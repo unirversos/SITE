@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Unirversos — onde se unem versos, memórias e propósito</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Baloo+2:wght@500;600;700&family=Zen+Maru+Gothic:wght@400;500;700&display=swap');
+:root{
+  --void:#FDF8F5; --void-2:#FAEDE7;
+  --pink:#E08C86; --pink-deep:#C26F6C; --pink-soft:rgba(224,140,134,.14);
+  --blush:#FBEBE7; --blush-2:#F0DFDA; --cream:#FDF8F5;
+  --ink:#4A4149; --ink-soft:#8A7F86;
+  --line-d:rgba(74,65,73,.12);
+}
+*{box-sizing:border-box;margin:0;padding:0;}
+@media (prefers-reduced-motion: reduce){ *{transition:none !important;} }
+body{font-family:'Zen Maru Gothic',sans-serif;color:var(--ink);background:var(--cream);line-height:1.7;font-size:16px;-webkit-font-smoothing:antialiased;}
+.wrap{max-width:900px;margin:0 auto;padding:0 24px;}
+
+.nav{display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap;padding:22px 0;}
+.logo{font-family:'Baloo 2',cursive;font-size:18px;font-weight:700;text-decoration:none;color:inherit;}
+.logo i{font-style:normal;color:var(--pink);}
+.nav .links{display:flex;gap:20px;font-size:13px;}
+.nav .links a{color:var(--ink-soft);text-decoration:none;}
+.nav .links a:hover{color:var(--pink-deep);}
+
+.hero{padding:40px 0 46px;text-align:center;}
+.hero .brand{font-family:'Baloo 2',cursive;font-size:clamp(32px,7.5vw,54px);letter-spacing:2px;line-height:1.1;margin-bottom:16px;}
+.hero .brand i{font-style:normal;color:var(--pink);}
+
+.hero h1{font-family:'Baloo 2',cursive;font-size:clamp(19px,3.2vw,25px);color:var(--pink-deep);font-weight:600;line-height:1.4;max-width:520px;margin:0 auto;}
+
+.strip{background:var(--pink);color:#fff;padding:13px 0;text-align:center;font-size:14px;}
+.strip a{color:#fff;text-decoration:underline;text-underline-offset:3px;}
+
+.universes{padding:54px 0 20px;}
+.universes + .universes { padding-top: 64px; border-top: 1px solid var(--line-d); }
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:16px;}
+.card{
+  background:#fff;border:1px solid var(--blush-2);border-radius:22px;padding:26px 24px;
+  display:flex;flex-direction:column;transition:all .18s ease;
+}
+.card:hover{transform:translateY(-3px);box-shadow:0 12px 30px rgba(36,28,63,.06);}
+.card .tag{font-size:11px;letter-spacing:2.5px;text-transform:uppercase;color:var(--pink);margin-bottom:10px;}
+.card h3{font-family:'Baloo 2',cursive;font-size:21px;font-weight:600;line-height:1.3;margin-bottom:10px;}
+.card p{font-size:14.5px;color:var(--ink-soft);flex:1;margin-bottom:18px;}
+.card a.go{
+  align-self:flex-start;font-size:13.5px;font-weight:500;color:var(--pink-deep);
+  text-decoration:none;border-bottom:1.5px solid var(--blush-2);padding-bottom:2px;
+}
+.card a.go:hover{border-color:var(--pink);}
+
+.quote{padding:64px 0;text-align:center;}
+.quote p{font-family:'Baloo 2',cursive;font-weight:600;font-size:clamp(19px,3.2vw,27px);line-height:1.5;color:var(--ink);max-width:620px;margin:0 auto;}
+.quote span{color:var(--pink);}
+
+.foot{border-top:1px solid var(--blush-2);padding:34px 0 50px;text-align:center;}
+.foot .big{font-family:'Baloo 2',cursive;font-size:18px;margin-bottom:16px;}
+.foot .tags{display:flex;gap:16px;justify-content:center;flex-wrap:wrap;font-size:13px;color:var(--pink-deep);}
+.foot .credit{margin-top:18px;font-size:11.5px;color:var(--ink-soft);opacity:.7;}
+
+</style>
+</head>
+<body>
+
+<div class="wrap">
+  <nav class="nav">
+    <a href="/" class="logo">UNIRVERSOS</a>
+    <div class="links">
+      <a href="/idiomas/">idiomas</a>
+      <a href="/memorias/">memórias</a>
+      <a href="/paralelos/">paralelos</a>
+      <a href="/sobre/">sobre</a>
+    </div>
+  </nav>
+
+  <div class="hero">
+    <p class="brand">UNIRVERSOS</p>
+    <h1>Uma jornada para aprender, praticar, usar e compartilhar.</h1>
+  </div>
+</div>
+
+<div class="strip">
+  <div class="wrap">✦ Turmas ao vivo com acompanhamento individual: <strong>vagas até dezembro</strong>. <a href="/idiomas/#ao-vivo">Ver mais</a></div>
+</div>
+
+<!-- FASE 1: APRENDER -->
+<section class="universes">
+  <div class="wrap">
+    <div style="text-align:center;margin-bottom:36px;">
+      <p style="font-size:12px;letter-spacing:3px;text-transform:uppercase;color:var(--pink);font-weight:600;margin-bottom:8px;">Fase 1</p>
+      <h2 style="font-family:'Baloo 2',cursive;font-size:28px;font-weight:600;color:var(--ink);margin-bottom:10px;">Aprender em contexto</h2>
+      <p style="color:var(--ink-soft);max-width:600px;margin:0 auto;">Construa um vocabulário que faz sentido. Não é lista de palavras — é entender *quando* e *como* usar.</p>
+    </div>
+    <div class="grid">
+      <div class="card">
+        <span class="tag">Mapas de Contexto</span>
+        <h3>12 cenários reais</h3>
+        <p>Restaurante, loja, trem, hotel. Cada mapa mostra a lógica por trás das frases, não só memorização.</p>
+        <a class="go" href="/idiomas/mapas/">explorar →</a>
+      </div>
+      <div class="card">
+        <span class="tag">Amuleto de Bolso</span>
+        <h3>52 expressões essenciais</h3>
+        <p>Flashcards com pronúncia automática, kanji destacado e variações de gênero. Leve no celular.</p>
+        <a class="go" href="/idiomas/amuleto/">revisar →</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FASE 2: PRATICAR -->
+<section class="universes">
+  <div class="wrap">
+    <div style="text-align:center;margin-bottom:36px;">
+      <p style="font-size:12px;letter-spacing:3px;text-transform:uppercase;color:var(--pink);font-weight:600;margin-bottom:8px;">Fase 2</p>
+      <h2 style="font-family:'Baloo 2',cursive;font-size:28px;font-weight:600;color:var(--ink);margin-bottom:10px;">Ganhe confiança praticando</h2>
+      <p style="color:var(--ink-soft);max-width:600px;margin:0 auto;">A teoria fica na memória. A prática te torna fluente.</p>
+    </div>
+    <div class="grid">
+      <div class="card" style="grid-column:1/-1;">
+        <span class="tag">Planeta Utopia</span>
+        <h3>O livro-jogo gamificado</h3>
+        <p>Crie seu avatar, suba de nível, ganhe XP em cada cena. Cada decisão é uma prática real — você escolhe o que dizer e colhe as consequências (ou sucesso).</p>
+        <a class="go" href="/idiomas/planeta-utopia/">começar jogo →</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FASE 3: USAR -->
+<section class="universes">
+  <div class="wrap">
+    <div style="text-align:center;margin-bottom:36px;">
+      <p style="font-size:12px;letter-spacing:3px;text-transform:uppercase;color:var(--pink);font-weight:600;margin-bottom:8px;">Fase 3</p>
+      <h2 style="font-family:'Baloo 2',cursive;font-size:28px;font-weight:600;color:var(--ink);margin-bottom:10px;">Prepare-se para a vida real</h2>
+      <p style="color:var(--ink-soft);max-width:600px;margin:0 auto;">Viagem marcada? Quer falar com confiança? Leve este guia prático de bolso.</p>
+    </div>
+    <div class="grid">
+      <div class="card" style="grid-column:1/-1;">
+        <span class="tag">Guia de Sobrevivência</span>
+        <h3>Seu manual para o Japão (ou qualquer lugar)</h3>
+        <p>Do café da manhã à emergência: frases testadas, alergênicos em kanji, números, dicas de viagem. Tudo que você precisa quando não dá pra parar pra pensar.</p>
+        <a class="go" href="/memorias/guia-sobrevivencia/">acessar guia →</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FASE 4: COMPARTILHAR -->
+<section class="universes">
+  <div class="wrap">
+    <div style="text-align:center;margin-bottom:36px;">
+      <p style="font-size:12px;letter-spacing:3px;text-transform:uppercase;color:var(--pink);font-weight:600;margin-bottom:8px;">Fase 4</p>
+      <h2 style="font-family:'Baloo 2',cursive;font-size:28px;font-weight:600;color:var(--ink);margin-bottom:10px;">Virar parte de algo maior</h2>
+      <p style="color:var(--ink-soft);max-width:600px;margin:0 auto;">Você não está sozinho. Compartilhe seu dia em outro idioma e ouça a história de quem está no mesmo caminho.</p>
+    </div>
+    <div class="grid">
+      <div class="card" style="grid-column:1/-1;">
+        <span class="tag">Diário Trilíngue</span>
+        <h3>Paralelos — a comunidade</h3>
+        <p>Um acontecimento ou pensamento com constância, em japonês, inglês ou português. Leia a jornada de outros aprendizes. Sincroniza com o Instagram (@unirversos.idiomas).</p>
+        <a class="go" href="/paralelos/">escrever →</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- QUOTE -->
+<section class="quote">
+  <div class="wrap">
+    <p>Não é sobre sair da zona de conforto.<br>É sobre <span>aumentar</span> a zona de conforto.</p>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer class="foot">
+  <div class="wrap">
+    <p class="big">unirversos — tudo conectado</p>
+    <div class="tags">
+      <span>@unirversos.idiomas</span><span>unirversos.idiomas@gmail.com</span>
+    </div>
+    <p class="credit">Aline Kikuti</p>
+  </div>
+</footer>
+
+</body>
+</html>

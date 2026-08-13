@@ -1,0 +1,923 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Aula Zero — O Essencial | Unirversos</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@400;600;700&family=Zen+Maru+Gothic:wght@400;500;700&display=swap" rel="stylesheet">
+  <style>
+    *{margin:0;padding:0;box-sizing:border-box;}
+    :root{
+      --paper:#FDF8F5;--pink:#E08C86;--pink-deep:#C26F6C;--lav:#8B90C4;--lav-soft:#D4D9F0;
+      --sage:#7FA893;--gold:#C0913F;--ink:#4A4149;--ink-soft:#7A6F7E;--line:#E8DFDA;--line-d:#D8CCBF;
+    }
+    html,body{background:var(--paper);font-family:'Zen Maru Gothic',sans-serif;color:var(--ink);line-height:1.6;}
+    .wrap{max-width:900px;margin:0 auto;padding:0 24px;}
+    header{background:linear-gradient(135deg, var(--pink) 0%, var(--lav) 100%);color:#fff;padding:40px 0;margin-bottom:40px;box-shadow:0 2px 8px rgba(0,0,0,.1);}
+    header h1{font-family:'Baloo 2',cursive;font-size:36px;margin-bottom:8px;}
+    header p{font-size:14px;opacity:.95;}
+    
+    .lesson-section{margin-bottom:48px;}
+    .lesson-section h2{font-family:'Baloo 2',cursive;font-size:24px;color:var(--pink-deep);margin-bottom:16px;border-bottom:2px solid var(--line-d);padding-bottom:8px;}
+    .lesson-section > p{margin-bottom:20px;color:var(--ink-soft);font-size:14px;}
+    
+    .concept{background:#fff;border:1px solid var(--line);border-radius:8px;padding:24px;margin-bottom:20px;box-shadow:0 1px 4px rgba(0,0,0,.05);}
+    .concept h3{font-family:'Baloo 2',cursive;font-size:18px;color:var(--ink);margin-bottom:12px;}
+    
+    .structure-box{
+      background:#f9f7f5;border-left:4px solid var(--pink);padding:16px;border-radius:4px;margin-bottom:20px;
+      font-family:'JetBrains Mono',monospace;font-size:14px;line-height:1.8;color:var(--ink);
+    }
+    .structure-box.lav{border-left-color:var(--lav);}
+    .structure-box.sage{border-left-color:var(--sage);}
+    
+    .examples-label{font-size:13px;color:var(--ink-soft);margin-bottom:12px;font-weight:600;}
+    
+    .phrase-row{
+      display:grid;grid-template-columns:1fr 1fr 1fr 80px;gap:12px;align-items:center;
+      background:#f9f7f5;padding:12px;border-radius:6px;margin-bottom:8px;border-left:3px solid var(--pink);
+    }
+    .phrase-jp{font-size:16px;font-weight:600;}
+    .phrase-roma{font-size:13px;color:var(--ink-soft);}
+    .phrase-pt{font-size:13px;color:var(--sage);}
+    .audio-btn{
+      padding:6px 12px;font-size:11px;background:var(--lav);color:#fff;border:none;border-radius:4px;
+      cursor:pointer;font-weight:600;transition:background .2s;width:80px;
+    }
+    .audio-btn:hover{background:var(--pink);}
+    
+    .record-section{background:var(--lav-soft);border:2px dashed var(--lav);border-radius:8px;padding:20px;margin:24px 0;text-align:center;}
+    .record-btn{
+      padding:12px 24px;background:var(--pink);color:#fff;border:none;border-radius:6px;
+      font-weight:600;cursor:pointer;font-size:14px;transition:background .2s;
+    }
+    .record-btn:hover{background:var(--pink-deep);}
+    .record-status{margin-top:12px;font-size:13px;color:var(--ink-soft);}
+    
+    .test-section{background:linear-gradient(135deg, var(--lav-soft), #f0f0f0);border-radius:8px;padding:32px;margin-top:40px;}
+    .test-part{margin-bottom:40px;}
+    .test-part h3{font-family:'Baloo 2',cursive;font-size:18px;color:var(--lav);margin-bottom:16px;}
+    
+    .question{background:#fff;border-radius:6px;padding:16px;margin-bottom:16px;}
+    .question p{font-weight:600;margin-bottom:12px;color:var(--ink);}
+    .options{display:flex;flex-direction:column;gap:8px;}
+    .option{
+      padding:10px 12px;border:2px solid var(--line);border-radius:4px;cursor:pointer;
+      transition:all .2s;background:#fff;
+    }
+    .option:hover{border-color:var(--pink);background:#fdf0ed;}
+    .option input{margin-right:8px;}
+    .option.correct{border-color:var(--sage);background:#e8f0e8;color:var(--sage);}
+    .option.incorrect{border-color:var(--pink);background:#fde8e5;color:var(--pink);}
+    
+    .matching-pairs{display:grid;grid-template-columns:1fr 1fr;gap:16px;}
+    .match-col{display:flex;flex-direction:column;gap:8px;}
+    .match-item{
+      padding:12px;background:#fff;border-radius:4px;border:2px solid var(--line);
+      cursor:pointer;transition:all .2s;text-align:center;font-size:13px;
+    }
+    .match-item:hover{border-color:var(--pink);}
+    .match-item.selected{border-color:var(--pink);background:#fdf0ed;font-weight:600;}
+    .match-item.matched{border-color:var(--sage);background:#e8f0e8;color:var(--sage);}
+    
+    .result{
+      margin-top:24px;padding:20px;border-radius:8px;text-align:center;font-weight:600;
+    }
+    .result.pass{background:#e8f0e8;color:var(--sage);border:2px solid var(--sage);}
+    .result.fail{background:#fde8e5;color:var(--pink);border:2px solid var(--pink);}
+    
+    .btn-primary{
+      display:inline-block;padding:12px 28px;background:var(--pink);color:#fff;border:none;
+      border-radius:6px;font-weight:600;cursor:pointer;margin-top:16px;transition:background .2s;
+      font-size:14px;
+    }
+    .btn-primary:hover{background:var(--pink-deep);}
+    .btn-primary:disabled{background:var(--ink-soft);cursor:not-allowed;}
+    
+    footer{border-top:1px solid var(--line-d);padding:40px 0;margin-top:60px;text-align:center;color:var(--ink-soft);font-size:13px;}
+    
+    /* SIDEBAR VOCAB */
+    .vocab-sidebar{
+      position:fixed;right:-350px;top:0;width:350px;height:100vh;background:#fff;
+      border-left:4px solid var(--pink);box-shadow:-6px 0 20px rgba(0,0,0,.2);
+      overflow-y:auto;padding:24px;z-index:999;transition:right .3s ease;font-size:13px;
+    }
+    .vocab-sidebar.open{right:0;}
+    .vocab-toggle{
+      position:fixed;right:20px;top:80px;width:55px;height:55px;
+      background:var(--pink);color:#fff;border:none;border-radius:50%;
+      cursor:pointer;font-size:24px;box-shadow:0 4px 16px rgba(224, 140, 134, 0.5);
+      z-index:998;transition:all .3s;font-weight:bold;animation:pulse-vocab 2s infinite;
+    }
+    .vocab-toggle:hover{background:var(--pink-deep);transform:scale(1.15);box-shadow:0 8px 24px rgba(224, 140, 134, 0.7);}
+    .vocab-toggle:hover::before{opacity:1;}
+    @keyframes pulse-vocab{0%,100%{box-shadow:0 4px 16px rgba(224, 140, 134, 0.5);} 50%{box-shadow:0 6px 20px rgba(224, 140, 134, 0.8);}}
+    .vocab-toggle::before{content:"Dicionário (clique)";position:absolute;right:65px;top:50%;transform:translateY(-50%);
+      background:var(--pink-deep);color:#fff;padding:10px 14px;border-radius:6px;font-size:12px;
+      white-space:nowrap;opacity:0;pointer-events:none;transition:opacity .3s;font-weight:600;z-index:1000;}
+    .vocab-sidebar h3{font-family:'Baloo 2',cursive;color:var(--pink);margin-bottom:16px;border-bottom:2px solid var(--line-d);padding-bottom:8px;}
+    .vocab-item{margin-bottom:16px;padding-bottom:12px;border-bottom:1px solid var(--line);}
+    .vocab-item .jp{font-weight:600;font-size:14px;color:var(--ink);margin-bottom:4px;}
+    .vocab-item .roma{font-size:12px;color:var(--ink-soft);margin-bottom:2px;}
+    .vocab-item .pt{font-size:12px;color:var(--sage);font-weight:500;}
+    
+    /* POPOVER */
+    .popover{
+      position:absolute;background:#fff;border:1px solid var(--line-d);border-radius:6px;
+      padding:12px;box-shadow:0 4px 12px rgba(0,0,0,.15);font-size:12px;z-index:1000;
+      min-width:120px;text-align:center;pointer-events:none;
+    }
+    .popover .jp{font-weight:600;color:var(--ink);margin-bottom:4px;}
+    .popover .roma{color:var(--ink-soft);margin-bottom:2px;font-size:11px;}
+    .popover .pt{color:var(--sage);font-weight:500;}
+    
+    /* PALAVRA CLICÁVEL */
+    .word-tip{cursor:pointer;border-bottom:2px dashed var(--pink);position:relative;transition:color .2s;}
+    .word-tip:hover{color:var(--pink);}
+    
+    @media(max-width:768px){
+      .phrase-row{grid-template-columns:1fr;gap:8px;}
+      .matching-pairs{grid-template-columns:1fr;}
+      header h1{font-size:28px;}
+      .vocab-sidebar{width:80%;right:-80%;}
+      .vocab-toggle{right:10px;top:70px;width:45px;height:45px;}
+    }
+  </style>
+</head>
+<body>
+
+<header>
+  <div class="wrap">
+    <h1>🎓 Aula Zero</h1>
+    <p>O essencial antes de explorar os mapas • Primeira, o essencial</p>
+  </div>
+</header>
+
+<div class="wrap">
+
+  <!-- SEÇÃO 1: ESTRUTURA DOS MOLDES -->
+  <section class="lesson-section">
+    <h2>1️⃣ Estrutura dos Moldes</h2>
+    <p>
+      <strong>A cópula</strong> (です) é o verbo "ser/estar" em japonês. É a base de tudo. Sem ela, não há frase em japonês. Aprenda a afirmar, negar e perguntar.
+    </p>
+    
+    <div class="concept">
+      <h3>✓ です (Desu) — É / Sou</h3>
+      <p style="font-size:13px;color:var(--ink-soft);margin-bottom:16px;"><strong>Estrutura:</strong></p>
+      <div class="structure-box">[Item/Conceito] <strong>+ です</strong></div>
+      <p class="examples-label">Exemplos:</p>
+      <div class="phrase-row">
+        <div class="phrase-jp">パスポートです</div>
+        <div class="phrase-roma">Pasupoto desu</div>
+        <div class="phrase-pt">É o passaporte</div>
+        <button class="audio-btn" onclick="speak('pasupoto desu', 'ja-JP')">🔊</button>
+      </div>
+      <div class="phrase-row">
+        <div class="phrase-jp">ブラジル人です</div>
+        <div class="phrase-roma">Burajiru jin desu</div>
+        <div class="phrase-pt">Sou brasileiro(a)</div>
+        <button class="audio-btn" onclick="speak('burajiru jin desu', 'ja-JP')">🔊</button>
+      </div>
+    </div>
+
+    <div class="concept">
+      <h3>✗ ではありません (Dewa Arimasen) — Não é</h3>
+      <p style="font-size:13px;color:var(--ink-soft);margin-bottom:16px;"><strong>Estrutura:</strong></p>
+      <div class="structure-box sage">[Item/Conceito] <strong>+ ではありません</strong><br/><span style="font-size:12px;color:var(--ink-soft);">Variações: じゃありません (jya arimasen) | じゃない (jya nai)</span></div>
+      <p class="examples-label">Exemplos:</p>
+      <div class="phrase-row">
+        <div class="phrase-jp">観光客ではありません</div>
+        <div class="phrase-roma">Kankou kyaku dewa arimasen</div>
+        <div class="phrase-pt">Não sou turista (formal)</div>
+        <button class="audio-btn" onclick="speak('kankou kyaku dewa arimasen', 'ja-JP')">🔊</button>
+      </div>
+      <div class="phrase-row">
+        <div class="phrase-jp">観光客じゃありません</div>
+        <div class="phrase-roma">Kankou kyaku jya arimasen</div>
+        <div class="phrase-pt">Não sou turista (coloquial)</div>
+        <button class="audio-btn" onclick="speak('kankou kyaku jya arimasen', 'ja-JP')">🔊</button>
+      </div>
+      <div class="phrase-row">
+        <div class="phrase-jp">日本人じゃない</div>
+        <div class="phrase-roma">Nihon jin jya nai</div>
+        <div class="phrase-pt">Não sou japonês(a) (informal)</div>
+        <button class="audio-btn" onclick="speak('nihon jin jya nai', 'ja-JP')">🔊</button>
+      </div>
+      <div class="phrase-row">
+        <div class="phrase-jp">パスポートじゃない</div>
+        <div class="phrase-roma">Pasupoto jya nai</div>
+        <div class="phrase-pt">Não é o passaporte</div>
+        <button class="audio-btn" onclick="speak('pasupoto jya nai', 'ja-JP')">🔊</button>
+      </div>
+    </div>
+
+    <div class="concept">
+      <h3>❓ ですか？ (Desu ka?) — É ...? (Pergunta)</h3>
+      <p style="font-size:13px;color:var(--ink-soft);margin-bottom:16px;"><strong>Estrutura:</strong></p>
+      <div class="structure-box lav">[Frase] <strong>+ ですか？</strong></div>
+      <p class="examples-label">Exemplos:</p>
+      <div class="phrase-row">
+        <div class="phrase-jp">観光客ですか？</div>
+        <div class="phrase-roma">Kankou kyaku desu ka?</div>
+        <div class="phrase-pt">Você é turista?</div>
+        <button class="audio-btn" onclick="speak('kankou kyaku desu ka', 'ja-JP')">🔊</button>
+      </div>
+      <div class="phrase-row">
+        <div class="phrase-jp">ブラジル人ですか？</div>
+        <div class="phrase-roma">Burajiru jin desu ka?</div>
+        <div class="phrase-pt">Você é brasileiro(a)?</div>
+        <button class="audio-btn" onclick="speak('burajiru jin desu ka', 'ja-JP')">🔊</button>
+      </div>
+      <div class="phrase-row">
+        <div class="phrase-jp">パスポートですか？</div>
+        <div class="phrase-roma">Pasupoto desu ka?</div>
+        <div class="phrase-pt">É o passaporte?</div>
+        <button class="audio-btn" onclick="speak('pasupoto desu ka', 'ja-JP')">🔊</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- SEÇÃO 2: SISTEMA VERBAL -->
+  <section class="lesson-section">
+    <h2>2️⃣ Sistema Verbal (~ます)</h2>
+    <p>
+      <strong>Os verbos em japonês mudam de forma</strong> para indicar tempo e polidez. O padrão ~ます (masu) é polido e formal. Aprenda as 4 formas básicas de cada verbo.
+    </p>
+
+    <div class="concept">
+      <h3>行く (Iku) — Ir</h3>
+      <p class="examples-label">Todas as conjugações:</p>
+      <div class="phrase-row">
+        <div class="phrase-jp">行きます</div>
+        <div class="phrase-roma">Ikimasu</div>
+        <div class="phrase-pt">Vou / Vou ir (presente)</div>
+        <button class="audio-btn" onclick="speak('ikimasu', 'ja-JP')">🔊</button>
+      </div>
+      <div class="phrase-row">
+        <div class="phrase-jp">行きません</div>
+        <div class="phrase-roma">Ikimasen</div>
+        <div class="phrase-pt">Não vou (negativo)</div>
+        <button class="audio-btn" onclick="speak('ikimasen', 'ja-JP')">🔊</button>
+      </div>
+      <div class="phrase-row">
+        <div class="phrase-jp">行きました</div>
+        <div class="phrase-roma">Ikimashita</div>
+        <div class="phrase-pt">Fui / Ia (passado)</div>
+        <button class="audio-btn" onclick="speak('ikimashita', 'ja-JP')">🔊</button>
+      </div>
+      <div class="phrase-row">
+        <div class="phrase-jp">行きませんでした</div>
+        <div class="phrase-roma">Ikimasen deshita</div>
+        <div class="phrase-pt">Não fui (passado negativo)</div>
+        <button class="audio-btn" onclick="speak('ikimasen deshita', 'ja-JP')">🔊</button>
+      </div>
+    </div>
+
+    <div class="concept">
+      <h3>食べる (Taberu) — Comer</h3>
+      <p class="examples-label">Todas as conjugações:</p>
+      <div class="phrase-row">
+        <div class="phrase-jp">食べます</div>
+        <div class="phrase-roma">Tabemasu</div>
+        <div class="phrase-pt">Como / Vou comer (presente)</div>
+        <button class="audio-btn" onclick="speak('tabemasu', 'ja-JP')">🔊</button>
+      </div>
+      <div class="phrase-row">
+        <div class="phrase-jp">食べません</div>
+        <div class="phrase-roma">Tabemasen</div>
+        <div class="phrase-pt">Não como (negativo)</div>
+        <button class="audio-btn" onclick="speak('tabemasen', 'ja-JP')">🔊</button>
+      </div>
+      <div class="phrase-row">
+        <div class="phrase-jp">食べました</div>
+        <div class="phrase-roma">Tabemashita</div>
+        <div class="phrase-pt">Comi (passado)</div>
+        <button class="audio-btn" onclick="speak('tabemashita', 'ja-JP')">🔊</button>
+      </div>
+      <div class="phrase-row">
+        <div class="phrase-jp">食べませんでした</div>
+        <div class="phrase-roma">Tabemasen deshita</div>
+        <div class="phrase-pt">Não comi (passado negativo)</div>
+        <button class="audio-btn" onclick="speak('tabemasen deshita', 'ja-JP')">🔊</button>
+      </div>
+    </div>
+
+    <div class="concept">
+      <h3>飲む (Nomu) — Beber</h3>
+      <p class="examples-label">Todas as conjugações:</p>
+      <div class="phrase-row">
+        <div class="phrase-jp">飲みます</div>
+        <div class="phrase-roma">Nomimasu</div>
+        <div class="phrase-pt">Bebo / Vou beber (presente)</div>
+        <button class="audio-btn" onclick="speak('nomimasu', 'ja-JP')">🔊</button>
+      </div>
+      <div class="phrase-row">
+        <div class="phrase-jp">飲みません</div>
+        <div class="phrase-roma">Nomimasen</div>
+        <div class="phrase-pt">Não bebo (negativo)</div>
+        <button class="audio-btn" onclick="speak('nomimasen', 'ja-JP')">🔊</button>
+      </div>
+      <div class="phrase-row">
+        <div class="phrase-jp">飲みました</div>
+        <div class="phrase-roma">Nomimashita</div>
+        <div class="phrase-pt">Bebi (passado)</div>
+        <button class="audio-btn" onclick="speak('nomimashita', 'ja-JP')">🔊</button>
+      </div>
+      <div class="phrase-row">
+        <div class="phrase-jp">飲みませんでした</div>
+        <div class="phrase-roma">Nomimasen deshita</div>
+        <div class="phrase-pt">Não bebi (passado negativo)</div>
+        <button class="audio-btn" onclick="speak('nomimasen deshita', 'ja-JP')">🔊</button>
+      </div>
+    </div>
+
+    <div class="concept">
+      <h3>わかる (Wakaru) — Entender</h3>
+      <p class="examples-label">Todas as conjugações:</p>
+      <div class="phrase-row">
+        <div class="phrase-jp">わかります</div>
+        <div class="phrase-roma">Wakarimasu</div>
+        <div class="phrase-pt">Entendo (presente)</div>
+        <button class="audio-btn" onclick="speak('wakarimasu', 'ja-JP')">🔊</button>
+      </div>
+      <div class="phrase-row">
+        <div class="phrase-jp">わかりません</div>
+        <div class="phrase-roma">Wakarimasen</div>
+        <div class="phrase-pt">Não entendo (negativo)</div>
+        <button class="audio-btn" onclick="speak('wakarimasen', 'ja-JP')">🔊</button>
+      </div>
+      <div class="phrase-row">
+        <div class="phrase-jp">わかりました</div>
+        <div class="phrase-roma">Wakarimashita</div>
+        <div class="phrase-pt">Entendi (passado)</div>
+        <button class="audio-btn" onclick="speak('wakarimashita', 'ja-JP')">🔊</button>
+      </div>
+      <div class="phrase-row">
+        <div class="phrase-jp">わかりませんでした</div>
+        <div class="phrase-roma">Wakarimasen deshita</div>
+        <div class="phrase-pt">Não entendi (passado negativo)</div>
+        <button class="audio-btn" onclick="speak('wakarimasen deshita', 'ja-JP')">🔊</button>
+      </div>
+    </div>
+
+    <div class="concept">
+      <h3>来る (Kuru) — Vir</h3>
+      <p class="examples-label">Todas as conjugações:</p>
+      <div class="phrase-row">
+        <div class="phrase-jp">来ます</div>
+        <div class="phrase-roma">Kimasu</div>
+        <div class="phrase-pt">Venho / Vou vir (presente)</div>
+        <button class="audio-btn" onclick="speak('kimasu', 'ja-JP')">🔊</button>
+      </div>
+      <div class="phrase-row">
+        <div class="phrase-jp">来ません</div>
+        <div class="phrase-roma">Kimasen</div>
+        <div class="phrase-pt">Não venho (negativo)</div>
+        <button class="audio-btn" onclick="speak('kimasen', 'ja-JP')">🔊</button>
+      </div>
+      <div class="phrase-row">
+        <div class="phrase-jp">来ました</div>
+        <div class="phrase-roma">Kimashita</div>
+        <div class="phrase-pt">Vim / Cheguei (passado)</div>
+        <button class="audio-btn" onclick="speak('kimashita', 'ja-JP')">🔊</button>
+      </div>
+      <div class="phrase-row">
+        <div class="phrase-jp">来ませんでした</div>
+        <div class="phrase-roma">Kimasen deshita</div>
+        <div class="phrase-pt">Não vim (passado negativo)</div>
+        <button class="audio-btn" onclick="speak('kimasen deshita', 'ja-JP')">🔊</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- SEÇÃO 3: INTERROGATIVOS (5 CURINGA) -->
+  <section class="lesson-section">
+    <h2>3️⃣ Os 5 Interrogativos Curinga</h2>
+    <p>
+      <strong>Estas 5 palavras são sua chave de ouro.</strong> Se você entender quando aparecem, saberá quando o fiscal ou atendente está te fazendo uma pergunta. Sempre seguidas de か？(ka?) no final.
+    </p>
+
+    <div class="concept">
+      <h3>何 (Nan) — O quê? / Qual?</h3>
+      <p style="font-size:13px;color:var(--ink-soft);margin-bottom:16px;"><strong>Estrutura:</strong></p>
+      <div class="structure-box"><strong>何</strong> + ですか？</div>
+      <p class="examples-label">Exemplos:</p>
+      <div class="phrase-row">
+        <div class="phrase-jp">何ですか？</div>
+        <div class="phrase-roma">Nan desu ka?</div>
+        <div class="phrase-pt">O que é?</div>
+        <button class="audio-btn" onclick="speak('nan desu ka', 'ja-JP')">🔊</button>
+      </div>
+    </div>
+
+    <div class="concept">
+      <h3>どこ (Doko) — Onde?</h3>
+      <p style="font-size:13px;color:var(--ink-soft);margin-bottom:16px;"><strong>Estrutura:</strong></p>
+      <div class="structure-box"><strong>どこ</strong> + ですか？</div>
+      <p class="examples-label">Exemplos:</p>
+      <div class="phrase-row">
+        <div class="phrase-jp">どこですか？</div>
+        <div class="phrase-roma">Doko desu ka?</div>
+        <div class="phrase-pt">Onde é?</div>
+        <button class="audio-btn" onclick="speak('doko desu ka', 'ja-JP')">🔊</button>
+      </div>
+    </div>
+
+    <div class="concept">
+      <h3>誰 (Dare) — Quem?</h3>
+      <p style="font-size:13px;color:var(--ink-soft);margin-bottom:16px;"><strong>Estrutura:</strong></p>
+      <div class="structure-box"><strong>誰</strong> + ですか？</div>
+      <p class="examples-label">Exemplos:</p>
+      <div class="phrase-row">
+        <div class="phrase-jp">誰ですか？</div>
+        <div class="phrase-roma">Dare desu ka?</div>
+        <div class="phrase-pt">Quem é?</div>
+        <button class="audio-btn" onclick="speak('dare desu ka', 'ja-JP')">🔊</button>
+      </div>
+    </div>
+
+    <div class="concept">
+      <h3>なんで (Nande) — Por quê?</h3>
+      <p style="font-size:13px;color:var(--ink-soft);margin-bottom:16px;"><strong>Estrutura:</strong></p>
+      <div class="structure-box"><strong>なんで</strong> + ですか？</div>
+      <p class="examples-label">Exemplos:</p>
+      <div class="phrase-row">
+        <div class="phrase-jp">なんでですか？</div>
+        <div class="phrase-roma">Nande desu ka?</div>
+        <div class="phrase-pt">Por que?</div>
+        <button class="audio-btn" onclick="speak('nande desu ka', 'ja-JP')">🔊</button>
+      </div>
+    </div>
+
+    <div class="concept">
+      <h3>いつ (Itsu) — Quando?</h3>
+      <p style="font-size:13px;color:var(--ink-soft);margin-bottom:16px;"><strong>Estrutura:</strong></p>
+      <div class="structure-box"><strong>いつ</strong> + ですか？</div>
+      <p class="examples-label">Exemplos:</p>
+      <div class="phrase-row">
+        <div class="phrase-jp">いつですか？</div>
+        <div class="phrase-roma">Itsu desu ka?</div>
+        <div class="phrase-pt">Quando é?</div>
+        <button class="audio-btn" onclick="speak('itsu desu ka', 'ja-JP')">🔊</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- SEÇÃO 4: AS 6 PEÇAS CURINGA ESSENCIAIS -->
+  <section class="lesson-section">
+    <h2>4️⃣ As 6 Peças Curinga Essenciais</h2>
+    <p>
+      <strong>Estes padrões te salvam no aeroporto, no Japão e em qualquer situação.</strong> São de altíssima frequência. Decora bem!
+    </p>
+
+    <div class="concept">
+      <h3>1. ~は どこですか？ (Wa Doko Desu ka?) — Onde fica X?</h3>
+      <p style="font-size:13px;color:var(--ink-soft);margin-bottom:16px;"><strong>A estrutura número 1 de sobrevivência.</strong> Use para encontrar lugar, serviço ou coisa.</p>
+      <p style="font-size:13px;color:var(--ink-soft);margin-bottom:16px;"><strong>Estrutura:</strong></p>
+      <div class="structure-box">[Lugar/Serviço/Coisa] <strong>+ は どこですか？</strong></div>
+      <p class="examples-label">Exemplos:</p>
+      <div class="phrase-row">
+        <div class="phrase-jp">トイレはどこですか？</div>
+        <div class="phrase-roma">Toire wa doko desu ka?</div>
+        <div class="phrase-pt">Onde fica o banheiro?</div>
+        <button class="audio-btn" onclick="speak('toire wa doko desu ka', 'ja-JP')">🔊</button>
+      </div>
+      <div class="phrase-row">
+        <div class="phrase-jp">パスポートはどこですか？</div>
+        <div class="phrase-roma">Pasupoto wa doko desu ka?</div>
+        <div class="phrase-pt">Onde está o passaporte?</div>
+        <button class="audio-btn" onclick="speak('pasupoto wa doko desu ka', 'ja-JP')">🔊</button>
+      </div>
+    </div>
+
+    <div class="concept">
+      <h3>2. ~が あります / ありません (Ga Arimasu/Arimasen) — Existe / Não existe</h3>
+      <p style="font-size:13px;color:var(--ink-soft);margin-bottom:16px;"><strong>Estrutura:</strong></p>
+      <div class="structure-box">[Item] <strong>+ が あります</strong> | <strong>+ が ありません</strong></div>
+      <p class="examples-label">Exemplos:</p>
+      <div class="phrase-row">
+        <div class="phrase-jp">申告があります</div>
+        <div class="phrase-roma">Shinkoku ga arimasu</div>
+        <div class="phrase-pt">Tenho algo a declarar</div>
+        <button class="audio-btn" onclick="speak('shinkoku ga arimasu', 'ja-JP')">🔊</button>
+      </div>
+      <div class="phrase-row">
+        <div class="phrase-jp">フライトがあります</div>
+        <div class="phrase-roma">Furaito ga arimasu</div>
+        <div class="phrase-pt">Tenho um voo</div>
+        <button class="audio-btn" onclick="speak('furaito ga arimasu', 'ja-JP')">🔊</button>
+      </div>
+    </div>
+
+    <div class="concept">
+      <h3>3. ありがとうございます / すみません (Arigatou Gozaimasu / Sumimasen)</h3>
+      <p style="font-size:13px;color:var(--ink-soft);margin-bottom:16px;"><strong>Sumimasen é o canivete suíço:</strong> serve para chamar atendente, pedir licença e pedir desculpas.</p>
+      <p class="examples-label">Exemplos:</p>
+      <div class="phrase-row">
+        <div class="phrase-jp">すみません</div>
+        <div class="phrase-roma">Sumimasen</div>
+        <div class="phrase-pt">Com licença / Desculpa</div>
+        <button class="audio-btn" onclick="speak('sumimasen', 'ja-JP')">🔊</button>
+      </div>
+      <div class="phrase-row">
+        <div class="phrase-jp">ありがとうございます</div>
+        <div class="phrase-roma">Arigatou gozaimasu</div>
+        <div class="phrase-pt">Muito obrigado(a)</div>
+        <button class="audio-btn" onclick="speak('arigatou gozaimasu', 'ja-JP')">🔊</button>
+      </div>
+    </div>
+
+    <div class="concept">
+      <h3>4. ~は いくらですか？ (Wa Ikura Desu ka?) — Quanto custa?</h3>
+      <p style="font-size:13px;color:var(--ink-soft);margin-bottom:16px;"><strong>Estrutura:</strong></p>
+      <div class="structure-box">[Item] <strong>+ は いくらですか？</strong></div>
+      <p class="examples-label">Exemplos:</p>
+      <div class="phrase-row">
+        <div class="phrase-jp">いくらですか？</div>
+        <div class="phrase-roma">Ikura desu ka?</div>
+        <div class="phrase-pt">Quanto custa?</div>
+        <button class="audio-btn" onclick="speak('ikura desu ka', 'ja-JP')">🔊</button>
+      </div>
+    </div>
+
+    <div class="concept">
+      <h3>5. ~ても いいですか？ (Te Mo Ii Desu ka?) — Posso? / É permitido?</h3>
+      <p style="font-size:13px;color:var(--ink-soft);margin-bottom:16px;"><strong>Estrutura:</strong></p>
+      <div class="structure-box"><strong>いいですか？</strong> (forma rápida)</div>
+      <p class="examples-label">Exemplos:</p>
+      <div class="phrase-row">
+        <div class="phrase-jp">いいですか？</div>
+        <div class="phrase-roma">Ii desu ka?</div>
+        <div class="phrase-pt">Pode? / Tudo bem?</div>
+        <button class="audio-btn" onclick="speak('ii desu ka', 'ja-JP')">🔊</button>
+      </div>
+    </div>
+
+    <div class="concept">
+      <h3>6. ~を (Wo/O) — Partícula do Objeto Direto</h3>
+      <p style="font-size:13px;color:var(--ink-soft);margin-bottom:16px;"><strong>A partícula を (wo/o)</strong> marca o objeto direto. Essencial para pedir coisas.</p>
+      <p style="font-size:13px;color:var(--ink-soft);margin-bottom:16px;"><strong>Estrutura:</strong></p>
+      <div class="structure-box">[Objeto] <strong>+ を ください</strong> | <strong>+ を お願いします</strong></div>
+      <p class="examples-label">Exemplos:</p>
+      <div class="phrase-row">
+        <div class="phrase-jp">水をください</div>
+        <div class="phrase-roma">Mizu wo kudasai</div>
+        <div class="phrase-pt">Me dê água, por favor</div>
+        <button class="audio-btn" onclick="speak('mizu wo kudasai', 'ja-JP')">🔊</button>
+      </div>
+      <div class="phrase-row">
+        <div class="phrase-jp">窓側をお願いします</div>
+        <div class="phrase-roma">Madogawa wo onegai shimasu</div>
+        <div class="phrase-pt">Janela, por favor</div>
+        <button class="audio-btn" onclick="speak('madogawa wo onegai shimasu', 'ja-JP')">🔊</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- SEÇÃO PRÁTICA: GRAVAÇÃO -->
+  <section class="lesson-section">
+    <div class="record-section">
+      <h3 style="margin-bottom:16px;">🎙️ Repita Comigo</h3>
+      <p style="margin-bottom:16px;color:var(--ink-soft);font-size:13px;">
+        Escolha uma frase acima e clique em 🔊. Ouça bem a pronúncia, depois clique abaixo para gravar sua voz!
+      </p>
+      <button class="record-btn" id="recordBtn" onclick="toggleRecording()">🎤 Começar a gravar</button>
+      <div class="record-status" id="recordStatus"></div>
+      <div id="audioPlayer" style="margin-top:16px;"></div>
+    </div>
+  </section>
+
+  <!-- SEÇÃO TESTE -->
+  <section class="test-section">
+    <h2 style="color:#fff;margin-bottom:24px;text-align:center;">🎯 Teste Final</h2>
+    <p style="color:#fff;margin-bottom:32px;text-align:center;font-size:14px;">
+      Acerte 80%+ para desbloquear os Mapas e começar sua jornada! Você tem 2 partes.
+    </p>
+
+    <div class="test-part">
+      <h3>Parte 1: Reconhecer a Frase (5 questões)</h3>
+      <p style="color:#fff;margin-bottom:16px;font-size:13px;">Clique na resposta correta.</p>
+      <div id="testPart1"></div>
+    </div>
+
+    <div class="test-part">
+      <h3>Parte 2: Conectar Frases e Traduções (6 pares)</h3>
+      <p style="color:#fff;margin-bottom:16px;font-size:13px;">Clique para conectar cada frase à sua tradução.</p>
+      <div id="testPart2"></div>
+    </div>
+
+    <div id="testResult"></div>
+
+    <div style="text-align:center;">
+      <button class="btn-primary" onclick="submitTest()">📊 Enviar Teste</button>
+    </div>
+  </section>
+
+</div>
+
+<footer>
+  <div class="wrap">
+    <p>Aula Zero — Preparação para os Mapas de Contexto</p>
+    <p style="margin-top:8px;">Quando completar com 80%+, você desbloqueará os 12 Mapas e começará a coletar insignias de Fogo. 🔥</p>
+  </div>
+</footer>
+
+<!-- SIDEBAR VOCABULÁRIO -->
+<button class="vocab-toggle" onclick="toggleVocabSidebar()">📚</button>
+<div class="vocab-sidebar" id="vocabSidebar">
+  <h3>📖 Vocabulário</h3>
+  <div id="vocabList"></div>
+</div>
+
+<script>
+// ============ VOCABULÁRIO & POPOVER ============
+const vocabulary = [
+  // Seção 1: Estrutura dos Moldes
+  { jp: 'パスポート', roma: 'Pasupoto', pt: 'Passaporte' },
+  { jp: 'ブラジル人', roma: 'Burajiru jin', pt: 'Brasileiro(a)' },
+  { jp: 'です', roma: 'desu', pt: 'É / Sou (polido)' },
+  { jp: 'ではありません', roma: 'dewa arimasen', pt: 'Não é (formal)' },
+  { jp: 'じゃありません', roma: 'jya arimasen', pt: 'Não é (coloquial)' },
+  { jp: 'じゃない', roma: 'jya nai', pt: 'Não é (informal)' },
+  { jp: 'ですか', roma: 'desu ka', pt: 'Pergunta? (polido)' },
+  { jp: '観光客', roma: 'Kankou kyaku', pt: 'Turista' },
+  { jp: '日本人', roma: 'Nihon jin', pt: 'Japonês(a)' },
+  
+  // Seção 2: Verbos
+  { jp: '行く', roma: 'iku', pt: 'Ir' },
+  { jp: '食べる', roma: 'taberu', pt: 'Comer' },
+  { jp: '飲む', roma: 'nomu', pt: 'Beber' },
+  { jp: 'わかる', roma: 'wakaru', pt: 'Entender' },
+  { jp: '来る', roma: 'kuru', pt: 'Vir' },
+  { jp: 'ます', roma: 'masu', pt: 'Sufixo polido (presente)' },
+  { jp: 'ません', roma: 'masen', pt: 'Sufixo negativo' },
+  { jp: 'ました', roma: 'mashita', pt: 'Sufixo passado afirmativo' },
+  { jp: 'ませんでした', roma: 'masen deshita', pt: 'Sufixo passado negativo' },
+  
+  // Seção 3: Interrogativos
+  { jp: '何', roma: 'nan', pt: 'O quê? / Qual?' },
+  { jp: 'どこ', roma: 'doko', pt: 'Onde?' },
+  { jp: '誰', roma: 'dare', pt: 'Quem?' },
+  { jp: 'なんで', roma: 'nande', pt: 'Por que?' },
+  { jp: 'いつ', roma: 'itsu', pt: 'Quando?' },
+  
+  // Seção 4: Essenciais
+  { jp: 'トイレ', roma: 'toire', pt: 'Banheiro' },
+  { jp: 'は', roma: 'wa', pt: 'Partícula de tópico' },
+  { jp: 'が', roma: 'ga', pt: 'Partícula de sujeito' },
+  { jp: 'を', roma: 'wo / o', pt: 'Partícula de objeto direto' },
+  { jp: 'ください', roma: 'kudasai', pt: 'Me dê... por favor' },
+  { jp: 'お願いします', roma: 'onegai shimasu', pt: 'Por favor (formal)' },
+  { jp: 'ありがとうございます', roma: 'arigatou gozaimasu', pt: 'Muito obrigado(a)' },
+  { jp: 'すみません', roma: 'sumimasen', pt: 'Com licença / Desculpa' },
+  { jp: 'いくら', roma: 'ikura', pt: 'Quanto?' },
+  { jp: '水', roma: 'mizu', pt: 'Água' },
+  { jp: '窓側', roma: 'madogawa', pt: 'Lado da janela' },
+  { jp: '申告', roma: 'shinkoku', pt: 'Declaração' },
+  { jp: 'フライト', roma: 'furaito', pt: 'Voo' },
+];
+
+function toggleVocabSidebar() {
+  const sidebar = document.getElementById('vocabSidebar');
+  sidebar.classList.toggle('open');
+  if (sidebar.classList.contains('open')) {
+    renderVocabList();
+  }
+}
+
+function renderVocabList() {
+  const vocabList = document.getElementById('vocabList');
+  vocabList.innerHTML = vocabulary.map(word => `
+    <div class="vocab-item">
+      <div class="jp">${word.jp}</div>
+      <div class="roma">${word.roma}</div>
+      <div class="pt">${word.pt}</div>
+    </div>
+  `).join('');
+}
+
+function showPopover(event, jp, roma, pt) {
+  event.preventDefault();
+  event.stopPropagation();
+  
+  // Remove popover anterior
+  const existing = document.querySelector('.popover');
+  if (existing) existing.remove();
+  
+  // Cria novo popover
+  const popover = document.createElement('div');
+  popover.className = 'popover';
+  popover.innerHTML = `
+    <div class="jp">${jp}</div>
+    <div class="roma">${roma}</div>
+    <div class="pt">${pt}</div>
+  `;
+  
+  document.body.appendChild(popover);
+  
+  // Posiciona perto do mouse
+  const rect = event.target.getBoundingClientRect();
+  popover.style.left = (rect.left + window.scrollX - 60) + 'px';
+  popover.style.top = (rect.top + window.scrollY - 50) + 'px';
+  
+  // Remove ao clicar em outro lugar
+  setTimeout(() => {
+    document.addEventListener('click', () => popover.remove(), { once: true });
+  }, 0);
+}
+
+function wordTip(jp, roma, pt) {
+  return `<span class="word-tip" onclick="showPopover(event, '${jp}', '${roma}', '${pt}')">${jp}</span>`;
+}
+
+// Fechar sidebar ao clicar fora
+document.addEventListener('click', (e) => {
+  const sidebar = document.getElementById('vocabSidebar');
+  const toggle = document.querySelector('.vocab-toggle');
+  if (!sidebar.contains(e.target) && !toggle.contains(e.target)) {
+    sidebar.classList.remove('open');
+  }
+});
+
+  const utterance = new SpeechSynthesisUtterance(text);
+  utterance.lang = lang;
+  utterance.rate = 0.85;
+  window.speechSynthesis.cancel();
+  window.speechSynthesis.speak(utterance);
+}
+
+let mediaRecorder;
+let recordedChunks = [];
+const recordBtn = document.getElementById('recordBtn');
+const recordStatus = document.getElementById('recordStatus');
+let isRecording = false;
+
+function toggleRecording() {
+  if (isRecording) {
+    mediaRecorder.stop();
+    isRecording = false;
+  } else {
+    startRecording();
+  }
+}
+
+function startRecording() {
+  recordedChunks = [];
+  navigator.mediaDevices.getUserMedia({ audio: true }).then(stream => {
+    mediaRecorder = new MediaRecorder(stream);
+    mediaRecorder.ondataavailable = e => recordedChunks.push(e.data);
+    mediaRecorder.onstop = () => {
+      const audioBlob = new Blob(recordedChunks, { type: 'audio/webm' });
+      const audioUrl = URL.createObjectURL(audioBlob);
+      recordStatus.innerHTML = '✅ Gravação concluída! Clique no player abaixo para ouvir sua pronúncia.';
+      
+      const playerDiv = document.getElementById('audioPlayer');
+      playerDiv.innerHTML = `
+        <div style="background:#f9f7f5;padding:12px;border-radius:6px;text-align:center;">
+          <p style="font-size:12px;color:var(--ink-soft);margin-bottom:8px;">🔊 Sua gravação:</p>
+          <audio controls style="width:100%;max-width:300px;height:36px;">
+            <source src="${audioUrl}" type="audio/webm">
+            Seu navegador não suporta reprodução de áudio.
+          </audio>
+        </div>
+      `;
+      recordBtn.textContent = '🎤 Gravar novamente';
+      isRecording = false;
+    };
+    mediaRecorder.start();
+    recordBtn.textContent = '⏹️ Parar gravação';
+    recordStatus.innerHTML = '🔴 Gravando...';
+    isRecording = true;
+  }).catch(err => {
+    recordStatus.innerHTML = '❌ Erro ao acessar microfone. Verifique as permissões.';
+  });
+}
+
+const testPart1Questions = [
+  { question: 'Como você diz "Onde fica o banheiro?"?', correct: 'トイレはどこですか？', options: ['トイレはどこですか？', '何ですか？', 'いくらですか？'] },
+  { question: 'Qual frase significa "Não entendo"?', correct: 'わかりません', options: ['わかります', 'わかりません', 'わかりました'] },
+  { question: 'Como pedir água educadamente?', correct: '水をください', options: ['水です', '水をください', '水があります'] },
+  { question: 'Qual é o significado de "ですか？"', correct: 'Pergunta polida', options: ['Afirmação', 'Pergunta polida', 'Negação'] },
+  { question: 'Como você diz "Você é turista?"', correct: '観光客ですか？', options: ['観光客です', '観光客ですか？', '観光客ではありません'] }
+];
+
+const testPart2Pairs = [
+  { jp: 'ありがとうございます', pt: 'Muito obrigado(a)' },
+  { jp: 'すみません', pt: 'Com licença / Desculpa' },
+  { jp: 'いくらですか？', pt: 'Quanto custa?' },
+  { jp: '申告があります', pt: 'Tenho algo a declarar' },
+  { jp: 'どこですか？', pt: 'Onde é?' },
+  { jp: 'いつですか？', pt: 'Quando é?' }
+];
+
+function renderTest() {
+  const part1Html = testPart1Questions.map((q, i) => `
+    <div class="question">
+      <p>${i + 1}. ${q.question}</p>
+      <div class="options">
+        ${q.options.map(opt => `
+          <label class="option">
+            <input type="radio" name="q${i}" value="${opt}">
+            ${opt}
+          </label>
+        `).join('')}
+      </div>
+    </div>
+  `).join('');
+  document.getElementById('testPart1').innerHTML = part1Html;
+
+  const part2Html = `
+    <div class="matching-pairs">
+      <div class="match-col">
+        <strong style="text-align:center;margin-bottom:8px;">Frases em Japonês</strong>
+        ${testPart2Pairs.map((p, i) => `
+          <div class="match-item" onclick="selectMatch('jp', ${i})" id="jp-${i}">${p.jp}</div>
+        `).join('')}
+      </div>
+      <div class="match-col">
+        <strong style="text-align:center;margin-bottom:8px;">Traduções</strong>
+        ${testPart2Pairs.map((p, i) => `
+          <div class="match-item" onclick="selectMatch('pt', ${i})" id="pt-${i}">${p.pt}</div>
+        `).join('')}
+      </div>
+    </div>
+  `;
+  document.getElementById('testPart2').innerHTML = part2Html;
+}
+
+let selectedMatch = { jp: null, pt: null };
+let matches = [];
+
+function selectMatch(type, index) {
+  const el = document.getElementById(`${type}-${index}`);
+  
+  if (el.classList.contains('matched')) return;
+  
+  if (selectedMatch[type] === index) {
+    el.classList.remove('selected');
+    selectedMatch[type] = null;
+  } else {
+    if (selectedMatch[type] !== null) {
+      document.getElementById(`${type}-${selectedMatch[type]}`).classList.remove('selected');
+    }
+    el.classList.add('selected');
+    selectedMatch[type] = index;
+  }
+
+  if (selectedMatch.jp !== null && selectedMatch.pt !== null) {
+    if (selectedMatch.jp === selectedMatch.pt) {
+      document.getElementById(`jp-${selectedMatch.jp}`).classList.add('matched');
+      document.getElementById(`pt-${selectedMatch.pt}`).classList.add('matched');
+      matches.push(selectedMatch.jp);
+      selectedMatch = { jp: null, pt: null };
+    }
+  }
+}
+
+function submitTest() {
+  let score = 0;
+  const total = testPart1Questions.length + testPart2Pairs.length;
+
+  testPart1Questions.forEach((q, i) => {
+    const answer = document.querySelector(`input[name="q${i}"]:checked`)?.value;
+    if (answer === q.correct) score++;
+  });
+
+  score += matches.length;
+  const percentage = Math.round((score / total) * 100);
+  const passed = percentage >= 80;
+
+  const resultHtml = `
+    <div class="result ${passed ? 'pass' : 'fail'}">
+      <p style="font-size:20px;margin-bottom:8px;">${passed ? '🎉 Parabéns!' : '❌ Tente novamente'}</p>
+      <p>Você acertou ${score} de ${total} (${percentage}%)</p>
+      <p style="font-size:13px;margin-top:12px;">
+        ${passed 
+          ? 'Você desbloqueou os 12 Mapas! Clique em "Mapas de Contexto" para começar sua jornada.' 
+          : 'Você precisa de 80% para desbloquear. Revise o conteúdo acima e tente novamente!'}
+      </p>
+    </div>
+  `;
+  document.getElementById('testResult').innerHTML = resultHtml;
+
+  if (passed) {
+    localStorage.setItem('aulaZeroCompleted', 'true');
+  }
+}
+
+function speak(text, lang) {
+  const utterance = new SpeechSynthesisUtterance(text);
+  utterance.lang = lang;
+  utterance.rate = 0.85;
+  window.speechSynthesis.cancel();
+  window.speechSynthesis.speak(utterance);
+}
+
+document.addEventListener('DOMContentLoaded', renderTest);
+</script>
+
+</body>
+</html>

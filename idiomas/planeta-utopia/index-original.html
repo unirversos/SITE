@@ -1,0 +1,604 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Planeta Utopia — simulador de situações | Unirversos Idiomas</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Baloo+2:wght@500;600;700&family=Zen+Maru+Gothic:wght@400;500;700&family=JetBrains+Mono:wght@400;600&display=swap');
+:root{
+  --paper:#FDF8F5; --white:#FFFFFF; --ink:#4A4149; --ink-soft:#8A7F86;
+  --line:#F0E6E2; --line-2:#E7DCE4;
+  --rose:#E08C86; --rose-deep:#C26F6C; --rose-soft:#FBEBE7;
+  --lav:#8B90C4; --lav-soft:#EEEFF9;
+  --sage:#7FA893; --sage-soft:#EAF3EE;
+  --gold:#C0913F; --gold-soft:#FBF2DF;
+  --hp:#D9736E; --hp-soft:#FBEAE6; --xp:#8B90C4; --xp-soft:#EEEFF9;
+}
+*{box-sizing:border-box;margin:0;padding:0;}
+@media (prefers-reduced-motion: reduce){ *{transition:none !important;animation:none !important;} }
+body{font-family:'Zen Maru Gothic',sans-serif;background:var(--paper);color:var(--ink);line-height:1.7;font-size:16px;-webkit-font-smoothing:antialiased;}
+body::before{content:'';position:fixed;inset:0;pointer-events:none;z-index:0;
+  background-image:radial-gradient(circle at 12% 10%, rgba(224,140,134,.10) 0, transparent 42%),
+                   radial-gradient(circle at 88% 34%, rgba(139,144,196,.09) 0, transparent 40%);}
+.page{position:relative;z-index:1;max-width:760px;margin:0 auto;padding:0 20px 90px;}
+.top{display:flex;align-items:center;justify-content:space-between;gap:14px;flex-wrap:wrap;padding:18px 0;}
+.brand{font-family:'Baloo 2',cursive;font-size:18px;font-weight:700;text-decoration:none;color:inherit;}
+.brand span{color:var(--rose);}
+.navlinks{display:flex;gap:14px;font-size:12.5px;}
+.navlinks a{color:var(--ink-soft);text-decoration:none;}
+.cover{text-align:center;padding:32px 0 20px;}
+.cover .kicker{font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:3px;text-transform:uppercase;color:var(--rose);margin-bottom:10px;}
+.cover h1{font-family:'Baloo 2',cursive;font-weight:700;font-size:clamp(28px,6vw,44px);line-height:1.15;margin-bottom:8px;}
+.cover h1 em{font-style:normal;color:var(--rose);}
+.cover p{color:var(--ink-soft);max-width:540px;margin:0 auto;}
+.btn{font-family:'Zen Maru Gothic',sans-serif;font-size:13.5px;font-weight:500;border:1.5px solid var(--rose);background:var(--rose);color:#fff;border-radius:22px;padding:9px 18px;cursor:pointer;display:inline-flex;align-items:center;gap:7px;transition:all .18s ease;}
+.btn:hover{background:var(--rose-deep);border-color:var(--rose-deep);}
+.btn.ghost{background:var(--white);color:var(--rose-deep);}
+.btn.ghost:hover{background:var(--rose-soft);}
+.btn[disabled]{opacity:.45;cursor:not-allowed;}
+.btn.big{font-size:15px;padding:12px 26px;}
+.card{background:var(--white);border:1.5px solid var(--line);border-radius:24px;padding:24px;margin-bottom:16px;box-shadow:0 4px 20px rgba(74,65,73,.05);}
+.crow{display:flex;align-items:center;gap:14px;flex-wrap:wrap;margin-bottom:14px;}
+.crow label{font-size:13px;color:var(--ink-soft);min-width:92px;font-weight:500;}
+.crow input{font-family:'JetBrains Mono',monospace;font-size:14.5px;border:1.5px solid var(--line);border-radius:12px;padding:8px 14px;background:var(--paper);color:var(--ink);outline:none;flex:1;min-width:150px;}
+.crow input:focus{border-color:var(--rose);}
+.choices-grid{display:flex;gap:10px;flex-wrap:wrap;}
+.choice{border:1.5px solid var(--line);background:var(--paper);border-radius:16px;padding:11px 15px;cursor:pointer;text-align:center;min-width:88px;transition:all .18s ease;font-family:inherit;}
+.choice:hover{transform:translateY(-2px);border-color:var(--rose);}
+.choice.sel{border-color:var(--rose);background:var(--rose-soft);box-shadow:0 0 0 3px rgba(224,140,134,.14);}
+.choice .ic{font-size:23px;display:block;margin-bottom:3px;}
+.choice .nm{font-size:12px;font-weight:600;}
+.choice .sub{font-size:10px;color:var(--ink-soft);}
+.sheet-top{display:flex;align-items:center;gap:14px;flex-wrap:wrap;margin-bottom:14px;}
+.avatar{width:56px;height:56px;border-radius:50%;background:var(--rose-soft);border:2.5px solid var(--rose);display:flex;align-items:center;justify-content:center;font-size:28px;flex-shrink:0;}
+.sheet-info{flex:1;min-width:160px;}
+.sheet-info h2{font-family:'Baloo 2',cursive;font-size:19px;font-weight:700;}
+.sheet-info .cls{font-size:12px;color:var(--rose-deep);}
+.lvl{background:var(--gold-soft);border:1.5px solid var(--gold);color:var(--gold);border-radius:14px;padding:5px 12px;text-align:center;font-family:'Baloo 2',cursive;font-weight:700;}
+.lvl .n{font-size:18px;line-height:1;}
+.lvl .t{font-size:8.5px;letter-spacing:1.5px;text-transform:uppercase;color:var(--ink-soft);font-family:'JetBrains Mono',monospace;font-weight:400;}
+.bars{display:grid;grid-template-columns:1fr 1fr;gap:10px;}
+.barbox .lbl{display:flex;justify-content:space-between;font-size:10.5px;font-family:'JetBrains Mono',monospace;letter-spacing:1px;text-transform:uppercase;color:var(--ink-soft);margin-bottom:3px;}
+.barbox .track{height:10px;background:var(--line);border-radius:20px;overflow:hidden;}
+.barbox.hp .track{background:var(--hp-soft);} .barbox.hp .fill{background:var(--hp);}
+.barbox.xp .track{background:var(--xp-soft);} .barbox.xp .fill{background:var(--xp);}
+.barbox .fill{height:100%;width:0;border-radius:20px;transition:width .5s ease;}
+.langtabs{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:14px;}
+.langtab{border:1.5px solid var(--line);background:var(--white);border-radius:14px;padding:8px 15px;cursor:pointer;font-family:inherit;font-size:13.5px;display:flex;align-items:center;gap:8px;transition:all .18s ease;}
+.langtab .code{font-family:'JetBrains Mono',monospace;font-size:11px;font-weight:600;background:var(--paper);border:1px solid var(--line);border-radius:8px;padding:2px 7px;color:var(--ink-soft);}
+.langtab.on{border-color:var(--rose);background:var(--rose-soft);}
+.langtab.on .code{background:var(--rose);border-color:var(--rose);color:#fff;}
+.territories{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:12px;}
+.terr{border:1.5px solid var(--line);background:var(--white);border-radius:18px;padding:16px;cursor:pointer;transition:all .18s ease;position:relative;font-family:inherit;text-align:left;}
+.terr:hover{transform:translateY(-3px);border-color:var(--rose);}
+.terr.locked{opacity:.5;cursor:not-allowed;filter:grayscale(.5);}
+.terr.done{border-color:var(--sage);background:var(--sage-soft);}
+.terr .chip{font-size:21px;margin-bottom:5px;}
+.terr h4{font-family:'Baloo 2',cursive;font-size:15px;font-weight:600;margin-bottom:2px;}
+.terr .meta{font-size:11px;color:var(--ink-soft);}
+.terr .badge{position:absolute;top:11px;right:11px;font-size:10.5px;font-family:'JetBrains Mono',monospace;background:var(--gold-soft);color:var(--gold);border:1px solid var(--gold);border-radius:12px;padding:2px 8px;}
+.terr.locked .lockic{position:absolute;top:11px;right:11px;font-size:14px;}
+
+/* ==== cena / simulador ==== */
+.scene-head{display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap;margin-bottom:12px;}
+.scene-head h2{font-family:'Baloo 2',cursive;font-size:21px;font-weight:700;}
+.backlink{display:inline-flex;align-items:center;gap:6px;font-size:13px;color:var(--rose-deep);background:none;border:none;cursor:pointer;font-family:inherit;}
+.intro{background:var(--lav-soft);border:1px solid #DFE1F4;border-radius:18px;padding:18px 20px;font-size:14.5px;color:#3E4488;margin-bottom:16px;font-style:italic;}
+.chat{display:flex;flex-direction:column;gap:12px;margin-bottom:16px;}
+.bubble{max-width:88%;border-radius:20px;padding:14px 18px;position:relative;animation:pop .25s ease;}
+@keyframes pop{from{opacity:0;transform:translateY(8px);}to{opacity:1;transform:none;}}
+.bubble.npc{align-self:flex-start;background:var(--white);border:1.5px solid var(--line);border-bottom-left-radius:6px;}
+.bubble.me{align-self:flex-end;background:var(--rose);color:#fff;border-bottom-right-radius:6px;}
+.bubble .who{font-size:10.5px;font-family:'JetBrains Mono',monospace;letter-spacing:1px;text-transform:uppercase;color:var(--ink-soft);margin-bottom:4px;}
+.bubble.me .who{color:#FBDDD8;}
+.bubble .line-txt{font-size:16px;font-weight:500;}
+.bubble .tr{font-size:12.5px;color:var(--ink-soft);margin-top:6px;display:none;}
+.bubble .tr.revealed{display:block;animation:pop .2s ease;}
+.trbtn{background:none;border:none;cursor:pointer;font-family:'JetBrains Mono',monospace;font-size:10.5px;letter-spacing:0.5px;color:var(--ink-soft);opacity:.7;padding:2px 0;margin-top:4px;display:inline-flex;align-items:center;gap:4px;}
+.trbtn:hover{opacity:1;color:var(--rose-deep);}
+
+.bubble.me .tr{color:#FBDDD8;}
+.bubble .replay{margin-top:8px;}
+.bubble.shake{animation:shake .35s ease;}
+@keyframes shake{0%,100%{transform:translateX(0);}25%{transform:translateX(-5px);}75%{transform:translateX(5px);}}
+.opts{display:flex;flex-direction:column;gap:8px;margin:6px 0 16px;}
+.opt{border:1.5px solid var(--line);background:var(--white);border-radius:16px;padding:12px 16px;cursor:pointer;font-family:inherit;font-size:14.5px;text-align:left;transition:all .15s ease;color:var(--ink);}
+.opt:hover{border-color:var(--rose);background:var(--rose-soft);}
+.opt.wrong{border-color:#C4685F;background:#FBEAE6;color:#C4685F;}
+.opt[disabled]{cursor:default;opacity:.6;}
+.hintbox{background:var(--gold-soft);border:1px dashed var(--gold);border-radius:14px;padding:12px 16px;font-size:13.5px;color:#7A5B21;margin-bottom:14px;}
+.boss-zone{border-top:2px dotted var(--line-2);padding-top:16px;margin-top:6px;}
+.boss-zone .ctx{font-size:14px;color:var(--ink-soft);margin-bottom:12px;}
+.kwrow{display:flex;gap:8px;flex-wrap:wrap;margin:8px 0 12px;}
+.kw{font-family:'JetBrains Mono',monospace;font-size:12px;border:1.5px solid var(--line);border-radius:14px;padding:4px 11px;color:var(--ink-soft);transition:all .2s ease;}
+.kw.hit{border-color:var(--sage);background:var(--sage-soft);color:var(--sage);}
+.boss-zone textarea{width:100%;min-height:96px;border:1.5px solid var(--line);border-radius:16px;padding:13px;font-family:'Zen Maru Gothic',sans-serif;font-size:15px;color:var(--ink);background:var(--paper);outline:none;resize:vertical;}
+.boss-zone textarea:focus{border-color:var(--rose);}
+.selfcheck{background:var(--gold-soft);border:1px dashed var(--gold);border-radius:16px;padding:14px 16px;margin-top:12px;}
+.selfcheck h4{font-size:13.5px;font-weight:600;color:#7A5B21;margin-bottom:6px;}
+.selfcheck label{display:flex;align-items:flex-start;gap:8px;font-size:13px;color:#7A5B21;padding:4px 0;cursor:pointer;}
+.selfcheck .model{background:var(--white);border:1px solid var(--line);border-radius:12px;padding:10px 12px;margin-bottom:10px;font-size:14px;color:var(--ink);}
+.selfcheck .model .lbl{font-size:10.5px;font-family:'JetBrains Mono',monospace;letter-spacing:1px;text-transform:uppercase;color:var(--ink-soft);margin-bottom:3px;}
+details.pieces{background:var(--white);border:1.5px solid var(--line);border-radius:16px;margin-bottom:14px;}
+details.pieces summary{list-style:none;cursor:pointer;padding:12px 16px;font-size:13.5px;color:var(--rose-deep);font-weight:500;}
+details.pieces summary::-webkit-details-marker{display:none;}
+details.pieces .plist{display:flex;gap:8px;flex-wrap:wrap;padding:0 16px 14px;}
+.pbtn{border:1.5px solid var(--line);background:var(--paper);border-radius:12px;padding:7px 12px;cursor:pointer;font-family:inherit;font-size:13px;transition:all .15s ease;}
+.pbtn:hover{border-color:var(--rose);}
+.pbtn small{display:block;font-size:10.5px;color:var(--ink-soft);}
+.passgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(92px,1fr));gap:10px;}
+.pstamp{border:2px dashed var(--line-2);border-radius:50%;aspect-ratio:1;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;font-family:'JetBrains Mono',monospace;font-size:9px;color:var(--ink-soft);padding:8px;transform:rotate(-6deg);line-height:1.25;}
+.pstamp.got{border-style:solid;border-color:var(--sage);background:var(--sage-soft);color:var(--sage);}
+.pstamp .em{font-size:17px;}
+.pstamp .cd{font-weight:600;font-size:10px;margin-top:2px;}
+.reset-row{text-align:right;margin-top:12px;}
+.reset-row button{background:none;border:none;cursor:pointer;font-family:'JetBrains Mono',monospace;font-size:10.5px;color:var(--ink-soft);opacity:.6;}
+.reset-row button:hover{opacity:1;color:var(--rose-deep);}
+.toast{position:fixed;left:50%;bottom:28px;transform:translateX(-50%) translateY(140%);background:var(--ink);color:#fff;border-radius:20px;padding:14px 26px;font-family:'Baloo 2',cursive;font-size:16px;box-shadow:0 8px 26px rgba(0,0,0,.2);transition:transform .35s ease;z-index:20;}
+.toast.show{transform:translateX(-50%) translateY(0);}
+.stamp-pop{position:fixed;inset:0;background:rgba(74,65,73,.35);display:flex;align-items:center;justify-content:center;z-index:30;opacity:0;pointer-events:none;transition:opacity .3s ease;}
+.stamp-pop.show{opacity:1;pointer-events:auto;}
+.stamp-card{background:var(--white);border-radius:26px;padding:34px 38px;text-align:center;max-width:340px;transform:scale(.9);transition:transform .3s ease;}
+.stamp-pop.show .stamp-card{transform:scale(1);}
+.stamp-circle{width:120px;height:120px;border-radius:50%;border:3px solid var(--sage);color:var(--sage);display:flex;align-items:center;justify-content:center;flex-direction:column;margin:0 auto 16px;transform:rotate(-8deg);font-family:'Baloo 2',cursive;font-weight:700;padding:10px;background:var(--sage-soft);}
+.stamp-circle .big{font-size:26px;line-height:1;}
+.stamp-circle .small{font-size:11px;margin-top:4px;line-height:1.3;}
+.stamp-card h3{font-family:'Baloo 2',cursive;font-size:20px;margin-bottom:6px;}
+.stamp-card p{font-size:13.5px;color:var(--ink-soft);margin-bottom:16px;}
+.foot{margin-top:44px;padding-top:20px;border-top:2px dotted var(--line-2);display:flex;align-items:center;justify-content:space-between;gap:14px;flex-wrap:wrap;font-size:13px;color:var(--ink-soft);}
+.foot .b{font-family:'Baloo 2',cursive;font-weight:600;color:var(--ink);}
+.note{font-size:12px;color:var(--ink-soft);margin-top:10px;text-align:center;}
+.hidden{display:none;}
+
+</style>
+</head>
+<body>
+<main class="page">
+  <header class="top">
+    <a href="/idiomas/" class="brand">unirversos <span>/ idiomas</span></a>
+    <span class="navlinks"><a href="/">início</a><a href="/idiomas/">idiomas</a><a href="/idiomas/mapas/">mapas</a><a href="/sobre/">sobre</a></span>
+  </header>
+
+  <section id="setup">
+    <div class="cover">
+      <p class="kicker">planeta utopia</p>
+      <h1>Você <em>sobreviveria</em> à cena?</h1>
+      <p>Cada território é uma situação real acontecendo: o oficial pergunta, o garçom oferece, o motorista avisa. Responda à altura, resolva o momento crítico e ganhe o carimbo.</p>
+    </div>
+    <div class="card">
+      <div class="crow"><label>Nome</label><input id="c-name" placeholder="seu nome de viajante" oninput="checkStart()"></div>
+      <div class="crow" style="align-items:flex-start;"><label style="padding-top:8px;">Ser</label><div class="choices-grid" id="beings"></div></div>
+      <div style="text-align:center;margin-top:16px;"><button class="btn big" id="start-btn" disabled onclick="startGame()">⚔ Entrar no planeta</button></div>
+    </div>
+  </section>
+
+  <section id="hub" class="hidden">
+    <div class="card">
+      <div class="sheet-top">
+        <div class="avatar" id="av">🧚</div>
+        <div class="sheet-info"><h2 id="s-name"></h2><p class="cls" id="s-class"></p></div>
+        <div class="lvl"><div class="n" id="s-lvl">1</div><div class="t">nível</div></div>
+      </div>
+      <div class="bars">
+        <div class="barbox hp"><div class="lbl"><span>HP</span><span id="hp-t"></span></div><div class="track"><div class="fill" id="hp-f"></div></div></div>
+        <div class="barbox xp"><div class="lbl"><span>XP</span><span id="xp-t"></span></div><div class="track"><div class="fill" id="xp-f"></div></div></div>
+      </div>
+    </div>
+    <div class="card">
+      <p style="font-family:'Baloo 2',cursive;font-size:18px;font-weight:600;margin-bottom:4px;">Mapa-múndi</p>
+      <p style="font-size:13px;color:var(--ink-soft);margin-bottom:14px;">Cada território é uma cena. Cada idioma vale um carimbo próprio no passaporte.</p>
+      <div class="langtabs" id="langtabs"></div>
+      <div class="territories" id="territories"></div>
+    </div>
+    <div class="card">
+      <p style="font-family:'Baloo 2',cursive;font-size:18px;font-weight:600;margin-bottom:2px;">Passaporte</p>
+      <p style="font-size:13px;color:var(--ink-soft);margin-bottom:14px;" id="pass-count"></p>
+      <div class="passgrid" id="passgrid"></div>
+      <div class="reset-row"><button onclick="resetGame()">↺ recomeçar jornada</button></div>
+    </div>
+  </section>
+
+  <section id="scene" class="hidden">
+    <div class="scene-head">
+      <button class="backlink" id="back-btn" onclick="backToHub()"></button>
+      <h2 id="scene-title"></h2>
+    </div>
+    <details class="pieces"><summary id="pieces-sum"></summary><div class="plist" id="pieces-list"></div></details>
+    <div class="intro" id="scene-intro"></div>
+    <div class="chat" id="chat"></div>
+    <div id="interaction"></div>
+  </section>
+
+  <footer class="foot">
+    <span class="b">unirversos — tudo conectado</span>
+    <span>planeta utopia · simulador de situações</span>
+  </footer>
+  <p class="note">🔊 usa a voz do navegador no idioma do território. Progresso vale só nesta sessão.</p>
+</main>
+<div class="toast" id="toast"></div>
+<div class="stamp-pop" id="stamp-pop">
+  <div class="stamp-card">
+    <div class="stamp-circle"><span class="big">🏅</span><span class="small" id="stamp-label"></span></div>
+    <h3 id="stamp-title"></h3>
+    <p id="stamp-sub"></p>
+    <button class="btn" onclick="closeStamp()">continuar a jornada →</button>
+    <p id="stamp-next" style="margin-top:10px;"></p>
+    <p id="stamp-backmap" style="margin-top:6px;display:none;"><a href="/idiomas/mapas/" style="font-size:13px;color:var(--rose-deep);">↩ voltar aos mapas de contexto</a></p>
+  </div>
+</div>
+
+<script>
+const DATA = {"packs": {"ja": {"name": "Japonês", "code": "JP", "tts": "ja-JP", "territories": [{"id": "aeroporto", "num": "00", "chip": "🛂 Aeroporto e imigração", "tts": "ja-JP", "pieces": [{"say": "パスポート", "label": "パスポート", "ro": "pasupooto", "pt": "passaporte"}, {"say": "ビザ", "label": "ビザ", "ro": "biza", "pt": "visto"}, {"say": "観光", "label": "観光", "ro": "kankou", "pt": "turismo"}, {"say": "仕事", "label": "仕事", "ro": "shigoto", "pt": "trabalho"}, {"say": "目的", "label": "目的", "ro": "mokuteki", "pt": "motivo / propósito"}, {"say": "何日間", "label": "何日間", "ro": "nannichikan", "pt": "por quantos dias"}, {"say": "十日", "label": "十日", "ro": "tooka", "pt": "dez dias"}], "phrases": [{"say": "ブラジルから来ました。", "show": "Burajiru kara kimashita.", "pt": "Vim do Brasil."}, {"say": "十日間です。", "show": "Tooka-kan desu.", "pt": "Fico dez dias."}, {"say": "目的は何ですか。", "show": "Mokuteki wa nan desu ka.", "pt": "Qual o motivo da viagem?"}, {"say": "観光です。", "show": "Kankou desu.", "pt": "É turismo."}, {"say": "何日間ですか。", "show": "Nannichikan desu ka.", "pt": "Por quantos dias?"}, {"say": "パスポートとビザです。", "show": "Pasupooto to biza desu.", "pt": "Passaporte e visto. (a partícula to = \"e\")"}], "keywords": ["pasupooto", "biza", "kankou", "shigoto", "mokuteki"]}, {"id": "hotel", "num": "01", "chip": "🏨 O hotel", "tts": "ja-JP", "pieces": [{"say": "鍵", "label": "鍵", "ro": "kagi", "pt": "chave"}, {"say": "カード", "label": "カード", "ro": "kaado", "pt": "cartão-chave"}, {"say": "荷物", "label": "荷物", "ro": "nimotsu", "pt": "bagagem"}, {"say": "ワイファイ", "label": "Wi-Fi", "ro": "waifai", "pt": "wi-fi"}, {"say": "部屋", "label": "部屋", "ro": "heya", "pt": "quarto"}, {"say": "トイレ", "label": "トイレ", "ro": "toire", "pt": "banheiro"}, {"say": "朝食", "label": "朝食", "ro": "choushoku", "pt": "café da manhã"}, {"say": "エレベーター", "label": "エレベーター", "ro": "erebeetaa", "pt": "elevador"}, {"say": "二階", "label": "二階", "ro": "nikai", "pt": "2º andar"}], "phrases": [{"say": "ちょっと待って下さい。", "show": "Chotto matte kudasai.", "pt": "Um segundinho, por favor!"}, {"say": "英語でいいですか。", "show": "Eigo de ii desu ka.", "pt": "Pode ser em inglês?"}, {"say": "予約があります。", "show": "Yoyaku ga arimasu.", "pt": "Tenho uma reserva."}, {"say": "三人です。", "show": "San nin desu.", "pt": "Somos três."}, {"say": "鍵もう一つありますか。", "show": "Kagi mou hitotsu arimasu ka.", "pt": "Tem mais uma chave?"}, {"say": "かしこまりました。部屋は二階です。", "show": "Kashikomarimashita. Heya wa nikai desu.", "pt": "Entendido. O quarto é no 2º andar."}], "keywords": ["kagi", "kaado", "nimotsu", "waifai", "heya"]}, {"id": "conbini", "num": "02", "chip": "🏪 Kombini", "tts": "ja-JP", "pieces": [{"say": "これ", "label": "これ", "ro": "kore", "pt": "isto"}, {"say": "水", "label": "水", "ro": "mizu", "pt": "água"}, {"say": "お弁当", "label": "お弁当", "ro": "obentou", "pt": "marmita / bentô"}, {"say": "袋", "label": "袋", "ro": "fukuro", "pt": "sacola"}, {"say": "箸", "label": "箸", "ro": "hashi", "pt": "hashi"}, {"say": "お会計", "label": "お会計", "ro": "okaikei", "pt": "a conta"}, {"say": "温めますか", "label": "温めますか", "ro": "atatamemasu ka", "pt": "aquecer?"}, {"say": "大丈夫です", "label": "大丈夫です", "ro": "daijoubu desu", "pt": "não precisa"}], "phrases": [{"say": "お会計をお願いします。", "show": "Okaikei o onegaishimasu.", "pt": "A conta, por favor."}, {"say": "大丈夫です。", "show": "Daijoubu desu.", "pt": "Não precisa, obrigada."}, {"say": "すみません、これをください。", "show": "Sumimasen, kore o kudasai.", "pt": "Com licença, isto por favor."}, {"say": "ベジタリアン料理はありますか。", "show": "Bejitarian ryouri wa arimasu ka.", "pt": "Tem comida vegetariana?"}, {"say": "温めますか。", "show": "Atatamemasu ka.", "pt": "Quer que eu esquente?"}, {"say": "かしこまりました。", "show": "Kashikomarimashita.", "pt": "Entendido (fala do atendente)."}], "keywords": ["kore", "mizu", "obentou", "fukuro", "hashi"]}, {"id": "restaurante", "num": "03", "chip": "🍽️ Restaurante", "tts": "ja-JP", "pieces": [{"say": "メニュー", "label": "メニュー", "ro": "menyuu", "pt": "cardápio"}, {"say": "お勘定", "label": "お勘定", "ro": "okanjou", "pt": "a conta"}, {"say": "箸", "label": "箸", "ro": "hashi", "pt": "hashi"}, {"say": "フォーク", "label": "フォーク", "ro": "fooku", "pt": "garfo"}, {"say": "スプーン", "label": "スプーン", "ro": "supuun", "pt": "colher"}, {"say": "セット", "label": "セット", "ro": "setto", "pt": "combo"}, {"say": "単品", "label": "単品", "ro": "tanpin", "pt": "só o item"}, {"say": "店内", "label": "店内", "ro": "tennai", "pt": "comer aqui"}, {"say": "お持ち帰り", "label": "お持ち帰り", "ro": "omochikaeri", "pt": "pra viagem"}], "phrases": [{"say": "メニューを見せてもらえますか。", "show": "Menyuu o misete moraemasu ka.", "pt": "Posso ver o cardápio?"}, {"say": "何名様ですか。", "show": "Nan mei sama desu ka.", "pt": "Mesa para quantos?"}, {"say": "三名です。", "show": "San mei desu.", "pt": "Somos três."}, {"say": "メニューを見せてもらえますか。", "show": "Menyuu o misete moraemasu ka.", "pt": "Posso ver o cardápio?"}, {"say": "チョコレートありますか。", "show": "Chokoreeto arimasu ka.", "pt": "Tem chocolate? (troque a palavra e pergunte qualquer coisa)"}], "keywords": ["menyuu", "okanjou", "hashi", "fooku", "supuun"]}, {"id": "trens", "num": "04", "chip": "🚆 Trens e metrô", "tts": "ja-JP", "pieces": [{"say": "駅", "label": "駅", "ro": "eki", "pt": "estação"}, {"say": "ホーム", "label": "ホーム", "ro": "hoomu", "pt": "plataforma"}, {"say": "出口", "label": "出口", "ro": "deguchi", "pt": "saída"}, {"say": "トイレ", "label": "トイレ", "ro": "toire", "pt": "banheiro"}, {"say": "乗り換え", "label": "乗り換え", "ro": "norikae", "pt": "baldeação"}, {"say": "まっすぐ", "label": "まっすぐ", "ro": "massugu", "pt": "em frente"}, {"say": "右", "label": "右", "ro": "migi", "pt": "direita"}, {"say": "左", "label": "左", "ro": "hidari", "pt": "esquerda"}], "phrases": [{"say": "新宿に行きたいです。", "show": "Shinjuku ni ikitai desu.", "pt": "Quero ir para Shinjuku."}, {"say": "電車で行きます。", "show": "Densha de ikimasu.", "pt": "Vou de trem. (a partícula de = meio de transporte)"}, {"say": "切符を買います。", "show": "Kippu o kaimasu.", "pt": "Compro o bilhete."}, {"say": "はい、分かりました。", "show": "Hai, wakarimashita.", "pt": "Sim, entendido."}], "keywords": ["eki", "hoomu", "deguchi", "toire", "norikae"]}, {"id": "compras", "num": "05", "chip": "🛍️ Compras e tax-free", "tts": "ja-JP", "pieces": [{"say": "これ", "label": "これ", "ro": "kore", "pt": "isto"}, {"say": "お土産", "label": "お土産", "ro": "omiyage", "pt": "lembrancinha"}, {"say": "免税", "label": "免税", "ro": "menzei", "pt": "tax-free"}, {"say": "カード", "label": "カード", "ro": "kaado", "pt": "cartão"}, {"say": "現金", "label": "現金", "ro": "genkin", "pt": "dinheiro vivo"}, {"say": "領収書", "label": "領収書", "ro": "ryoushuusho", "pt": "nota fiscal"}, {"say": "一つ", "label": "一つ", "ro": "hitotsu", "pt": "uma unidade"}, {"say": "二つ", "label": "二つ", "ro": "futatsu", "pt": "duas unidades"}, {"say": "いくら", "label": "いくら", "ro": "ikura", "pt": "quanto custa"}], "phrases": [{"say": "カードでいいですか", "show": "Kaado de ii desu ka", "pt": "Pode ser no cartão?"}, {"say": "免税はできますか", "show": "Menzei wa dekimasu ka", "pt": "Vocês fazem tax-free?"}, {"say": "じゃ、これにします。", "show": "Ja, kore ni shimasu.", "pt": "Então vou levar este."}, {"say": "三千円です。", "show": "Sanzen en desu.", "pt": "São 3 mil ienes."}, {"say": "五千円です。", "show": "Gosen en desu.", "pt": "São 5 mil ienes."}, {"say": "これは高いです。", "show": "Kore wa takai desu.", "pt": "Isto é caro."}], "keywords": ["kore", "omiyage", "menzei", "kaado", "genkin"]}, {"id": "roupas", "num": "06", "chip": "👗 Roupas e provador", "tts": "ja-JP", "pieces": [{"say": "試着室", "label": "試着室", "ro": "shichakushitsu", "pt": "provador"}, {"say": "レジ", "label": "レジ", "ro": "reji", "pt": "caixa"}, {"say": "Tシャツ", "label": "Tシャツ", "ro": "tii-shatsu", "pt": "camiseta"}, {"say": "ズボン", "label": "ズボン", "ro": "zubon", "pt": "calça"}, {"say": "靴", "label": "靴", "ro": "kutsu", "pt": "sapatos"}, {"say": "上着", "label": "上着", "ro": "uwagi", "pt": "casaco"}, {"say": "もっと大きいの", "label": "もっと大きいの", "ro": "motto ookii no", "pt": "um maior"}, {"say": "もっと小さいの", "label": "もっと小さいの", "ro": "motto chiisai no", "pt": "um menor"}, {"say": "ほかの色", "label": "ほかの色", "ro": "hoka no iro", "pt": "outra cor"}], "phrases": [{"say": "着替えてみてもいいですか。", "show": "Kigaete mitemo ii desu ka.", "pt": "Posso experimentar?"}, {"say": "ちょっと見てもいいですか。", "show": "Chotto mitemo ii desu ka.", "pt": "Posso só dar uma olhada?"}, {"say": "試着室はどこですか。", "show": "Shichakushitsu wa doko desu ka.", "pt": "Onde fica o provador?"}, {"say": "もっと大きいのがありますか。", "show": "Motto ookii no ga arimasu ka.", "pt": "Tem um maior?"}, {"say": "これはブラジルで使えますか。", "show": "Kore wa Burajiru de tsukaemasu ka.", "pt": "Isto dá pra usar no Brasil? (voltagem, compatibilidade)"}, {"say": "どうぞごゆっくり。", "show": "Doozo goyukkuri.", "pt": "Fique à vontade."}], "keywords": ["shichakushitsu", "reji", "tii-shatsu", "zubon", "kutsu"]}, {"id": "sos", "num": "07", "chip": "🆘 Emergência", "tts": "ja-JP", "pieces": [{"say": "病院", "label": "病院", "ro": "byouin", "pt": "hospital"}, {"say": "交番", "label": "交番", "ro": "kouban", "pt": "posto policial"}, {"say": "薬", "label": "薬", "ro": "kusuri", "pt": "remédio"}, {"say": "頭", "label": "頭", "ro": "atama", "pt": "cabeça"}, {"say": "お腹", "label": "お腹", "ro": "onaka", "pt": "barriga"}, {"say": "救急車", "label": "救急車", "ro": "kyuukyuusha", "pt": "ambulância"}, {"say": "警察", "label": "警察", "ro": "keisatsu", "pt": "polícia"}, {"say": "助けて", "label": "助けて", "ro": "tasukete", "pt": "socorro!"}], "phrases": [{"say": "道に迷いました。", "show": "Michi ni mayoimashita.", "pt": "Perdi o caminho."}, {"say": "すみません、道に迷いました。", "show": "Sumimasen, michi ni mayoimashita.", "pt": "Com licença, estou perdida."}, {"say": "病院はどこですか。", "show": "Byouin wa doko desu ka.", "pt": "Onde fica o hospital?"}, {"say": "薬をください。", "show": "Kusuri o kudasai.", "pt": "Remédio, por favor."}, {"say": "あのビルの隣です。", "show": "Ano biru no tonari desu.", "pt": "É ao lado daquele prédio."}], "keywords": ["byouin", "kouban", "kusuri", "atama", "onaka"]}, {"id": "base", "num": "08", "chip": "🤝 Apresentação", "tts": "ja-JP", "pieces": [{"say": "おはようございます", "label": "おはようございます", "ro": "ohayou gozaimasu", "pt": "bom dia"}, {"say": "こんにちは", "label": "こんにちは", "ro": "konnichiwa", "pt": "boa tarde / olá"}, {"say": "こんばんは", "label": "こんばんは", "ro": "konbanwa", "pt": "boa noite"}, {"say": "はじめまして", "label": "はじめまして", "ro": "hajimemashite", "pt": "prazer em conhecer"}, {"say": "すみません", "label": "すみません", "ro": "sumimasen", "pt": "com licença / desculpe"}, {"say": "ありがとうございます", "label": "ありがとうございます", "ro": "arigatou gozaimasu", "pt": "obrigada(o)"}, {"say": "私", "label": "私", "ro": "watashi", "pt": "eu"}, {"say": "ブラジル", "label": "ブラジル", "ro": "Burajiru", "pt": "Brasil"}], "phrases": [{"say": "よろしくお願いします。", "show": "Yoroshiku onegaishimasu.", "pt": "Um prazer — conto com você."}, {"say": "こんにちは！はじめまして。", "show": "Konnichiwa! Hajimemashite.", "pt": "Olá! Prazer em conhecer."}, {"say": "私はキクチです。", "show": "Watashi wa Kikuchi desu.", "pt": "Eu sou Kikuchi. (wa marca o tópico)"}, {"say": "キクチですか。", "show": "Kikuchi desu ka.", "pt": "É Kikuchi? (o ka transforma em pergunta)"}, {"say": "ブラジルからです。", "show": "Burajiru kara desu.", "pt": "Sou do Brasil. (versão curta, sem verbo)"}], "keywords": ["ohayou gozaimasu", "konnichiwa", "konbanwa", "hajimemashite", "sumimasen"]}, {"id": "numeros", "num": "09", "chip": "🕒 Horas e números", "tts": "ja-JP", "pieces": [{"say": "今", "label": "今", "ro": "ima", "pt": "agora"}, {"say": "何時", "label": "何時", "ro": "nanji", "pt": "que horas"}, {"say": "午前", "label": "午前", "ro": "gozen", "pt": "da manhã (AM)"}, {"say": "午後", "label": "午後", "ro": "gogo", "pt": "da tarde (PM)"}, {"say": "今日", "label": "今日", "ro": "kyou", "pt": "hoje"}, {"say": "明日", "label": "明日", "ro": "ashita", "pt": "amanhã"}, {"say": "会いましょう", "label": "会いましょう", "ro": "aimashou", "pt": "vamos nos encontrar"}], "phrases": [{"say": "今何時ですか。", "show": "Ima nanji desu ka.", "pt": "Que horas são agora?"}, {"say": "午後三時です。", "show": "Gogo sanji desu.", "pt": "São 15h (três da tarde)."}, {"say": "午前九時に会いましょう。", "show": "Gozen kuji ni aimashou.", "pt": "Vamos nos encontrar às 9h da manhã."}, {"say": "今日は日曜日です。", "show": "Kyou wa nichiyoubi desu.", "pt": "Hoje é domingo."}, {"say": "明日は月曜日です。", "show": "Ashita wa getsuyoubi desu.", "pt": "Amanhã é segunda-feira."}], "keywords": ["ima", "nanji", "gozen", "gogo", "kyou"]}, {"id": "planos", "num": "10", "chip": "🎉 Planos e convites", "tts": "ja-JP", "pieces": [{"say": "行きましょう", "label": "行きましょう", "ro": "ikimashou", "pt": "vamos (ir)"}, {"say": "食べましょう", "label": "食べましょう", "ro": "tabemashou", "pt": "vamos comer"}, {"say": "したい", "label": "したい", "ro": "shitai", "pt": "quero fazer"}, {"say": "一緒に", "label": "一緒に", "ro": "issho ni", "pt": "juntos"}, {"say": "いいですね", "label": "いいですね", "ro": "ii desu ne", "pt": "boa ideia!"}, {"say": "何", "label": "何", "ro": "nani", "pt": "o quê"}, {"say": "京都", "label": "京都", "ro": "Kyoto", "pt": "Kyoto"}], "phrases": [{"say": "いいですね！一緒に行きましょう。", "show": "Ii desu ne! Issho ni ikimashou.", "pt": "Boa ideia! Vamos juntos."}, {"say": "明日何をしたいですか。", "show": "Ashita nani o shitai desu ka.", "pt": "O que você quer fazer amanhã?"}, {"say": "京都に行きたいです。", "show": "Kyoto ni ikitai desu.", "pt": "Quero ir a Kyoto."}, {"say": "何を食べましょうか。", "show": "Nani o tabemashou ka.", "pt": "O que vamos comer?"}, {"say": "京都はいいですね。", "show": "Kyoto wa ii desu ne.", "pt": "Kyoto é legal, né."}], "keywords": ["ikimashou", "tabemashou", "shitai", "issho ni", "ii desu ne"]}, {"id": "placas", "num": "11", "chip": "🪧 Sinalização", "tts": "ja-JP", "pieces": [{"say": "入口", "label": "入口", "ro": "iriguchi", "pt": "entrada"}, {"say": "出口", "label": "出口", "ro": "deguchi", "pt": "saída"}, {"say": "非常口", "label": "非常口", "ro": "hijouguchi", "pt": "saída de emergência"}, {"say": "お手洗い", "label": "お手洗い", "ro": "otearai", "pt": "banheiro"}, {"say": "改札", "label": "改札", "ro": "kaisatsu", "pt": "catraca"}, {"say": "乗り場", "label": "乗り場", "ro": "noriba", "pt": "embarque"}, {"say": "禁煙", "label": "禁煙", "ro": "kin'en", "pt": "proibido fumar"}, {"say": "危険", "label": "危険", "ro": "kiken", "pt": "perigo"}], "phrases": [{"say": "あれは何ですか。", "show": "Are wa nan desu ka.", "pt": "O que é aquilo?"}, {"say": "入口、出口、非常口", "show": "[kanji] + 口 → é uma porta", "pt": "iriguchi · deguchi · hijouguchi — toda passagem termina em 口"}, {"say": "禁煙、立入禁止", "show": "禁 + [ação] → é proibido", "pt": "kin'en (proibido fumar) · tachiiri kinshi (entrada proibida)"}, {"say": "営業中", "show": "[kanji] + 中 → em andamento", "pt": "eigyouchuu = aberto, funcionando agora"}, {"say": "あれは何ですか。", "show": "Are wa nan desu ka.", "pt": "O que é aquilo?"}, {"say": "出口はあそこです。", "show": "Deguchi wa asoko desu.", "pt": "A saída é ali."}], "keywords": ["iriguchi", "deguchi", "hijouguchi", "otearai", "kaisatsu"]}]}, "en": {"name": "Inglês", "code": "EN", "tts": "en-US", "territories": [{"id": "en-airport", "num": "00", "chip": "🛂 Airport e imigração", "tts": "en-US", "pieces": [{"say": "passport", "label": "passport", "ro": "PÁS-port", "pt": "passaporte"}, {"say": "luggage", "label": "luggage", "ro": "LÂ-guedj", "pt": "bagagem"}, {"say": "vacation", "label": "vacation", "ro": "vei-QUÊI-xon", "pt": "férias / turismo"}, {"say": "business", "label": "business", "ro": "BÍZ-nes", "pt": "negócios"}, {"say": "purpose", "label": "purpose", "ro": "PÂR-pos", "pt": "motivo"}, {"say": "how long", "label": "how long", "ro": "rau LONG", "pt": "por quanto tempo"}, {"say": "ten days", "label": "ten days", "ro": "ten DEIZ", "pt": "dez dias"}], "phrases": [{"say": "I'm from Brazil.", "show": "I'm from Brazil.", "pt": "Sou do Brasil."}, {"say": "I'm staying for ten days.", "show": "I'm staying for ten days.", "pt": "Fico dez dias."}, {"say": "What is the purpose of your visit?", "show": "What is the purpose of your visit?", "pt": "Qual o motivo da sua visita?"}, {"say": "I'm here on vacation.", "show": "I'm here on vacation.", "pt": "Estou aqui a turismo."}, {"say": "I'm staying at a hotel in the city.", "show": "I'm staying at a hotel in the city.", "pt": "Vou ficar num hotel na cidade."}], "keywords": ["PÁS-port", "LÂ-guedj", "vei-QUÊI-xon", "BÍZ-nes", "PÂR-pos"]}, {"id": "en-hotel", "num": "01", "chip": "🏨 O hotel", "tts": "en-US", "pieces": [{"say": "key", "label": "key", "ro": "QUÍ", "pt": "chave"}, {"say": "room", "label": "room", "ro": "RÚM", "pt": "quarto"}, {"say": "wi-fi password", "label": "wi-fi password", "ro": "uai-fai PÁS-uord", "pt": "senha do wi-fi"}, {"say": "luggage", "label": "luggage", "ro": "LÂ-guedj", "pt": "bagagem"}, {"say": "reservation", "label": "reservation", "ro": "ré-zer-VÊI-xon", "pt": "reserva"}, {"say": "check-out", "label": "check-out", "ro": "tchec-ÁUT", "pt": "saída do hotel"}, {"say": "second floor", "label": "second floor", "ro": "SÉ-cond flór", "pt": "2º andar"}], "phrases": [{"say": "Sorry, could you say that again?", "show": "Sorry, could you say that again?", "pt": "Desculpe, pode repetir?"}, {"say": "I have a reservation under Silva.", "show": "I have a reservation under Silva.", "pt": "Tenho reserva no nome de Silva."}, {"say": "Breakfast is from seven to ten.", "show": "Breakfast is from seven to ten.", "pt": "O café é das 7h às 10h."}, {"say": "What time is check-out?", "show": "What time is check-out?", "pt": "Que horas é o check-out?"}], "keywords": ["QUÍ", "RÚM", "uai-fai PÁS-uord", "LÂ-guedj", "ré-zer-VÊI-xon"]}, {"id": "en-food", "num": "02", "chip": "🍽️ Restaurante e café", "tts": "en-US", "pieces": [{"say": "this one", "label": "this one", "ro": "DÍS uan", "pt": "este aqui"}, {"say": "water", "label": "water", "ro": "UÓ-ter", "pt": "água"}, {"say": "the check", "label": "the check", "ro": "da TCHÉC", "pt": "a conta"}, {"say": "menu", "label": "menu", "ro": "MÊ-niu", "pt": "cardápio"}, {"say": "table for two", "label": "table for two", "ro": "TÊI-bol for tchú", "pt": "mesa pra dois"}, {"say": "allergic", "label": "allergic", "ro": "a-LÂR-djic", "pt": "alérgico(a)"}, {"say": "to go", "label": "to go", "ro": "tchu GÔU", "pt": "pra viagem"}], "phrases": [{"say": "A table for two, please.", "show": "A table for two, please.", "pt": "Uma mesa pra dois, por favor."}, {"say": "Could I get the check, please?", "show": "Could I get the check, please?", "pt": "A conta, por favor."}, {"say": "For here or to go?", "show": "For here or to go?", "pt": "Pra comer aqui ou pra levar?"}, {"say": "I'm allergic to peanuts.", "show": "I'm allergic to peanuts.", "pt": "Sou alérgica a amendoim."}], "keywords": ["DÍS uan", "UÓ-ter", "da TCHÉC", "MÊ-niu", "TÊI-bol for tchú"]}, {"id": "en-transit", "num": "03", "chip": "🚇 Transporte", "tts": "en-US", "pieces": [{"say": "train", "label": "train", "ro": "TRÊIN", "pt": "trem"}, {"say": "bus", "label": "bus", "ro": "BÂS", "pt": "ônibus"}, {"say": "ticket", "label": "ticket", "ro": "TÍ-quet", "pt": "bilhete"}, {"say": "platform", "label": "platform", "ro": "PLÁT-form", "pt": "plataforma"}, {"say": "station", "label": "station", "ro": "STÊI-xon", "pt": "estação"}, {"say": "restroom", "label": "restroom", "ro": "RÉST-rum", "pt": "banheiro"}, {"say": "downtown", "label": "downtown", "ro": "dáun-TÁUN", "pt": "centro"}, {"say": "left · right", "label": "left · right", "ro": "LÉFT · RÁIT", "pt": "esquerda · direita"}], "phrases": [{"say": "One ticket to downtown, please.", "show": "One ticket to downtown, please.", "pt": "Um bilhete pro centro, por favor."}, {"say": "Does this bus go to the airport?", "show": "Does this bus go to the airport?", "pt": "Este ônibus vai pro aeroporto?"}, {"say": "Change at Central Station.", "show": "Change at Central Station.", "pt": "Troque na Estação Central."}, {"say": "Where is the platform?", "show": "Where is the platform?", "pt": "Onde fica a plataforma?"}], "keywords": ["TRÊIN", "BÂS", "TÍ-quet", "PLÁT-form", "STÊI-xon"]}]}, "pt": {"name": "Português", "code": "PT", "tts": "pt-BR", "territories": [{"id": "pt-intro", "num": "00", "chip": "🤝 Introductions", "tts": "pt-BR", "pieces": [{"say": "oi", "label": "oi", "ro": "oy", "pt": "hi"}, {"say": "tudo bem?", "label": "tudo bem?", "ro": "TOO-doo BAYN", "pt": "how are you? / all good?"}, {"say": "prazer", "label": "prazer", "ro": "prah-ZEHR", "pt": "nice to meet you"}, {"say": "obrigado(a)", "label": "obrigado(a)", "ro": "oh-bree-GAH-doo(dah)", "pt": "thank you"}, {"say": "com licença", "label": "com licença", "ro": "kohn lee-SEHN-sah", "pt": "excuse me"}, {"say": "desculpa", "label": "desculpa", "ro": "jes-KOOL-pah", "pt": "sorry"}], "phrases": [{"say": "Tudo bem?", "show": "Tudo bem?", "pt": "All good? — works as both 'hello' AND 'how are you'"}, {"say": "Não entendi. Pode repetir, por favor?", "show": "Não entendi. Pode repetir, por favor?", "pt": "I didn't understand. Can you repeat, please?"}, {"say": "Oi, tudo bem? Eu sou a Emma.", "show": "Oi, tudo bem? Eu sou a Emma.", "pt": "Hi, how's it going? I'm Emma."}, {"say": "Tudo ótimo, e você?", "show": "Tudo ótimo, e você?", "pt": "All great, and you?"}, {"say": "Muito prazer!", "show": "Muito prazer!", "pt": "Very nice to meet you!"}], "keywords": ["oy", "TOO-doo BAYN", "prah-ZEHR", "oh-bree-GAH-doo(dah)", "kohn lee-SEHN-sah"]}, {"id": "pt-hotel", "num": "01", "chip": "🏨 The hotel", "tts": "pt-BR", "pieces": [{"say": "a chave", "label": "a chave", "ro": "ah SHAH-vee", "pt": "the key"}, {"say": "o quarto", "label": "o quarto", "ro": "oo KWAR-too", "pt": "the room"}, {"say": "a senha do wi-fi", "label": "a senha do wi-fi", "ro": "ah SEHN-yah doo wi-fi", "pt": "the wi-fi password"}, {"say": "a mala", "label": "a mala", "ro": "ah MAH-lah", "pt": "the suitcase"}, {"say": "café da manhã", "label": "café da manhã", "ro": "kah-FEH dah mahn-YAHN", "pt": "breakfast"}, {"say": "reserva", "label": "reserva", "ro": "heh-ZEHR-vah", "pt": "reservation"}], "phrases": [{"say": "Que horas é o café da manhã?", "show": "Que horas é o café da manhã?", "pt": "What time is breakfast? (it is usually included in Brazil!)"}, {"say": "Tenho uma reserva no nome de Smith.", "show": "Tenho uma reserva no nome de Smith.", "pt": "I have a reservation under Smith."}, {"say": "O café é das sete às dez.", "show": "O café é das sete às dez.", "pt": "Breakfast is from 7 to 10."}, {"say": "A senha do wi-fi, por favor.", "show": "A senha do wi-fi, por favor.", "pt": "The wi-fi password, please."}], "keywords": ["ah SHAH-vee", "oo KWAR-too", "ah SEHN-yah doo wi-fi", "ah MAH-lah", "kah-FEH dah mahn-YAHN"]}, {"id": "pt-food", "num": "02", "chip": "🍽️ Restaurante", "tts": "pt-BR", "pieces": [{"say": "esse aqui", "label": "esse aqui", "ro": "EH-see ah-KEE", "pt": "this one"}, {"say": "água", "label": "água", "ro": "AH-gwah", "pt": "water"}, {"say": "suco", "label": "suco", "ro": "SOO-koo", "pt": "juice"}, {"say": "a conta", "label": "a conta", "ro": "ah KOHN-tah", "pt": "the check"}, {"say": "cardápio", "label": "cardápio", "ro": "car-DAH-pyoo", "pt": "menu"}, {"say": "sem gelo", "label": "sem gelo", "ro": "sayn ZHEH-loo", "pt": "no ice"}], "phrases": [{"say": "Tem opção vegetariana?", "show": "Tem opção vegetariana?", "pt": "Is there a vegetarian option?"}, {"say": "Tá uma delícia!", "show": "Tá uma delícia!", "pt": "It's delicious! — say it and watch the waiter smile"}, {"say": "Um suco de laranja sem gelo, por favor.", "show": "Um suco de laranja sem gelo, por favor.", "pt": "An orange juice with no ice, please."}, {"say": "Vai querer sobremesa?", "show": "Vai querer sobremesa?", "pt": "Will you want dessert?"}, {"say": "Tá uma delícia!", "show": "Tá uma delícia!", "pt": "It's delicious!"}], "keywords": ["EH-see ah-KEE", "AH-gwah", "SOO-koo", "ah KOHN-tah", "car-DAH-pyoo"]}, {"id": "pt-transit", "num": "03", "chip": "🚌 Getting around", "tts": "pt-BR", "pieces": [{"say": "o ônibus", "label": "o ônibus", "ro": "oo OH-nee-boos", "pt": "the bus"}, {"say": "o metrô", "label": "o metrô", "ro": "oo meh-TROH", "pt": "the metro"}, {"say": "o ponto", "label": "o ponto", "ro": "oo POHN-too", "pt": "the bus stop"}, {"say": "a estação", "label": "a estação", "ro": "ah es-tah-SOWN", "pt": "the station"}, {"say": "o centro", "label": "o centro", "ro": "oo SEHN-troo", "pt": "downtown"}, {"say": "direita · esquerda", "label": "direita · esquerda", "ro": "jee-RAY-tah · es-KEHR-dah", "pt": "right · left"}], "phrases": [{"say": "Pode avisar quando chegar, por favor?", "show": "Pode avisar quando chegar, por favor?", "pt": "Can you let me know when we arrive? — drivers and passengers genuinely will"}, {"say": "Esse ônibus vai para o centro?", "show": "Esse ônibus vai para o centro?", "pt": "Does this bus go downtown?"}, {"say": "Desce no próximo ponto.", "show": "Desce no próximo ponto.", "pt": "Get off at the next stop."}, {"say": "Pode avisar quando chegar?", "show": "Pode avisar quando chegar?", "pt": "Can you let me know when we arrive?"}], "keywords": ["oo OH-nee-boos", "oo meh-TROH", "oo POHN-too", "ah es-tah-SOWN", "oo SEHN-troo"]}]}}, "scenes": {"ja": {"ui": "pt", "scenes": {"aeroporto": {"intro": "Você pousou em Narita depois de 24 horas de viagem. A fila da imigração andou devagar — e agora é a sua vez. O oficial te olha por cima do balcão.", "steps": [{"npc": {"say": "パスポートをお願いします。", "show": "Pasupooto o onegaishimasu.", "tr": "Seu passaporte, por favor."}, "choices": [{"t": "Hai, douzo. (はい、どうぞ)", "ok": true}, {"t": "Ikura desu ka. (いくらですか)", "ok": false, "why": "Isso pergunta o preço — aqui é hora de entregar o documento: Hai, douzo."}, {"t": "Konbanwa! (こんばんは)", "ok": false, "why": "Cumprimento simpático, mas ele pediu o passaporte. Entregue com: Hai, douzo."}]}, {"npc": {"say": "目的は何ですか。", "show": "Mokuteki wa nan desu ka.", "tr": "Qual o motivo da viagem?"}, "choices": [{"t": "Kankou desu. (観光です)", "ok": true}, {"t": "Tooka-kan desu. (十日間です)", "ok": false, "why": "Isso responde POR QUANTOS DIAS. Ele perguntou o motivo: Kankou desu = turismo."}, {"t": "Sumimasen. (すみません)", "ok": false, "why": "Pedir desculpa não responde. O molde do mapa: [motivo] + desu → Kankou desu."}]}, {"npc": {"say": "何日間ですか。", "show": "Nannichikan desu ka.", "tr": "Por quantos dias você fica?"}, "choices": [{"t": "Tooka-kan desu. (十日間です)", "ok": true}, {"t": "Kankou desu. (観光です)", "ok": false, "why": "Motivo já foi! Agora são os dias: Tooka-kan desu = dez dias."}, {"t": "Burajiru desu. (ブラジルです)", "ok": false, "why": "Ele perguntou dias, não país. Tooka-kan desu."}]}], "boss": {"npc": {"say": "どこに泊まりますか。", "show": "Doko ni tomarimasu ka.", "tr": "Onde você vai ficar hospedado(a)?"}, "context": "O momento crítico: essa pergunta não estava no roteiro que você decorou. Respire — você tem as peças.", "hint": "Molde de sobrevivência: [lugar] no hoteru desu. → Toukyou no hoteru desu. (É um hotel em Tóquio)", "kws": ["hoteru", "desu", "toukyou", "tokyo"], "min": 2, "model": "Toukyou no hoteru desu."}, "stamp": "入国 · Entrada no Japão"}, "hotel": {"intro": "21h. Você arrasta a mala até a recepção do hotel em Ueno. A recepcionista sorri e faz uma leve reverência.", "steps": [{"npc": {"say": "いらっしゃいませ。ご予約はありますか。", "show": "Irasshaimase. Go-yoyaku wa arimasu ka.", "tr": "Bem-vindo(a). Tem reserva?"}, "choices": [{"t": "Yoyaku ga arimasu. (予約があります)", "ok": true}, {"t": "Daijoubu desu. (大丈夫です)", "ok": false, "why": "'Não precisa' não encaixa — ela quer saber da reserva: Yoyaku ga arimasu."}, {"t": "Okaikei o onegaishimasu. (お会計を)", "ok": false, "why": "Isso pede a CONTA. Você acabou de chegar! Yoyaku ga arimasu."}]}, {"npc": {"say": "お名前をお願いします。", "show": "O-namae o onegaishimasu.", "tr": "Seu nome, por favor."}, "choices": [{"t": "[seu nome] desu.", "ok": true}, {"t": "Nikai desu. (二階です)", "ok": false, "why": "Isso é '2º andar'! O molde: [nome] + desu."}, {"t": "Iie. (いいえ)", "ok": false, "why": "Não dá pra negar o próprio nome 😄 — [nome] desu."}]}, {"npc": {"say": "朝食は七時から十時までです。", "show": "Choushoku wa shichi-ji kara juu-ji made desu.", "tr": "O café da manhã é das 7h às 10h."}, "choices": [{"t": "Wakarimashita. Arigatou gozaimasu.", "ok": true}, {"t": "Atatamemasu ka. (温めますか)", "ok": false, "why": "'Quer que eu esquente?' é fala de atendente de konbini! Aqui: Wakarimashita = entendi."}, {"t": "Tasukete! (助けて)", "ok": false, "why": "Socorro?! Era só uma informação do café ☺ Wakarimashita, arigatou."}]}], "boss": {"npc": {"say": "何かご質問はありますか。", "show": "Nanika go-shitsumon wa arimasu ka.", "tr": "Tem alguma pergunta?"}, "context": "A chance de pedir o que você vai precisar de verdade: a senha do wi-fi e a chave.", "hint": "Molde do mapa: [coisa] o onegaishimasu → Waifai o onegaishimasu. Kagi o onegaishimasu.", "kws": ["waifai", "kagi", "onegaishimasu", "wifi"], "min": 2, "model": "Waifai no pasuwaado o onegaishimasu."}, "stamp": "チェックイン · Check-in feito"}, "conbini": {"intro": "Primeira noite, fome de viagem. Você entra num konbini iluminado, pega um bentô e vai ao caixa.", "steps": [{"npc": {"say": "いらっしゃいませ！", "show": "Irasshaimase!", "tr": "Bem-vindo(a)! (o grito padrão da loja)"}, "choices": [{"t": "…(sorrir e colocar o bentô no balcão)", "ok": true}, {"t": "Irasshaimase! (responder de volta)", "ok": false, "why": "Radar do mapa: irasshaimase NÃO exige resposta. Só siga — no máximo um 'doomo'."}, {"t": "Tasukete kudasai.", "ok": false, "why": "Pedir socorro no caixa vai assustar 😅 É só seguir com a compra."}]}, {"npc": {"say": "お弁当を温めますか。", "show": "O-bentou o atatamemasu ka.", "tr": "Quer que eu esquente a marmita?"}, "choices": [{"t": "Hai, onegaishimasu.", "ok": true}, {"t": "Daijoubu desu. (não precisa)", "ok": true}, {"t": "Ikura desu ka.", "ok": false, "why": "Preço vem depois! Ele perguntou do aquecimento: Hai, onegaishimasu OU Daijoubu desu."}]}, {"npc": {"say": "袋はご利用ですか。", "show": "Fukuro wa go-riyou desu ka.", "tr": "Vai querer sacola?"}, "choices": [{"t": "Daijoubu desu. (não precisa)", "ok": true}, {"t": "Atatamete kudasai.", "ok": false, "why": "Esquentar a sacola? 😄 Ele ofereceu a fukuro: Daijoubu desu ou Onegaishimasu."}]}], "boss": {"npc": {"say": "五百円です。ポイントカードはありますか。", "show": "Go-hyaku en desu. Pointo kaado wa arimasu ka.", "tr": "São 500 ienes. Tem cartão de pontos?"}, "context": "Pergunta-surpresa clássica de caixa japonês. Recuse com educação e diga como vai pagar.", "hint": "Nai desu (não tenho) + Kaado de onegaishimasu (no cartão) ou Genkin de (em dinheiro).", "kws": ["nai", "daijoubu", "kaado", "genkin", "onegaishimasu"], "min": 2, "model": "Nai desu. Kaado de onegaishimasu."}, "stamp": "買い物 · Compra dominada"}, "restaurante": {"intro": "Um restaurante pequeno, cheiro de shoyu no ar. A atendente vem até a porta te receber.", "steps": [{"npc": {"say": "何名様ですか。", "show": "Nan-mei sama desu ka.", "tr": "Mesa para quantos?"}, "choices": [{"t": "San-nin desu. (三人です)", "ok": true}, {"t": "San-ji desu. (三時です)", "ok": false, "why": "Isso é 'três HORAS'! Pessoas: San-nin desu."}, {"t": "Menyuu desu.", "ok": false, "why": "'É cardápio'? Ela perguntou quantas pessoas: San-nin desu."}]}, {"npc": {"say": "ご注文はお決まりですか。", "show": "Go-chuumon wa o-kimari desu ka.", "tr": "Já decidiu o pedido?"}, "choices": [{"t": "Raamen ni shimasu. (ラーメンにします)", "ok": true}, {"t": "Raamen wa doko desu ka.", "ok": false, "why": "'Onde fica o ramen'? 😄 O molde de pedir: [prato] ni shimasu."}]}, {"npc": {"say": "お飲み物はいかがですか。", "show": "O-nomimono wa ikaga desu ka.", "tr": "E para beber?"}, "choices": [{"t": "Mizu o onegaishimasu.", "ok": true}, {"t": "Okaikei o onegaishimasu.", "ok": false, "why": "A conta AGORA? Você nem comeu! Bebida: Mizu o onegaishimasu."}]}], "boss": {"npc": {"say": "店内ですか、お持ち帰りですか。", "show": "Tennai desu ka, o-mochikaeri desu ka.", "tr": "É para comer aqui ou para viagem?"}, "context": "A escolha do mapa em ação — e aproveite para pedir a conta ao final, como um local.", "hint": "Tennai de onegaishimasu (aqui) · depois: Okaikei o onegaishimasu (a conta).", "kws": ["tennai", "okaikei", "onegaishimasu", "omochikaeri"], "min": 2, "model": "Tennai de onegaishimasu. ... Okaikei o onegaishimasu."}, "stamp": "ごちそうさま · Refeição completa"}, "trens": {"intro": "Estação de Tóquio, um mar de gente e placas. Você respira fundo — um funcionário de uniforme está parado perto da catraca.", "steps": [{"npc": {"say": "すみません、何かお探しですか。", "show": "Sumimasen, nanika o-sagashi desu ka.", "tr": "Com licença, procurando algo?"}, "choices": [{"t": "Hoomu wa doko desu ka. (ホームはどこですか)", "ok": true}, {"t": "Okaikei o onegaishimasu.", "ok": false, "why": "A conta... na estação? 😄 Pergunte o lugar: Hoomu wa doko desu ka."}, {"t": "Atatamemasu ka.", "ok": false, "why": "Isso é do konbini! Aqui: [lugar] wa doko desu ka."}]}, {"npc": {"say": "三番ホームです。まっすぐです。", "show": "San-ban hoomu desu. Massugu desu.", "tr": "Plataforma 3. É direto em frente."}, "choices": [{"t": "Arigatou gozaimasu!", "ok": true}, {"t": "Daijoubu desu.", "ok": false, "why": "'Não precisa' soa como recusar a ajuda que você pediu 😅 Agradeça: Arigatou gozaimasu!"}]}, {"npc": {"say": "この電車は金沢に行きますよ。", "show": "Kono densha wa Kanazawa ni ikimasu yo.", "tr": "Este trem vai para Kanazawa, viu."}, "choices": [{"t": "Wakarimashita. Arigatou gozaimasu.", "ok": true}, {"t": "Ikura desu ka.", "ok": false, "why": "Preço se pergunta no guichê. Aqui confirme: Wakarimashita."}]}], "boss": {"npc": {"say": "次は乗り換えです。ご注意ください。", "show": "“Tsugi wa norikae desu. Go-chuui kudasai.”", "tr": "(anúncio) Próxima estação: baldeação. Atenção."}, "context": "O alto-falante anunciou NORIKAE — seu radar captou. Confirme com o passageiro ao lado onde trocar.", "hint": "Norikae wa doko desu ka. / Nani-sen desu ka. (qual linha?)", "kws": ["norikae", "doko", "desu", "ka", "sen"], "min": 2, "model": "Sumimasen, norikae wa doko desu ka."}, "stamp": "出発 · Embarque certo"}, "compras": {"intro": "Uma loja de omiyage em Kyoto, prateleiras lotadas de caixinhas lindas. A vendedora se aproxima sorrindo.", "steps": [{"npc": {"say": "いらっしゃいませ。何かお探しですか。", "show": "Irasshaimase. Nanika o-sagashi desu ka.", "tr": "Bem-vinda! Procurando algo?"}, "choices": [{"t": "Kore wa ikura desu ka. (これはいくらですか)", "ok": true}, {"t": "Toire wa doko desu ka.", "ok": false, "why": "O banheiro pode esperar 😄 Pergunte o preço: Kore wa ikura desu ka."}, {"t": "Tasukete!", "ok": false, "why": "Calma, é só uma lojinha! Kore wa ikura desu ka."}]}, {"npc": {"say": "三千円です。", "show": "San-zen en desu.", "tr": "São 3 mil ienes."}, "choices": [{"t": "Ja, kore ni shimasu. (じゃ、これにします)", "ok": true}, {"t": "Tooka-kan desu.", "ok": false, "why": "Dez dias?! 😄 Pra decidir a compra: Ja, kore ni shimasu."}]}, {"npc": {"say": "お支払いはどうなさいますか。", "show": "O-shiharai wa dou nasaimasu ka.", "tr": "Como vai pagar?"}, "choices": [{"t": "Kaado de ii desu ka.", "ok": true}, {"t": "Kankou desu.", "ok": false, "why": "Turismo é resposta de imigração! Pagamento: Kaado de ii desu ka."}]}], "boss": {"npc": {"say": "免税をご希望ですか。パスポートはお持ちですか。", "show": "Menzei o go-kibou desu ka. Pasupooto wa o-mochi desu ka.", "tr": "Deseja tax-free? Está com o passaporte?"}, "context": "O momento de ativar a isenção — responda que sim e mostre o documento.", "hint": "Hai, menzei o onegaishimasu. Pasupooto wa arimasu.", "kws": ["menzei", "pasupooto", "hai", "onegaishimasu", "arimasu"], "min": 2, "model": "Hai, menzei o onegaishimasu. Pasupooto wa arimasu."}, "stamp": "お土産 · Lembrança garantida"}, "roupas": {"intro": "Uma loja de roupas em Harajuku. Você segura uma jaqueta no cabide quando a vendedora aparece.", "steps": [{"npc": {"say": "ご試着なさいますか。", "show": "Go-shichaku nasaimasu ka.", "tr": "Gostaria de provar?"}, "choices": [{"t": "Kigaete mitemo ii desu ka.", "ok": true}, {"t": "Okaikei o onegaishimasu.", "ok": false, "why": "A conta antes de provar? Peça o provador: Kigaete mitemo ii desu ka."}]}, {"npc": {"say": "試着室はあちらです。", "show": "Shichakushitsu wa achira desu.", "tr": "O provador é ali."}, "choices": [{"t": "Arigatou gozaimasu.", "ok": true}, {"t": "Atatamemasu ka.", "ok": false, "why": "Esquentar a jaqueta? 😄 Só agradeça: Arigatou gozaimasu."}]}, {"npc": {"say": "サイズはいかがですか。", "show": "Saizu wa ikaga desu ka.", "tr": "E o tamanho, como está?"}, "choices": [{"t": "Motto ookii no ga arimasu ka.", "ok": true}, {"t": "San-nin desu.", "ok": false, "why": "'Somos três'?! 😄 Tamanho: Motto ookii no ga arimasu ka."}]}], "boss": {"npc": {"say": "こちらはセール品です。いかがですか。", "show": "Kochira wa seeru-hin desu. Ikaga desu ka.", "tr": "Esta está em promoção. O que acha?"}, "context": "Promoção anunciada — decida a compra como um local.", "hint": "Ja, kore ni shimasu. (então vou levar esta)", "kws": ["kore", "ni", "shimasu", "kudasai", "ikura"], "min": 2, "model": "Ii desu ne! Ja, kore ni shimasu."}, "stamp": "完璧 · Look completo"}, "sos": {"intro": "Anoiteceu, o mapa do celular morreu com a bateria — e o hotel sumiu. Você avista a luz de um kōban, o postinho policial de bairro.", "steps": [{"npc": {"say": "こんばんは。どうしましたか。", "show": "Konbanwa. Dou shimashita ka.", "tr": "Boa noite. O que aconteceu?"}, "choices": [{"t": "Michi ni mayoimashita. (道に迷いました)", "ok": true}, {"t": "Raamen ni shimasu.", "ok": false, "why": "Pedir ramen no kōban 😄 Diga que se perdeu: Michi ni mayoimashita."}]}, {"npc": {"say": "どこに行きたいですか。", "show": "Doko ni ikitai desu ka.", "tr": "Para onde você quer ir?"}, "choices": [{"t": "Hoteru ni ikitai desu.", "ok": true}, {"t": "Daijoubu desu.", "ok": false, "why": "'Não precisa'? Você PRECISA 😅 Hoteru ni ikitai desu."}]}, {"npc": {"say": "まっすぐ行って、右です。", "show": "Massugu itte, migi desu.", "tr": "Vá reto e vire à direita."}, "choices": [{"t": "Wakarimashita. Arigatou gozaimasu!", "ok": true}, {"t": "Menzei wa dekimasu ka.", "ok": false, "why": "Tax-free no kōban?! 😄 Agradeça: Wakarimashita, arigatou!"}]}], "boss": {"npc": {"say": "大丈夫ですか。他に何かありますか。", "show": "Daijoubu desu ka. Hoka ni nanika arimasu ka.", "tr": "Você está bem? Precisa de mais algo?"}, "context": "O policial confere se está tudo certo. Tranquilize e agradeça — o kōban salvou sua noite.", "hint": "Daijoubu desu. Arigatou gozaimasu!", "kws": ["daijoubu", "arigatou", "desu", "gozaimasu"], "min": 2, "model": "Daijoubu desu. Arigatou gozaimashita!"}, "stamp": "安心 · Salvo pelo kōban"}, "base": {"intro": "Jantar na casa da família japonesa de uma amiga. A avó dela abre a porta e faz uma reverência gentil.", "steps": [{"npc": {"say": "はじめまして！", "show": "Hajimemashite!", "tr": "Prazer em conhecer!"}, "choices": [{"t": "Hajimemashite, [seu nome] desu.", "ok": true}, {"t": "Sayounara.", "ok": false, "why": "Tchau?! Você acabou de chegar 😄 Hajimemashite, [nome] desu."}]}, {"npc": {"say": "どちらから来ましたか。", "show": "Dochira kara kimashita ka.", "tr": "De onde você veio?"}, "choices": [{"t": "Burajiru kara kimashita.", "ok": true}, {"t": "Nikai desu.", "ok": false, "why": "'2º andar' 😄 O molde: [lugar] kara kimashita."}]}, {"npc": {"say": "日本は初めてですか。", "show": "Nihon wa hajimete desu ka.", "tr": "É sua primeira vez no Japão?"}, "choices": [{"t": "Hai, hajimete desu.", "ok": true}, {"t": "Okaikei o onegaishimasu.", "ok": false, "why": "A conta no jantar de família?! 😱 Hai, hajimete desu."}]}], "boss": {"npc": {"say": "これからもよろしくね。", "show": "Kore kara mo yoroshiku ne.", "tr": "Conto com você daqui pra frente, tá?"}, "context": "A frase que sela os laços no Japão. Devolva a gentileza — é assim que a ponte se constrói.", "hint": "Kochira koso, yoroshiku onegaishimasu. (eu que agradeço — conto com você)", "kws": ["yoroshiku", "onegaishimasu", "kochira"], "min": 1, "model": "Kochira koso, yoroshiku onegaishimasu!"}, "stamp": "友達 · Ponte construída"}, "numeros": {"intro": "Sua amiga de Osaka liga: vocês precisam combinar o encontro de amanhã. Do outro lado da linha, ela pergunta:", "steps": [{"npc": {"say": "今何時ですか、そっちは。", "show": "Ima nanji desu ka, socchi wa.", "tr": "Que horas são aí agora?"}, "choices": [{"t": "San-ji desu. (三時です)", "ok": true}, {"t": "San-nin desu.", "ok": false, "why": "'Somos três'! Horas: San-ji desu."}]}, {"npc": {"say": "明日会いましょうか。", "show": "Ashita aimashou ka.", "tr": "A gente se encontra amanhã?"}, "choices": [{"t": "Ii desu ne!", "ok": true}, {"t": "Ikura desu ka.", "ok": false, "why": "Encontro não tem preço 😄 Aceite: Ii desu ne!"}]}, {"npc": {"say": "何時に会いましょうか。", "show": "Nanji ni aimashou ka.", "tr": "A que horas nos encontramos?"}, "choices": [{"t": "Ku-ji ni aimashou. (九時に会いましょう)", "ok": true}, {"t": "Tooka-kan desu.", "ok": false, "why": "Dez DIAS de encontro? 😄 Hora: [x]-ji ni aimashou."}]}], "boss": {"npc": {"say": "九時？午前ですか、午後ですか。", "show": "Ku-ji? Gozen desu ka, gogo desu ka.", "tr": "Nove? Da manhã ou da noite?"}, "context": "A pegadinha clássica dos horários japoneses. Especifique: gozen (AM) ou gogo (PM).", "hint": "Gozen ku-ji desu. (9h da manhã) · Gogo nara ku-ji (se for da noite)", "kws": ["gozen", "gogo", "ji", "desu"], "min": 2, "model": "Gozen ku-ji desu!"}, "stamp": "時間 · Hora marcada"}, "planos": {"intro": "Sábado de manhã, café com os amigos japoneses. Alguém abre o mapa na mesa e pergunta animado:", "steps": [{"npc": {"say": "週末、何をしたいですか。", "show": "Shuumatsu, nani o shitai desu ka.", "tr": "O que você quer fazer no fim de semana?"}, "choices": [{"t": "Kyoto ni ikitai desu.", "ok": true}, {"t": "Michi ni mayoimashita.", "ok": false, "why": "Você não está perdida — está planejando! [lugar] ni ikitai desu."}]}, {"npc": {"say": "いいですね！一緒に行きましょうか。", "show": "Ii desu ne! Issho ni ikimashou ka.", "tr": "Boa! Vamos juntos?"}, "choices": [{"t": "Ii desu ne! Issho ni ikimashou.", "ok": true}, {"t": "Daijoubu desu.", "ok": false, "why": "'Não precisa' recusa o convite 🥲 Aceite: Ii desu ne!"}]}, {"npc": {"say": "何を食べましょうか。", "show": "Nani o tabemashou ka.", "tr": "O que vamos comer?"}, "choices": [{"t": "Raamen o tabemashou!", "ok": true}, {"t": "Pasupooto desu.", "ok": false, "why": "Comer o passaporte?! 😄 [comida] o tabemashou!"}]}], "boss": {"npc": {"say": "じゃ、何時に出発しましょうか。", "show": "Ja, nanji ni shuppatsu shimashou ka.", "tr": "Então, que horas a gente sai?"}, "context": "Feche o plano: proponha o horário com o -mashou de convite.", "hint": "Ku-ji ni ikimashou! ([hora]-ji ni + verbo-mashou)", "kws": ["ji", "ni", "ikimashou", "aimashou", "shuppatsu"], "min": 2, "model": "Ku-ji ni ikimashou!"}, "stamp": "冒険 · Plano fechado"}, "placas": {"intro": "Passeio solo pelas ruas de Takaoka. As placas conversam com você — e de repente, alguém conversa também.", "steps": [{"npc": {"say": "あの店は営業中ですよ。", "show": "Ano mise wa eigyouchuu desu yo.", "tr": "Aquela loja está aberta, viu."}, "choices": [{"t": "Arigatou gozaimasu!", "ok": true}, {"t": "Atatamemasu ka.", "ok": false, "why": "De novo o konbini! 😄 Agradeça a dica: Arigatou gozaimasu!"}]}, {"npc": {"say": "出口はあそこです。", "show": "Deguchi wa asoko desu.", "tr": "A saída é ali."}, "choices": [{"t": "Wakarimashita.", "ok": true}, {"t": "San-ji desu.", "ok": false, "why": "'São três horas'? Ele mostrou a saída: Wakarimashita."}]}, {"npc": {"say": "すみません、ここは禁煙です。", "show": "Sumimasen, koko wa kin'en desu.", "tr": "Com licença, aqui é proibido fumar."}, "choices": [{"t": "Sumimasen! Wakarimashita.", "ok": true}, {"t": "Ii desu ne!", "ok": false, "why": "'Boa ideia!' não é resposta pra bronca 😅 Sumimasen, wakarimashita."}]}], "boss": {"npc": {"say": "すみません、非常口はどこですか。", "show": "Sumimasen, hijouguchi wa doko desu ka.", "tr": "Com licença, onde é a saída de emergência?"}, "context": "A virada: agora é VOCÊ quem ajuda um perdido. Aponte o caminho com o que você leu nas placas.", "hint": "Asoko desu. (é ali) · Massugu desu. (é reto)", "kws": ["asoko", "desu", "massugu", "migi", "hidari"], "min": 2, "model": "Asoko desu. Massugu itte, migi desu."}, "stamp": "読解 · Leu a cidade"}}}, "en": {"ui": "pt", "scenes": {"en-airport": {"intro": "Você pousou em Nova York. O oficial da imigração pega seu passaporte sem sorrir. Respira: você tem o repertório.", "steps": [{"npc": {"say": "Passport, please.", "show": "Passport, please.", "tr": "Passaporte, por favor."}, "choices": [{"t": "Here you go.", "ok": true}, {"t": "How much is it?", "ok": false, "why": "'Quanto custa'? Ele pediu o documento: Here you go."}, {"t": "Good night!", "ok": false, "why": "Simpático, mas entregue o passaporte: Here you go."}]}, {"npc": {"say": "What is the purpose of your visit?", "show": "What is the purpose of your visit?", "tr": "Qual o motivo da sua visita?"}, "choices": [{"t": "I'm here on vacation.", "ok": true}, {"t": "Ten days.", "ok": false, "why": "Isso responde a duração. O motivo: I'm here on vacation."}, {"t": "I'm a fairy.", "ok": false, "why": "O oficial não joga Planeta Utopia 😄 — I'm here on vacation."}]}, {"npc": {"say": "How long are you staying?", "show": "How long are you staying?", "tr": "Por quanto tempo você fica?"}, "choices": [{"t": "Ten days.", "ok": true}, {"t": "On vacation.", "ok": false, "why": "Motivo já passou! Agora a duração: Ten days."}]}], "boss": {"npc": {"say": "Where will you be staying?", "show": "Where will you be staying?", "tr": "Onde você vai ficar?"}, "context": "A pergunta fora do roteiro. Monte com calma: lugar + is/at.", "hint": "Bloco de sobrevivência: I'm staying at a hotel in [cidade].", "kws": ["hotel", "staying", "house", "apartment", "friend"], "min": 1, "model": "I'm staying at a hotel in Manhattan."}, "stamp": "Immigration cleared"}, "en-hotel": {"intro": "Lobby do hotel, 22h. A recepcionista levanta o olhar do computador e sorri.", "steps": [{"npc": {"say": "Good evening! Do you have a reservation?", "show": "Good evening! Do you have a reservation?", "tr": "Boa noite! Tem reserva?"}, "choices": [{"t": "Yes, I have a reservation under Silva.", "ok": true}, {"t": "The check, please.", "ok": false, "why": "A conta? Você acabou de chegar! I have a reservation under [nome]."}]}, {"npc": {"say": "Could I see your ID, please?", "show": "Could I see your ID, please?", "tr": "Posso ver seu documento?"}, "choices": [{"t": "Sure, here you go.", "ok": true}, {"t": "I'm allergic to peanuts.", "ok": false, "why": "Informação de restaurante 😄 Entregue o documento: Sure, here you go."}]}, {"npc": {"say": "Breakfast is from seven to ten.", "show": "Breakfast is from seven to ten.", "tr": "O café é das 7h às 10h."}, "choices": [{"t": "Great, thank you!", "ok": true}, {"t": "For here or to go?", "ok": false, "why": "Essa é fala de CAIXA de lanchonete. Aqui só agradeça: Great, thank you!"}]}], "boss": {"npc": {"say": "Anything else I can help you with?", "show": "Anything else I can help you with?", "tr": "Posso ajudar com mais alguma coisa?"}, "context": "Sua chance de garantir a noite: peça a senha do wi-fi (e a chave, se quiser).", "hint": "Molde: Could I have the [coisa], please? → the wi-fi password / the key.", "kws": ["wi-fi", "password", "key", "could", "please"], "min": 2, "model": "Could I have the wi-fi password, please?"}, "stamp": "Checked in"}, "en-food": {"intro": "Uma lanchonete movimentada na hora do almoço. Sua vez no balcão.", "steps": [{"npc": {"say": "Hi! For here or to go?", "show": "Hi! For here or to go?", "tr": "Pra comer aqui ou pra levar?"}, "choices": [{"t": "For here, please.", "ok": true}, {"t": "I'm here on vacation.", "ok": false, "why": "Resposta de imigração 😄 Ele quer saber: For here (aqui) ou To go (viagem)."}]}, {"npc": {"say": "What can I get you?", "show": "What can I get you?", "tr": "O que você vai querer?"}, "choices": [{"t": "Could I get this one and a water?", "ok": true}, {"t": "Where is the platform?", "ok": false, "why": "Plataforma é na estação! Pedido: Could I get [item]?"}]}, {"npc": {"say": "How is everything?", "show": "How is everything?", "tr": "Está tudo bem por aí? (checagem de cortesia)"}, "choices": [{"t": "Great, thanks!", "ok": true}, {"t": "No, that's all.", "ok": false, "why": "'Só isso' responde OUTRA pergunta (anything else?). Aqui: Great, thanks!"}]}], "boss": {"npc": {"say": "Anything else?", "show": "Anything else?", "tr": "Mais alguma coisa?"}, "context": "Hora de encerrar como um local: recuse e peça a conta.", "hint": "No, that's all. Could I get the check, please?", "kws": ["check", "please", "that's", "all"], "min": 2, "model": "No, that's all. Could I get the check, please?"}, "stamp": "Well fed"}, "en-transit": {"intro": "Estação central, painéis piscando. Você se aproxima do balcão de informações.", "steps": [{"npc": {"say": "Hi, how can I help you?", "show": "Hi, how can I help you?", "tr": "Oi, como posso ajudar?"}, "choices": [{"t": "Does this train go to downtown?", "ok": true}, {"t": "A table for two, please.", "ok": false, "why": "Mesa pra dois... na estação? 😄 Pergunte do trem: Does this train go to...?"}]}, {"npc": {"say": "Yes, it does. Platform two.", "show": "Yes, it does. Platform two.", "tr": "Vai sim. Plataforma dois."}, "choices": [{"t": "Thanks! Where is platform two?", "ok": true}, {"t": "I'm allergic to peanuts.", "ok": false, "why": "De novo os amendoins?! Pergunte o caminho: Where is platform two?"}]}, {"npc": {"say": "Down the stairs, on your left.", "show": "Down the stairs, on your left.", "tr": "Descendo a escada, à sua esquerda."}, "choices": [{"t": "Thanks so much!", "ok": true}, {"t": "For here or to go?", "ok": false, "why": "Isso é do mapa da lanchonete 😄 Só agradeça: Thanks so much!"}]}], "boss": {"npc": {"say": "Attention passengers: transfer at Central Station for downtown.", "show": "“Attention: transfer at Central Station for downtown.”", "tr": "(anúncio) Baldeação na Estação Central para o centro."}, "context": "O radar em ação: o alto-falante anunciou uma baldeação. Confirme com alguém na plataforma.", "hint": "Excuse me — do I transfer at Central Station?", "kws": ["transfer", "central", "station", "excuse"], "min": 2, "model": "Excuse me, do I transfer at Central Station to get downtown?"}, "stamp": "On track"}}}, "pt": {"ui": "en", "scenes": {"pt-intro": {"intro": "You just walked into a friend's birthday party in São Paulo. Someone you've never met turns to you with a big smile.", "steps": [{"npc": {"say": "Oi! Tudo bem?", "show": "Oi! Tudo bem?", "tr": "Hi! All good? (a greeting, not a real question)"}, "choices": [{"t": "Tudo bem! E você?", "ok": true}, {"t": "A conta, por favor.", "ok": false, "why": "That asks for the check — you're at a party! Echo the greeting: Tudo bem!"}, {"t": "Desculpa.", "ok": false, "why": "Nothing to apologize for 😄 Just echo it back: Tudo bem! E você?"}]}, {"npc": {"say": "Qual é o seu nome?", "show": "Qual é o seu nome?", "tr": "What's your name?"}, "choices": [{"t": "Eu sou [your name]. Prazer!", "ok": true}, {"t": "Sem gelo.", "ok": false, "why": "'No ice' is for ordering drinks! The mold: Eu sou [name]. Prazer!"}]}, {"npc": {"say": "De onde você é?", "show": "De onde você é?", "tr": "Where are you from?"}, "choices": [{"t": "Sou de fora, vim conhecer o Brasil.", "ok": true}, {"t": "São nove horas.", "ok": false, "why": "That's the time! Where you're from: Sou de [place]."}]}], "boss": {"npc": {"say": "Você quer comer alguma coisa? Fica à vontade!", "show": "Você quer comer alguma coisa? Fica à vontade!", "tr": "Do you want something to eat? Make yourself at home!"}, "context": "The critical moment of Brazilian hospitality: accept warmly (refusing food takes advanced skills).", "hint": "Quero, sim! Obrigado(a). — yes please + thanks.", "kws": ["quero", "sim", "obrigado", "obrigada", "por favor"], "min": 2, "model": "Quero, sim! Muito obrigada."}, "stamp": "Primeiro amigo · First friend"}, "pt-hotel": {"intro": "A hotel lobby in Rio, 9 pm. The receptionist looks up and smiles.", "steps": [{"npc": {"say": "Boa noite! Tem reserva?", "show": "Boa noite! Tem reserva?", "tr": "Good evening! Do you have a reservation?"}, "choices": [{"t": "Tenho uma reserva no nome de Smith.", "ok": true}, {"t": "Tá uma delícia!", "ok": false, "why": "'It's delicious' is for restaurants 😄 Here: Tenho uma reserva no nome de [name]."}]}, {"npc": {"say": "Documento, por favor.", "show": "Documento, por favor.", "tr": "ID, please."}, "choices": [{"t": "Claro, aqui está.", "ok": true}, {"t": "Pode avisar quando chegar?", "ok": false, "why": "That's the bus trick! Hand over the passport: Claro, aqui está."}]}, {"npc": {"say": "O café é das sete às dez.", "show": "O café é das sete às dez.", "tr": "Breakfast is from 7 to 10 (usually included in Brazil!)."}, "choices": [{"t": "Ótimo, obrigado!", "ok": true}, {"t": "Preciso de ajuda.", "ok": false, "why": "'I need help' is for emergencies — this is great news 😄 Ótimo, obrigado!"}]}], "boss": {"npc": {"say": "Mais alguma coisa?", "show": "Mais alguma coisa?", "tr": "Anything else?"}, "context": "Secure your evening: ask for the wi-fi password.", "hint": "A senha do wi-fi, por favor. — and maybe: Pode escrever?", "kws": ["senha", "wi-fi", "chave", "por favor", "escrever"], "min": 2, "model": "A senha do wi-fi, por favor. Pode escrever?"}, "stamp": "Hóspede oficial · Checked in"}, "pt-food": {"intro": "A juice bar in São Paulo, mid-afternoon. The attendant greets you from behind the counter.", "steps": [{"npc": {"say": "Oi! Vai querer o cardápio?", "show": "Oi! Vai querer o cardápio?", "tr": "Hi! Will you want the menu?"}, "choices": [{"t": "Quero, sim! Obrigado.", "ok": true}, {"t": "Desce aqui.", "ok": false, "why": "'Get off here' is bus talk 😄 Accept the menu: Quero, sim!"}]}, {"npc": {"say": "O que você vai pedir?", "show": "O que você vai pedir?", "tr": "What will you order?"}, "choices": [{"t": "Um suco de laranja sem gelo, por favor.", "ok": true}, {"t": "Onde fica o ponto?", "ok": false, "why": "'Where's the bus stop' — wrong map! Order: [item], por favor."}]}, {"npc": {"say": "Mais alguma coisa?", "show": "Mais alguma coisa?", "tr": "Anything else?"}, "choices": [{"t": "Só isso, obrigado.", "ok": true}, {"t": "E aí?", "ok": false, "why": "'E aí' is a greeting between friends. Close the order: Só isso, obrigado."}]}], "boss": {"npc": {"say": "E aí, tá gostando? Como tá o suco?", "show": "E aí, tá gostando? Como tá o suco?", "tr": "So, enjoying it? How's the juice?"}, "context": "Compliment like a local — then ask for the check.", "hint": "Tá uma delícia! ... A conta, por favor.", "kws": ["delícia", "delicia", "conta", "por favor", "obrigado", "obrigada"], "min": 2, "model": "Tá uma delícia! A conta, por favor."}, "stamp": "Comeu como local · Ate like a local"}, "pt-transit": {"intro": "A bus stop in Salvador. The bus pulls up, doors open, and the driver nods at you.", "steps": [{"npc": {"say": "Boa tarde!", "show": "Boa tarde!", "tr": "Good afternoon!"}, "choices": [{"t": "Boa tarde! Esse ônibus vai para o centro?", "ok": true}, {"t": "Tem opção vegetariana?", "ok": false, "why": "Vegetarian options... on a bus? 😄 Ask the route: Esse ônibus vai para [place]?"}]}, {"npc": {"say": "Vai sim, pode subir.", "show": "Vai sim, pode subir.", "tr": "It does — hop on."}, "choices": [{"t": "Pode avisar quando chegar, por favor?", "ok": true}, {"t": "A conta, por favor.", "ok": false, "why": "No checks on the bus! Use the Brazilian trick: Pode avisar quando chegar?"}]}, {"npc": {"say": "Aviso sim! Senta aí.", "show": "Aviso sim! Senta aí.", "tr": "I will! Take a seat."}, "choices": [{"t": "Muito obrigado!", "ok": true}, {"t": "Não entendi.", "ok": false, "why": "You did understand this one 😉 Just thank him: Muito obrigado!"}]}], "boss": {"npc": {"say": "Desce aqui! Chegou no centro.", "show": "Desce aqui! Chegou no centro.", "tr": "Get off here! You've reached downtown."}, "context": "A stranger is helping you — thank them and confirm you got it.", "hint": "Obrigado(a)! É aqui o centro? Tchau!", "kws": ["obrigado", "obrigada", "centro", "tchau", "aqui"], "min": 2, "model": "Muito obrigada! Tchau!"}, "stamp": "Navegador urbano · City navigator"}}}}, "ui": {"pt": {"listen": "🔊 ouvir de novo", "reviewPieces": "🔊 revisar as peças deste mapa", "wrong": "Hmm… o personagem inclina a cabeça. Tente outra fala:", "bossTitle": "O momento crítico", "bossBtn": "🔓 resolver a situação", "bossKwNote": "Sua resposta precisa usar as peças do território:", "selfTitle": "Autoavaliação sincerona — como foi?", "self1": "Usei as peças do território", "self2": "Me expressei, mesmo com erros", "self3": "Entendi o exemplo de referência", "modelLbl": "exemplo de referência", "hintLbl": "💡 dica do mapa", "advance": "a conversa avança…", "perfect": "sem nenhum tropeço · bônus +10 XP", "speakTitle": "Prova de fala", "speakCtx": "Última etapa: escute a pergunta e grave sua resposta em voz alta.", "speakBtn": "🎙️ grave sua resposta", "speakListening": "gravando… fale a resposta", "speakHeard": "o que eu entendi:", "speakPass": "✓ entendi você! Fase concluída.", "speakRetry": "não captei as peças — respire e grave de novo", "speakNoSup": "Seu navegador não suporta reconhecimento de voz (funciona no Chrome e Edge). Sem problema:", "speakFallback": "Falei a resposta em voz alta", "stampWin": "carimbo conquistado", "back": "← voltar ao mapa-múndi", "playNpc": "🔊 ouvir", "typed": "Escreva sua resposta no idioma…"}, "en": {"listen": "🔊 listen again", "reviewPieces": "🔊 review this map's pieces", "wrong": "Hmm… they tilt their head. Try another line:", "bossTitle": "The critical moment", "bossBtn": "🔓 resolve the situation", "bossKwNote": "Your answer must use the territory's pieces:", "selfTitle": "Honest self-check — how did it go?", "self1": "I used the territory's pieces", "self2": "I expressed myself, even with mistakes", "self3": "I understood the reference example", "modelLbl": "reference example", "hintLbl": "💡 map hint", "advance": "the conversation moves on…", "perfect": "flawless run · bonus +10 XP", "speakTitle": "Speaking check", "speakCtx": "Last step: listen to the question and record your answer out loud.", "speakBtn": "🎙️ record your answer", "speakListening": "recording… say your answer", "speakHeard": "what I heard:", "speakPass": "✓ got you! Phase complete.", "speakRetry": "missed the key pieces — breathe and record again", "speakNoSup": "Your browser does not support speech recognition (Chrome and Edge do). No worries:", "speakFallback": "I said the answer out loud", "stampWin": "stamp earned", "back": "← back to the world map", "playNpc": "🔊 listen", "typed": "Write your answer in the language…"}}};
+
+const SPEAK={
+ ja:{
+  aeroporto:{npc:{say:'目的は何ですか。',show:'Mokuteki wa nan desu ka.',tr:'Qual o motivo da viagem?'},kws:['観光','かんこう','仕事'],min:1,model:'観光です。(Kankou desu.)'},
+  hotel:{npc:{say:'ご予約はありますか。',show:'Go-yoyaku wa arimasu ka.',tr:'Tem reserva?'},kws:['予約','あります','よやく'],min:1,model:'予約があります。(Yoyaku ga arimasu.)'},
+  conbini:{npc:{say:'お弁当を温めますか。',show:'O-bentou o atatamemasu ka.',tr:'Quer que eu esquente?'},kws:['お願いします','大丈夫','おねがい','だいじょうぶ'],min:1,model:'はい、お願いします。(Hai, onegaishimasu.)'},
+  restaurante:{npc:{say:'何名様ですか。',show:'Nan-mei sama desu ka.',tr:'Mesa para quantos?'},kws:['人','一人','二人','三人','にん'],min:1,model:'三人です。(San-nin desu.)'}
+ },
+ en:{
+  'en-airport':{npc:{say:'What is the purpose of your visit?',show:'What is the purpose of your visit?',tr:'Qual o motivo da sua visita?'},kws:['vacation','business','holiday'],min:1,model:"I'm here on vacation."},
+  'en-hotel':{npc:{say:'Do you have a reservation?',show:'Do you have a reservation?',tr:'Tem reserva?'},kws:['reservation','yes'],min:1,model:'Yes, I have a reservation.'},
+  'en-food':{npc:{say:'For here or to go?',show:'For here or to go?',tr:'Pra comer aqui ou pra levar?'},kws:['here','go'],min:1,model:'For here, please.'},
+  'en-transit':{npc:{say:'Where do you want to go?',show:'Where do you want to go?',tr:'Para onde você quer ir?'},kws:['downtown','station','airport','train'],min:1,model:'I want to go downtown.'}
+ },
+ pt:{
+  'pt-intro':{npc:{say:'Oi! Tudo bem?',show:'Oi! Tudo bem?',tr:'Hi! All good?'},kws:['tudo','bem'],min:1,model:'Tudo bem! E você?'},
+  'pt-hotel':{npc:{say:'Boa noite! Tem reserva?',show:'Boa noite! Tem reserva?',tr:'Good evening! Do you have a reservation?'},kws:['reserva','tenho'],min:1,model:'Tenho uma reserva.'},
+  'pt-food':{npc:{say:'O que você vai pedir?',show:'O que você vai pedir?',tr:'What will you order?'},kws:['por favor','suco','água','agua','favor'],min:1,model:'Um suco, por favor.'},
+  'pt-transit':{npc:{say:'Para onde você vai?',show:'Para onde você vai?',tr:'Where are you headed?'},kws:['centro','praia','hotel'],min:1,model:'Vou para o centro.'}
+ }
+};
+Object.assign(SPEAK.ja,{
+ trens:{npc:{say:'どちらまでですか。',show:'Dochira made desu ka.',tr:'Até onde você vai?'},kws:['まで','東京','金沢','ホーム'],min:1,model:'Kanazawa made onegaishimasu.'},
+ compras:{npc:{say:'お支払いはどうしますか。',show:'O-shiharai wa dou shimasu ka.',tr:'Como vai pagar?'},kws:['カード','現金','かーど'],min:1,model:'Kaado de onegaishimasu.'},
+ roupas:{npc:{say:'サイズはいかがですか。',show:'Saizu wa ikaga desu ka.',tr:'E o tamanho?'},kws:['大きい','小さい','いい'],min:1,model:'Motto ookii no ga arimasu ka.'},
+ sos:{npc:{say:'どうしましたか。',show:'Dou shimashita ka.',tr:'O que aconteceu?'},kws:['迷い','道','痛い'],min:1,model:'Michi ni mayoimashita.'},
+ base:{npc:{say:'どちらから来ましたか。',show:'Dochira kara kimashita ka.',tr:'De onde você veio?'},kws:['ブラジル','から','来ました'],min:1,model:'Burajiru kara kimashita.'},
+ numeros:{npc:{say:'今何時ですか。',show:'Ima nanji desu ka.',tr:'Que horas são?'},kws:['時'],min:1,model:'San-ji desu.'},
+ planos:{npc:{say:'週末、何をしたいですか。',show:'Shuumatsu, nani o shitai desu ka.',tr:'O que quer fazer no fim de semana?'},kws:['たい','行き'],min:1,model:'Kyoto ni ikitai desu.'},
+ placas:{npc:{say:'出口はどこですか。',show:'Deguchi wa doko desu ka.',tr:'Onde é a saída?'},kws:['あそこ','です','まっすぐ'],min:1,model:'Asoko desu.'}
+});
+
+const PACKS=DATA.packs, SCENES=DATA.scenes, UI=DATA.ui;
+
+const BEINGS=[
+ {id:'fairy',ic:'🧚',nm:'Fada',en:'fairy',jp:'妖精',ro:'yousei',cl:'Feiticeira do Ar'},
+ {id:'wizard',ic:'🧙',nm:'Mago',en:'wizard',jp:'魔法使い',ro:'mahoutsukai',cl:'Guardião do Fogo'},
+ {id:'dragon',ic:'🐉',nm:'Dragão',en:'dragon',jp:'竜',ro:'ryuu',cl:'Senhor da Terra'},
+ {id:'traveler',ic:'🧳',nm:'Viajante',en:'traveler',jp:'旅人',ro:'tabibito',cl:'Explorador'},
+ {id:'student',ic:'📚',nm:'Estudante',en:'student',jp:'学生',ro:'gakusei',cl:'Aprendiz'},
+ {id:'human',ic:'🧑',nm:'Humano',en:'human',jp:'人間',ro:'ningen',cl:'Andarilho'}
+];
+let chosenBeing=null, curLang='ja', curTerr=null;
+let stepIdx=0, mistakes=0;
+const G={name:'',being:null,xp:0,maxXp:100,level:1,hp:10,maxHp:10,done:{}};
+
+let VOICES=[];
+function loadVoices(){ if('speechSynthesis' in window) VOICES=speechSynthesis.getVoices()||[]; }
+if('speechSynthesis' in window){ loadVoices(); speechSynthesis.onvoiceschanged=loadVoices; }
+function say(txt,code){
+  if(!('speechSynthesis' in window))return;
+  const u=new SpeechSynthesisUtterance(txt);
+  const b=code.split('-')[0];
+  const v=VOICES.find(x=>(x.lang||'').toLowerCase().startsWith(b)); if(v)u.voice=v;
+  u.lang=code;u.rate=0.88;speechSynthesis.speak(u);
+}
+document.addEventListener('click',e=>{const b=e.target.closest('[data-say]');if(b)say(b.getAttribute('data-say'),b.getAttribute('data-tts'));});
+
+function ui(){ return UI[SCENES[curLang].ui]; }
+function pack(){ return PACKS[curLang]; }
+function terr(){ return pack().territories.find(t=>t.id===curTerr); }
+function scene(){ return SCENES[curLang].scenes[curTerr]; }
+
+
+// ---------- progresso salvo ----------
+const SAVE_KEY='utopiaSave1';
+function saveGame(){ try{ localStorage.setItem(SAVE_KEY, JSON.stringify({name:G.name,being:G.being?G.being.id:null,xp:G.xp,maxXp:G.maxXp,level:G.level,hp:G.hp,maxHp:G.maxHp,done:G.done})); }catch(e){} }
+function loadGame(){ try{ const s=JSON.parse(localStorage.getItem(SAVE_KEY)||'null'); if(!s||!s.being)return false;
+  G.name=s.name||'Viajante'; G.being=BEINGS.find(b=>b.id===s.being)||BEINGS[3];
+  G.xp=s.xp||0; G.maxXp=s.maxXp||100; G.level=s.level||1; G.hp=s.hp||10; G.maxHp=s.maxHp||10; G.done=s.done||{};
+  return true; }catch(e){ return false; } }
+function resetGame(){ if(!confirm('Recomeçar do zero? Todos os carimbos serão apagados.'))return; try{localStorage.removeItem(SAVE_KEY);}catch(e){} location.href=location.pathname; }
+function enterHub(){
+  document.getElementById('setup').classList.add('hidden');
+  document.getElementById('hub').classList.remove('hidden');
+  document.getElementById('av').textContent=G.being.ic;
+  document.getElementById('s-name').textContent=G.name;
+  document.getElementById('s-class').textContent='Classe: '+G.being.cl;
+  renderLangTabs(); renderTerritories(); renderPassport(); refreshSheet();
+}
+function renderBeings(){
+  document.getElementById('beings').innerHTML=BEINGS.map(b=>
+   `<button class="choice ${chosenBeing===b.id?'sel':''}" onclick="pickBeing('${b.id}')"><span class="ic">${b.ic}</span><div class="nm">${b.nm}</div><div class="sub">${b.en} · ${b.jp}</div><div class="sub" style="opacity:.75;">${b.ro}</div></button>`).join('');
+}
+function pickBeing(id){chosenBeing=id;renderBeings();checkStart();}
+function checkStart(){document.getElementById('start-btn').disabled=!(document.getElementById('c-name').value.trim()&&chosenBeing);}
+renderBeings();
+
+function startGame(){
+  G.name=document.getElementById('c-name').value.trim();
+  G.being=BEINGS.find(b=>b.id===chosenBeing);
+  saveGame();
+  enterHub();
+}
+function renderLangTabs(){
+  document.getElementById('langtabs').innerHTML=Object.keys(PACKS).map(k=>
+   `<button class="langtab ${curLang===k?'on':''}" onclick="setLang('${k}')"><span class="code">${PACKS[k].code}</span> ${PACKS[k].name}</button>`).join('');
+}
+function setLang(k){curLang=k;renderLangTabs();renderTerritories();}
+function terrUnlocked(i){ return true; } // ordem livre: cada mapa desemboca na sua prova
+function renderTerritories(){
+  document.getElementById('territories').innerHTML=pack().territories.map((t,i)=>{
+    const done=!!G.done[curLang+':'+t.id], unlocked=terrUnlocked(i);
+    let cls='terr'; if(done)cls+=' done'; else if(!unlocked)cls+=' locked';
+    const badge=done?`<span class="badge">✦ ${pack().code}</span>`:'';
+    return `<button class="${cls}" ${unlocked?`onclick="openScene('${t.id}')"`:''}>
+      <div class="chip">${t.chip.split(' ')[0]}</div><h4>${t.chip.replace(/^\S+\s/,'')}</h4>
+      <p class="meta">${done?'carimbado':'cena disponível'}</p>${badge}</button>`;
+  }).join('');
+}
+
+function openScene(id){
+  curTerr=id; stepIdx=0; mistakes=0;
+  document.getElementById('hub').classList.add('hidden');
+  document.getElementById('scene').classList.remove('hidden');
+  const t=terr(), sc=scene(), U=ui();
+  document.getElementById('back-btn').textContent=U.back;
+  document.getElementById('scene-title').textContent=t.chip+' · '+pack().code;
+  document.getElementById('scene-intro').textContent=sc.intro;
+  document.getElementById('pieces-sum').textContent=U.reviewPieces;
+  document.getElementById('pieces-list').innerHTML=t.pieces.map(p=>
+   `<button class="pbtn" data-say="${p.say.replace(/"/g,'&quot;')}" data-tts="${t.tts}">${p.label}<small>${p.pt||''}</small></button>`).join('');
+  document.getElementById('chat').innerHTML='';
+  document.getElementById('interaction').innerHTML='';
+  window.scrollTo(0,0);
+  setTimeout(showStep,400);
+}
+function backToHub(){
+  try{speechSynthesis.cancel();}catch(e){}
+  document.getElementById('scene').classList.add('hidden');
+  document.getElementById('hub').classList.remove('hidden');
+  renderTerritories();renderPassport();refreshSheet();
+}
+
+function npcBubble(npc){
+  const t=terr();
+  const div=document.createElement('div');
+  div.className='bubble npc';
+  const trHtml = npc.tr ? `<button class="trbtn" onclick="this.nextElementSibling.classList.add('revealed');this.remove();">🫣 ${ui().showTr}</button><div class="tr">${npc.tr}</div>` : '';
+  div.innerHTML=`<div class="who">✦</div><div class="line-txt">${npc.show}</div>
+    <div class="replay"><button class="btn ghost" data-say="${npc.say.replace(/"/g,'&quot;')}" data-tts="${t.tts}" style="font-size:11.5px;padding:5px 12px;">${ui().playNpc}</button></div>${trHtml}`;
+  document.getElementById('chat').appendChild(div);
+  say(npc.say,t.tts);
+  div.scrollIntoView({behavior:'smooth',block:'end'});
+  return div;
+}
+function meBubble(txt){
+  const div=document.createElement('div');
+  div.className='bubble me';
+  div.innerHTML=`<div class="who">${G.being?G.being.ic:''} ${G.name}</div><div class="line-txt">${txt}</div>`;
+  document.getElementById('chat').appendChild(div);
+  div.scrollIntoView({behavior:'smooth',block:'end'});
+}
+
+function showStep(){
+  const sc=scene(), U=ui();
+  if(stepIdx>=sc.steps.length){ showBoss(); return; }
+  const st=sc.steps[stepIdx];
+  const bub=npcBubble(st.npc);
+  const shuffled=[...st.choices].sort(()=>Math.random()-.5);
+  const box=document.getElementById('interaction');
+  box.innerHTML='<div class="opts">'+shuffled.map((c,i)=>
+    `<button class="opt" data-ci="${i}">${c.t.replace('[seu nome]',G.name).replace('[your name]',G.name)}</button>`).join('')+'</div><div id="hintslot"></div>';
+  box.querySelectorAll('.opt').forEach((btn,i)=>{
+    btn.onclick=()=>{
+      const c=shuffled[i];
+      if(c.ok){
+        meBubble(btn.textContent);
+        box.innerHTML='';
+        stepIdx++; 
+        setTimeout(showStep,700);
+      }else{
+        mistakes++;
+        btn.classList.add('wrong'); btn.disabled=true;
+        bub.classList.remove('shake'); void bub.offsetWidth; bub.classList.add('shake');
+        document.getElementById('hintslot').innerHTML=`<div class="hintbox">${U.wrong}<br><strong>${U.hintLbl}:</strong> ${c.why||''}</div>`;
+      }
+    };
+  });
+}
+
+function showBoss(){
+  const sc=scene(), t=terr(), U=ui(), b=sc.boss;
+  npcBubble(b.npc);
+  const box=document.getElementById('interaction');
+  box.innerHTML=`
+   <div class="boss-zone">
+     <p class="ctx">🔒 <strong>${U.bossTitle}:</strong> ${b.context}</p>
+     <div class="hintbox"><strong>${U.hintLbl}:</strong> ${b.hint}</div>
+     <p style="font-size:12.5px;color:var(--ink-soft);">${U.bossKwNote}</p>
+     <div class="kwrow" id="kwrow">${b.kws.map(k=>`<span class="kw" data-kw="${k.toLowerCase()}">${k}</span>`).join('')}</div>
+     <textarea id="boss-text" placeholder="${U.typed}" oninput="checkBoss()"></textarea>
+     <div class="selfcheck" id="selfcheck" style="display:none;">
+       <div class="model"><div class="lbl">${U.modelLbl}</div><span>${b.model}</span> <button class="btn ghost" data-say="${b.model.replace(/"/g,'&quot;')}" data-tts="${t.tts}" style="font-size:11px;padding:4px 10px;">🔊</button></div>
+       <h4>${U.selfTitle}</h4>
+       <label><input type="checkbox" class="sc" onchange="checkBoss()"> ${U.self1}</label>
+       <label><input type="checkbox" class="sc" onchange="checkBoss()"> ${U.self2}</label>
+       <label><input type="checkbox" class="sc" onchange="checkBoss()"> ${U.self3}</label>
+     </div>
+     <div style="text-align:right;margin-top:12px;">
+       <button class="btn" id="boss-btn" disabled onclick="winScene()">${U.bossBtn}</button>
+     </div>
+   </div>`;
+}
+function checkBoss(){
+  const b=scene().boss;
+  const txt=(document.getElementById('boss-text').value||'').toLowerCase();
+  let hits=0;
+  document.querySelectorAll('#kwrow .kw').forEach(el=>{
+    const hit=txt.includes(el.getAttribute('data-kw'));
+    el.classList.toggle('hit',hit); if(hit)hits++;
+  });
+  const words=txt.split(/\s+/).filter(Boolean).length;
+  const enough=hits>=b.min && words>=3;
+  document.getElementById('selfcheck').style.display=enough?'block':'none';
+  const checks=[...document.querySelectorAll('.sc')].filter(c=>c.checked).length;
+  document.getElementById('boss-btn').disabled=!(enough&&checks>=2);
+}
+function winScene(){
+  meBubble(document.getElementById('boss-text').value);
+  document.getElementById('interaction').innerHTML='';
+  setTimeout(showSpeak, 500);
+}
+
+function showSpeak(){
+  const U=ui(), t=terr();
+  const sp=(SPEAK[curLang]||{})[curTerr];
+  if(!sp){ grantStamp(); return; }
+  npcBubble(sp.npc);
+  const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
+  const box=document.getElementById('interaction');
+  const kwHtml = sp.kws.slice(0,4).map(k=>`<span class="kw" data-kw="${k.toLowerCase()}">${k}</span>`).join('');
+  box.innerHTML=`
+   <div class="boss-zone">
+     <p class="ctx">🎙️ <strong>${U.speakTitle}:</strong> ${U.speakCtx}</p>
+     <div class="kwrow" id="sp-kw">${kwHtml}</div>
+     <div style="display:flex;align-items:center;gap:12px;flex-wrap:wrap;">
+       <button class="btn big" id="sp-btn">${U.speakBtn}</button>
+       <span id="sp-status" style="font-size:13px;color:var(--ink-soft);"></span>
+     </div>
+     <p id="sp-heard" style="margin-top:12px;font-size:14px;color:var(--ink);"></p>
+     <div id="sp-fallback" style="display:none;margin-top:12px;" class="selfcheck">
+       <p style="font-size:13px;color:#7A5B21;margin-bottom:8px;"></p>
+       <label><input type="checkbox" id="sp-fb-check"> ${U.speakFallback}</label>
+       <div style="text-align:right;margin-top:8px;"><button class="btn" id="sp-fb-btn" disabled>🔓 ${U.bossBtn}</button></div>
+     </div>
+   </div>`;
+  const btn=document.getElementById('sp-btn'), status=document.getElementById('sp-status'), heard=document.getElementById('sp-heard');
+
+  function enableFallback(msg){
+    const fb=document.getElementById('sp-fallback');
+    fb.style.display='block';
+    fb.querySelector('p').textContent=msg;
+    document.getElementById('sp-fb-check').onchange=function(){ document.getElementById('sp-fb-btn').disabled=!this.checked; };
+    document.getElementById('sp-fb-btn').onclick=grantStamp;
+  }
+
+  if(!SR){ btn.disabled=true; enableFallback(U.speakNoSup); return; }
+
+  let tries=0;
+  btn.onclick=function(){
+    try{speechSynthesis.cancel();}catch(e){}
+    const rec=new SR();
+    rec.lang=t.tts; rec.interimResults=false; rec.maxAlternatives=3;
+    status.textContent=U.speakListening; btn.disabled=true;
+    rec.onresult=function(ev){
+      let txt='';
+      for(let i=0;i<ev.results[0].length;i++) txt+=' '+ev.results[0][i].transcript;
+      txt=txt.toLowerCase();
+      heard.textContent=U.speakHeard+' “'+ev.results[0][0].transcript+'”';
+      let hits=0;
+      document.querySelectorAll('#sp-kw .kw').forEach(el=>{
+        const hit=txt.includes(el.getAttribute('data-kw'));
+        el.classList.toggle('hit',hit); if(hit)hits++;
+      });
+      if(hits>=sp.min){
+        status.textContent=U.speakPass;
+        meBubble(ev.results[0][0].transcript);
+        setTimeout(grantStamp, 900);
+      }else{
+        tries++; btn.disabled=false;
+        status.textContent=U.speakRetry;
+        if(tries>=3) enableFallback(U.speakRetry+' · '+U.hintLbl+': '+sp.model);
+      }
+    };
+    rec.onerror=function(){ btn.disabled=false; status.textContent=''; enableFallback(U.speakNoSup); };
+    rec.onend=function(){ if(btn.disabled && status.textContent===U.speakListening){btn.disabled=false;status.textContent='';} };
+    rec.start();
+  };
+}
+
+function grantStamp(){
+  const sc=scene(), U=ui();
+  G.done[curLang+':'+curTerr]=true;
+  let gained=50;
+  if(mistakes===0){gained+=10;}
+  G.xp+=gained; levelCheck(); refreshSheet(); saveGame();
+  document.getElementById('interaction').innerHTML='';
+  document.getElementById('stamp-label').textContent=sc.stamp;
+  document.getElementById('stamp-title').textContent=U.stampWin+' · +'+gained+' XP';
+  document.getElementById('stamp-sub').textContent=(mistakes===0?U.perfect:'');
+  document.getElementById('stamp-backmap').style.display = cameFromMaps ? 'block' : 'none';
+  // sugestão de próximo território não carimbado (com cena) no mesmo idioma
+  const ts=pack().territories;
+  const ci=ts.findIndex(t=>t.id===curTerr);
+  let next=null;
+  for(let k=1;k<=ts.length;k++){
+    const cand=ts[(ci+k)%ts.length];
+    if(!G.done[curLang+':'+cand.id] && SCENES[curLang].scenes[cand.id]){ next=cand; break; }
+  }
+  const slot=document.getElementById('stamp-next');
+  if(next){
+    slot.innerHTML='<button class="btn ghost" onclick="goNext(\''+next.id+'\')">'+next.chip.split(' ')[0]+' próximo: '+next.chip.replace(/^\S+\s/,'')+' →</button>';
+  } else {
+    slot.innerHTML='<span style="font-size:12.5px;color:var(--ink-soft);">✦ todos os territórios deste idioma carimbados!</span>';
+  }
+  document.getElementById('stamp-pop').classList.add('show');
+}
+function goNext(id){
+  document.getElementById('stamp-pop').classList.remove('show');
+  openScene(id);
+}
+function closeStamp(){
+  document.getElementById('stamp-pop').classList.remove('show');
+  backToHub();
+}
+function levelCheck(){
+  let up=false;
+  while(G.xp>=G.maxXp){G.xp-=G.maxXp;G.level++;G.maxHp+=5;G.hp=G.maxHp;G.maxXp=Math.round(G.maxXp*1.2);up=true;}
+  if(up)toast('🎉 Level up! Nível '+G.level);
+}
+
+function renderPassport(){
+  const grid=document.getElementById('passgrid'); if(!grid)return;
+  let total=0, got=0, html='';
+  for(const lk of Object.keys(PACKS)){
+    for(const t of PACKS[lk].territories){
+      if(!(SCENES[lk] && SCENES[lk].scenes[t.id])) continue;
+      total++;
+      const done=!!G.done[lk+':'+t.id]; if(done)got++;
+      html+='<div class="pstamp '+(done?'got':'')+'"><span class="em">'+t.chip.split(' ')[0]+'</span><span>'+t.chip.replace(/^\S+\s/,'').split(' ')[0]+'</span><span class="cd">['+PACKS[lk].code+']</span></div>';
+    }
+  }
+  grid.innerHTML=html;
+  document.getElementById('pass-count').textContent=got+' de '+total+' carimbos · JP, EN e PT contam separado';
+}
+function refreshSheet(){
+  document.getElementById('s-lvl').textContent=G.level;
+  document.getElementById('hp-t').textContent=G.hp+'/'+G.maxHp;
+  document.getElementById('hp-f').style.width=(G.hp/G.maxHp*100)+'%';
+  document.getElementById('xp-t').textContent=G.xp+'/'+G.maxXp;
+  document.getElementById('xp-f').style.width=(G.xp/G.maxXp*100)+'%';
+}
+function toast(m){const t=document.getElementById('toast');t.textContent=m;t.classList.add('show');setTimeout(()=>t.classList.remove('show'),2600);}
+
+// ---------- boot: progresso salvo + entrada direta ----------
+let cameFromMaps=false;
+(function(){
+  const q=new URLSearchParams(location.search);
+  const l=q.get('lang'), t=q.get('terr');
+  cameFromMaps = q.get('from')==='mapas';
+  const hasSave = loadGame();
+  const valid = l && t && PACKS[l] && PACKS[l].territories.some(x=>x.id===t) && SCENES[l] && SCENES[l].scenes[t];
+  if(!hasSave && !valid) return; // primeira visita sem link: fica no setup
+  if(!hasSave){ G.name='Viajante'; G.being=BEINGS.find(b=>b.id==='traveler'); }
+  if(valid) curLang=l;
+  enterHub();
+  if(valid) openScene(t);
+})();
+</script>
+</body>
+</html>

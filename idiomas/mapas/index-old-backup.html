@@ -1,0 +1,1574 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Eu crio mapas — trilhas de idiomas para viagem | Unirversos Idiomas</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Baloo+2:wght@500;600;700&family=Zen+Maru+Gothic:wght@400;500;700&family=JetBrains+Mono:wght@400;600&display=swap');
+:root{
+  --paper:#FDF8F6; --white:#FFFFFF;
+  --ink:#4A4149; --ink-soft:#8A7F86;
+  --line:#F0E6E2; --line-2:#E7DCE4;
+  --rose:#E08C86; --rose-deep:#C26F6C; --rose-soft:#FBEBE7;
+  --lav:#8B90C4; --lav-soft:#EEEFF9;
+  --sage:#7FA893; --sage-soft:#EAF3EE;
+  --c-obj:#C0913F; --c-obj-bg:#FBF2DF;
+  --c-act:#5E9179; --c-act-bg:#EAF3EE;
+  --c-dir:#6E77BE; --c-dir-bg:#EEEFF9;
+  --c-urg:#C4685F; --c-urg-bg:#FBEAE6;
+  --teal:var(--rose); --teal-deep:var(--rose-deep); --teal-soft:#F0C4BE;
+}
+*{box-sizing:border-box;margin:0;padding:0;}
+@media (prefers-reduced-motion: reduce){ *{transition:none !important;} }
+body{
+  font-family:'Zen Maru Gothic',sans-serif;background:var(--paper);color:var(--ink);
+  line-height:1.75;font-size:16px;-webkit-font-smoothing:antialiased;
+}
+body::before{
+  content:'';position:fixed;inset:0;pointer-events:none;z-index:0;
+  background-image:
+    radial-gradient(circle at 12% 8%, rgba(224,140,134,.10) 0, transparent 42%),
+    radial-gradient(circle at 88% 30%, rgba(139,144,196,.09) 0, transparent 40%),
+    radial-gradient(circle at 50% 96%, rgba(127,168,147,.08) 0, transparent 45%);
+}
+.page{position:relative;z-index:1;max-width:840px;margin:0 auto;padding:0 20px 100px;}
+
+.top{display:flex;align-items:center;justify-content:space-between;gap:14px;flex-wrap:wrap;padding:20px 0;}
+.brand{font-family:'Prata',serif;font-size:20px;font-weight:700;letter-spacing:0.3px;}
+.brand span{color:var(--rose);}
+.top .crumb{font-family:'JetBrains Mono',monospace;font-size:10.5px;letter-spacing:1.6px;color:var(--ink-soft);text-transform:uppercase;background:var(--white);border:1px solid var(--line);border-radius:20px;padding:5px 14px;}
+
+.hero{padding:34px 0 20px;text-align:center;}
+.hero .jp{font-family:'Zen Maru Gothic',sans-serif;color:var(--rose);letter-spacing:7px;font-size:13px;margin-bottom:10px;}
+.hero h1{font-family:'Prata',serif;font-weight:700;font-size:clamp(30px,5.6vw,46px);line-height:1.25;margin-bottom:14px;}
+.hero h1 em{font-style:normal;color:var(--rose);}
+.hero h1{letter-spacing:0.5px;}
+.hero p{color:var(--ink-soft);max-width:600px;margin:0 auto;font-size:16px;}
+.hero p strong{color:var(--ink);font-weight:700;}
+
+.langs{display:flex;gap:10px;flex-wrap:wrap;justify-content:center;margin:26px 0 8px;}
+.langs button{
+  font-family:'Zen Maru Gothic',sans-serif;font-size:14.5px;font-weight:500;
+  border:1.5px solid var(--line);background:var(--white);color:var(--ink);
+  border-radius:18px;padding:12px 20px;cursor:pointer;transition:all .18s ease;text-align:left;
+  box-shadow:0 2px 10px rgba(74,65,73,0.03);
+}
+.langs button small{display:block;font-weight:400;font-size:11px;color:var(--ink-soft);font-family:'JetBrains Mono',monospace;letter-spacing:0.3px;margin-top:2px;}
+.langs button:hover{border-color:var(--rose);transform:translateY(-1px);}
+.langs button.on{border-color:var(--rose);background:var(--rose-soft);}
+.langs button.on small{color:var(--rose-deep);}
+
+.trail{display:flex;gap:8px;flex-wrap:wrap;justify-content:center;margin:22px 0 8px;}
+.trail button{
+  font-family:'Zen Maru Gothic',sans-serif;border:1.5px solid var(--line);background:var(--white);color:var(--ink);
+  border-radius:22px;padding:8px 15px;font-size:13.5px;cursor:pointer;display:flex;align-items:center;gap:7px;transition:all .18s ease;
+}
+.trail button .n{font-family:'JetBrains Mono',monospace;font-size:10px;font-weight:600;color:var(--rose);letter-spacing:0.5px;}
+.trail button:hover{border-color:var(--rose);}
+.trail button.on{background:var(--rose);border-color:var(--rose);color:var(--white);}
+.trail button.on .n{color:#FBDDD8;}
+
+.missao{
+  margin:20px 0 32px;background:var(--white);border:1.5px solid var(--line);
+  border-radius:20px;padding:16px 20px;font-size:15px;color:var(--ink-soft);
+  box-shadow:0 3px 14px rgba(74,65,73,0.03);
+}
+.missao strong{color:var(--rose-deep);font-weight:700;}
+
+.wp{display:flex;align-items:center;gap:14px;margin:38px 0 6px;}
+.wp .dot{
+  width:38px;height:38px;border-radius:50%;flex-shrink:0;
+  background:var(--rose-soft);color:var(--rose-deep);border:1.5px solid var(--rose);
+  font-size:17px;font-weight:700;
+  display:flex;align-items:center;justify-content:center;
+}
+.wp h2{font-family:'Prata',serif;font-size:23px;font-weight:600;}
+.wp .hint{font-size:13px;color:var(--ink-soft);}
+.wp-line{border-left:2px dotted var(--line-2);margin-left:17px;padding:14px 0 8px 30px;}
+
+.legend{display:flex;gap:14px;flex-wrap:wrap;margin-bottom:14px;font-size:12.5px;color:var(--ink-soft);}
+.legend span{display:flex;align-items:center;gap:6px;}
+.legend i{width:9px;height:9px;border-radius:50%;display:inline-block;}
+
+.pieces{display:flex;gap:10px;flex-wrap:wrap;}
+.piece{
+  border:1.5px solid var(--line);background:var(--white);border-radius:18px;padding:11px 16px;
+  cursor:pointer;transition:all .18s ease;min-width:120px;text-align:left;font-family:inherit;
+  box-shadow:0 2px 8px rgba(74,65,73,0.03);
+}
+.piece:hover{transform:translateY(-3px);border-color:var(--rose);}
+.piece.sel{border-color:var(--rose);background:var(--rose-soft);box-shadow:0 0 0 3px rgba(224,140,134,0.14);}
+.piece .kj{font-family:'Zen Maru Gothic',sans-serif;font-size:19px;font-weight:700;line-height:1.25;}
+.piece .ro{font-family:'JetBrains Mono',monospace;font-size:11.5px;font-weight:600;margin-top:3px;}
+.piece .pt{font-size:12.5px;color:var(--ink-soft);margin-top:1px;}
+.piece.obj .ro{color:var(--c-obj);}
+.piece.act .ro{color:var(--c-act);}
+.piece.dir .ro{color:var(--c-dir);}
+.piece.urg .ro{color:var(--c-urg);}
+.piece.obj{border-left:4px solid var(--c-obj-bg);}
+.piece.act{border-left:4px solid var(--c-act-bg);}
+.piece.dir{border-left:4px solid var(--c-dir-bg);}
+.piece.urg{border-left:4px solid var(--c-urg-bg);}
+.piece .mini-audio{margin-top:7px;font-size:10.5px;color:var(--rose);font-family:'JetBrains Mono',monospace;}
+
+.mold{background:var(--white);border:1.5px solid var(--line);border-radius:22px;padding:20px 22px;margin-bottom:14px;box-shadow:0 3px 14px rgba(74,65,73,0.03);}
+.mold .label{font-family:'JetBrains Mono',monospace;font-size:10px;font-weight:600;letter-spacing:1.4px;text-transform:uppercase;color:var(--rose);margin-bottom:8px;}
+.mold .frame{display:flex;align-items:center;gap:8px;flex-wrap:wrap;font-family:'Zen Maru Gothic',sans-serif;font-size:16px;font-weight:500;}
+.mold .slot{border:2px dashed var(--teal-soft);border-radius:14px;padding:5px 14px;color:var(--rose-deep);background:var(--rose-soft);min-width:92px;text-align:center;transition:all .18s ease;font-weight:700;}
+.mold .slot.filled{border-style:solid;border-color:var(--rose);background:var(--rose);color:var(--white);}
+.mold .slot.nofit{border-color:var(--c-urg);background:var(--c-urg-bg);color:var(--c-urg);text-decoration:line-through;}
+.mold .said.no{color:var(--c-urg);}
+.mold .said.no b{color:var(--c-urg);}
+.mold .fixedtx{color:var(--ink);}
+.mold input{font-family:'JetBrains Mono',monospace;font-size:14px;border:2px dashed var(--teal-soft);border-radius:14px;padding:5px 12px;background:var(--rose-soft);color:var(--rose-deep);width:155px;outline:none;}
+.mold input:focus{border-style:solid;border-color:var(--rose);}
+.mold .result{margin-top:14px;padding-top:14px;border-top:1px dotted var(--line-2);display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;}
+.mold .said{font-size:14.5px;color:var(--ink-soft);}
+.mold .said b{color:var(--ink);font-weight:700;}
+.mold .said .jp-r{font-family:'JetBrains Mono',monospace;font-size:13px;color:var(--lav);}
+
+.btn{
+  font-family:'Zen Maru Gothic',sans-serif;font-size:13.5px;font-weight:500;
+  border:1.5px solid var(--rose);background:var(--rose);color:var(--white);
+  border-radius:22px;padding:8px 18px;cursor:pointer;display:inline-flex;align-items:center;gap:7px;transition:all .18s ease;
+}
+.btn:hover{background:var(--rose-deep);border-color:var(--rose-deep);}
+.btn.ghost{background:var(--white);color:var(--rose-deep);}
+.btn.ghost:hover{background:var(--rose-soft);}
+.btn[disabled]{opacity:.4;cursor:not-allowed;}
+
+.radar{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:12px;}
+.radar .r-card{background:var(--white);border:1.5px solid var(--line);border-radius:20px;padding:16px 18px;box-shadow:0 3px 14px rgba(74,65,73,0.03);}
+.radar .kw{font-family:'JetBrains Mono',monospace;font-size:13px;font-weight:600;color:var(--c-urg);letter-spacing:0.4px;}
+.radar .kw.soft{color:var(--lav);}
+.radar .mean{font-size:14px;color:var(--ink-soft);margin-top:5px;}
+.radar .resp{font-size:13px;margin-top:9px;padding-top:9px;border-top:1px dotted var(--line-2);color:var(--ink);}
+.radar .resp b{color:var(--rose-deep);}
+
+/* HUB ABAS */
+.hub-tabs{display:flex;gap:12px;justify-content:center;margin-bottom:32px;}
+.hub-tabs button{background:var(--white);border:1.5px solid var(--line);border-radius:20px;padding:10px 28px;font-size:14px;font-family:'Zen Maru Gothic',sans-serif;font-weight:600;cursor:pointer;transition:all 0.2s ease;color:var(--ink-soft);}
+.hub-tabs button.active{background:var(--rose);border-color:var(--rose);color:white;}
+.hub-tabs button:hover{border-color:var(--rose);}
+
+.hub-content{display:none;}
+.hub-content.active{display:block;}
+
+/* HUB DE TRILHAS */
+.hub-section{margin-bottom:60px;}
+.hub-section.aula-zero{margin-bottom:80px;}
+
+.aula-zero-card{
+  background:linear-gradient(135deg, var(--rose-soft) 0%, var(--lav-soft) 100%);
+  border:2px solid var(--rose);border-radius:24px;padding:40px;text-align:center;
+  box-shadow:0 8px 32px rgba(224,140,134,0.15);cursor:pointer;transition:all 0.3s ease;
+}
+.aula-zero-card:hover{transform:translateY(-4px);box-shadow:0 12px 40px rgba(224,140,134,0.25);}
+.aula-zero-card .emoji{font-size:48px;margin-bottom:12px;display:block;}
+.aula-zero-card h2{font-family:'Baloo 2',sans-serif;font-size:28px;font-weight:700;margin-bottom:8px;color:var(--rose-deep);}
+.aula-zero-card .status{font-family:'JetBrains Mono',monospace;font-size:12px;letter-spacing:1px;text-transform:uppercase;color:var(--rose);font-weight:600;margin-bottom:12px;}
+.aula-zero-card p{color:var(--ink-soft);font-size:14.5px;margin-bottom:20px;max-width:500px;margin-left:auto;margin-right:auto;}
+.aula-zero-card .btn-start{display:inline-block;background:var(--rose);color:white;border:none;border-radius:14px;padding:14px 32px;font-size:15px;font-family:'Zen Maru Gothic',sans-serif;font-weight:600;cursor:pointer;transition:all 0.2s ease;text-decoration:none;}
+.aula-zero-card .btn-start:hover{background:var(--rose-deep);transform:translateY(-2px);}
+.aula-zero-card .progress{margin-top:20px;padding-top:20px;border-top:1px solid rgba(224,140,134,0.3);font-size:12px;color:var(--rose-deep);font-weight:600;}
+.aula-zero-card.completed .status{color:var(--sage);}
+.aula-zero-card.completed .progress{color:var(--sage);}
+
+.hub-mapas-section h2{font-family:'Baloo 2',sans-serif;font-size:26px;font-weight:700;margin-bottom:12px;text-align:center;color:var(--ink);}
+.hub-mapas-section .intro{text-align:center;color:var(--ink-soft);font-size:14px;margin-bottom:36px;max-width:700px;margin-left:auto;margin-right:auto;}
+
+.mapas-hub-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:18px;margin-bottom:20px;}
+.mapa-card{background:white;border:1.5px solid var(--line);border-radius:18px;padding:20px;text-align:center;cursor:pointer;transition:all 0.2s ease;box-shadow:0 2px 12px rgba(74,65,73,0.06);position:relative;text-decoration:none;color:inherit;display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:180px;}
+.mapa-card:hover:not(.locked){transform:translateY(-4px);border-color:var(--rose);box-shadow:0 6px 20px rgba(224,140,134,0.15);}
+.mapa-card .number{font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:1.2px;text-transform:uppercase;color:var(--rose);font-weight:600;margin-bottom:6px;}
+.mapa-card .emoji{font-size:36px;margin-bottom:8px;}
+.mapa-card h3{font-family:'Baloo 2',sans-serif;font-size:16px;font-weight:700;color:var(--ink);margin-bottom:4px;}
+.mapa-card p{font-size:13px;color:var(--ink-soft);}
+.mapa-card.locked{opacity:0.65;cursor:not-allowed;}
+.mapa-card.locked .lock-badge{position:absolute;top:8px;right:8px;width:32px;height:32px;background:var(--line);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:18px;}
+.mapa-card.locked::after{content:'';position:absolute;inset:0;background:linear-gradient(135deg,rgba(255,255,255,0.4) 0%,rgba(255,255,255,0) 100%);border-radius:18px;pointer-events:none;}
+
+.deep-wrap{margin-top:14px;border-top:2px dotted var(--line-2);padding-top:28px;}
+.deep-h{font-family:'Prata',serif;font-size:21px;font-weight:600;margin-bottom:4px;}
+.deep-sub{font-size:13.5px;color:var(--ink-soft);margin-bottom:16px;}
+.ph-row{background:var(--white);border:1.5px solid var(--line);border-radius:18px;padding:13px 18px;margin-bottom:10px;display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;}
+.ph-row .who{font-size:11px;font-family:'JetBrains Mono',monospace;letter-spacing:0.6px;border-radius:16px;padding:3px 12px;white-space:nowrap;}
+.ph-row .who.boca{background:var(--c-act-bg);color:var(--c-act);}
+.ph-row .who.ouvido{background:var(--c-dir-bg);color:var(--c-dir);}
+.ph-row .ptx{flex:1;min-width:200px;}
+.ph-row .ro{font-family:'JetBrains Mono',monospace;font-size:13.5px;font-weight:600;color:var(--rose-deep);}
+.ph-row .tr{font-size:13.5px;color:var(--ink-soft);}
+
+.quiz-card{background:var(--white);border:1.5px solid var(--line);border-radius:22px;padding:20px 22px;margin-bottom:14px;box-shadow:0 3px 14px rgba(74,65,73,0.03);}
+.quiz-card .q{font-weight:700;font-size:15.5px;margin-bottom:14px;}
+.quiz-card .opt{display:block;width:100%;text-align:left;font-family:inherit;font-size:14.5px;border:1.5px solid var(--line);background:var(--paper);border-radius:16px;padding:11px 16px;margin-bottom:8px;cursor:pointer;transition:all .18s ease;color:var(--ink);}
+.quiz-card .opt:hover{border-color:var(--rose);background:var(--rose-soft);}
+.quiz-card .opt.ok{border-color:var(--c-act);background:var(--c-act-bg);color:var(--c-act);font-weight:700;}
+.quiz-card .opt.bad{border-color:var(--c-urg);background:var(--c-urg-bg);color:var(--c-urg);}
+.quiz-card .opt[disabled]{cursor:default;}
+.quiz-card .why{margin-top:10px;padding:12px 16px;border-radius:16px;background:var(--lav-soft);border:1px solid #DFE1F4;font-size:13.5px;color:#4E5490;}
+
+.foot{margin-top:60px;padding-top:22px;border-top:2px dotted var(--line-2);display:flex;align-items:center;justify-content:space-between;gap:14px;flex-wrap:wrap;font-size:13px;color:var(--ink-soft);}
+.foot .b{font-family:'Prata',serif;font-size:16px;font-weight:600;color:var(--ink);}
+.note{font-size:12px;color:var(--ink-soft);margin-top:10px;text-align:center;}
+
+.langs button{display:flex;align-items:center;gap:12px;}
+.langs .code{
+  width:38px;height:38px;flex-shrink:0;border-radius:12px;
+  display:flex;align-items:center;justify-content:center;
+  font-family:'JetBrains Mono',monospace;font-size:12px;font-weight:600;letter-spacing:0.5px;
+  background:var(--paper);border:1.5px solid var(--line);color:var(--ink-soft);transition:all .18s ease;
+}
+.langs button.on .code{background:var(--rose);border-color:var(--rose);color:var(--white);}
+.langs .txt{display:block;}
+@media (max-width:560px){ .wp-line{padding-left:20px;} .langs button{flex:1 1 100%;} }
+
+</style>
+</head>
+<body>
+<main class="page">
+
+  <header class="top">
+    <a href="/idiomas/" class="brand" style="text-decoration:none;color:inherit;">unirversos <span>/ idiomas</span></a>
+    <span style="display:flex;gap:14px;align-items:center;font-size:12.5px;flex-wrap:wrap;">
+      <span class="crumb"></span>
+      <a href="/" style="color:var(--ink-soft);text-decoration:none;">início</a>
+      <a href="/idiomas/" style="color:var(--ink-soft);text-decoration:none;">idiomas</a>
+      <a href="/memorias/" style="color:var(--ink-soft);text-decoration:none;">memórias</a>
+      <a href="/sobre/" style="color:var(--ink-soft);text-decoration:none;">sobre</a>
+    </span>
+  </header>
+
+  <!-- ABAS DO HUB -->
+  <div class="hub-tabs">
+    <button class="active" onclick="switchHubTab('trilhas')">🧭 Trilhas</button>
+    <button onclick="switchHubTab('mapas')">🗺️ Explorar</button>
+  </div>
+
+  <!-- ABA 1: HUB DE TRILHAS -->
+  <div class="hub-content active" id="tab-trilhas">
+    <div class="hub-section aula-zero">
+      <div class="aula-zero-card" id="aulaZeroCard" onclick="location.href='aula-zero/';">
+        <span class="emoji">🧩</span>
+        <h2>Aula Zero</h2>
+        <div class="status">Pré-requisito</div>
+        <p>Estrutura básica de japonês em 4 abas. Aprenda o essencial para sobreviver em qualquer situação.</p>
+        <a href="aula-zero/" class="btn-start">Começar</a>
+        <div class="progress" id="aulaZeroProgress"></div>
+      </div>
+    </div>
+
+    <div class="hub-section hub-mapas-section">
+      <h2>12 Mapas de Contexto</h2>
+      <p class="intro">Desbloqueados após completar a Aula Zero. Cada mapa é uma trilha de aprendizado em um contexto real.</p>
+      <div class="mapas-hub-grid" id="mapasGrid"></div>
+    </div>
+  </div>
+
+  <!-- ABA 2: EXPLORAR MAPAS (conteúdo original) -->
+  <div class="hub-content" id="tab-mapas">
+  <section class="hero">
+    <p class="jp">地図をつくる</p>
+    <h1>Eu crio <em>mapas.</em><br>Você constrói as pontes.</h1>
+    <p>Cada mapa percorre o <strong>Quadrado Elemental</strong>: fogo para descobrir as peças, ar para montar a fala, água para escutar o outro, terra para materializar — e o espírito, que nasce quando você usa tudo isso com alguém de verdade. Escolha o idioma da sua travessia:</p>
+  </section>
+
+  <p style="text-align:center;font-family:'JetBrains Mono',monospace;font-size:10.5px;letter-spacing:1.6px;text-transform:uppercase;color:var(--ink-soft);margin-top:18px;">escolha sua trilha</p>
+  <div class="langs" id="langs"></div>
+  <nav class="trail" id="trail" aria-label="Escolha o mapa"></nav>
+  <div class="missao" id="missao"></div>
+
+  <div class="wp">
+    <div class="dot">1</div>
+    <div><h2 id="wp1t"></h2><p class="hint" id="wp1h"></p></div>
+  </div>
+  <div class="wp-line">
+    <div class="legend" id="legend"></div>
+    <div class="pieces" id="pieces"></div>
+  </div>
+
+  <div class="wp">
+    <div class="dot">2</div>
+    <div><h2 id="wp2t"></h2><p class="hint" id="wp2h"></p></div>
+  </div>
+  <div class="wp-line" id="molds"></div>
+
+  <div class="wp">
+    <div class="dot">3</div>
+    <div><h2 id="wp3t"></h2><p class="hint" id="wp3h"></p></div>
+  </div>
+  <div class="wp-line">
+    <div class="radar" id="radar"></div>
+  </div>
+
+  <div style="text-align:center;margin-top:34px;">
+    <button class="btn ghost" id="deep-btn" onclick="toggleDeep()">⛏️</button>
+  </div>
+  <div id="deep"></div>
+  <div class="fifth-el" id="fifth"></div>
+  <div class="prova-cta" id="prova-cta"></div>
+
+  <footer class="foot">
+    <span class="b">unirversos — tudo conectado</span>
+    <span>metodologia: mapas de contexto · peças + moldes + radar</span>
+  </footer>
+  <p class="note" id="audio-note"></p>
+  <p id="voice-warn" style="display:none;max-width:640px;margin:12px auto 0;font-size:12.5px;line-height:1.6;color:#8A5A3B;background:#FBF2DF;border:1px solid #EBD9B4;border-radius:16px;padding:12px 16px;text-align:center;"></p>
+  <p style="text-align:center;margin-top:14px;"><button class="btn ghost" id="audio-test">🔊 testar o áudio</button></p>
+  </div><!-- fecha tab-mapas -->
+
+</main>
+
+<script>
+/* =========================================================
+   PACOTE JAPONÊS — trilha completa (interface em português)
+   ========================================================= */
+const MAPS_JA = [
+ { id:'aeroporto', num:'00', chip:'🛂 Aeroporto e imigração',
+  missao:'<strong>Missão:</strong> declarar objetivo, localizar documentos e chegar ao seu destino final.',
+  vocab:[
+   {jp:'パスポート', ro:'pasupōto', pt:'passaporte', cat:'obj'},
+   {jp:'ビザ', ro:'biza', pt:'visto', cat:'obj'},
+   {jp:'観光', ro:'kankou', pt:'turismo', cat:'obj'},
+   {jp:'旅行', ro:'ryokou', pt:'viagem', cat:'obj'},
+   {jp:'仕事', ro:'shigoto', pt:'trabalho', cat:'obj'},
+   {jp:'目的地', ro:'mokutekichi', pt:'destino final', cat:'dir'},
+   {jp:'搭乗', ro:'toujouu', pt:'embarque', cat:'dir'},
+   {jp:'到着', ro:'touchaku', pt:'desembarque', cat:'dir'},
+   {jp:'ゲート', ro:'geeto', pt:'gate', cat:'obj'},
+   {jp:'遅延', ro:'chien', pt:'atraso', cat:'dir'},
+   {jp:'搭乗口', ro:'toujoukuchi', pt:'portão de embarque', cat:'dir'},
+   {jp:'荷物', ro:'nimotsu', pt:'bagagem', cat:'obj'},
+   {jp:'預ける', ro:'azukeru', pt:'despachar bagagem', cat:'act'},
+   {jp:'紛失', ro:'funshitsu', pt:'bagagem extraviada', cat:'urg'}
+  ],
+  molds:[
+   {label:'Molde 1.1 · Declarar Objetivo / Motivo', 
+    tplRo:'{ro} desu', tplJp:'{jp}です', tplPt:'é {pt}', slot:'vocab',
+    fits:['kankou','ryokou','shigoto'],
+    hint:'Estrutura: [Motivo] + です. Responda o propósito da sua viagem: turismo (観光) ou trabalho (仕事).'},
+   {label:'Molde 1.2.A · Apresentar Passaporte', 
+    slot:null, ro:'Pasupōto desu.', jp:'パスポートです。', pt:'É o passaporte.'},
+   {label:'Molde 1.2.B · Localizar Passaporte', 
+    slot:null, ro:'Pasupōto wa doko desu ka?', jp:'パスポートはどこですか？', pt:'Onde está o passaporte?'},
+   {label:'Molde 1.3 · Declarar Destino Final', 
+    tplRo:'Mokutekichi wa {v} desu', tplJp:'目的地は{v}です', tplPt:'O destino final é {pt}', slot:'input', inputPh:'sua cidade-alvo',
+    hint:'Estrutura: 目的地は [Local] です. Declare para qual cidade você está indo.'},
+   {label:'Molde 1.4 · Comunicar Problema', 
+    tplRo:'{ro} ga arimasen', tplJp:'{jp}がありません', tplPt:'{pt} não está aqui / não tenho', slot:'vocab',
+    fits:['biza','nimotsu','pasupōto'],
+    hint:'Estrutura: [Coisa] がありません. Use quando algo está faltando: visto perdido, bagagem extraviada, passaporte não tem.'},
+   {label:'Molde 1.5 · Informar Atraso', 
+    slot:null, ro:'Chien desu.', jp:'遅延です。', pt:'Há atraso no voo.'}
+  ],
+  radar:[
+   {kw:'KANKOU DESUKA?', mean:'Qual o motivo da viagem?', resp:'Responda em bloco: <b>Kankou desu.</b> (turismo) ou <b>Shigoto desu.</b> (trabalho)'},
+   {kw:'MOKUTEKICHI WA?', mean:'Qual é o seu destino final?', resp:'Ex.: <b>Tōkyō desu.</b> (Tóquio) ou <b>Ōsaka desu.</b> (Osaka)'},
+   {kw:'PASUPŌTO', soft:true, mean:'Ele quer seu passaporte.', resp:'Entregue junto com o formulário de desembarque.'},
+   {kw:'MONDAI / SHŌJIKI', mean:'Há um problema?', resp:'<b>Nimotsu ga arimasen.</b> (Minha bagagem não chegou) ou <b>Chien desu.</b> (Há atraso)'}
+  ]},
+ { id:'hotel', num:'01', chip:'🏨 O hotel',
+  missao:'<strong>Missão:</strong> fazer o check-in, pedir o que precisa e capturar as palavras-chave do recepcionista.',
+  vocab:[
+   {jp:'鍵', ro:'kagi', pt:'chave', cat:'obj'},
+   {jp:'カード', ro:'kaado', pt:'cartão-chave', cat:'obj'},
+   {jp:'荷物', ro:'nimotsu', pt:'bagagem', cat:'obj'},
+   {jp:'Wi-Fi', ro:'waifai', pt:'wi-fi', cat:'obj', say:'ワイファイ'},
+   {jp:'部屋', ro:'heya', pt:'quarto', cat:'obj'},
+   {jp:'トイレ', ro:'toire', pt:'banheiro', cat:'obj'},
+   {jp:'朝食', ro:'choushoku', pt:'café da manhã', cat:'obj'},
+   {jp:'エレベーター', ro:'erebeetaa', pt:'elevador', cat:'dir'},
+   {jp:'二階', ro:'nikai', pt:'2º andar', cat:'dir'}
+  ],
+  molds:[
+   {label:'Molde A · pedir algo', tplRo:'{ro} o onegaishimasu', tplJp:'{jp}をお願いします', tplPt:'{pt}, por favor', slot:'vocab',
+    fits:['kagi','kaado','waifai','nimotsu'],
+    hint:'Aqui entram coisas que você recebe na mão: kagi, kaado, waifai, nimotsu. Quarto, banheiro, café e elevador são LUGARES — usam o molde C.'},
+   {label:'Molde B · anunciar a reserva', slot:'input', inputPh:'seu nome',
+    tplRo:'Yoyaku ga arimasu. {v} desu.', tplJp:'予約があります。{v}です。', tplPt:'Tenho reserva. Sou {v}.'},
+   {label:'Molde C · onde fica?', tplRo:'{ro} wa doko desu ka', tplJp:'{jp}はどこですか', tplPt:'onde fica {pt}?', slot:'vocab',
+    fits:['heya','toire','choushoku','erebeetaa'],
+    hint:'Aqui entram lugares: heya, toire, choushoku, erebeetaa. Chave e bagagem se PEDEM (molde A), e nikai é a resposta que você vai ouvir.'},
+   {label:'Molde D · pedir mais um tempo', slot:null,
+    ro:'Chotto matte kudasai.', jp:'ちょっと待って下さい。', pt:'Um segundinho, por favor!'},
+   {label:'Molde E · pedir socorro em inglês', slot:null,
+    ro:'Eigo de ii desu ka.', jp:'英語でいいですか。', pt:'Pode ser em inglês?'}
+  ],
+  radar:[
+   {kw:'NAN NIN SAMA?', mean:'Quantas pessoas são?', resp:'Responda em bloco: <b>San nin desu.</b> (somos 3)'},
+   {kw:'NAN KAI?', soft:true, mean:'Falando de andar — pergunta ou informação.', resp:'<b>Nikai</b> = 2º andar. Pegue o número antes do <b>kai</b>.'},
+   {kw:'CHOUSHOKU + GOZEN/GOGO', soft:true, mean:'Horário do café da manhã.', resp:'Padrão: <b>x ji kara x ji made</b> = das x às x.'}
+  ]},
+ { id:'conbini', num:'02', chip:'🏪 Kombini',
+  missao:'<strong>Missão:</strong> comprar na loja de conveniência sem medo — responder o atendente do caixa e pagar com facilidade.',
+  vocab:[
+   {jp:'これ', ro:'kore', pt:'isto', cat:'obj'},
+   {jp:'水', ro:'mizu', pt:'água', cat:'obj'},
+   {jp:'お弁当', ro:'obentou', pt:'marmita / bentô', cat:'obj'},
+   {jp:'袋', ro:'fukuro', pt:'sacola', cat:'obj'},
+   {jp:'箸', ro:'hashi', pt:'hashi', cat:'obj'},
+   {jp:'お会計', ro:'okaikei', pt:'a conta', cat:'obj'},
+   {jp:'温めますか', ro:'atatamemasu ka', pt:'aquecer?', cat:'act'},
+   {jp:'大丈夫です', ro:'daijoubu desu', pt:'não precisa', cat:'act'}
+  ],
+  molds:[
+   {label:'Molde A · apontar e pedir', tplRo:'{ro} o kudasai', tplJp:'{jp}をください', tplPt:'{pt}, por favor', slot:'vocab',
+    fits:['kore','mizu','obentou','hashi','fukuro'],
+    hint:'Aqui entram coisas que dá pra apontar e receber: kore, mizu, obentou, hashi, fukuro. A conta tem molde próprio (B), e respostas como daijoubu desu são frases inteiras.'},
+   {label:'Molde B · pedir a conta', slot:null, ro:'Okaikei o onegaishimasu.', jp:'お会計をお願いします。', pt:'A conta, por favor.'},
+   {label:'Molde C · recusar com educação', slot:null, ro:'Daijoubu desu.', jp:'大丈夫です。', pt:'Não precisa, obrigada.'}
+  ],
+  radar:[
+   {kw:'ATATAMEMASU KA?', mean:'Quer que eu esquente (a marmita)?', resp:'Sim: <b>Hai, onegaishimasu.</b> · Não: <b>Daijoubu desu.</b>'},
+   {kw:'FUKURO', soft:true, mean:'Você quer sacola?', resp:'Sim: <b>Onegaishimasu.</b> · Não: <b>Daijoubu desu.</b>'},
+   {kw:'[número] EN DESU', soft:true, mean:'É o total da compra, em ienes.', resp:'Confira o visor do caixa — ele sempre mostra o número.'}
+  ]},
+ { id:'restaurante', num:'03', chip:'🍽️ Restaurante',
+  missao:'<strong>Missão:</strong> conseguir mesa, pedir o prato, escolher combo ou avulso e fechar a conta — tudo em bloco.',
+  vocab:[
+   {jp:'メニュー', ro:'menyuu', pt:'cardápio', cat:'obj'},
+   {jp:'お勘定', ro:'okanjou', pt:'a conta', cat:'obj'},
+   {jp:'箸', ro:'hashi', pt:'hashi', cat:'obj'},
+   {jp:'フォーク', ro:'fooku', pt:'garfo', cat:'obj'},
+   {jp:'スプーン', ro:'supuun', pt:'colher', cat:'obj'},
+   {jp:'セット', ro:'setto', pt:'combo', cat:'dir'},
+   {jp:'単品', ro:'tanpin', pt:'só o item', cat:'dir'},
+   {jp:'店内', ro:'tennai', pt:'comer aqui', cat:'dir'},
+   {jp:'お持ち帰り', ro:'omochikaeri', pt:'pra viagem', cat:'dir'}
+  ],
+  molds:[
+   {label:'Molde A · pedir na mesa', tplRo:'{ro} onegaishimasu', tplJp:'{jp}お願いします', tplPt:'{pt}, por favor', slot:'vocab',
+    fits:['hashi','fooku','supuun','okanjou'],
+    hint:'Aqui entra o que o garçom traz à mesa: hashi, fooku, supuun, okanjou. Cardápio tem molde próprio (D), e setto/tennai são escolhas (molde C).'},
+   {label:'Molde B · escolher o prato', slot:'input', inputPh:'prato (ex.: ramen)',
+    tplRo:'Watashi wa {v} ni shimasu.', tplJp:'私は{v}にします。', tplPt:'Eu vou de {v}.'},
+   {label:'Molde C · combo, avulso, aqui ou viagem', tplRo:'{ro} de onegaishimasu', tplJp:'{jp}でお願いします', tplPt:'{pt}, por favor', slot:'vocab',
+    fits:['setto','tanpin','tennai','omochikaeri'],
+    hint:'Aqui entram as ESCOLHAS: setto, tanpin, tennai, omochikaeri. Talheres e conta usam o molde A.'},
+   {label:'Molde D · ver o cardápio', slot:null,
+    ro:'Menyuu o misete moraemasu ka.', jp:'メニューを見せてもらえますか。', pt:'Posso ver o cardápio?'}
+  ],
+  radar:[
+   {kw:'NAN MEI SAMA DESU KA?', mean:'Mesa para quantas pessoas?', resp:'Responda: <b>San mei desu.</b> ou <b>San nin desu.</b> (somos 3)'},
+   {kw:'TENNAI? OMOCHIKAERI?', mean:'Pra comer aqui ou pra viagem?', resp:'<b>Tennai de.</b> (aqui) · <b>Omochikaeri de.</b> (viagem)'},
+   {kw:'SETTO? TANPIN?', soft:true, mean:'Combo (com acompanhamento) ou só o item?', resp:'<b>Setto de onegaishimasu.</b> ou <b>Tanpin de onegaishimasu.</b>'}
+  ]},
+ { id:'trens', num:'04', chip:'🚆 Trens e metrô',
+  missao:'<strong>Missão:</strong> achar a plataforma certa, confirmar o destino do trem e navegar pelo labirinto das estações.',
+  vocab:[
+   {jp:'駅', ro:'eki', pt:'estação', cat:'obj'},
+   {jp:'ホーム', ro:'hoomu', pt:'plataforma', cat:'obj'},
+   {jp:'出口', ro:'deguchi', pt:'saída', cat:'obj'},
+   {jp:'トイレ', ro:'toire', pt:'banheiro', cat:'obj'},
+   {jp:'乗り換え', ro:'norikae', pt:'baldeação', cat:'act'},
+   {jp:'まっすぐ', ro:'massugu', pt:'em frente', cat:'dir'},
+   {jp:'右', ro:'migi', pt:'direita', cat:'dir'},
+   {jp:'左', ro:'hidari', pt:'esquerda', cat:'dir'}
+  ],
+  molds:[
+   {label:'Molde A · onde fica?', tplRo:'{ro} wa doko desu ka', tplJp:'{jp}はどこですか', tplPt:'onde fica {pt}?', slot:'vocab',
+    fits:['eki','hoomu','deguchi','toire','norikae'],
+    hint:'Aqui entram lugares: eki, hoomu, deguchi, toire (e norikae: onde faço a baldeação?). Massugu, migi e hidari são RESPOSTAS que você vai ouvir — não perguntas.'},
+   {label:'Molde B · este trem vai para…?', slot:'input', inputPh:'destino (ex.: Kanazawa)',
+    tplRo:'Kono densha wa {v} ni ikimasu ka', tplJp:'この電車は{v}に行きますか', tplPt:'Este trem vai para {v}?'},
+   {label:'Molde C · comando de táxi', slot:'input', inputPh:'destino (ex.: hoteru)',
+    tplRo:'{v} made onegaishimasu', tplJp:'{v}までお願いします', tplPt:'Até {v}, por favor.'}
+  ],
+  radar:[
+   {kw:'MASSUGU', soft:true, mean:'Siga direto em frente.', resp:'Agradeça: <b>Arigatou gozaimasu!</b>'},
+   {kw:'MIGI · HIDARI', soft:true, mean:'Vire à direita (migi) ou à esquerda (hidari).', resp:'Truque: <b>hidari</b> e <b>esquerda</b> — os dois são a palavra mais longa.'},
+   {kw:'NORIKAE', mean:'Você vai precisar trocar de trem.', resp:'Pergunte a linha: <b>Nani-sen desu ka?</b>'}
+  ]},
+ { id:'compras', num:'05', chip:'🛍️ Compras e tax-free',
+  missao:'<strong>Missão:</strong> perguntar preços, pedir quantidades, escolher o pagamento e ativar a isenção de imposto.',
+  vocab:[
+   {jp:'これ', ro:'kore', pt:'isto', cat:'obj'},
+   {jp:'お土産', ro:'omiyage', pt:'lembrancinha', cat:'obj'},
+   {jp:'免税', ro:'menzei', pt:'tax-free', cat:'obj'},
+   {jp:'カード', ro:'kaado', pt:'cartão', cat:'obj'},
+   {jp:'現金', ro:'genkin', pt:'dinheiro vivo', cat:'obj'},
+   {jp:'領収書', ro:'ryoushuusho', pt:'nota fiscal', cat:'obj'},
+   {jp:'一つ', ro:'hitotsu', pt:'uma unidade', cat:'dir'},
+   {jp:'二つ', ro:'futatsu', pt:'duas unidades', cat:'dir'},
+   {jp:'いくら', ro:'ikura', pt:'quanto custa', cat:'dir'}
+  ],
+  molds:[
+   {label:'Molde A · quanto custa?', tplRo:'{ro} wa ikura desu ka', tplJp:'{jp}はいくらですか', tplPt:'quanto custa {pt}?', slot:'vocab',
+    fits:['kore','omiyage'],
+    hint:'Aqui entra a COISA cujo preço você quer saber: kore, omiyage. Ikura já é a pergunta, e menzei/kaado usam os moldes C e D.'},
+   {label:'Molde B · quantas unidades', tplRo:'Kore o {ro} kudasai', tplJp:'これを{jp}ください', tplPt:'Isto, {pt}, por favor.', slot:'vocab',
+    fits:['hitotsu','futatsu'],
+    hint:'Aqui entram os contadores: hitotsu, futatsu. A fórmula é objeto + número + kudasai — funciona apontando pra qualquer coisa.'},
+   {label:'Molde C · pode ser no cartão?', slot:null, ro:'Kaado de ii desu ka', jp:'カードでいいですか', pt:'Pode ser no cartão?'},
+   {label:'Molde D · faz tax-free?', slot:null, ro:'Menzei wa dekimasu ka', jp:'免税はできますか', pt:'Vocês fazem tax-free?'},
+   {label:'Molde E · decidir a compra', slot:null, ro:'Ja, kore ni shimasu.', jp:'じゃ、これにします。', pt:'Então vou levar este.'}
+  ],
+  radar:[
+   {kw:'IRASSHAIMASE!', soft:true, mean:'É o “bem-vindo” ao entrar na loja — não exige resposta.', resp:'Se quiser responder algo, <b>doomo</b> já basta.'},
+   {kw:'GENKIN DAKE', mean:'Só aceitam dinheiro vivo.', resp:'Saque no 7-Eleven ou nos Correios — os caixas que aceitam cartão estrangeiro.'},
+   {kw:'PASUPOOTO', soft:true, mean:'Mostre o passaporte pra registrar o tax-free.', resp:'O tax-free só vale com passaporte físico em mãos.'}
+  ]},
+ { id:'roupas', num:'06', chip:'👗 Roupas e provador',
+  missao:'<strong>Missão:</strong> achar seu tamanho, pedir outra cor e experimentar sem constrangimento — no país onde o M é menor do que você imagina.',
+  vocab:[
+   {jp:'試着室', ro:'shichakushitsu', pt:'provador', cat:'obj'},
+   {jp:'レジ', ro:'reji', pt:'caixa', cat:'obj'},
+   {jp:'Tシャツ', ro:'tii-shatsu', pt:'camiseta', cat:'obj'},
+   {jp:'ズボン', ro:'zubon', pt:'calça', cat:'obj'},
+   {jp:'靴', ro:'kutsu', pt:'sapatos', cat:'obj'},
+   {jp:'上着', ro:'uwagi', pt:'casaco', cat:'obj'},
+   {jp:'もっと大きいの', ro:'motto ookii no', pt:'um maior', cat:'dir'},
+   {jp:'もっと小さいの', ro:'motto chiisai no', pt:'um menor', cat:'dir'},
+   {jp:'ほかの色', ro:'hoka no iro', pt:'outra cor', cat:'dir'}
+  ],
+  molds:[
+   {label:'Molde A · vocês têm...?', tplRo:'{ro} ga arimasu ka', tplJp:'{jp}がありますか', tplPt:'tem {pt}?', slot:'vocab',
+    fits:['motto ookii no','motto chiisai no','hoka no iro','tii-shatsu','zubon','kutsu','uwagi'],
+    hint:'Aqui entra o que você procura: tamanhos, cores e peças. Provador e caixa são LUGARES — usam o molde C.'},
+   {label:'Molde B · posso experimentar?', slot:null,
+    ro:'Kigaete mitemo ii desu ka.', jp:'着替えてみてもいいですか。', pt:'Posso experimentar?'},
+   {label:'Molde C · onde fica?', tplRo:'{ro} wa doko desu ka', tplJp:'{jp}はどこですか', tplPt:'onde fica {pt}?', slot:'vocab',
+    fits:['shichakushitsu','reji'],
+    hint:'Aqui entram lugares da loja: shichakushitsu, reji. Roupas e tamanhos se PERGUNTAM com o molde A.'},
+   {label:'Molde D · só dando uma olhada', slot:null,
+    ro:'Chotto mitemo ii desu ka.', jp:'ちょっと見てもいいですか。', pt:'Posso só dar uma olhada?'}
+  ],
+  radar:[
+   {kw:'SAIZU', soft:true, mean:'Estão falando de tamanho: S, M, L, LL.', resp:'⚠️ Tamanhos japoneses correm menores — o <b>M</b> de lá costuma ser o <b>P/S</b> daqui.'},
+   {kw:'DOOZO GOYUKKURI', soft:true, mean:'“Fique à vontade” — gentileza, não convite pra sair.', resp:'Sorria e continue olhando: <b>doomo.</b>'},
+   {kw:'SEERU · WARIBIKI', soft:true, mean:'Promoção (seeru) · desconto (waribiki).', resp:'Pergunte o preço final: <b>Ikura desu ka.</b>'}
+  ]},
+ { id:'sos', num:'07', chip:'🆘 Emergência',
+  missao:'<strong>Missão:</strong> resolver imprevistos de saúde, perdas e pedir ajuda imediata — sem travar.',
+  vocab:[
+   {jp:'病院', ro:'byouin', pt:'hospital', cat:'obj'},
+   {jp:'交番', ro:'kouban', pt:'posto policial', cat:'obj'},
+   {jp:'薬', ro:'kusuri', pt:'remédio', cat:'obj'},
+   {jp:'頭', ro:'atama', pt:'cabeça', cat:'obj'},
+   {jp:'お腹', ro:'onaka', pt:'barriga', cat:'obj'},
+   {jp:'救急車', ro:'kyuukyuusha', pt:'ambulância', cat:'urg'},
+   {jp:'警察', ro:'keisatsu', pt:'polícia', cat:'urg'},
+   {jp:'助けて', ro:'tasukete', pt:'socorro!', cat:'urg'}
+  ],
+  molds:[
+   {label:'Molde A · declarar dor', tplRo:'{ro} ga itai desu', tplJp:'{jp}が痛いです', tplPt:'meu/minha {pt} dói', slot:'vocab',
+    fits:['atama','onaka'],
+    hint:'Aqui entram partes do corpo: atama, onaka. Hospital não dói — você VAI até ele (byouin wa doko desu ka).'},
+   {label:'Molde B · estou perdida', slot:null, ro:'Michi ni mayoimashita.', jp:'道に迷いました。', pt:'Perdi o caminho.'},
+   {label:'Molde C · chamar ajuda', tplRo:'{ro} o yonde kudasai', tplJp:'{jp}を呼んでください', tplPt:'chame {pt}, por favor', slot:'vocab',
+    fits:['kyuukyuusha','keisatsu'],
+    hint:'Aqui entra QUEM pode ser chamado: kyuukyuusha, keisatsu. Remédio e hospital não atendem chamado — se pede (kusuri o kudasai) ou se pergunta onde fica.'}
+  ],
+  radar:[
+   {kw:'DAIJOUBU DESU KA?', soft:true, mean:'Estão perguntando se você está bem.', resp:'Bem: <b>Daijoubu desu.</b> · Precisa de ajuda: <b>Tasukete kudasai.</b>'},
+   {kw:'KOUBAN', soft:true, mean:'Apontaram o posto policial de bairro.', resp:'É o melhor lugar pra item perdido — os koban resolvem.'},
+   {kw:'KYUUKYUU', mean:'Falando de emergência médica.', resp:'O número é <b>119</b> — ambulância e bombeiros.'}
+  ]},
+ { id:'base', num:'08', chip:'🤝 Apresentação',
+  missao:'<strong>Missão:</strong> construir pontes — se apresentar, agradecer e abrir qualquer conversa. Os moldes daqui sustentam todos os outros mapas.',
+  vocab:[
+   {jp:'おはようございます', ro:'ohayou gozaimasu', pt:'bom dia', cat:'act'},
+   {jp:'こんにちは', ro:'konnichiwa', pt:'boa tarde / olá', cat:'act'},
+   {jp:'こんばんは', ro:'konbanwa', pt:'boa noite', cat:'act'},
+   {jp:'はじめまして', ro:'hajimemashite', pt:'prazer em conhecer', cat:'act'},
+   {jp:'すみません', ro:'sumimasen', pt:'com licença / desculpe', cat:'act'},
+   {jp:'ありがとうございます', ro:'arigatou gozaimasu', pt:'obrigada(o)', cat:'act'},
+   {jp:'私', ro:'watashi', pt:'eu', cat:'obj'},
+   {jp:'ブラジル', ro:'Burajiru', pt:'Brasil', cat:'obj'}
+  ],
+  molds:[
+   {label:'Molde A · se apresentar', slot:'input', inputPh:'seu nome',
+    tplRo:'Hajimemashite, {v} desu.', tplJp:'はじめまして、{v}です。', tplPt:'Prazer, sou {v}.'},
+   {label:'Molde B · dizer de onde vem', slot:'input', inputPh:'ex.: Burajiru',
+    tplRo:'{v} kara kimashita.', tplJp:'{v}から来ました。', tplPt:'Vim de {v}.'},
+   {label:'Molde C · fechar a apresentação', slot:null, ro:'Yoroshiku onegaishimasu.', jp:'よろしくお願いします。', pt:'Um prazer — conto com você.'}
+  ],
+  radar:[
+   {kw:'HAJIMEMASHITE', soft:true, mean:'A pessoa está se apresentando a você.', resp:'Responda igual: <b>Hajimemashite, [nome] desu.</b>'},
+   {kw:'ONAMAE WA?', soft:true, mean:'Perguntaram seu nome.', resp:'<b>[Nome] desu.</b> — o desu fecha a frase sozinho.'},
+   {kw:'YOROSHIKU', soft:true, mean:'Estão fechando a apresentação com cortesia.', resp:'Devolva: <b>Yoroshiku onegaishimasu.</b>'}
+  ]},
+ { id:'numeros', num:'09', chip:'🕒 Horas e números',
+  missao:'<strong>Missão:</strong> perguntar e entender horas, marcar encontros e não confundir manhã com noite.',
+  vocab:[
+   {jp:'今', ro:'ima', pt:'agora', cat:'dir'},
+   {jp:'何時', ro:'nanji', pt:'que horas', cat:'dir'},
+   {jp:'午前', ro:'gozen', pt:'da manhã (AM)', cat:'dir'},
+   {jp:'午後', ro:'gogo', pt:'da tarde (PM)', cat:'dir'},
+   {jp:'今日', ro:'kyou', pt:'hoje', cat:'dir'},
+   {jp:'明日', ro:'ashita', pt:'amanhã', cat:'dir'},
+   {jp:'会いましょう', ro:'aimashou', pt:'vamos nos encontrar', cat:'act'}
+  ],
+  molds:[
+   {label:'Molde A · perguntar as horas', slot:null, ro:'Ima nanji desu ka.', jp:'今何時ですか。', pt:'Que horas são agora?'},
+   {label:'Molde B · marcar encontro', slot:'input', inputPh:'hora (ex.: 9)',
+    tplRo:'{v}-ji ni aimashou', tplJp:'{v}時に会いましょう', tplPt:'Vamos nos encontrar às {v}h.'},
+   {label:'Molde C · que dia é?', tplRo:'{ro} wa nan-youbi desu ka', tplJp:'{jp}は何曜日ですか', tplPt:'que dia da semana é {pt}?', slot:'vocab',
+    fits:['kyou','ashita'],
+    hint:'Aqui só entram dias: kyou, ashita. Horas usam o molde A, e aimashou é o convite do molde B.'}
+  ],
+  radar:[
+   {kw:'NANJI?', soft:true, mean:'Perguntaram as horas a você.', resp:'Ex.: <b>Sanji desu.</b> (são três horas)'},
+   {kw:'GOZEN · GOGO', soft:true, mean:'Gozen = manhã (AM) · Gogo = tarde/noite (PM).', resp:'<b>Gozen kuji</b> = 9h da manhã, não da noite!'},
+   {kw:'AIMASHOU', soft:true, mean:'Estão marcando um encontro com você.', resp:'Topa? <b>Ii desu ne!</b>'}
+  ]},
+ { id:'planos', num:'10', chip:'🎉 Planos e convites',
+  missao:'<strong>Missão:</strong> convidar, ser convidada e combinar programas — o mapa dos reencontros com amigos e família.',
+  vocab:[
+   {jp:'行きましょう', ro:'ikimashou', pt:'vamos (ir)', cat:'act'},
+   {jp:'食べましょう', ro:'tabemashou', pt:'vamos comer', cat:'act'},
+   {jp:'したい', ro:'shitai', pt:'quero fazer', cat:'act'},
+   {jp:'一緒に', ro:'issho ni', pt:'juntos', cat:'dir'},
+   {jp:'いいですね', ro:'ii desu ne', pt:'boa ideia!', cat:'act'},
+   {jp:'何', ro:'nani', pt:'o quê', cat:'dir'},
+   {jp:'京都', ro:'Kyoto', pt:'Kyoto', cat:'obj'}
+  ],
+  molds:[
+   {label:'Molde A · quero ir a…', slot:'input', inputPh:'lugar (ex.: Kanazawa)',
+    tplRo:'{v} ni ikitai desu', tplJp:'{v}に行きたいです', tplPt:'Quero ir a {v}.'},
+   {label:'Molde B · convidar', tplRo:'Issho ni {ro}', tplJp:'一緒に{jp}', tplPt:'Vamos {pt} juntos?', slot:'vocab',
+    fits:['ikimashou','tabemashou'],
+    hint:'Aqui entram convites já na forma -mashou: ikimashou, tabemashou. Shitai é desejo (molde A) e ii desu ne é a RESPOSTA ao convite.'},
+   {label:'Molde C · aceitar o convite', slot:null, ro:'Ii desu ne! Issho ni ikimashou.', jp:'いいですね！一緒に行きましょう。', pt:'Boa ideia! Vamos juntos.'}
+  ],
+  radar:[
+   {kw:'-MASHOU', mean:'Terminou em -mashou? É um convite: vamos!', resp:'Aceite: <b>Ii desu ne!</b>'},
+   {kw:'-TAI DESU', soft:true, mean:'Terminou em -tai? A pessoa está dizendo o que QUER fazer.', resp:'Convide: <b>Issho ni ikimashou!</b>'},
+   {kw:'NANI O SHITAI?', soft:true, mean:'O que você quer fazer?', resp:'<b>[lugar] ni ikitai desu.</b>'}
+  ]},
+ { id:'placas', num:'11', chip:'🪧 Sinalização',
+  missao:'<strong>Missão:</strong> ler a cidade sem falar nada — reconhecer os padrões de kanji que se repetem em toda placa do Japão.',
+  vocab:[
+   {jp:'入口', ro:'iriguchi', pt:'entrada', cat:'dir'},
+   {jp:'出口', ro:'deguchi', pt:'saída', cat:'dir'},
+   {jp:'非常口', ro:'hijouguchi', pt:'saída de emergência', cat:'urg'},
+   {jp:'お手洗い', ro:'otearai', pt:'banheiro', cat:'dir'},
+   {jp:'改札', ro:'kaisatsu', pt:'catraca', cat:'dir'},
+   {jp:'乗り場', ro:'noriba', pt:'embarque', cat:'dir'},
+   {jp:'禁煙', ro:"kin'en", pt:'proibido fumar', cat:'urg'},
+   {jp:'危険', ro:'kiken', pt:'perigo', cat:'urg'}
+  ],
+  molds:[
+   {label:'Molde de boca · perguntar uma placa', slot:null, ro:'Are wa nan desu ka.', jp:'あれは何ですか。', pt:'O que é aquilo?'},
+   {label:'Molde de olho · 口 (guchi) = abertura', slot:null, ro:'[kanji] + 口 → é uma porta', jp:'入口、出口、非常口', pt:'iriguchi · deguchi · hijouguchi — toda passagem termina em 口'},
+   {label:'Molde de olho · 禁 (kin) = proibição', slot:null, ro:'禁 + [ação] → é proibido', jp:'禁煙、立入禁止', pt:"kin'en (proibido fumar) · tachiiri kinshi (entrada proibida)"},
+   {label:'Molde de olho · 中 (chuu) = acontecendo', slot:null, ro:'[kanji] + 中 → em andamento', jp:'営業中', pt:'eigyouchuu = aberto, funcionando agora'}
+  ],
+  radar:[
+   {kw:'危険', mean:'PERIGO (kiken) — a placa mais importante do mapa.', resp:'Dois kanji, sempre em vermelho ou amarelo. Grave a forma.'},
+   {kw:'非常口', soft:true, mean:'Saída de emergência — o homenzinho verde correndo.', resp:'Note o padrão: termina em <b>口</b>, porta.'},
+   {kw:'営業中 · 準備中', soft:true, mean:'Aberto (eigyouchuu) · em preparação = fechado (junbichuu).', resp:'O <b>中</b> no fim diz: está acontecendo agora.'}
+  ]}
+];
+
+const DEEP_JA = {
+ aeroporto:{
+  phrases:[
+   {who:'ouvido', ro:'Mokuteki wa nan desu ka.', jpk:'目的は何ですか。', pt:'Qual o motivo da viagem?'},
+   {who:'boca', ro:'Kankou desu.', jpk:'観光です。', pt:'É turismo.'},
+   {who:'ouvido', ro:'Nannichikan desu ka.', jpk:'何日間ですか。', pt:'Por quantos dias?'},
+   {who:'boca', ro:'Pasupooto to biza desu.', jpk:'パスポートとビザです。', pt:'Passaporte e visto. (a partícula to = "e")'}
+  ],
+  quiz:[
+   {q:'Como se pergunta oficialmente o motivo da viagem?', opts:['Mokuteki wa nan desu ka','Ikura desu ka','Doko desu ka'], a:0, why:"'Mokuteki wa nan desu ka' = qual é o motivo da viagem? Pergunta padrão da imigração."},
+   {q:"Qual partícula junta duas coisas, como 'passaporte e visto'?", opts:['to','kara','ni'], a:0, why:"'to' funciona como 'e': pasupooto to biza."}
+  ]},
+ hotel:{
+  phrases:[
+   {who:'boca', ro:'Yoyaku ga arimasu.', jpk:'予約があります。', pt:'Tenho uma reserva.'},
+   {who:'boca', ro:'San nin desu.', jpk:'三人です。', pt:'Somos três.'},
+   {who:'boca', ro:'Kagi mou hitotsu arimasu ka.', jpk:'鍵もう一つありますか。', pt:'Tem mais uma chave?'},
+   {who:'ouvido', ro:'Kashikomarimashita. Heya wa nikai desu.', jpk:'かしこまりました。部屋は二階です。', pt:'Entendido. O quarto é no 2º andar.'},
+   {who:'ouvido', ro:'Shichi ji kara juu ji made desu.', jpk:'七時から十時までです。', pt:'É das 7h às 10h. (x ji kara x ji made)'},
+   {who:'boca', ro:'Doyatte ikimasu ka.', jpk:'どうやって行きますか。', pt:'Como eu chego lá?'}
+  ],
+  quiz:[
+   {q:"Qual palavra significa café da manhã?", opts:['choushoku (朝食)','chuushoku (昼食)','yuushoku (夕食)'], a:0, why:'Pegadinha clássica: 朝食 choushoku = café da manhã · 昼食 chuushoku = almoço · 夕食 yuushoku = jantar. O 朝 (manhã) é a pista.'},
+   {q:"Como se diz 'Fiz uma reserva'?", opts:['Yoyaku ga arimasu','Heya o onegaishimasu','Nimotsu desu'], a:0, why:"'Yoyaku ga arimasu' = tenho reserva. A primeira frase natural do check-in."},
+   {q:"Qual é a forma educada de 'entendido' que a RECEPÇÃO usa?", opts:['kashikomarimashita','wakarimashita','sumimasen'], a:0, why:"'kashikomarimashita' é a versão mais formal e cortês — peça de OUVIDO: você escuta, não precisa falar."}
+  ]},
+ conbini:{
+  phrases:[
+   {who:'boca', ro:'Sumimasen, kore o kudasai.', jpk:'すみません、これをください。', pt:'Com licença, isto por favor.'},
+   {who:'boca', ro:'Bejitarian ryouri wa arimasu ka.', jpk:'ベジタリアン料理はありますか。', pt:'Tem comida vegetariana?'},
+   {who:'ouvido', ro:'Atatamemasu ka.', jpk:'温めますか。', pt:'Quer que eu esquente?'},
+   {who:'ouvido', ro:'Kashikomarimashita.', jpk:'かしこまりました。', pt:'Entendido (fala do atendente).'}
+  ],
+  quiz:[
+   {q:'Como pedir algo apontando, sem saber o nome do prato?', opts:['Kore o kudasai','Okaikei desu ka','Oishii desu'], a:0, why:"'Kore o kudasai' = isto, por favor. O molde A resolvendo a vida."},
+   {q:'O que se diz para pedir a conta?', opts:['Okaikei o onegaishimasu','Mizu o onegaishimasu','Kore wa ikura desu ka'], a:0, why:"'Okaikei o onegaishimasu' = a conta, por favor."}
+  ]},
+ restaurante:{
+  phrases:[
+   {who:'ouvido', ro:'Nan mei sama desu ka.', jpk:'何名様ですか。', pt:'Mesa para quantos?'},
+   {who:'boca', ro:'San mei desu.', jpk:'三名です。', pt:'Somos três.'},
+   {who:'boca', ro:'Menyuu o misete moraemasu ka.', jpk:'メニューを見せてもらえますか。', pt:'Posso ver o cardápio?'},
+   {who:'boca', ro:'Chokoreeto arimasu ka.', jpk:'チョコレートありますか。', pt:'Tem chocolate? (troque a palavra e pergunte qualquer coisa)'},
+   {who:'boca', ro:'Okanjou onegaishimasu.', jpk:'お勘定お願いします。', pt:'A conta, por favor.'}
+  ],
+  quiz:[
+   {q:"'Setto de onegaishimasu' significa:", opts:['quero o combo','quero só o lanche','quero a conta'], a:0, why:'setto = combo (com acompanhamento) · tanpin = só o item avulso.'},
+   {q:"O atendente pergunta 'Tennai desu ka?'. Ele quer saber:", opts:['se é pra comer ali','quantas pessoas são','se você quer hashi'], a:0, why:'店内 tennai = dentro da loja · お持ち帰り omochikaeri = pra viagem.'}
+  ]},
+ roupas:{
+  phrases:[
+   {who:'boca', ro:'Shichakushitsu wa doko desu ka.', jpk:'試着室はどこですか。', pt:'Onde fica o provador?'},
+   {who:'boca', ro:'Motto ookii no ga arimasu ka.', jpk:'もっと大きいのがありますか。', pt:'Tem um maior?'},
+   {who:'boca', ro:'Kore wa Burajiru de tsukaemasu ka.', jpk:'これはブラジルで使えますか。', pt:'Isto dá pra usar no Brasil? (voltagem, compatibilidade)'},
+   {who:'ouvido', ro:'Doozo goyukkuri.', jpk:'どうぞごゆっくり。', pt:'Fique à vontade.'},
+   {who:'boca', ro:'Ryoushuusho onegaishimasu.', jpk:'領収書お願いします。', pt:'A nota fiscal, por favor.'}
+  ],
+  quiz:[
+   {q:'No Japão, um tamanho M costuma equivaler a:', opts:['P/S ocidental','M ocidental','G ocidental'], a:0, why:'Os tamanhos japoneses correm menores — experimente sempre antes de levar.'},
+   {q:"A vendedora diz 'Doozo goyukkuri'. Isso significa:", opts:['fique à vontade','a loja vai fechar','não pode tocar'], a:0, why:'É gentileza pura: pode olhar com calma. Responda apenas <b>doomo</b>.'}
+  ]},
+ trens:{
+  phrases:[
+   {who:'boca', ro:'Shinjuku ni ikitai desu.', jpk:'新宿に行きたいです。', pt:'Quero ir para Shinjuku.'},
+   {who:'boca', ro:'Densha de ikimasu.', jpk:'電車で行きます。', pt:'Vou de trem. (a partícula de = meio de transporte)'},
+   {who:'boca', ro:'Kippu o kaimasu.', jpk:'切符を買います。', pt:'Compro o bilhete.'},
+   {who:'ouvido', ro:'Hai, wakarimashita.', jpk:'はい、分かりました。', pt:'Sim, entendido.'}
+  ],
+  quiz:[
+   {q:"Qual partícula indica o meio de transporte, como em 'densha de ikimasu'?", opts:['de','made','to'], a:0, why:"'de' marca o meio usado: densha de = de trem."}
+  ]},
+ compras:{
+  phrases:[
+   {who:'ouvido', ro:'Sanzen en desu.', jpk:'三千円です。', pt:'São 3 mil ienes.'},
+   {who:'ouvido', ro:'Gosen en desu.', jpk:'五千円です。', pt:'São 5 mil ienes.'},
+   {who:'boca', ro:'Kore wa takai desu.', jpk:'これは高いです。', pt:'Isto é caro.'},
+   {who:'boca', ro:'Sore wa yasui desu.', jpk:'それは安いです。', pt:'Isso é barato.'}
+  ],
+  quiz:[
+   {q:'Como você pergunta o preço de algo?', opts:['Kore wa ikura desu ka','Kore wa nan desu ka','Kaado desu ka'], a:0, why:"'[coisa] wa ikura desu ka' = quanto custa [coisa]?"},
+   {q:"'Sore' se refere a algo que está...", opts:['perto da outra pessoa','perto de quem fala','longe dos dois'], a:0, why:"'sore' = isso (perto do ouvinte); 'kore' = isto (perto de quem fala)."}
+  ]},
+ sos:{
+  phrases:[
+   {who:'boca', ro:'Sumimasen, michi ni mayoimashita.', jpk:'すみません、道に迷いました。', pt:'Com licença, estou perdida.'},
+   {who:'boca', ro:'Byouin wa doko desu ka.', jpk:'病院はどこですか。', pt:'Onde fica o hospital?'},
+   {who:'boca', ro:'Kusuri o kudasai.', jpk:'薬をください。', pt:'Remédio, por favor.'},
+   {who:'ouvido', ro:'Ano biru no tonari desu.', jpk:'あのビルの隣です。', pt:'É ao lado daquele prédio.'}
+  ],
+  quiz:[
+   {q:"Como se diz 'estou perdido(a)'?", opts:['Michi ni mayoimashita','Byouin desu','Itai desu'], a:0, why:"'Michi ni mayoimashita' = perdi o caminho. Frase-chave pra pedir ajuda."},
+   {q:"Qual partícula marca o que dói, como em 'atama ga itai desu'?", opts:['ga','wa','o'], a:0, why:"'ga' marca o sujeito que dói: atama ga itai = a cabeça dói."}
+  ]},
+ base:{
+  phrases:[
+   {who:'boca', ro:'Konnichiwa! Hajimemashite.', jpk:'こんにちは！はじめまして。', pt:'Olá! Prazer em conhecer.'},
+   {who:'boca', ro:'Watashi wa Kikuchi desu.', jpk:'私はキクチです。', pt:'Eu sou Kikuchi. (wa marca o tópico)'},
+   {who:'ouvido', ro:'Kikuchi desu ka.', jpk:'キクチですか。', pt:'É Kikuchi? (o ka transforma em pergunta)'},
+   {who:'boca', ro:'Burajiru kara desu.', jpk:'ブラジルからです。', pt:'Sou do Brasil. (versão curta, sem verbo)'}
+  ],
+  quiz:[
+   {q:"Como se completa 'Watashi wa ___ desu' para dizer 'Eu sou Tanaka'?", opts:['Tanaka','Tanaka wa desu','Tanaka desu ka'], a:0, why:"Só o nome preenche o espaço; o 'desu' já fecha a frase sozinho."},
+   {q:"Qual partícula marca o tópico, como em 'watashi wa Kikuchi desu'?", opts:['wa','ka','kara'], a:0, why:"'wa' marca o assunto da frase — o molde-mãe de todos os mapas."}
+  ]},
+ numeros:{
+  phrases:[
+   {who:'ouvido', ro:'Gogo sanji desu.', jpk:'午後三時です。', pt:'São 15h (três da tarde).'},
+   {who:'boca', ro:'Gozen kuji ni aimashou.', jpk:'午前九時に会いましょう。', pt:'Vamos nos encontrar às 9h da manhã.'},
+   {who:'boca', ro:'Kyou wa nichiyoubi desu.', jpk:'今日は日曜日です。', pt:'Hoje é domingo.'},
+   {who:'boca', ro:'Ashita wa getsuyoubi desu.', jpk:'明日は月曜日です。', pt:'Amanhã é segunda-feira.'}
+  ],
+  quiz:[
+   {q:'Como perguntar as horas agora?', opts:['Ima nanji desu ka','Nannichikan desu ka','Doko desu ka'], a:0, why:"'Ima nanji desu ka' = que horas são agora? Nannichikan é a pergunta de DIAS da imigração."},
+   {q:"'Gozen kuji' significa:", opts:['9h da manhã','21h','9 minutos'], a:0, why:"'gozen' = AM, manhã. 21h seria 'gogo kuji'."}
+  ]},
+ planos:{
+  phrases:[
+   {who:'ouvido', ro:'Ashita nani o shitai desu ka.', jpk:'明日何をしたいですか。', pt:'O que você quer fazer amanhã?'},
+   {who:'boca', ro:'Kyoto ni ikitai desu.', jpk:'京都に行きたいです。', pt:'Quero ir a Kyoto.'},
+   {who:'boca', ro:'Nani o tabemashou ka.', jpk:'何を食べましょうか。', pt:'O que vamos comer?'},
+   {who:'boca', ro:'Kyoto wa ii desu ne.', jpk:'京都はいいですね。', pt:'Kyoto é legal, né.'}
+  ],
+  quiz:[
+   {q:'Como convidar alguém para ir junto?', opts:['Issho ni ikimashou','Ikitai desu ka','Doko desu ka'], a:0, why:"'Issho ni ikimashou' = vamos juntos! O -mashou é o convite."},
+   {q:"O padrão '[verbo]-tai desu' expressa:", opts:['um desejo (querer fazer algo)','uma pergunta','uma ordem'], a:0, why:"-tai = querer: ikitai (quero ir), tabetai (quero comer)."}
+  ]},
+ placas:{
+  phrases:[
+   {who:'boca', ro:'Are wa nan desu ka.', jpk:'あれは何ですか。', pt:'O que é aquilo?'},
+   {who:'ouvido', ro:'Deguchi wa asoko desu.', jpk:'出口はあそこです。', pt:'A saída é ali.'},
+   {who:'ouvido', ro:'Eigyouchuu desu.', jpk:'営業中です。', pt:'Está aberto (funcionando).'},
+   {who:'ouvido', ro:'Kuushitsu ga arimasu.', jpk:'空室があります。', pt:'Há vaga disponível (hotel).'}
+  ],
+  quiz:[
+   {q:'O que significa 危険 (kiken)?', opts:['Perigo','Entrada','Grátis'], a:0, why:"危険 = perigo. A peça de olho mais importante da viagem."},
+   {q:"Qual palavra é a placa de 'proibido fumar'?", opts:["kin'en",'deguchi','waribiki'], a:0, why:"禁煙 (kin'en): o 禁 de proibição + 煙 de fumaça. O molde de olho em ação."}
+  ]}
+};
+
+/* =========================================================
+   PACOTE INGLÊS — 5 mapas (interface em português)
+   ========================================================= */
+const MAPS_EN = [
+ { id:'en-airport', num:'00', chip:'🛂 Airport e imigração',
+  missao:'<strong>Missão:</strong> passar pela imigração entendendo as perguntas clássicas do officer — e respondendo em bloco.',
+  vocab:[
+   {jp:'passport', ro:'PÁS-port', pt:'passaporte', cat:'obj'},
+   {jp:'luggage', ro:'LÂ-guedj', pt:'bagagem', cat:'obj'},
+   {jp:'vacation', ro:'vei-QUÊI-xon', pt:'férias / turismo', cat:'obj'},
+   {jp:'business', ro:'BÍZ-nes', pt:'negócios', cat:'obj'},
+   {jp:'purpose', ro:'PÂR-pos', pt:'motivo', cat:'dir'},
+   {jp:'how long', ro:'rau LONG', pt:'por quanto tempo', cat:'dir'},
+   {jp:'ten days', ro:'ten DEIZ', pt:'dez dias', cat:'dir'}
+  ],
+  molds:[
+   {label:'Molde A · responder o motivo', tplRo:"I'm here on {ro}", tplJp:"I'm here on {jp}", tplPt:'Estou aqui a {pt}', slot:'vocab',
+    fits:['vacation','business'],
+    hint:'Aqui entra o MOTIVO: vacation ou business. Purpose e how long são as PERGUNTAS do officer — peças de ouvido.'},
+   {label:'Molde B · dizer de onde vem', slot:null, ro:"I'm from Brazil.", jp:"I'm from Brazil.", pt:'Sou do Brasil.'},
+   {label:'Molde C · quantos dias fica', slot:null, ro:"I'm staying for ten days.", jp:"I'm staying for ten days.", pt:'Fico dez dias.'}
+  ],
+  radar:[
+   {kw:'PURPOSE OF YOUR VISIT?', mean:'Qual o motivo da sua visita?', resp:"Em bloco: <b>I'm here on vacation.</b>"},
+   {kw:'HOW LONG...?', mean:'Por quanto tempo você fica?', resp:'<b>Ten days.</b> — número + days resolve.'},
+   {kw:'ANYTHING TO DECLARE?', soft:true, mean:'Tem algo a declarar na alfândega?', resp:'<b>No, nothing to declare.</b>'}
+  ]},
+ { id:'en-hotel', num:'01', chip:'🏨 O hotel',
+  missao:'<strong>Missão:</strong> fazer o check-in, pedir o que precisa e entender os avisos da recepção.',
+  vocab:[
+   {jp:'key', ro:'QUÍ', pt:'chave', cat:'obj'},
+   {jp:'room', ro:'RÚM', pt:'quarto', cat:'obj'},
+   {jp:'wi-fi password', ro:'uai-fai PÁS-uord', pt:'senha do wi-fi', cat:'obj'},
+   {jp:'luggage', ro:'LÂ-guedj', pt:'bagagem', cat:'obj'},
+   {jp:'reservation', ro:'ré-zer-VÊI-xon', pt:'reserva', cat:'obj'},
+   {jp:'check-out', ro:'tchec-ÁUT', pt:'saída do hotel', cat:'dir'},
+   {jp:'second floor', ro:'SÉ-cond flór', pt:'2º andar', cat:'dir'}
+  ],
+  molds:[
+   {label:'Molde A · pedir algo', tplRo:'Could I have the {ro}, please?', tplJp:'Could I have the {jp}, please?', tplPt:'Poderia me dar {pt}, por favor?', slot:'vocab',
+    fits:['key','wi-fi password','luggage'],
+    hint:'Aqui entram coisas que VOCÊ recebe na mão: key, wi-fi password, luggage. Room e reservation usam o molde B, e check-out é informação — peça de ouvido.'},
+   {label:'Molde B · anunciar a reserva', slot:'input', inputPh:'seu nome',
+    tplRo:'I have a reservation under {v}.', tplJp:'I have a reservation under {v}.', tplPt:'Tenho uma reserva no nome de {v}.'},
+   {label:'Molde C · se travar, peça de novo', slot:null,
+    ro:'Sorry, could you say that again?', jp:'Sorry, could you say that again?', pt:'Desculpe, pode repetir?'}
+  ],
+  radar:[
+   {kw:'ID / PASSPORT', soft:true, mean:'Querem ver seu documento.', resp:'Entregue o passaporte — hotéis registram hóspedes estrangeiros.'},
+   {kw:'BREAKFAST', soft:true, mean:'Falando do café da manhã: horário e andar.', resp:'Capture os números: <b>from seven to ten</b> = das 7h às 10h.'},
+   {kw:'DEPOSIT', mean:'Vão pré-autorizar um valor no seu cartão.', resp:'É caução, não cobrança — o valor volta no check-out.'}
+  ]},
+ { id:'en-food', num:'02', chip:'🍽️ Restaurante e café',
+  missao:'<strong>Missão:</strong> pedir com confiança, responder o garçom e fechar a conta sem surpresas.',
+  vocab:[
+   {jp:'this one', ro:'DÍS uan', pt:'este aqui', cat:'obj'},
+   {jp:'water', ro:'UÓ-ter', pt:'água', cat:'obj'},
+   {jp:'the check', ro:'da TCHÉC', pt:'a conta', cat:'obj'},
+   {jp:'menu', ro:'MÊ-niu', pt:'cardápio', cat:'obj'},
+   {jp:'table for two', ro:'TÊI-bol for tchú', pt:'mesa pra dois', cat:'obj'},
+   {jp:'allergic', ro:'a-LÂR-djic', pt:'alérgico(a)', cat:'urg'},
+   {jp:'to go', ro:'tchu GÔU', pt:'pra viagem', cat:'dir'}
+  ],
+  molds:[
+   {label:'Molde A · pedir algo', tplRo:'Could I get {ro}?', tplJp:'Could I get {jp}?', tplPt:'Poderia me trazer {pt}?', slot:'vocab',
+    fits:['this one','water','the check','menu'],
+    hint:'Aqui entra o que se traz à mesa: this one, water, the check, menu. Allergic é aviso (molde C) e to go é resposta ao caixa.'},
+   {label:'Molde B · pedir mesa', slot:null,
+    ro:'A table for two, please.', jp:'A table for two, please.', pt:'Uma mesa pra dois, por favor.'},
+   {label:'Molde C · avisar alergia', slot:'input', inputPh:'ex.: peanuts',
+    tplRo:"I'm allergic to {v}.", tplJp:"I'm allergic to {v}.", tplPt:'Sou alérgico(a) a {v}.'}
+  ],
+  radar:[
+   {kw:'FOR HERE OR TO GO?', mean:'Pra comer aqui ou pra levar?', resp:'<b>For here</b> (aqui) · <b>To go</b> (viagem).'},
+   {kw:'ANYTHING ELSE?', soft:true, mean:'Mais alguma coisa?', resp:"<b>No, that's all, thanks.</b>"},
+   {kw:'HOW IS EVERYTHING?', soft:true, mean:'Checagem de cortesia no meio da refeição — não é pergunta profunda.', resp:'<b>Great, thanks!</b> e siga comendo.'}
+  ]},
+ { id:'en-transit', num:'03', chip:'🚇 Transporte',
+  missao:'<strong>Missão:</strong> pegar o trem ou ônibus certo, comprar bilhete e não descer na estação errada.',
+  vocab:[
+   {jp:'train', ro:'TRÊIN', pt:'trem', cat:'obj'},
+   {jp:'bus', ro:'BÂS', pt:'ônibus', cat:'obj'},
+   {jp:'ticket', ro:'TÍ-quet', pt:'bilhete', cat:'obj'},
+   {jp:'platform', ro:'PLÁT-form', pt:'plataforma', cat:'obj'},
+   {jp:'station', ro:'STÊI-xon', pt:'estação', cat:'obj'},
+   {jp:'restroom', ro:'RÉST-rum', pt:'banheiro', cat:'obj'},
+   {jp:'downtown', ro:'dáun-TÁUN', pt:'centro', cat:'dir'},
+   {jp:'left · right', ro:'LÉFT · RÁIT', pt:'esquerda · direita', cat:'dir'}
+  ],
+  molds:[
+   {label:'Molde A · este trem vai para…?', slot:'input', inputPh:'destino (ex.: downtown)',
+    tplRo:'Does this train go to {v}?', tplJp:'Does this train go to {v}?', tplPt:'Este trem vai para {v}?'},
+   {label:'Molde B · onde fica?', tplRo:'Where is the {ro}?', tplJp:'Where is the {jp}?', tplPt:'Onde fica {pt}?', slot:'vocab',
+    fits:['platform','station','restroom'],
+    hint:'Aqui entram lugares: platform, station, restroom. Left e right são RESPOSTAS que você vai ouvir, e ticket se compra (molde C).'},
+   {label:'Molde C · comprar bilhete', slot:null,
+    ro:'One ticket to downtown, please.', jp:'One ticket to downtown, please.', pt:'Um bilhete pro centro, por favor.'}
+  ],
+  radar:[
+   {kw:'TRANSFER / CHANGE AT...', mean:'Você vai precisar trocar de trem na estação dita.', resp:'Capture o NOME da estação que vem depois.'},
+   {kw:'LAST STOP', soft:true, mean:'Ponto final da linha.', resp:'Se seu destino não chegou, você passou dele.'},
+   {kw:'OUT OF SERVICE', mean:'Fora de serviço — esse não é o seu.', resp:'Espere o próximo: <b>the next one</b>.'}
+  ]},
+ { id:'en-intro', num:'04', chip:'🤝 Apresentação',
+  missao:'<strong>Missão:</strong> construir pontes — se apresentar, puxar papo e entender os cumprimentos que não são perguntas.',
+  vocab:[
+   {jp:'hi / hello', ro:'RÁI · re-LÔU', pt:'oi / olá', cat:'act'},
+   {jp:'nice to meet you', ro:'náis tchu MIT iú', pt:'prazer em conhecer', cat:'act'},
+   {jp:'thanks so much', ro:'thenks sou MÂTCH', pt:'muito obrigada(o)', cat:'act'},
+   {jp:'excuse me', ro:'eks-KIÚZ mi', pt:'com licença', cat:'act'},
+   {jp:'sorry', ro:'SÓ-ri', pt:'desculpa', cat:'act'},
+   {jp:'Brazil', ro:'bra-ZÍL', pt:'Brasil', cat:'obj'}
+  ],
+  molds:[
+   {label:'Molde A · se apresentar', slot:'input', inputPh:'seu nome',
+    tplRo:"Hi, I'm {v}. Nice to meet you!", tplJp:"Hi, I'm {v}. Nice to meet you!", tplPt:'Oi, sou {v}. Prazer!'},
+   {label:'Molde B · dizer de onde vem', slot:null,
+    ro:"I'm from Brazil.", jp:"I'm from Brazil.", pt:'Sou do Brasil.'},
+   {label:'Molde C · quebrar o gelo com honestidade', slot:null,
+    ro:'Sorry, my English is a work in progress!', jp:'Sorry, my English is a work in progress!', pt:'Desculpa, meu inglês é uma obra em andamento!'}
+  ],
+  radar:[
+   {kw:'WHERE ARE YOU FROM?', soft:true, mean:'De onde você é?', resp:"<b>I'm from Brazil!</b> — e prepare-se pro sorriso."},
+   {kw:"HOW'S IT GOING?", soft:true, mean:'É cumprimento, não pergunta de verdade.', resp:'<b>Good, and you?</b> — resposta-bloco universal.'},
+   {kw:'WHAT DO YOU DO?', soft:true, mean:'Perguntaram sua profissão.', resp:"<b>I'm a [profissão].</b>"}
+  ]}
+];
+
+const DEEP_EN = {
+ 'en-airport':{
+  phrases:[
+   {who:'ouvido', ro:'What is the purpose of your visit?', jpk:'What is the purpose of your visit?', pt:'Qual o motivo da sua visita?'},
+   {who:'boca', ro:"I'm here on vacation.", jpk:"I'm here on vacation.", pt:'Estou aqui a turismo.'},
+   {who:'boca', ro:"I'm staying at a hotel in the city.", jpk:"I'm staying at a hotel in the city.", pt:'Vou ficar num hotel na cidade.'}
+  ],
+  quiz:[
+   {q:"O officer pergunta 'How long are you staying?'. Ele quer saber:", opts:['por quanto tempo você fica','onde você mora','quanto dinheiro você tem'], a:0, why:"'How long' = por quanto tempo. Responda com número + days: 'Ten days.'"}
+  ]},
+ 'en-hotel':{
+  phrases:[
+   {who:'boca', ro:'I have a reservation under Silva.', jpk:'I have a reservation under Silva.', pt:'Tenho reserva no nome de Silva.'},
+   {who:'ouvido', ro:'Breakfast is from seven to ten.', jpk:'Breakfast is from seven to ten.', pt:'O café é das 7h às 10h.'},
+   {who:'boca', ro:'What time is check-out?', jpk:'What time is check-out?', pt:'Que horas é o check-out?'}
+  ],
+  quiz:[
+   {q:"'Could I have the key, please?' é o molde de:", opts:['pedir algo com educação','reclamar','se despedir'], a:0, why:"'Could I have...' é o pedido educado universal — funciona pra chave, senha, bagagem e além."}
+  ]},
+ 'en-food':{
+  phrases:[
+   {who:'boca', ro:'Could I get the check, please?', jpk:'Could I get the check, please?', pt:'A conta, por favor.'},
+   {who:'ouvido', ro:'For here or to go?', jpk:'For here or to go?', pt:'Pra comer aqui ou pra levar?'},
+   {who:'boca', ro:"I'm allergic to peanuts.", jpk:"I'm allergic to peanuts.", pt:'Sou alérgica a amendoim.'}
+  ],
+  quiz:[
+   {q:"Nos EUA, 'the check' no restaurante significa:", opts:['a conta','o cheque do banco','a checagem da comida'], a:0, why:"'Check' no restaurante = conta. No Reino Unido você ouvirá 'the bill'."}
+  ]},
+ 'en-transit':{
+  phrases:[
+   {who:'boca', ro:'Does this bus go to the airport?', jpk:'Does this bus go to the airport?', pt:'Este ônibus vai pro aeroporto?'},
+   {who:'ouvido', ro:'Change at Central Station.', jpk:'Change at Central Station.', pt:'Troque na Estação Central.'},
+   {who:'boca', ro:'Where is the platform?', jpk:'Where is the platform?', pt:'Onde fica a plataforma?'}
+  ],
+  quiz:[
+   {q:"Você ouve 'transfer at the next stop'. O que fazer?", opts:['descer na próxima e trocar','ficar sentado','pagar de novo'], a:0, why:"'Transfer' = baldeação. Desça na próxima parada e troque de linha."}
+  ]},
+ 'en-intro':{
+  phrases:[
+   {who:'boca', ro:"Hi, I'm Aline. Nice to meet you!", jpk:"Hi, I'm Aline. Nice to meet you!", pt:'Oi, sou a Aline. Prazer!'},
+   {who:'ouvido', ro:"How's it going?", jpk:"How's it going?", pt:'E aí, como vai? (cumprimento)'},
+   {who:'boca', ro:'Good, and you?', jpk:'Good, and you?', pt:'Bem, e você?'}
+  ],
+  quiz:[
+   {q:"Alguém diz 'How's it going?' no corredor e continua andando. Você deve:", opts:["responder 'Good, and you?' e seguir",'parar e contar seu dia','ficar em silêncio'], a:0, why:'É um cumprimento-ritual, não uma pergunta real — a resposta-bloco resolve.'}
+  ]}
+};
+
+/* =========================================================
+   PACOTE PORTUGUÊS PARA ESTRANGEIROS — interface em inglês
+   ========================================================= */
+const MAPS_PT = [
+ { id:'pt-intro', num:'00', chip:'🤝 Introductions',
+  missao:'<strong>Mission:</strong> build bridges — greet people, introduce yourself, and decode the greetings that are not real questions.',
+  vocab:[
+   {jp:'oi', ro:'oy', pt:'hi', cat:'act'},
+   {jp:'tudo bem?', ro:'TOO-doo BAYN', pt:'how are you? / all good?', cat:'act'},
+   {jp:'prazer', ro:'prah-ZEHR', pt:'nice to meet you', cat:'act'},
+   {jp:'obrigado(a)', ro:'oh-bree-GAH-doo(dah)', pt:'thank you', cat:'act'},
+   {jp:'com licença', ro:'kohn lee-SEHN-sah', pt:'excuse me', cat:'act'},
+   {jp:'desculpa', ro:'jes-KOOL-pah', pt:'sorry', cat:'act'}
+  ],
+  molds:[
+   {label:'Mold A · introduce yourself', slot:'input', inputPh:'your name',
+    tplRo:'Oi, eu sou {v}. Prazer!', tplJp:'Oi, eu sou {v}. Prazer!', tplPt:"Hi, I'm {v}. Nice to meet you!"},
+   {label:'Mold B · the magic greeting', slot:null,
+    ro:'Tudo bem?', jp:'Tudo bem?', pt:"All good? — works as both 'hello' AND 'how are you'"},
+   {label:'Mold C · if you get stuck', slot:null,
+    ro:'Não entendi. Pode repetir, por favor?', jp:'Não entendi. Pode repetir, por favor?', pt:"I didn't understand. Can you repeat, please?"}
+  ],
+  radar:[
+   {kw:'TUDO BEM?', soft:true, mean:"It's a greeting, not a real question.", resp:'Just echo it back: <b>Tudo bem!</b>'},
+   {kw:'E AÍ?', soft:true, mean:"Casual 'hey, what's up' — very common among friends.", resp:'<b>E aí!</b> works as the reply too.'},
+   {kw:'BELEZA', soft:true, mean:"Means 'cool / OK / all set'.", resp:'Answer <b>Beleza!</b> and you sound local already.'}
+  ]},
+ { id:'pt-hotel', num:'01', chip:'🏨 The hotel',
+  missao:'<strong>Mission:</strong> check in, ask for what you need, and catch the key words from the front desk.',
+  vocab:[
+   {jp:'a chave', ro:'ah SHAH-vee', pt:'the key', cat:'obj'},
+   {jp:'o quarto', ro:'oo KWAR-too', pt:'the room', cat:'obj'},
+   {jp:'a senha do wi-fi', ro:'ah SEHN-yah doo wi-fi', pt:'the wi-fi password', cat:'obj'},
+   {jp:'a mala', ro:'ah MAH-lah', pt:'the suitcase', cat:'obj'},
+   {jp:'café da manhã', ro:'kah-FEH dah mahn-YAHN', pt:'breakfast', cat:'dir'},
+   {jp:'reserva', ro:'heh-ZEHR-vah', pt:'reservation', cat:'obj'}
+  ],
+  molds:[
+   {label:'Mold A · ask for something', tplRo:'{ro}, por favor', tplJp:'{jp}, por favor', tplPt:'{pt}, please', slot:'vocab',
+    fits:['a chave','a senha do wi-fi','a mala'],
+    hint:"This mold takes things you RECEIVE: a chave, a senha do wi-fi, a mala. 'Reserva' uses mold B, and 'café da manhã' is info you ask about (mold C)."},
+   {label:'Mold B · announce your reservation', slot:'input', inputPh:'your name',
+    tplRo:'Tenho uma reserva no nome de {v}.', tplJp:'Tenho uma reserva no nome de {v}.', tplPt:'I have a reservation under {v}.'},
+   {label:'Mold C · the golden question', slot:null,
+    ro:'Que horas é o café da manhã?', jp:'Que horas é o café da manhã?', pt:'What time is breakfast? (it is usually included in Brazil!)'}
+  ],
+  radar:[
+   {kw:'DOCUMENTO', soft:true, mean:'They want to see your passport.', resp:'Hand it over — hotels register foreign guests.'},
+   {kw:'CAFÉ DA MANHÃ', soft:true, mean:'Breakfast info — in Brazil it is usually included and generous.', resp:'Catch the numbers: <b>das sete às dez</b> = from 7 to 10.'},
+   {kw:'SENHA', soft:true, mean:'The password (usually the wi-fi one).', resp:'Ask them to write it down: <b>Pode escrever?</b>'}
+  ]},
+ { id:'pt-food', num:'02', chip:'🍽️ Restaurante',
+  missao:'<strong>Mission:</strong> order with confidence, answer the waiter, and compliment the food like a local.',
+  vocab:[
+   {jp:'esse aqui', ro:'EH-see ah-KEE', pt:'this one', cat:'obj'},
+   {jp:'água', ro:'AH-gwah', pt:'water', cat:'obj'},
+   {jp:'suco', ro:'SOO-koo', pt:'juice', cat:'obj'},
+   {jp:'a conta', ro:'ah KOHN-tah', pt:'the check', cat:'obj'},
+   {jp:'cardápio', ro:'car-DAH-pyoo', pt:'menu', cat:'obj'},
+   {jp:'sem gelo', ro:'sayn ZHEH-loo', pt:'no ice', cat:'dir'}
+  ],
+  molds:[
+   {label:'Mold A · point and order', tplRo:'{ro}, por favor', tplJp:'{jp}, por favor', tplPt:'{pt}, please', slot:'vocab',
+    fits:['esse aqui','água','suco','a conta','cardápio'],
+    hint:"This mold takes anything the waiter can bring: esse aqui, água, suco, a conta, cardápio. 'Sem gelo' is a modifier — attach it after a drink."},
+   {label:'Mold B · ask about options', slot:null,
+    ro:'Tem opção vegetariana?', jp:'Tem opção vegetariana?', pt:'Is there a vegetarian option?'},
+   {label:'Mold C · compliment like a local', slot:null,
+    ro:'Tá uma delícia!', jp:'Tá uma delícia!', pt:"It's delicious! — say it and watch the waiter smile"}
+  ],
+  radar:[
+   {kw:'VAI QUERER...?', soft:true, mean:"They're offering you something ('will you want...?').", resp:'Yes: <b>Quero, sim!</b> · No: <b>Não, obrigado(a).</b>'},
+   {kw:'MAIS ALGUMA COISA?', soft:true, mean:'Anything else?', resp:'<b>Só isso, obrigado(a).</b> = just that, thanks.'},
+   {kw:'AÇÚCAR OU ADOÇANTE?', soft:true, mean:'Sugar or sweetener? — Brazilian coffee culture question.', resp:'<b>Açúcar</b> (sugar) · <b>Adoçante</b> (sweetener) · <b>Puro</b> (black).'}
+  ]},
+ { id:'pt-transit', num:'03', chip:'🚌 Getting around',
+  missao:'<strong>Mission:</strong> catch the right bus or metro, ask where things are, and use the most Brazilian trick of all: asking the driver to warn you.',
+  vocab:[
+   {jp:'o ônibus', ro:'oo OH-nee-boos', pt:'the bus', cat:'obj'},
+   {jp:'o metrô', ro:'oo meh-TROH', pt:'the metro', cat:'obj'},
+   {jp:'o ponto', ro:'oo POHN-too', pt:'the bus stop', cat:'obj'},
+   {jp:'a estação', ro:'ah es-tah-SOWN', pt:'the station', cat:'obj'},
+   {jp:'o centro', ro:'oo SEHN-troo', pt:'downtown', cat:'dir'},
+   {jp:'direita · esquerda', ro:'jee-RAY-tah · es-KEHR-dah', pt:'right · left', cat:'dir'}
+  ],
+  molds:[
+   {label:'Mold A · does this bus go to…?', slot:'input', inputPh:'destination (ex.: o centro)',
+    tplRo:'Esse ônibus vai para {v}?', tplJp:'Esse ônibus vai para {v}?', tplPt:'Does this bus go to {v}?'},
+   {label:'Mold B · where is…?', tplRo:'Onde fica {ro}?', tplJp:'Onde fica {jp}?', tplPt:'Where is {pt}?', slot:'vocab',
+    fits:['o ponto','o metrô','a estação'],
+    hint:"This mold takes places: o ponto, o metrô, a estação. 'Direita' and 'esquerda' are ANSWERS you will hear — ear pieces, not mouth pieces."},
+   {label:'Mold C · the Brazilian trick', slot:null,
+    ro:'Pode avisar quando chegar, por favor?', jp:'Pode avisar quando chegar, por favor?', pt:'Can you let me know when we arrive? — drivers and passengers genuinely will'}
+  ],
+  radar:[
+   {kw:'PRÓXIMA PARADA', soft:true, mean:'Next stop.', resp:'Get ready if it is yours.'},
+   {kw:'SEGUE RETO', soft:true, mean:'Go straight ahead.', resp:'Then listen for <b>direita</b> (right) or <b>esquerda</b> (left).'},
+   {kw:'DESCE AQUI', mean:"'Get off here' — someone is helping you.", resp:'Say <b>Obrigado(a)!</b> and hop off.'}
+  ]},
+ { id:'pt-sos', num:'04', chip:'🆘 Emergência',
+  missao:'<strong>Mission:</strong> handle health issues and unexpected situations — and understand when Brazilians are trying to help you.',
+  vocab:[
+   {jp:'o hospital', ro:'oo ohs-pee-TAU', pt:'the hospital', cat:'obj'},
+   {jp:'a farmácia', ro:'ah far-MAH-syah', pt:'the pharmacy', cat:'obj'},
+   {jp:'remédio', ro:'heh-MEH-jyoo', pt:'medicine', cat:'obj'},
+   {jp:'ajuda', ro:'ah-ZHOO-dah', pt:'help', cat:'urg'},
+   {jp:'a polícia', ro:'ah poh-LEE-syah', pt:'the police', cat:'urg'},
+   {jp:'dor', ro:'dohr', pt:'pain', cat:'urg'}
+  ],
+  molds:[
+   {label:'Mold A · where is…?', tplRo:'Onde fica {ro}?', tplJp:'Onde fica {jp}?', tplPt:'Where is {pt}?', slot:'vocab',
+    fits:['o hospital','a farmácia','a polícia'],
+    hint:"This mold takes places: o hospital, a farmácia, a polícia. 'Ajuda', 'remédio' and 'dor' are things you ask FOR or declare — molds B and C."},
+   {label:'Mold B · ask for help', slot:null,
+    ro:'Preciso de ajuda.', jp:'Preciso de ajuda.', pt:'I need help.'},
+   {label:'Mold C · declare pain', slot:null,
+    ro:'Estou com dor aqui.', jp:'Estou com dor aqui.', pt:'I have pain here. — point to where it hurts'}
+  ],
+  radar:[
+   {kw:'CALMA', soft:true, mean:"'Stay calm' — someone is reassuring you.", resp:'They are helping. Breathe and follow.'},
+   {kw:'SAMU · 192', mean:'The Brazilian ambulance service and its number.', resp:'Emergency numbers: <b>192</b> ambulance · <b>190</b> police.'},
+   {kw:'TÁ TUDO BEM?', soft:true, mean:'Are you OK? — the greeting becomes a real question in emergencies.', resp:'OK: <b>Tô bem.</b> · Need help: <b>Preciso de ajuda.</b>'}
+  ]}
+];
+
+const DEEP_PT = {
+ 'pt-intro':{
+  phrases:[
+   {who:'boca', ro:'Oi, tudo bem? Eu sou a Emma.', jpk:'Oi, tudo bem? Eu sou a Emma.', pt:"Hi, how's it going? I'm Emma."},
+   {who:'ouvido', ro:'Tudo ótimo, e você?', jpk:'Tudo ótimo, e você?', pt:'All great, and you?'},
+   {who:'boca', ro:'Muito prazer!', jpk:'Muito prazer!', pt:'Very nice to meet you!'}
+  ],
+  quiz:[
+   {q:"Someone says 'Tudo bem?' as they walk past. You should:", opts:["answer 'Tudo bem!' and keep walking",'stop and describe your day','stay silent'], a:0, why:"'Tudo bem?' is a ritual greeting — echoing it back is the perfect block answer."}
+  ]},
+ 'pt-hotel':{
+  phrases:[
+   {who:'boca', ro:'Tenho uma reserva no nome de Smith.', jpk:'Tenho uma reserva no nome de Smith.', pt:'I have a reservation under Smith.'},
+   {who:'ouvido', ro:'O café é das sete às dez.', jpk:'O café é das sete às dez.', pt:'Breakfast is from 7 to 10.'},
+   {who:'boca', ro:'A senha do wi-fi, por favor.', jpk:'A senha do wi-fi, por favor.', pt:'The wi-fi password, please.'}
+  ],
+  quiz:[
+   {q:"In Brazilian hotels, 'café da manhã' is usually:", opts:['included in the room rate','always extra','only coffee'], a:0, why:'Brazilian breakfast is famously generous and usually included — fruit, bread, cakes, juices. Enjoy it.'}
+  ]},
+ 'pt-food':{
+  phrases:[
+   {who:'boca', ro:'Um suco de laranja sem gelo, por favor.', jpk:'Um suco de laranja sem gelo, por favor.', pt:'An orange juice with no ice, please.'},
+   {who:'ouvido', ro:'Vai querer sobremesa?', jpk:'Vai querer sobremesa?', pt:'Will you want dessert?'},
+   {who:'boca', ro:'Tá uma delícia!', jpk:'Tá uma delícia!', pt:"It's delicious!"}
+  ],
+  quiz:[
+   {q:"The waiter asks 'Mais alguma coisa?'. It means:", opts:['Anything else?','Is everything OK?','Do you want the check?'], a:0, why:"'Mais alguma coisa?' = anything else? Answer: 'Só isso, obrigado(a).'"}
+  ]},
+ 'pt-transit':{
+  phrases:[
+   {who:'boca', ro:'Esse ônibus vai para o centro?', jpk:'Esse ônibus vai para o centro?', pt:'Does this bus go downtown?'},
+   {who:'ouvido', ro:'Desce no próximo ponto.', jpk:'Desce no próximo ponto.', pt:'Get off at the next stop.'},
+   {who:'boca', ro:'Pode avisar quando chegar?', jpk:'Pode avisar quando chegar?', pt:'Can you let me know when we arrive?'}
+  ],
+  quiz:[
+   {q:"Asking 'Pode avisar quando chegar?' on a Brazilian bus is:", opts:['common and welcome — people genuinely help','considered rude','forbidden'], a:0, why:'Brazilians are famously helpful with directions — drivers and fellow passengers will really warn you.'}
+  ]},
+ 'pt-sos':{
+  phrases:[
+   {who:'boca', ro:'Onde fica a farmácia mais próxima?', jpk:'Onde fica a farmácia mais próxima?', pt:'Where is the nearest pharmacy?'},
+   {who:'ouvido', ro:'Calma, vou te ajudar.', jpk:'Calma, vou te ajudar.', pt:"Stay calm, I'll help you."},
+   {who:'boca', ro:'Preciso de um médico.', jpk:'Preciso de um médico.', pt:'I need a doctor.'}
+  ],
+  quiz:[
+   {q:'The Brazilian ambulance number is:', opts:['192','911','119'], a:0, why:'192 = SAMU (ambulance) · 190 = police. Save both.'}
+  ]}
+};
+
+/* =========================================================
+   PACOTES DE IDIOMA + INTERFACE
+   ========================================================= */
+const UI_PT = {
+  crumb:'Trilhas de viagem · 3 idiomas',
+  wp1t:'Fogo · caixa de peças', wp1h:'A exposição: toque numa peça pra ouvir — e ela se encaixa nos moldes lá embaixo.',
+  wp2t:'Ar · bancada de moldes', wp2h:'A transmissão: a peça escolhida entra no encaixe e vira frase inteira, pronta pra falar.',
+  wp3t:'Água · radar de escuta', wp3h:'O mergulho: você não precisa entender a frase toda — só capturar a palavra-chave.',
+  dots:['🔥','🌬','💧'],
+  fifthT:'✦ Espírito — o quinto elemento',
+  fifthP:'Os quatro se completam quando você usa isto com uma pessoa de verdade. O quinto não vem pronto no mapa: ele é cocriado no encontro — na hora em que você atravessa a ponte e fala.',
+  legend:[['obj','objetos e lugares'],['act','ações'],['dir','direções e tempo'],['urg','urgência']],
+  pieceTap:'🔊 tocar e encaixar', slotEmpty:'peça',
+  choosePiece:'Escolha uma peça na caixa acima pra montar a frase.',
+  typeHint:'Digite no encaixe pontilhado pra completar o molde.',
+  noFitPrefix:'🚫', noFitMsg:'não encaixa neste molde.',
+  listen:'🔊 ouvir', train:'🎙️ treinar', trainTip:'Chega na versão app',
+  deepBtn:'🌱 Terra · materializar este mapa', deepClose:'▲ Fechar',
+  phrasesT:'Frases do território', phrasesSub:'🗣 boca = você fala · 👂 ouvido = você só precisa reconhecer quando escutar',
+  bocaTag:'🗣 boca', ouvidoTag:'👂 ouvido',
+  quizT:'Teste o mapa', quizSub:'Errar aqui é de graça — errar lá custa um mal-entendido.',
+  ok:'✅ Isso!', almost:'💡 Quase —',
+  audioNote:'🔊 usa a voz do seu navegador no idioma da trilha (funciona melhor no Chrome e Safari). 🎙️ o treino de pronúncia com feedback chega na versão app.'
+};
+const UI_EN = {
+  crumb:'Travel trails · 3 languages',
+  wp1t:'Fire · piece box', wp1h:'Exposure: tap a piece to hear it — it snaps into the molds below.',
+  wp2t:'Air · mold bench', wp2h:'Transmission: your chosen piece fills the slot and becomes a full sentence, ready to speak.',
+  wp3t:'Water · listening radar', wp3h:'The dive: you do not need the whole sentence — just catch the key word.',
+  dots:['🔥','🌬','💧'],
+  fifthT:'✦ Spirit — the fifth element',
+  fifthP:'The four are only complete when you use this with a real person. The fifth never comes ready-made in the map: it is co-created in the encounter — the moment you cross the bridge and speak.',
+  legend:[['obj','objects and places'],['act','actions'],['dir','directions and time'],['urg','urgency']],
+  pieceTap:'🔊 tap to snap', slotEmpty:'piece',
+  choosePiece:'Pick a piece from the box above to build the sentence.',
+  typeHint:'Type in the dotted slot to complete the mold.',
+  noFitPrefix:'🚫', noFitMsg:'does not fit this mold.',
+  listen:'🔊 listen', train:'🎙️ practice', trainTip:'Coming in the app version',
+  deepBtn:'🌱 Earth · materialize this map', deepClose:'▲ Close',
+  phrasesT:'Phrases of the territory', phrasesSub:'🗣 mouth = you say it · 👂 ear = you only need to recognize it',
+  bocaTag:'🗣 mouth', ouvidoTag:'👂 ear',
+  quizT:'Test the map', quizSub:'Mistakes here are free — out there they cost a misunderstanding.',
+  ok:'✅ Yes!', almost:'💡 Almost —',
+  audioNote:'🔊 uses your browser voice in the trail language (best on Chrome and Safari). 🎙️ pronunciation practice with feedback arrives in the app version.'
+};
+
+const LANGS = [
+ {key:'ja', flag:'JA', name:'Japonês', sub:'trilha completa · 12 mapas', tts:'ja-JP', maps:MAPS_JA, deep:DEEP_JA, ui:UI_PT},
+ {key:'en', flag:'EN', name:'Inglês', sub:'trilha inicial · 5 mapas', tts:'en-US', maps:MAPS_EN, deep:DEEP_EN, ui:UI_PT},
+ {key:'pt', flag:'PT', name:'Português', sub:'for foreigners · 5 maps', tts:'pt-BR', maps:MAPS_PT, deep:DEEP_PT, ui:UI_EN}
+];
+
+/* =========================================================
+   MOTOR
+   ========================================================= */
+let curLang = 0, cur = 0, selPiece = null;
+const inputVals = {}, deepOpen = {}, quizPicks = {};
+
+function pack(){ return LANGS[curLang]; }
+function MAPS(){ return pack().maps; }
+function DEEP(){ return pack().deep; }
+function UI(){ return pack().ui; }
+
+let VOICES = [];
+function loadVoices(){
+  if(!('speechSynthesis' in window)) return;
+  VOICES = speechSynthesis.getVoices() || [];
+}
+if('speechSynthesis' in window){
+  loadVoices();
+  speechSynthesis.onvoiceschanged = function(){ loadVoices(); updateVoiceNote(); };
+}
+
+function pickVoice(langCode){
+  const base = langCode.split('-')[0].toLowerCase();
+  let v = VOICES.find(x => (x.lang||'').toLowerCase().replace('_','-') === langCode.toLowerCase());
+  if(!v) v = VOICES.find(x => (x.lang||'').toLowerCase().split(/[-_]/)[0] === base);
+  return v || null;
+}
+
+function hasVoiceFor(langCode){ return !!pickVoice(langCode); }
+
+function updateVoiceNote(){
+  const el = document.getElementById('voice-warn');
+  if(!el) return;
+  const lang = pack().tts;
+  if(!('speechSynthesis' in window)){
+    el.style.display = '';
+    el.textContent = 'Seu navegador não suporta leitura em voz. Tente no Chrome, Edge ou Safari.';
+    return;
+  }
+  if(VOICES.length && !hasVoiceFor(lang)){
+    el.style.display = '';
+    el.textContent = 'Seu sistema ainda não tem uma voz instalada para este idioma (' + lang + '), então o áudio pode sair mudo ou com pronúncia errada. No Windows: Configurações → Hora e idioma → Idioma e região → adicionar idioma com pacote de fala. O restante do mapa funciona normalmente.';
+  } else {
+    el.style.display = 'none';
+  }
+}
+
+function speak(txt){
+  if(!txt || !('speechSynthesis' in window)) return;
+  if(!VOICES.length) loadVoices();
+  try{ speechSynthesis.cancel(); }catch(e){}
+  const u = new SpeechSynthesisUtterance(txt);
+  const lang = pack().tts;
+  const v = pickVoice(lang);
+  if(v) u.voice = v;
+  u.lang = lang;
+  u.rate = 0.85;
+  speechSynthesis.speak(u);
+  updateVoiceNote();
+}
+
+// clique delegado: nada de texto dentro de onclick (evita erro com aspas e acentos)
+document.addEventListener('click', function(ev){
+  const b = ev.target.closest('[data-say]');
+  if(!b || b.disabled) return;
+  speak(b.getAttribute('data-say'));
+});
+
+function esc(s){
+  return String(s == null ? '' : s)
+    .replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')
+    .replace(/"/g,'&quot;').replace(/'/g,'&#39;');
+}
+
+function setLang(i){ curLang=i; cur=0; selPiece=null; render(); }
+function setMap(i){ cur=i; selPiece=null; render(); }
+function selectPiece(idx){
+  const v = MAPS()[cur].vocab[idx];
+  selPiece = idx;
+  speak(v.say || v.jp);
+  render();
+}
+function setInput(key, val){ inputVals[key]=val; renderMolds(); }
+function fill(tpl, map){ return tpl.replace(/\{(\w+)\}/g,(_,k)=>map[k]??'____'); }
+
+function toggleDeep(){
+  const id = MAPS()[cur].id;
+  deepOpen[id] = !deepOpen[id];
+  renderDeep();
+}
+function shuffled(n, seedKey){
+  if(!quizPicks[seedKey]){
+    const arr = [...Array(n).keys()];
+    for(let i=arr.length-1;i>0;i--){ const j=Math.floor(Math.random()*(i+1)); [arr[i],arr[j]]=[arr[j],arr[i]]; }
+    quizPicks[seedKey] = {order:arr, answered:null};
+  }
+  return quizPicks[seedKey];
+}
+function answerQuiz(seedKey, chosen){
+  if(quizPicks[seedKey].answered!=null) return;
+  quizPicks[seedKey].answered = chosen;
+  renderDeep();
+}
+
+function renderLangs(){
+  document.getElementById('langs').innerHTML = LANGS.map((l,i)=>`
+    <button class="${i===curLang?'on':''}" onclick="setLang(${i})"><span class="code">${l.flag}</span><span class="txt">${l.name}<small>${l.sub}</small></span></button>`).join('');
+}
+function renderTrail(){
+  document.getElementById('trail').innerHTML = MAPS().map((m,i)=>`<button class="${i===cur?'on':''}" onclick="setMap(${i})"><span class="n">MAPA ${m.num}</span> ${m.chip}</button>`).join('');
+}
+
+function renderMolds(){
+  const m = MAPS()[cur], ui = UI();
+  const sel = selPiece!=null ? m.vocab[selPiece] : null;
+  document.getElementById('molds').innerHTML = m.molds.map((md,mi)=>{
+    if(md.slot==='vocab'){
+      const nofit = !!sel && md.fits && !md.fits.includes(sel.ro) && !md.fits.includes(sel.jp);
+      const filled = !!sel && !nofit;
+      const slotHtml = nofit
+        ? `<span class="slot nofit">${sel.jp}</span>`
+        : `<span class="slot ${filled?'filled':''}">${filled? sel.jp : ui.slotEmpty}</span>`;
+      const parts = md.tplRo.split(/\{\w+\}/);
+      const frameHtml = parts.map(p=>`<span class="fixedtx">${p.trim()}</span>`).join(slotHtml);
+      const ro = filled? fill(md.tplRo,{ro:sel.ro, jp:sel.jp}) : null;
+      const jp = filled? fill(md.tplJp,{jp:(sel.say||sel.jp), ro:sel.ro}) : null;
+      const pt = filled? fill(md.tplPt,{pt:sel.pt}) : null;
+      return `<div class="mold">
+        <p class="label">${md.label}</p>
+        <div class="frame">${frameHtml}</div>
+        <div class="result">
+          <p class="said ${nofit?'no':''}">${nofit
+            ? `${ui.noFitPrefix} <b>${sel.jp}</b> ${ui.noFitMsg} ${md.hint||''}`
+            : (filled? `<b>${jp}</b> · <span class="jp-r">${ro}</span><br>${pt}` : ui.choosePiece)}</p>
+          <span>
+            <button class="btn" ${filled?'':'disabled'} data-say="${filled? esc(jp) : ''}">${ui.listen}</button>
+            <button class="btn ghost" disabled title="${ui.trainTip}">${ui.train}</button>
+          </span>
+        </div>
+      </div>`;
+    }
+    if(md.slot==='input'){
+      const key = m.id+'-'+mi;
+      const v = (inputVals[key]||'').trim();
+      const ro = v? fill(md.tplRo,{v}) : null;
+      const jp = v? fill(md.tplJp,{v}) : null;
+      const pt = v? fill(md.tplPt,{v}) : null;
+      const parts = md.tplRo.split('{v}');
+      const inputHtml = `<input value="${(inputVals[key]||'').replace(/"/g,'&quot;')}" placeholder="${md.inputPh}" oninput="setInput('${key}', this.value)">`;
+      const frameHtml = parts.map(p=>`<span class="fixedtx">${p.trim()}</span>`).join(inputHtml);
+      return `<div class="mold">
+        <p class="label">${md.label}</p>
+        <div class="frame">${frameHtml}</div>
+        <div class="result">
+          <p class="said">${v? `<b>${ro}</b><br>${pt}` : ui.typeHint}</p>
+          <span>
+            <button class="btn" ${v?'':'disabled'} data-say="${v? esc(jp) : ''}">${ui.listen}</button>
+            <button class="btn ghost" disabled title="${ui.trainTip}">${ui.train}</button>
+          </span>
+        </div>
+      </div>`;
+    }
+    return `<div class="mold">
+      <p class="label">${md.label}</p>
+      <div class="frame"><span class="fixedtx">${md.ro}</span></div>
+      <div class="result">
+        <p class="said"><span class="jp-r">${md.jp!==md.ro? md.jp : ''}</span>${md.jp!==md.ro?'<br>':''}${md.pt}</p>
+        <span>
+          <button class="btn" data-say="${esc(md.jp)}">${ui.listen}</button>
+          <button class="btn ghost" disabled title="${ui.trainTip}">${ui.train}</button>
+        </span>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+function renderDeep(){
+  const m = MAPS()[cur], ui = UI();
+  const d = DEEP()[m.id];
+  const btn = document.getElementById('deep-btn');
+  const box = document.getElementById('deep');
+  if(!d){ btn.style.display='none'; box.innerHTML=''; return; }
+  btn.style.display='';
+  const open = !!deepOpen[m.id];
+  btn.textContent = open ? ui.deepClose : ui.deepBtn;
+  if(!open){ box.innerHTML=''; return; }
+  const phrasesHtml = d.phrases.map(p=>`
+    <div class="ph-row">
+      <span class="who ${p.who}">${p.who==='boca'? ui.bocaTag : ui.ouvidoTag}</span>
+      <span class="ptx"><span class="ro">${p.ro}</span><br><span class="tr">${p.pt}</span></span>
+      <button class="btn ghost" data-say="${esc(p.jpk)}">🔊</button>
+    </div>`).join('');
+  const quizHtml = d.quiz.map((q,qi)=>{
+    const key = pack().key+'-'+m.id+'-q'+qi;
+    const st = shuffled(q.opts.length, key);
+    const done = st.answered!=null;
+    const opts = st.order.map(oi=>{
+      let cls='opt';
+      if(done){ if(oi===q.a) cls+=' ok'; else if(oi===st.answered) cls+=' bad'; }
+      return `<button class="${cls}" ${done?'disabled':''} onclick="answerQuiz('${key}', ${oi})">${q.opts[oi]}</button>`;
+    }).join('');
+    const why = done? `<div class="why">${st.answered===q.a? ui.ok : ui.almost} ${q.why}</div>` : '';
+    return `<div class="quiz-card"><p class="q">${q.q}</p>${opts}${why}</div>`;
+  }).join('');
+  box.innerHTML = `<div class="deep-wrap">
+    <h3 class="deep-h">${ui.phrasesT}</h3>
+    <p class="deep-sub">${ui.phrasesSub}</p>
+    ${phrasesHtml}
+    <h3 class="deep-h" style="margin-top:26px;">${ui.quizT}</h3>
+    <p class="deep-sub">${ui.quizSub}</p>
+    ${quizHtml}
+  </div>`;
+}
+
+function render(){
+  const m = MAPS()[cur], ui = UI();
+  renderLangs();
+  renderTrail();
+  const crumbEl = document.querySelector('.crumb');
+  if(crumbEl) crumbEl.textContent = ui.crumb;
+  document.getElementById('missao').innerHTML = m.missao;
+  { const e=document.getElementById('wp1t'); if(e) e.textContent = ui.wp1t; }
+  { const e=document.getElementById('wp1h'); if(e) e.textContent = ui.wp1h; }
+  { const e=document.getElementById('wp2t'); if(e) e.textContent = ui.wp2t; }
+  { const e=document.getElementById('wp2h'); if(e) e.textContent = ui.wp2h; }
+  { const e=document.getElementById('wp3t'); if(e) e.textContent = ui.wp3t; }
+  { const e=document.getElementById('wp3h'); if(e) e.textContent = ui.wp3h; }
+  { const e=document.getElementById('audio-note'); if(e) e.textContent = ui.audioNote; }
+  const dots = document.querySelectorAll('.wp .dot');
+  if(ui.dots) dots.forEach((d,i)=>{ d.textContent = ui.dots[i] || (i+1); });
+  document.getElementById('fifth').innerHTML = '<h3>'+ui.fifthT+'</h3><p>'+ui.fifthP+'</p>';
+  document.getElementById('legend').innerHTML = ui.legend.map(([c,l])=>`<span><i style="background:var(--c-${c});"></i> ${l}</span>`).join('');
+  document.getElementById('pieces').innerHTML = m.vocab.map((v,i)=>`
+    <button class="piece ${v.cat} ${selPiece===i?'sel':''}" onclick="selectPiece(${i})">
+      <div class="kj">${v.jp}</div>
+      <div class="ro">${v.ro}</div>
+      <div class="pt">${v.pt}</div>
+      <div class="mini-audio">${ui.pieceTap}</div>
+    </button>`).join('');
+  renderMolds();
+  document.getElementById('radar').innerHTML = m.radar.map(r=>`
+    <div class="r-card">
+      <p class="kw ${r.soft?'soft':''}">📡 ${r.kw}</p>
+      <p class="mean">${r.mean}</p>
+      <p class="resp">${r.resp}</p>
+    </div>`).join('');
+  renderDeep();
+  renderProva();
+  updateVoiceNote();
+}
+
+const PROVAS = {
+  ja:['aeroporto','hotel','conbini','restaurante','trens','compras','roupas','sos','base','numeros','planos','placas'],
+  en:['en-airport','en-hotel','en-food','en-transit'],
+  pt:['pt-intro','pt-hotel','pt-food','pt-transit']
+};
+const PROVA_TXT = {
+  pt:{t:'⚔ Pronto pra testar este mapa?', p:'Entre na cena e veja se você sobreviveria à situação de verdade — com carimbo no final.', b:'Fazer a prova no Planeta Utopia →', soon:'⚔ A prova deste mapa chega em breve no Planeta Utopia.'},
+  en:{t:'⚔ Ready to test this map?', p:'Step into the scene and see if you would survive the real situation — stamp at the end.', b:'Take the test on Planeta Utopia →', soon:'⚔ The test for this map is coming soon on Planeta Utopia.'}
+};
+function renderProva(){
+  const m=MAPS()[cur], lang=LANGS[curLang].key;
+  const txt = PROVA_TXT[UI()===undefined?'pt':(LANGS[curLang].key==='pt'?'en':'pt')];
+  const el=document.getElementById('prova-cta');
+  if(PROVAS[lang] && PROVAS[lang].includes(m.id)){
+    el.innerHTML='<h3>'+txt.t+'</h3><p>'+txt.p+'</p><a href="/idiomas/planeta-utopia/?lang='+lang+'&terr='+m.id+'&from=mapas">'+txt.b+'</a>';
+  } else {
+    el.innerHTML='<p class="soon">'+txt.soon+'</p>';
+  }
+}
+
+document.getElementById('audio-test').addEventListener('click', function(){
+  const demo = {ja:'こんにちは', en:'Hello, this is a test.', pt:'Olá, isto é um teste.'};
+  speak(demo[pack().key]);
+});
+
+render();
+
+// ========== HUB DE TRILHAS ==========
+
+// Alternar abas
+function switchHubTab(tabName) {
+  // Esconder todas as abas
+  document.getElementById('tab-trilhas').classList.remove('active');
+  document.getElementById('tab-mapas').classList.remove('active');
+  
+  // Mostrar aba selecionada
+  document.getElementById('tab-' + tabName).classList.add('active');
+  
+  // Atualizar botões
+  document.querySelectorAll('.hub-tabs button').forEach(btn => {
+    btn.classList.remove('active');
+  });
+  event.target.classList.add('active');
+}
+
+const mapasHub = [
+  { id: 1, emoji: '✈️', titulo: 'Chegada', descricao: 'Aeroporto, documentação, primeiras palavras' },
+  { id: 2, emoji: '🏨', titulo: 'Hotel', descricao: 'Check-in, quarto, serviços' },
+  { id: 3, emoji: '🍱', titulo: 'Restaurante', descricao: 'Cardápio, pedidos, preferências' },
+  { id: 4, emoji: '🛍️', titulo: 'Compras', descricao: 'Preços, tamanhos, devoluções' },
+  { id: 5, emoji: '🚕', titulo: 'Transporte', descricao: 'Táxi, metrô, direções' },
+  { id: 6, emoji: '🏥', titulo: 'Saúde', descricao: 'Farmácia, médico, emergências' },
+  { id: 7, emoji: '🏦', titulo: 'Banco', descricao: 'Câmbio, caixa, dúvidas financeiras' },
+  { id: 8, emoji: '📞', titulo: 'Comunicação', descricao: 'Telefone, internet, postal' },
+  { id: 9, emoji: '🎭', titulo: 'Lazer', descricao: 'Museu, cinema, eventos' },
+  { id: 10, emoji: '🏠', titulo: 'Moradia', descricao: 'Aluguel, condomínio, vizinhos' },
+  { id: 11, emoji: '👔', titulo: 'Trabalho', descricao: 'Escritório, reuniões, carreira' },
+  { id: 12, emoji: '💍', titulo: 'Relacionamentos', descricao: 'Família, amigos, encontros' }
+];
+
+function checkAulaZeroStatus() {
+  return localStorage.getItem('aulaZeroCompleted') === 'true';
+}
+
+function renderMapasHub() {
+  const grid = document.getElementById('mapasGrid');
+  if (!grid) return;
+  
+  const aulaZeroCompleted = checkAulaZeroStatus();
+  
+  mapasHub.forEach(mapa => {
+    const card = document.createElement('a');
+    card.href = aulaZeroCompleted ? '#' : '#';
+    card.className = `mapa-card ${!aulaZeroCompleted ? 'locked' : ''}`;
+    
+    let html = '';
+    if (!aulaZeroCompleted) {
+      html += '<div class="lock-badge">🔒</div>';
+    }
+    html += `
+      <div class="number">Mapa ${mapa.id}</div>
+      <div class="emoji">${mapa.emoji}</div>
+      <h3>${mapa.titulo}</h3>
+      <p>${mapa.descricao}</p>
+    `;
+    
+    card.innerHTML = html;
+    grid.appendChild(card);
+  });
+}
+
+function updateAulaZeroStatus() {
+  const card = document.getElementById('aulaZeroCard');
+  const progress = document.getElementById('aulaZeroProgress');
+  
+  if (!card || !progress) return;
+  
+  const completed = checkAulaZeroStatus();
+  
+  if (completed) {
+    card.classList.add('completed');
+    progress.innerHTML = '✓ Aula Zero concluída! Todos os Mapas desbloqueados.';
+  } else {
+    progress.innerHTML = '→ Complete para desbloquear os Mapas';
+  }
+}
+
+// Inicializar Hub
+renderMapasHub();
+updateAulaZeroStatus();
+
+// Listener para mudanças no localStorage
+window.addEventListener('storage', () => {
+  updateAulaZeroStatus();
+  location.reload();
+});
+</script>
+</body>
+</html>

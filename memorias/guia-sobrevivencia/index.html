@@ -1,0 +1,670 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Um dia inteiro no Japão — mini guia de sobrevivência | Unirversos Memórias</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Shippori+Mincho:wght@500;700&family=Zen+Kaku+Gothic+New:wght@400;500;700&family=JetBrains+Mono:wght@400;600&display=swap');
+
+:root{
+  --paper:#F5F0FB;
+  --paper-dark:#EBDFF7;
+  --ink:#332946;
+  --ink-soft:#5C5175;
+  --indigo:#6B4FA0;
+  --indigo-soft:#8A6FC0;
+  --hanko:#A8447C;
+  --gold:#C29A3B;
+  --line:#DCD0EC;
+  --white:#FDFBFF;
+}
+*{box-sizing:border-box;margin:0;padding:0;}
+html{scroll-behavior:smooth;}
+@media (prefers-reduced-motion: reduce){ html{scroll-behavior:auto;} *{transition:none !important;} }
+
+body{
+  font-family:'Zen Kaku Gothic New',sans-serif;
+  background:var(--paper);
+  color:var(--ink);
+  line-height:1.75;
+  font-size:16px;
+}
+body::before{
+  content:'';
+  position:fixed;inset:0;
+  background-image:
+    radial-gradient(circle at 18% 25%, rgba(107,79,160,0.05) 0, transparent 45%),
+    radial-gradient(circle at 85% 75%, rgba(168,68,124,0.04) 0, transparent 40%);
+  pointer-events:none;z-index:0;
+}
+.page{position:relative;z-index:1;max-width:780px;margin:0 auto;padding:0 22px 80px;}
+
+/* ---------- capa ---------- */
+.cover{padding:64px 0 40px;border-bottom:2px solid var(--ink);}
+.kicker{
+  font-family:'JetBrains Mono',monospace;
+  font-size:11px;letter-spacing:2.5px;text-transform:uppercase;
+  color:var(--indigo-soft);margin-bottom:18px;
+}
+.cover h1{
+  font-family:'Shippori Mincho',serif;
+  font-weight:700;font-size:clamp(34px,6vw,52px);
+  line-height:1.15;letter-spacing:0.3px;margin-bottom:20px;
+}
+.cover h1 em{font-style:normal;color:var(--hanko);}
+.cover .jp-vert{
+  font-family:'Shippori Mincho',serif;
+  color:var(--indigo);font-size:15px;letter-spacing:6px;margin-bottom:8px;
+}
+.lede{font-size:17.5px;color:var(--ink-soft);max-width:560px;}
+.lede strong{color:var(--ink);font-weight:700;}
+.cover-foot{
+  display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap;
+  margin-top:30px;font-family:'JetBrains Mono',monospace;font-size:11px;
+  color:var(--indigo-soft);letter-spacing:1.5px;
+}
+
+/* ---------- selo hanko ---------- */
+.seal{
+  width:58px;height:58px;flex-shrink:0;border-radius:50%;
+  border:2.5px solid var(--hanko);color:var(--hanko);
+  display:flex;align-items:center;justify-content:center;
+  font-family:'Shippori Mincho',serif;font-size:26px;font-weight:700;
+  transform:rotate(-7deg);background:var(--white);
+  box-shadow:0 0 0 3px var(--paper), 0 0 0 4px var(--line);
+}
+
+/* ---------- capítulos (horas do dia) ---------- */
+.chapter{padding:46px 0 8px;}
+.ch-head{
+  display:flex;align-items:center;gap:18px;
+  padding-bottom:14px;border-bottom:1.5px solid var(--ink);margin-bottom:26px;
+}
+.ch-time{
+  font-family:'JetBrains Mono',monospace;font-size:12px;font-weight:600;
+  letter-spacing:2px;color:var(--gold);
+}
+.ch-head h2{
+  font-family:'Shippori Mincho',serif;font-weight:700;
+  font-size:clamp(23px,4vw,29px);line-height:1.2;
+}
+.ch-head .ch-txt{flex:1;}
+.ch-intro{color:var(--ink-soft);max-width:600px;margin-bottom:22px;font-size:16.5px;}
+.ch-intro strong{color:var(--ink);}
+
+/* ---------- cards ---------- */
+.card{
+  background:var(--white);border:1px solid var(--line);border-radius:12px;
+  padding:20px 22px;margin-bottom:16px;
+}
+.card h3{
+  font-family:'Zen Kaku Gothic New',sans-serif;font-weight:700;font-size:16px;
+  margin-bottom:8px;display:flex;align-items:baseline;gap:10px;
+}
+.card h3 .tag{
+  font-family:'JetBrains Mono',monospace;font-size:10px;font-weight:600;
+  letter-spacing:1.5px;text-transform:uppercase;color:var(--hanko);
+  border:1px solid var(--hanko);border-radius:20px;padding:2px 10px;white-space:nowrap;
+}
+.card p{color:var(--ink-soft);font-size:15.5px;}
+.card p + p{margin-top:10px;}
+.card p strong{color:var(--ink);}
+.card ul{list-style:none;margin-top:10px;}
+.card ul li{
+  position:relative;padding:8px 0 8px 22px;color:var(--ink-soft);font-size:15.5px;
+  border-top:1px dashed var(--line);
+}
+.card ul li:first-child{border-top:none;}
+.card ul li::before{
+  content:'—';position:absolute;left:0;color:var(--gold);font-weight:700;
+}
+.card ul li strong{color:var(--ink);}
+
+.warn{border-left:4px solid var(--hanko);border-radius:0 12px 12px 0;}
+.gold-card{border-left:4px solid var(--gold);border-radius:0 12px 12px 0;}
+
+.grid2{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:16px;margin-bottom:16px;}
+.grid2 .card{margin-bottom:0;}
+
+/* ---------- frases ---------- */
+.phrase{
+  display:flex;align-items:baseline;justify-content:space-between;gap:14px;
+  padding:9px 0;border-top:1px dashed var(--line);flex-wrap:wrap;
+}
+.phrase:first-of-type{border-top:none;}
+.phrase .jp{
+  font-family:'JetBrains Mono',monospace;font-size:14px;font-weight:600;color:var(--indigo);
+}
+.phrase .pt{font-size:14.5px;color:var(--ink-soft);text-align:right;flex:1;min-width:140px;}
+
+/* ---------- sticky header com índice ---------- */
+.sticky-nav{
+  position:sticky;top:0;z-index:100;
+  background:var(--white);border-bottom:2px solid var(--ink);
+  padding:10px 0;margin:0 -22px;padding:10px 22px;
+  box-shadow:0 2px 8px rgba(0,0,0,0.08);
+  overflow-x:auto;scroll-behavior:smooth;
+}
+.sticky-nav ul{
+  list-style:none;display:flex;gap:8px;justify-content:flex-start;
+  flex-wrap:nowrap;padding:0;font-size:13px;
+}
+.sticky-nav li{flex-shrink:0;}
+.sticky-nav a{
+  display:flex;align-items:center;gap:6px;padding:8px 14px;
+  border-radius:20px;background:var(--paper);color:var(--ink);
+  text-decoration:none;font-weight:600;transition:all .2s ease;
+  border:1px solid transparent;
+}
+.sticky-nav a:hover{background:var(--indigo-soft);color:var(--white);}
+.sticky-nav a.active{background:var(--indigo);color:var(--white);border-color:var(--indigo);}
+.sticky-nav a span{font-size:16px;}
+
+/* ---------- alergênicos (cards coloridos) ---------- */
+.allergens{display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:12px;margin-top:16px;}
+.allergen{
+  background:var(--white);border:2px solid;border-radius:14px;
+  padding:22px 16px;text-align:center;font-weight:600;
+  transition:all .2s ease;cursor:pointer;position:relative;
+  min-height:160px;display:flex;flex-direction:column;justify-content:center;
+  box-shadow:0 2px 8px rgba(0,0,0,0.06);
+}
+.allergen:hover{transform:translateY(-4px);box-shadow:0 6px 16px rgba(0,0,0,0.12);}
+
+/* cores específicas para cada alergenio */
+.allergen:nth-child(1){border-color:#FF6B6B;background:rgba(255,107,107,0.08);}
+.allergen:nth-child(1) .kj{color:#FF6B6B;}
+.allergen:nth-child(2){border-color:#4ECDC4;background:rgba(78,205,196,0.08);}
+.allergen:nth-child(2) .kj{color:#4ECDC4;}
+.allergen:nth-child(3){border-color:#FFE66D;background:rgba(255,230,109,0.08);}
+.allergen:nth-child(3) .kj{color:#E5C200;}
+.allergen:nth-child(4){border-color:#95E1D3;background:rgba(149,225,211,0.08);}
+.allergen:nth-child(4) .kj{color:#30B995;}
+.allergen:nth-child(5){border-color:#F38181;background:rgba(243,129,129,0.08);}
+.allergen:nth-child(5) .kj{color:#F38181;}
+.allergen:nth-child(6){border-color:#AA96DA;background:rgba(170,150,218,0.08);}
+.allergen:nth-child(6) .kj{color:#AA96DA;}
+.allergen:nth-child(7){border-color:#FCBAD3;background:rgba(252,186,211,0.08);}
+.allergen:nth-child(7) .kj{color:#E83E8C;}
+.allergen:nth-child(8){border-color:#A8E6CF;background:rgba(168,230,207,0.08);}
+.allergen:nth-child(8) .kj{color:#56C596;}
+
+.allergen .kj{font-family:'Shippori Mincho',serif;font-size:36px;font-weight:700;line-height:1;margin-bottom:10px;}
+.allergen .nm{font-size:14px;color:var(--ink);font-weight:600;margin-bottom:6px;}
+.allergen .rj{font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--ink-soft);letter-spacing:0.5px;}
+
+/* ---------- banners de prática ---------- */
+.practice-banner{
+  background:linear-gradient(135deg, rgba(107,79,160,0.1) 0%, rgba(168,68,124,0.08) 100%);
+  border:2px solid var(--indigo-soft);border-radius:14px;padding:20px 22px;
+  margin:20px 0;text-align:center;
+}
+.practice-banner h4{
+  font-family:'Shippori Mincho',serif;font-size:18px;font-weight:700;
+  color:var(--indigo);margin-bottom:8px;
+}
+.practice-banner p{font-size:15px;color:var(--ink-soft);margin-bottom:14px;}
+.practice-banner a{
+  display:inline-block;background:var(--indigo);color:var(--white);
+  padding:10px 22px;border-radius:40px;text-decoration:none;font-weight:600;
+  transition:all .2s ease;font-size:14px;
+}
+.practice-banner a:hover{background:var(--indigo-soft);transform:translateY(-2px);box-shadow:0 4px 12px rgba(107,79,160,0.3);}
+
+/* ---------- CTA final - revista ---------- */
+.cta-final{
+  background:linear-gradient(135deg, #6B4FA0 0%, #A8447C 100%);
+  color:var(--white);border-radius:16px;padding:36px 26px;
+  text-align:center;margin:40px 0 30px;
+}
+.cta-final h3{
+  font-family:'Shippori Mincho',serif;font-size:26px;font-weight:700;
+  margin-bottom:12px;
+}
+.cta-final p{font-size:16px;line-height:1.6;opacity:0.95;margin-bottom:24px;}
+.cta-final-btns{display:flex;gap:12px;justify-content:center;flex-wrap:wrap;}
+.cta-final a{
+  display:inline-block;padding:12px 28px;border-radius:40px;
+  text-decoration:none;font-weight:600;font-size:15px;transition:all .2s ease;
+}
+.cta-final a.btn-pdf{background:var(--white);color:#6B4FA0;}
+.cta-final a.btn-revista{background:rgba(255,255,255,0.2);color:var(--white);border:2px solid var(--white);}
+.cta-final a:hover{transform:translateY(-2px);box-shadow:0 6px 16px rgba(0,0,0,0.2);}
+
+/* ---------- emergência ---------- */
+.emg{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:16px;margin-bottom:16px;}
+.emg .card{margin-bottom:0;text-align:left;}
+.emg .num{
+  font-family:'Shippori Mincho',serif;font-size:44px;font-weight:700;color:var(--hanko);line-height:1;
+}
+.emg .num-label{font-weight:700;font-size:15px;margin:6px 0 2px;}
+.emg .num-jp{font-family:'JetBrains Mono',monospace;font-size:12px;color:var(--indigo-soft);letter-spacing:1px;}
+.emg p{margin-top:8px;font-size:14.5px;}
+
+/* ---------- preços onsen ---------- */
+.price-row{
+  display:flex;align-items:baseline;justify-content:space-between;gap:12px;
+  padding:10px 0;border-top:1px dashed var(--line);flex-wrap:wrap;
+}
+.price-row:first-of-type{border-top:none;}
+.price-row .what{font-size:15px;color:var(--ink);font-weight:500;flex:1;min-width:180px;}
+.price-row .what small{display:block;font-weight:400;color:var(--ink-soft);font-size:13px;}
+.price-row .val{font-family:'JetBrains Mono',monospace;font-size:13.5px;font-weight:600;color:var(--gold);white-space:nowrap;}
+
+/* ---------- amuleto ---------- */
+.omamori{
+  background:var(--ink);color:var(--paper);border-radius:14px;
+  padding:28px 26px;margin-top:10px;
+  border:1px solid var(--ink);
+}
+.omamori h3{
+  font-family:'Shippori Mincho',serif;font-size:20px;font-weight:700;color:var(--paper);
+  display:flex;align-items:center;gap:12px;margin-bottom:6px;
+}
+.omamori .seal{border-color:var(--gold);color:var(--gold);background:transparent;box-shadow:none;width:46px;height:46px;font-size:20px;}
+.omamori .note{color:#BBAFD6;font-size:14.5px;margin-bottom:14px;}
+.omamori .phrase{border-top:1px dashed #4A3E63;}
+.omamori .phrase .jp{color:#C9B8F0;}
+.omamori .phrase .pt{color:#BBAFD6;}
+
+/* ---------- rodapé ---------- */
+.colophon{
+  margin-top:56px;padding-top:22px;border-top:2px solid var(--ink);
+  display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap;
+}
+.colophon .brand{font-family:'Shippori Mincho',serif;font-size:17px;font-weight:700;}
+.colophon .meta{
+  font-family:'JetBrains Mono',monospace;font-size:10.5px;letter-spacing:1.5px;
+  color:var(--indigo-soft);text-transform:uppercase;text-align:right;
+}
+.diary{
+  margin-top:26px;background:var(--white);border:1px dashed var(--indigo-soft);
+  border-radius:12px;padding:20px 22px;
+}
+.diary .q{
+  font-family:'Shippori Mincho',serif;font-size:16.5px;color:var(--indigo);margin-bottom:14px;
+}
+.diary .ln{border-bottom:1px solid var(--line);height:30px;}
+@media (max-width:560px){
+  .phrase .pt{text-align:left;}
+  .cover{padding-top:44px;}
+}
+
+</style>
+</head>
+<body>
+<main class="page">
+
+  <nav style="display:flex;align-items:center;justify-content:space-between;gap:14px;flex-wrap:wrap;padding:16px 0;border-bottom:1px solid var(--line);margin-bottom:8px;font-family:'Zen Kaku Gothic New',sans-serif;">
+    <a href="/memorias/" style="font-family:'Shippori Mincho',serif;font-size:15px;font-weight:700;color:var(--ink);text-decoration:none;">unirversos <span style="color:var(--indigo);">/ memórias</span></a>
+    <span style="display:flex;gap:14px;font-size:12.5px;">
+      <a href="/" style="color:var(--ink-soft);text-decoration:none;">início</a>
+      <a href="/idiomas/" style="color:var(--ink-soft);text-decoration:none;">idiomas</a>
+      <a href="/sobre/" style="color:var(--ink-soft);text-decoration:none;">sobre</a>
+    </span>
+  </nav>
+
+  <!-- ============ STICKY HEADER COM ÍNDICE ============ -->
+  <nav class="sticky-nav" id="indexNav">
+    <ul>
+      <li><a href="#vespera" onclick="updateActiveIndex(event)"><span>🧳</span> Véspera</a></li>
+      <li><a href="#manha" onclick="updateActiveIndex(event)"><span>☕</span> Manhã</a></li>
+      <li><a href="#mesa" onclick="updateActiveIndex(event)"><span>🍜</span> Almoço</a></li>
+      <li><a href="#aguas" onclick="updateActiveIndex(event)"><span>🫖</span> Águas</a></li>
+      <li><a href="#emergencia" onclick="updateActiveIndex(event)"><span>🆘</span> Emergência</a></li>
+      <li><a href="#noite" onclick="updateActiveIndex(event)"><span>🚃</span> Noite</a></li>
+      <li><a href="#amuleto" onclick="updateActiveIndex(event)"><span>💎</span> Amuleto</a></li>
+    </ul>
+  </nav>
+
+  <!-- ============ CAPA ============ -->
+  <header class="cover">
+    <p class="kicker">Unirversos memórias · caderno de bordo nº 1</p>
+    <p class="jp-vert">日本での一日</p>
+    <h1>Um dia inteiro<br>no Japão <em>—</em><br>e tudo o que ninguém<br>te conta sobre ele</h1>
+    <p class="lede">Este mini guia acompanha você da véspera da viagem até o último trem da noite. Nada de listas infinitas: só o que <strong>evita perrengue de verdade</strong> — contado por quem viveu dez anos do lado de dentro.</p>
+    <div class="cover-foot">
+      <span>Do amanhecer ao shuuden</span>
+      <div class="seal" aria-hidden="true">旅</div>
+    </div>
+  </header>
+
+  <!-- ============ VÉSPERA ============ -->
+  <section class="chapter" id="vespera">
+    <div class="ch-head">
+      <div class="seal" aria-hidden="true">備</div>
+      <div class="ch-txt">
+        <p class="ch-time">VÉSPERA · MALA ABERTA</p>
+        <h2>Antes de embarcar</h2>
+      </div>
+    </div>
+    <p class="ch-intro">A viagem começa em casa. Três decisões tomadas antes do voo — remédios, seguro e internet — evitam noventa por cento das dores de cabeça do outro lado.</p>
+
+    <div class="card warn">
+      <h3>Remédios comuns podem ser ilegais lá <span class="tag">alfândega</span></h3>
+      <p>Alguns descongestionantes muito comuns no Brasil e em outros países (com <strong>pseudoefedrina</strong>, como certas versões de Sudafed e Vicks Inhaler) são <strong>proibidos no Japão mesmo com receita médica</strong> — e podem gerar apreensão na alfândega. Antes de colocar qualquer remédio na mala, verifique no site do Ministério da Saúde japonês se ele é permitido (procure por <em>Yakkan Shoumei</em>).</p>
+    </div>
+
+    <div class="grid2">
+      <div class="card">
+        <h3>Seguro viagem não é opcional</h3>
+        <p>Hospitais japoneses podem sair muito caros para estrangeiros sem cobertura — uma consulta simples de pronto-socorro chega a custar centenas de dólares. Viaje sempre com seguro de saúde internacional.</p>
+      </div>
+      <div class="card">
+        <h3>Internet: resolva antes do embarque</h3>
+        <p><strong>eSIM</strong> é o mais prático hoje: você compra e ativa antes mesmo de decolar, sem retirar nada no aeroporto. <strong>Pocket wifi</strong> vale pra grupos (todos conectam no mesmo aparelho). Chip físico exige celular desbloqueado.</p>
+      </div>
+    </div>
+
+    <div class="card">
+      <h3>Viaje leve — o trem não perdoa mala grande</h3>
+      <p>Trens urbanos e de longa distância têm pouquíssimo espaço pra bagagem. E atenção: no Shinkansen das linhas Tokaido, Sanyo e Kyushu, malas com <strong>soma de altura, largura e profundidade acima de 160 cm</strong> exigem reserva de assento na última fileira — sem isso, multa de ¥1.000.</p>
+    </div>
+  </section>
+
+  <!-- ============ MANHÃ ============ -->
+  <section class="chapter" id="manha">
+    <div class="ch-head">
+      <div class="seal" aria-hidden="true">金</div>
+      <div class="ch-txt">
+        <p class="ch-time">07:00 · PRIMEIRO CAFÉ</p>
+        <h2>Bom dia, dinheiro</h2>
+      </div>
+    </div>
+    <p class="ch-intro">O Japão é futurista, mas o bolso dele é old school. A primeira lição do dia: <strong>ienes em espécie na carteira, sempre.</strong></p>
+
+    <div class="grid2">
+      <div class="card">
+        <h3>O país ainda é bem "cash-based"</h3>
+        <p>Fora das grandes cidades, muitos restaurantes pequenos, templos e lojas locais <strong>só aceitam dinheiro</strong>. Não dá pra contar com cartão em todo lugar — nem nos lugares mais charmosos, justamente.</p>
+      </div>
+      <div class="card">
+        <h3>Onde sacar sem drama</h3>
+        <p>Nem todo caixa eletrônico aceita cartão estrangeiro. Os confiáveis são os do <strong>7-Eleven (Seven Bank)</strong> e dos <strong>Correios japoneses (Japan Post Bank)</strong> — presentes em praticamente qualquer bairro.</p>
+      </div>
+    </div>
+
+    <div class="card warn">
+      <h3>Não compre o Suica errado <span class="tag">existem vários</span></h3>
+      <p>O cartão que abre o Japão inteiro — trens, ônibus, conveniências, máquinas de venda. Mas "Suica" não é uma coisa só, e escolher o tipo errado pode te fazer perder dinheiro:</p>
+      <ul>
+        <li><strong>Suica comum (verde)</strong> — cartão físico com depósito reembolsável de ¥500. Ao devolver no balcão da JR East, você recebe saldo + depósito de volta, menos taxa de ¥220.</li>
+        <li><strong>Welcome Suica</strong> — versão de turista, sem depósito, vendida em aeroportos. Vale só <strong>28 dias</strong> a partir do primeiro uso e o saldo restante <strong>não é reembolsável</strong> — não carregue mais do que vai gastar.</li>
+        <li><strong>Mobile Suica</strong> (Apple/Google Wallet) — recarrega pelo celular e nunca se perde. Mas exige chip <strong>FeliCa</strong>: a maioria dos Android vendidos no Brasil não tem — só funciona garantido em iPhone.</li>
+        <li>E a regra de ouro: encoste o cartão na catraca <strong>ao entrar E ao sair</strong>. Esquecer a saída pode travar o cartão.</li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- ============ NA RUA ============ -->
+  <section class="chapter" id="rua">
+    <div class="ch-head">
+      <div class="seal" aria-hidden="true">道</div>
+      <div class="ch-txt">
+        <p class="ch-time">10:00 · EXPLORANDO</p>
+        <h2>As regras invisíveis da rua</h2>
+      </div>
+    </div>
+    <p class="ch-intro">Ninguém vai te dar bronca — mas todo mundo percebe. Quatro costumes que separam o turista apressado do viajante presente.</p>
+
+    <div class="grid2">
+      <div class="card">
+        <h3>Lixeiras públicas quase não existem</h3>
+        <p>O país é impecavelmente limpo — e mesmo assim, quase não há lixeiras na rua. O normal é <strong>levar seu lixo de volta</strong> pro hotel ou esperar uma lixeira de conveniência ou estação. Um saquinho vazio na mochila resolve o dia.</p>
+      </div>
+      <div class="card">
+        <h3>Não coma andando</h3>
+        <p>Fora dos festivais de rua, comer enquanto anda é visto como falta de educação. Comprou algo numa banca ou konbini? Coma ali mesmo, parado, e siga em frente.</p>
+      </div>
+      <div class="card">
+        <h3>Escada rolante: o lado muda de cidade</h3>
+        <p>Em <strong>Tóquio</strong>, fica-se à esquerda e anda-se pela direita. Em <strong>Osaka e no Kansai</strong>, é o oposto. Confunde até japonês de outra região — observe a maioria antes de se posicionar.</p>
+      </div>
+      <div class="card">
+        <h3>Onde tirar os sapatos</h3>
+        <ul>
+          <li>Casas particulares, sempre</li>
+          <li>Muitos templos e alguns santuários</li>
+          <li>Ryokan (pousadas tradicionais)</li>
+          <li>Vestiários de onsen</li>
+          <li>Restaurantes tradicionais com tatame</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ À MESA ============ -->
+  <section class="chapter" id="mesa">
+    <div class="ch-head">
+      <div class="seal" aria-hidden="true">食</div>
+      <div class="ch-txt">
+        <p class="ch-time">13:00 · HORA DO ALMOÇO</p>
+        <h2>À mesa, sem sustos</h2>
+      </div>
+    </div>
+    <p class="ch-intro">Comer bem no Japão é fácil. Comer <strong>sabendo o que está comendo</strong> é o que este capítulo garante.</p>
+
+    <div class="card warn">
+      <h3>Cuidado: wasabi escondido</h3>
+      <p>Muitos rolinhos de sushi, onigiri de conveniência e até alguns sanduíches vêm com uma camada fina de wasabi por dentro — <strong>sem nenhum aviso na embalagem</strong>. Se você não gosta ou tem sensibilidade, pergunte antes de morder de uma vez.</p>
+    </div>
+
+    <div class="card">
+      <h3>Os 8 alergênicos de declaração obrigatória</h3>
+      <p>Por lei, todo alimento embalado no Japão precisa declarar estes oito. Aprenda a reconhecer os kanji:</p>
+      <div class="allergens">
+        <div class="allergen"><div class="kj">卵</div><div class="nm">Ovo</div><div class="rj">tamago</div></div>
+        <div class="allergen"><div class="kj">乳</div><div class="nm">Leite</div><div class="rj">nyuu</div></div>
+        <div class="allergen"><div class="kj">小麦</div><div class="nm">Trigo</div><div class="rj">komugi</div></div>
+        <div class="allergen"><div class="kj">そば</div><div class="nm">Soba (trigo sarraceno)</div><div class="rj">soba</div></div>
+        <div class="allergen"><div class="kj">落花生</div><div class="nm">Amendoim</div><div class="rj">rakkasei</div></div>
+        <div class="allergen"><div class="kj">えび</div><div class="nm">Camarão</div><div class="rj">ebi</div></div>
+        <div class="allergen"><div class="kj">かに</div><div class="nm">Caranguejo</div><div class="rj">kani</div></div>
+        <div class="allergen"><div class="kj">くるみ</div><div class="nm">Nozes</div><div class="rj">kurumi</div></div>
+      </div>
+    </div>
+
+    <div class="card">
+      <h3>Frases que salvam o almoço</h3>
+      <div class="phrase"><span class="jp">Bejitarian ryouri wa arimasu ka.</span><span class="pt">Tem comida vegetariana?</span></div>
+      <div class="phrase"><span class="jp">Kore o kudasai.</span><span class="pt">Isto, por favor.</span></div>
+      <div class="phrase"><span class="jp">Mizu o onegaishimasu.</span><span class="pt">Água, por favor.</span></div>
+      <div class="phrase"><span class="jp">Ikura desu ka.</span><span class="pt">Quanto custa?</span></div>
+    </div>
+
+    <div class="practice-banner">
+      <h4>🎯 Quer praticar a pronúncia?</h4>
+      <p>Teste essas frases num mini-game de sobrevivência de verdade.</p>
+      <a href="/idiomas/planeta-utopia/">Ir para Planeta Utopia →</a>
+    </div>
+  </section>
+
+  <!-- ============ ÁGUAS ============ -->
+  <section class="chapter" id="aguas">
+    <div class="ch-head">
+      <div class="seal" aria-hidden="true">湯</div>
+      <div class="ch-txt">
+        <p class="ch-time">16:00 · PAUSA QUENTE</p>
+        <h2>A hora das águas</h2>
+      </div>
+    </div>
+    <p class="ch-intro">Fim de tarde é hora de fazer como os locais: entrar na água quente e deixar o dia dissolver.</p>
+
+    <div class="card">
+      <h3>Onsen ou sentou? São coisas diferentes</h3>
+      <p><strong>Onsen</strong> (温泉) é fonte termal de verdade — água mineral do subsolo vulcânico, típica de cidades termais como Hakone, Kusatsu e Beppu, com preço e ambiente mais elaborados. <strong>Sentou</strong> (銭湯) é o banho público de bairro, com água aquecida comum, muito mais barato e simples — historicamente usado por quem não tinha banheira em casa.</p>
+      <p>A etiqueta é a mesma nos dois: <strong>lave-se por completo no chuveiro antes</strong> de entrar na água (a banheira é pra relaxar, não pra se lavar), e a toalha nunca entra na água — fica na cabeça ou na beira. Tatuagens ainda são proibidas em alguns onsens tradicionais; se for o seu caso, procure locais "tattoo friendly".</p>
+    </div>
+
+    <div class="card">
+      <h3>Quanto custa mergulhar</h3>
+      <div class="price-row"><span class="what">Sentou <small>banho público de bairro, em quase toda cidade</small></span><span class="val">¥400–600</span></div>
+      <div class="price-row"><span class="what">Onsen de dia (higaeri) <small>sem hospedagem, em cidades termais e spas urbanos</small></span><span class="val">¥700–2.000</span></div>
+      <div class="price-row"><span class="what">Onsen de ryokan <small>geralmente incluso na diária da pousada</small></span><span class="val">diárias a partir de ¥15.000</span></div>
+      <div class="price-row"><span class="what">Sala privativa urbana <small>por sala, não por pessoa — sessões de horas ou pernoite</small></span><span class="val">¥8.000–28.000+</span></div>
+    </div>
+
+    <div class="card gold-card">
+      <h3>Achado escondido: Kudochi Sauna, Tóquio <span class="tag">dica de residente</span></h3>
+      <p>Saunas e onsen <strong>totalmente privativos</strong> em Roppongi, Akasaka e Ginza — cada sala tem sauna própria, banheira fria e uma banheira de onsen com água trazida de fontes termais reais. Aberto 24h, entrada por QR code, e por ser privativo não tem as restrições do onsen público: <strong>aceita tatuagem e grupos mistos</strong> (casais, amigos, família). Reserve pelo site oficial com pelo menos um dia de antecedência — vaga de última hora é raro.</p>
+    </div>
+  </section>
+
+  <!-- ============ EMERGÊNCIA ============ -->
+  <section class="chapter" id="emergencia">
+    <div class="ch-head">
+      <div class="seal" aria-hidden="true">助</div>
+      <div class="ch-txt">
+        <p class="ch-time">A QUALQUER HORA</p>
+        <h2>Se algo sair do controle</h2>
+      </div>
+    </div>
+    <p class="ch-intro">Provavelmente você não vai precisar deste capítulo. Mas ele existe pra que, se precisar, você já saiba de cor.</p>
+
+    <div class="emg">
+      <div class="card">
+        <div class="num">110</div>
+        <div class="num-label">Polícia</div>
+        <div class="num-jp">hyaku-tō-ban · 百十番</div>
+        <p>Só para polícia. Repare na leitura irregular: usa <em>tō</em> (a contagem japonesa antiga) em vez de <em>juu</em>.</p>
+      </div>
+      <div class="card">
+        <div class="num">119</div>
+        <div class="num-label">Ambulância / Bombeiros</div>
+        <div class="num-jp">hyaku-juu-kyū-ban · 百十九番</div>
+        <p>Atende os dois casos — a telefonista pergunta <em>"kaji desu ka, kyuukyuu desu ka?"</em> (é incêndio ou emergência médica?).</p>
+      </div>
+    </div>
+
+    <div class="card">
+      <h3>Depois de um tremor</h3>
+      <p>Siga a sinalização até o ponto de evacuação mais próximo (<em>hinanjo</em>) — geralmente uma escola ou parque. Tenha o app <strong>Safety Tips</strong> instalado pra receber alertas em português e inglês. E lembre: elevadores param automaticamente após tremores fortes — <strong>use as escadas</strong>.</p>
+    </div>
+
+    <div class="card">
+      <h3>Frases de emergência</h3>
+      <div class="phrase"><span class="jp">Tasukete!</span><span class="pt">Socorro!</span></div>
+      <div class="phrase"><span class="jp">Michi ni mayoimashita.</span><span class="pt">Estou perdido(a).</span></div>
+      <div class="phrase"><span class="jp">Byouin wa doko desu ka.</span><span class="pt">Onde fica o hospital?</span></div>
+      <div class="phrase"><span class="jp">Kusuri o kudasai.</span><span class="pt">Remédio, por favor.</span></div>
+      <div class="phrase"><span class="jp">Keisatsu o yonde kudasai.</span><span class="pt">Chame a polícia, por favor.</span></div>
+    </div>
+
+    <div class="practice-banner">
+      <h4>🎯 Quer praticar essas situações?</h4>
+      <p>Descubra como usar essas frases num contexto real no Planeta Utopia.</p>
+      <a href="/idiomas/planeta-utopia/">Ir para Planeta Utopia →</a>
+    </div>
+  </section>
+
+  <!-- ============ ÚLTIMO TREM ============ -->
+  <section class="chapter" id="noite">
+    <div class="ch-head">
+      <div class="seal" aria-hidden="true">終</div>
+      <div class="ch-txt">
+        <p class="ch-time">23:30 · A NOITE ACABA CEDO</p>
+        <h2>O último trem</h2>
+      </div>
+    </div>
+    <p class="ch-intro">A cidade brilha a noite toda — mas os trilhos, não. O <strong>shuuden</strong>, o último trem, é o relógio secreto de qualquer noite no Japão.</p>
+
+    <div class="card warn">
+      <h3>Não perca o shuuden</h3>
+      <p>Muitas linhas param por volta da meia-noite e só voltam de manhã cedo. Perder o último trem significa, na prática, <strong>táxi caro</strong> ou horas de espera numa loja de conveniência ou num karaokê 24h até o primeiro trem do dia. Cheque o horário da sua linha antes de pedir a última rodada.</p>
+    </div>
+
+    <div class="grid2">
+      <div class="card">
+        <h3>Coin lockers: a mochila descansa</h3>
+        <ul>
+          <li><strong>Pequeno</strong> — em quase toda estação, ¥400–500/dia</li>
+          <li><strong>Médio</strong> — nas estações maiores, ¥500–700/dia</li>
+          <li><strong>Grande</strong> — poucos por estação, ¥600–1.000/dia</li>
+          <li>Muitos só aceitam moedas de ¥100 (guarde algumas); cada vez mais aceitam cartão IC</li>
+          <li>O preço é por dia corrido (meia-noite a meia-noite): pernoitar conta como dois dias</li>
+        </ul>
+      </div>
+      <div class="card">
+        <h3>Takuhaibin: a mala viaja sozinha</h3>
+        <p>O segredo mais bem guardado dos viajantes leves: empresas como <strong>Yamato e Sagawa</strong> entregam sua mala entre aeroporto, hotel e até entre cidades, geralmente no dia seguinte, por cerca de <strong>¥2.000–2.500 por mala</strong>. Você passeia livre; a mala chega antes de você.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ CTA FINAL - REVISTA PERSONALIZADA ============ -->
+  <div class="cta-final">
+    <h3>📖 Este guia é o começo</h3>
+    <p>Quer um diário completo para preencher ao longo da viagem? Baixe em PDF para imprimir ou crie sua Revista de Viagem Personalizada e revise seus dias com calma, em casa ou na pousada.</p>
+    <div class="cta-final-btns">
+      <a href="#" class="btn-pdf">📥 Baixar PDF</a>
+      <a href="/memorias/" class="btn-revista">✨ Criar Revista Personalizada</a>
+    </div>
+  </div>
+
+  <!-- ============ AMULETO ============ -->
+  <section class="chapter" id="amuleto">
+    <div class="omamori">
+      <h3><span class="seal" aria-hidden="true">守</span> Amuleto de bolso</h3>
+      <p class="note">As palavras que resolvem quase tudo. Se decorar só uma, que seja <em>sumimasen</em> — ela abre qualquer porta.</p>
+      <div class="phrase"><span class="jp">sumimasen</span><span class="pt">com licença / desculpe</span></div>
+      <div class="phrase"><span class="jp">Arigatou gozaimasu.</span><span class="pt">obrigado(a)</span></div>
+      <div class="phrase"><span class="jp">Eki wa doko desu ka.</span><span class="pt">onde fica a estação?</span></div>
+      <div class="phrase"><span class="jp">Norikae wa arimasu ka.</span><span class="pt">tem baldeação?</span></div>
+      <div class="phrase"><span class="jp">deguchi 出口 · iriguchi 入口</span><span class="pt">saída · entrada</span></div>
+      <div class="phrase"><span class="jp">kiken 危険 · kin'en 禁煙</span><span class="pt">perigo · proibido fumar</span></div>
+    </div>
+
+    <div class="diary">
+      <p class="q">E o seu dia, como foi? Escreva em uma ou duas frases — em qualquer língua.</p>
+      <div class="ln"></div>
+      <div class="ln"></div>
+    </div>
+  </section>
+
+  <footer class="colophon">
+    <span class="brand">unirversos — tudo conectado</span>
+    <span class="meta">Memórias · caderno de bordo nº 1<br>fonte: Nihongo Tabi, de Aline</span>
+  </footer>
+
+</main>
+
+<script>
+// Atualizar link ativo no índice ao scroll
+function updateActiveIndex(e) {
+  e.preventDefault();
+  const href = e.target.closest('a').getAttribute('href');
+  const target = document.querySelector(href);
+  if (target) {
+    target.scrollIntoView({ behavior: 'smooth' });
+    setActiveLink(href);
+  }
+}
+
+function setActiveLink(href) {
+  document.querySelectorAll('.sticky-nav a').forEach(link => {
+    link.classList.remove('active');
+  });
+  document.querySelector(`.sticky-nav a[href="${href}"]`)?.classList.add('active');
+}
+
+// Atualizar link ativo ao fazer scroll
+window.addEventListener('scroll', () => {
+  const sections = ['vespera', 'manha', 'mesa', 'aguas', 'emergencia', 'noite', 'amuleto'];
+  
+  for (let i = sections.length - 1; i >= 0; i--) {
+    const section = document.getElementById(sections[i]);
+    if (section && window.scrollY >= section.offsetTop - 100) {
+      setActiveLink(`#${sections[i]}`);
+      break;
+    }
+  }
+});
+
+// Inicializar - marcar primeiro link como ativo
+document.addEventListener('DOMContentLoaded', () => {
+  setActiveLink('#vespera');
+});
+</script>
+</body>
+</html>

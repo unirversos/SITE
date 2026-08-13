@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Sobre — Unirversos</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Baloo+2:wght@500;600;700&family=Zen+Maru+Gothic:wght@400;500;700&display=swap');
+:root{
+  --pink:#E08C86; --pink-deep:#C26F6C;
+  --blush:#FBEBE7; --blush-2:#F0DFDA; --cream:#FDF8F5;
+  --ink:#4A4149; --ink-soft:#8A7F86;
+  --gold:#C0913F; --gold-soft:#FBF2DF;
+  --sage:#7FA893; --sage-soft:#EAF3EE;
+  --lav:#8B90C4; --lav-soft:#EEEFF9;
+}
+*{box-sizing:border-box;margin:0;padding:0;}
+@media (prefers-reduced-motion: reduce){ *{transition:none !important;} }
+body{font-family:'Zen Maru Gothic',sans-serif;color:var(--ink);background:var(--cream);line-height:1.75;font-size:16px;-webkit-font-smoothing:antialiased;}
+.wrap{max-width:860px;margin:0 auto;padding:0 24px;}
+
+.nav{display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap;padding:22px 0;}
+.logo{font-family:'Baloo 2',cursive;font-size:18px;font-weight:700;text-decoration:none;color:inherit;}
+.logo i{font-style:normal;color:var(--pink);}
+.nav .links{display:flex;gap:20px;font-size:13px;}
+.nav .links a{color:var(--ink-soft);text-decoration:none;}
+.nav .links a:hover{color:var(--pink-deep);}
+.nav .links a.on{color:var(--pink);}
+
+.hero{padding:36px 0 8px;}
+.eyebrow{font-size:11px;letter-spacing:4px;text-transform:uppercase;color:var(--pink);margin-bottom:12px;font-weight:600;}
+.hero h1{font-family:'Baloo 2',cursive;font-weight:700;font-size:clamp(28px,5.5vw,42px);line-height:1.2;margin-bottom:20px;}
+.hero h1 em{font-style:normal;color:var(--pink);}
+
+.manifesto{padding:10px 0 48px;}
+.manifesto .lead{font-family:'Baloo 2',cursive;font-weight:600;font-size:clamp(19px,3vw,24px);line-height:1.55;max-width:680px;margin-bottom:22px;}
+.manifesto p{max-width:660px;color:var(--ink-soft);margin-bottom:14px;}
+.manifesto .sign{font-family:'Baloo 2',cursive;font-size:17px;color:var(--pink-deep);margin-top:20px;}
+
+.stitle{font-family:'Baloo 2',cursive;font-weight:700;font-size:clamp(23px,3.8vw,30px);line-height:1.2;margin-bottom:12px;}
+.sintro{max-width:640px;color:var(--ink-soft);margin-bottom:30px;}
+
+/* quadrado elemental */
+.elemental{padding:48px 0;border-top:1px solid var(--blush-2);}
+.quad{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:14px;}
+.el{background:#fff;border:1px solid var(--blush-2);border-radius:20px;padding:22px;transition:all .18s ease;}
+.el:hover{transform:translateY(-2px);box-shadow:0 8px 24px rgba(36,28,63,.05);}
+.el .icon{font-size:24px;display:block;margin-bottom:8px;}
+.el h3{font-family:'Baloo 2',cursive;font-weight:600;font-size:16px;margin-bottom:2px;}
+.el .tag{font-size:12px;color:var(--pink);margin-bottom:12px;}
+.el ul{list-style:none;margin-bottom:12px;}
+.el li{font-size:13.5px;color:var(--ink);padding:2px 0 2px 16px;position:relative;}
+.el li::before{content:'·';position:absolute;left:2px;color:var(--pink);font-weight:700;}
+.el p{font-size:13.5px;color:var(--ink-soft);border-top:1px dashed var(--blush-2);padding-top:10px;}
+.fifth{margin-top:16px;background:var(--blush);border:1px dashed var(--pink);border-radius:18px;padding:22px;text-align:center;}
+.fifth h3{font-family:'Baloo 2',cursive;font-size:16px;margin-bottom:6px;}
+.fifth p{font-size:13.5px;color:var(--ink-soft);max-width:520px;margin:0 auto;}
+
+/* universos detalhados */
+.udetail{padding:48px 0;border-top:1px solid var(--blush-2);}
+.u{background:#fff;border:1px solid var(--blush-2);border-radius:22px;padding:26px;margin-bottom:16px;}
+.u .tagname{font-size:11px;letter-spacing:2.5px;text-transform:uppercase;color:var(--pink);margin-bottom:8px;}
+.u h3{font-family:'Baloo 2',cursive;font-size:clamp(20px,3.4vw,25px);line-height:1.3;margin-bottom:10px;}
+.u > p{font-size:14.5px;color:var(--ink-soft);margin-bottom:18px;max-width:600px;}
+.items{display:flex;flex-direction:column;gap:10px;}
+.item{border:1px solid var(--blush-2);border-radius:14px;padding:13px 16px;background:var(--cream);}
+.item .st{font-size:11px;letter-spacing:1.5px;text-transform:uppercase;color:var(--pink-deep);}
+.item h4{font-size:14.5px;font-weight:600;margin:2px 0;}
+.item p{font-size:13px;color:var(--ink-soft);}
+
+.quote{padding:56px 0;text-align:center;border-top:1px solid var(--blush-2);}
+.quote p{font-family:'Baloo 2',cursive;font-weight:600;font-size:clamp(19px,3.2vw,26px);line-height:1.5;color:var(--ink);max-width:600px;margin:0 auto;}
+.quote span{color:var(--pink);}
+
+.foot{border-top:1px solid var(--blush-2);padding:34px 0 50px;text-align:center;}
+.foot .big{font-family:'Baloo 2',cursive;font-size:18px;margin-bottom:16px;}
+.foot .tags{display:flex;gap:16px;justify-content:center;flex-wrap:wrap;font-size:13px;color:var(--pink-deep);}
+.foot .credit{margin-top:18px;font-size:11.5px;color:var(--ink-soft);opacity:.7;}
+
+</style>
+</head>
+<body>
+
+<div class="wrap">
+  <nav class="nav">
+    <a href="/" class="logo">UNIRVERSOS</a>
+    <div class="links">
+      <a href="/idiomas/">idiomas</a>
+      <a href="/memorias/">memórias</a>
+      <a href="/paralelos/">paralelos</a>
+      <a href="/sobre/" class="on">sobre</a>
+    </div>
+  </nav>
+
+  <header class="hero">
+    <p class="eyebrow">o convite</p>
+    <h1>Aprenda a se comunicar<br>a partir da sua <em>essência</em>.</h1>
+  </header>
+
+  <section class="manifesto">
+    <p class="lead">Estou muito animada para te contar sobre este projeto, que integra tantas e tantas coisas em uma só.</p>
+    <p>O objetivo do que construo aqui é te ensinar, através dos idiomas e das viagens, a capacidade de realmente se conectar, se expressar, se posicionar, interagir — e comunicar sua essência com segurança. Aprendemos com vivências da vida real, falando de si na primeira pessoa, e só então saímos para conhecer e explorar novos seres e espaços.</p>
+    <p>Se os nossos caminhos se cruzaram neste tempo e espaço, podemos ser um ponto de transformação no microcosmo um do outro.</p>
+    <p class="sign">Vamos juntos? Unir tempo, espaço e versos. — Aline Kikuti</p>
+  </section>
+
+  <!-- QUADRADO ELEMENTAL -->
+  <section class="elemental">
+    <p class="eyebrow">a metodologia</p>
+    <h2 class="stitle">O Quadrado Elemental</h2>
+    <p class="sintro">A espinha dorsal de tudo que crio — não só das aulas de idioma, mas do diário, do guia de viagem e do canal de escuta. Quatro elementos que cobrem o ciclo inteiro de aprender e se expressar.</p>
+
+    <div class="quad">
+      <div class="el">
+        <span class="icon">🔥</span>
+        <h3>Fogo</h3>
+        <p class="tag">início</p>
+        <ul><li>a busca do conhecimento</li><li>exploração do exterior</li><li>exposição e assimilação</li><li>momentos a-há!</li></ul>
+        <p>O brilho no olhar, o impulso que faz a gente realizar as coisas. Começamos por ele.</p>
+      </div>
+      <div class="el">
+        <span class="icon">💧</span>
+        <h3>Água</h3>
+        <p class="tag">fluidez</p>
+        <ul><li>mergulho no contexto</li><li>leitura</li><li>escuta profunda</li><li>perguntas geradoras</li></ul>
+        <p>O mergulho nas profundezas da psique, como o oceano — em busca do que ainda não temos para lidar na superfície.</p>
+      </div>
+      <div class="el">
+        <span class="icon">🌬</span>
+        <h3>Ar</h3>
+        <p class="tag">transmissão</p>
+        <ul><li>a fala</li><li>a memória</li><li>a interação e integração</li><li>a conversação</li></ul>
+        <p>A troca. O momento de refinar e internalizar o que se aprendeu. Ar é integrar para conectar.</p>
+      </div>
+      <div class="el">
+        <span class="icon">🌱</span>
+        <h3>Terra</h3>
+        <p class="tag">materialidade</p>
+        <ul><li>objetividade</li><li>escrita criativa</li><li>estabilidade e segurança</li><li>expressão livre do ser</li></ul>
+        <p>O palco da vida: materializar o que foi adquirido no mergulho. Colher os frutos e se expressar com liberdade.</p>
+      </div>
+    </div>
+
+    <div class="fifth">
+      <h3>✦ E o quinto elemento: o Espírito</h3>
+      <p>Não vem pronto — é cocriado. Nasce quando os quatro se encontram numa interação viva, cada pessoa dando corpo ao seu avatar e falando na primeira pessoa.</p>
+    </div>
+  </section>
+
+  <!-- DETALHAMENTO DOS UNIVERSOS -->
+  <section class="udetail">
+    <p class="eyebrow">o que existe hoje</p>
+    <h2 class="stitle">Dentro de cada universo</h2>
+    <p class="sintro">O mapa completo do que já está de pé, e o que ainda está a caminho.</p>
+
+    <div class="u">
+      <p class="tagname">unirversos idiomas</p>
+      <h3>Eu mapeio o cenário. Você explora.</h3>
+      <p>Trilha digital de idiomas: explore o mapa de contexto e teste suas habilidades num jogo de sobrevivência da vida real. Unir teoria e prática — é assim que se aprende de verdade, sobre a base do Quadrado Elemental.</p>
+      <div class="items">
+        <div class="item"><span class="st">autoguiado</span><h4>Mapas de contexto</h4><p>Doze mapas em japonês e trilhas iniciais em inglês e português. Peças, moldes e radar de escuta.</p></div>
+        <div class="item"><span class="st">autoguiado · rpg</span><h4>Planeta Utopia</h4><p>O livro-jogo gamificado: crie seu avatar, suba de nível e ganhe XP praticando idiomas.</p></div>
+        <div class="item"><span class="st">grátis</span><h4>Aula zero — autoanálise sincerona</h4><p>Trinta minutos, um copão de água e um coração aberto. A porta de entrada do método.</p></div>
+        <div class="item"><span class="st">até dezembro</span><h4>Do Caos ao Cosmos</h4><p>Acompanhamento ao vivo, individual, com quests mensais. Vagas limitadas.</p></div>
+      </div>
+    </div>
+
+    <div class="u">
+      <p class="tagname">unirversos memórias</p>
+      <h3>Eu entrego o guia. Você vive as histórias.</h3>
+      <p>Um guia pessoal para o Japão que se adapta ao seu estilo: roteiros e experiências exclusivas, revista de viagem personalizada e um álbum físico para guardar as lembranças. Vivi dez anos lá — este guia é o que eu gostaria de ter tido.</p>
+      <div class="items">
+        <div class="item"><span class="st">amostra</span><h4>Mini guia de sobrevivência</h4><p>As informações indispensáveis num lugar só, com dicas de quem viveu do lado de dentro.</p></div>
+        <div class="item"><span class="st">em breve</span><h4>App e revista-agenda</h4><p>Roteiro, espaço para carimbos, curiosidades e um cantinho para escrever sua memória de uma frase.</p></div>
+        <div class="item"><span class="st">em breve</span><h4>Monte a sua edição</h4><p>Escolha os lugares da sua viagem e receba a revista com o seu nome na capa.</p></div>
+      </div>
+    </div>
+
+    <div class="u">
+      <p class="tagname">unirversos paralelos</p>
+      <h3>Todo mundo carrega mundos que ninguém vê.</h3>
+      <p>Um diário trilíngue e um canal de escuta para pensar em voz alta sobre aprender, ensinar e recomeçar — o elemento Água aplicado a mim mesma.</p>
+      <div class="items">
+        <div class="item"><span class="st">diário</span><h4>Diário trilíngue</h4><p>Três acontecimentos, três pensamentos, todo dia, em três línguas. No Instagram.</p></div>
+        <div class="item"><span class="st">em breve</span><h4>O canal</h4><p>O bastidor de criar tudo isso. Sem aula, sem roteiro — só elaboração honesta.</p></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="quote">
+    <p>Não é sobre sair da zona de conforto.<br>É sobre <span>aumentar</span> a zona de conforto.</p>
+  </section>
+
+  <footer class="foot">
+    <p class="big">unirversos — tudo conectado</p>
+    <div class="tags"><span>@unirversos.idiomas</span><span>unirversos.idiomas@gmail.com</span></div>
+    <p class="credit">Aline Kikuti</p>
+  </footer>
+</div>
+
+</body>
+</html>

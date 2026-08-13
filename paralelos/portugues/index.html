@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Unirversos Português — diário comunitário</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Baloo+2:wght@500;600;700&family=Zen+Maru+Gothic:wght@400;500;700&display=swap');
+:root{
+  --pink:#E08C86; --pink-deep:#C26F6C; --pink-soft:rgba(224,140,134,.14);
+  --blush:#FBEBE7; --blush-2:#F0DFDA; --cream:#FDF8F5;
+  --ink:#4A4149; --ink-soft:#8A7F86;
+  --gold:#C0913F; --gold-soft:#FBF2DF;
+  --lav:#8B90C4; --lav-soft:#EEEFF9;
+}
+*{box-sizing:border-box;margin:0;padding:0;}
+@media (prefers-reduced-motion: reduce){ *{transition:none !important;} }
+body{font-family:'Zen Maru Gothic',sans-serif;color:var(--ink);background:var(--cream);line-height:1.7;font-size:16px;-webkit-font-smoothing:antialiased;}
+.wrap{max-width:840px;margin:0 auto;padding:0 24px;}
+
+.nav{display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap;padding:22px 0;}
+.logo{font-family:'Baloo 2',cursive;font-size:18px;font-weight:700;text-decoration:none;color:inherit;}
+.logo i{font-style:normal;color:var(--pink);}
+.nav .links{display:flex;gap:18px;font-size:13px;}
+.nav .links a{color:var(--ink-soft);text-decoration:none;}
+.nav .links a:hover{color:var(--pink-deep);}
+
+.hero{padding:30px 0 30px;text-align:center;}
+.hero .eyebrow{font-size:11px;letter-spacing:4px;text-transform:uppercase;color:var(--pink);margin-bottom:14px;font-weight:600;}
+.hero h1{font-family:'Baloo 2',cursive;font-weight:700;font-size:clamp(24px,4vw,36px);line-height:1.25;margin:0 auto 10px;}
+.hero .lang-label{font-size:14px;color:var(--pink-deep);font-weight:600;margin-bottom:16px;}
+.hero p{color:var(--ink-soft);max-width:520px;margin:0 auto;font-size:15px;}
+
+.section-title{padding:32px 0 20px;text-align:center;}
+.section-title h2{font-family:'Baloo 2',cursive;font-weight:700;font-size:clamp(22px,3.6vw,28px);}
+
+/* Formulário de novo post */
+.form-box{background:#fff;border:1.5px solid var(--blush-2);border-radius:18px;padding:24px;margin-bottom:32px;}
+.form-box h3{font-family:'Baloo 2',cursive;font-size:18px;font-weight:600;margin-bottom:16px;}
+.form-group{margin-bottom:14px;}
+.form-group label{display:block;font-size:13px;font-weight:600;color:var(--ink);margin-bottom:6px;}
+.form-group textarea{width:100%;font-family:'Zen Maru Gothic',sans-serif;font-size:15px;padding:12px 14px;border:1px solid var(--blush-2);border-radius:12px;resize:vertical;min-height:70px;line-height:1.5;}
+.form-group textarea:focus{outline:none;border-color:var(--pink);box-shadow:0 0 0 3px var(--pink-soft);}
+.btn-submit{display:inline-block;font-weight:600;font-size:15px;background:var(--pink);color:#fff;border:none;border-radius:40px;padding:12px 28px;cursor:pointer;transition:all .2s ease;font-family:'Zen Maru Gothic',sans-serif;}
+.btn-submit:hover{background:var(--pink-deep);transform:translateY(-2px);box-shadow:0 6px 20px rgba(224,140,134,.22);}
+.btn-submit:active{transform:translateY(0);}
+
+/* Posts da comunidade */
+.posts-container{display:flex;flex-direction:column;gap:14px;margin-bottom:32px;}
+.post{background:#fff;border:1px solid var(--blush-2);border-radius:16px;padding:18px 20px;transition:all .2s ease;}
+.post:hover{box-shadow:0 6px 20px rgba(36,28,63,.05);}
+.post-header{display:flex;justify-content:space-between;align-items:flex-start;gap:12px;margin-bottom:8px;}
+.post-author{font-family:'Baloo 2',cursive;font-weight:600;font-size:15px;color:var(--ink);}
+.post-date{font-size:12px;color:var(--ink-soft);}
+.post-text{font-size:15px;color:var(--ink);line-height:1.6;}
+
+.empty-state{text-align:center;padding:40px 20px;color:var(--ink-soft);}
+.empty-state p{font-size:14px;margin-bottom:16px;}
+.empty-state .note{font-size:13px;font-style:italic;}
+
+.back-link{display:inline-block;margin-bottom:20px;color:var(--pink-deep);text-decoration:none;font-weight:500;font-size:14px;}
+.back-link:hover{text-decoration:underline;}
+
+.foot{border-top:1px solid var(--blush-2);padding:34px 0 50px;text-align:center;margin-top:40px;}
+.foot .big{font-family:'Baloo 2',cursive;font-size:17px;margin-bottom:14px;}
+.foot .tags{display:flex;gap:16px;justify-content:center;flex-wrap:wrap;font-size:13px;color:var(--pink-deep);}
+.foot .credit{margin-top:16px;font-size:11.5px;color:var(--ink-soft);opacity:.7;}
+
+</style>
+</head>
+<body>
+
+<div class="wrap">
+  <nav class="nav">
+    <a href="/" class="logo">UNIRVERSOS</a>
+    <div class="links">
+      <a href="/idiomas/">idiomas</a>
+      <a href="/memorias/">memórias</a>
+      <a href="/paralelos/">paralelos</a>
+      <a href="/sobre/">sobre</a>
+      <a href="/">início</a>
+    </div>
+  </nav>
+
+  <a href="/paralelos/" class="back-link">← voltar para idiomas</a>
+
+  <header class="hero">
+    <p class="eyebrow">diário comunitário</p>
+    <h1>Português</h1>
+    <p class="lang-label">Comunidade de Português</p>
+    <p>Compartilhe um acontecimento ou pensamento do dia, em português. Inspire e seja inspirado.</p>
+  </header>
+</div>
+
+<div class="wrap">
+
+  <div class="section-title">
+    <h2>✍️ Compartilhe sua frase</h2>
+  </div>
+
+  <div class="form-box">
+    <h3>Novo post</h3>
+    <form id="formPost">
+      <div class="form-group">
+        <label for="author">Seu nome:</label>
+        <textarea id="author" placeholder="Como você quer ser conhecido?" maxlength="50"></textarea>
+      </div>
+      <div class="form-group">
+        <label for="text">Sua frase (em português):</label>
+        <textarea id="text" placeholder="Um acontecimento, um pensamento, uma descoberta..." maxlength="280" required></textarea>
+      </div>
+      <button type="submit" class="btn-submit">Publicar →</button>
+    </form>
+  </div>
+
+  <div class="section-title">
+    <h2>📖 Histórias da comunidade</h2>
+  </div>
+
+  <div class="posts-container" id="postsContainer">
+    <div class="empty-state">
+      <p>Nenhum post ainda. Seja o primeiro a compartilhar! 🌱</p>
+      <p class="note">Seus posts são salvos localmente no seu navegador.</p>
+    </div>
+  </div>
+
+  <footer class="foot">
+    <p class="big">unirversos — tudo conectado</p>
+    <div class="tags"><span>@unirversos.idiomas</span><span>unirversos.idiomas@gmail.com</span></div>
+    <p style="margin-top:16px;font-size:13px;"><a href="https://www.instagram.com/unirversos.idiomas" target="_blank" rel="noopener" style="color:var(--pink-deep);text-decoration:none;border-bottom:1px solid var(--blush-2);">💬 acompanhe o diário trilíngue →</a></p>
+    <p class="credit">Aline Kikuti</p>
+  </footer>
+
+</div>
+
+<script>
+const STORAGE_KEY = 'paralelos_portugues_posts';
+
+// Exemplos de posts iniciais
+const SAMPLE_POSTS = [
+  { author: 'Sofia', text: 'Acordei cedo e vi o sol nascendo. Uma nova oportunidade todos os dias.', date: '2024-08-03' },
+  { author: 'Marcos', text: 'Hoje consegui entender uma conversa completa. O esforço compensa.', date: '2024-08-02' },
+  { author: 'Clara', text: 'Aprender um idioma é plantar sementes. Nunca sabemos quando vão brotar.', date: '2024-08-01' }
+];
+
+function getPosts() {
+  const stored = localStorage.getItem(STORAGE_KEY);
+  return stored ? JSON.parse(stored) : SAMPLE_POSTS;
+}
+
+function savePosts(posts) {
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(posts));
+  renderPosts();
+}
+
+function formatDate(date) {
+  return new Date(date).toLocaleDateString('pt-BR', { 
+    year: 'numeric', 
+    month: 'long', 
+    day: 'numeric' 
+  });
+}
+
+function renderPosts() {
+  const posts = getPosts();
+  const container = document.getElementById('postsContainer');
+  
+  if (posts.length === 0) {
+    container.innerHTML = `
+      <div class="empty-state">
+        <p>Nenhum post ainda. Seja o primeiro a compartilhar! 🌱</p>
+        <p class="note">Seus posts são salvos localmente no seu navegador.</p>
+      </div>
+    `;
+    return;
+  }
+
+  container.innerHTML = posts.map((post, idx) => `
+    <div class="post">
+      <div class="post-header">
+        <span class="post-author">${post.author || 'Aprendiz'}</span>
+        <span class="post-date">${formatDate(post.date)}</span>
+      </div>
+      <div class="post-text">${post.text}</div>
+    </div>
+  `).reverse().join('');
+}
+
+document.getElementById('formPost').addEventListener('submit', function(e) {
+  e.preventDefault();
+  
+  const author = document.getElementById('author').value.trim() || 'Aprendiz';
+  const text = document.getElementById('text').value.trim();
+  
+  if (!text) return;
+  
+  const posts = getPosts();
+  posts.push({
+    author: author,
+    text: text,
+    date: new Date().toISOString().split('T')[0]
+  });
+  
+  savePosts(posts);
+  
+  document.getElementById('author').value = '';
+  document.getElementById('text').value = '';
+  document.getElementById('text').focus();
+});
+
+// Renderizar posts ao carregar
+renderPosts();
+</script>
+
+</body>
+</html>

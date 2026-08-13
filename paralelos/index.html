@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Unirversos Paralelos — diário comunitário trilíngue</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Baloo+2:wght@500;600;700&family=Zen+Maru+Gothic:wght@400;500;700&display=swap');
+:root{
+  --pink:#E08C86; --pink-deep:#C26F6C; --pink-soft:rgba(224,140,134,.14);
+  --blush:#FBEBE7; --blush-2:#F0DFDA; --cream:#FDF8F5;
+  --ink:#4A4149; --ink-soft:#8A7F86;
+  --gold:#C0913F; --gold-soft:#FBF2DF;
+  --sage:#7FA893; --sage-soft:#EAF3EE;
+  --lav:#8B90C4; --lav-soft:#EEEFF9;
+}
+*{box-sizing:border-box;margin:0;padding:0;}
+@media (prefers-reduced-motion: reduce){ *{transition:none !important;} }
+body{font-family:'Zen Maru Gothic',sans-serif;color:var(--ink);background:var(--cream);line-height:1.7;font-size:16px;-webkit-font-smoothing:antialiased;}
+.wrap{max-width:840px;margin:0 auto;padding:0 24px;}
+
+.nav{display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap;padding:22px 0;}
+.logo{font-family:'Baloo 2',cursive;font-size:18px;font-weight:700;text-decoration:none;color:inherit;}
+.logo i{font-style:normal;color:var(--pink);}
+.nav .links{display:flex;gap:18px;font-size:13px;}
+.nav .links a{color:var(--ink-soft);text-decoration:none;}
+.nav .links a:hover{color:var(--pink-deep);}
+.nav .links a.on{color:var(--pink);}
+
+.hero{padding:30px 0 40px;text-align:center;}
+.hero .eyebrow{font-size:11px;letter-spacing:4px;text-transform:uppercase;color:var(--pink);margin-bottom:14px;font-weight:600;}
+.hero h1{font-family:'Baloo 2',cursive;font-weight:700;font-size:clamp(26px,4.6vw,40px);line-height:1.25;max-width:600px;margin:0 auto 16px;}
+.hero h1 em{font-style:normal;color:var(--pink);}
+.hero p{color:var(--ink-soft);max-width:520px;margin:0 auto;font-size:16px;}
+
+.section-intro{padding:44px 0 20px;text-align:center;}
+.section-intro .eyebrow{font-size:11px;letter-spacing:4px;text-transform:uppercase;color:var(--pink);margin-bottom:10px;font-weight:600;}
+.section-intro h2{font-family:'Baloo 2',cursive;font-weight:700;font-size:clamp(23px,3.8vw,31px);margin-bottom:10px;}
+.section-intro p{color:var(--ink-soft);max-width:560px;margin:0 auto;}
+
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:16px;padding:30px 0;}
+.lang-card{
+  background:#fff;border:1.5px solid var(--blush-2);border-radius:20px;padding:32px 24px;
+  text-align:center;transition:all .2s ease;text-decoration:none;color:inherit;display:flex;flex-direction:column;gap:12px;
+}
+.lang-card:hover{transform:translateY(-4px);box-shadow:0 12px 32px rgba(36,28,63,.08);border-color:var(--pink);}
+.lang-card .flag{font-size:48px;line-height:1;}
+.lang-card h3{font-family:'Baloo 2',cursive;font-weight:600;font-size:22px;}
+.lang-card p{font-size:14px;color:var(--ink-soft);}
+.lang-card .tag{font-size:11px;letter-spacing:2px;text-transform:uppercase;color:var(--pink);font-weight:600;}
+
+.quote{padding:52px 0;text-align:center;}
+.quote p{font-family:'Baloo 2',cursive;font-weight:600;font-size:clamp(19px,3.2vw,26px);line-height:1.5;color:var(--ink);max-width:600px;margin:0 auto;}
+.quote span{color:var(--pink);}
+
+.foot{border-top:1px solid var(--blush-2);padding:34px 0 50px;text-align:center;}
+.foot .big{font-family:'Baloo 2',cursive;font-size:17px;margin-bottom:14px;}
+.foot .tags{display:flex;gap:16px;justify-content:center;flex-wrap:wrap;font-size:13px;color:var(--pink-deep);}
+.foot .credit{margin-top:16px;font-size:11.5px;color:var(--ink-soft);opacity:.7;}
+
+</style>
+</head>
+<body>
+
+<div class="wrap">
+  <nav class="nav">
+    <a href="/" class="logo">UNIRVERSOS</a>
+    <div class="links">
+      <a href="/idiomas/">idiomas</a>
+      <a href="/memorias/">memórias</a>
+      <a href="/paralelos/" class="on">paralelos</a>
+      <a href="/sobre/">sobre</a>
+      <a href="/">início</a>
+    </div>
+  </nav>
+
+  <header class="hero">
+    <p class="eyebrow">unirversos paralelos</p>
+    <h1>Diário <em>comunitário</em>.</h1>
+    <p>Um acontecimento ou pensamento com constância, no idioma que você escolhe. Escreva uma frase e acompanhe a jornada de outros aprendizes.</p>
+  </header>
+</div>
+
+<div class="wrap">
+
+  <div class="section-intro">
+    <p class="eyebrow">escolha seu idioma</p>
+    <h2>Por qual língua começamos?</h2>
+    <p>Cada comunidade é um espaço de compartilhamento sincero, onde pequenas frases viram grandes transformações.</p>
+  </div>
+
+  <div class="grid">
+    <a href="/paralelos/japones/" class="lang-card">
+      <span class="flag">🇯🇵</span>
+      <span class="tag">言語</span>
+      <h3>Japonês</h3>
+      <p>日本語で毎日を記録する</p>
+    </a>
+
+    <a href="/paralelos/ingles/" class="lang-card">
+      <span class="flag">🇬🇧</span>
+      <span class="tag">Language</span>
+      <h3>English</h3>
+      <p>Record your days in English</p>
+    </a>
+
+    <a href="/paralelos/portugues/" class="lang-card">
+      <span class="flag">🇧🇷</span>
+      <span class="tag">Língua</span>
+      <h3>Português</h3>
+      <p>Registre seus dias em português</p>
+    </a>
+  </div>
+
+  <div class="quote">
+    <p>Todo mundo carrega mundos que ninguém vê.<br>Aqui, você <span>compartilha</span> o seu.</p>
+  </div>
+
+  <footer class="foot">
+    <p class="big">unirversos — tudo conectado</p>
+    <div class="tags"><span>@unirversos.idiomas</span><span>unirversos.idiomas@gmail.com</span></div>
+    <p style="margin-top:16px;font-size:13px;"><a href="https://www.instagram.com/unirversos.idiomas" target="_blank" rel="noopener" style="color:var(--pink-deep);text-decoration:none;border-bottom:1px solid var(--blush-2);">💬 acompanhe o diário trilíngue →</a></p>
+    <p class="credit">Aline Kikuti</p>
+  </footer>
+
+</div>
+
+</body>
+</html>

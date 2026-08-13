@@ -1,0 +1,412 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Planeta Utopia — simulador de situações | Unirversos Idiomas</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Baloo+2:wght@500;600;700&family=Zen+Maru+Gothic:wght@400;500;700&family=JetBrains+Mono:wght@400;600&display=swap');
+:root{
+  --paper:#FDF8F5; --white:#FFFFFF; --ink:#4A4149; --ink-soft:#8A7F86;
+  --line:#F0E6E2; --line-2:#E7DCE4;
+  --rose:#E08C86; --rose-deep:#C26F6C; --rose-soft:#FBEBE7;
+  --lav:#8B90C4; --lav-soft:#EEEFF9;
+  --sage:#7FA893; --sage-soft:#EAF3EE;
+  --gold:#C0913F; --gold-soft:#FBF2DF;
+  --star:#FFD700; --star-soft:#FFF8DC;
+  --hp:#D9736E; --hp-soft:#FBEAE6; --xp:#8B90C4; --xp-soft:#EEEFF9;
+}
+*{box-sizing:border-box;margin:0;padding:0;}
+@media (prefers-reduced-motion: reduce){ *{transition:none !important;animation:none !important;} }
+body{font-family:'Zen Maru Gothic',sans-serif;background:var(--paper);color:var(--ink);line-height:1.7;font-size:16px;-webkit-font-smoothing:antialiased;}
+body::before{content:'';position:fixed;inset:0;pointer-events:none;z-index:0;
+  background-image:radial-gradient(circle at 12% 10%, rgba(224,140,134,.10) 0, transparent 42%),
+                   radial-gradient(circle at 88% 34%, rgba(139,144,196,.09) 0, transparent 40%);}
+.page{position:relative;z-index:1;max-width:760px;margin:0 auto;padding:0 20px 90px;}
+.top{display:flex;align-items:center;justify-content:space-between;gap:14px;flex-wrap:wrap;padding:18px 0;}
+.brand{font-family:'Baloo 2',cursive;font-size:18px;font-weight:700;text-decoration:none;color:inherit;}
+.brand span{color:var(--rose);}
+.cover{text-align:center;padding:32px 0 20px;}
+.cover .kicker{font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:3px;text-transform:uppercase;color:var(--rose);margin-bottom:10px;}
+.cover h1{font-family:'Baloo 2',cursive;font-weight:700;font-size:clamp(28px,6vw,44px);line-height:1.15;margin-bottom:8px;}
+.cover h1 em{font-style:normal;color:var(--rose);}
+.cover p{color:var(--ink-soft);max-width:540px;margin:0 auto;}
+.btn{font-family:'Zen Maru Gothic',sans-serif;font-size:13.5px;font-weight:500;border:1.5px solid var(--rose);background:var(--rose);color:#fff;border-radius:22px;padding:9px 18px;cursor:pointer;display:inline-flex;align-items:center;gap:7px;transition:all .18s ease;}
+.btn:hover{background:var(--rose-deep);border-color:var(--rose-deep);}
+.btn.ghost{background:var(--white);color:var(--rose-deep);}
+.btn.ghost:hover{background:var(--rose-soft);}
+.btn[disabled]{opacity:.45;cursor:not-allowed;}
+.btn.big{font-size:15px;padding:12px 26px;}
+.card{background:var(--white);border:1.5px solid var(--line);border-radius:24px;padding:24px;margin-bottom:16px;box-shadow:0 4px 20px rgba(74,65,73,.05);}
+.crow{display:flex;align-items:center;gap:14px;flex-wrap:wrap;margin-bottom:14px;}
+.crow label{font-size:13px;color:var(--ink-soft);min-width:92px;font-weight:500;}
+.crow input{font-family:'JetBrains Mono',monospace;font-size:14.5px;border:1.5px solid var(--line);border-radius:12px;padding:8px 14px;background:var(--paper);color:var(--ink);outline:none;flex:1;min-width:150px;}
+.crow input:focus{border-color:var(--rose);}
+.choice{border:1.5px solid var(--line);background:var(--paper);border-radius:16px;padding:11px 15px;cursor:pointer;text-align:center;min-width:88px;transition:all .18s ease;font-family:inherit;}
+.choice:hover{transform:translateY(-2px);border-color:var(--rose);}
+.choice.sel{border-color:var(--rose);background:var(--rose-soft);box-shadow:0 0 0 3px rgba(224,140,134,.14);}
+.choice .ic{font-size:23px;display:block;margin-bottom:3px;}
+.choice .nm{font-size:12px;font-weight:600;}
+.territories{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:12px;}
+.terr{border:1.5px solid var(--line);background:var(--white);border-radius:18px;padding:16px;cursor:pointer;transition:all .18s ease;position:relative;font-family:inherit;text-align:left;}
+.terr:hover{transform:translateY(-3px);border-color:var(--rose);}
+.terr.locked{opacity:.5;cursor:not-allowed;filter:grayscale(.5);}
+.terr.done{border-color:var(--sage);background:var(--sage-soft);}
+.terr .chip{font-size:21px;margin-bottom:5px;}
+.terr h4{font-family:'Baloo 2',cursive;font-size:15px;font-weight:600;margin-bottom:2px;}
+.terr .meta{font-size:11px;color:var(--ink-soft);margin-bottom:8px;}
+.terr .stars{display:flex;gap:3px;font-size:14px;}
+.terr .star{opacity:.3;cursor:default;}
+.terr .star.filled{opacity:1;color:var(--star);}
+.terr .badge{position:absolute;top:11px;right:11px;font-size:10.5px;font-family:'JetBrains Mono',monospace;background:var(--gold-soft);color:var(--gold);border:1px solid var(--gold);border-radius:12px;padding:2px 8px;}
+.terr.locked .lockic{position:absolute;top:11px;right:11px;font-size:14px;}
+
+/* ==== resultado ==== */
+.result-screen{text-align:center;padding:32px 20px;}
+.result-screen .trophy{font-size:72px;margin-bottom:12px;animation:bounce .6s ease;}
+@keyframes bounce{0%,100%{transform:scale(1);}50%{transform:scale(1.15);}}
+.result-screen h2{font-family:'Baloo 2',cursive;font-size:32px;margin-bottom:6px;}
+.result-screen .stars-result{font-size:48px;letter-spacing:8px;margin:20px 0;animation:pop .5s ease;}
+@keyframes pop{from{opacity:0;transform:scale(.5);}to{opacity:1;transform:scale(1);}}
+.result-screen .desc{color:var(--ink-soft);font-size:14.5px;margin-bottom:20px;}
+.result-screen .xp-gain{background:var(--xp-soft);border:1.5px solid var(--xp);border-radius:16px;padding:16px;margin:16px 0;font-size:15px;font-weight:600;color:var(--xp);}
+.result-screen .xp-gain .label{font-size:12px;text-transform:uppercase;letter-spacing:1px;font-family:'JetBrains Mono',monospace;opacity:.8;}
+.progress-line{display:flex;align-items:center;gap:12px;margin:24px 0;}
+.progress-line .bar{flex:1;height:6px;background:var(--line);border-radius:10px;overflow:hidden;}
+.progress-line .bar-fill{height:100%;background:var(--rose);border-radius:10px;transition:width .5s ease;}
+.progress-line .label{font-size:12px;color:var(--ink-soft);font-family:'JetBrains Mono',monospace;white-space:nowrap;}
+
+/* ==== scene/simulador ==== */
+.scene-head{display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap;margin-bottom:12px;}
+.scene-head h2{font-family:'Baloo 2',cursive;font-size:21px;font-weight:700;}
+.backlink{display:inline-flex;align-items:center;gap:6px;font-size:13px;color:var(--rose-deep);background:none;border:none;cursor:pointer;font-family:inherit;}
+.intro{background:var(--lav-soft);border:1px solid #DFE1F4;border-radius:18px;padding:18px 20px;font-size:14.5px;color:#3E4488;margin-bottom:16px;font-style:italic;}
+.chat{display:flex;flex-direction:column;gap:12px;margin-bottom:16px;}
+.bubble{max-width:88%;border-radius:20px;padding:14px 18px;position:relative;animation:pop .25s ease;}
+@keyframes pop{from{opacity:0;transform:translateY(8px);}to{opacity:1;transform:none;}}
+.bubble.npc{align-self:flex-start;background:var(--white);border:1.5px solid var(--line);border-bottom-left-radius:6px;}
+.bubble.me{align-self:flex-end;background:var(--rose);color:#fff;border-bottom-right-radius:6px;}
+.bubble .who{font-size:10.5px;font-family:'JetBrains Mono',monospace;letter-spacing:1px;text-transform:uppercase;color:var(--ink-soft);margin-bottom:4px;}
+.bubble.me .who{color:#FBDDD8;}
+.bubble .line-txt{font-size:16px;font-weight:500;}
+.bubble .tr{font-size:12.5px;color:var(--ink-soft);margin-top:6px;display:none;}
+.bubble .tr.revealed{display:block;animation:pop .2s ease;}
+
+.choices-grid{display:flex;gap:10px;flex-wrap:wrap;}
+.choice-btn{border:1.5px solid var(--line);background:var(--paper);border-radius:16px;padding:11px 15px;cursor:pointer;text-align:center;min-width:100px;transition:all .18s ease;font-family:inherit;font-size:13px;}
+.choice-btn:hover{transform:translateY(-2px);border-color:var(--rose);}
+.choice-btn.correct{border-color:var(--sage);background:var(--sage-soft);color:var(--sage);font-weight:600;}
+.choice-btn.wrong{border-color:#D9736E;background:#FBEAE6;color:#D9736E;font-weight:600;}
+.choice-btn[disabled]{opacity:.5;cursor:not-allowed;}
+
+.boss-section{background:var(--gold-soft);border:1.5px solid var(--gold);border-radius:18px;padding:18px;margin-top:16px;}
+.boss-section h4{font-size:15px;font-weight:700;color:var(--gold);margin-bottom:12px;display:flex;align-items:center;gap:8px;}
+.boss-section textarea{width:100%;font-family:'JetBrains Mono',monospace;font-size:14px;border:1.5px solid var(--gold);border-radius:12px;padding:12px;background:var(--white);color:var(--ink);resize:vertical;min-height:80px;outline:none;}
+.boss-section textarea:focus{border-color:var(--rose);}
+.boss-section .hint{font-size:12px;color:var(--gold);margin-top:8px;font-style:italic;}
+
+.progress-tracker{display:flex;gap:8px;justify-content:center;margin:16px 0;font-size:12px;}
+.progress-tracker .step{width:32px;height:32px;border-radius:50%;background:var(--line);border:1.5px solid var(--line);display:flex;align-items:center;justify-content:center;font-weight:600;color:var(--ink-soft);}
+.progress-tracker .step.active{background:var(--rose);border-color:var(--rose);color:#fff;}
+.progress-tracker .step.done{background:var(--sage);border-color:var(--sage);color:#fff;}
+</style>
+</head>
+<body>
+
+<div class="page">
+  <div class="top">
+    <a href="/" class="brand">UNIR<span>versos</span></a>
+  </div>
+
+  <div id="screen-hub">
+    <div class="cover">
+      <div class="kicker">🌍 Praticar</div>
+      <h1>Planeta <em>Utopia</em></h1>
+      <p>Simule situações reais em 12 territórios. Ganhe ⭐ e desbloqueie novos mapas.</p>
+    </div>
+
+    <div class="card">
+      <div class="crow"><label>Nome</label><input id="c-name" placeholder="seu nome de viajante" oninput="checkStart()"></div>
+      <div class="crow">
+        <label>Idioma</label>
+        <div id="lang-choice" style="display:flex;gap:8px;flex-wrap:wrap;"></div>
+      </div>
+      <div style="text-align:center;margin-top:18px;">
+        <button id="start-btn" class="btn big" onclick="startPlanet()" disabled>🚀 Começar a aventura</button>
+      </div>
+    </div>
+
+    <div class="territories" id="territories"></div>
+  </div>
+
+  <div id="screen-scene" style="display:none;">
+    <div class="scene-head">
+      <h2 id="scene-title"></h2>
+      <button class="backlink" onclick="backToHub()">← voltar</button>
+    </div>
+    
+    <div class="intro" id="intro"></div>
+    
+    <div class="chat" id="chat"></div>
+
+    <div class="progress-tracker" id="progress-tracker"></div>
+
+    <div class="choices-grid" id="choices"></div>
+
+    <div class="boss-section" id="boss-section" style="display:none;">
+      <h4>🔓 O momento crítico</h4>
+      <p id="boss-context" style="font-size:14px;margin-bottom:12px;"></p>
+      <p id="boss-kw-note" style="font-size:12px;color:var(--gold);margin-bottom:8px;"></p>
+      <textarea id="boss-text" placeholder="escreva sua resposta aqui..."></textarea>
+      <div class="hint" id="boss-hint"></div>
+      <button class="btn big" style="margin-top:12px;width:100%;" onclick="checkBoss()" id="boss-btn">enviar resposta</button>
+    </div>
+  </div>
+
+  <div id="screen-result" style="display:none;">
+    <div class="result-screen">
+      <div class="trophy" id="trophy">🎉</div>
+      <h2 id="result-title">Missão Completa!</h2>
+      <div class="stars-result" id="stars-result">⭐⭐⭐</div>
+      <div class="desc" id="result-desc">Perfeito! Você completou tudo sem erros.</div>
+      <div class="xp-gain">
+        <div class="label">XP Ganho</div>
+        <div style="font-size:24px;">+<span id="xp-amount">100</span> XP</div>
+      </div>
+      <div class="progress-line">
+        <div class="label" id="progress-label">Mapas: 1/12</div>
+        <div class="bar"><div class="bar-fill" id="bar-fill" style="width:0%;"></div></div>
+      </div>
+      <button class="btn big" style="margin-top:24px;width:100%;" onclick="nextMapOrHub()">continuar →</button>
+    </div>
+  </div>
+</div>
+
+<script>
+const LANG={ja:{name:'Japonês',code:'JP',tts:'ja-JP'},en:{name:'Inglês',code:'EN',tts:'en-US'},pt:{name:'Português',code:'PT',tts:'pt-BR'}};
+const TERRITORIES=[
+  {id:'aeroporto',num:'00',chip:'🛂 Aeroporto',lang:'ja'},
+  {id:'hotel',num:'01',chip:'🏨 Hotel',lang:'ja'},
+  {id:'conbini',num:'02',chip:'🏪 Kombini',lang:'ja'},
+  {id:'restaurante',num:'03',chip:'🍽️ Restaurante',lang:'ja'},
+  {id:'trens',num:'04',chip:'🚆 Trens',lang:'ja'},
+  {id:'compras',num:'05',chip:'🛍️ Compras',lang:'ja'},
+  {id:'roupas',num:'06',chip:'👗 Roupas',lang:'ja'},
+  {id:'sos',num:'07',chip:'🆘 Emergência',lang:'ja'},
+  {id:'base',num:'08',chip:'🤝 Apresentação',lang:'ja'},
+  {id:'numeros',num:'09',chip:'🕒 Horas',lang:'ja'},
+  {id:'planos',num:'10',chip:'🎉 Planos',lang:'ja'},
+  {id:'placas',num:'11',chip:'🪧 Sinalização',lang:'ja'}
+];
+
+let gameState={player:{name:'',lang:'ja'},progress:{},currentScene:null,currentStep:0,correctCount:0,totalSteps:0,bossCompleted:false};
+
+function init(){
+  renderLangChoice();
+  loadProgress();
+  renderHub();
+}
+
+function renderLangChoice(){
+  const div=document.getElementById('lang-choice');
+  Object.entries(LANG).forEach(([k,v])=>{
+    const btn=document.createElement('button');
+    btn.className='choice';
+    btn.innerHTML=`<div class="ic">${k===gameState.lang?'✓':''}</div><div class="nm">${v.name}</div>`;
+    btn.style.minWidth='80px';
+    btn.onclick=()=>{gameState.lang=k;renderLangChoice();};
+    div.appendChild(btn);
+  });
+}
+
+function checkStart(){
+  const hasName=document.getElementById('c-name').value.trim();
+  document.getElementById('start-btn').disabled=!hasName;
+}
+
+function startPlanet(){
+  gameState.player.name=document.getElementById('c-name').value.trim();
+  if(!gameState.player.name) return;
+  renderHub();
+}
+
+function loadProgress(){
+  const saved=localStorage.getItem('utopia-progress');
+  if(saved) gameState.progress=JSON.parse(saved);
+}
+
+function saveProgress(){
+  localStorage.setItem('utopia-progress',JSON.stringify(gameState.progress));
+}
+
+function renderHub(){
+  const hub=document.getElementById('screen-hub');
+  const scene=document.getElementById('screen-scene');
+  scene.style.display='none';
+  hub.style.display='block';
+
+  const terrsDiv=document.getElementById('territories');
+  terrsDiv.innerHTML='';
+  
+  TERRITORIES.forEach((t,i)=>{
+    const card=document.createElement('div');
+    card.className='terr';
+    
+    const isLocked=i>0&&!gameState.progress[TERRITORIES[i-1].id];
+    if(isLocked) card.classList.add('locked');
+    else card.classList.add('done');
+
+    const stars=gameState.progress[t.id]?.stars||0;
+    const starsHtml=[1,2,3].map(s=>`<span class="star ${s<=stars?'filled':''}">⭐</span>`).join('');
+    
+    card.innerHTML=`
+      <div class="chip">${t.chip}</div>
+      <h4>${t.chip.split(' ').pop()}</h4>
+      <div class="meta">#${t.num} · ${LANG[gameState.lang].name}</div>
+      <div class="stars">${starsHtml}</div>
+      ${stars>0?`<div class="badge">★${stars}</div>`:''}
+    `;
+    
+    if(!isLocked) card.onclick=()=>startScene(t.id);
+    if(isLocked) card.innerHTML+=`<div class="lockic">🔒</div>`;
+    
+    terrsDiv.appendChild(card);
+  });
+}
+
+function startScene(terrId){
+  gameState.currentScene=terrId;
+  gameState.currentStep=0;
+  gameState.correctCount=0;
+  gameState.totalSteps=0;
+  gameState.bossCompleted=false;
+
+  const terr=TERRITORIES.find(t=>t.id===terrId);
+  document.getElementById('scene-title').textContent=terr.chip+' · Fase '+terr.num;
+  document.getElementById('intro').textContent='[Cenário introdutório]';
+  
+  renderScene();
+  document.getElementById('screen-hub').style.display='none';
+  document.getElementById('screen-scene').style.display='block';
+}
+
+function renderScene(){
+  const chat=document.getElementById('chat');
+  chat.innerHTML='';
+  
+  const bubble=document.createElement('div');
+  bubble.className='bubble npc';
+  bubble.innerHTML=`<div class="who">NPC</div><div class="line-txt">Olá! Como você gostaria de responder?</div>`;
+  chat.appendChild(bubble);
+
+  const choices=document.getElementById('choices');
+  choices.innerHTML='';
+  ['Opção 1','Opção 2','Opção 3'].forEach(opt=>{
+    const btn=document.createElement('button');
+    btn.className='choice-btn';
+    btn.textContent=opt;
+    btn.onclick=()=>handleChoice(Math.random()>0.5);
+    choices.appendChild(btn);
+  });
+
+  updateProgress();
+}
+
+function handleChoice(correct){
+  const chat=document.getElementById('chat');
+  const bubble=document.createElement('div');
+  bubble.className=`bubble me`;
+  bubble.innerHTML=`<div class="who">Você</div><div class="line-txt">Sua resposta</div>`;
+  chat.appendChild(bubble);
+
+  if(correct) gameState.correctCount++;
+  gameState.currentStep++;
+  gameState.totalSteps++;
+
+  setTimeout(()=>{
+    if(gameState.currentStep>=3) showBoss();
+    else renderScene();
+  },800);
+}
+
+function updateProgress(){
+  const tracker=document.getElementById('progress-tracker');
+  tracker.innerHTML='';
+  for(let i=0;i<3;i++){
+    const step=document.createElement('div');
+    step.className='step';
+    if(i<gameState.currentStep) step.classList.add('done');
+    if(i===gameState.currentStep) step.classList.add('active');
+    step.textContent=i+1;
+    tracker.appendChild(step);
+  }
+}
+
+function showBoss(){
+  document.getElementById('choices').style.display='none';
+  document.getElementById('boss-section').style.display='block';
+  document.getElementById('boss-context').textContent='Resolva a situação crítica usando as peças que você aprendeu.';
+  document.getElementById('boss-hint').textContent='💡 Dica: Use as palavras-chave do mapa.';
+}
+
+function checkBoss(){
+  const answer=document.getElementById('boss-text').value.trim();
+  if(!answer) return;
+  
+  gameState.bossCompleted=true;
+  completeScene();
+}
+
+function completeScene(){
+  const terr=TERRITORIES.find(t=>t.id===gameState.currentScene);
+  const completionRate=gameState.correctCount/gameState.totalSteps;
+  const bossBonus=gameState.bossCompleted?1:0;
+  
+  let stars=1;
+  if(completionRate>=0.8&&gameState.bossCompleted) stars=2;
+  if(completionRate===1&&gameState.bossCompleted) stars=3;
+
+  gameState.progress[gameState.currentScene]={stars,xp:stars*50,date:new Date().toISOString()};
+  saveProgress();
+
+  showResult(stars);
+}
+
+function showResult(stars){
+  document.getElementById('screen-scene').style.display='none';
+  document.getElementById('screen-result').style.display='block';
+
+  const starsHtml=[...Array(3)].map((,i)=>`<span style="color:${i<stars?'var(--star)':'var(--line)'};">⭐</span>`).join('');
+  document.getElementById('stars-result').innerHTML=starsHtml;
+
+  const desc={1:'Completou a missão!',2:'Bom trabalho! Quase perfeito.',3:'PERFEITO! Sem erros!'}[stars];
+  document.getElementById('result-desc').textContent=desc;
+  document.getElementById('xp-amount').textContent=stars*50;
+
+  const completed=Object.keys(gameState.progress).length;
+  const total=TERRITORIES.length;
+  document.getElementById('progress-label').textContent=`Mapas: ${completed}/${total}`;
+  document.getElementById('bar-fill').style.width=`${(completed/total)*100}%`;
+}
+
+function nextMapOrHub(){
+  const currentIdx=TERRITORIES.findIndex(t=>t.id===gameState.currentScene);
+  if(currentIdx<TERRITORIES.length-1){
+    startScene(TERRITORIES[currentIdx+1].id);
+    document.getElementById('screen-result').style.display='none';
+    document.getElementById('screen-scene').style.display='block';
+  } else {
+    backToHub();
+  }
+}
+
+function backToHub(){
+  document.getElementById('screen-scene').style.display='none';
+  document.getElementById('screen-result').style.display='none';
+  renderHub();
+}
+
+init();
+</script>
+</body>
+</html>

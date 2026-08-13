@@ -1,0 +1,977 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>🛍️ Compras | Unirversos</title>
+<style>
+:root{
+  --paper:#FDFBF7; --ink:#2A2E2C; --line:#E5E0D8; --teal:#1B4D3E; --gold:#D4A359; --green:#2ECC71;
+  --sage:#1B4D3E; --rose:#D4A359; --blue:#1B4D3E;
+}
+*{box-sizing:border-box;margin:0;padding:0;}
+body{font-family:'Segoe UI',sans-serif;background:var(--paper);color:var(--ink);}
+.container{max-width:1000px;margin:0 auto;padding:20px;}
+.header{text-align:center;padding:20px 0;border-bottom:2px solid var(--line);margin-bottom:30px;}
+.header h1{font-size:28px;margin-bottom:8px;}
+.tabs{display:flex;gap:15px;margin-bottom:30px;border-bottom:2px solid var(--line);padding-bottom:15px;}
+.tab-btn{background:none;border:none;cursor:pointer;font-size:14px;font-weight:500;color:#999;
+  padding:10px;border-bottom:3px solid transparent;transition:all 0.3s;}
+.tab-btn.active{color:var(--ink);border-bottom-color:var(--rose);}
+.mode-buttons{display:flex;gap:10px;margin-bottom:20px;flex-wrap:wrap;padding-bottom:15px;
+  border-bottom:1px solid var(--line);}
+.mode-btn{padding:8px 16px;background:var(--paper);border:1.5px solid var(--line);border-radius:15px;
+  cursor:pointer;font-size:13px;font-weight:500;transition:all 0.3s;}
+.mode-btn.active{background:var(--blue);color:#fff;border-color:var(--blue);}
+
+.grid-cards{display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:12px;margin-top:20px;}
+.card-simples{background:#fff;border:1.5px solid var(--line);border-radius:12px;padding:15px;text-align:center;
+  transition:all 0.3s;}
+.card-simples:hover{transform:translateY(-4px);border-color:var(--blue);}
+.kanji-simples{font-size:14px;color:#999;font-weight:500;margin-bottom:6px;}
+.romaji-simples{font-size:20px;color:var(--ink);font-weight:700;margin-bottom:5px;}
+.pt-simples{font-size:11px;color:var(--rose);}
+
+.flashcard{background:#fff;border:2px solid var(--rose);border-radius:15px;padding:20px;text-align:center;
+  cursor:pointer;transition:all 0.3s;min-height:140px;display:flex;flex-direction:column;justify-content:center;
+  align-items:center;}
+.flashcard:hover{transform:translateY(-2px);box-shadow:0 6px 14px rgba(224,140,134,0.2);}
+.flashcard.flipped .frente{display:none;}
+.flashcard.flipped .verso{display:block;}
+.verso{display:none;}
+.frente{display:flex;flex-direction:column;gap:10px;}
+.kanji-fc{font-size:22px;font-weight:700;color:var(--ink);}
+.romaji-fc{font-size:14px;font-weight:600;color:var(--blue);}
+.verso-text{font-size:14px;color:var(--rose);font-weight:600;}
+
+.grid-palavras{display:grid;grid-template-columns:repeat(auto-fill,minmax(120px,1fr));gap:10px;margin-top:20px;}
+.palavra-card{background:#fff;border:1.5px solid var(--line);border-radius:10px;padding:12px;text-align:center;
+  cursor:pointer;transition:all 0.3s;}
+.palavra-card:hover{border-color:var(--blue);transform:scale(1.05);}
+.palavra-card.active{background:var(--blue);color:#fff;border-color:var(--blue);}
+.palavra-kanji{font-size:13px;color:#999;font-weight:500;margin-bottom:5px;}
+.palavra-romaji{font-size:17px;font-weight:700;opacity:1;}
+
+.moldes-container{margin-top:30px;padding:20px;background:var(--paper);border-radius:15px;}
+.molde-card{background:#fff;border:2px solid var(--sage);border-radius:12px;padding:15px;margin-bottom:12px;}
+.molde-numero{font-size:11px;color:var(--sage);font-weight:600;margin-bottom:5px;}
+.molde-template{font-size:11px;color:#999;font-weight:500;font-family:'Courier',monospace;
+  background:rgba(127,168,147,0.1);padding:10px;border-radius:8px;}
+.molde-romaji{font-size:16px;color:var(--ink);font-weight:700;margin-bottom:6px;}
+.molde-exemplo{font-size:13px;color:var(--teal);margin-top:8px;font-weight:600;}
+.molde-exemplo-kanji{font-size:11px;color:#999;margin-top:3px;}
+
+.categoria-header{font-size:12px;font-weight:600;color:var(--ink);background:rgba(74,144,226,0.1);
+  padding:8px;border-radius:8px;margin:15px 0 10px 0;}
+
+/* RADAR */
+.radar-situacao{background:#fff;border:2px solid var(--blue);border-radius:15px;padding:20px;margin:15px 0;}
+.audio-btn{background:var(--rose);color:#fff;border:none;padding:10px 20px;border-radius:15px;
+  cursor:pointer;font-size:13px;margin:10px 0;}
+.radar-cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(100px,1fr));gap:10px;margin:15px 0;}
+.radar-card{background:#fff;border:2px solid var(--line);border-radius:10px;padding:12px;text-align:center;
+  cursor:pointer;transition:all 0.3s;}
+.radar-card:hover{border-color:var(--blue);transform:translateY(-2px);}
+.radar-card.selected{background:var(--green);color:#fff;border-color:var(--green);}
+
+/* INSIGNIAS */
+.insignias-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:15px;margin-top:20px;}
+.insignia-card{background:#fff;border:2px solid var(--line);border-radius:15px;padding:20px;text-align:center;}
+.insignia-icon{font-size:48px;margin:10px 0;}
+.insignia-title{font-size:14px;font-weight:600;margin:10px 0;}
+.insignia-status{font-size:12px;padding:8px;border-radius:8px;margin:10px 0;font-weight:600;}
+.status-locked{background:var(--line);color:var(--ink);}
+.status-unlocked{background:var(--green);color:#fff;}
+
+/* TERRA - GRAVAÇÃO */
+.terra-molde{background:#fff;border:2px solid var(--gold);border-radius:15px;padding:20px;margin:15px 0;}
+.terra-romaji{font-size:20px;font-weight:700;color:var(--ink);text-align:center;margin:15px 0 5px 0;}
+.terra-template{font-size:13px;color:#999;font-weight:500;text-align:center;margin:0 0 10px 0;
+  padding:8px;border-radius:8px;}
+.mic-btn{background:var(--teal);color:#fff;border:none;padding:15px 30px;border-radius:50px;
+  cursor:pointer;font-size:16px;font-weight:600;display:block;margin:20px auto;transition:all 0.3s;}
+.mic-btn:hover{transform:scale(1.05);box-shadow:0 6px 16px rgba(27,77,62,0.3);}
+.mic-btn.recording{background:var(--rose);animation:pulse 1s infinite;}
+@keyframes pulse{0%,100%{opacity:1;}50%{opacity:0.6;}}
+.rec-feedback{text-align:center;font-size:13px;color:#999;margin-top:15px;}
+.rec-feedback.done{color:var(--green);font-weight:600;}
+.terra-progress-bar{width:100%;height:10px;background:var(--line);border-radius:10px;margin:15px 0;overflow:hidden;}
+.terra-progress-fill{height:100%;background:var(--gold);border-radius:10px;transition:width 0.4s;}
+
+/* MODAL PROVA */
+.modal-overlay{display:none;position:fixed;top:0;left:0;width:100%;height:100%;
+  background:rgba(42,46,44,0.6);z-index:1000;align-items:center;justify-content:center;}
+.modal-overlay.show{display:flex;}
+.modal-box{background:#FDFBF7;border-radius:20px;padding:35px;max-width:420px;width:90%;
+  text-align:center;box-shadow:0 20px 50px rgba(0,0,0,0.3);animation:popIn 0.35s ease;}
+@keyframes popIn{from{transform:scale(0.85);opacity:0;}to{transform:scale(1);opacity:1;}}
+.modal-icon{font-size:56px;margin-bottom:10px;}
+.modal-title{font-size:20px;font-weight:700;color:var(--teal);margin-bottom:10px;}
+.modal-text{font-size:13px;color:#777;margin-bottom:25px;line-height:1.5;}
+.modal-btn{background:var(--teal);color:#fff;border:none;padding:14px 30px;border-radius:50px;
+  cursor:pointer;font-size:14px;font-weight:600;transition:all 0.3s;}
+.modal-btn:hover{transform:scale(1.05);}
+.modal-close{background:none;border:none;color:#999;font-size:12px;cursor:pointer;margin-top:12px;
+  display:block;width:100%;}
+
+.prova-desbloqueada-box{margin-top:20px;padding:20px;background:linear-gradient(135deg,var(--teal),#0F3329);
+  border-radius:15px;text-align:center;animation:popIn 0.4s ease;}
+.prova-desbloqueada-box .titulo{color:#fff;font-size:16px;font-weight:700;margin-bottom:8px;}
+.prova-desbloqueada-box .sub{color:rgba(255,255,255,0.8);font-size:12px;margin-bottom:15px;}
+.prova-btn{background:var(--gold);color:var(--ink);border:none;padding:12px 24px;border-radius:50px;
+  cursor:pointer;font-size:13px;font-weight:700;transition:all 0.3s;}
+.prova-btn:hover{transform:scale(1.05);box-shadow:0 6px 16px rgba(212,163,89,0.4);}
+
+
+/* CAIXA DE EXPLICAÇÃO (texto + áudio) */
+.explicacao-box{background:#fff;border:2px solid var(--line);border-radius:15px;padding:18px 20px;margin-bottom:20px;}
+.explicacao-titulo{font-size:13px;font-weight:700;color:var(--teal);margin-bottom:8px;
+  display:flex;align-items:center;gap:6px;}
+.explicacao-texto{font-size:13px;color:var(--ink);line-height:1.6;margin-bottom:12px;}
+.explicacao-audio{width:100%;height:38px;}
+
+
+/* BARRA DE ALFABETO (jump por romaji) */
+.alfabeto-bar{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:18px;padding:12px;
+  background:#fff;border:1.5px solid var(--line);border-radius:12px;}
+.alfabeto-letra{width:28px;height:28px;display:flex;align-items:center;justify-content:center;
+  border-radius:8px;font-size:12px;font-weight:700;cursor:pointer;background:var(--paper);
+  border:1px solid var(--line);color:var(--ink);transition:all 0.2s;}
+.alfabeto-letra:hover{background:var(--blue);color:#fff;border-color:var(--blue);}
+.alfabeto-letra.sem-palavra{opacity:0.3;cursor:default;pointer-events:none;}
+.card-simples.destacado{animation:piscaDestaque 1.2s ease;}
+@keyframes piscaDestaque{
+  0%,100%{box-shadow:none;border-color:var(--line);}
+  30%{box-shadow:0 0 0 4px rgba(74,144,226,0.35);border-color:var(--blue);}
+}
+
+.hidden{display:none;}
+
+/* ===== ABA AR — rede de segurança ===== */
+.ar-intro{background:#EFF6FB;border:2px solid #7FA8C4;border-radius:15px;padding:18px 20px;margin-bottom:18px;}
+.ar-intro-titulo{font-size:14px;font-weight:700;color:#4A7A96;margin-bottom:7px;}
+.ar-intro-texto{font-size:13px;line-height:1.65;color:var(--ink);}
+.ar-gaveta{background:#fff;border:1.5px solid var(--line);border-radius:14px;padding:18px 20px;margin-bottom:12px;}
+.ar-gaveta-titulo{font-size:13.5px;font-weight:700;color:#4A7A96;margin-bottom:12px;
+  display:flex;align-items:center;gap:7px;}
+.ar-frase{display:flex;justify-content:space-between;align-items:flex-start;gap:12px;
+  padding:11px 0;border-bottom:1px solid var(--line);}
+.ar-frase:last-child{border-bottom:none;}
+.ar-romaji{font-size:16px;font-weight:700;color:var(--ink);margin-bottom:2px;}
+.ar-jp{font-size:12px;color:#999;margin-bottom:3px;}
+.ar-pt{font-size:13px;color:#4A7A96;}
+.ar-som{background:none;border:none;cursor:pointer;font-size:17px;padding:4px;flex-shrink:0;}
+.ar-nota{background:#F7FAFC;border-left:3px solid #7FA8C4;border-radius:0 8px 8px 0;
+  padding:11px 14px;margin-top:12px;font-size:12.5px;line-height:1.6;color:var(--ink);}
+.ar-naofaca{background:#fff;border:2px dashed var(--rose);border-radius:14px;padding:18px 20px;margin-top:6px;}
+.ar-naofaca-titulo{font-size:12.5px;font-weight:700;color:var(--rose);margin-bottom:11px;letter-spacing:.5px;}
+.ar-naofaca li{font-size:13px;line-height:1.7;margin-bottom:9px;margin-left:18px;}
+.ar-naofaca li:last-child{margin-bottom:0;}
+</style>
+</head>
+<body>
+
+<div class="container">
+  <div class="header">
+    <h1>🛍️ Compras</h1>
+    <div style="font-size:13px;color:#999;">Mapa de Contexto #05 | Japonês</div>
+  </div>
+
+  <div class="explicacao-box">
+    <div class="explicacao-titulo">💬 Antes de começar</div>
+    <div class="explicacao-texto">Aqui eu explico rapidinho como funciona o mapa de Compras — o que você vai aprender e como praticar cada parte. Ouça o áudio ou leia o resumo abaixo antes de começar.</div>
+    <audio class="explicacao-audio" controls>
+      <source src="audio/explicacao.mp3" type="audio/mpeg">
+      Seu navegador não suporta áudio.
+    </audio>
+  </div>
+
+  <div class="tabs">
+    <button class="tab-btn active" onclick="changeTab('pecas')">📦 Peças</button>
+    <button class="tab-btn" onclick="changeTab('radar')">🎧 Radar</button>
+    <button class="tab-btn" onclick="changeTab('terra')">🌍 Terra</button>
+    <button class="tab-btn" onclick="changeTab('ar')">🌬️ Ar</button>
+    <button class="tab-btn" onclick="changeTab('insignias')">🏆 Insignias</button>
+  </div>
+
+  <!-- ABA PEÇAS -->
+  <div id="tab-pecas" class="tab-content">
+    <div class="mode-buttons">
+      <button class="mode-btn active" onclick="changeMode('visualizar')">Visualizar</button>
+      <button class="mode-btn" onclick="changeMode('flashcards')">🎴 Flashcards</button>
+      <button class="mode-btn" onclick="changeMode('encaixar')">🎯 Tocar & Encaixar</button>
+    </div>
+    <div id="mode-content"></div>
+  </div>
+
+  <!-- ABA RADAR -->
+  <div id="tab-radar" class="tab-content hidden">
+    <div id="radar-content"></div>
+  </div>
+
+  <!-- ABA TERRA -->
+  <div id="tab-terra" class="tab-content hidden">
+    <div id="terra-content"></div>
+  </div>
+
+  <!-- ABA AR -->
+  <div id="tab-ar" class="tab-content hidden">
+    <div id="ar-content"></div>
+  </div>
+
+  <!-- ABA INSIGNIAS -->
+  <div id="tab-insignias" class="tab-content hidden">
+    <div id="insignias-content"></div>
+  </div>
+</div>
+
+<!-- MODAL PROVA -->
+<div class="modal-overlay" id="modal-prova">
+  <div class="modal-box">
+    <div class="modal-icon">🏅</div>
+    <div class="modal-title">Prova Desbloqueada!</div>
+    <div class="modal-text">Você conquistou 💧 Água e 🌍 Terra no mapa de Compras.<br>Está pronto para enfrentar o Boss no Planeta Utopia?</div>
+    <button class="modal-btn" onclick="irParaProva()">🚀 Enfrentar o Boss</button>
+    <button class="modal-close" onclick="fecharModalProva()">Continuar praticando</button>
+  </div>
+</div>
+
+<script>
+// DADOS PEÇAS
+const PECAS = [
+  {
+    "kanji": "店",
+    "romaji": "mise",
+    "pt": "Loja",
+    "tipo": "substantivo",
+    "moldes": [
+      "6.1"
+    ]
+  },
+  {
+    "kanji": "店員",
+    "romaji": "tenin",
+    "pt": "Vendedor(a)",
+    "tipo": "substantivo",
+    "moldes": [
+      "6.1"
+    ]
+  },
+  {
+    "kanji": "サイズ",
+    "romaji": "saizu",
+    "pt": "Tamanho",
+    "tipo": "substantivo",
+    "moldes": [
+      "6.2"
+    ]
+  },
+  {
+    "kanji": "試着",
+    "romaji": "shichaku",
+    "pt": "Provar roupa",
+    "tipo": "substantivo",
+    "moldes": [
+      "6.2"
+    ]
+  },
+  {
+    "kanji": "値段",
+    "romaji": "nedan",
+    "pt": "Preço",
+    "tipo": "substantivo",
+    "moldes": [
+      "6.1"
+    ]
+  },
+  {
+    "kanji": "割引",
+    "romaji": "waribiki",
+    "pt": "Desconto",
+    "tipo": "substantivo",
+    "moldes": [
+      "6.4"
+    ]
+  },
+  {
+    "kanji": "タックスフリー",
+    "romaji": "takkusufurī",
+    "pt": "Isenção de imposto",
+    "tipo": "substantivo",
+    "moldes": [
+      "6.3"
+    ]
+  },
+  {
+    "kanji": "税",
+    "romaji": "zei",
+    "pt": "Imposto",
+    "tipo": "substantivo",
+    "moldes": [
+      "6.3"
+    ]
+  },
+  {
+    "kanji": "返品",
+    "romaji": "henpin",
+    "pt": "Devolução",
+    "tipo": "substantivo",
+    "moldes": [
+      "6.5"
+    ]
+  },
+  {
+    "kanji": "領収書",
+    "romaji": "ryōshūsho",
+    "pt": "Recibo",
+    "tipo": "substantivo",
+    "moldes": [
+      "6.5"
+    ]
+  },
+  {
+    "kanji": "保証",
+    "romaji": "hoshō",
+    "pt": "Garantia",
+    "tipo": "substantivo",
+    "moldes": [
+      "6.5"
+    ]
+  }
+];
+
+// MOLDES
+const MOLDES = {
+  "6.1": {
+    "template": "[Preço]ですか",
+    "romaji": "[Nedan] desu ka",
+    "exemplo": "いくらですか",
+    "exemploRomaji": "ikura desu ka"
+  },
+  "6.2": {
+    "template": "[Tamanho]を試着できますか",
+    "romaji": "[Saizu] wo shichaku dekimasu ka",
+    "exemplo": "Mサイズを試着できますか",
+    "exemploRomaji": "M saizu wo shichaku dekimasu ka"
+  },
+  "6.3": {
+    "template": "タックスフリーはありますか",
+    "romaji": "takkusufurī wa arimasu ka",
+    "exemplo": "タックスフリーはありますか",
+    "exemploRomaji": "takkusufurī wa arimasu ka"
+  },
+  "6.4": {
+    "template": "割引はありますか",
+    "romaji": "waribiki wa arimasu ka",
+    "exemplo": "割引はありますか",
+    "exemploRomaji": "waribiki wa arimasu ka"
+  },
+  "6.5": {
+    "template": "返品はできますか",
+    "romaji": "henpin wa dekimasu ka",
+    "exemplo": "返品はできますか",
+    "exemploRomaji": "henpin wa dekimasu ka"
+  }
+};
+
+// RADAR DADOS
+const RADAR_SITUACOES = [
+  {
+    "audio": "Irasshaimase! Nani ka osagashi desu ka?",
+    "cards": [
+      "店員",
+      "店",
+      "サイズ"
+    ],
+    "correta": "店員",
+    "situacao": "Chegada"
+  },
+  {
+    "audio": "Saizu wa ikaga desu ka?",
+    "cards": [
+      "サイズ",
+      "試着",
+      "値段"
+    ],
+    "correta": "サイズ",
+    "situacao": "Provador"
+  },
+  {
+    "audio": "Takkusufurī wa go-riyō ni narimasu ka?",
+    "cards": [
+      "タックスフリー",
+      "割引",
+      "税"
+    ],
+    "correta": "タックスフリー",
+    "situacao": "Pagamento"
+  },
+  {
+    "audio": "Henpin wa ryōshūsho ga hitsuyō desu.",
+    "cards": [
+      "返品",
+      "領収書",
+      "保証"
+    ],
+    "correta": "返品",
+    "situacao": "Pós-venda"
+  }
+];
+
+// Mapa auxiliar kanji → romaji (peças + extras usadas só no radar)
+const ROMAJI_MAP = {};
+PECAS.forEach(p => ROMAJI_MAP[p.kanji] = p.romaji);
+// (sem extras de romaji para este mapa)
+
+let currentMode = 'visualizar';
+let currentTab = 'pecas';
+let selectedWord = null;
+let radarIndex = 0;
+let radarScore = 0;
+let terraIndex = 0;
+let terraGravados = [];
+let activeFiltro = 'todos';
+let provaModalMostrado = false;
+let arVisitado = false;
+
+// MOLDES MÁGICOS PARA TERRA (frases completas do Boss)
+const TERRA_MOLDES = [
+  {
+    "template": "いくらですか",
+    "romaji": "ikura desu ka",
+    "dica": "Pergunte o preço"
+  },
+  {
+    "template": "Mサイズを試着できますか",
+    "romaji": "M saizu wo shichaku dekimasu ka",
+    "dica": "Peça para provar um tamanho"
+  },
+  {
+    "template": "タックスフリーはありますか",
+    "romaji": "takkusufurī wa arimasu ka",
+    "dica": "Pergunte sobre isenção de imposto"
+  },
+  {
+    "template": "割引はありますか",
+    "romaji": "waribiki wa arimasu ka",
+    "dica": "Pergunte se tem desconto"
+  },
+  {
+    "template": "返品はできますか",
+    "romaji": "henpin wa dekimasu ka",
+    "dica": "Pergunte se pode devolver"
+  }
+];
+
+function changeTab(tab){
+  document.querySelectorAll('.tab-content').forEach(el=>el.classList.add('hidden'));
+  document.getElementById('tab-' + tab).classList.remove('hidden');
+  document.querySelectorAll('.tabs .tab-btn').forEach(el=>el.classList.remove('active'));
+  event.target.classList.add('active');
+  currentTab = tab;
+  
+  if(tab === 'radar') renderRadar();
+  if(tab === 'terra') renderTerra();
+  if(tab === 'ar') renderAr();
+  if(tab === 'insignias') renderInsignias();
+}
+
+function changeMode(mode){
+  currentMode = mode;
+  activeFiltro = 'todos';
+  document.querySelectorAll('.mode-btn').forEach(el=>el.classList.remove('active'));
+  event.target.classList.add('active');
+  renderMode();
+}
+
+function renderMode(){
+  const content = document.getElementById('mode-content');
+  
+  if(currentMode === 'visualizar'){
+    content.innerHTML = `
+      <div style="font-size:14px;font-weight:600;margin-bottom:15px;">🧩 Peças (${PECAS.length})</div>
+      ${renderAlfabetoBar()}
+      <div class="grid-cards">
+        ${PECAS.map((p,idx)=>`
+          <div class="card-simples" id="voc-${idx}">
+            <div class="kanji-simples">${p.kanji}</div>
+            <div class="romaji-simples">${p.romaji}</div>
+            <div class="pt-simples">${p.pt}</div>
+            <div style="font-size:15px;cursor:pointer;margin-top:8px;" onclick="playAudio('${p.romaji}')">🔊</div>
+          </div>
+        `).join('')}
+      </div>
+    `;
+  }
+  
+  else if(currentMode === 'flashcards'){
+    content.innerHTML = `
+      <div class="grid-cards">
+        ${PECAS.map((p,idx)=>`
+          <div class="flashcard" onclick="toggleFlip(this)">
+            <div class="frente">
+              <div class="romaji-fc">${p.romaji}</div>
+              <div class="kanji-fc">${p.kanji}</div>
+              <div style="font-size:16px;cursor:pointer;" onclick="playAudio('${p.romaji}'); event.stopPropagation();">🔊</div>
+            </div>
+            <div class="verso">
+              <div class="verso-text">${p.pt}</div>
+            </div>
+          </div>
+        `).join('')}
+      </div>
+    `;
+  }
+  
+  else if(currentMode === 'encaixar'){
+    const porTipo = {'substantivo':[], 'particula':[], 'expressao':[]};
+    PECAS.forEach(p => porTipo[p.tipo].push(p));
+    
+    const categoriasLabel = {
+      'todos':'Todos', 'substantivo':'📝 Substantivos', 'particula':'⚡ Partículas', 'expressao':'📌 Expressões'
+    };
+    
+    content.innerHTML = `
+      <div style="font-size:14px;font-weight:600;margin-bottom:15px;">Clique numa palavra para ver moldes</div>
+      
+      <div class="mode-buttons" style="border-bottom:none;padding-bottom:0;">
+        ${Object.entries(categoriasLabel).map(([key,label])=>`
+          <button class="mode-btn filtro-cat ${activeFiltro===key ? 'active' : ''}" onclick="filtrarCategoria('${key}', this)">${label}</button>
+        `).join('')}
+      </div>
+      
+      ${Object.entries(porTipo).map(([tipo, palavras])=>`
+        <div class="grupo-categoria" data-tipo="${tipo}" style="${activeFiltro!=='todos' && activeFiltro!==tipo ? 'display:none;' : ''}">
+          <div class="categoria-header">
+            ${tipo === 'substantivo' ? '📝 Substantivos' : tipo === 'particula' ? '⚡ Partículas' : '📌 Expressões'}
+          </div>
+          <div class="grid-palavras">
+            ${palavras.map(p=>`
+              <div class="palavra-card ${selectedWord === p.romaji ? 'active' : ''}" onclick="selectWord('${p.romaji}', this)">
+                <div class="palavra-kanji">${p.kanji}</div>
+                <div class="palavra-romaji">${p.romaji}</div>
+              </div>
+            `).join('')}
+          </div>
+        </div>
+      `).join('')}
+      
+      <div id="moldes-display" ${!selectedWord ? "style='display:none;'" : ''}></div>
+    `;
+  }
+}
+
+function filtrarCategoria(tipo, btn){
+  activeFiltro = tipo;
+  document.querySelectorAll('.filtro-cat').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');
+  
+  document.querySelectorAll('.grupo-categoria').forEach(grupo=>{
+    if(tipo === 'todos' || grupo.dataset.tipo === tipo){
+      grupo.style.display = 'block';
+    } else {
+      grupo.style.display = 'none';
+    }
+  });
+}
+
+function toggleFlip(el){
+  el.classList.toggle('flipped');
+}
+
+function selectWord(romaji, el){
+  selectedWord = romaji;
+  document.querySelectorAll('.palavra-card').forEach(c=>c.classList.remove('active'));
+  el.classList.add('active');
+  
+  const palavra = PECAS.find(p=>p.romaji === romaji);
+  const moldDiv = document.getElementById('moldes-display');
+  
+  if(palavra && palavra.moldes.length > 0){
+    moldDiv.style.display = 'block';
+    moldDiv.innerHTML = `
+      <div class="moldes-container">
+        <div style="font-size:14px;font-weight:600;margin-bottom:15px;">📋 Moldes para <strong>${palavra.kanji}</strong>:</div>
+        ${palavra.moldes.map(moldId=>{
+          const mold = MOLDES[moldId];
+          return `
+            <div class="molde-card">
+              <div class="molde-numero">Molde ${moldId}</div>
+              <div class="molde-romaji">${mold.romaji}</div>
+              <div class="molde-template">${mold.template}</div>
+              <div class="molde-exemplo">✏️ ${mold.exemploRomaji}</div>
+              <div class="molde-exemplo-kanji">${mold.exemplo}</div>
+            </div>
+          `;
+        }).join('')}
+      </div>
+    `;
+  } else {
+    moldDiv.style.display = 'none';
+  }
+}
+
+// ===== AR — rede de segurança (idêntico nos 12 mapas, de propósito) =====
+const AR_GAVETAS = [
+  {
+    titulo: "1 · Respirar",
+    subtitulo: "ganhar tempo antes de responder",
+    frases: [
+      {jp:"えーと…", romaji:"eeto…", pt:"hum… (é aceito, é natural, não é falha)"},
+      {jp:"ちょっと待ってください", romaji:"chotto matte kudasai", pt:"um momento, por favor"},
+      {jp:"すみません", romaji:"sumimasen", pt:"com licença / desculpe"}
+    ],
+    nota: "すみません abre todas as outras cinco gavetas. Se você só levar uma palavra, leve essa."
+  },
+  {
+    titulo: "2 · Declarar",
+    subtitulo: "avisar antes, não depois",
+    frases: [
+      {jp:"わかりません", romaji:"wakarimasen", pt:"não entendi"},
+      {jp:"日本語が少しだけわかります", romaji:"nihongo ga sukoshi dake wakarimasu", pt:"eu entendo só um pouco de japonês"}
+    ],
+    nota: "Declarar cedo muda o comportamento do interlocutor. Quase todo mundo desacelera. Segurar até o fim piora."
+  },
+  {
+    titulo: "3 · Pedir ajuste",
+    subtitulo: "mudar como a pessoa está falando",
+    frases: [
+      {jp:"もう一度お願いします", romaji:"mou ichido onegaishimasu", pt:"mais uma vez, por favor"},
+      {jp:"ゆっくりお願いします", romaji:"yukkuri onegaishimasu", pt:"mais devagar, por favor"},
+      {jp:"書いてください", romaji:"kaite kudasai", pt:"escreva, por favor"},
+      {jp:"英語でお願いします", romaji:"eigo de onegaishimasu", pt:"em inglês, por favor"}
+    ],
+    nota: null
+  },
+  {
+    titulo: "4 · Confirmar",
+    subtitulo: "checar se você entendeu certo",
+    frases: [
+      {jp:"これですか", romaji:"kore desu ka", pt:"é este?"},
+      {jp:"○○ですか", romaji:"~ desu ka", pt:"é ~? (repita o que entendeu + ka)"}
+    ],
+    nota: "A técnica mais útil dos doze mapas: repetir de volta o pedaço que você entendeu, com か no fim. Não precisa de gramática nova."
+  },
+  {
+    titulo: "5 · Sair com elegância",
+    subtitulo: "encerrar sem constrangimento",
+    frases: [
+      {jp:"大丈夫です", romaji:"daijoubu desu", pt:"está tudo bem / não precisa"},
+      {jp:"また来ます", romaji:"mata kimasu", pt:"eu volto depois"},
+      {jp:"ありがとうございます", romaji:"arigatou gozaimasu", pt:"obrigada"}
+    ],
+    nota: "Desistir de uma interação é uma habilidade, não uma derrota."
+  }
+];
+
+const AR_NAOFACA = [
+  "Sorrir e assentir sem entender. Custa mais caro depois.",
+  "Repetir はい como quem concorda. Em japonês はい muitas vezes significa \"estou te ouvindo\", mas o interlocutor pode ler como sim.",
+  "Esperar entender tudo antes de falar. Não é assim que funciona para ninguém."
+];
+
+function renderAr(){
+  arVisitado = true;
+  const gavetas = AR_GAVETAS.map(g => `
+    <div class="ar-gaveta">
+      <div class="ar-gaveta-titulo">${g.titulo} <span style="font-weight:400;color:#999;font-size:12px;">— ${g.subtitulo}</span></div>
+      ${g.frases.map(f => `
+        <div class="ar-frase">
+          <div>
+            <div class="ar-romaji">${f.romaji}</div>
+            <div class="ar-jp">${f.jp}</div>
+            <div class="ar-pt">${f.pt}</div>
+          </div>
+          <button class="ar-som" onclick="playAudio('${f.jp}')">🔊</button>
+        </div>
+      `).join('')}
+      ${g.nota ? `<div class="ar-nota">${g.nota}</div>` : ''}
+    </div>
+  `).join('');
+
+  document.getElementById('ar-content').innerHTML = `
+    <div class="ar-intro">
+      <div class="ar-intro-titulo">🌬️ Quando você não entender nada</div>
+      <div class="ar-intro-texto">Travar está previsto aqui — acontece com todo mundo, sempre. Estas frases são as mesmas nos doze mapas, na mesma ordem, de propósito: é a única coisa do site feita para você decorar por repetição.</div>
+    </div>
+    ${gavetas}
+    <div class="ar-naofaca">
+      <div class="ar-naofaca-titulo">⚠ 6 · O QUE NÃO FAZER</div>
+      <ul>${AR_NAOFACA.map(i => `<li>${i}</li>`).join('')}</ul>
+    </div>
+  `;
+}
+
+// BARRA DE ALFABETO (jump por romaji)
+function renderAlfabetoBar(){
+  const disponiveis = new Set(PECAS.map(p => p.romaji.trim()[0].toUpperCase()).filter(c => /[A-Z]/.test(c)));
+  const letras = "ABCDEFGHIJKLMNOPQRSTUVWXYZ".split("");
+  return `
+    <div class="alfabeto-bar">
+      ${letras.map(l => `
+        <div class="alfabeto-letra ${disponiveis.has(l) ? '' : 'sem-palavra'}" onclick="jumpToLetter('${l}')">${l}</div>
+      `).join('')}
+    </div>
+  `;
+}
+
+function jumpToLetter(letra){
+  const idx = PECAS.findIndex(p => p.romaji.trim()[0].toUpperCase() === letra);
+  if(idx === -1) return;
+  const el = document.getElementById('voc-' + idx);
+  if(el){
+    el.scrollIntoView({behavior:'smooth', block:'center'});
+    el.classList.remove('destacado');
+    void el.offsetWidth;
+    el.classList.add('destacado');
+  }
+}
+
+function playAudio(romaji){
+  const utterance = new SpeechSynthesisUtterance(romaji);
+  utterance.lang = 'ja-JP';
+  speechSynthesis.speak(utterance);
+}
+
+// RADAR
+function renderRadar(){
+  const sit = RADAR_SITUACOES[radarIndex];
+  const content = document.getElementById('radar-content');
+  
+  content.innerHTML = `
+    <div class="radar-situacao">
+      <div style="font-size:14px;font-weight:600;margin-bottom:10px;">🎧 Situação ${radarIndex + 1}/4: ${sit.situacao}</div>
+      <button class="audio-btn" onclick="playRadarAudio(1)">🔊 Reproduzir (Normal)</button>
+      <button class="audio-btn" style="background:var(--gold);" onclick="playRadarAudio(0.7)">🐢 Reproduzir Lento (0.7x)</button>
+      
+      <div style="font-size:12px;color:#999;margin:10px 0;font-style:italic;">Qual palavra-chave você ouviu?</div>
+      
+      <div class="radar-cards">
+        ${sit.cards.map(card=>`
+          <div class="radar-card" onclick="selectRadarCard(this, '${card}')" data-card="${card}">
+            <div style="font-size:16px;font-weight:700;">${ROMAJI_MAP[card] || card}</div>
+            <div style="font-size:10px;color:#999;margin-top:4px;">${card}</div>
+          </div>
+        `).join('')}
+      </div>
+      
+      <div id="radar-feedback" style="margin-top:15px;font-size:14px;"></div>
+      
+      <div style="margin-top:20px;text-align:center;">
+        <button onclick="nextRadarSituation()" id="next-radar" style="display:none;padding:10px 20px;background:var(--blue);color:#fff;border:none;border-radius:10px;cursor:pointer;">Próxima Situação →</button>
+      </div>
+      
+      <div style="margin-top:20px;font-size:12px;color:#999;">
+        Progresso: ${radarScore}/${RADAR_SITUACOES.length} acertos
+      </div>
+    </div>
+  `;
+}
+
+function playRadarAudio(rate){
+  const sit = RADAR_SITUACOES[radarIndex];
+  const utterance = new SpeechSynthesisUtterance(sit.audio);
+  utterance.lang = 'ja-JP';
+  utterance.rate = rate || 1;
+  speechSynthesis.speak(utterance);
+}
+
+function selectRadarCard(el, card){
+  const sit = RADAR_SITUACOES[radarIndex];
+  const isCorrect = card === sit.correta;
+  
+  document.querySelectorAll('.radar-card').forEach(c=>c.classList.remove('selected'));
+  if(isCorrect) el.classList.add('selected');
+  
+  const feedback = document.getElementById('radar-feedback');
+  if(isCorrect){
+    feedback.innerHTML = '✅ CORRETO!';
+    feedback.style.color = 'var(--green)';
+    radarScore++;
+    setTimeout(()=>nextRadarSituation(), 1500);
+  } else {
+    feedback.innerHTML = '❌ Tente novamente';
+    feedback.style.color = 'var(--rose)';
+  }
+}
+
+function nextRadarSituation(){
+  if(radarIndex < RADAR_SITUACOES.length - 1){
+    radarIndex++;
+    renderRadar();
+  } else {
+    document.getElementById('radar-content').innerHTML = `
+      <div style="background:#fff;border:2px solid var(--sage);border-radius:15px;padding:30px;text-align:center;">
+        <div style="font-size:18px;font-weight:600;color:var(--sage);">✅ Radar Concluído!</div>
+        <div style="font-size:14px;color:var(--sage);margin-top:10px;">Score: ${radarScore}/${RADAR_SITUACOES.length}</div>
+        <div style="font-size:12px;color:var(--sage);margin-top:10px;">
+          ${radarScore >= 3 ? '💧 Você desbloqueou a Insignia de ÁGUA!' : '🔒 Complete 75% para desbloquear'}
+        </div>
+      </div>
+    `;
+  }
+}
+
+// TERRA - Materialização do Mapa (gravação simulada)
+function renderTerra(){
+  const molde = TERRA_MOLDES[terraIndex];
+  const jaGravado = terraGravados.includes(terraIndex);
+  const progresso = (terraGravados.length / TERRA_MOLDES.length) * 100;
+  
+  document.getElementById('terra-content').innerHTML = `
+    <div style="font-size:14px;font-weight:600;margin-bottom:5px;">🌍 Materialize o Mapa — Molde ${terraIndex + 1}/${TERRA_MOLDES.length}</div>
+    <div style="font-size:12px;color:#999;margin-bottom:10px;">Grave sua voz falando o Molde Mágico em voz alta</div>
+    
+    <div class="terra-progress-bar"><div class="terra-progress-fill" style="width:${progresso}%;"></div></div>
+    
+    <div class="terra-molde">
+      <div style="font-size:12px;color:var(--gold);font-weight:600;text-align:center;">${molde.dica}</div>
+      <div class="terra-romaji">${molde.romaji}</div>
+      <div class="terra-template">${molde.template}</div>
+      <div style="text-align:center;">
+        <span style="font-size:14px;cursor:pointer;color:var(--teal);" onclick="playTerraAudio()">🔊 Ouvir modelo</span>
+      </div>
+      
+      <button class="mic-btn" id="mic-btn" onclick="toggleGravacao()">
+        🎙️ ${jaGravado ? 'Gravar Novamente' : 'Gravar Minha Voz'}
+      </button>
+      
+      <div class="rec-feedback ${jaGravado ? 'done' : ''}" id="rec-feedback">
+        ${jaGravado ? '✅ Frase gravada e validada!' : 'Toque no microfone e fale o molde acima'}
+      </div>
+    </div>
+    
+    <div style="display:flex;justify-content:center;gap:10px;margin-top:20px;">
+      <button onclick="previousTerra()" style="padding:8px 16px;background:var(--line);border:none;border-radius:10px;cursor:pointer;">← Anterior</button>
+      <button onclick="nextTerra()" style="padding:8px 16px;background:var(--teal);color:#fff;border:none;border-radius:10px;cursor:pointer;">Próximo →</button>
+    </div>
+    
+    <div style="text-align:center;margin-top:15px;font-size:12px;color:#999;">
+      Gravados: ${terraGravados.length}/${TERRA_MOLDES.length}
+      ${terraGravados.length >= TERRA_MOLDES.length ? '<br>🌍 Insignia de TERRA desbloqueada!' : ''}
+    </div>
+  `;
+}
+
+function playTerraAudio(){
+  const molde = TERRA_MOLDES[terraIndex];
+  const utterance = new SpeechSynthesisUtterance(molde.template);
+  utterance.lang = 'ja-JP';
+  speechSynthesis.speak(utterance);
+}
+
+function toggleGravacao(){
+  const btn = document.getElementById('mic-btn');
+  const feedback = document.getElementById('rec-feedback');
+  
+  btn.classList.add('recording');
+  btn.textContent = '🔴 Gravando...';
+  feedback.textContent = 'Fale agora...';
+  feedback.classList.remove('done');
+  
+  // Simulação de gravação (2 segundos)
+  setTimeout(()=>{
+    btn.classList.remove('recording');
+    btn.textContent = '✅ Gravado!';
+    feedback.textContent = '✅ Frase gravada e validada!';
+    feedback.classList.add('done');
+    
+    if(!terraGravados.includes(terraIndex)){
+      terraGravados.push(terraIndex);
+    }
+    
+    setTimeout(()=>renderTerra(), 800);
+  }, 2000);
+}
+
+function nextTerra(){
+  if(terraIndex < TERRA_MOLDES.length - 1) terraIndex++;
+  renderTerra();
+}
+
+function previousTerra(){
+  if(terraIndex > 0) terraIndex--;
+  renderTerra();
+}
+
+// INSIGNIAS
+function renderInsignias(){
+  const aguaDesbloqueada = radarScore >= 3;
+  const terraDesbloqueada = terraGravados.length >= TERRA_MOLDES.length;
+  
+  document.getElementById('insignias-content').innerHTML = `
+    <div class="insignias-grid">
+      <div class="insignia-card">
+        <div class="insignia-icon">💧</div>
+        <div class="insignia-title">Insignia de Água</div>
+        <div style="font-size:12px;color:#999;">Compreensão Auditiva</div>
+        <div class="insignia-status ${aguaDesbloqueada ? 'status-unlocked' : 'status-locked'}">
+          ${aguaDesbloqueada ? '✅ Desbloqueada' : '🔒 Bloqueada'}
+        </div>
+        <div style="font-size:11px;color:#999;margin-top:10px;">Progresso: ${radarScore}/4</div>
+      </div>
+      
+      <div class="insignia-card">
+        <div class="insignia-icon">🌍</div>
+        <div class="insignia-title">Insignia de Terra</div>
+        <div style="font-size:12px;color:#999;">Materialização do Mapa</div>
+        <div class="insignia-status ${terraDesbloqueada ? 'status-unlocked' : 'status-locked'}">
+          ${terraDesbloqueada ? '✅ Desbloqueada' : '🔒 Bloqueada'}
+        </div>
+        <div style="font-size:11px;color:#999;margin-top:10px;">Progresso: ${terraGravados.length}/${TERRA_MOLDES.length}</div>
+      </div>
+
+      <div class="insignia-card" style="border-color:#7FA8C4;">
+        <div class="insignia-icon">🌬️</div>
+        <div class="insignia-title">Insignia de Ar</div>
+        <div style="font-size:12px;color:#999;">Rede de Segurança</div>
+        <div class="insignia-status ${arVisitado ? 'status-unlocked' : ''}" ${arVisitado ? '' : 'style="background:#EFF6FB;color:#4A7A96;"'}>
+          ${arVisitado ? '✅ Conquistada' : '🌬️ Sempre disponível'}
+        </div>
+        <div style="font-size:11px;color:#999;margin-top:10px;">
+          ${arVisitado ? 'Você conhece as saídas' : 'Abra a aba Ar para conquistar'}
+        </div>
+      </div>
+    </div>
+    
+    <div style="margin-top:30px;background:#fff;border:2px solid var(--line);border-radius:15px;padding:20px;text-align:center;">
+      <div style="font-size:14px;font-weight:600;">📊 Status do Mapa</div>
+      <div style="margin-top:15px;font-size:12px;color:#999;">
+        <div>Peças aprendidas: 16/16 ✅</div>
+        <div>Moldes dominados: 6/6 ✅</div>
+        <div>Escuta: ${radarScore}/4 acertos ${aguaDesbloqueada ? '✅' : ''}</div>
+        <div>Fala gravada: ${terraGravados.length}/${TERRA_MOLDES.length} ${terraDesbloqueada ? '✅' : ''}</div>
+        <div style="color:#4A7A96;">Ar: rede de segurança ${arVisitado ? '✅ conhecida' : '— sempre livre'}</div>
+      </div>
+      ${aguaDesbloqueada && terraDesbloqueada ? `
+        <div class="prova-desbloqueada-box">
+          <div class="titulo">🏅 Mapa Completo!</div>
+          <div class="sub">Ambas insignias conquistadas — o Boss do Planeta Utopia está liberado.</div>
+          <button class="prova-btn" onclick="irParaProva()">🚀 Enfrentar o Boss</button>
+        </div>
+      ` : ''}
+    </div>
+  `;
+  
+  // Dispara pop-up automático na primeira vez que ambas desbloqueiam
+  if(aguaDesbloqueada && terraDesbloqueada && !provaModalMostrado){
+    provaModalMostrado = true;
+    setTimeout(()=>{
+      document.getElementById('modal-prova').classList.add('show');
+    }, 400);
+  }
+}
+
+function irParaProva(){
+  fecharModalProva();
+  window.location.href = '/idiomas/planeta-utopia/?mapa=compras&boss=1';
+}
+
+function fecharModalProva(){
+  document.getElementById('modal-prova').classList.remove('show');
+}
+
+renderMode();
+</script>
+</body>
+</html>

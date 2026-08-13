@@ -1,0 +1,636 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Amuleto de Bolso — flashcards trilíngues | Unirversos Idiomas</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Baloo+2:wght@500;600;700&family=Zen+Maru+Gothic:wght@400;500;700&display=swap');
+:root{
+  --pink:#E08C86; --pink-deep:#C26F6C; --pink-soft:rgba(224,140,134,.14);
+  --blush:#FBEBE7; --blush-2:#F0DFDA; --cream:#FDF8F5;
+  --ink:#4A4149; --ink-soft:#8A7F86;
+  --gold:#C0913F; --gold-soft:#FBF2DF;
+  --sage:#7FA893; --sage-soft:#EAF3EE;
+  --lav:#8B90C4; --lav-soft:#EEEFF9;
+}
+*{box-sizing:border-box;margin:0;padding:0;}
+@media (prefers-reduced-motion: reduce){ *{transition:none !important;} }
+body{font-family:'Zen Maru Gothic',sans-serif;color:var(--ink);background:var(--cream);line-height:1.7;font-size:16px;-webkit-font-smoothing:antialiased;}
+.wrap{max-width:840px;margin:0 auto;padding:0 24px;}
+
+.nav{display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap;padding:22px 0;}
+.logo{font-family:'Baloo 2',cursive;font-size:18px;font-weight:700;text-decoration:none;color:inherit;}
+.logo i{font-style:normal;color:var(--pink);}
+.nav .links{display:flex;gap:18px;font-size:13px;}
+.nav .links a{color:var(--ink-soft);text-decoration:none;}
+.nav .links a:hover{color:var(--pink-deep);}
+.nav .links a.on{color:var(--pink);}
+
+.hero{padding:30px 0 40px;text-align:center;}
+.hero .eyebrow{font-size:11px;letter-spacing:4px;text-transform:uppercase;color:var(--pink);margin-bottom:14px;font-weight:600;}
+.hero h1{font-family:'Baloo 2',cursive;font-weight:700;font-size:clamp(26px,4.6vw,40px);line-height:1.25;max-width:600px;margin:0 auto 16px;}
+.hero h1 em{font-style:normal;color:var(--pink);}
+.hero p{color:var(--ink-soft);max-width:520px;margin:0 auto;font-size:16px;}
+
+/* ---------- seletor de idioma ---------- */
+.lang-selector{display:flex;gap:12px;justify-content:center;margin:30px 0 40px;flex-wrap:wrap;}
+.lang-btn{
+  padding:10px 24px;border:2px solid var(--blush-2);border-radius:40px;
+  background:#fff;color:var(--ink);font-weight:600;cursor:pointer;
+  transition:all .2s ease;font-size:15px;font-family:'Zen Maru Gothic',sans-serif;
+}
+.lang-btn:hover{border-color:var(--pink);color:var(--pink);}
+.lang-btn.active{background:var(--pink);color:#fff;border-color:var(--pink);}
+
+.gender-selector{text-align:center;margin:20px 0 30px;}
+.gender-btn{
+  padding:8px 18px;border:1.5px solid var(--lav);border-radius:40px;
+  background:#fff;color:var(--lav);font-weight:600;cursor:pointer;
+  transition:all .2s ease;font-size:13px;font-family:'Zen Maru Gothic',sans-serif;
+}
+.gender-btn:hover{border-color:var(--lav);background:var(--lav-soft);}
+.gender-btn.active{background:var(--lav);color:#fff;border-color:var(--lav);}
+
+/* ---------- seletor de contexto ---------- */
+.context-selector{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:10px;margin-bottom:32px;}
+.context-btn{
+  padding:12px 14px;background:var(--blush);border:1px solid var(--blush-2);
+  border-radius:12px;cursor:pointer;font-weight:600;font-size:13px;
+  transition:all .2s ease;text-align:center;color:var(--ink);
+}
+.context-btn:hover{background:var(--pink-soft);border-color:var(--pink);}
+.context-btn.active{background:var(--pink);color:#fff;border-color:var(--pink);}
+
+/* ---------- flashcard container ---------- */
+.flashcard-box{min-height:600px;display:flex;flex-direction:column;justify-content:center;align-items:center;gap:24px;padding:40px 20px;background:#fff;border:1.5px solid var(--blush-2);border-radius:16px;margin-bottom:30px;}
+
+.flashcard{
+  width:100%;max-width:500px;aspect-ratio:3/2;
+  background:linear-gradient(135deg, var(--lav) 0%, var(--pink-soft) 100%);
+  border:2px solid var(--pink);border-radius:16px;padding:40px;
+  display:flex;flex-direction:column;justify-content:center;align-items:center;
+  text-align:center;cursor:pointer;transition:all .3s ease;
+  box-shadow:0 8px 24px rgba(224,140,134,.15);
+  position:relative;min-height:300px;
+}
+
+.flashcard:hover{transform:scale(1.02);box-shadow:0 12px 32px rgba(224,140,134,.25);}
+.flashcard.flipped{background:linear-gradient(135deg, var(--pink-soft) 0%, var(--lav) 100%);}
+
+.flashcard-front{display:flex;flex-direction:column;justify-content:center;gap:16px;}
+.flashcard-text{font-size:clamp(22px,4vw,32px);font-weight:700;color:var(--ink);font-family:'Zen Maru Gothic',sans-serif;}
+.flashcard-kanji{font-size:clamp(28px,5vw,48px);font-weight:700;color:var(--pink);font-family:'Shippori Mincho',serif;margin:8px 0;}
+.flashcard-small{font-size:12px;color:var(--ink-soft);letter-spacing:1px;text-transform:uppercase;font-weight:600;}
+.flashcard-label{font-size:14px;color:var(--ink-soft);}
+
+.flashcard-back{display:flex;flex-direction:column;justify-content:center;gap:12px;}
+.flashcard-trans{font-size:clamp(18px,3.5vw,26px);font-weight:600;color:var(--ink);}
+.flashcard-hint{font-size:13px;color:var(--ink-soft);font-style:italic;}
+
+.audio-btn{
+  display:inline-flex;align-items:center;gap:8px;
+  padding:10px 18px;background:rgba(255,255,255,0.4);border:1.5px solid rgba(255,255,255,0.6);
+  border-radius:24px;color:var(--ink);font-weight:600;cursor:pointer;font-size:14px;
+  transition:all .2s ease;margin-top:8px;
+}
+.audio-btn:hover{background:rgba(255,255,255,0.7);transform:scale(1.05);}
+
+/* ---------- controles ---------- */
+.flashcard-controls{display:flex;gap:12px;justify-content:center;flex-wrap:wrap;margin-top:20px;}
+.btn{
+  padding:10px 20px;background:var(--pink);color:#fff;border:none;
+  border-radius:40px;cursor:pointer;font-weight:600;font-size:14px;
+  transition:all .2s ease;font-family:'Zen Maru Gothic',sans-serif;
+}
+.btn:hover{background:var(--pink-deep);transform:translateY(-2px);box-shadow:0 4px 12px rgba(224,140,134,.3);}
+.btn.secondary{background:#fff;color:var(--pink);border:2px solid var(--pink);}
+.btn.secondary:hover{background:var(--blush);}
+.btn:disabled{opacity:0.5;cursor:not-allowed;}
+
+.nav-arrow{font-size:18px;}
+
+/* ---------- progresso ---------- */
+.progress{text-align:center;margin-bottom:20px;}
+.progress-bar{
+  width:100%;height:6px;background:var(--blush-2);border-radius:3px;
+  margin:12px 0;overflow:hidden;
+}
+.progress-fill{height:100%;background:var(--pink);transition:width .3s ease;}
+.progress-text{font-size:13px;color:var(--ink-soft);font-weight:600;}
+
+/* ---------- PDF download ---------- */
+.download-section{background:linear-gradient(135deg, var(--lav-soft) 0%, var(--sage-soft) 100%);
+  border:2px solid var(--lav);border-radius:16px;padding:30px;text-align:center;margin-bottom:30px;}
+.download-section h3{font-family:'Baloo 2',cursive;font-size:22px;margin-bottom:12px;}
+.download-section p{color:var(--ink-soft);margin-bottom:20px;}
+.download-btn{
+  display:inline-flex;align-items:center;gap:8px;
+  padding:14px 30px;background:var(--lav);color:#fff;border:none;
+  border-radius:40px;cursor:pointer;font-weight:600;font-size:15px;
+  transition:all .2s ease;font-family:'Zen Maru Gothic',sans-serif;
+}
+.download-btn:hover{background:#6B4FA0;transform:translateY(-2px);box-shadow:0 6px 20px rgba(107,79,160,.3);}
+
+/* ---------- footer ---------- */
+.foot{border-top:1px solid var(--blush-2);padding:34px 0 50px;text-align:center;}
+.foot .big{font-family:'Baloo 2',cursive;font-size:17px;margin-bottom:14px;}
+.foot .tags{display:flex;gap:16px;justify-content:center;flex-wrap:wrap;font-size:13px;color:var(--pink-deep);}
+.foot .credit{margin-top:16px;font-size:11.5px;color:var(--ink-soft);opacity:.7;}
+
+
+/* ---------- responsivo ---------- */
+@media (max-width:640px){
+  .flashcard{padding:30px 20px;aspect-ratio:auto;min-height:280px;}
+  .flashcard-text{font-size:24px;}
+  .flashcard-trans{font-size:18px;}
+  .context-selector{grid-template-columns:repeat(2,1fr);}
+}
+</style>
+</head>
+<body>
+
+<div class="wrap">
+  <nav class="nav">
+    <a href="/" class="logo">UNIRVERSOS</a>
+    <div class="links">
+      <a href="/idiomas/" class="on">idiomas</a>
+      <a href="/memorias/">memórias</a>
+      <a href="/paralelos/">paralelos</a>
+      <a href="/sobre/">sobre</a>
+      <a href="/">início</a>
+    </div>
+  </nav>
+
+  <header class="hero">
+    <p class="eyebrow">unirversos idiomas</p>
+    <h1>💎 Amuleto de <em>bolso</em></h1>
+    <p>50 expressões essenciais em cada idioma, organizadas por contexto turístico. Flashcard interativo + cartão PDF pra levar na viagem.</p>
+  </header>
+</div>
+
+<div class="wrap">
+
+  <!-- Seletor de idioma -->
+  <div class="lang-selector">
+    <button class="lang-btn active" data-lang="ja">🇯🇵 Japonês</button>
+    <button class="lang-btn" data-lang="en">🇬🇧 English</button>
+    <button class="lang-btn" data-lang="pt">🇧🇷 Português</button>
+  </div>
+
+  <!-- Seletor de gênero (para PT e JA) -->
+  <div class="gender-selector" id="genderSelector" style="display:none;">
+    <small style="color:var(--ink-soft);font-size:12px;display:block;margin-bottom:8px;letter-spacing:1px;text-transform:uppercase;font-weight:600;">Escolha seu gênero:</small>
+    <div style="display:flex;gap:8px;justify-content:center;flex-wrap:wrap;">
+      <button class="gender-btn active" data-gender="neutral">😊 Neutro</button>
+      <button class="gender-btn" data-gender="masculino">👨 Masculino</button>
+      <button class="gender-btn" data-gender="feminino">👩 Feminino</button>
+    </div>
+  </div>
+
+  <!-- Seletor de contexto -->
+  <div class="context-selector" id="contextSelector"></div>
+
+  <!-- Flashcard -->
+  <div class="flashcard-box">
+    <div class="progress">
+      <div class="progress-text" id="progressText">1 / 52</div>
+      <div class="progress-bar">
+        <div class="progress-fill" id="progressFill" style="width: 2%"></div>
+      </div>
+    </div>
+
+    <div class="flashcard" id="flashcard">
+      <div class="flashcard-front" id="cardFront">
+        <div class="flashcard-small" id="cardSmall"></div>
+        <div class="flashcard-text" id="cardText"></div>
+        <div class="flashcard-label">Clique para revelar</div>
+      </div>
+    </div>
+
+    <div class="flashcard-controls">
+      <button class="btn secondary" id="prevBtn" onclick="previousCard()">◀ Anterior</button>
+      <button class="btn" id="revealBtn" onclick="revealCard()">Revelar</button>
+      <button class="btn secondary" id="nextBtn" onclick="nextCard()">Próximo ▶</button>
+    </div>
+  </div>
+
+  <!-- Download PDF -->
+  <div class="download-section">
+    <h3>📥 Leve para a viagem</h3>
+    <p>Baixe em PDF para imprimir e laminar. Um cartão de bolso pronto para usar.</p>
+    <button class="download-btn" onclick="downloadPDF()">
+      📄 Baixar Cartão PDF
+    </button>
+  </div>
+
+  <footer class="foot">
+    <p class="big">unirversos — tudo conectado</p>
+    <div class="tags"><span>@unirversos.idiomas</span><span>unirversos.idiomas@gmail.com</span></div>
+    <p class="credit">Aline Kikuti</p>
+  </footer>
+
+</div>
+
+<script>
+// Dados de expressões por contexto e idioma
+const phrases = {
+  ja: {
+    "🤝 Kit da Gentileza": [
+      { text: "sumimasen", romaji: "Sumimasen", kanji: "すみません", trans_neutro: "Com licença / Desculpe / Obrigado", trans_m: "Com licença / Desculpe / Obrigado", trans_f: "Com licença / Desculpe / Obrigado", hint: "A palavra universal" },
+      { text: "ありがとうございます", romaji: "Arigatou gozaimasu", kanji: "", trans_neutro: "Muito obrigado(a)", trans_m: "Muito obrigado", trans_f: "Muito obrigada", hint: "Forma polida" },
+      { text: "はい", romaji: "Hai", kanji: "", trans_neutro: "Sim / Certo", trans_m: "Sim / Certo", trans_f: "Sim / Certo", hint: "" },
+      { text: "いいえ", romaji: "Iie", kanji: "", trans_neutro: "Não / De nada", trans_m: "Não / De nada", trans_f: "Não / De nada", hint: "" },
+      { text: "お願いします", romaji: "Onegaishimasu", kanji: "お願いします", trans_neutro: "Por favor (formal)", trans_m: "Por favor (formal)", trans_f: "Por favor (formal)", hint: "Usado em lojas" }
+    ],
+    "🍜 Restaurante & Conveniência": [
+      { text: "これ", romaji: "Kore", kanji: "これ", trans_neutro: "Este / Isto", trans_m: "Este / Isto", trans_f: "Este / Isto", hint: "Apontando para algo" },
+      { text: "ください", romaji: "Kudasai", kanji: "ください", trans_neutro: "Por favor", trans_m: "Por favor", trans_f: "Por favor", hint: "Ex: 'Kore kudasai'" },
+      { text: "大丈夫です", romaji: "Daijoubu desu", kanji: "大丈夫です", trans_neutro: "Tudo bem / Não precisa", trans_m: "Tudo bem / Não precisa", trans_f: "Tudo bem / Não precisa", hint: "Para recusar sacola" },
+      { text: "おすすめ", romaji: "Osusume", kanji: "おすすめ", trans_neutro: "Recomendação", trans_m: "Recomendação", trans_f: "Recomendação", hint: "Ex: 'Osusume wa?'" },
+      { text: "お会計", romaji: "Okaikei", kanji: "お会計", trans_neutro: "A conta, por favor", trans_m: "A conta, por favor", trans_f: "A conta, por favor", hint: "" },
+      { text: "お水", romaji: "Omizu", kanji: "お水", trans_neutro: "Água", trans_m: "Água", trans_f: "Água", hint: "" },
+      { text: "温かい / 冷たい", romaji: "Atsui / Tsumetai", kanji: "温かい/冷たい", trans_neutro: "Quente / Frio", trans_m: "Quente / Frio", trans_f: "Quente / Frio", hint: "Escolher temperatura" },
+      { text: "持ち帰り", romaji: "Mochigaeri", kanji: "持ち帰り", trans_neutro: "Para levar", trans_m: "Para levar", trans_f: "Para levar", hint: "" }
+    ],
+    "🗺️ Movimentação & Localização": [
+      { text: "どこ", romaji: "Doko", kanji: "どこ", trans_neutro: "Onde?", trans_m: "Onde?", trans_f: "Onde?", hint: "Ex: 'Toire wa doko?'" },
+      { text: "駅", romaji: "Eki", kanji: "駅", trans_neutro: "Estação de trem", trans_m: "Estação de trem", trans_f: "Estação de trem", hint: "🔴 Em placas" },
+      { text: "トイレ", romaji: "Toire", kanji: "🚻 (símbolo)", trans_neutro: "Banheiro", trans_m: "Banheiro", trans_f: "Banheiro", hint: "🔴 Em placas" },
+      { text: "ここ", romaji: "Koko", kanji: "ここ", trans_neutro: "Aqui", trans_m: "Aqui", trans_f: "Aqui", hint: "" },
+      { text: "そこ", romaji: "Soko", kanji: "そこ", trans_neutro: "Ali / Lá", trans_m: "Ali / Lá", trans_f: "Ali / Lá", hint: "" },
+      { text: "近い / 遠い", romaji: "Chikai / Tooi", kanji: "近い/遠い", trans_neutro: "Perto / Longe", trans_m: "Perto / Longe", trans_f: "Perto / Longe", hint: "" },
+      { text: "右 / 左", romaji: "Migi / Hidari", kanji: "右/左", trans_neutro: "Direita / Esquerda", trans_m: "Direita / Esquerda", trans_f: "Direita / Esquerda", hint: "🔴 Em placas" },
+      { text: "まっすぐ", romaji: "Massugu", kanji: "まっすぐ", trans_neutro: "Em linha reta / Reto", trans_m: "Em linha reta / Reto", trans_f: "Em linha reta / Reto", hint: "Para direções" }
+    ],
+    "💳 Pagamento & Valores": [
+      { text: "いくら", romaji: "Ikura", kanji: "いくら", trans_neutro: "Quanto custa?", trans_m: "Quanto custa?", trans_f: "Quanto custa?", hint: "" },
+      { text: "クレジットカード", romaji: "Kurejittokādo", kanji: "クレジットカード", trans_neutro: "Cartão de crédito", trans_m: "Cartão de crédito", trans_f: "Cartão de crédito", hint: "" },
+      { text: "現金", romaji: "Genkin", kanji: "現金", trans_neutro: "Dinheiro / Espécie", trans_m: "Dinheiro / Espécie", trans_f: "Dinheiro / Espécie", hint: "" },
+      { text: "高い / 安い", romaji: "Takai / Yasui", kanji: "高い/安い", trans_neutro: "Caro / Barato", trans_m: "Caro / Barato", trans_f: "Caro / Barato", hint: "" },
+      { text: "領収書", romaji: "Ryoushuusho", kanji: "領収書", trans_neutro: "Recibo", trans_m: "Recibo", trans_f: "Recibo", hint: "" },
+      { text: "千円", romaji: "Senyen", kanji: "千円", trans_neutro: "Mil ienes", trans_m: "Mil ienes", trans_f: "Mil ienes", hint: "¥1,000" }
+    ],
+    "🏨 Hospedagem & Reservas": [
+      { text: "ホテル", romaji: "Hoteru", kanji: "ホテル", trans_neutro: "Hotel", trans_m: "Hotel", trans_f: "Hotel", hint: "" },
+      { text: "予約", romaji: "Yoyaku", kanji: "予約", trans_neutro: "Reserva", trans_m: "Reserva", trans_f: "Reserva", hint: "" },
+      { text: "チェックイン", romaji: "Chekku in", kanji: "チェックイン", trans_neutro: "Check-in", trans_m: "Check-in", trans_f: "Check-in", hint: "" },
+      { text: "チェックアウト", romaji: "Chekku auto", kanji: "チェックアウト", trans_neutro: "Check-out", trans_m: "Check-out", trans_f: "Check-out", hint: "" },
+      { text: "部屋", romaji: "Heya", kanji: "部屋", trans_neutro: "Quarto", trans_m: "Quarto", trans_f: "Quarto", hint: "" },
+      { text: "WiFi", romaji: "Waifai", kanji: "WiFi", trans_neutro: "Wifi", trans_m: "Wifi", trans_f: "Wifi", hint: "" },
+      { text: "朝食", romaji: "Choushoku", kanji: "朝食", trans_neutro: "Café da manhã", trans_m: "Café da manhã", trans_f: "Café da manhã", hint: "" },
+      { text: "布団", romaji: "Futon", kanji: "布団", trans_neutro: "Cama / Futon", trans_m: "Cama / Futon", trans_f: "Cama / Futon", hint: "" }
+    ],
+    "🛍️ Compras & Lojas": [
+      { text: "店", romaji: "Mise", kanji: "店", trans_neutro: "Loja", trans_m: "Loja", trans_f: "Loja", hint: "🔴 Em placas" },
+      { text: "値段", romaji: "Nedan", kanji: "値段", trans_neutro: "Preço", trans_m: "Preço", trans_f: "Preço", hint: "" },
+      { text: "小さい / 大きい", romaji: "Chiisai / Ookii", kanji: "小さい/大きい", trans_neutro: "Pequeno / Grande", trans_m: "Pequeno / Grande", trans_f: "Pequeno / Grande", hint: "Tamanho" },
+      { text: "サイズ", romaji: "Saizu", kanji: "サイズ", trans_neutro: "Tamanho", trans_m: "Tamanho", trans_f: "Tamanho", hint: "" },
+      { text: "試着", romaji: "Shichaku", kanji: "試着", trans_neutro: "Provar (roupas)", trans_m: "Provar (roupas)", trans_f: "Provar (roupas)", hint: "🔴 Em placas de lojas" },
+      { text: "割引", romaji: "Waribiki", kanji: "割引", trans_neutro: "Desconto", trans_m: "Desconto", trans_f: "Desconto", hint: "" },
+      { text: "売り切れ", romaji: "Urikire", kanji: "売り切れ", trans_neutro: "Esgotado / Fora de estoque", trans_m: "Esgotado", trans_f: "Esgotada", hint: "🔴 Em placas" },
+      { text: "セール", romaji: "Seeru", kanji: "セール", trans_neutro: "Sale / Promoção", trans_m: "Sale / Promoção", trans_f: "Sale / Promoção", hint: "" }
+    ],
+    "🆘 Emergência & Ajuda": [
+      { text: "助けて!", romaji: "Tasukete!", kanji: "助けて!", trans_neutro: "Socorro!", trans_m: "Socorro!", trans_f: "Socorro!", hint: "" },
+      { text: "警察", romaji: "Keisatsu", kanji: "警察", trans_neutro: "Polícia", trans_m: "Polícia", trans_f: "Polícia", hint: "🔴 Em placas" },
+      { text: "病院", romaji: "Byouin", kanji: "病院", trans_neutro: "Hospital", trans_m: "Hospital", trans_f: "Hospital", hint: "🔴 Em placas" },
+      { text: "迷いました", romaji: "Mayoimashita", kanji: "迷いました", trans_neutro: "Estou perdido", trans_m: "Estou perdido", trans_f: "Estou perdida", hint: "" },
+      { text: "分かりません", romaji: "Wakarimasen", kanji: "分かりません", trans_neutro: "Não entendo", trans_m: "Não entendo", trans_f: "Não entendo", hint: "" }
+    ],
+    "💬 Conversação Básica": [
+      { text: "おはよう", romaji: "Ohayou", kanji: "おはよう", trans_neutro: "Bom dia", trans_m: "Bom dia", trans_f: "Bom dia", hint: "" },
+      { text: "こんにちは", romaji: "Konnichiha", kanji: "こんにちは", trans_neutro: "Olá / Boa tarde", trans_m: "Olá / Boa tarde", trans_f: "Olá / Boa tarde", hint: "" },
+      { text: "おやすみなさい", romaji: "Oyasuminasai", kanji: "おやすみなさい", trans_neutro: "Boa noite", trans_m: "Boa noite", trans_f: "Boa noite", hint: "Antes de dormir" },
+      { text: "さようなら", romaji: "Sayounara", kanji: "さようなら", trans_neutro: "Adeus", trans_m: "Adeus", trans_f: "Adeus", hint: "" }
+    ]
+  },
+  en: {
+    "🤝 Kit da Gentileza": [
+      { text: "Excuse me", romaji: "", trans_neutro: "Excuse me", trans_m: "Excuse me", trans_f: "Excuse me", hint: "Universal" },
+      { text: "Thank you very much", romaji: "", trans_neutro: "Thank you very much", trans_m: "Thank you very much", trans_f: "Thank you very much", hint: "Polite form" },
+      { text: "Yes", romaji: "", trans_neutro: "Yes", trans_m: "Yes", trans_f: "Yes", hint: "" },
+      { text: "No", romaji: "", trans_neutro: "No", trans_m: "No", trans_f: "No", hint: "" },
+      { text: "Please", romaji: "", trans_neutro: "Please", trans_m: "Please", trans_f: "Please", hint: "" }
+    ],
+    "🍜 Restaurante & Conveniência": [
+      { text: "This one", romaji: "", trans_neutro: "This one", trans_m: "This one", trans_f: "This one", hint: "Pointing" },
+      { text: "Water, please", romaji: "", trans_neutro: "Water, please", trans_m: "Water, please", trans_f: "Water, please", hint: "" },
+      { text: "What do you recommend?", romaji: "", trans_neutro: "What do you recommend?", trans_m: "What do you recommend?", trans_f: "What do you recommend?", hint: "" },
+      { text: "The bill, please", romaji: "", trans_neutro: "The bill, please", trans_m: "The bill, please", trans_f: "The bill, please", hint: "" },
+      { text: "That's enough", romaji: "", trans_neutro: "That's enough", trans_m: "That's enough", trans_f: "That's enough", hint: "" },
+      { text: "Hot / Cold", romaji: "", trans_neutro: "Hot / Cold", trans_m: "Hot / Cold", trans_f: "Hot / Cold", hint: "Temperature" },
+      { text: "To go", romaji: "", trans_neutro: "To go", trans_m: "To go", trans_f: "To go", hint: "" },
+      { text: "Plastic bag", romaji: "", trans_neutro: "Plastic bag", trans_m: "Plastic bag", trans_f: "Plastic bag", hint: "" }
+    ],
+    "🗺️ Movimentação & Localização": [
+      { text: "Where is the bathroom?", romaji: "", trans_neutro: "Where is the bathroom?", trans_m: "Where is the bathroom?", trans_f: "Where is the bathroom?", hint: "" },
+      { text: "Train station", romaji: "", trans_neutro: "Train station", trans_m: "Train station", trans_f: "Train station", hint: "" },
+      { text: "Bathroom", romaji: "", trans_neutro: "Bathroom", trans_m: "Bathroom", trans_f: "Bathroom", hint: "" },
+      { text: "Here", romaji: "", trans_neutro: "Here", trans_m: "Here", trans_f: "Here", hint: "" },
+      { text: "There", romaji: "", trans_neutro: "There", trans_m: "There", trans_f: "There", hint: "" },
+      { text: "Close / Far", romaji: "", trans_neutro: "Close / Far", trans_m: "Close / Far", trans_f: "Close / Far", hint: "" },
+      { text: "Right / Left", romaji: "", trans_neutro: "Right / Left", trans_m: "Right / Left", trans_f: "Right / Left", hint: "" },
+      { text: "Straight ahead", romaji: "", trans_neutro: "Straight ahead", trans_m: "Straight ahead", trans_f: "Straight ahead", hint: "Directions" }
+    ],
+    "💳 Pagamento & Valores": [
+      { text: "How much?", romaji: "", trans_neutro: "How much?", trans_m: "How much?", trans_f: "How much?", hint: "" },
+      { text: "Credit card", romaji: "", trans_neutro: "Credit card", trans_m: "Credit card", trans_f: "Credit card", hint: "" },
+      { text: "Cash", romaji: "", trans_neutro: "Cash", trans_m: "Cash", trans_f: "Cash", hint: "" },
+      { text: "Expensive / Cheap", romaji: "", trans_neutro: "Expensive / Cheap", trans_m: "Expensive / Cheap", trans_f: "Expensive / Cheap", hint: "" },
+      { text: "Receipt", romaji: "", trans_neutro: "Receipt", trans_m: "Receipt", trans_f: "Receipt", hint: "" },
+      { text: "Change", romaji: "", trans_neutro: "Change", trans_m: "Change", trans_f: "Change", hint: "" }
+    ],
+    "🏨 Hospedagem & Reservas": [
+      { text: "Hotel", romaji: "", trans_neutro: "Hotel", trans_m: "Hotel", trans_f: "Hotel", hint: "" },
+      { text: "Reservation", romaji: "", trans_neutro: "Reservation", trans_m: "Reservation", trans_f: "Reservation", hint: "" },
+      { text: "Check-in", romaji: "", trans_neutro: "Check-in", trans_m: "Check-in", trans_f: "Check-in", hint: "" },
+      { text: "Check-out", romaji: "", trans_neutro: "Check-out", trans_m: "Check-out", trans_f: "Check-out", hint: "" },
+      { text: "Room", romaji: "", trans_neutro: "Room", trans_m: "Room", trans_f: "Room", hint: "" },
+      { text: "WiFi", romaji: "", trans_neutro: "WiFi", trans_m: "WiFi", trans_f: "WiFi", hint: "" },
+      { text: "Breakfast", romaji: "", trans_neutro: "Breakfast", trans_m: "Breakfast", trans_f: "Breakfast", hint: "" },
+      { text: "Bed", romaji: "", trans_neutro: "Bed", trans_m: "Bed", trans_f: "Bed", hint: "" }
+    ],
+    "🛍️ Compras & Lojas": [
+      { text: "Store", romaji: "", trans_neutro: "Store", trans_m: "Store", trans_f: "Store", hint: "" },
+      { text: "Price", romaji: "", trans_neutro: "Price", trans_m: "Price", trans_f: "Price", hint: "" },
+      { text: "Small / Big", romaji: "", trans_neutro: "Small / Big", trans_m: "Small / Big", trans_f: "Small / Big", hint: "Size" },
+      { text: "Size", romaji: "", trans_neutro: "Size", trans_m: "Size", trans_f: "Size", hint: "" },
+      { text: "Try on", romaji: "", trans_neutro: "Try on", trans_m: "Try on", trans_f: "Try on", hint: "" },
+      { text: "Discount", romaji: "", trans_neutro: "Discount", trans_m: "Discount", trans_f: "Discount", hint: "" },
+      { text: "Out of stock", romaji: "", trans_neutro: "Out of stock", trans_m: "Out of stock", trans_f: "Out of stock", hint: "" },
+      { text: "Sale", romaji: "", trans_neutro: "Sale", trans_m: "Sale", trans_f: "Sale", hint: "" }
+    ],
+    "🆘 Emergência & Ajuda": [
+      { text: "Help!", romaji: "", trans_neutro: "Help!", trans_m: "Help!", trans_f: "Help!", hint: "" },
+      { text: "Police", romaji: "", trans_neutro: "Police", trans_m: "Police", trans_f: "Police", hint: "" },
+      { text: "Hospital", romaji: "", trans_neutro: "Hospital", trans_m: "Hospital", trans_f: "Hospital", hint: "" },
+      { text: "I'm lost", romaji: "", trans_neutro: "I'm lost", trans_m: "I'm lost", trans_f: "I'm lost", hint: "" },
+      { text: "I don't understand", romaji: "", trans_neutro: "I don't understand", trans_m: "I don't understand", trans_f: "I don't understand", hint: "" }
+    ],
+    "💬 Conversação Básica": [
+      { text: "Good morning", romaji: "", trans_neutro: "Good morning", trans_m: "Good morning", trans_f: "Good morning", hint: "" },
+      { text: "Hello", romaji: "", trans_neutro: "Hello", trans_m: "Hello", trans_f: "Hello", hint: "" },
+      { text: "Good night", romaji: "", trans_neutro: "Good night", trans_m: "Good night", trans_f: "Good night", hint: "Before sleep" },
+      { text: "Goodbye", romaji: "", trans_neutro: "Goodbye", trans_m: "Goodbye", trans_f: "Goodbye", hint: "" }
+    ]
+  },
+  pt: {
+    "🤝 Kit da Gentileza": [
+      { text: "Com licença", romaji: "", trans_neutro: "Com licença", trans_m: "Com licença", trans_f: "Com licença", hint: "" },
+      { text: "Muito obrigado(a)", romaji: "", trans_neutro: "Muito obrigado", trans_m: "Muito obrigado", trans_f: "Muito obrigada", hint: "Forma polida" },
+      { text: "Sim", romaji: "", trans_neutro: "Sim", trans_m: "Sim", trans_f: "Sim", hint: "" },
+      { text: "Não", romaji: "", trans_neutro: "Não", trans_m: "Não", trans_f: "Não", hint: "" },
+      { text: "Por favor", romaji: "", trans_neutro: "Por favor", trans_m: "Por favor", trans_f: "Por favor", hint: "" }
+    ],
+    "🍜 Restaurante & Conveniência": [
+      { text: "Este aqui", romaji: "", trans_neutro: "Este aqui", trans_m: "Este aqui", trans_f: "Este aqui", hint: "" },
+      { text: "Água, por favor", romaji: "", trans_neutro: "Água, por favor", trans_m: "Água, por favor", trans_f: "Água, por favor", hint: "" },
+      { text: "O que recomenda?", romaji: "", trans_neutro: "O que recomenda?", trans_m: "O que recomenda?", trans_f: "O que recomenda?", hint: "" },
+      { text: "A conta", romaji: "", trans_neutro: "A conta", trans_m: "A conta", trans_f: "A conta", hint: "" },
+      { text: "É suficiente", romaji: "", trans_neutro: "É suficiente", trans_m: "É suficiente", trans_f: "É suficiente", hint: "" },
+      { text: "Quente / Frio", romaji: "", trans_neutro: "Quente / Frio", trans_m: "Quente / Frio", trans_f: "Quente / Frio", hint: "" },
+      { text: "Para levar", romaji: "", trans_neutro: "Para levar", trans_m: "Para levar", trans_f: "Para levar", hint: "" },
+      { text: "Sacola plástica", romaji: "", trans_neutro: "Sacola plástica", trans_m: "Sacola plástica", trans_f: "Sacola plástica", hint: "" }
+    ],
+    "🗺️ Movimentação & Localização": [
+      { text: "Onde é o banheiro?", romaji: "", trans_neutro: "Onde é o banheiro?", trans_m: "Onde é o banheiro?", trans_f: "Onde é o banheiro?", hint: "" },
+      { text: "Estação de trem", romaji: "", trans_neutro: "Estação de trem", trans_m: "Estação de trem", trans_f: "Estação de trem", hint: "" },
+      { text: "Banheiro", romaji: "", trans_neutro: "Banheiro", trans_m: "Banheiro", trans_f: "Banheiro", hint: "" },
+      { text: "Aqui", romaji: "", trans_neutro: "Aqui", trans_m: "Aqui", trans_f: "Aqui", hint: "" },
+      { text: "Ali / Lá", romaji: "", trans_neutro: "Ali / Lá", trans_m: "Ali / Lá", trans_f: "Ali / Lá", hint: "" },
+      { text: "Perto / Longe", romaji: "", trans_neutro: "Perto / Longe", trans_m: "Perto / Longe", trans_f: "Perto / Longe", hint: "" },
+      { text: "Direita / Esquerda", romaji: "", trans_neutro: "Direita / Esquerda", trans_m: "Direita / Esquerda", trans_f: "Direita / Esquerda", hint: "" },
+      { text: "Em linha reta", romaji: "", trans_neutro: "Em linha reta", trans_m: "Em linha reta", trans_f: "Em linha reta", hint: "" }
+    ],
+    "💳 Pagamento & Valores": [
+      { text: "Quanto custa?", romaji: "", trans_neutro: "Quanto custa?", trans_m: "Quanto custa?", trans_f: "Quanto custa?", hint: "" },
+      { text: "Cartão de crédito", romaji: "", trans_neutro: "Cartão de crédito", trans_m: "Cartão de crédito", trans_f: "Cartão de crédito", hint: "" },
+      { text: "Dinheiro", romaji: "", trans_neutro: "Dinheiro em espécie", trans_m: "Dinheiro em espécie", trans_f: "Dinheiro em espécie", hint: "" },
+      { text: "Caro / Barato", romaji: "", trans_neutro: "Caro / Barato", trans_m: "Caro / Barato", trans_f: "Caro / Barato", hint: "" },
+      { text: "Recibo", romaji: "", trans_neutro: "Recibo", trans_m: "Recibo", trans_f: "Recibo", hint: "" },
+      { text: "Troco", romaji: "", trans_neutro: "Troco", trans_m: "Troco", trans_f: "Troco", hint: "" }
+    ],
+    "🏨 Hospedagem & Reservas": [
+      { text: "Hotel", romaji: "", trans_neutro: "Hotel", trans_m: "Hotel", trans_f: "Hotel", hint: "" },
+      { text: "Reserva", romaji: "", trans_neutro: "Reserva", trans_m: "Reserva", trans_f: "Reserva", hint: "" },
+      { text: "Entrada no hotel", romaji: "", trans_neutro: "Check-in", trans_m: "Check-in", trans_f: "Check-in", hint: "" },
+      { text: "Saída do hotel", romaji: "", trans_neutro: "Check-out", trans_m: "Check-out", trans_f: "Check-out", hint: "" },
+      { text: "Quarto", romaji: "", trans_neutro: "Quarto", trans_m: "Quarto", trans_f: "Quarto", hint: "" },
+      { text: "Internet sem fio", romaji: "", trans_neutro: "Wifi", trans_m: "Wifi", trans_f: "Wifi", hint: "" },
+      { text: "Café da manhã", romaji: "", trans_neutro: "Café da manhã", trans_m: "Café da manhã", trans_f: "Café da manhã", hint: "" },
+      { text: "Cama", romaji: "", trans_neutro: "Cama", trans_m: "Cama", trans_f: "Cama", hint: "" }
+    ],
+    "🛍️ Compras & Lojas": [
+      { text: "Loja", romaji: "", trans_neutro: "Loja", trans_m: "Loja", trans_f: "Loja", hint: "" },
+      { text: "Preço", romaji: "", trans_neutro: "Preço", trans_m: "Preço", trans_f: "Preço", hint: "" },
+      { text: "Pequeno / Grande", romaji: "", trans_neutro: "Pequeno / Grande", trans_m: "Pequeno / Grande", trans_f: "Pequeno / Grande", hint: "" },
+      { text: "Tamanho", romaji: "", trans_neutro: "Tamanho", trans_m: "Tamanho", trans_f: "Tamanho", hint: "" },
+      { text: "Provar roupas", romaji: "", trans_neutro: "Quero provar", trans_m: "Quero provar", trans_f: "Quero provar", hint: "" },
+      { text: "Desconto", romaji: "", trans_neutro: "Tem desconto?", trans_m: "Tem desconto?", trans_f: "Tem desconto?", hint: "" },
+      { text: "Fora de estoque", romaji: "", trans_neutro: "Está esgotado", trans_m: "Está esgotado", trans_f: "Está esgotada", hint: "" },
+      { text: "Promoção", romaji: "", trans_neutro: "É promoção?", trans_m: "É promoção?", trans_f: "É promoção?", hint: "" }
+    ],
+    "🆘 Emergência & Ajuda": [
+      { text: "Socorro!", romaji: "", trans_neutro: "Socorro!", trans_m: "Socorro!", trans_f: "Socorro!", hint: "" },
+      { text: "Polícia", romaji: "", trans_neutro: "Chame a polícia", trans_m: "Chame a polícia", trans_f: "Chame a polícia", hint: "" },
+      { text: "Hospital", romaji: "", trans_neutro: "Preciso de hospital", trans_m: "Preciso de hospital", trans_f: "Preciso de hospital", hint: "" },
+      { text: "Estou perdido(a)", romaji: "", trans_neutro: "Estou perdido", trans_m: "Estou perdido", trans_f: "Estou perdida", hint: "" },
+      { text: "Não entendo", romaji: "", trans_neutro: "Não entendo", trans_m: "Não entendo", trans_f: "Não entendo", hint: "" }
+    ],
+    "💬 Conversação Básica": [
+      { text: "Bom dia", romaji: "", trans_neutro: "Bom dia", trans_m: "Bom dia", trans_f: "Bom dia", hint: "" },
+      { text: "Olá", romaji: "", trans_neutro: "Olá", trans_m: "Olá", trans_f: "Olá", hint: "" },
+      { text: "Boa noite", romaji: "", trans_neutro: "Boa noite", trans_m: "Boa noite", trans_f: "Boa noite", hint: "" },
+      { text: "Adeus", romaji: "", trans_neutro: "Adeus", trans_m: "Adeus", trans_f: "Adeus", hint: "" }
+    ]
+  }
+};
+
+let currentLang = 'ja';
+let currentContext = '🤝 Kit da Gentileza';
+let currentIndex = 0;
+let currentGender = 'neutral';
+let isFlipped = false;
+
+// Inicializar
+document.addEventListener('DOMContentLoaded', () => {
+  updateContextButtons();
+  loadCard();
+  
+  // Event listeners dos botões de idioma
+  document.querySelectorAll('.lang-btn').forEach(btn => {
+    btn.addEventListener('click', (e) => {
+      document.querySelectorAll('.lang-btn').forEach(b => b.classList.remove('active'));
+      e.target.classList.add('active');
+      currentLang = e.target.dataset.lang;
+      currentIndex = 0;
+      isFlipped = false;
+      currentGender = 'neutral';
+      updateGenderVisibility();
+      updateContextButtons();
+      loadCard();
+    });
+  });
+
+  // Event listeners dos botões de gênero
+  document.querySelectorAll('.gender-btn').forEach(btn => {
+    btn.addEventListener('click', (e) => {
+      document.querySelectorAll('.gender-btn').forEach(b => b.classList.remove('active'));
+      e.target.classList.add('active');
+      currentGender = e.target.dataset.gender;
+      if (isFlipped) {
+        revealCard();
+      }
+    });
+  });
+});
+
+function updateGenderVisibility() {
+  const genderSelector = document.getElementById('genderSelector');
+  if (currentLang === 'pt' || currentLang === 'ja') {
+    genderSelector.style.display = 'block';
+  } else {
+    genderSelector.style.display = 'none';
+  }
+}
+
+function updateContextButtons() {
+  const selector = document.getElementById('contextSelector');
+  selector.innerHTML = '';
+  Object.keys(phrases[currentLang]).forEach(context => {
+    const btn = document.createElement('button');
+    btn.className = 'context-btn' + (context === currentContext ? ' active' : '');
+    btn.textContent = context;
+    btn.onclick = () => selectContext(context);
+    selector.appendChild(btn);
+  });
+}
+
+function selectContext(context) {
+  currentContext = context;
+  currentIndex = 0;
+  isFlipped = false;
+  updateContextButtons();
+  loadCard();
+  
+  // Atualizar botões de contexto
+  document.querySelectorAll('.context-btn').forEach(btn => {
+    btn.classList.toggle('active', btn.textContent === context);
+  });
+}
+
+function loadCard() {
+  updateGenderVisibility();
+  const data = phrases[currentLang][currentContext][currentIndex];
+  const total = phrases[currentLang][currentContext].length;
+  
+  // Atualizar progresso
+  document.getElementById('progressText').textContent = `${currentIndex + 1} / ${total}`;
+  document.getElementById('progressFill').style.width = ((currentIndex + 1) / total * 100) + '%';
+  
+  // Atualizar card
+  isFlipped = false;
+  renderCardFront(data);
+  updateButtons();
+}
+
+function renderCardFront(data) {
+  const card = document.getElementById('flashcard');
+  card.classList.remove('flipped');
+  
+  let html = '<div class="flashcard-front" id="cardFront">';
+  html += `<div class="flashcard-small">${currentLang === 'ja' ? data.romaji : 'EXPRESSÃO'}</div>`;
+  
+  // Mostrar kanji se existir (apenas em japonês)
+  if (currentLang === 'ja' && data.kanji) {
+    html += `<div class="flashcard-kanji">${data.kanji}</div>`;
+  }
+  
+  html += `<div class="flashcard-text">${data.text}</div>`;
+  html += '<div class="flashcard-label">Clique para revelar</div>';
+  html += '<button class="audio-btn" onclick="playAudio()" style="margin-top:12px;">';
+  html += '🔊 Ouvir';
+  html += '</button>';
+  html += '</div>';
+  
+  card.innerHTML = html;
+}
+
+function revealCard() {
+  if (isFlipped) return;
+  isFlipped = true;
+  
+  const data = phrases[currentLang][currentContext][currentIndex];
+  const card = document.getElementById('flashcard');
+  card.classList.add('flipped');
+  
+  // Pega a tradução correta baseado no gênero
+  let translation = data.trans || data.trans_neutro;
+  if (currentLang === 'pt' || currentLang === 'ja') {
+    if (currentGender === 'masculino' && data.trans_m) {
+      translation = data.trans_m;
+    } else if (currentGender === 'feminino' && data.trans_f) {
+      translation = data.trans_f;
+    } else if (data.trans_neutro) {
+      translation = data.trans_neutro;
+    }
+  }
+  
+  let html = '<div class="flashcard-back" id="cardBack">';
+  html += `<div class="flashcard-trans">${translation}</div>`;
+  if (data.hint) html += `<div class="flashcard-hint">💡 ${data.hint}</div>`;
+  html += '</div>';
+  
+  card.innerHTML = html;
+}
+
+function nextCard() {
+  const total = phrases[currentLang][currentContext].length;
+  if (currentIndex < total - 1) {
+    currentIndex++;
+    loadCard();
+  }
+}
+
+function previousCard() {
+  if (currentIndex > 0) {
+    currentIndex--;
+    loadCard();
+  }
+}
+
+function updateButtons() {
+  const total = phrases[currentLang][currentContext].length;
+  document.getElementById('prevBtn').disabled = currentIndex === 0;
+  document.getElementById('nextBtn').disabled = currentIndex === total - 1;
+}
+
+function playAudio() {
+  const data = phrases[currentLang][currentContext][currentIndex];
+  
+  // Define qual idioma usar na síntese
+  const langCode = currentLang === 'ja' ? 'ja-JP' : 
+                   currentLang === 'en' ? 'en-US' : 'pt-BR';
+  
+  // Use a pronunciação (romaji para EN/PT, texto original pra JA)
+  const textToSpeak = currentLang === 'ja' ? data.text : data.trans;
+  
+  const utterance = new SpeechSynthesisUtterance(textToSpeak);
+  utterance.lang = langCode;
+  utterance.rate = 0.85; // Um pouco mais lento pra clareza
+  utterance.pitch = 1;
+  
+  // Cancelar qualquer áudio anterior
+  window.speechSynthesis.cancel();
+  window.speechSynthesis.speak(utterance);
+}
+
+function downloadPDF() {
+  // TODO: Implementar geração de PDF
+  alert('PDF será gerado em breve! Você receberá um cartão de bolso pronto para imprimir e laminar.');
+}
+</script>
+
+</body>
+</html>
