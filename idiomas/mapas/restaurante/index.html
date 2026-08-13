@@ -147,6 +147,14 @@ body{font-family:'Segoe UI',sans-serif;background:var(--paper);color:var(--ink);
 
 .hidden{display:none;}
 
+/* PONTES — cruzamento entre mapa e contexto do Amuleto */
+.pontes{margin-top:22px;padding:16px 18px;background:#fff;border:1.5px solid var(--line);border-radius:14px;}
+.pontes-titulo{font-size:12px;font-weight:700;color:var(--ink);margin-bottom:10px;letter-spacing:.3px;}
+.ponte{display:block;padding:9px 0;font-size:13px;color:#4A7A96;text-decoration:none;border-bottom:1px solid var(--line);}
+.ponte:last-child{border-bottom:none;}
+.ponte:hover{color:var(--teal);}
+.ponte b{font-weight:700;}
+
 /* ===== ABA AR — rede de segurança ===== */
 .ar-intro{background:#EFF6FB;border:2px solid #7FA8C4;border-radius:15px;padding:18px 20px;margin-bottom:18px;}
 .ar-intro-titulo{font-size:14px;font-weight:700;color:#4A7A96;margin-bottom:7px;}
@@ -202,6 +210,7 @@ body{font-family:'Segoe UI',sans-serif;background:var(--paper);color:var(--ink);
       <button class="mode-btn" onclick="changeMode('encaixar')">🎯 Tocar & Encaixar</button>
     </div>
     <div id="mode-content"></div>
+    <div class="pontes" id="pontes"></div>
   </div>
 
   <!-- ABA RADAR -->
@@ -238,135 +247,9 @@ body{font-family:'Segoe UI',sans-serif;background:var(--paper);color:var(--ink);
 
 <script>
 // DADOS PEÇAS
-const PECAS = [
-  {
-    "kanji": "窓際",
-    "romaji": "madogiwa",
-    "pt": "Mesa perto da janela",
-    "tipo": "substantivo",
-    "moldes": [
-      "3.2"
-    ]
-  },
-  {
-    "kanji": "喫煙席",
-    "romaji": "kitsuenseki",
-    "pt": "Área de fumantes",
-    "tipo": "substantivo",
-    "moldes": [
-      "3.2"
-    ]
-  },
-  {
-    "kanji": "禁煙席",
-    "romaji": "kinenseki",
-    "pt": "Área não-fumantes",
-    "tipo": "substantivo",
-    "moldes": [
-      "3.2"
-    ]
-  },
-  {
-    "kanji": "フォーク",
-    "romaji": "fooku",
-    "pt": "Garfo",
-    "tipo": "substantivo",
-    "moldes": [
-      "3.2"
-    ]
-  },
-  {
-    "kanji": "スプーン",
-    "romaji": "supuun",
-    "pt": "Colher",
-    "tipo": "substantivo",
-    "moldes": [
-      "3.2"
-    ]
-  },
-  {
-    "kanji": "ナイフ",
-    "romaji": "naifu",
-    "pt": "Faca",
-    "tipo": "substantivo",
-    "moldes": [
-      "3.2"
-    ]
-  },
-  {
-    "kanji": "箸",
-    "romaji": "hashi",
-    "pt": "Hashi (palitinhos)",
-    "tipo": "substantivo",
-    "moldes": [
-      "3.2"
-    ]
-  },
-  {
-    "kanji": "二人前",
-    "romaji": "ninin-mae",
-    "pt": "Duas porções",
-    "tipo": "substantivo",
-    "moldes": [
-      "3.1"
-    ]
-  },
-  {
-    "kanji": "お勧め",
-    "romaji": "osusume",
-    "pt": "Recomendação da casa",
-    "tipo": "substantivo",
-    "moldes": [
-      "3.1"
-    ]
-  },
-  {
-    "kanji": "注文",
-    "romaji": "chuumon",
-    "pt": "Pedido",
-    "tipo": "substantivo",
-    "moldes": [
-      "3.3"
-    ]
-  },
-  {
-    "kanji": "お下げ",
-    "romaji": "osage",
-    "pt": "Recolher o prato",
-    "tipo": "expressao",
-    "moldes": [
-      "3.2"
-    ]
-  },
-  {
-    "kanji": "お会計",
-    "romaji": "okaikei",
-    "pt": "A conta",
-    "tipo": "substantivo",
-    "moldes": [
-      "3.2"
-    ]
-  },
-  {
-    "kanji": "これ",
-    "romaji": "kore",
-    "pt": "Este/isto",
-    "tipo": "particula",
-    "moldes": [
-      "3.1",
-      "3.3"
-    ]
-  },
-  {
-    "kanji": "ごちそうさま",
-    "romaji": "gochisousama",
-    "pt": "Obrigado pela refeição",
-    "tipo": "expressao",
-    "moldes": [
-      "3.4"
-    ]
-  }
-];
+const MAPA_SLUG = 'restaurante';
+let PECAS = [];
+let VOCAB = null;
 
 // MOLDES
 const MOLDES = {
@@ -677,6 +560,20 @@ const AR_NAOFACA = [
   "Esperar entender tudo antes de falar. Não é assim que funciona para ninguém."
 ];
 
+
+// PONTES — liga este mapa aos contextos do Amuleto
+function renderPontes(){
+  const alvo=document.getElementById('pontes');
+  if(!alvo||!VOCAB) return;
+  const ctxs=[...new Set(PECAS.map(p=>p.contexto))];
+  const linhas=ctxs.map(c=>{
+    const info=VOCAB.contextos[c]; if(!info) return '';
+    const n=VOCAB.palavras.filter(p=>p.contexto===c).length;
+    return `<a class="ponte" href="/idiomas/amuleto/?contexto=${c}">${info.icone} <b>${info.rotulo}</b> — ${n} expressões no Amuleto →</a>`;
+  }).join('');
+  alvo.innerHTML=`<div class="pontes-titulo">🔗 Estas palavras também vivem no Amuleto</div>${linhas}`;
+}
+
 function renderAr(){
   arVisitado = true;
   const gavetas = AR_GAVETAS.map(g => `
@@ -978,7 +875,21 @@ function fecharModalProva(){
   document.getElementById('modal-prova').classList.remove('show');
 }
 
-renderMode();
+fetch('../../dados/vocabulario.json')
+  .then(r=>r.json())
+  .then(d=>{
+    VOCAB = d;
+    PECAS = d.palavras
+      .filter(p=>p.mapas.includes(MAPA_SLUG))
+      .map(p=>({kanji:p.kanji,romaji:p.romaji,pt:p.pt,tipo:p.tipo,grupo:p.grupo,moldes:p.moldes,contexto:p.contexto}));
+    renderMode();
+    renderPontes();
+  })
+  .catch(e=>{
+    document.getElementById('mode-content').innerHTML =
+      '<p style="padding:20px;color:#C26F6C;">Não consegui carregar o vocabulário. Se abriu o arquivo direto do computador, use o site publicado — o navegador bloqueia leitura de JSON local.</p>';
+    console.error(e);
+  });
 </script>
 </body>
 </html>

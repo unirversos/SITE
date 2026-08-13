@@ -147,6 +147,14 @@ body{font-family:'Segoe UI',sans-serif;background:var(--paper);color:var(--ink);
 
 .hidden{display:none;}
 
+/* PONTES — cruzamento entre mapa e contexto do Amuleto */
+.pontes{margin-top:22px;padding:16px 18px;background:#fff;border:1.5px solid var(--line);border-radius:14px;}
+.pontes-titulo{font-size:12px;font-weight:700;color:var(--ink);margin-bottom:10px;letter-spacing:.3px;}
+.ponte{display:block;padding:9px 0;font-size:13px;color:#4A7A96;text-decoration:none;border-bottom:1px solid var(--line);}
+.ponte:last-child{border-bottom:none;}
+.ponte:hover{color:var(--teal);}
+.ponte b{font-weight:700;}
+
 /* ===== ABA AR — rede de segurança ===== */
 .ar-intro{background:#EFF6FB;border:2px solid #7FA8C4;border-radius:15px;padding:18px 20px;margin-bottom:18px;}
 .ar-intro-titulo{font-size:14px;font-weight:700;color:#4A7A96;margin-bottom:7px;}
@@ -202,6 +210,7 @@ body{font-family:'Segoe UI',sans-serif;background:var(--paper);color:var(--ink);
       <button class="mode-btn" onclick="changeMode('encaixar')">🎯 Tocar & Encaixar</button>
     </div>
     <div id="mode-content"></div>
+    <div class="pontes" id="pontes"></div>
   </div>
 
   <!-- ABA RADAR -->
@@ -238,116 +247,9 @@ body{font-family:'Segoe UI',sans-serif;background:var(--paper);color:var(--ink);
 
 <script>
 // DADOS PEÇAS
-const PECAS = [
-  {
-    "kanji": "試着室",
-    "romaji": "shichakushitsu",
-    "pt": "Provador",
-    "tipo": "substantivo",
-    "moldes": [
-      "7.4"
-    ]
-  },
-  {
-    "kanji": "サイズ",
-    "romaji": "saizu",
-    "pt": "Tamanho",
-    "tipo": "substantivo",
-    "moldes": [
-      "7.2"
-    ]
-  },
-  {
-    "kanji": "大きい",
-    "romaji": "ookii",
-    "pt": "Grande/maior",
-    "tipo": "expressao",
-    "moldes": [
-      "7.2"
-    ]
-  },
-  {
-    "kanji": "小さい",
-    "romaji": "chiisai",
-    "pt": "Pequeno/menor",
-    "tipo": "expressao",
-    "moldes": [
-      "7.2"
-    ]
-  },
-  {
-    "kanji": "色",
-    "romaji": "iro",
-    "pt": "Cor",
-    "tipo": "substantivo",
-    "moldes": [
-      "7.3"
-    ]
-  },
-  {
-    "kanji": "黒",
-    "romaji": "kuro",
-    "pt": "Preto",
-    "tipo": "substantivo",
-    "moldes": [
-      "7.6"
-    ]
-  },
-  {
-    "kanji": "白",
-    "romaji": "shiro",
-    "pt": "Branco",
-    "tipo": "substantivo",
-    "moldes": [
-      "7.6"
-    ]
-  },
-  {
-    "kanji": "ベージュ",
-    "romaji": "beeju",
-    "pt": "Bege",
-    "tipo": "substantivo",
-    "moldes": [
-      "7.6"
-    ]
-  },
-  {
-    "kanji": "試着",
-    "romaji": "shichaku",
-    "pt": "Provar roupa",
-    "tipo": "substantivo",
-    "moldes": [
-      "7.1"
-    ]
-  },
-  {
-    "kanji": "着る",
-    "romaji": "kiru",
-    "pt": "Vestir",
-    "tipo": "expressao",
-    "moldes": [
-      "7.7"
-    ]
-  },
-  {
-    "kanji": "交換",
-    "romaji": "koukan",
-    "pt": "Trocar por outra peça",
-    "tipo": "substantivo",
-    "moldes": [
-      "7.8"
-    ]
-  },
-  {
-    "kanji": "ぴったり",
-    "romaji": "pittari",
-    "pt": "Justo/perfeito",
-    "tipo": "expressao",
-    "moldes": [
-      "7.9"
-    ]
-  }
-];
+const MAPA_SLUG = 'roupas';
+let PECAS = [];
+let VOCAB = null;
 
 // MOLDES
 const MOLDES = {
@@ -688,6 +590,20 @@ const AR_NAOFACA = [
   "Esperar entender tudo antes de falar. Não é assim que funciona para ninguém."
 ];
 
+
+// PONTES — liga este mapa aos contextos do Amuleto
+function renderPontes(){
+  const alvo=document.getElementById('pontes');
+  if(!alvo||!VOCAB) return;
+  const ctxs=[...new Set(PECAS.map(p=>p.contexto))];
+  const linhas=ctxs.map(c=>{
+    const info=VOCAB.contextos[c]; if(!info) return '';
+    const n=VOCAB.palavras.filter(p=>p.contexto===c).length;
+    return `<a class="ponte" href="/idiomas/amuleto/?contexto=${c}">${info.icone} <b>${info.rotulo}</b> — ${n} expressões no Amuleto →</a>`;
+  }).join('');
+  alvo.innerHTML=`<div class="pontes-titulo">🔗 Estas palavras também vivem no Amuleto</div>${linhas}`;
+}
+
 function renderAr(){
   arVisitado = true;
   const gavetas = AR_GAVETAS.map(g => `
@@ -989,7 +905,21 @@ function fecharModalProva(){
   document.getElementById('modal-prova').classList.remove('show');
 }
 
-renderMode();
+fetch('../../dados/vocabulario.json')
+  .then(r=>r.json())
+  .then(d=>{
+    VOCAB = d;
+    PECAS = d.palavras
+      .filter(p=>p.mapas.includes(MAPA_SLUG))
+      .map(p=>({kanji:p.kanji,romaji:p.romaji,pt:p.pt,tipo:p.tipo,grupo:p.grupo,moldes:p.moldes,contexto:p.contexto}));
+    renderMode();
+    renderPontes();
+  })
+  .catch(e=>{
+    document.getElementById('mode-content').innerHTML =
+      '<p style="padding:20px;color:#C26F6C;">Não consegui carregar o vocabulário. Se abriu o arquivo direto do computador, use o site publicado — o navegador bloqueia leitura de JSON local.</p>';
+    console.error(e);
+  });
 </script>
 </body>
 </html>

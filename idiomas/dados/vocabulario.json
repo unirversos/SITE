@@ -1,0 +1,2784 @@
+{
+ "contextos": {
+  "gentileza": {
+   "rotulo": "Kit da Gentileza",
+   "icone": "🤝"
+  },
+  "restaurante": {
+   "rotulo": "Restaurante & Conveniência",
+   "icone": "🍜"
+  },
+  "movimentacao": {
+   "rotulo": "Movimentação & Localização",
+   "icone": "🗺️"
+  },
+  "pagamento": {
+   "rotulo": "Pagamento & Valores",
+   "icone": "💳"
+  },
+  "hospedagem": {
+   "rotulo": "Hospedagem & Reservas",
+   "icone": "🏨"
+  },
+  "compras": {
+   "rotulo": "Compras & Lojas",
+   "icone": "🛍️"
+  },
+  "emergencia": {
+   "rotulo": "Emergência & Ajuda",
+   "icone": "🆘"
+  },
+  "conversacao": {
+   "rotulo": "Conversação Básica",
+   "icone": "💬"
+  }
+ },
+ "mapas": {
+  "aeroporto": {
+   "num": "00",
+   "titulo": "Aeroporto",
+   "emoji": "🛂"
+  },
+  "hotel": {
+   "num": "01",
+   "titulo": "Hotel",
+   "emoji": "🏨"
+  },
+  "restaurante": {
+   "num": "02",
+   "titulo": "Restaurante",
+   "emoji": "🍽️"
+  },
+  "kombini": {
+   "num": "03",
+   "titulo": "Kombini",
+   "emoji": "🏪"
+  },
+  "trens": {
+   "num": "04",
+   "titulo": "Trens",
+   "emoji": "🚆"
+  },
+  "compras": {
+   "num": "05",
+   "titulo": "Compras",
+   "emoji": "🛍️"
+  },
+  "roupas": {
+   "num": "06",
+   "titulo": "Roupas",
+   "emoji": "👗"
+  },
+  "emergencia": {
+   "num": "07",
+   "titulo": "Emergência",
+   "emoji": "🆘"
+  },
+  "apresentacao": {
+   "num": "08",
+   "titulo": "Apresentação",
+   "emoji": "🤝"
+  },
+  "horas": {
+   "num": "09",
+   "titulo": "Horas",
+   "emoji": "🕒"
+  },
+  "planos": {
+   "num": "10",
+   "titulo": "Planos",
+   "emoji": "🎉"
+  },
+  "sinalizacao": {
+   "num": "11",
+   "titulo": "Sinalização",
+   "emoji": "🪧"
+  }
+ },
+ "palavras": [
+  {
+   "romaji": "yoyaku",
+   "kanji": "予約",
+   "pt": "Reserva",
+   "tipo": "substantivo",
+   "contexto": "movimentacao",
+   "grupo": null,
+   "moldes": [
+    "1.1",
+    "1.4",
+    "2.1"
+   ],
+   "mapas": [
+    "aeroporto",
+    "hotel"
+   ]
+  },
+  {
+   "romaji": "pasupōto",
+   "kanji": "パスポート",
+   "pt": "Passaporte",
+   "tipo": "substantivo",
+   "contexto": "movimentacao",
+   "grupo": null,
+   "moldes": [
+    "1.2",
+    "1.4",
+    "1.6"
+   ],
+   "mapas": [
+    "aeroporto"
+   ]
+  },
+  {
+   "romaji": "biza",
+   "kanji": "ビザ",
+   "pt": "Visto",
+   "tipo": "substantivo",
+   "contexto": "movimentacao",
+   "grupo": null,
+   "moldes": [
+    "1.3",
+    "1.4"
+   ],
+   "mapas": [
+    "aeroporto"
+   ]
+  },
+  {
+   "romaji": "kankou",
+   "kanji": "観光",
+   "pt": "Turismo",
+   "tipo": "substantivo",
+   "contexto": "movimentacao",
+   "grupo": null,
+   "moldes": [
+    "1.1"
+   ],
+   "mapas": [
+    "aeroporto"
+   ]
+  },
+  {
+   "romaji": "kagi",
+   "kanji": "鍵",
+   "pt": "Chave",
+   "tipo": "substantivo",
+   "contexto": "movimentacao",
+   "grupo": null,
+   "moldes": [
+    "1.2",
+    "1.4",
+    "2.2"
+   ],
+   "mapas": [
+    "aeroporto",
+    "hotel"
+   ]
+  },
+  {
+   "romaji": "mokuteki",
+   "kanji": "目的地",
+   "pt": "Destino",
+   "tipo": "substantivo",
+   "contexto": "movimentacao",
+   "grupo": null,
+   "moldes": [
+    "1.3"
+   ],
+   "mapas": [
+    "aeroporto"
+   ]
+  },
+  {
+   "romaji": "jūsho",
+   "kanji": "住所",
+   "pt": "Endereço",
+   "tipo": "substantivo",
+   "contexto": "movimentacao",
+   "grupo": null,
+   "moldes": [
+    "1.4"
+   ],
+   "mapas": [
+    "aeroporto"
+   ]
+  },
+  {
+   "romaji": "mondai",
+   "kanji": "問題",
+   "pt": "Problema",
+   "tipo": "substantivo",
+   "contexto": "movimentacao",
+   "grupo": null,
+   "moldes": [
+    "1.4"
+   ],
+   "mapas": [
+    "aeroporto"
+   ]
+  },
+  {
+   "romaji": "chien",
+   "kanji": "遅延",
+   "pt": "Atraso",
+   "tipo": "substantivo",
+   "contexto": "movimentacao",
+   "grupo": null,
+   "moldes": [
+    "1.5"
+   ],
+   "mapas": [
+    "aeroporto"
+   ]
+  },
+  {
+   "romaji": "hoken",
+   "kanji": "保険",
+   "pt": "Seguro",
+   "tipo": "substantivo",
+   "contexto": "movimentacao",
+   "grupo": null,
+   "moldes": [
+    "1.4"
+   ],
+   "mapas": [
+    "aeroporto"
+   ]
+  },
+  {
+   "romaji": "zeikan",
+   "kanji": "税関",
+   "pt": "Alfândega",
+   "tipo": "substantivo",
+   "contexto": "movimentacao",
+   "grupo": null,
+   "moldes": [
+    "1.4"
+   ],
+   "mapas": [
+    "aeroporto"
+   ]
+  },
+  {
+   "romaji": "desu",
+   "kanji": "です",
+   "pt": "É",
+   "tipo": "particula",
+   "contexto": "movimentacao",
+   "grupo": null,
+   "moldes": [
+    "1.1",
+    "1.2",
+    "1.5",
+    "2.1",
+    "2.2",
+    "2.3"
+   ],
+   "mapas": [
+    "aeroporto",
+    "hotel"
+   ]
+  },
+  {
+   "romaji": "wo",
+   "kanji": "を",
+   "pt": "Objeto",
+   "tipo": "particula",
+   "contexto": "movimentacao",
+   "grupo": null,
+   "moldes": [
+    "1.6"
+   ],
+   "mapas": [
+    "aeroporto"
+   ]
+  },
+  {
+   "romaji": "wa",
+   "kanji": "は",
+   "pt": "Tópico",
+   "tipo": "particula",
+   "contexto": "movimentacao",
+   "grupo": null,
+   "moldes": [
+    "1.3"
+   ],
+   "mapas": [
+    "aeroporto"
+   ]
+  },
+  {
+   "romaji": "ga",
+   "kanji": "が",
+   "pt": "Sujeito",
+   "tipo": "particula",
+   "contexto": "movimentacao",
+   "grupo": null,
+   "moldes": [
+    "1.4"
+   ],
+   "mapas": [
+    "aeroporto"
+   ]
+  },
+  {
+   "romaji": "desu ga",
+   "kanji": "ですが",
+   "pt": "Mas...",
+   "tipo": "expressao",
+   "contexto": "movimentacao",
+   "grupo": null,
+   "moldes": [
+    "1.1"
+   ],
+   "mapas": [
+    "aeroporto"
+   ]
+  },
+  {
+   "romaji": "nimotsu",
+   "kanji": "荷物",
+   "pt": "Bagagem",
+   "tipo": "substantivo",
+   "contexto": "movimentacao",
+   "grupo": null,
+   "moldes": [],
+   "mapas": [
+    "aeroporto"
+   ]
+  },
+  {
+   "romaji": "kaban",
+   "kanji": "かばん",
+   "pt": "Bolsa / mala de mão",
+   "tipo": "substantivo",
+   "contexto": "movimentacao",
+   "grupo": null,
+   "moldes": [],
+   "mapas": [
+    "aeroporto"
+   ]
+  },
+  {
+   "romaji": "ryukku",
+   "kanji": "リュック",
+   "pt": "Mochila",
+   "tipo": "substantivo",
+   "contexto": "movimentacao",
+   "grupo": null,
+   "moldes": [],
+   "mapas": [
+    "aeroporto"
+   ]
+  },
+  {
+   "romaji": "hikouki",
+   "kanji": "飛行機",
+   "pt": "Avião",
+   "tipo": "substantivo",
+   "contexto": "movimentacao",
+   "grupo": null,
+   "moldes": [],
+   "mapas": [
+    "aeroporto"
+   ]
+  },
+  {
+   "romaji": "furaito",
+   "kanji": "フライト",
+   "pt": "Voo",
+   "tipo": "substantivo",
+   "contexto": "movimentacao",
+   "grupo": null,
+   "moldes": [],
+   "mapas": [
+    "aeroporto"
+   ]
+  },
+  {
+   "romaji": "kādo",
+   "kanji": "カード",
+   "pt": "Cartão",
+   "tipo": "substantivo",
+   "contexto": "hospedagem",
+   "grupo": null,
+   "moldes": [
+    "2.2"
+   ],
+   "mapas": [
+    "hotel"
+   ]
+  },
+  {
+   "romaji": "chōshoku",
+   "kanji": "朝食",
+   "pt": "Café da manhã",
+   "tipo": "substantivo",
+   "contexto": "hospedagem",
+   "grupo": null,
+   "moldes": [
+    "2.2"
+   ],
+   "mapas": [
+    "hotel"
+   ]
+  },
+  {
+   "romaji": "waifai",
+   "kanji": "Wi-Fi",
+   "pt": "Wi-Fi",
+   "tipo": "substantivo",
+   "contexto": "hospedagem",
+   "grupo": null,
+   "moldes": [
+    "2.2"
+   ],
+   "mapas": [
+    "hotel"
+   ]
+  },
+  {
+   "romaji": "taoru",
+   "kanji": "タオル",
+   "pt": "Toalha",
+   "tipo": "substantivo",
+   "contexto": "hospedagem",
+   "grupo": null,
+   "moldes": [
+    "2.2"
+   ],
+   "mapas": [
+    "hotel"
+   ]
+  },
+  {
+   "romaji": "mizu",
+   "kanji": "水",
+   "pt": "Água",
+   "tipo": "substantivo",
+   "contexto": "hospedagem",
+   "grupo": null,
+   "moldes": [
+    "2.2"
+   ],
+   "mapas": [
+    "hotel"
+   ]
+  },
+  {
+   "romaji": "oyu",
+   "kanji": "お湯",
+   "pt": "Água quente",
+   "tipo": "substantivo",
+   "contexto": "hospedagem",
+   "grupo": null,
+   "moldes": [
+    "2.2"
+   ],
+   "mapas": [
+    "hotel"
+   ]
+  },
+  {
+   "romaji": "eakon",
+   "kanji": "エアコン",
+   "pt": "Ar-condicionado",
+   "tipo": "substantivo",
+   "contexto": "hospedagem",
+   "grupo": null,
+   "moldes": [
+    "2.4"
+   ],
+   "mapas": [
+    "hotel"
+   ]
+  },
+  {
+   "romaji": "toire",
+   "kanji": "トイレ",
+   "pt": "Banheiro",
+   "tipo": "substantivo",
+   "contexto": "hospedagem",
+   "grupo": null,
+   "moldes": [
+    "2.4"
+   ],
+   "mapas": [
+    "hotel"
+   ]
+  },
+  {
+   "romaji": "beddo",
+   "kanji": "ベッド",
+   "pt": "Cama",
+   "tipo": "substantivo",
+   "contexto": "hospedagem",
+   "grupo": null,
+   "moldes": [
+    "2.4"
+   ],
+   "mapas": [
+    "hotel"
+   ]
+  },
+  {
+   "romaji": "shinguru",
+   "kanji": "シングル",
+   "pt": "Quarto solteiro",
+   "tipo": "substantivo",
+   "contexto": "hospedagem",
+   "grupo": null,
+   "moldes": [
+    "2.4"
+   ],
+   "mapas": [
+    "hotel"
+   ]
+  },
+  {
+   "romaji": "ippaku",
+   "kanji": "1泊",
+   "pt": "Uma noite",
+   "tipo": "substantivo",
+   "contexto": "hospedagem",
+   "grupo": null,
+   "moldes": [
+    "2.3"
+   ],
+   "mapas": [
+    "hotel"
+   ]
+  },
+  {
+   "romaji": "chekku-auto",
+   "kanji": "チェックアウト",
+   "pt": "Check-out",
+   "tipo": "substantivo",
+   "contexto": "hospedagem",
+   "grupo": null,
+   "moldes": [
+    "2.3"
+   ],
+   "mapas": [
+    "hotel"
+   ]
+  },
+  {
+   "romaji": "betsu-kanjō",
+   "kanji": "別勘定",
+   "pt": "Contas separadas",
+   "tipo": "expressao",
+   "contexto": "pagamento",
+   "grupo": null,
+   "moldes": [
+    "2.5"
+   ],
+   "mapas": [
+    "hotel"
+   ]
+  },
+  {
+   "romaji": "onsen",
+   "kanji": "温泉",
+   "pt": "Banho termal",
+   "tipo": "substantivo",
+   "contexto": "hospedagem",
+   "grupo": "facilidades",
+   "moldes": [],
+   "mapas": [
+    "hotel"
+   ]
+  },
+  {
+   "romaji": "massaaji",
+   "kanji": "マッサージ",
+   "pt": "Massagem",
+   "tipo": "substantivo",
+   "contexto": "hospedagem",
+   "grupo": "facilidades",
+   "moldes": [],
+   "mapas": [
+    "hotel"
+   ]
+  },
+  {
+   "romaji": "shokuji",
+   "kanji": "食事",
+   "pt": "Refeições",
+   "tipo": "substantivo",
+   "contexto": "hospedagem",
+   "grupo": "facilidades",
+   "moldes": [],
+   "mapas": [
+    "hotel"
+   ]
+  },
+  {
+   "romaji": "ryokan",
+   "kanji": "旅館",
+   "pt": "Pousada tradicional",
+   "tipo": "substantivo",
+   "contexto": "hospedagem",
+   "grupo": "facilidades",
+   "moldes": [],
+   "mapas": [
+    "hotel"
+   ]
+  },
+  {
+   "romaji": "daburu",
+   "kanji": "ダブル",
+   "pt": "Quarto de casal",
+   "tipo": "substantivo",
+   "contexto": "hospedagem",
+   "grupo": null,
+   "moldes": [],
+   "mapas": [
+    "hotel"
+   ]
+  },
+  {
+   "romaji": "daburu beddo",
+   "kanji": "ダブルベッド",
+   "pt": "Cama de casal",
+   "tipo": "substantivo",
+   "contexto": "hospedagem",
+   "grupo": null,
+   "moldes": [],
+   "mapas": [
+    "hotel"
+   ]
+  },
+  {
+   "romaji": "chekku-in",
+   "kanji": "チェックイン",
+   "pt": "Check-in",
+   "tipo": "substantivo",
+   "contexto": "hospedagem",
+   "grupo": null,
+   "moldes": [],
+   "mapas": [
+    "hotel"
+   ]
+  },
+  {
+   "romaji": "-haku",
+   "kanji": "〜泊",
+   "pt": "Contador de noites (2 noites = nihaku)",
+   "tipo": "sufixo",
+   "contexto": "hospedagem",
+   "grupo": null,
+   "moldes": [],
+   "mapas": [
+    "hotel"
+   ]
+  },
+  {
+   "romaji": "fooku",
+   "kanji": "フォーク",
+   "pt": "Garfo",
+   "tipo": "substantivo",
+   "contexto": "restaurante",
+   "grupo": null,
+   "moldes": [
+    "3.2"
+   ],
+   "mapas": [
+    "restaurante"
+   ]
+  },
+  {
+   "romaji": "supuun",
+   "kanji": "スプーン",
+   "pt": "Colher",
+   "tipo": "substantivo",
+   "contexto": "restaurante",
+   "grupo": null,
+   "moldes": [
+    "3.2"
+   ],
+   "mapas": [
+    "restaurante"
+   ]
+  },
+  {
+   "romaji": "naifu",
+   "kanji": "ナイフ",
+   "pt": "Faca",
+   "tipo": "substantivo",
+   "contexto": "restaurante",
+   "grupo": null,
+   "moldes": [
+    "3.2"
+   ],
+   "mapas": [
+    "restaurante"
+   ]
+  },
+  {
+   "romaji": "hashi",
+   "kanji": "箸",
+   "pt": "Hashi (palitinhos)",
+   "tipo": "substantivo",
+   "contexto": "restaurante",
+   "grupo": null,
+   "moldes": [
+    "3.2"
+   ],
+   "mapas": [
+    "restaurante"
+   ]
+  },
+  {
+   "romaji": "osusume",
+   "kanji": "お勧め",
+   "pt": "Recomendação da casa",
+   "tipo": "substantivo",
+   "contexto": "restaurante",
+   "grupo": null,
+   "moldes": [
+    "3.1"
+   ],
+   "mapas": [
+    "restaurante"
+   ]
+  },
+  {
+   "romaji": "chuumon",
+   "kanji": "注文",
+   "pt": "Pedido",
+   "tipo": "substantivo",
+   "contexto": "restaurante",
+   "grupo": null,
+   "moldes": [
+    "3.3"
+   ],
+   "mapas": [
+    "restaurante"
+   ]
+  },
+  {
+   "romaji": "osage",
+   "kanji": "お下げ",
+   "pt": "Recolher o prato",
+   "tipo": "expressao",
+   "contexto": "restaurante",
+   "grupo": null,
+   "moldes": [
+    "3.2"
+   ],
+   "mapas": [
+    "restaurante"
+   ]
+  },
+  {
+   "romaji": "okaikei",
+   "kanji": "お会計",
+   "pt": "A conta",
+   "tipo": "substantivo",
+   "contexto": "pagamento",
+   "grupo": null,
+   "moldes": [
+    "3.2"
+   ],
+   "mapas": [
+    "restaurante"
+   ]
+  },
+  {
+   "romaji": "kore",
+   "kanji": "これ",
+   "pt": "Este/isto",
+   "tipo": "particula",
+   "contexto": "restaurante",
+   "grupo": null,
+   "moldes": [
+    "3.1",
+    "3.3"
+   ],
+   "mapas": [
+    "restaurante"
+   ]
+  },
+  {
+   "romaji": "gochisousama",
+   "kanji": "ごちそうさま",
+   "pt": "Obrigado pela refeição",
+   "tipo": "expressao",
+   "contexto": "gentileza",
+   "grupo": null,
+   "moldes": [
+    "3.4"
+   ],
+   "mapas": [
+    "restaurante"
+   ]
+  },
+  {
+   "romaji": "itadakimasu",
+   "kanji": "いただきます",
+   "pt": "Bom apetite (antes de comer)",
+   "tipo": "expressao",
+   "contexto": "gentileza",
+   "grupo": null,
+   "moldes": [],
+   "mapas": [
+    "restaurante"
+   ]
+  },
+  {
+   "romaji": "nan mei sama",
+   "kanji": "何名様",
+   "pt": "Quantas pessoas?",
+   "tipo": "expressao",
+   "contexto": "restaurante",
+   "grupo": null,
+   "moldes": [],
+   "mapas": [
+    "restaurante"
+   ]
+  },
+  {
+   "romaji": "-mei",
+   "kanji": "〜名",
+   "pt": "Contador de pessoas (2 pessoas = nimei)",
+   "tipo": "sufixo",
+   "contexto": "restaurante",
+   "grupo": null,
+   "moldes": [],
+   "mapas": [
+    "restaurante"
+   ]
+  },
+  {
+   "romaji": "hitotsu",
+   "kanji": "ひとつ",
+   "pt": "Um (contagem)",
+   "tipo": "substantivo",
+   "contexto": "restaurante",
+   "grupo": "contagem",
+   "moldes": [],
+   "mapas": [
+    "restaurante"
+   ]
+  },
+  {
+   "romaji": "futatsu",
+   "kanji": "ふたつ",
+   "pt": "Dois (contagem)",
+   "tipo": "substantivo",
+   "contexto": "restaurante",
+   "grupo": "contagem",
+   "moldes": [],
+   "mapas": [
+    "restaurante"
+   ]
+  },
+  {
+   "romaji": "mittsu",
+   "kanji": "みっつ",
+   "pt": "Três (contagem)",
+   "tipo": "substantivo",
+   "contexto": "restaurante",
+   "grupo": "contagem",
+   "moldes": [],
+   "mapas": [
+    "restaurante"
+   ]
+  },
+  {
+   "romaji": "onigiri",
+   "kanji": "おにぎり",
+   "pt": "Bolinho de arroz recheado",
+   "tipo": "substantivo",
+   "contexto": "restaurante",
+   "grupo": null,
+   "moldes": [
+    "4.4"
+   ],
+   "mapas": [
+    "kombini"
+   ]
+  },
+  {
+   "romaji": "hotto sunakku",
+   "kanji": "ホットスナック",
+   "pt": "Lanches quentes",
+   "tipo": "substantivo",
+   "contexto": "restaurante",
+   "grupo": null,
+   "moldes": [
+    "4.4"
+   ],
+   "mapas": [
+    "kombini"
+   ]
+  },
+  {
+   "romaji": "hotto",
+   "kanji": "ホット",
+   "pt": "Quente",
+   "tipo": "substantivo",
+   "contexto": "restaurante",
+   "grupo": null,
+   "moldes": [
+    "4.4"
+   ],
+   "mapas": [
+    "kombini"
+   ]
+  },
+  {
+   "romaji": "aisu",
+   "kanji": "アイス",
+   "pt": "Gelado",
+   "tipo": "substantivo",
+   "contexto": "restaurante",
+   "grupo": null,
+   "moldes": [
+    "4.4"
+   ],
+   "mapas": [
+    "kombini"
+   ]
+  },
+  {
+   "romaji": "zeikomi",
+   "kanji": "税込",
+   "pt": "Com imposto incluso",
+   "tipo": "substantivo",
+   "contexto": "pagamento",
+   "grupo": null,
+   "moldes": [
+    "4.5"
+   ],
+   "mapas": [
+    "kombini"
+   ]
+  },
+  {
+   "romaji": "reshiito",
+   "kanji": "レシート",
+   "pt": "Recibo",
+   "tipo": "substantivo",
+   "contexto": "pagamento",
+   "grupo": null,
+   "moldes": [
+    "4.2"
+   ],
+   "mapas": [
+    "kombini"
+   ]
+  },
+  {
+   "romaji": "otearai",
+   "kanji": "お手洗い",
+   "pt": "Banheiro",
+   "tipo": "substantivo",
+   "contexto": "restaurante",
+   "grupo": null,
+   "moldes": [
+    "4.1"
+   ],
+   "mapas": [
+    "kombini"
+   ]
+  },
+  {
+   "romaji": "ATM",
+   "kanji": "ATM",
+   "pt": "Caixa eletrônico",
+   "tipo": "substantivo",
+   "contexto": "pagamento",
+   "grupo": null,
+   "moldes": [
+    "4.1"
+   ],
+   "mapas": [
+    "kombini"
+   ]
+  },
+  {
+   "romaji": "fukuro",
+   "kanji": "袋",
+   "pt": "Sacola",
+   "tipo": "substantivo",
+   "contexto": "restaurante",
+   "grupo": null,
+   "moldes": [
+    "4.3"
+   ],
+   "mapas": [
+    "kombini"
+   ]
+  },
+  {
+   "romaji": "ohashi",
+   "kanji": "お箸",
+   "pt": "Hashi (palitinhos)",
+   "tipo": "substantivo",
+   "contexto": "restaurante",
+   "grupo": null,
+   "moldes": [
+    "4.4"
+   ],
+   "mapas": [
+    "kombini"
+   ]
+  },
+  {
+   "romaji": "pointo kaado",
+   "kanji": "ポイントカード",
+   "pt": "Cartão de pontos",
+   "tipo": "substantivo",
+   "contexto": "pagamento",
+   "grupo": null,
+   "moldes": [
+    "4.6"
+   ],
+   "mapas": [
+    "kombini"
+   ]
+  },
+  {
+   "romaji": "atatameru",
+   "kanji": "温める",
+   "pt": "Esquentar",
+   "tipo": "verbo",
+   "contexto": "restaurante",
+   "grupo": null,
+   "moldes": [],
+   "mapas": [
+    "kombini"
+   ]
+  },
+  {
+   "romaji": "nanbansen",
+   "kanji": "何番線",
+   "pt": "Qual plataforma",
+   "tipo": "substantivo",
+   "contexto": "movimentacao",
+   "grupo": null,
+   "moldes": [
+    "5.1"
+   ],
+   "mapas": [
+    "trens"
+   ]
+  },
+  {
+   "romaji": "IC kaado",
+   "kanji": "ICカード",
+   "pt": "Cartão recarregável de transporte",
+   "tipo": "substantivo",
+   "contexto": "pagamento",
+   "grupo": null,
+   "moldes": [
+    "5.4"
+   ],
+   "mapas": [
+    "trens"
+   ]
+  },
+  {
+   "romaji": "norikae",
+   "kanji": "乗り換え",
+   "pt": "Baldeação",
+   "tipo": "substantivo",
+   "contexto": "movimentacao",
+   "grupo": null,
+   "moldes": [
+    "5.5"
+   ],
+   "mapas": [
+    "trens"
+   ]
+  },
+  {
+   "romaji": "ikitai",
+   "kanji": "行きたい",
+   "pt": "Quero ir",
+   "tipo": "expressao",
+   "contexto": "movimentacao",
+   "grupo": null,
+   "moldes": [
+    "5.1"
+   ],
+   "mapas": [
+    "trens"
+   ]
+  },
+  {
+   "romaji": "norimasu",
+   "kanji": "乗ります",
+   "pt": "Embarcar",
+   "tipo": "expressao",
+   "contexto": "movimentacao",
+   "grupo": null,
+   "moldes": [
+    "5.6"
+   ],
+   "mapas": [
+    "trens"
+   ]
+  },
+  {
+   "romaji": "orimasu",
+   "kanji": "降ります",
+   "pt": "Descer do trem",
+   "tipo": "expressao",
+   "contexto": "movimentacao",
+   "grupo": null,
+   "moldes": [
+    "5.6"
+   ],
+   "mapas": [
+    "trens"
+   ]
+  },
+  {
+   "romaji": "chaaji",
+   "kanji": "チャージ",
+   "pt": "Recarregar",
+   "tipo": "substantivo",
+   "contexto": "pagamento",
+   "grupo": null,
+   "moldes": [
+    "5.4"
+   ],
+   "mapas": [
+    "trens"
+   ]
+  },
+  {
+   "romaji": "eki",
+   "kanji": "駅",
+   "pt": "Estação",
+   "tipo": "substantivo",
+   "contexto": "movimentacao",
+   "grupo": null,
+   "moldes": [
+    "12.3"
+   ],
+   "mapas": [
+    "trens",
+    "sinalizacao"
+   ]
+  },
+  {
+   "romaji": "-bansen",
+   "kanji": "〜番線",
+   "pt": "Plataforma número (X)",
+   "tipo": "sufixo",
+   "contexto": "movimentacao",
+   "grupo": null,
+   "moldes": [],
+   "mapas": [
+    "trens"
+   ]
+  },
+  {
+   "romaji": "tokkyuu",
+   "kanji": "特急",
+   "pt": "Trem expresso",
+   "tipo": "substantivo",
+   "contexto": "movimentacao",
+   "grupo": "tipos-de-trem",
+   "moldes": [],
+   "mapas": [
+    "trens"
+   ]
+  },
+  {
+   "romaji": "kakueki teisha",
+   "kanji": "各駅停車",
+   "pt": "Trem local (para em todas)",
+   "tipo": "substantivo",
+   "contexto": "movimentacao",
+   "grupo": "tipos-de-trem",
+   "moldes": [],
+   "mapas": [
+    "trens"
+   ]
+  },
+  {
+   "romaji": "jiyuuseki",
+   "kanji": "自由席",
+   "pt": "Assento livre",
+   "tipo": "substantivo",
+   "contexto": "movimentacao",
+   "grupo": "assento",
+   "moldes": [],
+   "mapas": [
+    "trens"
+   ]
+  },
+  {
+   "romaji": "shiteiseki",
+   "kanji": "指定席",
+   "pt": "Assento reservado",
+   "tipo": "substantivo",
+   "contexto": "movimentacao",
+   "grupo": "assento",
+   "moldes": [],
+   "mapas": [
+    "trens"
+   ]
+  },
+  {
+   "romaji": "migi",
+   "kanji": "右",
+   "pt": "Direita",
+   "tipo": "substantivo",
+   "contexto": "movimentacao",
+   "grupo": "direcao",
+   "moldes": [],
+   "mapas": [
+    "trens"
+   ]
+  },
+  {
+   "romaji": "hidari",
+   "kanji": "左",
+   "pt": "Esquerda",
+   "tipo": "substantivo",
+   "contexto": "movimentacao",
+   "grupo": "direcao",
+   "moldes": [],
+   "mapas": [
+    "trens"
+   ]
+  },
+  {
+   "romaji": "kiiroi sen no uchigawa",
+   "kanji": "黄色い線の内側",
+   "pt": "Atrás da faixa amarela",
+   "tipo": "expressao",
+   "contexto": "movimentacao",
+   "grupo": null,
+   "moldes": [],
+   "mapas": [
+    "trens"
+   ]
+  },
+  {
+   "romaji": "deguchi wa migi desu",
+   "kanji": "出口は右です",
+   "pt": "Saída pela direita",
+   "tipo": "expressao",
+   "contexto": "movimentacao",
+   "grupo": null,
+   "moldes": [],
+   "mapas": [
+    "trens"
+   ]
+  },
+  {
+   "romaji": "deguchi wa hidari desu",
+   "kanji": "出口は左です",
+   "pt": "Saída pela esquerda",
+   "tipo": "expressao",
+   "contexto": "movimentacao",
+   "grupo": null,
+   "moldes": [],
+   "mapas": [
+    "trens"
+   ]
+  },
+  {
+   "romaji": "mise",
+   "kanji": "店",
+   "pt": "Loja",
+   "tipo": "substantivo",
+   "contexto": "compras",
+   "grupo": null,
+   "moldes": [
+    "6.1"
+   ],
+   "mapas": [
+    "compras"
+   ]
+  },
+  {
+   "romaji": "tenin",
+   "kanji": "店員",
+   "pt": "Vendedor(a)",
+   "tipo": "substantivo",
+   "contexto": "compras",
+   "grupo": null,
+   "moldes": [
+    "6.1"
+   ],
+   "mapas": [
+    "compras"
+   ]
+  },
+  {
+   "romaji": "saizu",
+   "kanji": "サイズ",
+   "pt": "Tamanho",
+   "tipo": "substantivo",
+   "contexto": "compras",
+   "grupo": null,
+   "moldes": [
+    "6.2",
+    "7.2"
+   ],
+   "mapas": [
+    "compras",
+    "roupas"
+   ]
+  },
+  {
+   "romaji": "shichaku",
+   "kanji": "試着",
+   "pt": "Provar roupa",
+   "tipo": "substantivo",
+   "contexto": "compras",
+   "grupo": null,
+   "moldes": [
+    "6.2",
+    "7.1"
+   ],
+   "mapas": [
+    "compras",
+    "roupas"
+   ]
+  },
+  {
+   "romaji": "nedan",
+   "kanji": "値段",
+   "pt": "Preço",
+   "tipo": "substantivo",
+   "contexto": "compras",
+   "grupo": null,
+   "moldes": [
+    "6.1"
+   ],
+   "mapas": [
+    "compras"
+   ]
+  },
+  {
+   "romaji": "waribiki",
+   "kanji": "割引",
+   "pt": "Desconto",
+   "tipo": "substantivo",
+   "contexto": "compras",
+   "grupo": null,
+   "moldes": [
+    "6.4"
+   ],
+   "mapas": [
+    "compras"
+   ]
+  },
+  {
+   "romaji": "takkusufurī",
+   "kanji": "タックスフリー",
+   "pt": "Isenção de imposto",
+   "tipo": "substantivo",
+   "contexto": "compras",
+   "grupo": null,
+   "moldes": [
+    "6.3"
+   ],
+   "mapas": [
+    "compras"
+   ]
+  },
+  {
+   "romaji": "zei",
+   "kanji": "税",
+   "pt": "Imposto",
+   "tipo": "substantivo",
+   "contexto": "compras",
+   "grupo": null,
+   "moldes": [
+    "6.3"
+   ],
+   "mapas": [
+    "compras"
+   ]
+  },
+  {
+   "romaji": "henpin",
+   "kanji": "返品",
+   "pt": "Devolução",
+   "tipo": "substantivo",
+   "contexto": "compras",
+   "grupo": null,
+   "moldes": [
+    "6.5"
+   ],
+   "mapas": [
+    "compras"
+   ]
+  },
+  {
+   "romaji": "ryōshūsho",
+   "kanji": "領収書",
+   "pt": "Recibo",
+   "tipo": "substantivo",
+   "contexto": "compras",
+   "grupo": null,
+   "moldes": [
+    "6.5"
+   ],
+   "mapas": [
+    "compras"
+   ]
+  },
+  {
+   "romaji": "hoshō",
+   "kanji": "保証",
+   "pt": "Garantia",
+   "tipo": "substantivo",
+   "contexto": "compras",
+   "grupo": null,
+   "moldes": [
+    "6.5"
+   ],
+   "mapas": [
+    "compras"
+   ]
+  },
+  {
+   "romaji": "shichakushitsu",
+   "kanji": "試着室",
+   "pt": "Provador",
+   "tipo": "substantivo",
+   "contexto": "compras",
+   "grupo": null,
+   "moldes": [
+    "7.4"
+   ],
+   "mapas": [
+    "roupas"
+   ]
+  },
+  {
+   "romaji": "ookii",
+   "kanji": "大きい",
+   "pt": "Grande/maior",
+   "tipo": "expressao",
+   "contexto": "compras",
+   "grupo": null,
+   "moldes": [
+    "7.2"
+   ],
+   "mapas": [
+    "roupas"
+   ]
+  },
+  {
+   "romaji": "chiisai",
+   "kanji": "小さい",
+   "pt": "Pequeno/menor",
+   "tipo": "expressao",
+   "contexto": "compras",
+   "grupo": null,
+   "moldes": [
+    "7.2"
+   ],
+   "mapas": [
+    "roupas"
+   ]
+  },
+  {
+   "romaji": "iro",
+   "kanji": "色",
+   "pt": "Cor",
+   "tipo": "substantivo",
+   "contexto": "compras",
+   "grupo": null,
+   "moldes": [
+    "7.3"
+   ],
+   "mapas": [
+    "roupas"
+   ]
+  },
+  {
+   "romaji": "kuro",
+   "kanji": "黒",
+   "pt": "Preto",
+   "tipo": "substantivo",
+   "contexto": "compras",
+   "grupo": null,
+   "moldes": [
+    "7.6"
+   ],
+   "mapas": [
+    "roupas"
+   ]
+  },
+  {
+   "romaji": "shiro",
+   "kanji": "白",
+   "pt": "Branco",
+   "tipo": "substantivo",
+   "contexto": "compras",
+   "grupo": null,
+   "moldes": [
+    "7.6"
+   ],
+   "mapas": [
+    "roupas"
+   ]
+  },
+  {
+   "romaji": "beeju",
+   "kanji": "ベージュ",
+   "pt": "Bege",
+   "tipo": "substantivo",
+   "contexto": "compras",
+   "grupo": null,
+   "moldes": [
+    "7.6"
+   ],
+   "mapas": [
+    "roupas"
+   ]
+  },
+  {
+   "romaji": "kiru",
+   "kanji": "着る",
+   "pt": "Vestir",
+   "tipo": "expressao",
+   "contexto": "compras",
+   "grupo": null,
+   "moldes": [
+    "7.7"
+   ],
+   "mapas": [
+    "roupas"
+   ]
+  },
+  {
+   "romaji": "koukan",
+   "kanji": "交換",
+   "pt": "Trocar por outra peça",
+   "tipo": "substantivo",
+   "contexto": "compras",
+   "grupo": null,
+   "moldes": [
+    "7.8"
+   ],
+   "mapas": [
+    "roupas"
+   ]
+  },
+  {
+   "romaji": "pittari",
+   "kanji": "ぴったり",
+   "pt": "Justo/perfeito",
+   "tipo": "expressao",
+   "contexto": "compras",
+   "grupo": null,
+   "moldes": [
+    "7.9"
+   ],
+   "mapas": [
+    "roupas"
+   ]
+  },
+  {
+   "romaji": "shatsu",
+   "kanji": "シャツ",
+   "pt": "Camisa",
+   "tipo": "substantivo",
+   "contexto": "compras",
+   "grupo": "pecas-de-roupa",
+   "moldes": [],
+   "mapas": [
+    "roupas"
+   ]
+  },
+  {
+   "romaji": "tii-shatsu",
+   "kanji": "Tシャツ",
+   "pt": "Camiseta",
+   "tipo": "substantivo",
+   "contexto": "compras",
+   "grupo": "pecas-de-roupa",
+   "moldes": [],
+   "mapas": [
+    "roupas"
+   ]
+  },
+  {
+   "romaji": "zubon",
+   "kanji": "ズボン",
+   "pt": "Calça",
+   "tipo": "substantivo",
+   "contexto": "compras",
+   "grupo": "pecas-de-roupa",
+   "moldes": [],
+   "mapas": [
+    "roupas"
+   ]
+  },
+  {
+   "romaji": "sukaato",
+   "kanji": "スカート",
+   "pt": "Saia",
+   "tipo": "substantivo",
+   "contexto": "compras",
+   "grupo": "pecas-de-roupa",
+   "moldes": [],
+   "mapas": [
+    "roupas"
+   ]
+  },
+  {
+   "romaji": "shooto pantsu",
+   "kanji": "ショートパンツ",
+   "pt": "Shorts",
+   "tipo": "substantivo",
+   "contexto": "compras",
+   "grupo": "pecas-de-roupa",
+   "moldes": [],
+   "mapas": [
+    "roupas"
+   ]
+  },
+  {
+   "romaji": "wanpiisu",
+   "kanji": "ワンピース",
+   "pt": "Vestido",
+   "tipo": "substantivo",
+   "contexto": "compras",
+   "grupo": "pecas-de-roupa",
+   "moldes": [],
+   "mapas": [
+    "roupas"
+   ]
+  },
+  {
+   "romaji": "aka",
+   "kanji": "赤",
+   "pt": "Vermelho",
+   "tipo": "substantivo",
+   "contexto": "compras",
+   "grupo": "cores",
+   "moldes": [],
+   "mapas": [
+    "roupas"
+   ]
+  },
+  {
+   "romaji": "ao",
+   "kanji": "青",
+   "pt": "Azul",
+   "tipo": "substantivo",
+   "contexto": "compras",
+   "grupo": "cores",
+   "moldes": [],
+   "mapas": [
+    "roupas"
+   ]
+  },
+  {
+   "romaji": "midori",
+   "kanji": "緑",
+   "pt": "Verde",
+   "tipo": "substantivo",
+   "contexto": "compras",
+   "grupo": "cores",
+   "moldes": [],
+   "mapas": [
+    "roupas"
+   ]
+  },
+  {
+   "romaji": "kiiro",
+   "kanji": "黄色",
+   "pt": "Amarelo",
+   "tipo": "substantivo",
+   "contexto": "compras",
+   "grupo": "cores",
+   "moldes": [],
+   "mapas": [
+    "roupas"
+   ]
+  },
+  {
+   "romaji": "pinku",
+   "kanji": "ピンク",
+   "pt": "Rosa",
+   "tipo": "substantivo",
+   "contexto": "compras",
+   "grupo": "cores",
+   "moldes": [],
+   "mapas": [
+    "roupas"
+   ]
+  },
+  {
+   "romaji": "chairo",
+   "kanji": "茶色",
+   "pt": "Marrom",
+   "tipo": "substantivo",
+   "contexto": "compras",
+   "grupo": "cores",
+   "moldes": [],
+   "mapas": [
+    "roupas"
+   ]
+  },
+  {
+   "romaji": "murasaki",
+   "kanji": "紫",
+   "pt": "Roxo",
+   "tipo": "substantivo",
+   "contexto": "compras",
+   "grupo": "cores",
+   "moldes": [],
+   "mapas": [
+    "roupas"
+   ]
+  },
+  {
+   "romaji": "haiiro",
+   "kanji": "灰色",
+   "pt": "Cinza",
+   "tipo": "substantivo",
+   "contexto": "compras",
+   "grupo": "cores",
+   "moldes": [],
+   "mapas": [
+    "roupas"
+   ]
+  },
+  {
+   "romaji": "hyakujuuban",
+   "kanji": "110番",
+   "pt": "Linha 110 (Polícia)",
+   "tipo": "substantivo",
+   "contexto": "emergencia",
+   "grupo": null,
+   "moldes": [
+    "8.2"
+   ],
+   "mapas": [
+    "emergencia"
+   ]
+  },
+  {
+   "romaji": "hyakujuukyuuban",
+   "kanji": "119番",
+   "pt": "Linha 119 (Ambulância/Bombeiros)",
+   "tipo": "substantivo",
+   "contexto": "emergencia",
+   "grupo": null,
+   "moldes": [
+    "8.2"
+   ],
+   "mapas": [
+    "emergencia"
+   ]
+  },
+  {
+   "romaji": "keisatsu",
+   "kanji": "警察",
+   "pt": "Polícia",
+   "tipo": "substantivo",
+   "contexto": "emergencia",
+   "grupo": null,
+   "moldes": [
+    "8.5"
+   ],
+   "mapas": [
+    "emergencia"
+   ]
+  },
+  {
+   "romaji": "shouboushou",
+   "kanji": "消防署",
+   "pt": "Corpo de bombeiros",
+   "tipo": "substantivo",
+   "contexto": "emergencia",
+   "grupo": null,
+   "moldes": [
+    "8.5"
+   ],
+   "mapas": [
+    "emergencia"
+   ]
+  },
+  {
+   "romaji": "byouin",
+   "kanji": "病院",
+   "pt": "Hospital",
+   "tipo": "substantivo",
+   "contexto": "emergencia",
+   "grupo": null,
+   "moldes": [
+    "8.5",
+    "12.3"
+   ],
+   "mapas": [
+    "emergencia",
+    "sinalizacao"
+   ]
+  },
+  {
+   "romaji": "kurinikku",
+   "kanji": "クリニック",
+   "pt": "Clínica",
+   "tipo": "substantivo",
+   "contexto": "emergencia",
+   "grupo": null,
+   "moldes": [
+    "8.5"
+   ],
+   "mapas": [
+    "emergencia"
+   ]
+  },
+  {
+   "romaji": "jiko",
+   "kanji": "事故",
+   "pt": "Acidente",
+   "tipo": "substantivo",
+   "contexto": "emergencia",
+   "grupo": null,
+   "moldes": [
+    "8.2"
+   ],
+   "mapas": [
+    "emergencia"
+   ]
+  },
+  {
+   "romaji": "jiken",
+   "kanji": "事件",
+   "pt": "Crime/ocorrência",
+   "tipo": "substantivo",
+   "contexto": "emergencia",
+   "grupo": null,
+   "moldes": [
+    "8.2"
+   ],
+   "mapas": [
+    "emergencia"
+   ]
+  },
+  {
+   "romaji": "kaji",
+   "kanji": "火事",
+   "pt": "Incêndio",
+   "tipo": "substantivo",
+   "contexto": "emergencia",
+   "grupo": null,
+   "moldes": [
+    "8.2"
+   ],
+   "mapas": [
+    "emergencia"
+   ]
+  },
+  {
+   "romaji": "kyuukyuu",
+   "kanji": "救急",
+   "pt": "Socorro médico/ambulância",
+   "tipo": "substantivo",
+   "contexto": "emergencia",
+   "grupo": null,
+   "moldes": [
+    "8.2"
+   ],
+   "mapas": [
+    "emergencia"
+   ]
+  },
+  {
+   "romaji": "kaze",
+   "kanji": "風邪",
+   "pt": "Resfriado/gripe",
+   "tipo": "substantivo",
+   "contexto": "emergencia",
+   "grupo": null,
+   "moldes": [
+    "8.3"
+   ],
+   "mapas": [
+    "emergencia"
+   ]
+  },
+  {
+   "romaji": "itai",
+   "kanji": "痛い",
+   "pt": "Dor/doendo",
+   "tipo": "expressao",
+   "contexto": "emergencia",
+   "grupo": null,
+   "moldes": [
+    "8.3"
+   ],
+   "mapas": [
+    "emergencia"
+   ]
+  },
+  {
+   "romaji": "tasukete",
+   "kanji": "助けて",
+   "pt": "Ajuda/socorro",
+   "tipo": "expressao",
+   "contexto": "emergencia",
+   "grupo": null,
+   "moldes": [
+    "8.1"
+   ],
+   "mapas": [
+    "emergencia"
+   ]
+  },
+  {
+   "romaji": "hokenshou",
+   "kanji": "保険証",
+   "pt": "Carteirinha do seguro saúde",
+   "tipo": "substantivo",
+   "contexto": "emergencia",
+   "grupo": null,
+   "moldes": [
+    "8.6"
+   ],
+   "mapas": [
+    "emergencia"
+   ]
+  },
+  {
+   "romaji": "shohousen",
+   "kanji": "処方箋",
+   "pt": "Receita médica",
+   "tipo": "substantivo",
+   "contexto": "emergencia",
+   "grupo": null,
+   "moldes": [
+    "8.6"
+   ],
+   "mapas": [
+    "emergencia"
+   ]
+  },
+  {
+   "romaji": "hajimemashite",
+   "kanji": "初めまして",
+   "pt": "Muito prazer",
+   "tipo": "expressao",
+   "contexto": "conversacao",
+   "grupo": null,
+   "moldes": [
+    "9.1"
+   ],
+   "mapas": [
+    "apresentacao"
+   ]
+  },
+  {
+   "romaji": "namae",
+   "kanji": "名前",
+   "pt": "Nome",
+   "tipo": "substantivo",
+   "contexto": "conversacao",
+   "grupo": null,
+   "moldes": [
+    "9.1"
+   ],
+   "mapas": [
+    "apresentacao"
+   ]
+  },
+  {
+   "romaji": "shusshin",
+   "kanji": "出身",
+   "pt": "Terra natal/origem",
+   "tipo": "substantivo",
+   "contexto": "conversacao",
+   "grupo": null,
+   "moldes": [
+    "9.1"
+   ],
+   "mapas": [
+    "apresentacao"
+   ]
+  },
+  {
+   "romaji": "kuni",
+   "kanji": "国",
+   "pt": "País",
+   "tipo": "substantivo",
+   "contexto": "conversacao",
+   "grupo": null,
+   "moldes": [
+    "9.1"
+   ],
+   "mapas": [
+    "apresentacao"
+   ]
+  },
+  {
+   "romaji": "burajiru",
+   "kanji": "ブラジル",
+   "pt": "Brasil",
+   "tipo": "substantivo",
+   "contexto": "conversacao",
+   "grupo": null,
+   "moldes": [
+    "9.1"
+   ],
+   "mapas": [
+    "apresentacao"
+   ]
+  },
+  {
+   "romaji": "ohayou gozaimasu",
+   "kanji": "おはようございます",
+   "pt": "Bom dia",
+   "tipo": "expressao",
+   "contexto": "conversacao",
+   "grupo": null,
+   "moldes": [
+    "9.5"
+   ],
+   "mapas": [
+    "apresentacao"
+   ]
+  },
+  {
+   "romaji": "konnichiwa",
+   "kanji": "こんにちは",
+   "pt": "Boa tarde/Olá",
+   "tipo": "expressao",
+   "contexto": "conversacao",
+   "grupo": null,
+   "moldes": [
+    "9.6"
+   ],
+   "mapas": [
+    "apresentacao"
+   ]
+  },
+  {
+   "romaji": "konbanwa",
+   "kanji": "こんばんは",
+   "pt": "Boa noite",
+   "tipo": "expressao",
+   "contexto": "conversacao",
+   "grupo": null,
+   "moldes": [
+    "9.7"
+   ],
+   "mapas": [
+    "apresentacao"
+   ]
+  },
+  {
+   "romaji": "osaki ni shitsurei shimasu",
+   "kanji": "お先に失礼します",
+   "pt": "Estou indo embora primeiro",
+   "tipo": "expressao",
+   "contexto": "conversacao",
+   "grupo": null,
+   "moldes": [
+    "9.3"
+   ],
+   "mapas": [
+    "apresentacao"
+   ]
+  },
+  {
+   "romaji": "otsukaresama desu",
+   "kanji": "お疲れ様です",
+   "pt": "Bom trabalho",
+   "tipo": "expressao",
+   "contexto": "conversacao",
+   "grupo": null,
+   "moldes": [
+    "9.8"
+   ],
+   "mapas": [
+    "apresentacao"
+   ]
+  },
+  {
+   "romaji": "omedetou gozaimasu",
+   "kanji": "おめでとうございます",
+   "pt": "Parabéns",
+   "tipo": "expressao",
+   "contexto": "conversacao",
+   "grupo": null,
+   "moldes": [
+    "9.4"
+   ],
+   "mapas": [
+    "apresentacao"
+   ]
+  },
+  {
+   "romaji": "odaiji ni",
+   "kanji": "お大事に",
+   "pt": "Melhoras",
+   "tipo": "expressao",
+   "contexto": "conversacao",
+   "grupo": null,
+   "moldes": [
+    "9.9"
+   ],
+   "mapas": [
+    "apresentacao"
+   ]
+  },
+  {
+   "romaji": "yoroshiku onegaishimasu",
+   "kanji": "よろしくお願いします",
+   "pt": "Conto com sua gentileza",
+   "tipo": "expressao",
+   "contexto": "conversacao",
+   "grupo": null,
+   "moldes": [
+    "9.2"
+   ],
+   "mapas": [
+    "apresentacao"
+   ]
+  },
+  {
+   "romaji": "ima",
+   "kanji": "今",
+   "pt": "Agora",
+   "tipo": "substantivo",
+   "contexto": "conversacao",
+   "grupo": null,
+   "moldes": [
+    "10.1"
+   ],
+   "mapas": [
+    "horas"
+   ]
+  },
+  {
+   "romaji": "-ji",
+   "kanji": "〜時",
+   "pt": "Sufixo de hora",
+   "tipo": "particula",
+   "contexto": "conversacao",
+   "grupo": null,
+   "moldes": [
+    "10.2"
+   ],
+   "mapas": [
+    "horas"
+   ]
+  },
+  {
+   "romaji": "-fun",
+   "kanji": "〜分",
+   "pt": "Sufixo de minuto",
+   "tipo": "particula",
+   "contexto": "conversacao",
+   "grupo": null,
+   "moldes": [
+    "10.2"
+   ],
+   "mapas": [
+    "horas"
+   ]
+  },
+  {
+   "romaji": "han",
+   "kanji": "半",
+   "pt": "Meia (hora)",
+   "tipo": "substantivo",
+   "contexto": "conversacao",
+   "grupo": null,
+   "moldes": [
+    "10.2"
+   ],
+   "mapas": [
+    "horas"
+   ]
+  },
+  {
+   "romaji": "gozen",
+   "kanji": "午前",
+   "pt": "Manhã (AM)",
+   "tipo": "substantivo",
+   "contexto": "conversacao",
+   "grupo": null,
+   "moldes": [
+    "10.2"
+   ],
+   "mapas": [
+    "horas"
+   ]
+  },
+  {
+   "romaji": "gogo",
+   "kanji": "午後",
+   "pt": "Tarde (PM)",
+   "tipo": "substantivo",
+   "contexto": "conversacao",
+   "grupo": null,
+   "moldes": [
+    "10.2",
+    "11.1"
+   ],
+   "mapas": [
+    "horas",
+    "planos"
+   ]
+  },
+  {
+   "romaji": "kyou",
+   "kanji": "今日",
+   "pt": "Hoje",
+   "tipo": "substantivo",
+   "contexto": "conversacao",
+   "grupo": null,
+   "moldes": [
+    "10.3"
+   ],
+   "mapas": [
+    "horas",
+    "planos"
+   ]
+  },
+  {
+   "romaji": "ashita",
+   "kanji": "明日",
+   "pt": "Amanhã",
+   "tipo": "substantivo",
+   "contexto": "conversacao",
+   "grupo": null,
+   "moldes": [
+    "10.3"
+   ],
+   "mapas": [
+    "horas",
+    "planos"
+   ]
+  },
+  {
+   "romaji": "kinou",
+   "kanji": "昨日",
+   "pt": "Ontem",
+   "tipo": "substantivo",
+   "contexto": "conversacao",
+   "grupo": null,
+   "moldes": [
+    "10.3"
+   ],
+   "mapas": [
+    "horas"
+   ]
+  },
+  {
+   "romaji": "mainichi",
+   "kanji": "毎日",
+   "pt": "Todos os dias",
+   "tipo": "substantivo",
+   "contexto": "conversacao",
+   "grupo": null,
+   "moldes": [
+    "10.5"
+   ],
+   "mapas": [
+    "horas"
+   ]
+  },
+  {
+   "romaji": "-youbi",
+   "kanji": "〜曜日",
+   "pt": "Sufixo dia da semana",
+   "tipo": "particula",
+   "contexto": "conversacao",
+   "grupo": null,
+   "moldes": [
+    "10.6"
+   ],
+   "mapas": [
+    "horas"
+   ]
+  },
+  {
+   "romaji": "ichi",
+   "kanji": "一",
+   "pt": "1",
+   "tipo": "numero",
+   "contexto": "conversacao",
+   "grupo": "numeros",
+   "moldes": [],
+   "mapas": [
+    "horas"
+   ]
+  },
+  {
+   "romaji": "ni",
+   "kanji": "二",
+   "pt": "2",
+   "tipo": "numero",
+   "contexto": "conversacao",
+   "grupo": "numeros",
+   "moldes": [],
+   "mapas": [
+    "horas"
+   ]
+  },
+  {
+   "romaji": "san",
+   "kanji": "三",
+   "pt": "3",
+   "tipo": "numero",
+   "contexto": "conversacao",
+   "grupo": "numeros",
+   "moldes": [],
+   "mapas": [
+    "horas"
+   ]
+  },
+  {
+   "romaji": "yon",
+   "kanji": "四",
+   "pt": "4",
+   "tipo": "numero",
+   "contexto": "conversacao",
+   "grupo": "numeros",
+   "moldes": [],
+   "mapas": [
+    "horas"
+   ]
+  },
+  {
+   "romaji": "go",
+   "kanji": "五",
+   "pt": "5",
+   "tipo": "numero",
+   "contexto": "conversacao",
+   "grupo": "numeros",
+   "moldes": [],
+   "mapas": [
+    "horas"
+   ]
+  },
+  {
+   "romaji": "roku",
+   "kanji": "六",
+   "pt": "6",
+   "tipo": "numero",
+   "contexto": "conversacao",
+   "grupo": "numeros",
+   "moldes": [],
+   "mapas": [
+    "horas"
+   ]
+  },
+  {
+   "romaji": "nana",
+   "kanji": "七",
+   "pt": "7",
+   "tipo": "numero",
+   "contexto": "conversacao",
+   "grupo": "numeros",
+   "moldes": [],
+   "mapas": [
+    "horas"
+   ]
+  },
+  {
+   "romaji": "hachi",
+   "kanji": "八",
+   "pt": "8",
+   "tipo": "numero",
+   "contexto": "conversacao",
+   "grupo": "numeros",
+   "moldes": [],
+   "mapas": [
+    "horas"
+   ]
+  },
+  {
+   "romaji": "kyuu",
+   "kanji": "九",
+   "pt": "9",
+   "tipo": "numero",
+   "contexto": "conversacao",
+   "grupo": "numeros",
+   "moldes": [],
+   "mapas": [
+    "horas"
+   ]
+  },
+  {
+   "romaji": "juu",
+   "kanji": "十",
+   "pt": "10",
+   "tipo": "numero",
+   "contexto": "conversacao",
+   "grupo": "numeros",
+   "moldes": [],
+   "mapas": [
+    "horas"
+   ]
+  },
+  {
+   "romaji": "getsuyoubi",
+   "kanji": "月曜日",
+   "pt": "Segunda-feira",
+   "tipo": "substantivo",
+   "contexto": "conversacao",
+   "grupo": "dias-da-semana",
+   "moldes": [],
+   "mapas": [
+    "horas"
+   ]
+  },
+  {
+   "romaji": "kayoubi",
+   "kanji": "火曜日",
+   "pt": "Terça-feira",
+   "tipo": "substantivo",
+   "contexto": "conversacao",
+   "grupo": "dias-da-semana",
+   "moldes": [],
+   "mapas": [
+    "horas"
+   ]
+  },
+  {
+   "romaji": "suiyoubi",
+   "kanji": "水曜日",
+   "pt": "Quarta-feira",
+   "tipo": "substantivo",
+   "contexto": "conversacao",
+   "grupo": "dias-da-semana",
+   "moldes": [],
+   "mapas": [
+    "horas"
+   ]
+  },
+  {
+   "romaji": "mokuyoubi",
+   "kanji": "木曜日",
+   "pt": "Quinta-feira",
+   "tipo": "substantivo",
+   "contexto": "conversacao",
+   "grupo": "dias-da-semana",
+   "moldes": [],
+   "mapas": [
+    "horas"
+   ]
+  },
+  {
+   "romaji": "kinyoubi",
+   "kanji": "金曜日",
+   "pt": "Sexta-feira",
+   "tipo": "substantivo",
+   "contexto": "conversacao",
+   "grupo": "dias-da-semana",
+   "moldes": [],
+   "mapas": [
+    "horas"
+   ]
+  },
+  {
+   "romaji": "doyoubi",
+   "kanji": "土曜日",
+   "pt": "Sábado",
+   "tipo": "substantivo",
+   "contexto": "conversacao",
+   "grupo": "dias-da-semana",
+   "moldes": [],
+   "mapas": [
+    "horas"
+   ]
+  },
+  {
+   "romaji": "nichiyoubi",
+   "kanji": "日曜日",
+   "pt": "Domingo",
+   "tipo": "substantivo",
+   "contexto": "conversacao",
+   "grupo": "dias-da-semana",
+   "moldes": [],
+   "mapas": [
+    "horas"
+   ]
+  },
+  {
+   "romaji": "konban",
+   "kanji": "こんばん",
+   "pt": "Esta noite",
+   "tipo": "substantivo",
+   "contexto": "conversacao",
+   "grupo": null,
+   "moldes": [
+    "11.1"
+   ],
+   "mapas": [
+    "planos"
+   ]
+  },
+  {
+   "romaji": "asa",
+   "kanji": "あさ",
+   "pt": "Manhã",
+   "tipo": "substantivo",
+   "contexto": "conversacao",
+   "grupo": null,
+   "moldes": [
+    "11.1"
+   ],
+   "mapas": [
+    "planos"
+   ]
+  },
+  {
+   "romaji": "yoru",
+   "kanji": "よる",
+   "pt": "Noite",
+   "tipo": "substantivo",
+   "contexto": "conversacao",
+   "grupo": null,
+   "moldes": [
+    "11.1"
+   ],
+   "mapas": [
+    "planos"
+   ]
+  },
+  {
+   "romaji": "issho ni",
+   "kanji": "いっしょに",
+   "pt": "Juntos/comigo",
+   "tipo": "expressao",
+   "contexto": "conversacao",
+   "grupo": null,
+   "moldes": [
+    "11.1",
+    "11.2"
+   ],
+   "mapas": [
+    "planos"
+   ]
+  },
+  {
+   "romaji": "ocha wo nomimasu",
+   "kanji": "おちゃをのみます",
+   "pt": "Beber chá",
+   "tipo": "expressao",
+   "contexto": "conversacao",
+   "grupo": null,
+   "moldes": [
+    "11.1"
+   ],
+   "mapas": [
+    "planos"
+   ]
+  },
+  {
+   "romaji": "gohan wo tabemasu",
+   "kanji": "ごはんをたべます",
+   "pt": "Comer/refeição",
+   "tipo": "expressao",
+   "contexto": "conversacao",
+   "grupo": null,
+   "moldes": [
+    "11.2"
+   ],
+   "mapas": [
+    "planos"
+   ]
+  },
+  {
+   "romaji": "eiga wo mimasu",
+   "kanji": "えいがをみます",
+   "pt": "Assistir filme",
+   "tipo": "expressao",
+   "contexto": "conversacao",
+   "grupo": null,
+   "moldes": [
+    "11.2"
+   ],
+   "mapas": [
+    "planos"
+   ]
+  },
+  {
+   "romaji": "kaimono wo shimasu",
+   "kanji": "かいものをします",
+   "pt": "Fazer compras",
+   "tipo": "expressao",
+   "contexto": "conversacao",
+   "grupo": null,
+   "moldes": [
+    "11.2"
+   ],
+   "mapas": [
+    "planos"
+   ]
+  },
+  {
+   "romaji": "ii desu ne",
+   "kanji": "いいですね",
+   "pt": "Que bom / Ótima ideia",
+   "tipo": "expressao",
+   "contexto": "conversacao",
+   "grupo": null,
+   "moldes": [
+    "11.3"
+   ],
+   "mapas": [
+    "planos"
+   ]
+  },
+  {
+   "romaji": "sanpo shimasu",
+   "kanji": "散歩します",
+   "pt": "Passear",
+   "tipo": "verbo",
+   "contexto": "conversacao",
+   "grupo": null,
+   "moldes": [],
+   "mapas": [
+    "planos"
+   ]
+  },
+  {
+   "romaji": "umi ni ikimasu",
+   "kanji": "海に行きます",
+   "pt": "Ir à praia",
+   "tipo": "verbo",
+   "contexto": "conversacao",
+   "grupo": null,
+   "moldes": [],
+   "mapas": [
+    "planos"
+   ]
+  },
+  {
+   "romaji": "kouen ni ikimasu",
+   "kanji": "公園に行きます",
+   "pt": "Ir ao parque",
+   "tipo": "verbo",
+   "contexto": "conversacao",
+   "grupo": null,
+   "moldes": [],
+   "mapas": [
+    "planos"
+   ]
+  },
+  {
+   "romaji": "iriguchi",
+   "kanji": "入口",
+   "pt": "Entrada",
+   "tipo": "substantivo",
+   "contexto": "movimentacao",
+   "grupo": null,
+   "moldes": [
+    "12.3"
+   ],
+   "mapas": [
+    "sinalizacao"
+   ]
+  },
+  {
+   "romaji": "deguchi",
+   "kanji": "出口",
+   "pt": "Saída",
+   "tipo": "substantivo",
+   "contexto": "movimentacao",
+   "grupo": null,
+   "moldes": [
+    "12.3"
+   ],
+   "mapas": [
+    "sinalizacao"
+   ]
+  },
+  {
+   "romaji": "kaisatsu",
+   "kanji": "改札",
+   "pt": "Catraca/portão de bilhetes",
+   "tipo": "substantivo",
+   "contexto": "movimentacao",
+   "grupo": null,
+   "moldes": [
+    "12.3"
+   ],
+   "mapas": [
+    "sinalizacao"
+   ]
+  },
+  {
+   "romaji": "kinshi",
+   "kanji": "禁止",
+   "pt": "Proibido",
+   "tipo": "substantivo",
+   "contexto": "movimentacao",
+   "grupo": null,
+   "moldes": [
+    "12.2"
+   ],
+   "mapas": [
+    "sinalizacao"
+   ]
+  },
+  {
+   "romaji": "kiken",
+   "kanji": "危険",
+   "pt": "Perigo",
+   "tipo": "substantivo",
+   "contexto": "movimentacao",
+   "grupo": null,
+   "moldes": [
+    "12.4"
+   ],
+   "mapas": [
+    "sinalizacao"
+   ]
+  },
+  {
+   "romaji": "chuui",
+   "kanji": "注意",
+   "pt": "Atenção/cuidado",
+   "tipo": "substantivo",
+   "contexto": "movimentacao",
+   "grupo": null,
+   "moldes": [
+    "12.4"
+   ],
+   "mapas": [
+    "sinalizacao"
+   ]
+  },
+  {
+   "romaji": "kyoka",
+   "kanji": "許可",
+   "pt": "Permissão",
+   "tipo": "substantivo",
+   "contexto": "movimentacao",
+   "grupo": null,
+   "moldes": [
+    "12.2"
+   ],
+   "mapas": [
+    "sinalizacao"
+   ]
+  },
+  {
+   "romaji": "kin'en",
+   "kanji": "禁煙",
+   "pt": "Proibido fumar",
+   "tipo": "substantivo",
+   "contexto": "movimentacao",
+   "grupo": null,
+   "moldes": [],
+   "mapas": [
+    "sinalizacao"
+   ]
+  }
+ ]
+}

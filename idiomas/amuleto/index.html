@@ -454,7 +454,21 @@ let currentGender = 'neutral';
 let isFlipped = false;
 
 // Inicializar
+const CONTEXTO_SLUG = {
+  gentileza:'🤝 Kit da Gentileza', restaurante:'🍜 Restaurante & Conveniência',
+  movimentacao:'🗺️ Movimentação & Localização', pagamento:'💳 Pagamento & Valores',
+  hospedagem:'🏨 Hospedagem & Reservas', compras:'🛍️ Compras & Lojas',
+  emergencia:'🆘 Emergência & Ajuda', conversacao:'💬 Conversação Básica'
+};
+
 document.addEventListener('DOMContentLoaded', () => {
+  const slug = new URLSearchParams(location.search).get('contexto');
+  if(slug && CONTEXTO_SLUG[slug]){
+    const alvo = CONTEXTO_SLUG[slug];
+    if(EXPRESSIONS[currentLang] && EXPRESSIONS[currentLang][alvo]){
+      currentContext = alvo; currentIndex = 0;
+    }
+  }
   updateContextButtons();
   loadCard();
   
