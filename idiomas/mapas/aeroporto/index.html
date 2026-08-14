@@ -147,6 +147,50 @@ body{font-family:'Segoe UI',sans-serif;background:var(--paper);color:var(--ink);
 
 .hidden{display:none;}
 
+/* ===== RADAR NOVO — frases inteiras ===== */
+.radar-frases{display:flex;flex-direction:column;gap:9px;margin:14px 0 4px;}
+.radar-frase{background:#fff;border:1.5px solid var(--line);border-radius:12px;
+  padding:13px 15px;cursor:pointer;transition:all .2s;}
+.radar-frase:hover{border-color:var(--teal);transform:translateY(-1px);}
+.radar-frase.certa{border-color:var(--teal);background:#F0F7F4;}
+.radar-frase.errada{border-color:#D9A5A2;background:#FBF2F1;opacity:.75;}
+.rf-romaji{font-size:15px;font-weight:700;color:var(--ink);}
+.rf-jp{font-size:12px;color:#999;margin-top:2px;}
+.rf-pt{font-size:12.5px;color:var(--teal);margin-top:6px;}
+.radar-feedback{margin-top:14px;padding:11px 14px;border-radius:10px;font-size:13px;line-height:1.6;}
+.radar-feedback.ok{background:#F0F7F4;color:var(--teal);}
+.radar-feedback.quase{background:#FBF6EC;color:var(--gold);}
+.nav-btn{padding:9px 18px;background:var(--line);border:none;border-radius:20px;
+  cursor:pointer;font-family:inherit;font-size:13px;font-weight:600;color:var(--ink);}
+.nav-btn.primary{background:var(--teal);color:#fff;}
+.nav-btn:hover{opacity:.85;}
+
+/* ===== TERRA NOVA — montar a resposta ===== */
+.terra-cena{background:#fff;border-left:4px solid var(--gold);border-radius:0 12px 12px 0;
+  padding:15px 18px;margin:14px 0 18px;}
+.terra-quem{font-size:11px;color:#999;letter-spacing:.4px;margin-bottom:6px;}
+.terra-pergunta-romaji{font-size:17px;font-weight:700;color:var(--ink);display:flex;
+  align-items:center;gap:8px;flex-wrap:wrap;}
+.terra-pergunta-jp{font-size:12px;color:#999;margin-top:2px;}
+.terra-pergunta-pt{font-size:13px;color:var(--gold);margin-top:6px;}
+.terra-label{font-size:12px;font-weight:700;color:var(--ink);margin:14px 0 8px;letter-spacing:.3px;}
+.terra-slots{display:flex;flex-wrap:wrap;gap:8px;padding:14px;background:#fff;
+  border:2px dashed var(--line-d);border-radius:12px;min-height:62px;align-items:center;}
+.terra-slot{min-width:78px;height:40px;border-radius:10px;border:1.5px dashed var(--line-d);
+  display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:700;
+  color:#BBB;background:var(--paper);padding:0 12px;}
+.terra-slot.preenchido{border-style:solid;border-color:var(--gold);color:var(--ink);
+  background:#FBF6EC;cursor:pointer;}
+.terra-slot.ok{border-color:var(--teal);background:#F0F7F4;color:var(--teal);cursor:default;}
+.terra-banco{display:flex;flex-wrap:wrap;gap:8px;}
+.terra-peca{padding:10px 16px;background:#fff;border:1.5px solid var(--line-d);
+  border-radius:10px;font-size:14px;font-weight:700;cursor:pointer;transition:all .2s;}
+.terra-peca:hover{border-color:var(--gold);background:#FBF6EC;transform:translateY(-2px);}
+.terra-feedback{margin:14px 0;padding:12px 15px;border-radius:10px;font-size:13px;line-height:1.6;}
+.terra-feedback.ok{background:#F0F7F4;color:var(--teal);}
+.terra-feedback.quase{background:#FBF6EC;color:var(--gold);}
+
+
 /* PONTES — cruzamento entre mapa e contexto do Amuleto */
 .pontes{margin-top:22px;padding:16px 18px;background:#fff;border:1.5px solid var(--line);border-radius:14px;}
 .pontes-titulo{font-size:12px;font-weight:700;color:var(--ink);margin-bottom:10px;letter-spacing:.3px;}
@@ -262,12 +306,114 @@ const MOLDES = {
 };
 
 // RADAR DADOS
+// ===== RADAR — 5 situações, alternativas são FRASES INTEIRAS =====
 const RADAR_SITUACOES = [
-  {audio:'Irasshaimase! Go-yoyaku wa gozaimasu ka?',cards:['予約','鍵','名前'],correta:'予約',situacao:'Chegada'},
-  {audio:'O-mokuteki wa doko desu ka?',cards:['目的地','住所','名前'],correta:'目的地',situacao:'Destino'},
-  {audio:'Biza wa arimasu ka?',cards:['ビザ','パスポート','税関'],correta:'ビザ',situacao:'Documentação'},
-  {audio:'Chien desu. Sumimasen.',cards:['遅延','問題','保険'],correta:'遅延',situacao:'Situação'}
+  {
+    situacao: 'Chegada no balcão',
+    audio: 'Go-yoyaku wa gozaimasu ka?',
+    jp: 'ご予約はございますか？',
+    opcoes: [
+      {romaji:'Go-yoyaku wa gozaimasu ka?', jp:'ご予約はございますか？', pt:'A senhora tem reserva?', correta:true},
+      {romaji:'Go-yoyaku wa arimasen.', jp:'ご予約はありません。', pt:'Não há reserva.'},
+      {romaji:'Kagi wa gozaimasu ka?', jp:'鍵はございますか？', pt:'A senhora tem a chave?'},
+      {romaji:'Namae wa nan desu ka?', jp:'名前は何ですか？', pt:'Qual é o seu nome?'}
+    ]
+  },
+  {
+    situacao: 'Motivo da viagem',
+    audio: 'Mokuteki wa nan desu ka?',
+    jp: '目的は何ですか？',
+    opcoes: [
+      {romaji:'Mokuteki wa nan desu ka?', jp:'目的は何ですか？', pt:'Qual é o seu motivo (da viagem)?', correta:true},
+      {romaji:'Mokutekichi wa doko desu ka?', jp:'目的地はどこですか？', pt:'Qual é o seu destino?'},
+      {romaji:'Namae wa nan desu ka?', jp:'名前は何ですか？', pt:'Qual é o seu nome?'},
+      {romaji:'Nimotsu wa nan desu ka?', jp:'荷物は何ですか？', pt:'O que é esta bagagem?'}
+    ]
+  },
+  {
+    situacao: 'Documentação',
+    audio: 'Pasupōto wo misete kudasai.',
+    jp: 'パスポートを見せてください。',
+    opcoes: [
+      {romaji:'Pasupōto wo misete kudasai.', jp:'パスポートを見せてください。', pt:'Mostre o passaporte, por favor.', correta:true},
+      {romaji:'Pasupōto wa arimasen.', jp:'パスポートはありません。', pt:'Não tenho passaporte.'},
+      {romaji:'Biza wo misete kudasai.', jp:'ビザを見せてください。', pt:'Mostre o visto, por favor.'},
+      {romaji:'Nimotsu wo misete kudasai.', jp:'荷物を見せてください。', pt:'Mostre a bagagem, por favor.'}
+    ]
+  },
+  {
+    situacao: 'Bagagem na esteira',
+    audio: 'Nimotsu wa ikutsu desu ka?',
+    jp: '荷物はいくつですか？',
+    opcoes: [
+      {romaji:'Nimotsu wa ikutsu desu ka?', jp:'荷物はいくつですか？', pt:'Quantas peças de bagagem?', correta:true},
+      {romaji:'Nimotsu wa doko desu ka?', jp:'荷物はどこですか？', pt:'Onde está a bagagem?'},
+      {romaji:'Kaban wa ikura desu ka?', jp:'かばんはいくらですか？', pt:'Quanto custa a bolsa?'},
+      {romaji:'Nimotsu wa arimasen.', jp:'荷物はありません。', pt:'Não há bagagem.'}
+    ]
+  },
+  {
+    situacao: 'Voo atrasado',
+    audio: 'Furaito wa chien desu.',
+    jp: 'フライトは遅延です。',
+    opcoes: [
+      {romaji:'Furaito wa chien desu.', jp:'フライトは遅延です。', pt:'O voo está atrasado.', correta:true},
+      {romaji:'Furaito wa mondai desu.', jp:'フライトは問題です。', pt:'O voo é um problema.'},
+      {romaji:'Hikouki wa doko desu ka?', jp:'飛行機はどこですか？', pt:'Onde está o avião?'},
+      {romaji:'Chien wa arimasen.', jp:'遅延はありません。', pt:'Não há atraso.'}
+    ]
+  }
 ];
+
+// ===== TERRA — o interlocutor pergunta, você monta a resposta =====
+const TERRA_DESAFIOS = [
+  {
+    contexto: 'Oficial da imigração',
+    perguntaRomaji: 'Mokuteki wa nan desu ka?',
+    perguntaJp: '目的は何ですか？',
+    perguntaPt: 'Qual é o seu motivo de viagem?',
+    resposta: ['kankou','desu'],
+    distratores: ['yoyaku','mondai','wo'],
+    respostaPt: 'É turismo.'
+  },
+  {
+    contexto: 'Oficial da imigração',
+    perguntaRomaji: 'Mokutekichi wa doko desu ka?',
+    perguntaJp: '目的地はどこですか？',
+    perguntaPt: 'Qual é o seu destino?',
+    resposta: ['mokuteki','wa','Tōkyō','desu'],
+    distratores: ['ga','jūsho','chien'],
+    respostaPt: 'Meu destino é Tóquio.'
+  },
+  {
+    contexto: 'Balcão do check-in',
+    perguntaRomaji: 'Go-yoyaku wa gozaimasu ka?',
+    perguntaJp: 'ご予約はございますか？',
+    perguntaPt: 'A senhora tem reserva?',
+    resposta: ['yoyaku','desu'],
+    distratores: ['kagi','arimasen','wo'],
+    respostaPt: 'Tenho reserva.'
+  },
+  {
+    contexto: 'Guichê da imigração',
+    perguntaRomaji: 'Biza wa arimasu ka?',
+    perguntaJp: 'ビザはありますか？',
+    perguntaPt: 'A senhora tem visto?',
+    resposta: ['biza','ga','arimasen'],
+    distratores: ['desu','wa','hoken'],
+    respostaPt: 'Não tenho visto.'
+  },
+  {
+    contexto: 'Balcão da companhia aérea',
+    perguntaRomaji: 'Nimotsu wa ikutsu desu ka?',
+    perguntaJp: '荷物はいくつですか？',
+    perguntaPt: 'Quantas peças de bagagem?',
+    resposta: ['nimotsu','wa','futatsu','desu'],
+    distratores: ['kaban','wo','mondai'],
+    respostaPt: 'São duas bagagens.'
+  }
+];
+
 
 // Mapa auxiliar kanji → romaji (peças + extras usadas só no radar)
 const ROMAJI_MAP = {};
@@ -280,20 +426,18 @@ let selectedWord = null;
 let radarIndex = 0;
 let radarScore = 0;
 let terraIndex = 0;
-let terraGravados = [];
+let terraResolvidos = [];
+let terraMontagem = {};
+let terraBanco = {};
+let terraErrou = {};
+let radarRespondidas = {};
+let aguaDesbloqueada = false;
+let terraDesbloqueada = false;
 let activeFiltro = 'todos';
 let provaModalMostrado = false;
 let arVisitado = false;
 
-// MOLDES MÁGICOS PARA TERRA (frases completas do Boss)
-const TERRA_MOLDES = [
-  {template:'観光です', romaji:'kankou desu', dica:'Diga que seu motivo é turismo'},
-  {template:'パスポートです', romaji:'pasupōto desu', dica:'Apresente seu passaporte'},
-  {template:'目的地は東京です', romaji:'mokuteki wa Tōkyō desu', dica:'Diga que seu destino é Tóquio'},
-  {template:'ビザがありません', romaji:'biza ga arimasen', dica:'Informe que não tem visto'},
-  {template:'遅延です', romaji:'chien desu', dica:'Avise sobre o atraso'},
-  {template:'パスポートを宣言します', romaji:'pasupōto wo sengen shimasu', dica:'Declare seu passaporte na alfândega'}
-];
+
 
 function changeTab(tab){
   document.querySelectorAll('.tab-content').forEach(el=>el.classList.add('hidden'));
@@ -580,39 +724,6 @@ function playAudio(romaji){
 }
 
 // RADAR
-function renderRadar(){
-  const sit = RADAR_SITUACOES[radarIndex];
-  const content = document.getElementById('radar-content');
-  
-  content.innerHTML = `
-    <div class="radar-situacao">
-      <div style="font-size:14px;font-weight:600;margin-bottom:10px;">🎧 Situação ${radarIndex + 1}/4: ${sit.situacao}</div>
-      <button class="audio-btn" onclick="playRadarAudio(1)">🔊 Reproduzir (Normal)</button>
-      <button class="audio-btn" style="background:var(--gold);" onclick="playRadarAudio(0.7)">🐢 Reproduzir Lento (0.7x)</button>
-      
-      <div style="font-size:12px;color:#999;margin:10px 0;font-style:italic;">Qual palavra-chave você ouviu?</div>
-      
-      <div class="radar-cards">
-        ${sit.cards.map(card=>`
-          <div class="radar-card" onclick="selectRadarCard(this, '${card}')" data-card="${card}">
-            <div style="font-size:16px;font-weight:700;">${ROMAJI_MAP[card] || card}</div>
-            <div style="font-size:10px;color:#999;margin-top:4px;">${card}</div>
-          </div>
-        `).join('')}
-      </div>
-      
-      <div id="radar-feedback" style="margin-top:15px;font-size:14px;"></div>
-      
-      <div style="margin-top:20px;text-align:center;">
-        <button onclick="nextRadarSituation()" id="next-radar" style="display:none;padding:10px 20px;background:var(--blue);color:#fff;border:none;border-radius:10px;cursor:pointer;">Próxima Situação →</button>
-      </div>
-      
-      <div style="margin-top:20px;font-size:12px;color:#999;">
-        Progresso: ${radarScore}/${RADAR_SITUACOES.length} acertos
-      </div>
-    </div>
-  `;
-}
 
 function playRadarAudio(rate){
   const sit = RADAR_SITUACOES[radarIndex];
@@ -622,24 +733,6 @@ function playRadarAudio(rate){
   speechSynthesis.speak(utterance);
 }
 
-function selectRadarCard(el, card){
-  const sit = RADAR_SITUACOES[radarIndex];
-  const isCorrect = card === sit.correta;
-  
-  document.querySelectorAll('.radar-card').forEach(c=>c.classList.remove('selected'));
-  if(isCorrect) el.classList.add('selected');
-  
-  const feedback = document.getElementById('radar-feedback');
-  if(isCorrect){
-    feedback.innerHTML = '✅ CORRETO!';
-    feedback.style.color = 'var(--green)';
-    radarScore++;
-    setTimeout(()=>nextRadarSituation(), 1500);
-  } else {
-    feedback.innerHTML = '❌ Tente novamente';
-    feedback.style.color = 'var(--rose)';
-  }
-}
 
 function nextRadarSituation(){
   if(radarIndex < RADAR_SITUACOES.length - 1){
@@ -659,91 +752,217 @@ function nextRadarSituation(){
 }
 
 // TERRA - Materialização do Mapa (gravação simulada)
-function renderTerra(){
-  const molde = TERRA_MOLDES[terraIndex];
-  const jaGravado = terraGravados.includes(terraIndex);
-  const progresso = (terraGravados.length / TERRA_MOLDES.length) * 100;
-  
-  document.getElementById('terra-content').innerHTML = `
-    <div style="font-size:14px;font-weight:600;margin-bottom:5px;">🌍 Materialize o Mapa — Molde ${terraIndex + 1}/${TERRA_MOLDES.length}</div>
-    <div style="font-size:12px;color:#999;margin-bottom:10px;">Grave sua voz falando o Molde Mágico em voz alta</div>
-    
-    <div class="terra-progress-bar"><div class="terra-progress-fill" style="width:${progresso}%;"></div></div>
-    
-    <div class="terra-molde">
-      <div style="font-size:12px;color:var(--gold);font-weight:600;text-align:center;">${molde.dica}</div>
-      <div class="terra-romaji">${molde.romaji}</div>
-      <div class="terra-template">${molde.template}</div>
-      <div style="text-align:center;">
-        <span style="font-size:14px;cursor:pointer;color:var(--teal);" onclick="playTerraAudio()">🔊 Ouvir modelo</span>
+// ===== RADAR — escolher a FRASE inteira que ouviu =====
+function renderRadar(){
+  const sit = RADAR_SITUACOES[radarIndex];
+  const total = RADAR_SITUACOES.length;
+  const respondida = radarRespondidas[radarIndex];
+
+  document.getElementById('radar-content').innerHTML = `
+    <div class="radar-situacao">
+      <div style="font-size:14px;font-weight:600;margin-bottom:4px;">🎧 Situação ${radarIndex+1}/${total}: ${sit.situacao}</div>
+      <div style="font-size:12px;color:#999;margin-bottom:12px;">Ouça e escolha a frase que você ouviu</div>
+
+      <button class="audio-btn" onclick="playRadarAudio(1)">🔊 Reproduzir (Normal)</button>
+      <button class="audio-btn" style="background:var(--gold);" onclick="playRadarAudio(0.7)">🐢 Reproduzir Lento (0.7x)</button>
+
+      <div class="radar-frases">
+        ${sit.opcoes.map((o,i)=>{
+          let cls='radar-frase';
+          if(respondida){
+            if(o.correta) cls+=' certa';
+            else if(respondida.escolhida===i) cls+=' errada';
+          }
+          return `
+          <div class="${cls}" onclick="responderRadar(${i})">
+            <div class="rf-romaji">${o.romaji}</div>
+            <div class="rf-jp">${o.jp}</div>
+            ${respondida ? `<div class="rf-pt">${o.pt}</div>` : ''}
+          </div>`;
+        }).join('')}
       </div>
-      
-      <button class="mic-btn" id="mic-btn" onclick="toggleGravacao()">
-        🎙️ ${jaGravado ? 'Gravar Novamente' : 'Gravar Minha Voz'}
-      </button>
-      
-      <div class="rec-feedback ${jaGravado ? 'done' : ''}" id="rec-feedback">
-        ${jaGravado ? '✅ Frase gravada e validada!' : 'Toque no microfone e fale o molde acima'}
+
+      ${respondida ? `
+        <div class="radar-feedback ${respondida.acertou?'ok':'quase'}">
+          ${respondida.acertou
+            ? '✓ É essa mesma. Repare no que segurou o sentido da frase.'
+            : 'Quase — a frase certa está destacada acima. Ouça de novo no modo lento.'}
+        </div>
+        <div style="display:flex;justify-content:center;gap:10px;margin-top:14px;">
+          ${radarIndex>0?`<button class="nav-btn" onclick="navRadar(-1)">← Anterior</button>`:''}
+          ${radarIndex<total-1?`<button class="nav-btn primary" onclick="navRadar(1)">Próxima →</button>`:''}
+        </div>` : ''}
+
+      <div style="font-size:12px;color:#999;margin-top:14px;text-align:center;">
+        Progresso: ${radarScore}/${total} acertos
       </div>
-    </div>
-    
-    <div style="display:flex;justify-content:center;gap:10px;margin-top:20px;">
-      <button onclick="previousTerra()" style="padding:8px 16px;background:var(--line);border:none;border-radius:10px;cursor:pointer;">← Anterior</button>
-      <button onclick="nextTerra()" style="padding:8px 16px;background:var(--teal);color:#fff;border:none;border-radius:10px;cursor:pointer;">Próximo →</button>
-    </div>
-    
-    <div style="text-align:center;margin-top:15px;font-size:12px;color:#999;">
-      Gravados: ${terraGravados.length}/${TERRA_MOLDES.length}
-      ${terraGravados.length >= TERRA_MOLDES.length ? '<br>🌍 Insignia de TERRA desbloqueada!' : ''}
     </div>
   `;
 }
 
-function playTerraAudio(){
-  const molde = TERRA_MOLDES[terraIndex];
-  const utterance = new SpeechSynthesisUtterance(molde.template);
-  utterance.lang = 'ja-JP';
-  speechSynthesis.speak(utterance);
+function responderRadar(i){
+  if(radarRespondidas[radarIndex]) return;
+  const sit = RADAR_SITUACOES[radarIndex];
+  const acertou = !!sit.opcoes[i].correta;
+  radarRespondidas[radarIndex] = {escolhida:i, acertou};
+  if(acertou) radarScore++;
+  renderRadar();
+  verificarAgua();
 }
 
-function toggleGravacao(){
-  const btn = document.getElementById('mic-btn');
-  const feedback = document.getElementById('rec-feedback');
-  
-  btn.classList.add('recording');
-  btn.textContent = '🔴 Gravando...';
-  feedback.textContent = 'Fale agora...';
-  feedback.classList.remove('done');
-  
-  // Simulação de gravação (2 segundos)
-  setTimeout(()=>{
-    btn.classList.remove('recording');
-    btn.textContent = '✅ Gravado!';
-    feedback.textContent = '✅ Frase gravada e validada!';
-    feedback.classList.add('done');
-    
-    if(!terraGravados.includes(terraIndex)){
-      terraGravados.push(terraIndex);
+function navRadar(d){
+  radarIndex = Math.max(0, Math.min(RADAR_SITUACOES.length-1, radarIndex+d));
+  renderRadar();
+}
+
+function playRadarAudio(rate){
+  const sit = RADAR_SITUACOES[radarIndex];
+  const u = new SpeechSynthesisUtterance(sit.jp);
+  u.lang='ja-JP'; u.rate=rate;
+  speechSynthesis.cancel(); speechSynthesis.speak(u);
+}
+
+function verificarAgua(){
+  const necessario = Math.ceil(RADAR_SITUACOES.length * 0.75);
+  if(radarScore >= necessario && !aguaDesbloqueada){
+    aguaDesbloqueada = true;
+  }
+}
+
+// ===== TERRA — o interlocutor pergunta, você monta a resposta =====
+function renderTerra(){
+  const d = TERRA_DESAFIOS[terraIndex];
+  const total = TERRA_DESAFIOS.length;
+  const resolvido = terraResolvidos.includes(terraIndex);
+  const montagem = terraMontagem[terraIndex] || [];
+  const banco = terraBanco[terraIndex] || [];
+  const progresso = (terraResolvidos.length/total)*100;
+  const completo = montagem.filter(Boolean).length === d.resposta.length;
+
+  document.getElementById('terra-content').innerHTML = `
+    <div style="font-size:14px;font-weight:600;margin-bottom:4px;">🌍 Materialize o Mapa — ${terraIndex+1}/${total}</div>
+    <div style="font-size:12px;color:#999;margin-bottom:10px;">Alguém falou com você. Monte a sua resposta com as peças.</div>
+    <div class="terra-progress-bar"><div class="terra-progress-fill" style="width:${progresso}%;"></div></div>
+
+    <div class="terra-cena">
+      <div class="terra-quem">${d.contexto} diz:</div>
+      <div class="terra-pergunta-romaji">${d.perguntaRomaji}
+        <span style="cursor:pointer;font-size:15px;" onclick="playTerraPergunta()">🔊</span>
+      </div>
+      <div class="terra-pergunta-jp">${d.perguntaJp}</div>
+      <div class="terra-pergunta-pt">${d.perguntaPt}</div>
+    </div>
+
+    <div class="terra-label">Sua resposta:</div>
+    <div class="terra-slots">
+      ${d.resposta.map((_,i)=>`
+        <div class="terra-slot ${montagem[i]?'preenchido':''} ${resolvido?'ok':''}"
+             onclick="tirarPeca(${i})">${montagem[i]||''}</div>
+      `).join('')}
+    </div>
+
+    ${resolvido ? `
+      <div class="terra-feedback ok">
+        ✓ É isso. <b>${d.respostaPt}</b>
+      </div>` : completo ? `
+      <div style="text-align:center;margin:14px 0;">
+        <button class="nav-btn primary" onclick="validarTerra()">Conferir resposta</button>
+      </div>
+      ${terraErrou[terraIndex] ? `<div class="terra-feedback quase">
+        Ainda não. Toque numa peça da resposta para devolvê-la e tente outra ordem.
+      </div>` : ''}` : `
+      <div class="terra-label">Peças disponíveis:</div>
+      <div class="terra-banco">
+        ${banco.map((p,i)=>p===null?'':`
+          <div class="terra-peca" onclick="porPeca(${i})">${p}</div>
+        `).join('')}
+      </div>`}
+
+    ${!resolvido && !completo ? '' : `
+      <div style="display:flex;justify-content:center;gap:10px;margin-top:16px;">
+        ${terraIndex>0?`<button class="nav-btn" onclick="navTerra(-1)">← Anterior</button>`:''}
+        ${terraIndex<total-1?`<button class="nav-btn primary" onclick="navTerra(1)">Próximo →</button>`:''}
+      </div>`}
+
+    <div style="text-align:center;margin-top:14px;font-size:12px;color:#999;">
+      Resolvidos: ${terraResolvidos.length}/${total}
+      ${terraResolvidos.length>=total?'<br>🌍 Insignia de TERRA desbloqueada!':''}
+    </div>
+  `;
+}
+
+function prepararTerra(i){
+  if(terraBanco[i]) return;
+  const d = TERRA_DESAFIOS[i];
+  const pecas = [...d.resposta, ...(d.distratores||[])];
+  for(let k=pecas.length-1;k>0;k--){
+    const j=Math.floor(Math.random()*(k+1));
+    [pecas[k],pecas[j]]=[pecas[j],pecas[k]];
+  }
+  terraBanco[i]=pecas;
+  terraMontagem[i]=new Array(d.resposta.length).fill(null);
+}
+
+function porPeca(iBanco){
+  const m = terraMontagem[terraIndex];
+  const vaga = m.indexOf(null);
+  if(vaga===-1) return;
+  m[vaga] = terraBanco[terraIndex][iBanco];
+  terraBanco[terraIndex][iBanco] = null;
+  terraErrou[terraIndex]=false;
+  renderTerra();
+}
+
+function tirarPeca(iSlot){
+  if(terraResolvidos.includes(terraIndex)) return;
+  const m = terraMontagem[terraIndex];
+  if(!m[iSlot]) return;
+  const vaga = terraBanco[terraIndex].indexOf(null);
+  if(vaga!==-1) terraBanco[terraIndex][vaga]=m[iSlot];
+  else terraBanco[terraIndex].push(m[iSlot]);
+  m[iSlot]=null;
+  terraErrou[terraIndex]=false;
+  renderTerra();
+}
+
+function validarTerra(){
+  const d = TERRA_DESAFIOS[terraIndex];
+  const m = terraMontagem[terraIndex];
+  const certo = m.every((p,i)=>p===d.resposta[i]);
+  if(certo){
+    if(!terraResolvidos.includes(terraIndex)) terraResolvidos.push(terraIndex);
+    terraErrou[terraIndex]=false;
+    const u=new SpeechSynthesisUtterance(d.resposta.join(' '));
+    u.lang='ja-JP'; speechSynthesis.cancel(); speechSynthesis.speak(u);
+    if(terraResolvidos.length>=TERRA_DESAFIOS.length && !terraDesbloqueada){
+      terraDesbloqueada=true;
     }
-    
-    setTimeout(()=>renderTerra(), 800);
-  }, 2000);
-}
-
-function nextTerra(){
-  if(terraIndex < TERRA_MOLDES.length - 1) terraIndex++;
+  } else {
+    terraErrou[terraIndex]=true;
+  }
   renderTerra();
 }
 
-function previousTerra(){
-  if(terraIndex > 0) terraIndex--;
+function navTerra(d){
+  terraIndex = Math.max(0, Math.min(TERRA_DESAFIOS.length-1, terraIndex+d));
+  prepararTerra(terraIndex);
   renderTerra();
 }
+
+function playTerraPergunta(){
+  const u=new SpeechSynthesisUtterance(TERRA_DESAFIOS[terraIndex].perguntaJp);
+  u.lang='ja-JP'; speechSynthesis.cancel(); speechSynthesis.speak(u);
+}
+
+
+
+
+
 
 // INSIGNIAS
 function renderInsignias(){
-  const aguaDesbloqueada = radarScore >= 3;
-  const terraDesbloqueada = terraGravados.length >= TERRA_MOLDES.length;
+  aguaDesbloqueada = radarScore >= Math.ceil(RADAR_SITUACOES.length * 0.75);
+  terraDesbloqueada = terraResolvidos.length >= TERRA_DESAFIOS.length;
   
   document.getElementById('insignias-content').innerHTML = `
     <div class="insignias-grid">
@@ -764,7 +983,7 @@ function renderInsignias(){
         <div class="insignia-status ${terraDesbloqueada ? 'status-unlocked' : 'status-locked'}">
           ${terraDesbloqueada ? '✅ Desbloqueada' : '🔒 Bloqueada'}
         </div>
-        <div style="font-size:11px;color:#999;margin-top:10px;">Progresso: ${terraGravados.length}/${TERRA_MOLDES.length}</div>
+        <div style="font-size:11px;color:#999;margin-top:10px;">Progresso: ${terraResolvidos.length}/${TERRA_DESAFIOS.length}</div>
       </div>
 
       <div class="insignia-card" style="border-color:#7FA8C4;">
@@ -786,7 +1005,7 @@ function renderInsignias(){
         <div>Peças aprendidas: 16/16 ✅</div>
         <div>Moldes dominados: 6/6 ✅</div>
         <div>Escuta: ${radarScore}/4 acertos ${aguaDesbloqueada ? '✅' : ''}</div>
-        <div>Fala gravada: ${terraGravados.length}/${TERRA_MOLDES.length} ${terraDesbloqueada ? '✅' : ''}</div>
+        <div>Resposta montada: ${terraResolvidos.length}/${TERRA_DESAFIOS.length} ${terraDesbloqueada ? '✅' : ''}</div>
         <div style="color:#4A7A96;">Ar: rede de segurança ${arVisitado ? '✅ conhecida' : '— sempre livre'}</div>
       </div>
       ${aguaDesbloqueada && terraDesbloqueada ? `
@@ -826,6 +1045,7 @@ fetch('../../dados/vocabulario.json')
       .map(p=>({kanji:p.kanji,romaji:p.romaji,pt:p.pt,tipo:p.tipo,grupo:p.grupo,moldes:p.moldes,contexto:p.contexto}));
     renderMode();
     renderPontes();
+    prepararTerra(0);
   })
   .catch(e=>{
     document.getElementById('mode-content').innerHTML =
