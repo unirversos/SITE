@@ -334,21 +334,15 @@ function renderTerritories(){
   document.getElementById('territories').innerHTML=pack().territories.map((t,i)=>{
     const done=!!G.done[curLang+':'+t.id], unlocked=terrUnlocked(i);
     let cls='terr'; if(done)cls+=' done'; else if(!unlocked)cls+=' locked';
-    const mapData=GAMIFY.progress[curLang]?.[t.id];
-    const stars=mapData?.stars||0;
-    const starsHtml=[...Array(3)].map((,n)=>`<span style="color:${n<stars?'#FFD700':'#F0E6E2'};font-size:12px;">⭐</span>`).join('');
-    const badge=done?`<span class="badge">✦ ${stars||''}${stars?'★':''}</span>`:'';
+    const badge=done?`<span class="badge">✦ ${pack().code}</span>`:'';
     return `<button class="${cls}" ${unlocked?`onclick="openScene('${t.id}')"`:''}>
       <div class="chip">${t.chip.split(' ')[0]}</div><h4>${t.chip.replace(/^\S+\s/,'')}</h4>
-      <p class="meta">${done?'carimbado':'cena disponível'}</p>
-      ${stars>0?`<div style="margin-top:6px;">${starsHtml}</div>`:''}<br/>
-      ${badge}</button>`;
+      <p class="meta">${done?'carimbado':'cena disponível'}</p>${badge}</button>`;
   }).join('');
 }
 
 function openScene(id){
   curTerr=id; stepIdx=0; mistakes=0;
-  GAMIFY.beginMap(id, curLang); // GAMIFICAÇÃO
   document.getElementById('hub').classList.add('hidden');
   document.getElementById('scene').classList.remove('hidden');
   const t=terr(), sc=scene(), U=ui();
@@ -530,7 +524,6 @@ function showSpeak(){
 function grantStamp(){
   const sc=scene(), U=ui();
   G.done[curLang+':'+curTerr]=true;
-  GAMIFY.recordBoss(2); // Registra boss como 2 estrelas (bom trabalho)
   let gained=50;
   if(mistakes===0){gained+=10;}
   G.xp+=gained; levelCheck(); refreshSheet(); saveGame();
@@ -594,48 +587,6 @@ function toast(m){const t=document.getElementById('toast');t.textContent=m;t.cla
 
 // ---------- boot: progresso salvo + entrada direta ----------
 let cameFromMaps=false;
-// ============ GAMIFICAÇÃO v2 ============
-const GAMIFY={
-  progress:{},
-  currentMap:'',
-  
-  init(){
-    try{this.progress=JSON.parse(localStorage.getItem('utopia-gamify')||'{}');}catch(e){this.progress={}}
-  },
-  
-  beginMap(mapId,lang){
-    this.currentMap=mapId;
-    if(!this.progress[lang]) this.progress[lang]={};
-  },
-  
-  recordBoss(quality){
-    const lang=curLang;
-    const stars=quality||1;
-    if(!this.progress[lang]) this.progress[lang]={};
-    this.progress[lang][this.currentMap]={stars,xp:stars*50,date:new Date().toISOString()};
-    this.save();
-  },
-  
-  getStars(){
-    const lang=curLang;
-    return this.progress[lang]?.[this.currentMap]?.stars||0;
-  },
-  
-  isUnlocked(mapId,lang,allMaps){
-    if(!allMaps||allMaps.length===0) return true;
-    const idx=allMaps.findIndex(m=>m.id===mapId);
-    if(idx===0) return true;
-    const prev=allMaps[idx-1];
-    return !!this.progress[lang]?.[prev.id];
-  },
-  
-  save(){
-    try{localStorage.setItem('utopia-gamify',JSON.stringify(this.progress));}catch(e){}
-  }
-};
-
-GAMIFY.init();
-
 (function(){
   const q=new URLSearchParams(location.search);
   const l=q.get('lang'), t=q.get('terr');
