@@ -116,6 +116,13 @@
             margin-bottom: 2rem;
         }
 
+        .section-subtitle {
+            font-size: 1.1rem;
+            color: var(--color-gray);
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+
         /* PASSOS */
         .steps {
             display: grid;
@@ -164,12 +171,14 @@
             border: 1px solid #e8e8e8;
             border-radius: 8px;
             background: var(--color-white);
+            border-top: 4px solid var(--color-rose);
         }
 
         .feature-icon {
             font-size: 2rem;
             margin-bottom: 1rem;
             line-height: 1;
+            filter: drop-shadow(0 0 8px rgba(201, 150, 153, 0.3));
         }
 
         .feature h3 {
@@ -242,6 +251,7 @@
             padding: 1.5rem;
             background: var(--color-light-gray);
             border-radius: 8px;
+            border-left: 4px solid var(--color-rose);
         }
 
         .faq-question {
@@ -257,6 +267,7 @@
         .faq-toggle {
             color: var(--color-rose);
             font-size: 1.2rem;
+            font-weight: bold;
         }
 
         .faq-answer {
@@ -277,6 +288,7 @@
             margin: 4rem 0;
             background: var(--color-light-gray);
             border-radius: 8px;
+            border-left: 4px solid var(--color-rose);
         }
 
         .cta-section h2 {
@@ -285,10 +297,17 @@
             color: var(--color-dark);
         }
 
+        .cta-section p {
+            color: var(--color-rose);
+            font-size: 1.05rem;
+            margin-bottom: 1rem;
+            font-weight: 500;
+        }
+
         .cta-button {
             display: inline-block;
             padding: 1rem 2.5rem;
-            background: var(--color-dark);
+            background: var(--color-rose);
             color: white;
             text-decoration: none;
             border: none;
@@ -301,7 +320,7 @@
         }
 
         .cta-button:hover {
-            background: var(--color-rose);
+            background: var(--color-dark);
             transform: scale(1.02);
         }
 
