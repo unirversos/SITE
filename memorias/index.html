@@ -1,0 +1,566 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Suas Memórias do Japão — Revista Personalizada</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --color-dark: #333333;
+            --color-rose: #c99699;
+            --color-gray: #777777;
+            --color-light-gray: #f5f5f5;
+            --color-white: #ffffff;
+        }
+
+        body {
+            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+            line-height: 1.8;
+            color: var(--color-dark);
+            background: var(--color-white);
+        }
+
+        /* HEADER */
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 2rem 4rem;
+            border-bottom: 1px solid #e0e0e0;
+        }
+
+        .logo {
+            font-size: 13px;
+            font-weight: 700;
+            letter-spacing: 2px;
+            text-decoration: none;
+            color: var(--color-dark);
+            text-transform: uppercase;
+        }
+
+        nav {
+            display: flex;
+            gap: 2.5rem;
+        }
+
+        nav a {
+            text-decoration: none;
+            color: var(--color-rose);
+            font-size: 13px;
+            font-weight: 400;
+            letter-spacing: 0.5px;
+            transition: opacity 0.3s;
+        }
+
+        nav a:hover {
+            opacity: 0.7;
+        }
+
+        /* MAIN */
+        main {
+            max-width: 1100px;
+            margin: 0 auto;
+            padding: 0 4rem;
+        }
+
+        /* HERO */
+        .hero {
+            text-align: center;
+            padding: 4rem 0 3rem;
+        }
+
+        .hero h1 {
+            font-size: 3rem;
+            font-weight: 300;
+            line-height: 1.3;
+            margin-bottom: 1rem;
+            color: var(--color-dark);
+            letter-spacing: -0.5px;
+        }
+
+        .hero .highlight {
+            color: var(--color-rose);
+            font-weight: 400;
+        }
+
+        .hero p {
+            font-size: 1.2rem;
+            color: var(--color-gray);
+            max-width: 700px;
+            margin: 0 auto;
+        }
+
+        /* SECTION */
+        section {
+            margin: 4rem 0;
+        }
+
+        .section-title {
+            font-size: 2rem;
+            font-weight: 400;
+            margin-bottom: 2.5rem;
+            color: var(--color-dark);
+            text-align: center;
+        }
+
+        .section-subtitle {
+            font-size: 1.1rem;
+            color: var(--color-gray);
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+
+        /* PASSOS */
+        .steps {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 2rem;
+            margin: 2rem 0;
+        }
+
+        .step {
+            padding: 2rem;
+            background: var(--color-light-gray);
+            border-radius: 8px;
+            text-align: center;
+        }
+
+        .step-number {
+            font-size: 2.5rem;
+            font-weight: 300;
+            color: var(--color-rose);
+            margin-bottom: 1rem;
+        }
+
+        .step h3 {
+            font-size: 1.2rem;
+            font-weight: 500;
+            margin-bottom: 0.8rem;
+            color: var(--color-dark);
+        }
+
+        .step p {
+            font-size: 0.95rem;
+            color: var(--color-gray);
+            line-height: 1.6;
+        }
+
+        /* FEATURES */
+        .features {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 2rem;
+            margin: 2rem 0;
+        }
+
+        .feature {
+            padding: 2rem;
+            border: 1px solid #e8e8e8;
+            border-radius: 8px;
+            background: var(--color-white);
+        }
+
+        .feature-icon {
+            font-size: 2rem;
+            margin-bottom: 1rem;
+            line-height: 1;
+        }
+
+        .feature h3 {
+            font-size: 1.1rem;
+            font-weight: 500;
+            margin-bottom: 0.8rem;
+            color: var(--color-dark);
+        }
+
+        .feature p {
+            font-size: 0.95rem;
+            color: var(--color-gray);
+            line-height: 1.6;
+        }
+
+        /* TABELA */
+        .table-wrapper {
+            overflow-x: auto;
+            margin: 2rem 0;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            background: var(--color-white);
+            border: 1px solid #e8e8e8;
+            border-radius: 8px;
+            overflow: hidden;
+        }
+
+        th {
+            background: var(--color-light-gray);
+            padding: 1.2rem;
+            text-align: left;
+            font-weight: 600;
+            color: var(--color-dark);
+            border-bottom: 2px solid #e8e8e8;
+            font-size: 0.95rem;
+        }
+
+        td {
+            padding: 1.2rem;
+            border-bottom: 1px solid #e8e8e8;
+            font-size: 0.95rem;
+            color: var(--color-gray);
+        }
+
+        td:first-child {
+            color: var(--color-dark);
+            font-weight: 500;
+        }
+
+        tr:last-child td {
+            border-bottom: none;
+        }
+
+        .checkmark {
+            color: var(--color-rose);
+            font-weight: bold;
+            font-size: 1.2rem;
+        }
+
+        /* FAQ */
+        .faq {
+            margin: 2rem 0;
+        }
+
+        .faq-item {
+            margin-bottom: 1.5rem;
+            padding: 1.5rem;
+            background: var(--color-light-gray);
+            border-radius: 8px;
+        }
+
+        .faq-question {
+            font-weight: 600;
+            color: var(--color-dark);
+            cursor: pointer;
+            margin-bottom: 0.8rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .faq-toggle {
+            color: var(--color-rose);
+            font-size: 1.2rem;
+        }
+
+        .faq-answer {
+            color: var(--color-gray);
+            font-size: 0.95rem;
+            line-height: 1.6;
+            display: none;
+        }
+
+        .faq-item.active .faq-answer {
+            display: block;
+        }
+
+        /* CTA SECTION */
+        .cta-section {
+            text-align: center;
+            padding: 3rem 2rem;
+            margin: 4rem 0;
+            background: var(--color-light-gray);
+            border-radius: 8px;
+        }
+
+        .cta-section h2 {
+            font-size: 2rem;
+            margin-bottom: 1.5rem;
+            color: var(--color-dark);
+        }
+
+        .cta-button {
+            display: inline-block;
+            padding: 1rem 2.5rem;
+            background: var(--color-dark);
+            color: white;
+            text-decoration: none;
+            border: none;
+            border-radius: 4px;
+            font-size: 1.1rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s;
+            margin-top: 1rem;
+        }
+
+        .cta-button:hover {
+            background: var(--color-rose);
+            transform: scale(1.02);
+        }
+
+        /* FOOTER */
+        footer {
+            text-align: center;
+            padding: 2.5rem;
+            color: #999;
+            font-size: 0.85rem;
+            border-top: 1px solid #e0e0e0;
+            margin-top: 4rem;
+        }
+
+        footer a {
+            color: var(--color-dark);
+            text-decoration: none;
+        }
+
+        /* RESPONSIVE */
+        @media (max-width: 768px) {
+            header {
+                flex-direction: column;
+                gap: 1.5rem;
+                padding: 1.5rem;
+            }
+
+            nav {
+                flex-wrap: wrap;
+                justify-content: center;
+                gap: 1rem;
+            }
+
+            main {
+                padding: 0 1.5rem;
+            }
+
+            .hero h1 {
+                font-size: 1.8rem;
+            }
+
+            .hero p {
+                font-size: 1rem;
+            }
+
+            .steps,
+            .features {
+                grid-template-columns: 1fr;
+            }
+
+            .section-title {
+                font-size: 1.5rem;
+            }
+
+            table {
+                font-size: 0.85rem;
+            }
+
+            th, td {
+                padding: 0.8rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- HEADER -->
+    <header>
+        <a href="/" class="logo">UNIRVERSOS</a>
+        <nav>
+            <a href="https://unirversos.com/idiomas/">idiomas</a>
+            <a href="https://unirversos.com/memorias/">memórias</a>
+            <a href="https://unirversos.com/paralelos/">paralelos</a>
+            <a href="https://unirversos.com/sobre/">sobre</a>
+        </nav>
+    </header>
+
+    <main>
+        <!-- HERO -->
+        <section class="hero">
+            <h1>Suas Memórias do Japão:<br/><span class="highlight">Da galeria do celular para uma revista real</span></h1>
+            <p>Eternize suas histórias, fotos e momentos marcantes em uma publicação gráfica de alta qualidade, entregue diretamente na sua casa.</p>
+        </section>
+
+        <!-- COMO FUNCIONA -->
+        <section>
+            <h2 class="section-title">Como Funciona</h2>
+            <p class="section-subtitle">3 passos simples para sua revista ficar pronta</p>
+            
+            <div class="steps">
+                <div class="step">
+                    <div class="step-number">1</div>
+                    <h3>Viva com calma</h3>
+                    <p>Não se preocupe em preencher nada na correria. Tire suas fotos, aproveite cada detalhe e monte sua revista quando voltar para casa.</p>
+                </div>
+
+                <div class="step">
+                    <div class="step-number">2</div>
+                    <h3>Preencha online</h3>
+                    <p>Acesse nosso layout temático guiado, faça upload das suas melhores fotos e responda a perguntas simples sobre cada momento.</p>
+                </div>
+
+                <div class="step">
+                    <div class="step-number">3</div>
+                    <h3>Receba em casa</h3>
+                    <p>Nossa equipe cuida da revisão de resolução, diagramação profissional, impressão gráfica e entrega com código de rastreio.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- O QUE TORNA ESPECIAL -->
+        <section>
+            <h2 class="section-title">O Que Torna Esta Revista Especial</h2>
+            
+            <div class="features">
+                <div class="feature">
+                    <div class="feature-icon">🎨</div>
+                    <h3>Design com Alma Japonesa</h3>
+                    <p>Layout editorial limpo e sofisticado, pensado especificamente para viagens ao Japão.</p>
+                </div>
+
+                <div class="feature">
+                    <div class="feature-icon">✍️</div>
+                    <h3>Roteiro de Escrita Guiado</h3>
+                    <p>Prompts temáticos para registrar muito além das imagens: o sabor daquele prato marcante, as palavras que você usou.</p>
+                </div>
+
+                <div class="feature">
+                    <div class="feature-icon">📚</div>
+                    <h3>Qualidade de Livraria</h3>
+                    <p>Impressão em papel Couché premium, capa com toque aveludado (soft touch) e acabamento editorial duradouro.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- PLANOS -->
+        <section>
+            <h2 class="section-title">Escolha Seu Plano</h2>
+            <p class="section-subtitle">O que está incluído em cada opção</p>
+            
+            <div class="table-wrapper">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Recurso</th>
+                            <th>Acesso Digital</th>
+                            <th>Revista Impressa</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Acesso à plataforma online guiada</td>
+                            <td class="checkmark">✓</td>
+                            <td class="checkmark">✓</td>
+                        </tr>
+                        <tr>
+                            <td>Templates temáticos exclusivos do Japão</td>
+                            <td class="checkmark">✓</td>
+                            <td class="checkmark">✓</td>
+                        </tr>
+                        <tr>
+                            <td>Download em PDF de alta resolução</td>
+                            <td class="checkmark">✓</td>
+                            <td class="checkmark">✓</td>
+                        </tr>
+                        <tr>
+                            <td>Revisão técnica de impressão e fotos</td>
+                            <td></td>
+                            <td class="checkmark">✓</td>
+                        </tr>
+                        <tr>
+                            <td>Impressão gráfica premium (16 a 24 págs)</td>
+                            <td></td>
+                            <td class="checkmark">✓</td>
+                        </tr>
+                        <tr>
+                            <td>Frete e entrega rastreada para todo Brasil</td>
+                            <td></td>
+                            <td class="checkmark">✓</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
+        <!-- FAQ -->
+        <section>
+            <h2 class="section-title">Perguntas Frequentes</h2>
+            
+            <div class="faq">
+                <div class="faq-item">
+                    <div class="faq-question">
+                        <span>Preciso ser aluno do curso para pedir a revista?</span>
+                        <span class="faq-toggle">+</span>
+                    </div>
+                    <div class="faq-answer">
+                        Não! A Revista de Memórias está disponível para qualquer pessoa que viajou ao Japão e quer imortalizar seus registros. Você não precisa ser aluno de nada — é um produto totalmente independente.
+                    </div>
+                </div>
+
+                <div class="faq-item">
+                    <div class="faq-question">
+                        <span>Tenho prazo para enviar minhas fotos?</span>
+                        <span class="faq-toggle">+</span>
+                    </div>
+                    <div class="faq-answer">
+                        Você tem até 60 dias após a compra para preencher sua revista no seu próprio ritmo. Sem pressa, sem pressão. Escolha o melhor momento para organizar suas memórias.
+                    </div>
+                </div>
+
+                <div class="faq-item">
+                    <div class="faq-question">
+                        <span>Como garanto que minhas fotos vão ficar nítidas?</span>
+                        <span class="faq-toggle">+</span>
+                    </div>
+                    <div class="faq-answer">
+                        Nosso sistema avisa caso uma foto esteja em baixa resolução antes de você finalizar o envio. Além disso, nossa equipe revisa tudo antes de imprimir para garantir qualidade máxima.
+                    </div>
+                </div>
+
+                <div class="faq-item">
+                    <div class="faq-question">
+                        <span>Quanto tempo leva para chegar?</span>
+                        <span class="faq-toggle">+</span>
+                    </div>
+                    <div class="faq-answer">
+                        Após você finalizar seu pedido, a gente leva de 10 a 15 dias úteis para imprimir, encadernar e enviar. Você acompanha tudo com código de rastreio.
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- CTA -->
+        <section class="cta-section">
+            <h2>Pronto para imortalizar suas memórias?</h2>
+            <p>Comece a montar sua revista de memórias do Japão agora</p>
+            <button class="cta-button" onclick="window.location.href='/memorias/seu-album'">
+                Começar a Montar Minha Revista de Memórias →
+            </button>
+        </section>
+    </main>
+
+    <!-- FOOTER -->
+    <footer>
+        <p>unirversos — tudo conectado</p>
+        <p>
+            <a href="https://instagram.com/unirversos.idiomas">@unirversos.idiomas</a>
+            |
+            <a href="mailto:unirversos.idiomas@gmail.com">unirversos.idiomas@gmail.com</a>
+        </p>
+    </footer>
+
+    <script>
+        // FAQ interativo
+        document.querySelectorAll('.faq-item').forEach(item => {
+            item.querySelector('.faq-question').addEventListener('click', () => {
+                item.classList.toggle('active');
+                const toggle = item.querySelector('.faq-toggle');
+                toggle.textContent = item.classList.contains('active') ? '−' : '+';
+            });
+        });
+    </script>
+</body>
+</html>
