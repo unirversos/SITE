@@ -1,0 +1,554 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Guia de Sobrevivência — Unirversos</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --color-dark: #333333;
+            --color-rose: #c99699;
+            --color-gray: #777777;
+            --color-light-bg: #f5f5f5;
+            --color-white: #ffffff;
+        }
+
+        body {
+            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+            line-height: 1.8;
+            color: var(--color-dark);
+            background: var(--color-white);
+        }
+
+        /* HEADER */
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 2rem 4rem;
+            border-bottom: 1px solid #e0e0e0;
+        }
+
+        .logo {
+            font-size: 13px;
+            font-weight: 700;
+            letter-spacing: 2px;
+            text-decoration: none;
+            color: var(--color-dark);
+            text-transform: uppercase;
+        }
+
+        nav {
+            display: flex;
+            gap: 2.5rem;
+        }
+
+        nav a {
+            text-decoration: none;
+            color: var(--color-rose);
+            font-size: 13px;
+            font-weight: 400;
+            letter-spacing: 0.5px;
+            transition: opacity 0.3s;
+        }
+
+        nav a:hover {
+            opacity: 0.7;
+        }
+
+        /* MAIN */
+        main {
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 0 4rem;
+        }
+
+        /* HERO */
+        .hero {
+            text-align: center;
+            padding: 3rem 0 2rem;
+        }
+
+        .hero h1 {
+            font-size: 2.8rem;
+            font-weight: 300;
+            line-height: 1.2;
+            margin-bottom: 1.5rem;
+            color: var(--color-dark);
+            letter-spacing: -0.5px;
+        }
+
+        .hero p {
+            font-size: 1.1rem;
+            color: var(--color-gray);
+            margin-bottom: 2rem;
+        }
+
+        /* SECTION */
+        section {
+            margin: 3rem 0;
+        }
+
+        .section-title {
+            font-size: 2rem;
+            font-weight: 400;
+            margin-bottom: 2rem;
+            color: var(--color-dark);
+        }
+
+        /* CARDS */
+        .guide-cards {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 2rem;
+            margin: 2rem 0;
+        }
+
+        .guide-card {
+            padding: 2rem;
+            background: var(--color-light-bg);
+            border-radius: 8px;
+            border-left: 4px solid var(--color-rose);
+        }
+
+        .guide-card h3 {
+            font-size: 1.2rem;
+            font-weight: 500;
+            margin-bottom: 1rem;
+            color: var(--color-dark);
+        }
+
+        .guide-item {
+            margin-bottom: 1.2rem;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid #e0e0e0;
+        }
+
+        .guide-item:last-child {
+            border-bottom: none;
+            margin-bottom: 0;
+            padding-bottom: 0;
+        }
+
+        .phrase {
+            font-weight: 500;
+            color: var(--color-dark);
+            font-size: 0.95rem;
+            margin-bottom: 0.3rem;
+        }
+
+        .pronunciation {
+            font-size: 0.85rem;
+            color: var(--color-rose);
+            font-style: italic;
+            margin-bottom: 0.2rem;
+        }
+
+        .meaning {
+            font-size: 0.85rem;
+            color: var(--color-gray);
+        }
+
+        /* TABLA */
+        .table-wrapper {
+            overflow-x: auto;
+            margin: 2rem 0;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            background: var(--color-white);
+            border: 1px solid #e8e8e8;
+            border-radius: 8px;
+            overflow: hidden;
+        }
+
+        th {
+            background: var(--color-light-bg);
+            padding: 1rem;
+            text-align: left;
+            font-weight: 600;
+            color: var(--color-dark);
+            border-bottom: 2px solid #e8e8e8;
+        }
+
+        td {
+            padding: 0.8rem 1rem;
+            border-bottom: 1px solid #e8e8e8;
+        }
+
+        tr:last-child td {
+            border-bottom: none;
+        }
+
+        /* ALERT */
+        .alert {
+            background: #fff3cd;
+            border-left: 4px solid #ffc107;
+            padding: 1.5rem;
+            border-radius: 4px;
+            margin: 2rem 0;
+        }
+
+        .alert strong {
+            color: #856404;
+        }
+
+        .alert p {
+            color: #856404;
+            margin: 0;
+            font-size: 0.95rem;
+        }
+
+        /* DOWNLOAD */
+        .download-section {
+            background: var(--color-light-bg);
+            padding: 2rem;
+            border-radius: 8px;
+            text-align: center;
+            margin: 3rem 0;
+        }
+
+        .download-button {
+            display: inline-block;
+            padding: 0.8rem 2rem;
+            background: var(--color-dark);
+            color: white;
+            text-decoration: none;
+            border-radius: 4px;
+            font-weight: 500;
+            transition: background 0.3s;
+            margin-top: 1rem;
+        }
+
+        .download-button:hover {
+            background: var(--color-rose);
+        }
+
+        /* FOOTER */
+        footer {
+            text-align: center;
+            padding: 2.5rem;
+            color: #999;
+            font-size: 0.85rem;
+            border-top: 1px solid #e0e0e0;
+            margin-top: 4rem;
+        }
+
+        footer a {
+            color: var(--color-dark);
+            text-decoration: none;
+        }
+
+        /* RESPONSIVE */
+        @media (max-width: 768px) {
+            header {
+                flex-direction: column;
+                gap: 1.5rem;
+                padding: 1.5rem;
+            }
+
+            nav {
+                flex-wrap: wrap;
+                justify-content: center;
+                gap: 1rem;
+            }
+
+            main {
+                padding: 0 1.5rem;
+            }
+
+            .hero h1 {
+                font-size: 1.8rem;
+            }
+
+            .guide-cards {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- HEADER -->
+    <header>
+        <a href="/" class="logo">UNIRVERSOS</a>
+        <nav>
+            <a href="https://unirversos.com/idiomas/">idiomas</a>
+            <a href="https://unirversos.com/memorias/">memórias</a>
+            <a href="https://unirversos.com/paralelos/">paralelos</a>
+            <a href="https://unirversos.com/sobre/">sobre</a>
+        </nav>
+    </header>
+
+    <main>
+        <!-- HERO -->
+        <section class="hero">
+            <h1>Guia de Sobrevivência</h1>
+            <p>Frases essenciais, números, emergências e situações reais do dia a dia no Japão.</p>
+        </section>
+
+        <!-- ALERT -->
+        <div class="alert">
+            <strong>💡 Dica:</strong> Este é um guia inicial. Para uma preparação completa, considere fazer o curso Unirversos com prática em contexto.
+        </div>
+
+        <!-- FRASES ESSENCIAIS -->
+        <section>
+            <h2 class="section-title">Frases Essenciais</h2>
+            
+            <div class="guide-cards">
+                <div class="guide-card">
+                    <h3>Saudações</h3>
+                    
+                    <div class="guide-item">
+                        <div class="phrase">おはよう (Ohayou)</div>
+                        <div class="pronunciation">o-ha-yô</div>
+                        <div class="meaning">Bom dia</div>
+                    </div>
+
+                    <div class="guide-item">
+                        <div class="phrase">こんにちは (Konnichiwa)</div>
+                        <div class="pronunciation">kon-ni-chi-wá</div>
+                        <div class="meaning">Olá / Boa tarde</div>
+                    </div>
+
+                    <div class="guide-item">
+                        <div class="phrase">おやすみなさい (Oyasuminasai)</div>
+                        <div class="pronunciation">o-ya-su-mi-na-sái</div>
+                        <div class="meaning">Boa noite</div>
+                    </div>
+
+                    <div class="guide-item">
+                        <div class="phrase">ありがとうございます (Arigatou gozaimasu)</div>
+                        <div class="pronunciation">a-ri-ga-tô go-zai-mas</div>
+                        <div class="meaning">Obrigado (formal)</div>
+                    </div>
+                </div>
+
+                <div class="guide-card">
+                    <h3>No Restaurante</h3>
+                    
+                    <div class="guide-item">
+                        <div class="phrase">水をください (Mizu wo kudasai)</div>
+                        <div class="pronunciation">mi-zu wo ku-da-sái</div>
+                        <div class="meaning">Água, por favor</div>
+                    </div>
+
+                    <div class="guide-item">
+                        <div class="phrase">これをください (Kore wo kudasai)</div>
+                        <div class="pronunciation">ko-re wo ku-da-sái</div>
+                        <div class="meaning">Isto, por favor</div>
+                    </div>
+
+                    <div class="guide-item">
+                        <div class="phrase">辛いですか？(Karai desu ka?)</div>
+                        <div class="pronunciation">ka-rái des-ka</div>
+                        <div class="meaning">É picante?</div>
+                    </div>
+
+                    <div class="guide-item">
+                        <div class="phrase">お会計ください (Okaikei kudasai)</div>
+                        <div class="pronunciation">o-kai-kei ku-da-sái</div>
+                        <div class="meaning">A conta, por favor</div>
+                    </div>
+                </div>
+
+                <div class="guide-card">
+                    <h3>No Hotel / Transporte</h3>
+                    
+                    <div class="guide-item">
+                        <div class="phrase">トイレはどこですか？(Toire wa doko desu ka?)</div>
+                        <div class="pronunciation">toi-re wa do-ko des-ka</div>
+                        <div class="meaning">Onde é o banheiro?</div>
+                    </div>
+
+                    <div class="guide-item">
+                        <div class="phrase">駅はどこですか？(Eki wa doko desu ka?)</div>
+                        <div class="pronunciation">e-ki wa do-ko des-ka</div>
+                        <div class="meaning">Onde é a estação?</div>
+                    </div>
+
+                    <div class="guide-item">
+                        <div class="phrase">チェックインをしたいです (Chekku-in wo shitai desu)</div>
+                        <div class="pronunciation">che-ku-in wo shi-tai des</div>
+                        <div class="meaning">Quero fazer check-in</div>
+                    </div>
+
+                    <div class="guide-item">
+                        <div class="phrase">英語は話せますか？(Eigo wa hanasemasu ka?)</div>
+                        <div class="pronunciation">ei-go wa ha-na-se-mas ka</div>
+                        <div class="meaning">Você fala inglês?</div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- NÚMEROS -->
+        <section>
+            <h2 class="section-title">Números e Contagem</h2>
+            
+            <div class="table-wrapper">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Número</th>
+                            <th>Japonês</th>
+                            <th>Pronúncia</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>0</td>
+                            <td>ゼロ / 零</td>
+                            <td>ze-ro</td>
+                        </tr>
+                        <tr>
+                            <td>1</td>
+                            <td>一 (ichi)</td>
+                            <td>i-chi</td>
+                        </tr>
+                        <tr>
+                            <td>2</td>
+                            <td>二 (ni)</td>
+                            <td>ni</td>
+                        </tr>
+                        <tr>
+                            <td>3</td>
+                            <td>三 (san)</td>
+                            <td>san</td>
+                        </tr>
+                        <tr>
+                            <td>5</td>
+                            <td>五 (go)</td>
+                            <td>go</td>
+                        </tr>
+                        <tr>
+                            <td>10</td>
+                            <td>十 (juu)</td>
+                            <td>juu</td>
+                        </tr>
+                        <tr>
+                            <td>100</td>
+                            <td>百 (hyaku)</td>
+                            <td>hya-ku</td>
+                        </tr>
+                        <tr>
+                            <td>1.000</td>
+                            <td>千 (sen)</td>
+                            <td>sen</td>
+                        </tr>
+                        <tr>
+                            <td>10.000</td>
+                            <td>万 (man)</td>
+                            <td>man</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
+        <!-- EMERGÊNCIAS -->
+        <section>
+            <h2 class="section-title">Emergências</h2>
+            
+            <div class="guide-cards">
+                <div class="guide-card">
+                    <h3>Situações Críticas</h3>
+                    
+                    <div class="guide-item">
+                        <div class="phrase">助けてください！(Tasukete kudasai!)</div>
+                        <div class="pronunciation">ta-su-ke-te ku-da-sái</div>
+                        <div class="meaning">Ajude-me! (grito de socorro)</div>
+                    </div>
+
+                    <div class="guide-item">
+                        <div class="phrase">119番です (119-ban desu)</div>
+                        <div class="pronunciation">121-kyuu ban</div>
+                        <div class="meaning">Emergência / Ambulância</div>
+                    </div>
+
+                    <div class="guide-item">
+                        <div class="phrase">警察を呼んでください (Keisatsu wo yonde kudasai)</div>
+                        <div class="pronunciation">kei-sa-tsu wo yon-de ku-da-sái</div>
+                        <div class="meaning">Chame a polícia</div>
+                    </div>
+
+                    <div class="guide-item">
+                        <div class="phrase">病院に行きたいです (Byouin ni ikitai desu)</div>
+                        <div class="pronunciation">byo-in ni i-ki-tai des</div>
+                        <div class="meaning">Quero ir ao hospital</div>
+                    </div>
+                </div>
+
+                <div class="guide-card">
+                    <h3>Situações Incômodas</h3>
+                    
+                    <div class="guide-item">
+                        <div class="phrase">I'm lost (Watashi wa mayotte imasu)</div>
+                        <div class="pronunciation">wa-ta-shi wa ma-yo-tte i-mas</div>
+                        <div class="meaning">Estou perdido</div>
+                    </div>
+
+                    <div class="guide-item">
+                        <div class="phrase">I don't understand (Wakarimashita)</div>
+                        <div class="pronunciation">wa-ka-ri-ma-shí-ta</div>
+                        <div class="meaning">Não entendi</div>
+                    </div>
+
+                    <div class="guide-item">
+                        <div class="phrase">もう一度言ってください (Mou ichido itte kudasai)</div>
+                        <div class="pronunciation">mô i-chi-do i-tte ku-da-sái</div>
+                        <div class="meaning">Repita, por favor</div>
+                    </div>
+
+                    <div class="guide-item">
+                        <div class="phrase">写真を撮ってもいいですか？(Shashin wo totte mo ii desu ka?)</div>
+                        <div class="pronunciation">sha-shin wo to-tte mo ii des ka</div>
+                        <div class="meaning">Posso tirar uma foto?</div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- DICAS IMPORTANTES -->
+        <section>
+            <h2 class="section-title">Dicas Importantes</h2>
+            
+            <div class="guide-card">
+                <h3>✓ Coisas que funcionam</h3>
+                <ul style="color: var(--color-gray); font-size: 0.95rem; line-height: 1.8;">
+                    <li>✓ Apontar + gestos = comunicação básica funciona bem</li>
+                    <li>✓ Google Translate em tempo real ajuda muito</li>
+                    <li>✓ Traduzir cardápios com a câmera do celular</li>
+                    <li>✓ Taxistas entendem endereços em romaji (alfabeto comum)</li>
+                    <li>✓ Funcionários de lojas geralmente conhecem números</li>
+                </ul>
+            </div>
+        </section>
+
+        <!-- DOWNLOAD -->
+        <section class="download-section">
+            <h2>Quer uma versão completa?</h2>
+            <p>Acesse o curso Unirversos para praticar com contexto real e ter acesso a mais de 100 frases essenciais.</p>
+            <a href="/" class="download-button">Voltar à Homepage</a>
+        </section>
+    </main>
+
+    <!-- FOOTER -->
+    <footer>
+        <p>unirversos — tudo conectado</p>
+        <p>
+            <a href="https://instagram.com/unirversos.idiomas">@unirversos.idiomas</a>
+            |
+            <a href="mailto:unirversos.idiomas@gmail.com">unirversos.idiomas@gmail.com</a>
+        </p>
+    </footer>
+</body>
+</html>

@@ -256,6 +256,49 @@
         }
 
         /* CTA SECTION */
+        .benefits-section {
+            margin: 3rem 0;
+            padding: 2rem 0;
+        }
+
+        .benefits-list {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 2rem;
+            margin: 2rem 0;
+        }
+
+        .benefit-item {
+            display: flex;
+            gap: 1.5rem;
+            padding: 1.5rem;
+            background: var(--color-light-bg);
+            border-radius: 8px;
+            align-items: flex-start;
+        }
+
+        .benefit-icon {
+            font-size: 1.8rem;
+            color: var(--color-rose);
+            font-weight: bold;
+            min-width: 30px;
+            text-align: center;
+        }
+
+        .benefit-item strong {
+            display: block;
+            color: var(--color-dark);
+            font-size: 1.05rem;
+            margin-bottom: 0.3rem;
+        }
+
+        .benefit-item p {
+            color: var(--color-gray);
+            font-size: 0.9rem;
+            line-height: 1.6;
+        }
+
+        /* CTA SECTION */
         .cta-section {
             background: var(--color-light-bg);
             padding: 3.5rem 2rem;
@@ -591,8 +634,8 @@
         
         <!-- HERO -->
         <section class="hero">
-            <h1>Não é sobre sair da zona de conforto.<br/>É sobre <strong style="color: var(--color-rose); font-weight: 700;">aumentar</strong> a zona de conforto.</h1>
-            <p class="subtitle">Com tradutores inteligentes, IA e ferramentas ao seu favor, você no controle do seu japonês desde o primeiro dia.</p>
+            <h1>Japão sem perrengue:<br/>aumente sua zona de conforto com o idioma desde o primeiro dia.</h1>
+            <p class="subtitle">Conquiste a autonomia prática para se virar com total segurança — mesmo se acabar a bateria do celular.</p>
         </section>
 
         <!-- ANNOUNCEMENT -->
@@ -621,15 +664,46 @@
             </div>
         </section>
 
+        <!-- O QUE VOCÊ GANHA -->
+        <section class="benefits-section">
+            <h2 class="section-title">Deixe seu email e ganhe:</h2>
+            
+            <div class="benefits-list">
+                <div class="benefit-item">
+                    <div class="benefit-icon">✓</div>
+                    <div>
+                        <strong>Acesso a 2 mapas grátis</strong>
+                        <p>Comece a aprender hoje mesmo (Restaurante + Hotel)</p>
+                    </div>
+                </div>
+
+                <div class="benefit-item">
+                    <div class="benefit-icon">✓</div>
+                    <div>
+                        <strong>Early bird 50% OFF na vida toda</strong>
+                        <p>R$ 99 em vez de R$ 199 (primeiros 20 interessados)</p>
+                    </div>
+                </div>
+
+                <div class="benefit-item">
+                    <div class="benefit-icon">✓</div>
+                    <div>
+                        <strong>Seu feedback direto</strong>
+                        <p>Você ajuda a moldar o produto enquanto testamos</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
         <!-- CTA -->
         <section class="cta-section" id="cta">
-            <h2>Comece agora — acesso gratuito</h2>
-            <p>Veja 2 mapas de graça. Sem cartão de crédito.</p>
+            <h2>Comece agora — 2 mapas grátis</h2>
+            <p>Sem cartão de crédito. Sem compromisso.</p>
             <form class="email-form" action="https://formspree.io/f/myegnoob" method="POST">
                 <input type="email" name="email" placeholder="seu email" required>
-                <button type="submit">Quero aprender →</button>
+                <button type="submit">Quero meus 2 mapas grátis →</button>
             </form>
-            <p class="cta-disclaimer">Sem compromisso. Sem spam. Seu feedback é valioso pra gente.</p>
+            <p class="cta-disclaimer">⚠️ Vagas limitadas ao early bird: 20 pessoas (primeiras chegam, primeiras saem!)</p>
         </section>
 
         <!-- ===== CONTEÚDO ORIGINAL (MANTIDO) ===== -->
