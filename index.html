@@ -1,802 +1,226 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Unirversos — onde se unem versos, memórias e propósito</title>
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
-        :root {
-            --color-dark: #333333;
-            --color-rose: #c99699;
-            --color-gray: #777777;
-            --color-light-bg: #f5f5f5;
-            --color-white: #ffffff;
-        }
-
-        html {
-            scroll-behavior: smooth;
-        }
-
-        body {
-            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
-            line-height: 1.8;
-            color: var(--color-dark);
-            background: var(--color-white);
-            font-size: 16px;
-        }
-
-        /* HEADER */
-        header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 2rem 4rem;
-            max-width: 100%;
-            border-bottom: 1px solid #e0e0e0;
-        }
-
-        .logo {
-            font-size: 13px;
-            font-weight: 700;
-            letter-spacing: 2px;
-            text-decoration: none;
-            color: var(--color-dark);
-            text-transform: uppercase;
-        }
-
-        nav {
-            display: flex;
-            gap: 2.5rem;
-        }
-
-        nav a {
-            text-decoration: none;
-            color: var(--color-rose);
-            font-size: 13px;
-            font-weight: 400;
-            letter-spacing: 0.5px;
-            transition: opacity 0.3s;
-        }
-
-        nav a:hover {
-            opacity: 0.7;
-        }
-
-        /* MAIN CONTAINER */
-        main {
-            max-width: 900px;
-            margin: 0 auto;
-            padding: 0 4rem;
-        }
-
-        /* HERO SECTION */
-        .hero {
-            text-align: center;
-            padding: 3rem 0 2rem;
-        }
-
-        .hero h1 {
-            font-size: 2.8rem;
-            font-weight: 300;
-            line-height: 1.2;
-            margin-bottom: 1.5rem;
-            color: var(--color-dark);
-            letter-spacing: -0.5px;
-            max-width: 100%;
-            display: block;
-            white-space: normal;
-        }
-
-        .hero .subtitle {
-            font-size: 1.4rem;
-            color: var(--color-rose);
-            font-weight: 400;
-            line-height: 1.6;
-            margin-bottom: 1.5rem;
-        }
-
-        /* ANNOUNCEMENT BANNER */
-        .announcement {
-            background: var(--color-rose);
-            color: var(--color-white);
-            padding: 1.2rem;
-            text-align: center;
-            font-size: 0.95rem;
-            margin: 2rem 0;
-            letter-spacing: 0.3px;
-        }
-
-        .announcement a {
-            color: var(--color-white);
-            text-decoration: underline;
-        }
-
-        /* TAGLINE */
-        .tagline-main {
-            text-align: center;
-            font-size: 1.5rem;
-            color: var(--color-rose);
-            font-weight: 400;
-            line-height: 1.7;
-            margin: 2rem 0 2rem;
-        }
-
-        /* PHASE LABEL */
-        .phase-label {
-            text-align: center;
-            font-size: 11px;
-            letter-spacing: 1.5px;
-            text-transform: uppercase;
-            color: var(--color-rose);
-            margin: 3rem 0 1.5rem;
-            font-weight: 600;
-        }
-
-        /* SECTION TITLE */
-        .section-title {
-            font-size: 2.2rem;
-            font-weight: 400;
-            text-align: center;
-            margin-bottom: 1.5rem;
-            color: var(--color-dark);
-        }
-
-        .section-desc {
-            text-align: center;
-            color: var(--color-gray);
-            font-size: 1.05rem;
-            margin-bottom: 3rem;
-            line-height: 1.8;
-            max-width: 700px;
-            margin-left: auto;
-            margin-right: auto;
-        }
-
-        /* PROBLEM SECTION */
-        .problem-section {
-            margin: 3rem 0;
-        }
-
-        .problem-list {
-            display: grid;
-            gap: 1.5rem;
-        }
-
-        .problem-item {
-            padding: 2rem;
-            background: var(--color-light-bg);
-            border-radius: 8px;
-        }
-
-        .problem-item strong {
-            display: block;
-            color: var(--color-rose);
-            font-weight: 600;
-            margin-bottom: 0.5rem;
-            font-size: 1.05rem;
-        }
-
-        .problem-item p {
-            color: var(--color-gray);
-            font-size: 0.95rem;
-            line-height: 1.7;
-        }
-
-        /* SOLUTION CARDS */
-        .solution-section {
-            margin: 4rem 0;
-        }
-
-        .solution-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-            gap: 2rem;
-        }
-
-        .card {
-            padding: 2.5rem 2rem;
-            background: var(--color-white);
-            border: 1px solid #e8e8e8;
-            border-radius: 8px;
-            transition: all 0.3s ease;
-        }
-
-        .card:hover {
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
-        }
-
-        .card-label {
-            font-size: 10px;
-            letter-spacing: 1.5px;
-            text-transform: uppercase;
-            color: var(--color-rose);
-            font-weight: 600;
-            margin-bottom: 1rem;
-        }
-
-        .card h3 {
-            font-size: 1.4rem;
-            font-weight: 500;
-            margin-bottom: 1.2rem;
-            color: var(--color-dark);
-        }
-
-        .card p {
-            color: var(--color-gray);
-            font-size: 0.95rem;
-            line-height: 1.8;
-            margin-bottom: 0.8rem;
-        }
-
-        .card ul {
-            list-style: none;
-            margin: 0;
-        }
-
-        .card li {
-            color: var(--color-gray);
-            font-size: 0.95rem;
-            line-height: 1.8;
-            margin-bottom: 0.6rem;
-            padding-left: 1.2rem;
-            position: relative;
-        }
-
-        .card li:before {
-            content: "✦";
-            position: absolute;
-            left: 0;
-            color: var(--color-rose);
-        }
-
-        /* CTA SECTION */
-        .benefits-section {
-            margin: 3rem 0;
-            padding: 2rem 0;
-        }
-
-        .benefits-list {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-            gap: 2rem;
-            margin: 2rem 0;
-        }
-
-        .benefit-item {
-            display: flex;
-            gap: 1.5rem;
-            padding: 1.5rem;
-            background: var(--color-light-bg);
-            border-radius: 8px;
-            align-items: flex-start;
-        }
-
-        .benefit-icon {
-            font-size: 1.8rem;
-            color: var(--color-rose);
-            font-weight: bold;
-            min-width: 30px;
-            text-align: center;
-        }
-
-        .benefit-item strong {
-            display: block;
-            color: var(--color-dark);
-            font-size: 1.05rem;
-            margin-bottom: 0.3rem;
-        }
-
-        .benefit-item p {
-            color: var(--color-gray);
-            font-size: 0.9rem;
-            line-height: 1.6;
-        }
-
-        /* CTA SECTION */
-        .cta-section {
-            background: var(--color-light-bg);
-            padding: 3.5rem 2rem;
-            text-align: center;
-            margin: 4rem 0;
-            border-radius: 8px;
-        }
-
-        .cta-section h2 {
-            font-size: 2rem;
-            font-weight: 400;
-            margin-bottom: 0.8rem;
-            color: var(--color-dark);
-        }
-
-        .cta-section p {
-            color: var(--color-gray);
-            margin-bottom: 2rem;
-            font-size: 1.05rem;
-        }
-
-        .email-form {
-            display: flex;
-            justify-content: center;
-            gap: 0.8rem;
-            margin-bottom: 1.5rem;
-            flex-wrap: wrap;
-        }
-
-        .email-form input {
-            padding: 0.9rem 1.2rem;
-            font-size: 0.95rem;
-            border: 1px solid #ddd;
-            border-radius: 4px;
-            width: 320px;
-            font-family: inherit;
-            background: white;
-        }
-
-        .email-form input::placeholder {
-            color: #aaa;
-        }
-
-        .email-form button {
-            padding: 0.9rem 2rem;
-            background: var(--color-dark);
-            color: white;
-            border: none;
-            border-radius: 4px;
-            cursor: pointer;
-            font-size: 0.95rem;
-            font-weight: 500;
-            letter-spacing: 0.3px;
-            transition: background 0.3s;
-            white-space: nowrap;
-        }
-
-        .email-form button:hover {
-            background: var(--color-rose);
-        }
-
-        .cta-disclaimer {
-            font-size: 0.85rem;
-            color: #aaa;
-            margin-top: 1rem;
-        }
-
-        /* ORIGINAL CONTENT - PHASES */
-        .phases-section {
-            margin: 4rem 0;
-            padding: 2rem 0;
-        }
-
-        .phase-content {
-            text-align: center;
-            margin: 3rem 0;
-        }
-
-        .phase-title {
-            font-size: 2rem;
-            font-weight: 400;
-            margin-bottom: 1rem;
-            color: var(--color-dark);
-        }
-
-        .phase-subtitle {
-            color: var(--color-gray);
-            font-size: 1.05rem;
-            margin-bottom: 2.5rem;
-            line-height: 1.8;
-        }
-
-        .phase-items {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 2rem;
-            margin-bottom: 3rem;
-        }
-
-        .phase-item {
-            padding: 2.5rem 2rem;
-            background: var(--color-white);
-            border: 1px solid #e8e8e8;
-            border-radius: 8px;
-            text-align: left;
-        }
-
-        .phase-item-label {
-            font-size: 10px;
-            letter-spacing: 1.5px;
-            text-transform: uppercase;
-            color: var(--color-rose);
-            font-weight: 600;
-            margin-bottom: 1rem;
-        }
-
-        .phase-item h4 {
-            font-size: 1.3rem;
-            font-weight: 500;
-            margin-bottom: 1rem;
-            color: var(--color-dark);
-        }
-
-        .phase-item p {
-            color: var(--color-gray);
-            font-size: 0.95rem;
-            line-height: 1.8;
-            margin-bottom: 1.2rem;
-        }
-
-        .phase-item a {
-            color: var(--color-rose);
-            text-decoration: none;
-            font-size: 0.9rem;
-            font-weight: 500;
-        }
-
-        .phase-item a:hover {
-            opacity: 0.7;
-        }
-
-        .separator {
-            border-top: 1px solid #e0e0e0;
-            border-bottom: 1px solid #e0e0e0;
-            padding: 2rem 0;
-            margin: 3rem 0;
-        }
-
-        /* PHASES GRID */
-        .phases-grid-section {
-            margin: 3rem 0;
-        }
-
-        .phases-grid {
-            display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 2rem;
-        }
-
-        .phase-card-grid {
-            padding: 2rem;
-            background: var(--color-white);
-            border: 1px solid #e8e8e8;
-            border-radius: 8px;
-        }
-
-        .phase-card-grid .phase-number {
-            font-size: 2.5rem;
-            font-weight: 300;
-            color: #e8e8e8;
-            margin-bottom: 0.5rem;
-            line-height: 1;
-        }
-
-        .phase-card-grid h3 {
-            font-size: 1.1rem;
-            font-weight: 500;
-            margin-bottom: 0.8rem;
-            color: var(--color-dark);
-        }
-
-        .phase-card-grid > p {
-            color: var(--color-gray);
-            font-size: 0.9rem;
-            line-height: 1.6;
-            margin-bottom: 1.5rem;
-        }
-
-        .phase-card-items {
-            display: flex;
-            flex-direction: column;
-            gap: 1rem;
-        }
-
-        .phase-card-item {
-            padding: 1rem;
-            background: var(--color-light-bg);
-            border-radius: 4px;
-        }
-
-        .phase-card-item .phase-item-label {
-            font-size: 9px;
-            letter-spacing: 1px;
-            text-transform: uppercase;
-            color: var(--color-rose);
-            font-weight: 600;
-            margin-bottom: 0.4rem;
-        }
-
-        .phase-card-item p {
-            font-size: 0.85rem;
-            color: var(--color-dark);
-            margin: 0.3rem 0;
-        }
-
-        .phase-card-item a {
-            display: inline-block;
-            margin-top: 0.5rem;
-            color: var(--color-rose);
-            text-decoration: none;
-            font-size: 0.85rem;
-            font-weight: 500;
-        }
-
-        .phase-card-item a:hover {
-            opacity: 0.7;
-        }
-
-        /* QUOTE */
-        .quote {
-            text-align: center;
-            padding: 3rem 2rem;
-            font-size: 1.4rem;
-            font-weight: 400;
-            color: var(--color-dark);
-            border-top: 1px solid #e0e0e0;
-            border-bottom: 1px solid #e0e0e0;
-            margin: 4rem 0;
-            line-height: 1.8;
-        }
-
-        /* FOOTER */
-        footer {
-            text-align: center;
-            padding: 2.5rem;
-            color: #999;
-            font-size: 0.85rem;
-            border-top: 1px solid #e0e0e0;
-            margin-top: 4rem;
-        }
-
-        footer p {
-            margin: 0.5rem 0;
-        }
-
-        footer a {
-            color: var(--color-dark);
-            text-decoration: none;
-            transition: color 0.3s;
-        }
-
-        footer a:hover {
-            color: var(--color-rose);
-        }
-
-        /* RESPONSIVE */
-        @media (max-width: 768px) {
-            header {
-                flex-direction: column;
-                gap: 1.5rem;
-                padding: 1.5rem;
-                text-align: center;
-            }
-
-            nav {
-                flex-wrap: wrap;
-                justify-content: center;
-                gap: 1.5rem;
-            }
-
-            main {
-                padding: 0 1.5rem;
-            }
-
-            .hero h1 {
-                font-size: 1.8rem;
-            }
-
-            .hero .subtitle {
-                font-size: 1.1rem;
-            }
-
-            .section-title {
-                font-size: 1.7rem;
-            }
-
-            .email-form {
-                flex-direction: column;
-            }
-
-            .email-form input {
-                width: 100%;
-            }
-
-            .email-form button {
-                width: 100%;
-            }
-
-            .phases-grid {
-                grid-template-columns: 1fr;
-            }
-
-            .quote {
-                font-size: 1.1rem;
-            }
-        }
-    </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Unirversos Idiomas — aprenda a se comunicar a partir da sua essência</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Baloo+2:wght@500;600;700&family=Zen+Maru+Gothic:wght@400;500;700&display=swap');
+:root{
+  --pink:#E08C86; --pink-deep:#C26F6C; --pink-soft:rgba(224,140,134,.14);
+  --blush:#FBEBE7; --blush-2:#F0DFDA; --cream:#FDF8F5;
+  --ink:#4A4149; --ink-soft:#8A7F86;
+  --gold:#C0913F; --gold-soft:#FBF2DF;
+  --sage:#7FA893; --sage-soft:#EAF3EE;
+  --lav:#8B90C4; --lav-soft:#EEEFF9;
+}
+*{box-sizing:border-box;margin:0;padding:0;}
+@media (prefers-reduced-motion: reduce){ *{transition:none !important;} }
+body{font-family:'Zen Maru Gothic',sans-serif;color:var(--ink);background:var(--cream);line-height:1.7;font-size:16px;-webkit-font-smoothing:antialiased;}
+.wrap{max-width:840px;margin:0 auto;padding:0 24px;}
+
+.nav{display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap;padding:22px 0;}
+.logo{font-family:'Baloo 2',cursive;font-size:18px;font-weight:700;text-decoration:none;color:inherit;}
+.logo i{font-style:normal;color:var(--pink);}
+.nav .links{display:flex;gap:18px;font-size:13px;}
+.nav .links a{color:var(--ink-soft);text-decoration:none;}
+.nav .links a:hover{color:var(--pink-deep);}
+.nav .links a.on{color:var(--pink);}
+
+.hero{padding:30px 0 40px;text-align:center;}
+.hero .eyebrow{font-size:11px;letter-spacing:4px;text-transform:uppercase;color:var(--pink);margin-bottom:14px;font-weight:600;}
+.hero h1{font-family:'Baloo 2',cursive;font-weight:700;font-size:clamp(26px,4.6vw,40px);line-height:1.25;max-width:600px;margin:0 auto 16px;}
+.hero h1 em{font-style:normal;color:var(--pink);}
+.hero p{color:var(--ink-soft);max-width:520px;margin:0 auto 26px;font-size:16px;}
+.cta{display:inline-block;font-weight:500;font-size:15px;background:var(--pink);color:#fff;border-radius:40px;padding:13px 30px;text-decoration:none;transition:all .2s ease;box-shadow:0 6px 20px rgba(224,140,134,.22);}
+.cta:hover{background:var(--pink-deep);transform:translateY(-2px);}
+.cta.ghost{background:#fff;color:var(--pink-deep);border:1.5px solid var(--pink);box-shadow:none;}
+.cta.ghost:hover{background:var(--blush);}
+
+.strip{background:var(--pink);color:#fff;padding:13px 0;text-align:center;font-size:14px;}
+.strip a{color:#fff;text-decoration:underline;text-underline-offset:3px;}
+
+.section-intro{padding:44px 0 8px;text-align:center;}
+.section-intro .eyebrow{font-size:11px;letter-spacing:4px;text-transform:uppercase;color:var(--pink);margin-bottom:10px;font-weight:600;}
+.section-intro h2{font-family:'Baloo 2',cursive;font-weight:700;font-size:clamp(23px,3.8vw,31px);margin-bottom:10px;}
+.section-intro p{color:var(--ink-soft);max-width:560px;margin:0 auto;}
+
+/* blocos expansíveis */
+.accordion{padding:20px 0 10px;}
+details{
+  background:#fff;border:1px solid var(--blush-2);border-radius:18px;margin-bottom:12px;overflow:hidden;transition:all .2s ease;
+}
+details[open]{box-shadow:0 8px 26px rgba(36,28,63,.05);}
+summary{
+  list-style:none;cursor:pointer;padding:20px 24px;display:flex;align-items:center;gap:14px;
+  font-family:'Baloo 2',cursive;font-weight:600;font-size:18px;transition:background .18s ease;
+}
+summary::-webkit-details-marker{display:none;}
+summary:hover{background:var(--blush);}
+summary .ic{font-size:22px;line-height:1;}
+summary .txt{flex:1;}
+summary .txt small{display:block;font-family:'Zen Maru Gothic',sans-serif;font-weight:400;font-size:12.5px;color:var(--ink-soft);margin-top:2px;}
+summary .arrow{color:var(--pink);font-size:14px;transition:transform .2s ease;}
+details[open] summary .arrow{transform:rotate(90deg);}
+.detail-body{padding:4px 24px 24px;}
+.detail-body p{color:var(--ink-soft);font-size:14.5px;margin-bottom:12px;}
+.detail-body p:last-child{margin-bottom:0;}
+.detail-body p strong{color:var(--ink);}
+
+/* grid interno dos elementos */
+.quad{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:12px;margin-top:6px;}
+.el{background:var(--cream);border:1px solid var(--blush-2);border-radius:14px;padding:16px;}
+.el .icon{font-size:20px;display:block;margin-bottom:6px;}
+.el h4{font-family:'Baloo 2',cursive;font-weight:600;font-size:14px;}
+.el .tag{font-size:11.5px;color:var(--pink);margin-bottom:8px;}
+.el ul{list-style:none;}
+.el li{font-size:13px;color:var(--ink);padding:2px 0 2px 14px;position:relative;}
+.el li::before{content:'·';position:absolute;left:2px;color:var(--pink);font-weight:700;}
+.fifth-note{margin-top:12px;background:var(--blush);border:1px dashed var(--pink);border-radius:14px;padding:16px;font-size:13.5px;color:var(--ink-soft);}
+.fifth-note b{color:var(--pink-deep);}
+
+/* lista de itens dentro dos blocos */
+.ilist{display:flex;flex-direction:column;gap:10px;margin-top:4px;}
+.irow{border:1px solid var(--blush-2);border-radius:14px;padding:14px 16px;background:var(--cream);}
+.irow .st{font-size:11px;letter-spacing:1.5px;text-transform:uppercase;color:var(--pink-deep);}
+.irow h4{font-size:14.5px;font-weight:600;margin:2px 0;}
+.irow p{font-size:13px;color:var(--ink-soft);margin:0;}
+.irow a{color:var(--pink-deep);text-decoration:none;border-bottom:1px solid var(--blush-2);}
+.irow a:hover{border-color:var(--pink);}
+.bolsa{margin-top:12px;background:var(--gold-soft);border:1px dashed var(--gold);border-radius:14px;padding:14px 16px;font-size:13.5px;color:#7A5B21;}
+.bolsa strong{color:#5E4416;}
+
+.quote{padding:52px 0;text-align:center;}
+.quote p{font-family:'Baloo 2',cursive;font-weight:600;font-size:clamp(19px,3.2vw,26px);line-height:1.5;color:var(--ink);max-width:600px;margin:0 auto;}
+.quote span{color:var(--pink);}
+
+.zero{background:var(--blush);padding:52px 0;text-align:center;border-radius:24px;margin:20px 0;}
+.zero .eyebrow{font-size:11px;letter-spacing:4px;text-transform:uppercase;color:var(--pink-deep);margin-bottom:10px;font-weight:600;}
+.zero h2{font-family:'Baloo 2',cursive;font-weight:700;font-size:clamp(24px,4vw,34px);margin-bottom:14px;}
+.zero p{color:var(--ink-soft);max-width:520px;margin:0 auto 16px;}
+.zero .kit{display:flex;gap:10px;justify-content:center;flex-wrap:wrap;margin:20px 0 26px;}
+.zero .kit span{background:#fff;border:1px solid var(--blush-2);border-radius:30px;padding:8px 16px;font-size:13.5px;}
+
+.foot{border-top:1px solid var(--blush-2);padding:34px 0 50px;text-align:center;}
+.foot .big{font-family:'Baloo 2',cursive;font-size:17px;margin-bottom:14px;}
+.foot .tags{display:flex;gap:16px;justify-content:center;flex-wrap:wrap;font-size:13px;color:var(--pink-deep);}
+.foot .credit{margin-top:16px;font-size:11.5px;color:var(--ink-soft);opacity:.7;}
+
+</style>
 </head>
 <body>
-    <!-- HEADER -->
-    <header>
-        <a href="/" class="logo">UNIRVERSOS</a>
-        <nav>
-            <a href="https://unirversos.com/idiomas/">idiomas</a>
-            <a href="https://unirversos.com/memorias/">memórias</a>
-            <a href="https://unirversos.com/paralelos/">paralelos</a>
-            <a href="https://unirversos.com/sobre/">sobre</a>
-        </nav>
-    </header>
 
-    <main>
-        <!-- ===== LANDING DE VALIDAÇÃO (NOVO) ===== -->
-        
-        <!-- HERO -->
-        <section class="hero">
-            <h1>Japão sem perrengue:<br/>aumente sua zona de conforto com o idioma desde o primeiro dia.</h1>
-            <p class="subtitle">Conquiste a autonomia prática para se virar com total segurança — mesmo se acabar a bateria do celular.</p>
-        </section>
+<div class="wrap">
+  <nav class="nav">
+    <a href="/" class="logo">UNIRVERSOS</a>
+    <div class="links">
+      <a href="/idiomas/" class="on">idiomas</a>
+      <a href="/memorias/">memórias</a>
+      <a href="/paralelos/">paralelos</a>
+      <a href="/sobre/">sobre</a>
+      <a href="/">início</a>
+    </div>
+  </nav>
 
-        <!-- ANNOUNCEMENT -->
-        <div class="announcement">
-            ✦ Turmas ao vivo com acompanhamento individual: <strong>vagas até dezembro</strong>. <a href="#cta">Ver mais</a>
+  <header class="hero">
+    <p class="eyebrow">unirversos idiomas</p>
+    <h1>Aprenda a se comunicar a partir da sua <em>essência</em>.</h1>
+    <p>Trilhas de inglês, português e japonês criadas a partir de uma metodologia autoral, lapidada ao longo de anos. Primeiro, comece por você e descubra a sua voz — depois, escolha a sua jornada e faça seu próprio caminho.</p>
+    <a href="#aula-zero" class="cta">Começar pela aula zero</a>
+  </header>
+</div>
+
+<div class="strip">
+  <div class="wrap">✦ Turmas ao vivo com acompanhamento individual: <strong>vagas até dezembro</strong>. <a href="#ao-vivo">Ver as modalidades</a></div>
+</div>
+
+<div class="wrap">
+
+  <div class="section-intro">
+    <p class="eyebrow">explore no seu tempo</p>
+    <h2>O que você quer conhecer?</h2>
+    <p>Toque em cada tema para abrir. Nada aparece antes de você pedir.</p>
+  </div>
+
+  <div class="accordion">
+
+    <!-- TRILHAS AUTOGUIADAS -->
+    <details>
+      <summary>
+        <span class="ic">🧭</span>
+        <span class="txt">As trilhas autoguiadas<small>Para caminhar no seu ritmo, sem hora marcada</small></span>
+        <span class="arrow">▶</span>
+      </summary>
+      <div class="detail-body">
+        <div class="ilist">
+          <div class="irow"><span class="st">autoguiado</span><h4><a href="/idiomas/mapas/">Mapas de contexto →</a></h4><p>Doze mapas em japonês e trilhas iniciais em inglês e português. Peças, moldes e radar de escuta.</p></div>
+          <div class="irow"><span class="st">autoguiado · rpg</span><h4><a href="/idiomas/planeta-utopia/">Planeta Utopia →</a></h4><p>O livro-jogo gamificado: crie seu avatar, suba de nível e ganhe XP praticando idiomas.</p></div>
+          <div class="irow"><span class="st">flashcard · trilíngue</span><h4><a href="/idiomas/amuleto/">Amuleto de Bolso →</a></h4><p>52 expressões essenciais em 3 idiomas. Flashcards com pronúncia, kanji destacado e variações de gênero.</p></div>
+          <div class="irow"><span class="st">diário · comunidade</span><h4><a href="/paralelos/">Diário →</a></h4><p>Um acontecimento ou pensamento com constância, no idioma alvo. Compartilhe sua frase e acompanhe a jornada de outros aprendizes.</p></div>
         </div>
+      </div>
+    </details>
 
-        <!-- PROBLEMA -->
-        <section class="problem-section">
-            <div class="phase-label">POR QUE UNIRVERSOS?</div>
-            <h2 class="section-title">Aprender japonês para viajar não precisa ser exaustivo nem abstrato.</h2>
-
-            <div class="problem-list">
-                <div class="problem-item">
-                    <strong>Pensamento em blocos, não em decoreba</strong>
-                    <p>Monte estruturas funcionais com facilidade, entendendo como o idioma se conecta de verdade.</p>
-                </div>
-                <div class="problem-item">
-                    <strong>Radar de escuta para o mundo real</strong>
-                    <p>Aprenda a pescar as palavras-chave que atendentes e fiscais realmente usam no dia a dia.</p>
-                </div>
-                <div class="problem-item">
-                    <strong>Simulações práticas para destravar a voz</strong>
-                    <p>Treine com cenários imersivos antes da viagem para responder com naturalidade desde o primeiro dia.</p>
-                </div>
-            </div>
-        </section>
-
-        <!-- O QUE VOCÊ GANHA -->
-        <section class="benefits-section">
-            <h2 class="section-title">Deixe seu email e ganhe:</h2>
-            
-            <div class="benefits-list">
-                <div class="benefit-item">
-                    <div class="benefit-icon">✓</div>
-                    <div>
-                        <strong>Acesso a 2 mapas grátis</strong>
-                        <p>Comece a aprender hoje mesmo (Restaurante + Hotel)</p>
-                    </div>
-                </div>
-
-                <div class="benefit-item">
-                    <div class="benefit-icon">✓</div>
-                    <div>
-                        <strong>Early bird 50% OFF na vida toda</strong>
-                        <p>R$ 99 em vez de R$ 199 (primeiros 20 interessados)</p>
-                    </div>
-                </div>
-
-                <div class="benefit-item">
-                    <div class="benefit-icon">✓</div>
-                    <div>
-                        <strong>Seu feedback direto</strong>
-                        <p>Você ajuda a moldar o produto enquanto testamos</p>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <!-- CTA -->
-        <section class="cta-section" id="cta">
-            <h2>Comece agora — 2 mapas grátis</h2>
-            <p>Sem cartão de crédito. Sem compromisso.</p>
-            <form class="email-form" action="https://formspree.io/f/myegnoob" method="POST">
-                <input type="email" name="email" placeholder="seu email" required>
-                <button type="submit">Quero meus 2 mapas grátis →</button>
-            </form>
-            <p class="cta-disclaimer">⚠️ Vagas limitadas ao early bird: 20 pessoas (primeiras chegam, primeiras saem!)</p>
-        </section>
-
-        <!-- ===== CONTEÚDO ORIGINAL (MANTIDO) ===== -->
-
-        <div class="separator"></div>
-
-        <!-- TAGLINE ORIGINAL -->
-        <p class="tagline-main">Uma jornada para aprender, praticar, usar e<br/>compartilhar.</p>
-
-        <!-- FASES EM GRID -->
-        <section class="phases-grid-section">
-            <div class="phases-grid">
-                <div class="phase-card-grid">
-                    <div class="phase-number">1</div>
-                    <h3>Aprender em contexto</h3>
-                    <p>Construa um vocabulário que faz sentido. Não é lista de palavras — é entender <em>quando</em> e <em>como</em> usar.</p>
-                    <div class="phase-card-items">
-                        <div class="phase-card-item">
-                            <div class="phase-item-label">Mapas de Contexto</div>
-                            <p><strong>12 cenários reais</strong></p>
-                            <a href="https://unirversos.com/idiomas/mapas/">explorar →</a>
-                        </div>
-                        <div class="phase-card-item">
-                            <div class="phase-item-label">Amuleto de Bolso</div>
-                            <p><strong>52 expressões</strong></p>
-                            <a href="https://unirversos.com/idiomas/amuleto/">revisar →</a>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="phase-card-grid">
-                    <div class="phase-number">2</div>
-                    <h3>Ganhe confiança praticando</h3>
-                    <p>A teoria fica na memória. A prática te torna fluente.</p>
-                    <div class="phase-card-items">
-                        <div class="phase-card-item">
-                            <div class="phase-item-label">Planeta Utopia</div>
-                            <p><strong>Livro-jogo gamificado</strong></p>
-                            <a href="https://unirversos.com/idiomas/planeta-utopia/">começar →</a>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="phase-card-grid">
-                    <div class="phase-number">3</div>
-                    <h3>Eternize suas memórias</h3>
-                    <p>Transforme suas fotos em uma revista encadernada profissional. Leve suas histórias para casa.</p>
-                    <div class="phase-card-items">
-                        <div class="phase-card-item">
-                            <div class="phase-item-label">Revista de Memórias</div>
-                            <p><strong>Do celular para a prateleira</strong></p>
-                            <a href="https://unirversos.com/memorias/">criar →</a>
-                        </div>
-                        <div class="phase-card-item">
-                            <div class="phase-item-label">Álbum Personalizado</div>
-                            <p><strong>Com suas próprias fotos</strong></p>
-                            <a href="https://unirversos.com/memorias/seu-album/">montar →</a>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="phase-card-grid">
-                    <div class="phase-number">4</div>
-                    <h3>Virar parte de algo maior</h3>
-                    <p>Você não está sozinho. Compartilhe seu dia em outro idioma e ouça a história de quem está no mesmo caminho.</p>
-                    <div class="phase-card-items">
-                        <div class="phase-card-item">
-                            <div class="phase-item-label">Diário Trilíngue</div>
-                            <p><strong>Paralelos — comunidade</strong></p>
-                            <a href="https://unirversos.com/paralelos/">escrever →</a>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <!-- QUOTE -->
-        <div class="quote">
-            Não é sobre sair da zona de conforto.<br/>
-            É sobre aumentar a zona de conforto.
+    <!-- FERRAMENTAS -->
+    <details>
+      <summary>
+        <span class="ic">🧰</span>
+        <span class="txt">As ferramentas do método<small>Como cada elemento vira prática</small></span>
+        <span class="arrow">▶</span>
+      </summary>
+      <div class="detail-body">
+        <div class="ilist">
+          <div class="irow"><span class="st">fogo</span><h4>Mapas de contexto</h4><p>Situações reais viram mapas com peças, moldes e radar de escuta. Aprenda a lógica uma vez e ela abre centenas de frases.</p></div>
+          <div class="irow"><span class="st">água</span><h4>Quebra-cabeça da fluência</h4><p>Toda palavra que faltar na hora de falar vira sua lista. Você sempre busca o que faltou — e avança um pouco por dia.</p></div>
+          <div class="irow"><span class="st">terra</span><h4>Desafio do diário</h4><p>Três acontecimentos, três pensamentos, todo dia, no idioma alvo. A língua vira o impulso de emanar naturalmente.</p></div>
+          <div class="irow"><span class="st">ar + espírito</span><h4>Quests</h4><p>Role play de um cenário no idioma, cada um com seu avatar, na primeira pessoa. Desinibição, eloquência e transmissão de ideias.</p></div>
         </div>
+      </div>
+    </details>
 
-    </main>
+    <!-- MODALIDADES AO VIVO -->
+    <details id="ao-vivo">
+      <summary>
+        <span class="ic">🌟</span>
+        <span class="txt">Acompanhamento ao vivo<small>Vagas até dezembro — o formato mais intenso</small></span>
+        <span class="arrow">▶</span>
+      </summary>
+      <div class="detail-body">
+        <p>Turmas com acompanhamento individual ou em grupo, ao vivo, com material feito sob medida. É o formato que exige presença de nós dois.</p>
+        <div class="ilist">
+          <div class="irow"><span class="st">adultos · individual</span><h4>Do Caos ao Cosmos</h4><p>Para quem não abre mão de viver uma vida extraordinária, aprendendo sempre. Aulas individuais, PDF semanal, quest mensal e conteúdo feito para você.</p></div>
+          <div class="irow"><span class="st">a partir de 7 anos · em grupo e individual</span><h4>Trilha em grupo e individual</h4><p>Com a interação como motor, numa dinâmica relacional que reacende o interesse. Aulas em grupo ou individual, material incluso e quest mensal.</p></div>
+        </div>
+        <div class="bolsa"><strong>20% das vagas em grupo são bolsas de até 100%</strong>, destinadas a alunos da rede pública (sujeitas a análise). Essas vagas existem graças às turmas que patrocinam esse sonho.</div>
+      </div>
+    </details>
 
-    <!-- FOOTER -->
-    <footer>
-        <p>unirversos — tudo conectado</p>
-        <p>
-            <a href="https://instagram.com/unirversos.idiomas">@unirversos.idiomas</a>
-            |
-            <a href="mailto:unirversos.idiomas@gmail.com">unirversos.idiomas@gmail.com</a>
-        </p>
-        <p style="margin-top: 1.5rem;">Aline Kikuti</p>
-    </footer>
+  </div>
+
+  <div class="quote">
+    <p>Não é sobre sair da zona de conforto.<br>É sobre <span>aumentar</span> a zona de conforto.</p>
+  </div>
+
+  <!-- AULA ZERO -->
+  <section class="zero" id="aula-zero">
+    <p class="eyebrow">a porta de entrada</p>
+    <h2>Aula zero: autoanálise sincerona</h2>
+    <p>Antes de qualquer conteúdo, a gente começa por você. Porque sozinhos não somos nada — mas, antes, é importante saber quem somos.</p>
+    <div class="kit">
+      <span>⏱ 30 minutinhos</span>
+      <span>🥤 um copão de água</span>
+      <span>💗 um coração aberto</span>
+    </div>
+    <p><a href="/idiomas/aula-zero/" class="cta">Fazer a aula zero</a></p>
+  </section>
+
+  <footer class="foot">
+    <p class="big">unirversos — tudo conectado</p>
+    <div class="tags"><span>@unirversos.idiomas</span><span>unirversos.idiomas@gmail.com</span></div>
+    <p class="credit">Aline Kikuti</p>
+  </footer>
+
+</div>
+
 </body>
 </html>
