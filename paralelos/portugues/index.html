@@ -98,19 +98,8 @@ body{font-family:'Zen Maru Gothic',sans-serif;color:var(--ink);background:var(--
     <h2>✍️ Compartilhe sua frase</h2>
   </div>
 
-  <div class="form-box">
-    <h3>Novo post</h3>
-    <form id="formPost">
-      <div class="form-group">
-        <label for="author">Seu nome:</label>
-        <textarea id="author" placeholder="Como você quer ser conhecido?" maxlength="50"></textarea>
-      </div>
-      <div class="form-group">
-        <label for="text">Sua frase (em português):</label>
-        <textarea id="text" placeholder="Um acontecimento, um pensamento, uma descoberta..." maxlength="280" required></textarea>
-      </div>
-      <button type="submit" class="btn-submit">Publicar →</button>
-    </form>
+  <div class="form-box" style="padding:0;overflow:hidden;">
+    <iframe src="https://docs.google.com/forms/d/e/1FAIpQLSfU5g-SGjo8oIxc-nQwvEZWpVPf1M_jhy3_tgL5mGgDzk617w/viewform?embedded=true" width="100%" height="640" frameborder="0" marginheight="0" marginwidth="0" style="display:block;">Carregando…</iframe>
   </div>
 
   <div class="section-title">
@@ -119,8 +108,7 @@ body{font-family:'Zen Maru Gothic',sans-serif;color:var(--ink);background:var(--
 
   <div class="posts-container" id="postsContainer">
     <div class="empty-state">
-      <p>Nenhum post ainda. Seja o primeiro a compartilhar! 🌱</p>
-      <p class="note">Seus posts são salvos localmente no seu navegador.</p>
+      <p>Carregando as frases da comunidade…</p>
     </div>
   </div>
 
@@ -134,82 +122,86 @@ body{font-family:'Zen Maru Gothic',sans-serif;color:var(--ink);background:var(--
 </div>
 
 <script>
-const STORAGE_KEY = 'paralelos_portugues_posts';
+// Diário comunitário — lê as respostas da planilha vinculada ao Google Form
+// Depois que a planilha estiver com "Qualquer pessoa com o link -> Leitor",
+// troque SHEET_ID abaixo pelo ID real (fica na URL entre /d/ e /edit).
+const SHEET_ID = 'COLE_AQUI_O_ID_DA_PLANILHA';
+const LANG_MATCH = ['portugu']; // como identificar esta língua no campo "Idioma"
 
-// Exemplos de posts iniciais
-const SAMPLE_POSTS = [
-  { author: 'Sofia', text: 'Acordei cedo e vi o sol nascendo. Uma nova oportunidade todos os dias.', date: '2024-08-03' },
-  { author: 'Marcos', text: 'Hoje consegui entender uma conversa completa. O esforço compensa.', date: '2024-08-02' },
-  { author: 'Clara', text: 'Aprender um idioma é plantar sementes. Nunca sabemos quando vão brotar.', date: '2024-08-01' }
-];
-
-function getPosts() {
-  const stored = localStorage.getItem(STORAGE_KEY);
-  return stored ? JSON.parse(stored) : SAMPLE_POSTS;
+function normalize(str){
+  return (str || '').toString().normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase();
 }
 
-function savePosts(posts) {
-  localStorage.setItem(STORAGE_KEY, JSON.stringify(posts));
-  renderPosts();
+function formatDate(d){
+  if (!d) return '';
+  try{
+    return new Date(d).toLocaleDateString('pt-BR', { year: 'numeric', month: 'long', day: 'numeric' });
+  }catch(e){ return ''; }
 }
 
-function formatDate(date) {
-  return new Date(date).toLocaleDateString('pt-BR', { 
-    year: 'numeric', 
-    month: 'long', 
-    day: 'numeric' 
-  });
+function renderEmpty(msg){
+  document.getElementById('postsContainer').innerHTML = '<div class="empty-state"><p>' + msg + '</p></div>';
 }
 
-function renderPosts() {
-  const posts = getPosts();
+function renderPosts(posts){
   const container = document.getElementById('postsContainer');
-  
-  if (posts.length === 0) {
-    container.innerHTML = `
-      <div class="empty-state">
-        <p>Nenhum post ainda. Seja o primeiro a compartilhar! 🌱</p>
-        <p class="note">Seus posts são salvos localmente no seu navegador.</p>
-      </div>
-    `;
+  if (!posts.length){
+    renderEmpty('Nenhuma frase ainda. Seja a primeira pessoa a compartilhar! 🌱');
     return;
   }
-
-  container.innerHTML = posts.map((post, idx) => `
-    <div class="post">
-      <div class="post-header">
-        <span class="post-author">${post.author || 'Aprendiz'}</span>
-        <span class="post-date">${formatDate(post.date)}</span>
-      </div>
-      <div class="post-text">${post.text}</div>
-    </div>
-  `).reverse().join('');
+  container.innerHTML = posts.slice().reverse().map(function(post){
+    return '<div class="post">' +
+      '<div class="post-header"><span class="post-author">' + (post.author || 'Aprendiz') + '</span>' +
+      '<span class="post-date">' + formatDate(post.date) + '</span></div>' +
+      '<div class="post-text">' + post.text + '</div></div>';
+  }).join('');
 }
 
-document.getElementById('formPost').addEventListener('submit', function(e) {
-  e.preventDefault();
-  
-  const author = document.getElementById('author').value.trim() || 'Aprendiz';
-  const text = document.getElementById('text').value.trim();
-  
-  if (!text) return;
-  
-  const posts = getPosts();
-  posts.push({
-    author: author,
-    text: text,
-    date: new Date().toISOString().split('T')[0]
-  });
-  
-  savePosts(posts);
-  
-  document.getElementById('author').value = '';
-  document.getElementById('text').value = '';
-  document.getElementById('text').focus();
-});
+function loadPosts(){
+  if (!SHEET_ID || SHEET_ID.indexOf('COLE_AQUI') === 0){
+    renderEmpty('As frases da comunidade aparecem aqui assim que os primeiros envios chegarem. 🌱');
+    return;
+  }
+  window.__diarioCallback = function(data){
+    try{
+      const cols = data.table.cols;
+      let idxIdioma = -1, idxNome = -1, idxFrase = -1, idxData = -1;
+      cols.forEach(function(c, i){
+        const label = normalize(c.label);
+        if (idxIdioma === -1 && (label.indexOf('idiom') !== -1 || label.indexOf('language') !== -1)) idxIdioma = i;
+        if (idxNome === -1 && (label.indexOf('nome') !== -1 || label.indexOf('autor') !== -1 || label.indexOf('name') !== -1)) idxNome = i;
+        if (idxFrase === -1 && (label.indexOf('frase') !== -1 || label.indexOf('pensamento') !== -1 || label.indexOf('mensagem') !== -1 || label.indexOf('message') !== -1)) idxFrase = i;
+        if (idxData === -1 && (label.indexOf('carimbo') !== -1 || label.indexOf('timestamp') !== -1)) idxData = i;
+      });
+      const rows = data.table.rows || [];
+      const posts = [];
+      rows.forEach(function(row){
+        const cells = row.c || [];
+        const idiomaVal = idxIdioma !== -1 && cells[idxIdioma] ? normalize(cells[idxIdioma].v) : '';
+        const matches = LANG_MATCH.some(function(k){ return idiomaVal.indexOf(normalize(k)) !== -1; });
+        if (idxIdioma === -1 || matches){
+          const fraseVal = idxFrase !== -1 && cells[idxFrase] ? cells[idxFrase].v : null;
+          if (fraseVal){
+            posts.push({
+              author: idxNome !== -1 && cells[idxNome] ? cells[idxNome].v : '',
+              text: fraseVal,
+              date: idxData !== -1 && cells[idxData] ? cells[idxData].v : null
+            });
+          }
+        }
+      });
+      renderPosts(posts);
+    }catch(err){
+      renderEmpty('Não foi possível carregar as frases agora. Tente novamente em instantes.');
+    }
+  };
+  const s = document.createElement('script');
+  s.src = 'https://docs.google.com/spreadsheets/d/' + SHEET_ID + '/gviz/tq?tqx=out:json;responseHandler:__diarioCallback';
+  s.onerror = function(){ renderEmpty('Não foi possível carregar as frases agora.'); };
+  document.body.appendChild(s);
+}
 
-// Renderizar posts ao carregar
-renderPosts();
+loadPosts();
 </script>
 
 </body>
