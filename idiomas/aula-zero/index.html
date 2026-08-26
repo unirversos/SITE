@@ -130,6 +130,9 @@
       .accordion-header{padding:16px;}
       .tab-btn{min-width:120px;font-size:12px;padding:12px 8px;}
     }
+    .audio-narracao{background:var(--lav-soft, #EEEFF9);border:1.5px solid var(--pink, #E08C86);border-radius:16px;padding:16px 20px;margin:0 0 20px;}
+    .audio-narracao p{margin:0 0 10px !important;font-size:13.5px !important;font-weight:600;color:var(--pink-deep, #C26F6C) !important;}
+    .audio-narracao audio{width:100%;}
   </style>
 </head>
 <body>
@@ -161,6 +164,13 @@
   <div class="tab-content active" id="tab0">
     <div class="tab-section">
       <h2>Estrutura dos Moldes</h2>
+      <div class="audio-narracao">
+        <p>🎧 Ouça a Aline explicar antes de praticar</p>
+        <audio controls preload="none">
+          <source src="audio/1-estrutura.mp3" type="audio/mpeg">
+          Seu navegador não suporta áudio nativo.
+        </audio>
+      </div>
       <p><strong>A cópula</strong> (です) é o verbo "ser/estar" em japonês. É a base de tudo. Aprenda a afirmar, negar e perguntar.</p>
       
       <!-- Molde A: Desu -->
@@ -171,19 +181,25 @@
         </div>
         <div class="accordion-body">
           <p style="font-size:13px;color:var(--ink-soft);margin-bottom:16px;"><strong>Estrutura:</strong></p>
-          <div class="structure-box">[Item/Conceito] <strong>+ です</strong><br/><span style="font-size:13px;color:var(--ink-soft);margin-top:8px;display:block;">= X desu</span></div>
+          <div class="structure-box">[Item/Conceito] <strong>+ です</strong><br/><span style="font-size:13px;color:var(--ink-soft);margin-top:8px;display:block;">= X desu</span><br/><span style="font-size:13px;color:var(--pink-deep);margin-top:8px;display:block;font-weight:600;">Ex: [Seu nome] + です = Sou [seu nome]</span></div>
           <p style="font-size:13px;color:var(--ink-soft);margin-bottom:12px;font-weight:600;">Exemplos:</p>
-          <div class="phrase-row">
-            <div class="phrase-jp">パスポートです</div>
-            <div class="phrase-roma">Pasupoto desu</div>
-            <div class="phrase-pt">É o passaporte</div>
-            <button class="audio-btn" onclick="speak('pasupoto desu', 'ja-JP')">🔊</button>
-          </div>
           <div class="phrase-row">
             <div class="phrase-jp">ブラジル人です</div>
             <div class="phrase-roma">Burajiru jin desu</div>
             <div class="phrase-pt">Sou brasileiro(a)</div>
             <button class="audio-btn" onclick="speak('burajiru jin desu', 'ja-JP')">🔊</button>
+          </div>
+          <div class="phrase-row">
+            <div class="phrase-jp">ほんとうです</div>
+            <div class="phrase-roma">Hontou desu</div>
+            <div class="phrase-pt">É verdade</div>
+            <button class="audio-btn" onclick="speak('hontou desu', 'ja-JP')">🔊</button>
+          </div>
+          <div class="phrase-row">
+            <div class="phrase-jp">Aline desu</div>
+            <div class="phrase-roma">[Seu nome] + desu</div>
+            <div class="phrase-pt">Sou Aline</div>
+            <button class="audio-btn" onclick="speak('Aline desu', 'ja-JP')">🔊</button>
           </div>
         </div>
       </div>
@@ -196,7 +212,7 @@
         </div>
         <div class="accordion-body">
           <p style="font-size:13px;color:var(--ink-soft);margin-bottom:16px;"><strong>Estrutura:</strong></p>
-          <div class="structure-box sage">[Item/Conceito] <strong>+ ではありません</strong><br/><span style="font-size:15px;color:var(--ink-soft);margin-top:12px;display:block;font-weight:600;">Variações: じゃありません (jya arimasen) | じゃない (jya nai)</span><br/><span style="font-size:13px;color:var(--ink-soft);margin-top:8px;display:block;">= X dewa arimasen / X jya arimasen / X jya nai</span></div>
+          <div class="structure-box sage">[Item/Conceito] <strong>+ ではありません</strong><br/><span style="font-size:15px;color:var(--ink-soft);margin-top:12px;display:block;font-weight:600;">Variações: じゃありません (jya arimasen) | じゃない (jya nai)</span><br/><span style="font-size:13px;color:var(--ink-soft);margin-top:8px;display:block;">= X dewa arimasen / X jya arimasen / X jya nai</span><br/><span style="font-size:13px;color:var(--pink-deep);margin-top:8px;display:block;font-weight:600;">Ex: [Seu nome] + dewa arimasen = Não sou [seu nome]</span></div>
           <p style="font-size:13px;color:var(--ink-soft);margin-bottom:12px;font-weight:600;">Exemplos:</p>
           <div class="phrase-row">
             <div class="phrase-jp">観光客ではありません</div>
@@ -211,10 +227,16 @@
             <button class="audio-btn" onclick="speak('nihon jin jya arimasen', 'ja-JP')">🔊</button>
           </div>
           <div class="phrase-row">
-            <div class="phrase-jp">パスポートじゃない</div>
-            <div class="phrase-roma">Pasupoto jya nai</div>
-            <div class="phrase-pt">Não é o passaporte (informal)</div>
-            <button class="audio-btn" onclick="speak('pasupoto jya nai', 'ja-JP')">🔊</button>
+            <div class="phrase-jp">ほんとうじゃない</div>
+            <div class="phrase-roma">Hontou jya nai</div>
+            <div class="phrase-pt">Não é verdade (informal)</div>
+            <button class="audio-btn" onclick="speak('hontou jya nai', 'ja-JP')">🔊</button>
+          </div>
+          <div class="phrase-row">
+            <div class="phrase-jp">Aline dewa arimasen</div>
+            <div class="phrase-roma">[Seu nome] + dewa arimasen</div>
+            <div class="phrase-pt">Não sou Aline</div>
+            <button class="audio-btn" onclick="speak('Aline dewa arimasen', 'ja-JP')">🔊</button>
           </div>
         </div>
       </div>
@@ -227,7 +249,7 @@
         </div>
         <div class="accordion-body">
           <p style="font-size:13px;color:var(--ink-soft);margin-bottom:16px;"><strong>Estrutura:</strong></p>
-          <div class="structure-box lav">[Frase] <strong>+ ですか？</strong><br/><span style="font-size:13px;color:var(--ink-soft);margin-top:8px;display:block;">= X desu ka?</span></div>
+          <div class="structure-box lav">[Frase] <strong>+ ですか？</strong><br/><span style="font-size:13px;color:var(--ink-soft);margin-top:8px;display:block;">= X desu ka?</span><br/><span style="font-size:13px;color:var(--pink-deep);margin-top:8px;display:block;font-weight:600;">Ex: [Seu nome] + desu ka? = Você é [seu nome]?</span></div>
           <p style="font-size:13px;color:var(--ink-soft);margin-bottom:12px;font-weight:600;">Exemplos:</p>
           <div class="phrase-row">
             <div class="phrase-jp">観光客ですか？</div>
@@ -242,10 +264,16 @@
             <button class="audio-btn" onclick="speak('burajiru jin desu ka', 'ja-JP')">🔊</button>
           </div>
           <div class="phrase-row">
-            <div class="phrase-jp">パスポートですか？</div>
-            <div class="phrase-roma">Pasupoto desu ka?</div>
-            <div class="phrase-pt">É o passaporte?</div>
-            <button class="audio-btn" onclick="speak('pasupoto desu ka', 'ja-JP')">🔊</button>
+            <div class="phrase-jp">ほんとうですか？</div>
+            <div class="phrase-roma">Hontou desu ka?</div>
+            <div class="phrase-pt">É verdade? / Sério?</div>
+            <button class="audio-btn" onclick="speak('hontou desu ka', 'ja-JP')">🔊</button>
+          </div>
+          <div class="phrase-row">
+            <div class="phrase-jp">Aline desu ka？</div>
+            <div class="phrase-roma">[Seu nome] + desu ka?</div>
+            <div class="phrase-pt">Você é Aline?</div>
+            <button class="audio-btn" onclick="speak('Aline desu ka', 'ja-JP')">🔊</button>
           </div>
         </div>
       </div>
@@ -261,6 +289,14 @@
   <div class="tab-content" id="tab1">
     <div class="tab-section">
       <h2>Sistema Verbal (~ます)</h2>
+      <!-- Quando o áudio 2 (verbos) estiver pronto, troque SRC-DO-AUDIO-2-AQUI.mp3 pelo caminho real -->
+      <div class="audio-narracao">
+        <p>🎧 Ouça a Aline explicar antes de praticar</p>
+        <audio controls preload="none">
+          <source src="audio/2-verbos.mp3" type="audio/mpeg">
+          Seu navegador não suporta áudio nativo.
+        </audio>
+      </div>
       <p><strong>Os verbos mudam de forma</strong> para indicar tempo e polidez. Cada verbo tem 4 conjugações: presente, negativo, passado e passado negativo.</p>
       
       <!-- VERBO 1: Iku -->
@@ -459,6 +495,14 @@
   <div class="tab-content" id="tab2">
     <div class="tab-section">
       <h2>Interrogativos & Frases Essenciais</h2>
+      <!-- Quando o áudio 3 (perguntas) estiver pronto, troque o caminho pelo real -->
+      <div class="audio-narracao">
+        <p>🎧 Ouça a Aline explicar antes de praticar</p>
+        <audio controls preload="none">
+          <source src="audio/3-perguntas.mp3" type="audio/mpeg">
+          Seu navegador não suporta áudio nativo.
+        </audio>
+      </div>
       <p><strong>Os 5 interrogativos curinga</strong> e as <strong>6 peças essenciais</strong> que salvam sua vida no Japão.</p>
       
       <!-- SEÇÃO: 5 Interrogativos -->
@@ -677,6 +721,14 @@
   <div class="tab-content" id="tab3">
     <div class="tab-section">
       <h2>Teste Final</h2>
+      <!-- Quando o áudio 4 (teste) estiver pronto, troque o caminho pelo real -->
+      <div class="audio-narracao">
+        <p>🎧 Ouça a Aline explicar antes de praticar</p>
+        <audio controls preload="none">
+          <source src="audio/4-teste.mp3" type="audio/mpeg">
+          Seu navegador não suporta áudio nativo.
+        </audio>
+      </div>
       <p>Acerte 80%+ para desbloquear os 12 Mapas e começar sua jornada! Teste suas habilidades agora.</p>
       
       <div class="test-section">
@@ -730,6 +782,7 @@ const vocabulary = [
   { jp: 'どこ', roma: 'Doko', pt: 'Onde?' },
   { jp: 'フライト', roma: 'Furaito', pt: 'Voo' },
   { jp: 'が', roma: 'Ga', pt: 'Partícula de sujeito' },
+  { jp: 'ほんとう', roma: 'Hontou', pt: 'Verdade / Sério' },
   { jp: 'いいですか', roma: 'Ii desu ka', pt: 'Pode? / Tudo bem?' },
   { jp: '行く', roma: 'Iku', pt: 'Ir' },
   { jp: 'いくら', roma: 'Ikura', pt: 'Quanto?' },
