@@ -11,7 +11,7 @@
     *{margin:0;padding:0;box-sizing:border-box;}
     :root{
       --paper:#FDF8F5;--pink:#E08C86;--pink-deep:#C26F6C;--lav:#8B90C4;--lav-soft:#D4D9F0;
-      --sage:#7FA893;--gold:#C0913F;--ink:#4A4149;--ink-soft:#7A6F7E;--line:#E8DFDA;--line-d:#D8CCBF;
+      --sage:#7FA893;--gold:#C0913F;--ink:#4A4149;--ink-soft:#7A6F7E;--roma:#5C4F60;--line:#E8DFDA;--line-d:#D8CCBF;
     }
     html,body{background:var(--paper);font-family:'Zen Maru Gothic',sans-serif;color:var(--ink);line-height:1.6;}
 
@@ -43,6 +43,9 @@
     }
     .tab-btn:hover{background:var(--lav-soft);color:var(--pink);}
     .tab-btn.active{color:var(--pink);border-bottom-color:var(--pink);background:var(--lav-soft);}
+    .progress-track{height:4px;background:var(--line);width:100%;}
+    .progress-fill{height:100%;background:var(--pink);width:25%;transition:width .3s ease;}
+    .progress-label{text-align:center;font-size:11px;color:var(--roma);padding:6px 0 0;font-weight:600;}
     
     .wrap{max-width:1000px;margin:0 auto;padding:0 24px;}
     
@@ -77,7 +80,7 @@
       background:#f9f7f5;padding:12px;border-radius:6px;margin-bottom:8px;border-left:3px solid var(--pink);
     }
     .phrase-jp{font-size:16px;font-weight:600;}
-    .phrase-roma{font-size:13px;color:var(--ink-soft);}
+    .phrase-roma{font-size:13px;color:var(--roma);font-weight:500;}
     .phrase-pt{font-size:13px;color:var(--sage);}
     .audio-btn{
       padding:6px 12px;font-size:11px;background:var(--lav);color:#fff;border:none;border-radius:4px;
@@ -208,6 +211,8 @@
     <button class="tab-btn" onclick="switchTab(2)">❓ 3. Perguntas</button>
     <button class="tab-btn" onclick="switchTab(3)">🎯 4. Teste</button>
   </div>
+  <div class="progress-track"><div class="progress-fill" id="progressFill"></div></div>
+  <div class="progress-label" id="progressLabel">Passo 1 de 4 · 25%</div>
 </nav>
 
 <!-- CONTEÚDO DAS ABAS -->
@@ -238,7 +243,7 @@
           <p style="font-size:13px;color:var(--ink-soft);margin-bottom:12px;font-weight:600;">Exemplos:</p>
           <div class="phrase-row">
             <div class="phrase-jp">ブラジル人です</div>
-            <div class="phrase-roma">Burajiru jin desu</div>
+            <div class="phrase-roma">Burajirujin desu</div>
             <div class="phrase-pt">Sou brasileiro(a)</div>
             <button class="audio-btn" onclick="speak('burajiru jin desu', 'ja-JP')">🔊</button>
           </div>
@@ -269,7 +274,7 @@
           <p style="font-size:13px;color:var(--ink-soft);margin-bottom:12px;font-weight:600;">Exemplos:</p>
           <div class="phrase-row">
             <div class="phrase-jp">観光客ではありません</div>
-            <div class="phrase-roma">Kankou kyaku dewa arimasen</div>
+            <div class="phrase-roma">Kankoukyaku dewa arimasen</div>
             <div class="phrase-pt">Não sou turista (formal)</div>
             <button class="audio-btn" onclick="speak('kankou kyaku dewa arimasen', 'ja-JP')">🔊</button>
           </div>
@@ -306,13 +311,13 @@
           <p style="font-size:13px;color:var(--ink-soft);margin-bottom:12px;font-weight:600;">Exemplos:</p>
           <div class="phrase-row">
             <div class="phrase-jp">観光客ですか？</div>
-            <div class="phrase-roma">Kankou kyaku desu ka?</div>
+            <div class="phrase-roma">Kankoukyaku desu ka?</div>
             <div class="phrase-pt">Você é turista?</div>
             <button class="audio-btn" onclick="speak('kankou kyaku desu ka', 'ja-JP')">🔊</button>
           </div>
           <div class="phrase-row">
             <div class="phrase-jp">ブラジル人ですか？</div>
-            <div class="phrase-roma">Burajiru jin desu ka?</div>
+            <div class="phrase-roma">Burajirujin desu ka?</div>
             <div class="phrase-pt">Você é brasileiro(a)?</div>
             <button class="audio-btn" onclick="speak('burajiru jin desu ka', 'ja-JP')">🔊</button>
           </div>
@@ -644,6 +649,11 @@
       <!-- SEÇÃO: 6 Peças Essenciais -->
       <h3 style="font-family:'Baloo 2',cursive;font-size:20px;color:var(--pink-deep);margin:32px 0 20px;">6 Peças Essenciais de Sobrevivência</h3>
 
+      <div class="audio-narracao" style="background:var(--gold-soft, #FBF2DF);border-color:var(--gold, #C0913F);">
+        <p style="color:var(--gold, #C0913F) !important;">💡 Uma coisa que ajuda muito</p>
+        <p style="font-weight:400 !important;color:var(--ink) !important;font-size:13.5px !important;">Não dá pra traduzir palavra por palavra do português. Duas partículas fazem o trabalho pesado: <strong>は (wa)</strong> marca o assunto da frase — <em>"quanto ao banheiro, onde fica?"</em> — e <strong>を (o/wo)</strong> marca o que você quer receber — <em>"água, por favor"</em>. Elas não têm tradução direta, só a função de apontar qual palavra é o quê na frase.</p>
+      </div>
+
       <div class="accordion">
         <div class="accordion-header" onclick="toggleAccordion(this)">
           <h3>1. Onde fica X?</h3>
@@ -706,6 +716,7 @@
             <div class="phrase-pt">Muito obrigado(a)</div>
             <button class="audio-btn" onclick="speak('arigatou gozaimasu', 'ja-JP')">🔊</button>
           </div>
+          <p style="font-size:12.5px;color:var(--roma);margin-top:10px;background:#f9f7f5;padding:10px 12px;border-radius:6px;">💡 <strong>すみません</strong> é curinga: serve pra "com licença" (passando por alguém), "desculpa" (esbarrão) e até um "valeu" informal quando alguém te ajuda. É diferente de <strong>ごめんなさい</strong>, que é um pedido de desculpas mais sincero/sério, tipo quando você realmente magoou alguém.</p>
         </div>
       </div>
 
@@ -812,13 +823,25 @@
         </div>
 
         <div class="test-section">
-          <h3 style="color:var(--pink-deep);margin-bottom:20px;">Parte 1: Reconhecer a Frase (5 questões)</h3>
+          <h3 style="color:var(--pink-deep);margin-bottom:20px;">Parte 1: Reconhecer a Frase (15 questões)</h3>
           <div id="testPart1"></div>
         </div>
 
         <div class="test-section" style="margin-top:24px;">
           <h3 style="color:var(--pink-deep);margin-bottom:20px;">Parte 2: Conectar Frases e Traduções (6 pares)</h3>
           <div id="testPart2"></div>
+        </div>
+
+        <div class="test-section" style="margin-top:24px;">
+          <h3 style="color:var(--pink-deep);margin-bottom:20px;">💧 Parte 3: Compreensão Auditiva (3 questões)</h3>
+          <p style="color:var(--pink-deep);font-size:12.5px;margin-bottom:16px;">Ouça o áudio e escolha o significado — sem ver o texto em japonês antes.</p>
+          <div id="testPart3"></div>
+        </div>
+
+        <div class="test-section" style="margin-top:24px;">
+          <h3 style="color:var(--pink-deep);margin-bottom:20px;">✍️ Parte 4: Produção (2 questões)</h3>
+          <p style="color:var(--pink-deep);font-size:12.5px;margin-bottom:16px;">Digite a resposta em romaji, sem opções prontas.</p>
+          <div id="testPart4"></div>
         </div>
 
         <div id="testResult"></div>
@@ -886,8 +909,8 @@ const vocabulary = [
   { jp: 'すみません', roma: 'Sumimasen', pt: 'Com licença / Desculpa' },
   { jp: '食べる', roma: 'Taberu', pt: 'Comer' },
   { jp: 'トイレ', roma: 'Toire', pt: 'Banheiro' },
-  { jp: 'ブラジル人', roma: 'Burajiru jin', pt: 'Brasileiro(a)' },
-  { jp: '観光客', roma: 'Kankou kyaku', pt: 'Turista' },
+  { jp: 'ブラジル人', roma: 'Burajirujin', pt: 'Brasileiro(a)' },
+  { jp: '観光客', roma: 'Kankoukyaku', pt: 'Turista' },
   { jp: 'わかる', roma: 'Wakaru', pt: 'Entender' },
   { jp: 'は', roma: 'Wa', pt: 'Partícula de tópico' },
 ];
@@ -899,6 +922,10 @@ function switchTab(tabIndex) {
   
   document.getElementById(`tab${tabIndex}`).classList.add('active');
   document.querySelectorAll('.tab-btn')[tabIndex].classList.add('active');
+
+  const pct = Math.round(((tabIndex + 1) / 4) * 100);
+  document.getElementById('progressFill').style.width = pct + '%';
+  document.getElementById('progressLabel').textContent = `Passo ${tabIndex + 1} de 4 · ${pct}%`;
   
   window.scrollTo(0, 0);
 }
@@ -939,84 +966,99 @@ function renderVocabList() {
 
 // TESTE
 const testPart1Questions = [
-  { question: 'Como você diz "Onde fica o banheiro?"?', correct: 'トイレはどこですか？', options: [
+  { question: 'Como você diz "Onde fica o banheiro?"?', correct: 'トイレはどこですか？', explicacao: 'は marca "banheiro" como o assunto da frase, e どこですか pergunta onde. Junto: "quanto ao banheiro, onde é?"', options: [
       { jp: 'トイレはどこですか？', roma: 'Toire wa doko desu ka?' },
       { jp: '何ですか？', roma: 'Nan desu ka?' },
       { jp: 'いくらですか？', roma: 'Ikura desu ka?' }
     ] },
-  { question: 'Qual frase significa "Não entendo"?', correct: 'わかりません', options: [
+  { question: 'Qual frase significa "Não entendo"?', correct: 'わかりません', explicacao: 'ます = presente afirmativo, ません = presente negativo. Wakarimasen é a negação de wakarimasu.', options: [
       { jp: 'わかります', roma: 'Wakarimasu' },
       { jp: 'わかりません', roma: 'Wakarimasen' },
       { jp: 'わかりました', roma: 'Wakarimashita' }
     ] },
-  { question: 'Como pedir água educadamente?', correct: '水をください', options: [
+  { question: 'Como pedir água educadamente?', correct: '水をください', explicacao: 'を marca a água como o que você quer receber; ください fecha o pedido de forma educada.', options: [
       { jp: '水です', roma: 'Mizu desu' },
       { jp: '水をください', roma: 'Mizu wo kudasai' },
       { jp: '水があります', roma: 'Mizu ga arimasu' }
     ] },
-  { question: 'Qual é o significado de "ですか？"', correct: 'Pergunta polida', options: [
+  { question: 'Qual é o significado de "ですか？"', correct: 'Pergunta polida', explicacao: 'か no final de uma frase japonesa sempre transforma ela numa pergunta educada.', options: [
       { jp: 'Afirmação', roma: '' },
       { jp: 'Pergunta polida', roma: '' },
       { jp: 'Negação', roma: '' }
     ] },
-  { question: 'Como você diz "Você é turista?"', correct: '観光客ですか？', options: [
-      { jp: '観光客です', roma: 'Kankou kyaku desu' },
-      { jp: '観光客ですか？', roma: 'Kankou kyaku desu ka?' },
-      { jp: '観光客ではありません', roma: 'Kankou kyaku dewa arimasen' }
+  { question: 'Como você diz "Você é turista?"', correct: '観光客ですか？', explicacao: 'Mesma estrutura do です, só com か no final pra virar pergunta: "você é turista?"', options: [
+      { jp: '観光客です', roma: 'Kankoukyaku desu' },
+      { jp: '観光客ですか？', roma: 'Kankoukyaku desu ka?' },
+      { jp: '観光客ではありません', roma: 'Kankoukyaku dewa arimasen' }
     ] },
-  { question: '食べました (Tabemashita) é qual flexão?', correct: 'Passado afirmativo', options: [
+  { question: '食べました (Tabemashita) é qual flexão?', correct: 'Passado afirmativo', explicacao: 'ました é a marca do passado afirmativo — "comi".', options: [
       { jp: 'Presente afirmativo', roma: '' },
       { jp: 'Presente negativo', roma: '' },
       { jp: 'Passado afirmativo', roma: '' },
       { jp: 'Passado negativo', roma: '' }
     ] },
-  { question: '行きません (Ikimasen) é qual flexão?', correct: 'Presente negativo', options: [
+  { question: '行きません (Ikimasen) é qual flexão?', correct: 'Presente negativo', explicacao: 'ません é o presente negativo — "não vou".', options: [
       { jp: 'Presente negativo', roma: '' },
       { jp: 'Passado afirmativo', roma: '' },
       { jp: 'Passado negativo', roma: '' },
       { jp: 'Presente afirmativo', roma: '' }
     ] },
-  { question: '飲みませんでした (Nomimasen deshita) é qual flexão?', correct: 'Passado negativo', options: [
+  { question: '飲みませんでした (Nomimasen deshita) é qual flexão?', correct: 'Passado negativo', explicacao: 'ませんでした junta negativo + passado — "não bebi".', options: [
       { jp: 'Presente afirmativo', roma: '' },
       { jp: 'Presente negativo', roma: '' },
       { jp: 'Passado afirmativo', roma: '' },
       { jp: 'Passado negativo', roma: '' }
     ] },
-  { question: '来ます (Kimasu) é qual flexão?', correct: 'Presente afirmativo', options: [
+  { question: '来ます (Kimasu) é qual flexão?', correct: 'Presente afirmativo', explicacao: 'ます sozinho, sem negativo nem passado, é sempre presente/futuro afirmativo.', options: [
       { jp: 'Presente afirmativo', roma: '' },
       { jp: 'Presente negativo', roma: '' },
       { jp: 'Passado afirmativo', roma: '' },
       { jp: 'Passado negativo', roma: '' }
     ] },
-  { question: 'Você tem alergia a amendoim e precisa avisar antes de comer algo. O que você diz?', correct: 'アレルギーがあります', options: [
+  { question: 'Você tem alergia a amendoim e precisa avisar antes de comer algo. O que você diz?', correct: 'アレルギーがあります', explicacao: 'が marca o que você tem/existe; あります é "existe/tem" pra coisas (não-vivas).', options: [
       { jp: 'アレルギーがあります', roma: 'Arerugī ga arimasu' },
       { jp: 'フライトがあります', roma: 'Furaito ga arimasu' },
       { jp: '水をください', roma: 'Mizu wo kudasai' }
     ] },
-  { question: 'Alguém esbarra em você sem querer no metrô. Qual a resposta educada?', correct: 'すみません', options: [
+  { question: 'Alguém esbarra em você sem querer no metrô. Qual a resposta educada?', correct: 'すみません', explicacao: 'すみません cobre "com licença" e "desculpa" ao mesmo tempo — é o mais usado no dia a dia.', options: [
       { jp: 'ありがとうございます', roma: 'Arigatou gozaimasu' },
       { jp: 'すみません', roma: 'Sumimasen' },
       { jp: 'いいですか？', roma: 'Ii desu ka?' }
     ] },
-  { question: 'Você quer saber o preço de um item antes de comprar. O que você pergunta?', correct: 'いくらですか？', options: [
+  { question: 'Você quer saber o preço de um item antes de comprar. O que você pergunta?', correct: 'いくらですか？', explicacao: 'いくら é o interrogativo específico pra perguntar preço.', options: [
       { jp: 'いくらですか？', roma: 'Ikura desu ka?' },
       { jp: 'なんでですか？', roma: 'Nande desu ka?' },
       { jp: '誰ですか？', roma: 'Dare desu ka?' }
     ] },
-  { question: 'Você quer tirar uma foto de alguém e precisa pedir permissão. O que você diz?', correct: 'いいですか？', options: [
+  { question: 'Você quer tirar uma foto de alguém e precisa pedir permissão. O que você diz?', correct: 'いいですか？', explicacao: 'いいですか？ é a forma rápida de pedir permissão — "pode? tudo bem?"', options: [
       { jp: 'いいですか？', roma: 'Ii desu ka?' },
       { jp: '誰ですか？', roma: 'Dare desu ka?' },
       { jp: 'どこですか？', roma: 'Doko desu ka?' }
     ] },
-  { question: 'Você está com sede num restaurante e quer pedir água educadamente. O que você diz?', correct: '水をください', options: [
+  { question: 'Você está com sede num restaurante e quer pedir água educadamente. O que você diz?', correct: '水をください', explicacao: 'を marca a água como o que você está pedindo; ください fecha educadamente.', options: [
       { jp: '水をください', roma: 'Mizu wo kudasai' },
       { jp: '水があります', roma: 'Mizu ga arimasu' },
       { jp: '水です', roma: 'Mizu desu' }
     ] },
-  { question: 'Alguém te conta algo surpreendente e você quer confirmar se é verdade. O que você pergunta?', correct: 'ほんとうですか？', options: [
+  { question: 'Alguém te conta algo surpreendente e você quer confirmar se é verdade. O que você pergunta?', correct: 'ほんとうですか？', explicacao: 'ほんとう = "verdade"; ですか transforma em pergunta de confirmação.', options: [
       { jp: 'ほんとうですか？', roma: 'Hontou desu ka?' },
       { jp: '誰ですか？', roma: 'Dare desu ka?' },
       { jp: 'なんでですか？', roma: 'Nande desu ka?' }
+    ] },
+  { question: 'Você vê uma pessoa desconhecida numa foto e quer saber quem é. O que você pergunta?', correct: '誰ですか？', explicacao: '誰 é o interrogativo específico pra perguntar "quem".', options: [
+      { jp: '誰ですか？', roma: 'Dare desu ka?' },
+      { jp: 'どこですか？', roma: 'Doko desu ka?' },
+      { jp: '何ですか？', roma: 'Nan desu ka?' }
+    ] },
+  { question: 'Seu amigo cancelou os planos de repente e você quer saber o motivo. O que você pergunta?', correct: 'なんでですか？', explicacao: 'なんで pergunta o motivo — equivalente a "por quê".', options: [
+      { jp: 'なんでですか？', roma: 'Nande desu ka?' },
+      { jp: 'いつですか？', roma: 'Itsu desu ka?' },
+      { jp: 'いくらですか？', roma: 'Ikura desu ka?' }
+    ] },
+  { question: 'Você quer saber a data de um evento antes de se planejar. O que você pergunta?', correct: 'いつですか？', explicacao: 'いつ é o interrogativo de tempo, usado pra perguntar "quando".', options: [
+      { jp: 'いつですか？', roma: 'Itsu desu ka?' },
+      { jp: 'どこですか？', roma: 'Doko desu ka?' },
+      { jp: '誰ですか？', roma: 'Dare desu ka?' }
     ] }
 ];
 
@@ -1029,6 +1071,19 @@ const testPart2Pairs = [
   { jp: 'いつですか？', roma: 'Itsu desu ka?', pt: 'Quando é?' }
 ];
 
+// Parte 3: Compreensão Auditiva — ouve o áudio, escolhe o significado (sem ver o texto japonês antes)
+const testListeningQuestions = [
+  { audio: 'wakarimasen', correct: 'Não entendo', explicacao: 'ません é o presente negativo — "wakarimasen" = "não entendo".', options: ['Entendo', 'Não entendo', 'Entendi'] },
+  { audio: 'arigatou gozaimasu', correct: 'Muito obrigado(a)', explicacao: 'Arigatou gozaimasu é a forma educada/completa de agradecer.', options: ['Com licença', 'Muito obrigado(a)', 'Desculpa'] },
+  { audio: 'ikura desu ka', correct: 'Quanto custa?', explicacao: 'いくら é o interrogativo específico de preço.', options: ['Onde é?', 'Quando é?', 'Quanto custa?'] }
+];
+
+// Parte 4: Produção — a pessoa digita a resposta em romaji, sem opções prontas
+const testProductionQuestions = [
+  { question: 'Como você diz "Não entendo" em japonês? (pode escrever em romaji)', accepted: ['wakarimasen'], explicacao: 'Wakarimasen = wakaru (entender) + ません (presente negativo).' },
+  { question: 'Como você pede água educadamente? (romaji)', accepted: ['mizu wo kudasai', 'mizu o kudasai', 'mizuwokudasai', 'mizuokudasai'], explicacao: 'Mizu (água) + を (marca o pedido) + kudasai (por favor).' }
+];
+
 function renderTest() {
   const part1Html = testPart1Questions.map((q, i) => `
     <div style="background:#fff;border-radius:6px;padding:16px;margin-bottom:16px;">
@@ -1037,10 +1092,11 @@ function renderTest() {
         ${q.options.map(opt => `
           <label style="color:var(--ink);display:flex;align-items:center;">
             <input type="radio" name="q${i}" value="${opt.jp}" style="margin-right:8px;">
-            <span>${opt.jp}${opt.roma ? ` <span style="color:var(--ink-soft);font-size:12px;">(${opt.roma})</span>` : ''}</span>
+            <span>${opt.jp}${opt.roma ? ` <span style="color:var(--roma);font-size:12px;font-weight:600;">(${opt.roma})</span>` : ''}</span>
           </label>
         `).join('')}
       </div>
+      <div id="fb-q${i}"></div>
     </div>
   `).join('');
   document.getElementById('testPart1').innerHTML = part1Html;
@@ -1058,7 +1114,7 @@ function renderTest() {
         ${testPart2Pairs.map((p, i) => `
           <div style="padding:12px;background:#fff;border-radius:4px;border:2px solid var(--line);cursor:pointer;
             margin-bottom:8px;text-align:center;font-size:13px;" onclick="selectMatch('jp', ${i})" id="jp-${i}">
-            ${p.jp}<br><span style="color:var(--ink-soft);font-size:11px;">${p.roma}</span>
+            ${p.jp}<br><span style="color:var(--roma);font-size:11px;font-weight:600;">${p.roma}</span>
           </div>
         `).join('')}
       </div>
@@ -1074,6 +1130,31 @@ function renderTest() {
     </div>
   `;
   document.getElementById('testPart2').innerHTML = part2Html;
+
+  const part3Html = testListeningQuestions.map((q, i) => `
+    <div style="background:#fff;border-radius:6px;padding:16px;margin-bottom:16px;">
+      <button type="button" onclick="speak('${q.audio}', 'ja-JP')" style="background:var(--lav);color:#fff;border:none;border-radius:20px;padding:8px 18px;font-size:14px;cursor:pointer;margin-bottom:12px;">🔊 Ouvir</button>
+      <div style="display:flex;flex-direction:column;gap:8px;">
+        ${q.options.map(opt => `
+          <label style="color:var(--ink);display:flex;align-items:center;">
+            <input type="radio" name="listen${i}" value="${opt}" style="margin-right:8px;">
+            ${opt}
+          </label>
+        `).join('')}
+      </div>
+      <div id="fb-listen${i}"></div>
+    </div>
+  `).join('');
+  document.getElementById('testPart3').innerHTML = part3Html;
+
+  const part4Html = testProductionQuestions.map((q, i) => `
+    <div style="background:#fff;border-radius:6px;padding:16px;margin-bottom:16px;">
+      <p style="font-weight:600;margin-bottom:10px;color:var(--ink);">${i + 1}. ${q.question}</p>
+      <input type="text" id="prod${i}" placeholder="Digite aqui..." style="width:100%;padding:10px;border:1.5px solid var(--line);border-radius:8px;font-size:14px;">
+      <div id="fb-prod${i}"></div>
+    </div>
+  `).join('');
+  document.getElementById('testPart4').innerHTML = part4Html;
 }
 
 let selectedMatch = { jp: null, pt: null };
@@ -1106,14 +1187,45 @@ function selectMatch(type, index) {
 
 function submitTest() {
   let score = 0;
-  const total = testPart1Questions.length + testPart2Pairs.length;
+  const total = testPart1Questions.length + testPart2Pairs.length + testListeningQuestions.length + testProductionQuestions.length;
+
+  function feedbackBox(correta, explicacao) {
+    return `<div style="margin-top:8px;padding:10px 12px;border-radius:6px;font-size:12.5px;
+      background:${correta ? '#e8f0e8' : '#fde8e5'};color:${correta ? '#5a7a68' : '#8a3a32'};">
+      ${correta ? '✓ Certinho!' : '✗ Não foi essa —'} ${explicacao}
+    </div>`;
+  }
 
   testPart1Questions.forEach((q, i) => {
     const answer = document.querySelector(`input[name="q${i}"]:checked`)?.value;
-    if (answer === q.correct) score++;
+    const correta = answer === q.correct;
+    if (correta) score++;
+    const fb = document.getElementById(`fb-q${i}`);
+    if (fb) fb.innerHTML = feedbackBox(correta, q.explicacao || '');
   });
 
   score += matches.length;
+
+  testListeningQuestions.forEach((q, i) => {
+    const answer = document.querySelector(`input[name="listen${i}"]:checked`)?.value;
+    const correta = answer === q.correct;
+    if (correta) score++;
+    const fb = document.getElementById(`fb-listen${i}`);
+    if (fb) fb.innerHTML = feedbackBox(correta, q.explicacao || '');
+  });
+
+  function normalizarProducao(str){
+    return (str || '').toString().trim().toLowerCase().replace(/[？?.。！!]/g, '');
+  }
+  testProductionQuestions.forEach((q, i) => {
+    const raw = document.getElementById(`prod${i}`)?.value || '';
+    const val = normalizarProducao(raw);
+    const correta = q.accepted.some(a => normalizarProducao(a) === val);
+    if (correta) score++;
+    const fb = document.getElementById(`fb-prod${i}`);
+    if (fb) fb.innerHTML = feedbackBox(correta, correta ? (q.explicacao || '') : `${q.explicacao || ''} Resposta esperada: "${q.accepted[0]}".`);
+  });
+
   const percentage = Math.round((score / total) * 100);
   const passed = percentage >= 80;
 
