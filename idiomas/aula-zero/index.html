@@ -14,6 +14,16 @@
       --sage:#7FA893;--gold:#C0913F;--ink:#4A4149;--ink-soft:#7A6F7E;--line:#E8DFDA;--line-d:#D8CCBF;
     }
     html,body{background:var(--paper);font-family:'Zen Maru Gothic',sans-serif;color:var(--ink);line-height:1.6;}
+
+    /* SITE NAV */
+    .site-nav{background:var(--paper);}
+    .site-nav .wrap{display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap;padding:20px 24px;}
+    .site-nav .logo{font-family:'Baloo 2',cursive;font-size:18px;font-weight:700;text-decoration:none;color:var(--ink);}
+    .site-nav .links{display:flex;gap:18px;font-size:13px;}
+    .site-nav .links a{color:var(--ink-soft);text-decoration:none;}
+    .site-nav .links a:hover{color:var(--pink-deep);}
+    .back-link{display:block;margin:0 24px 4px;color:var(--pink-deep);text-decoration:none;font-weight:500;font-size:14px;max-width:1040px;margin-left:auto;margin-right:auto;padding:0 24px;}
+    .back-link:hover{text-decoration:underline;}
     
     /* HEADER */
     header{background:linear-gradient(135deg, var(--pink) 0%, var(--lav) 100%);color:#fff;padding:24px 0;box-shadow:0 2px 8px rgba(0,0,0,.1);}
@@ -136,6 +146,21 @@
   </style>
 </head>
 <body>
+
+<!-- SITE NAV -->
+<nav class="site-nav">
+  <div class="wrap">
+    <a href="/" class="logo">UNIRVERSOS</a>
+    <div class="links">
+      <a href="/idiomas/">idiomas</a>
+      <a href="/memorias/">memórias</a>
+      <a href="/paralelos/">paralelos</a>
+      <a href="/sobre/">sobre</a>
+      <a href="/">início</a>
+    </div>
+  </div>
+</nav>
+<a href="/idiomas/" class="back-link">← voltar para idiomas</a>
 
 <!-- HEADER -->
 <header>
