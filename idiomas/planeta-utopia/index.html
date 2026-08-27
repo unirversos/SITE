@@ -296,7 +296,7 @@ function scene(){ return SCENES[curLang].scenes[curTerr]; }
 
 // ---------- progresso salvo ----------
 const SAVE_KEY='utopiaSave1';
-function saveGame(){ try{ localStorage.setItem(SAVE_KEY, JSON.stringify({name:G.name,being:G.being?G.being.id:null,xp:G.xp,maxXp:G.maxXp,level:G.level,hp:G.hp,maxHp:G.maxHp,done:G.done})); }catch(e){} }
+function saveGame(){ try{ const data={name:G.name,being:G.being?G.being.id:null,xp:G.xp,maxXp:G.maxXp,level:G.level,hp:G.hp,maxHp:G.maxHp,done:G.done}; localStorage.setItem(SAVE_KEY, JSON.stringify(data)); if(window.__uniSyncUtopia) window.__uniSyncUtopia(data); }catch(e){} }
 function loadGame(){ try{ const s=JSON.parse(localStorage.getItem(SAVE_KEY)||'null'); if(!s||!s.being)return false;
   G.name=s.name||'Viajante'; G.being=BEINGS.find(b=>b.id===s.being)||BEINGS[3];
   G.xp=s.xp||0; G.maxXp=s.maxXp||100; G.level=s.level||1; G.hp=s.hp||10; G.maxHp=s.maxHp||10; G.done=s.done||{};
@@ -599,6 +599,58 @@ let cameFromMaps=false;
   enterHub();
   if(valid) openScene(t);
 })();
+</script>
+
+<!-- FIREBASE: sincroniza o progresso do Planeta Utopia entre aparelhos -->
+<script type="module">
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+  import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
+  import { getFirestore, doc, getDoc, setDoc } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+
+  const firebaseConfig = {
+    apiKey: "AIzaSyCoo0UB5rWjD4ZGE3xKO32zXYPUQFYObmc",
+    authDomain: "unirversos-site.firebaseapp.com",
+    projectId: "unirversos-site",
+    storageBucket: "unirversos-site.firebasestorage.app",
+    messagingSenderId: "608479693630",
+    appId: "1:608479693630:web:38240bf82e09d72fd5ba6f",
+    measurementId: "G-V6K0D2KTJ1"
+  };
+
+  const app = initializeApp(firebaseConfig);
+  const auth = getAuth(app);
+  const db = getFirestore(app);
+  const SAVE_KEY = 'utopiaSave1';
+
+  // Toda vez que o jogo salva localmente, espelha na nuvem (se logada)
+  window.__uniSyncUtopia = async function(data) {
+    const user = auth.currentUser;
+    if (!user) return;
+    try {
+      await setDoc(doc(db, 'progress', user.uid), { planetaUtopia: data, email: user.email }, { merge: true });
+    } catch (err) {
+      console.error('Erro ao sincronizar Planeta Utopia:', err);
+    }
+  };
+
+  // Se essa é uma conta logada e esse aparelho não tem save local, busca da nuvem
+  onAuthStateChanged(auth, async (user) => {
+    if (!user) return;
+    const jaTemSaveLocal = !!localStorage.getItem(SAVE_KEY);
+    const jaTentouHidratar = sessionStorage.getItem('utopiaHidratou');
+    if (jaTemSaveLocal || jaTentouHidratar) return;
+
+    try {
+      const snap = await getDoc(doc(db, 'progress', user.uid));
+      if (snap.exists() && snap.data().planetaUtopia) {
+        localStorage.setItem(SAVE_KEY, JSON.stringify(snap.data().planetaUtopia));
+        sessionStorage.setItem('utopiaHidratou', 'true');
+        location.reload();
+      }
+    } catch (err) {
+      console.error('Erro ao buscar progresso na nuvem:', err);
+    }
+  });
 </script>
 </body>
 </html>

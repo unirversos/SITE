@@ -143,6 +143,25 @@
     .audio-narracao{background:var(--lav-soft, #EEEFF9);border:1.5px solid var(--pink, #E08C86);border-radius:16px;padding:16px 20px;margin:0 0 20px;}
     .audio-narracao p{margin:0 0 10px !important;font-size:13.5px !important;font-weight:600;color:var(--pink-deep, #C26F6C) !important;}
     .audio-narracao audio{width:100%;}
+
+    /* AUTH GATE */
+    .auth-gate{background:#fff;border:2px solid var(--pink);border-radius:16px;padding:32px;max-width:420px;margin:20px auto;text-align:center;}
+    .auth-gate h3{font-family:'Baloo 2',cursive;color:var(--pink-deep);margin-bottom:8px;font-size:20px;}
+    .auth-gate p{color:var(--ink-soft);font-size:13px;margin-bottom:20px;}
+    .auth-tabs{display:flex;gap:8px;margin-bottom:20px;justify-content:center;}
+    .auth-tabs button{background:none;border:none;padding:8px 16px;font-size:13px;font-weight:600;color:var(--ink-soft);cursor:pointer;border-bottom:2px solid transparent;}
+    .auth-tabs button.active{color:var(--pink-deep);border-color:var(--pink);}
+    .auth-form{display:flex;flex-direction:column;gap:10px;text-align:left;}
+    .auth-form input{padding:10px 14px;border:1.5px solid var(--line);border-radius:8px;font-size:14px;font-family:inherit;}
+    .auth-form button[type="submit"]{background:var(--pink);color:#fff;border:none;padding:12px;border-radius:8px;font-weight:600;cursor:pointer;margin-top:4px;}
+    .auth-form button[type="submit"]:hover{background:var(--pink-deep);}
+    .auth-divider{display:flex;align-items:center;gap:10px;margin:16px 0;color:var(--ink-soft);font-size:12px;}
+    .auth-divider::before,.auth-divider::after{content:'';flex:1;height:1px;background:var(--line);}
+    .auth-google{width:100%;background:#fff;border:1.5px solid var(--line);padding:12px;border-radius:8px;font-weight:600;cursor:pointer;font-size:13px;}
+    .auth-google:hover{background:#f9f7f5;}
+    .auth-error{color:#C0392B;font-size:12px;margin-top:8px;min-height:16px;}
+    .auth-loggedin{background:var(--sage-soft, #EAF3EE);border-radius:10px;padding:10px 16px;font-size:13px;margin-bottom:16px;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px;}
+    .auth-loggedin button{background:none;border:1px solid var(--ink-soft);border-radius:6px;padding:6px 12px;font-size:12px;cursor:pointer;}
   </style>
 </head>
 <body>
@@ -755,21 +774,49 @@
         </audio>
       </div>
       <p>Acerte 80%+ para desbloquear os 12 Mapas e começar sua jornada! Teste suas habilidades agora.</p>
-      
-      <div class="test-section">
-        <h3 style="color:#fff;margin-bottom:20px;">Parte 1: Reconhecer a Frase (5 questões)</h3>
-        <div id="testPart1"></div>
+
+      <!-- AUTH GATE: só pede login pra fazer o teste -->
+      <div id="authGate">
+        <div class="auth-gate">
+          <h3>🔐 Entre pra fazer o teste</h3>
+          <p>Assim seu progresso fica salvo e os 12 Mapas continuam desbloqueados em qualquer aparelho.</p>
+          <div class="auth-tabs">
+            <button id="authTabLogin" class="active" onclick="switchAuthTab('login')">Entrar</button>
+            <button id="authTabSignup" onclick="switchAuthTab('signup')">Criar conta</button>
+          </div>
+          <form class="auth-form" id="authForm" onsubmit="handleAuthSubmit(event)">
+            <input type="email" id="authEmail" placeholder="Seu e-mail" required>
+            <input type="password" id="authPassword" placeholder="Senha (mín. 6 caracteres)" required minlength="6">
+            <button type="submit" id="authSubmitBtn">Entrar</button>
+          </form>
+          <div class="auth-divider">ou</div>
+          <button class="auth-google" onclick="handleGoogleSignIn()">🔵 Entrar com Google</button>
+          <div class="auth-error" id="authError"></div>
+        </div>
       </div>
 
-      <div class="test-section" style="margin-top:24px;">
-        <h3 style="color:#fff;margin-bottom:20px;">Parte 2: Conectar Frases e Traduções (6 pares)</h3>
-        <div id="testPart2"></div>
-      </div>
+      <!-- CONTEÚDO DO TESTE: só aparece depois de logar -->
+      <div id="testGated" style="display:none;">
+        <div class="auth-loggedin">
+          <span>Logado como <strong id="authUserEmail"></strong></span>
+          <button onclick="handleLogout()">Sair</button>
+        </div>
 
-      <div id="testResult"></div>
+        <div class="test-section">
+          <h3 style="color:var(--pink-deep);margin-bottom:20px;">Parte 1: Reconhecer a Frase (5 questões)</h3>
+          <div id="testPart1"></div>
+        </div>
 
-      <div style="text-align:center;margin-top:32px;">
-        <button class="btn-nav" onclick="submitTest()" style="padding:14px 40px;font-size:16px;">📊 Enviar Teste</button>
+        <div class="test-section" style="margin-top:24px;">
+          <h3 style="color:var(--pink-deep);margin-bottom:20px;">Parte 2: Conectar Frases e Traduções (6 pares)</h3>
+          <div id="testPart2"></div>
+        </div>
+
+        <div id="testResult"></div>
+
+        <div style="text-align:center;margin-top:32px;">
+          <button class="btn-nav" onclick="submitTest()" style="padding:14px 40px;font-size:16px;">📊 Enviar Teste</button>
+        </div>
       </div>
 
       <div class="tab-nav-buttons">
@@ -883,31 +930,105 @@ function renderVocabList() {
 
 // TESTE
 const testPart1Questions = [
-  { question: 'Como você diz "Onde fica o banheiro?"?', correct: 'トイレはどこですか？', options: ['トイレはどこですか？', '何ですか？', 'いくらですか？'] },
-  { question: 'Qual frase significa "Não entendo"?', correct: 'わかりません', options: ['わかります', 'わかりません', 'わかりました'] },
-  { question: 'Como pedir água educadamente?', correct: '水をください', options: ['水です', '水をください', '水があります'] },
-  { question: 'Qual é o significado de "ですか？"', correct: 'Pergunta polida', options: ['Afirmação', 'Pergunta polida', 'Negação'] },
-  { question: 'Como você diz "Você é turista?"', correct: '観光客ですか？', options: ['観光客です', '観光客ですか？', '観光客ではありません'] }
+  { question: 'Como você diz "Onde fica o banheiro?"?', correct: 'トイレはどこですか？', options: [
+      { jp: 'トイレはどこですか？', roma: 'Toire wa doko desu ka?' },
+      { jp: '何ですか？', roma: 'Nan desu ka?' },
+      { jp: 'いくらですか？', roma: 'Ikura desu ka?' }
+    ] },
+  { question: 'Qual frase significa "Não entendo"?', correct: 'わかりません', options: [
+      { jp: 'わかります', roma: 'Wakarimasu' },
+      { jp: 'わかりません', roma: 'Wakarimasen' },
+      { jp: 'わかりました', roma: 'Wakarimashita' }
+    ] },
+  { question: 'Como pedir água educadamente?', correct: '水をください', options: [
+      { jp: '水です', roma: 'Mizu desu' },
+      { jp: '水をください', roma: 'Mizu wo kudasai' },
+      { jp: '水があります', roma: 'Mizu ga arimasu' }
+    ] },
+  { question: 'Qual é o significado de "ですか？"', correct: 'Pergunta polida', options: [
+      { jp: 'Afirmação', roma: '' },
+      { jp: 'Pergunta polida', roma: '' },
+      { jp: 'Negação', roma: '' }
+    ] },
+  { question: 'Como você diz "Você é turista?"', correct: '観光客ですか？', options: [
+      { jp: '観光客です', roma: 'Kankou kyaku desu' },
+      { jp: '観光客ですか？', roma: 'Kankou kyaku desu ka?' },
+      { jp: '観光客ではありません', roma: 'Kankou kyaku dewa arimasen' }
+    ] },
+  { question: '食べました (Tabemashita) é qual flexão?', correct: 'Passado afirmativo', options: [
+      { jp: 'Presente afirmativo', roma: '' },
+      { jp: 'Presente negativo', roma: '' },
+      { jp: 'Passado afirmativo', roma: '' },
+      { jp: 'Passado negativo', roma: '' }
+    ] },
+  { question: '行きません (Ikimasen) é qual flexão?', correct: 'Presente negativo', options: [
+      { jp: 'Presente negativo', roma: '' },
+      { jp: 'Passado afirmativo', roma: '' },
+      { jp: 'Passado negativo', roma: '' },
+      { jp: 'Presente afirmativo', roma: '' }
+    ] },
+  { question: '飲みませんでした (Nomimasen deshita) é qual flexão?', correct: 'Passado negativo', options: [
+      { jp: 'Presente afirmativo', roma: '' },
+      { jp: 'Presente negativo', roma: '' },
+      { jp: 'Passado afirmativo', roma: '' },
+      { jp: 'Passado negativo', roma: '' }
+    ] },
+  { question: '来ます (Kimasu) é qual flexão?', correct: 'Presente afirmativo', options: [
+      { jp: 'Presente afirmativo', roma: '' },
+      { jp: 'Presente negativo', roma: '' },
+      { jp: 'Passado afirmativo', roma: '' },
+      { jp: 'Passado negativo', roma: '' }
+    ] },
+  { question: 'Você tem alergia a amendoim e precisa avisar antes de comer algo. O que você diz?', correct: 'アレルギーがあります', options: [
+      { jp: 'アレルギーがあります', roma: 'Arerugī ga arimasu' },
+      { jp: 'フライトがあります', roma: 'Furaito ga arimasu' },
+      { jp: '水をください', roma: 'Mizu wo kudasai' }
+    ] },
+  { question: 'Alguém esbarra em você sem querer no metrô. Qual a resposta educada?', correct: 'すみません', options: [
+      { jp: 'ありがとうございます', roma: 'Arigatou gozaimasu' },
+      { jp: 'すみません', roma: 'Sumimasen' },
+      { jp: 'いいですか？', roma: 'Ii desu ka?' }
+    ] },
+  { question: 'Você quer saber o preço de um item antes de comprar. O que você pergunta?', correct: 'いくらですか？', options: [
+      { jp: 'いくらですか？', roma: 'Ikura desu ka?' },
+      { jp: 'なんでですか？', roma: 'Nande desu ka?' },
+      { jp: '誰ですか？', roma: 'Dare desu ka?' }
+    ] },
+  { question: 'Você quer tirar uma foto de alguém e precisa pedir permissão. O que você diz?', correct: 'いいですか？', options: [
+      { jp: 'いいですか？', roma: 'Ii desu ka?' },
+      { jp: '誰ですか？', roma: 'Dare desu ka?' },
+      { jp: 'どこですか？', roma: 'Doko desu ka?' }
+    ] },
+  { question: 'Você está com sede num restaurante e quer pedir água educadamente. O que você diz?', correct: '水をください', options: [
+      { jp: '水をください', roma: 'Mizu wo kudasai' },
+      { jp: '水があります', roma: 'Mizu ga arimasu' },
+      { jp: '水です', roma: 'Mizu desu' }
+    ] },
+  { question: 'Alguém te conta algo surpreendente e você quer confirmar se é verdade. O que você pergunta?', correct: 'ほんとうですか？', options: [
+      { jp: 'ほんとうですか？', roma: 'Hontou desu ka?' },
+      { jp: '誰ですか？', roma: 'Dare desu ka?' },
+      { jp: 'なんでですか？', roma: 'Nande desu ka?' }
+    ] }
 ];
 
 const testPart2Pairs = [
-  { jp: 'ありがとうございます', pt: 'Muito obrigado(a)' },
-  { jp: 'すみません', pt: 'Com licença / Desculpa' },
-  { jp: 'いくらですか？', pt: 'Quanto custa?' },
-  { jp: 'アレルギーがあります', pt: 'Tenho alergia' },
-  { jp: 'どこですか？', pt: 'Onde é?' },
-  { jp: 'いつですか？', pt: 'Quando é?' }
+  { jp: 'ありがとうございます', roma: 'Arigatou gozaimasu', pt: 'Muito obrigado(a)' },
+  { jp: 'すみません', roma: 'Sumimasen', pt: 'Com licença / Desculpa' },
+  { jp: 'いくらですか？', roma: 'Ikura desu ka?', pt: 'Quanto custa?' },
+  { jp: 'アレルギーがあります', roma: 'Arerugi ga arimasu', pt: 'Tenho alergia' },
+  { jp: 'どこですか？', roma: 'Doko desu ka?', pt: 'Onde é?' },
+  { jp: 'いつですか？', roma: 'Itsu desu ka?', pt: 'Quando é?' }
 ];
 
 function renderTest() {
   const part1Html = testPart1Questions.map((q, i) => `
     <div style="background:#fff;border-radius:6px;padding:16px;margin-bottom:16px;">
-      <p style="font-weight:600;margin-bottom:12px;color:#fff;">${i + 1}. ${q.question}</p>
+      <p style="font-weight:600;margin-bottom:12px;color:var(--ink);">${i + 1}. ${q.question}</p>
       <div style="display:flex;flex-direction:column;gap:8px;">
         ${q.options.map(opt => `
-          <label style="color:#fff;display:flex;align-items:center;">
-            <input type="radio" name="q${i}" value="${opt}" style="margin-right:8px;">
-            ${opt}
+          <label style="color:var(--ink);display:flex;align-items:center;">
+            <input type="radio" name="q${i}" value="${opt.jp}" style="margin-right:8px;">
+            <span>${opt.jp}${opt.roma ? ` <span style="color:var(--ink-soft);font-size:12px;">(${opt.roma})</span>` : ''}</span>
           </label>
         `).join('')}
       </div>
@@ -918,16 +1039,16 @@ function renderTest() {
   const part2Html = `
     <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;">
       <div>
-        <strong style="color:#fff;display:block;margin-bottom:8px;text-align:center;">Frases em Japonês</strong>
+        <strong style="color:var(--pink-deep);display:block;margin-bottom:8px;text-align:center;">Frases em Japonês</strong>
         ${testPart2Pairs.map((p, i) => `
           <div style="padding:12px;background:#fff;border-radius:4px;border:2px solid var(--line);cursor:pointer;
             margin-bottom:8px;text-align:center;font-size:13px;" onclick="selectMatch('jp', ${i})" id="jp-${i}">
-            ${p.jp}
+            ${p.jp}<br><span style="color:var(--ink-soft);font-size:11px;">${p.roma}</span>
           </div>
         `).join('')}
       </div>
       <div>
-        <strong style="color:#fff;display:block;margin-bottom:8px;text-align:center;">Traduções</strong>
+        <strong style="color:var(--pink-deep);display:block;margin-bottom:8px;text-align:center;">Traduções</strong>
         ${testPart2Pairs.map((p, i) => `
           <div style="padding:12px;background:#fff;border-radius:4px;border:2px solid var(--line);cursor:pointer;
             margin-bottom:8px;text-align:center;font-size:13px;" onclick="selectMatch('pt', ${i})" id="pt-${i}">
@@ -998,9 +1119,11 @@ function submitTest() {
   if (passed) {
     localStorage.setItem('aulaZeroCompleted', 'true');
   }
+  window.__uniSaveAulaZero && window.__uniSaveAulaZero(passed, score, total, percentage);
 }
 
-document.addEventListener('DOMContentLoaded', renderTest);
+// renderTest() agora só roda depois do login (ver bloco Firebase abaixo)
+
 
 // Fechar sidebar ao clicar fora
 document.addEventListener('click', (e) => {
@@ -1010,6 +1133,132 @@ document.addEventListener('click', (e) => {
     sidebar.classList.remove('open');
   }
 });
+</script>
+
+<!-- FIREBASE: login + progresso da Aula Zero -->
+<script type="module">
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+  import {
+    getAuth, onAuthStateChanged, createUserWithEmailAndPassword,
+    signInWithEmailAndPassword, GoogleAuthProvider, signInWithPopup, signOut
+  } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
+  import {
+    getFirestore, doc, getDoc, setDoc
+  } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+
+  const firebaseConfig = {
+    apiKey: "AIzaSyCoo0UB5rWjD4ZGE3xKO32zXYPUQFYObmc",
+    authDomain: "unirversos-site.firebaseapp.com",
+    projectId: "unirversos-site",
+    storageBucket: "unirversos-site.firebasestorage.app",
+    messagingSenderId: "608479693630",
+    appId: "1:608479693630:web:38240bf82e09d72fd5ba6f",
+    measurementId: "G-V6K0D2KTJ1"
+  };
+
+  const app = initializeApp(firebaseConfig);
+  const auth = getAuth(app);
+  const db = getFirestore(app);
+
+  let authMode = 'login';
+  window.switchAuthTab = function(mode) {
+    authMode = mode;
+    document.getElementById('authTabLogin').classList.toggle('active', mode === 'login');
+    document.getElementById('authTabSignup').classList.toggle('active', mode === 'signup');
+    document.getElementById('authSubmitBtn').textContent = mode === 'login' ? 'Entrar' : 'Criar conta';
+    document.getElementById('authError').textContent = '';
+  };
+
+  window.handleAuthSubmit = async function(e) {
+    e.preventDefault();
+    const email = document.getElementById('authEmail').value.trim();
+    const password = document.getElementById('authPassword').value;
+    const errorEl = document.getElementById('authError');
+    errorEl.textContent = '';
+    try {
+      if (authMode === 'login') {
+        await signInWithEmailAndPassword(auth, email, password);
+      } else {
+        await createUserWithEmailAndPassword(auth, email, password);
+      }
+    } catch (err) {
+      errorEl.textContent = traduzErroFirebase(err.code);
+    }
+  };
+
+  window.handleGoogleSignIn = async function() {
+    const errorEl = document.getElementById('authError');
+    errorEl.textContent = '';
+    try {
+      await signInWithPopup(auth, new GoogleAuthProvider());
+    } catch (err) {
+      errorEl.textContent = traduzErroFirebase(err.code);
+    }
+  };
+
+  window.handleLogout = async function() {
+    await signOut(auth);
+  };
+
+  function traduzErroFirebase(code) {
+    const mapa = {
+      'auth/invalid-email': 'E-mail inválido.',
+      'auth/user-not-found': 'Não achei essa conta. Tenta "Criar conta"?',
+      'auth/wrong-password': 'Senha incorreta.',
+      'auth/invalid-credential': 'E-mail ou senha incorretos.',
+      'auth/email-already-in-use': 'Esse e-mail já tem conta. Tenta "Entrar"?',
+      'auth/weak-password': 'A senha precisa ter no mínimo 6 caracteres.',
+      'auth/popup-closed-by-user': 'Janela do Google fechada antes de terminar.'
+    };
+    return mapa[code] || 'Algo deu errado. Tenta de novo.';
+  }
+
+  // Salva o resultado do teste na conta da pessoa logada
+  window.__uniSaveAulaZero = async function(passed, score, total, percentage) {
+    const user = auth.currentUser;
+    if (!user) return;
+    try {
+      await setDoc(doc(db, 'progress', user.uid), {
+        aulaZeroCompleted: passed,
+        aulaZeroScore: score,
+        aulaZeroTotal: total,
+        aulaZeroPercentage: percentage,
+        aulaZeroDate: new Date().toISOString(),
+        email: user.email
+      }, { merge: true });
+    } catch (err) {
+      console.error('Erro ao salvar progresso:', err);
+    }
+  };
+
+  // Ao logar: libera o teste e mostra se já passou antes
+  onAuthStateChanged(auth, async (user) => {
+    const gate = document.getElementById('authGate');
+    const gated = document.getElementById('testGated');
+    if (user) {
+      gate.style.display = 'none';
+      gated.style.display = 'block';
+      document.getElementById('authUserEmail').textContent = user.email;
+      if (typeof renderTest === 'function') renderTest();
+
+      try {
+        const snap = await getDoc(doc(db, 'progress', user.uid));
+        if (snap.exists() && snap.data().aulaZeroCompleted) {
+          document.getElementById('testResult').innerHTML = `
+            <div style="margin-top:24px;padding:20px;border-radius:8px;text-align:center;font-weight:600;
+              background:#e8f0e8;color:#7FA893;border:2px solid #7FA893;">
+              <p style="font-size:20px;margin-bottom:8px;">🎉 Você já passou nesse teste!</p>
+              <p style="font-size:13px;">Os 12 Mapas já estão desbloqueados na sua conta. Pode refazer o teste se quiser tentar de novo.</p>
+            </div>`;
+        }
+      } catch (err) {
+        console.error('Erro ao ler progresso:', err);
+      }
+    } else {
+      gate.style.display = 'block';
+      gated.style.display = 'none';
+    }
+  });
 </script>
 
 </body>

@@ -1499,33 +1499,37 @@ function switchHubTab(tabName) {
 }
 
 const mapasHub = [
-  { id: 1, emoji: '✈️', titulo: 'Chegada', descricao: 'Aeroporto, documentação, primeiras palavras' },
-  { id: 2, emoji: '🏨', titulo: 'Hotel', descricao: 'Check-in, quarto, serviços' },
-  { id: 3, emoji: '🍱', titulo: 'Restaurante', descricao: 'Cardápio, pedidos, preferências' },
-  { id: 4, emoji: '🛍️', titulo: 'Compras', descricao: 'Preços, tamanhos, devoluções' },
-  { id: 5, emoji: '🚕', titulo: 'Transporte', descricao: 'Táxi, metrô, direções' },
-  { id: 6, emoji: '🏥', titulo: 'Saúde', descricao: 'Farmácia, médico, emergências' },
-  { id: 7, emoji: '🏦', titulo: 'Banco', descricao: 'Câmbio, caixa, dúvidas financeiras' },
-  { id: 8, emoji: '📞', titulo: 'Comunicação', descricao: 'Telefone, internet, postal' },
-  { id: 9, emoji: '🎭', titulo: 'Lazer', descricao: 'Museu, cinema, eventos' },
-  { id: 10, emoji: '🏠', titulo: 'Moradia', descricao: 'Aluguel, condomínio, vizinhos' },
-  { id: 11, emoji: '👔', titulo: 'Trabalho', descricao: 'Escritório, reuniões, carreira' },
-  { id: 12, emoji: '💍', titulo: 'Relacionamentos', descricao: 'Família, amigos, encontros' }
+  { id: 0, slug: 'aeroporto', emoji: '🛂', titulo: 'Aeroporto', descricao: 'Chegada, documentação, primeiras palavras' },
+  { id: 1, slug: 'hotel', emoji: '🏨', titulo: 'Hotel', descricao: 'Check-in, quarto, serviços' },
+  { id: 2, slug: 'restaurante', emoji: '🍽️', titulo: 'Restaurante', descricao: 'Cardápio, pedidos, preferências' },
+  { id: 3, slug: 'kombini', emoji: '🏪', titulo: 'Kombini', descricao: 'Conveniência, compras rápidas, pagamento' },
+  { id: 4, slug: 'trens', emoji: '🚆', titulo: 'Trens', descricao: 'Estações, bilhetes, direções' },
+  { id: 5, slug: 'compras', emoji: '🛍️', titulo: 'Compras', descricao: 'Preços, tamanhos, devoluções' },
+  { id: 6, slug: 'roupas', emoji: '👗', titulo: 'Roupas', descricao: 'Provador, tamanhos, estilos' },
+  { id: 7, slug: 'emergencia', emoji: '🆘', titulo: 'Emergência', descricao: 'Socorro, saúde, situações urgentes' },
+  { id: 8, slug: 'apresentacao', emoji: '🤝', titulo: 'Apresentação', descricao: 'Cumprimentos, nomes, primeiras conversas' },
+  { id: 9, slug: 'horas', emoji: '🕒', titulo: 'Horas', descricao: 'Horários, compromissos, tempo' },
+  { id: 10, slug: 'planos', emoji: '🎉', titulo: 'Planos', descricao: 'Convites, encontros, combinar programas' },
+  { id: 11, slug: 'sinalizacao', emoji: '🪧', titulo: 'Sinalização', descricao: 'Placas, avisos, ler o ambiente' }
 ];
 
 function checkAulaZeroStatus() {
+  if (typeof window.__cloudAulaZeroStatus === 'boolean') {
+    return window.__cloudAulaZeroStatus;
+  }
   return localStorage.getItem('aulaZeroCompleted') === 'true';
 }
 
 function renderMapasHub() {
   const grid = document.getElementById('mapasGrid');
   if (!grid) return;
-  
+  grid.innerHTML = '';
+
   const aulaZeroCompleted = checkAulaZeroStatus();
   
   mapasHub.forEach(mapa => {
     const card = document.createElement('a');
-    card.href = aulaZeroCompleted ? '#' : '#';
+    card.href = aulaZeroCompleted ? `/idiomas/mapas/${mapa.slug}/` : '#';
     card.className = `mapa-card ${!aulaZeroCompleted ? 'locked' : ''}`;
     
     let html = '';
@@ -1569,6 +1573,46 @@ window.addEventListener('storage', () => {
   updateAulaZeroStatus();
   location.reload();
 });
+</script>
+
+<!-- FIREBASE: verifica o status real da Aula Zero na nuvem -->
+<script type="module">
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+  import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
+  import { getFirestore, doc, getDoc } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+
+  const firebaseConfig = {
+    apiKey: "AIzaSyCoo0UB5rWjD4ZGE3xKO32zXYPUQFYObmc",
+    authDomain: "unirversos-site.firebaseapp.com",
+    projectId: "unirversos-site",
+    storageBucket: "unirversos-site.firebasestorage.app",
+    messagingSenderId: "608479693630",
+    appId: "1:608479693630:web:38240bf82e09d72fd5ba6f",
+    measurementId: "G-V6K0D2KTJ1"
+  };
+
+  const app = initializeApp(firebaseConfig);
+  const auth = getAuth(app);
+  const db = getFirestore(app);
+
+  onAuthStateChanged(auth, async (user) => {
+    if (!user) {
+      // Não logada: mantém o comportamento local de antes (não desbloqueia)
+      window.__cloudAulaZeroStatus = false;
+      if (typeof renderMapasHub === 'function') renderMapasHub();
+      if (typeof updateAulaZeroStatus === 'function') updateAulaZeroStatus();
+      return;
+    }
+    try {
+      const snap = await getDoc(doc(db, 'progress', user.uid));
+      window.__cloudAulaZeroStatus = snap.exists() && snap.data().aulaZeroCompleted === true;
+    } catch (err) {
+      console.error('Erro ao checar progresso na nuvem:', err);
+      window.__cloudAulaZeroStatus = false;
+    }
+    if (typeof renderMapasHub === 'function') renderMapasHub();
+    if (typeof updateAulaZeroStatus === 'function') updateAulaZeroStatus();
+  });
 </script>
 </body>
 </html>
