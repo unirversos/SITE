@@ -142,10 +142,19 @@
       .phrase-row{grid-template-columns:1fr;gap:8px;}
       .accordion-header{padding:16px;}
       .tab-btn{min-width:120px;font-size:12px;padding:12px 8px;}
+      .transcript-text{max-height:170px;font-size:12px;}
     }
     .audio-narracao{background:var(--lav-soft, #EEEFF9);border:1.5px solid var(--pink, #E08C86);border-radius:16px;padding:16px 20px;margin:0 0 20px;}
     .audio-narracao p{margin:0 0 10px !important;font-size:13.5px !important;font-weight:600;color:var(--pink-deep, #C26F6C) !important;}
     .audio-narracao audio{width:100%;}
+    .transcript-btn{background:none;border:1.5px solid var(--pink);color:var(--pink-deep);border-radius:20px;padding:6px 14px;font-size:12px;font-weight:600;cursor:pointer;margin-top:10px;}
+    .transcript-btn:hover{background:var(--pink);color:#fff;}
+    .transcript-text{display:none;margin-top:10px;padding:12px 14px;background:#fff;border-radius:8px;font-size:13px;color:var(--ink);line-height:1.6;border-left:3px solid var(--pink);max-height:170px;overflow-y:auto;}
+    .transcript-text p{margin-bottom:10px;}
+    .transcript-text ul{margin:0 0 10px 18px;}
+    .transcript-text li{margin-bottom:4px;}
+    .transcript-text .nota{background:var(--gold-soft, #FBF2DF);padding:8px 10px;border-radius:6px;font-size:12.5px;font-style:italic;margin-bottom:10px;}
+    .transcript-text.aberta{display:block;}
 
     /* AUTH GATE */
     .auth-gate{background:#fff;border:2px solid var(--pink);border-radius:16px;padding:32px;max-width:420px;margin:20px auto;text-align:center;}
@@ -195,11 +204,12 @@
 
 <!-- HEADER -->
 <header>
-  <div class="wrap">
+  <div class="wrap" style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px;">
     <div>
       <h1>🎓 Aula Zero</h1>
       <p>O essencial antes de explorar os mapas</p>
     </div>
+    <a href="/idiomas/aula-zero/resumo-essencial.pdf" download style="background:rgba(255,255,255,.2);color:#fff;text-decoration:none;padding:10px 18px;border-radius:30px;font-size:13px;font-weight:600;white-space:nowrap;border:1.5px solid rgba(255,255,255,.5);">📄 Baixar resumo (PDF)</a>
   </div>
 </header>
 
@@ -228,6 +238,45 @@
           <source src="audio/1-estrutura.mp3" type="audio/mpeg">
           Seu navegador não suporta áudio nativo.
         </audio>
+        <button class="transcript-btn" onclick="toggleTranscript(this)">📝 Ver transcrição</button>
+        <div class="transcript-text">
+          <p>Olá, que bom ter você aqui! Eu sou a Aline. Preparei esse material com muito cuidado e carinho, e na Aula Zero vamos entender o funcionamento dos moldes. Aqui no site, a gente tem os mapas, que é onde você aprende o vocabulário por contexto, e o vocabulário são as peças que se encaixam nos moldes. E as quatro frentes para facilitar a organização do conteúdo é dividida em: fogo, água, ar e terra. E tem detalhes disponíveis na seção "Sobre", tá?</p>
+
+          <p>Então, o primeiro molde é o molde afirmativo <strong>desu</strong>. Equivale a "sou" ou "é" no tempo presente. Embora no português seja classificado como verbo, no japonês o desu possui regras próprias e não segue a conjugação padrão dos demais verbos.</p>
+          <p>Então:</p>
+          <ul>
+            <li>Eu sou Aline: <strong>Arine desu</strong>.</li>
+            <li>Eu sou brasileira: <strong>Burajirujin desu</strong>.</li>
+            <li>É verdade: <strong>Hontou desu</strong>.</li>
+          </ul>
+          <p>Desu afirma.</p>
+
+          <p>O molde negativo é o <strong>dewa arimasen, ja arimasen, janai</strong>, equivale a "não sou" ou "não é", e possui variações conforme o nível de polidez: dewa arimasen é mais formal, mais polido; ja arimasen é o intermediário; e janai é o menos formal, mas é o mais comum na fala, tá bom?</p>
+          <p>Então, aplicação:</p>
+          <ul>
+            <li>Não sou brasileira: <strong>Burajirujin dewa arimasen</strong> (formal); <strong>Burajirujin ja arimasen</strong> (neutro); <strong>Burajirujin janai</strong> (informal).</li>
+            <li>Eu não sou Aline: <strong>Arine dewa arimasen</strong>; <strong>Arine ja arimasen</strong>; <strong>Arine janai</strong>.</li>
+          </ul>
+
+          <p class="nota">Só um adendo: na fonologia japonesa não existe o fonema "L". Os nomes estrangeiros com "L", como Aline, são adaptados para o som de "R", tornando-se Arine. Então, quando eu falar Arine, vocês já sabem o porquê. E quem tiver um nome que tem "L", manda para mim que a gente vai converter seu nome para japonês.</p>
+
+          <p>O terceiro molde é o molde interrogativo: a partícula <strong>ka</strong>. A adição da partícula ka ao final de uma sentença transforma a estrutura em uma pergunta. Então ela funciona como um ponto de interrogação verbal — verbal no caso de falado, né? Mas aplica-se aos verbos, mas aplica-se também a outras estruturas sem verbo.</p>
+          <ul>
+            <li>Você é a Aline? <strong>Arine-san desu ka?</strong></li>
+            <li>Você é brasileira? <strong>Burajirujin desu ka?</strong></li>
+            <li>É verdade? <strong>Hontou desu ka?</strong></li>
+          </ul>
+
+          <p class="nota">Outro adendo aqui: Arine-san desu ka? — aqui eu coloquei o -san porque a gente tá perguntando para uma outra pessoa se ela é, né? A gente não usa o -san quando a gente tá falando da gente. Para se apresentar, você não vai colocar "eu sou a Aline-san", não. Você só vai dizer "eu sou a Aline". Mas para perguntar para a pessoa: "você é a senhora Aline?", aí sim, você vai pôr o -san. Arine-san desu ka?, Tanaka-san desu ka?, ok?</p>
+
+          <p>Então, recapitulando:</p>
+          <ul>
+            <li><strong>Desu</strong>: afirma.</li>
+            <li><strong>Janai, dewa arimasen, ja arimasen</strong>: nega.</li>
+            <li><strong>Desu ka?</strong>: pergunta.</li>
+          </ul>
+          <p>Com a prática dessas três estruturas-base — afirmação, negação e interrogação —, a gente vai construir a base necessária para se comunicar com clareza e segurança no idioma. Tudo bem até aqui? Manda pergunta se tiver pergunta, e vamos para o próximo: verbos!</p>
+        </div>
       </div>
       <p><strong>A cópula</strong> (です) é o verbo "ser/estar" em japonês. É a base de tudo. Aprenda a afirmar, negar e perguntar.</p>
       
@@ -239,7 +288,7 @@
         </div>
         <div class="accordion-body">
           <p style="font-size:13px;color:var(--ink-soft);margin-bottom:16px;"><strong>Estrutura:</strong></p>
-          <div class="structure-box">[Item/Conceito] <strong>+ です</strong><br/><span style="font-size:13px;color:var(--ink-soft);margin-top:8px;display:block;">= X desu</span><br/><span style="font-size:13px;color:var(--pink-deep);margin-top:8px;display:block;font-weight:600;">Ex: [Seu nome] + です = Sou [seu nome]</span></div>
+          <div class="structure-box">[Item/Conceito] <strong>+ です (desu)</strong><br/><span style="font-size:13px;color:var(--ink-soft);margin-top:8px;display:block;">= X desu</span><br/><span style="font-size:13px;color:var(--pink-deep);margin-top:8px;display:block;font-weight:600;">Ex: [Seu nome] + です = Sou [seu nome]</span></div>
           <p style="font-size:13px;color:var(--ink-soft);margin-bottom:12px;font-weight:600;">Exemplos:</p>
           <div class="phrase-row">
             <div class="phrase-jp">ブラジル人です</div>
@@ -270,13 +319,13 @@
         </div>
         <div class="accordion-body">
           <p style="font-size:13px;color:var(--ink-soft);margin-bottom:16px;"><strong>Estrutura:</strong></p>
-          <div class="structure-box sage">[Item/Conceito] <strong>+ ではありません</strong><br/><span style="font-size:15px;color:var(--ink-soft);margin-top:12px;display:block;font-weight:600;">Variações: じゃありません (jya arimasen) | じゃない (jya nai)</span><br/><span style="font-size:13px;color:var(--ink-soft);margin-top:8px;display:block;">= X dewa arimasen / X jya arimasen / X jya nai</span><br/><span style="font-size:13px;color:var(--pink-deep);margin-top:8px;display:block;font-weight:600;">Ex: [Seu nome] + dewa arimasen = Não sou [seu nome]</span></div>
+          <div class="structure-box sage">[Item/Conceito] <strong>+ ではありません (dewa arimasen)</strong><br/><span style="font-size:15px;color:var(--ink-soft);margin-top:12px;display:block;font-weight:600;">Variações: じゃありません (jya arimasen) | じゃない (jya nai)</span><br/><span style="font-size:13px;color:var(--ink-soft);margin-top:8px;display:block;">= X dewa arimasen / X jya arimasen / X jya nai</span><br/><span style="font-size:13px;color:var(--pink-deep);margin-top:8px;display:block;font-weight:600;">Ex: [Seu nome] + dewa arimasen = Não sou [seu nome]</span></div>
           <p style="font-size:13px;color:var(--ink-soft);margin-bottom:12px;font-weight:600;">Exemplos:</p>
           <div class="phrase-row">
-            <div class="phrase-jp">観光客ではありません</div>
-            <div class="phrase-roma">Kankoukyaku dewa arimasen</div>
-            <div class="phrase-pt">Não sou turista (formal)</div>
-            <button class="audio-btn" onclick="speak('kankou kyaku dewa arimasen', 'ja-JP')">🔊</button>
+            <div class="phrase-jp">日本人ではありません</div>
+            <div class="phrase-roma">Nihon jin dewa arimasen</div>
+            <div class="phrase-pt">Não sou japonês(a) (formal)</div>
+            <button class="audio-btn" onclick="speak('nihon jin dewa arimasen', 'ja-JP')">🔊</button>
           </div>
           <div class="phrase-row">
             <div class="phrase-jp">日本人じゃありません</div>
@@ -307,14 +356,8 @@
         </div>
         <div class="accordion-body">
           <p style="font-size:13px;color:var(--ink-soft);margin-bottom:16px;"><strong>Estrutura:</strong></p>
-          <div class="structure-box lav">[Frase] <strong>+ ですか？</strong><br/><span style="font-size:13px;color:var(--ink-soft);margin-top:8px;display:block;">= X desu ka?</span><br/><span style="font-size:13px;color:var(--pink-deep);margin-top:8px;display:block;font-weight:600;">Ex: [Seu nome] + desu ka? = Você é [seu nome]?</span></div>
+          <div class="structure-box lav">[Frase] <strong>+ ですか？ (desu ka?)</strong><br/><span style="font-size:13px;color:var(--ink-soft);margin-top:8px;display:block;">= X desu ka?</span><br/><span style="font-size:13px;color:var(--pink-deep);margin-top:8px;display:block;font-weight:600;">Ex: [Seu nome] + desu ka? = Você é [seu nome]?</span></div>
           <p style="font-size:13px;color:var(--ink-soft);margin-bottom:12px;font-weight:600;">Exemplos:</p>
-          <div class="phrase-row">
-            <div class="phrase-jp">観光客ですか？</div>
-            <div class="phrase-roma">Kankoukyaku desu ka?</div>
-            <div class="phrase-pt">Você é turista?</div>
-            <button class="audio-btn" onclick="speak('kankou kyaku desu ka', 'ja-JP')">🔊</button>
-          </div>
           <div class="phrase-row">
             <div class="phrase-jp">ブラジル人ですか？</div>
             <div class="phrase-roma">Burajirujin desu ka?</div>
@@ -354,6 +397,65 @@
           <source src="audio/2-verbos.mp3" type="audio/mpeg">
           Seu navegador não suporta áudio nativo.
         </audio>
+        <button class="transcript-btn" onclick="toggleTranscript(this)">📝 Ver transcrição</button>
+        <div class="transcript-text">
+          <p>Oi, gente! Então, continuando: agora a gente vai falar sobre o sistema verbal. Agora que você domina a estrutura do desu, a gente vai entrar no sistema de verbos.</p>
+
+          <p>O infinitivo em japonês é chamado de forma do dicionário, que é o <strong>jishokei</strong>. Os verbos são apresentados originalmente na sua forma do dicionário, equivalente ao infinitivo em português, como: ir, comer, beber, entender, vir (iku, taberu, nomu, wakaru, kuru). E a gente vai entender o molde das quatro conjugações verbais.</p>
+
+          <p class="nota">Tem uma regra, tá? No japonês, os verbos se dividem em grupos gramaticais, que são o Grupo 1, Grupo 2 e os irregulares, com regras específicas pra saber conjugar certinho e extrair a base de cada um. Mas agora, na Aula Zero, não é o momento pra gente se aprofundar nisso, porque senão vai complicar. O foco aqui é memorizar diretamente a base de cada verbo essencial e aprender a encaixar terminações polidas.</p>
+
+          <p>Então a gente tem quatro conjugações:</p>
+          <ul>
+            <li><strong>-masu</strong>: afirmativo no presente</li>
+            <li><strong>-masen</strong>: negativo no presente</li>
+            <li><strong>-mashita</strong>: afirmativo no passado</li>
+            <li><strong>-masen deshita</strong>: negativo no passado</li>
+          </ul>
+          <p>Calma que vai ficar mais fácil! O que a gente vai fazer agora é basicamente pegar a base do verbo e adicionar uma dessas quatro terminações, dependendo do que a gente quer falar.</p>
+
+          <p><strong>行く (Iku) — Ir.</strong> A base do iku vai ser <em>iki-</em>.</p>
+          <ul>
+            <li>Ikimasu: eu vou</li>
+            <li>Ikimasen: eu não vou</li>
+            <li>Ikimashita: eu fui</li>
+            <li>Ikimasen deshita: não fui</li>
+          </ul>
+
+          <p><strong>食べる (Taberu) — Comer.</strong> A base vai ser <em>tabe-</em>.</p>
+          <ul>
+            <li>Tabemasu: eu como</li>
+            <li>Tabemasen: não como</li>
+            <li>Tabemashita: comi</li>
+            <li>Tabemasen deshita: eu não comi</li>
+          </ul>
+
+          <p><strong>飲む (Nomu) — Beber.</strong> A base vai ser <em>nomi-</em>.</p>
+          <ul>
+            <li>Nomimasu, Nomimasen, Nomimashita, Nomimasen deshita</li>
+          </ul>
+
+          <p><strong>わかる (Wakaru) — Entender.</strong> A base vai ser <em>wakari-</em>.</p>
+          <ul>
+            <li>Wakarimasu: eu entendo</li>
+            <li>Wakarimasen: eu não entendo</li>
+            <li>Wakarimashita: eu entendi</li>
+            <li>Wakarimasen deshita: eu não entendi</li>
+          </ul>
+          <p>As conjugações não mudam — o que muda é só a base do verbo.</p>
+
+          <p><strong>来る (Kuru) — Vir</strong>, o verbo irregular da nossa lista. A forma base do kuru é <em>ki-</em>.</p>
+          <ul>
+            <li>Kimasu: eu venho</li>
+            <li>Kimasen: não venho</li>
+            <li>Kimashita: eu vim</li>
+            <li>Kimasen deshita: não vim</li>
+          </ul>
+
+          <p class="nota">Dica de fixação: repare na lógica das terminações. Afirmativo sempre termina em -masu. Afirmativo no passado ganha o -ta: -mashita. Negativo presente ganha o -masen. Negativo passado combina a negação com o passado: -masen deshita. Dominando esse molde você consegue conjugar qualquer verbo polido com facilidade.</p>
+
+          <p>Se tiver dúvidas, me mandem aqui, e vamos para a próxima parte, que são as palavras de pergunta. Te vejo lá!</p>
+        </div>
       </div>
       <p><strong>Os verbos mudam de forma</strong> para indicar tempo e polidez. Cada verbo tem 4 conjugações: presente, negativo, passado e passado negativo.</p>
       
@@ -365,7 +467,7 @@
         </div>
         <div class="accordion-body">
           <p style="font-size:13px;color:var(--ink-soft);margin-bottom:16px;"><strong>Padrão:</strong></p>
-          <div class="structure-box">[Base] <strong>+ ます / ません / ました / ませんでした</strong><br/><span style="font-size:13px;color:var(--ink-soft);margin-top:8px;display:block;">Iku → Iki + masu / masen / mashita / masen deshita</span></div>
+          <div class="structure-box">[Base] <strong>+ ます / ません / ました / ませんでした (masu / masen / mashita / masen deshita)</strong><br/><span style="font-size:13px;color:var(--ink-soft);margin-top:8px;display:block;">Iku → Iki + masu / masen / mashita / masen deshita</span></div>
           <p style="font-size:13px;color:var(--ink-soft);margin-bottom:12px;font-weight:600;">Conjugações:</p>
           <div class="phrase-row">
             <div class="phrase-jp">行きます</div>
@@ -402,7 +504,7 @@
         </div>
         <div class="accordion-body">
           <p style="font-size:13px;color:var(--ink-soft);margin-bottom:16px;"><strong>Padrão:</strong></p>
-          <div class="structure-box">[Base] <strong>+ ます / ません / ました / ませんでした</strong><br/><span style="font-size:13px;color:var(--ink-soft);margin-top:8px;display:block;">Taberu → Tabe + masu / masen / mashita / masen deshita</span></div>
+          <div class="structure-box">[Base] <strong>+ ます / ません / ました / ませんでした (masu / masen / mashita / masen deshita)</strong><br/><span style="font-size:13px;color:var(--ink-soft);margin-top:8px;display:block;">Taberu → Tabe + masu / masen / mashita / masen deshita</span></div>
           <p style="font-size:13px;color:var(--ink-soft);margin-bottom:12px;font-weight:600;">Conjugações:</p>
           <div class="phrase-row">
             <div class="phrase-jp">食べます</div>
@@ -439,7 +541,7 @@
         </div>
         <div class="accordion-body">
           <p style="font-size:13px;color:var(--ink-soft);margin-bottom:16px;"><strong>Padrão:</strong></p>
-          <div class="structure-box">[Base] <strong>+ ます / ません / ました / ませんでした</strong><br/><span style="font-size:13px;color:var(--ink-soft);margin-top:8px;display:block;">Nomu → Nomi + masu / masen / mashita / masen deshita</span></div>
+          <div class="structure-box">[Base] <strong>+ ます / ません / ました / ませんでした (masu / masen / mashita / masen deshita)</strong><br/><span style="font-size:13px;color:var(--ink-soft);margin-top:8px;display:block;">Nomu → Nomi + masu / masen / mashita / masen deshita</span></div>
           <p style="font-size:13px;color:var(--ink-soft);margin-bottom:12px;font-weight:600;">Conjugações:</p>
           <div class="phrase-row">
             <div class="phrase-jp">飲みます</div>
@@ -476,7 +578,7 @@
         </div>
         <div class="accordion-body">
           <p style="font-size:13px;color:var(--ink-soft);margin-bottom:16px;"><strong>Padrão:</strong></p>
-          <div class="structure-box">[Base] <strong>+ ます / ません / ました / ませんでした</strong><br/><span style="font-size:13px;color:var(--ink-soft);margin-top:8px;display:block;">Wakaru → Wakari + masu / masen / mashita / masen deshita</span></div>
+          <div class="structure-box">[Base] <strong>+ ます / ません / ました / ませんでした (masu / masen / mashita / masen deshita)</strong><br/><span style="font-size:13px;color:var(--ink-soft);margin-top:8px;display:block;">Wakaru → Wakari + masu / masen / mashita / masen deshita</span></div>
           <p style="font-size:13px;color:var(--ink-soft);margin-bottom:12px;font-weight:600;">Conjugações:</p>
           <div class="phrase-row">
             <div class="phrase-jp">わかります</div>
@@ -513,7 +615,7 @@
         </div>
         <div class="accordion-body">
           <p style="font-size:13px;color:var(--ink-soft);margin-bottom:16px;"><strong>Padrão:</strong></p>
-          <div class="structure-box">[Base irregular] <strong>+ ます / ません / ました / ませんでした</strong><br/><span style="font-size:13px;color:var(--ink-soft);margin-top:8px;display:block;">Kuru → Ki + masu / masen / mashita / masen deshita</span></div>
+          <div class="structure-box">[Base irregular] <strong>+ ます / ません / ました / ませんでした (masu / masen / mashita / masen deshita)</strong><br/><span style="font-size:13px;color:var(--ink-soft);margin-top:8px;display:block;">Kuru → Ki + masu / masen / mashita / masen deshita</span></div>
           <p style="font-size:13px;color:var(--ink-soft);margin-bottom:12px;font-weight:600;">Conjugações:</p>
           <div class="phrase-row">
             <div class="phrase-jp">来ます</div>
@@ -560,6 +662,34 @@
           <source src="audio/3-perguntas.mp3" type="audio/mpeg">
           Seu navegador não suporta áudio nativo.
         </audio>
+        <button class="transcript-btn" onclick="toggleTranscript(this)">📝 Ver transcrição</button>
+        <div class="transcript-text">
+          <p>Oi de novo! Agora que você já pegou o jeito dos moldes básicos e de como conjugar qualquer verbo no presente e no passado, a gente vai juntar essas peças pra fazer o que mais importa no dia a dia: perguntar e se virar em qualquer situação.</p>
+
+          <p>Lembra daquela partícula <strong>ka</strong> que vimos lá na primeira parte? Pois é, ela continua sendo a nossa chave de ouro aqui.</p>
+
+          <p>A primeira parte dessa página traz os <strong>5 Interrogativos Coringa</strong> — palavrinhas essenciais que você só precisa encaixar antes do desu ka pra perguntar qualquer coisa:</p>
+          <ul>
+            <li><strong>Nani / Nan</strong> — Nan desu ka? (O que é?)</li>
+            <li><strong>Doko</strong> — Doko desu ka? (Onde é? / Onde fica?)</li>
+            <li><strong>Dare</strong> — Dare desu ka? (Quem é?)</li>
+            <li><strong>Nande</strong> — Nande desu ka? (Por quê?)</li>
+            <li><strong>Itsu</strong> — Itsu desu ka? (Quando é?)</li>
+          </ul>
+          <p>Viu como a lógica é sempre a mesma? É só colocar a palavra de pergunta na frente do desu ka.</p>
+
+          <p>Mais abaixo, separei <strong>6 Peças Essenciais de Sobrevivência</strong> — frases quase prontas que salvam sua vida em viagens, aeroportos, restaurantes e lojas:</p>
+          <ul>
+            <li><strong>Localização</strong>: o lugar + wa + doko desu ka. Ex: Toire wa doko desu ka? (onde fica o banheiro?), Pasupooto wa doko desu ka? (cadê meu passaporte?)</li>
+            <li><strong>Posse/existência</strong> com arimasu (tenho/existe): Arerugii ga arimasu (tenho alergia), Furaito ga arimasu (tenho um voo). Todo esse vocabulário está no botãozinho "Vocabulário" aqui do lado.</li>
+            <li><strong>A duplinha de ouro</strong> da educação japonesa: Sumimasen (com licença — mas também serve como "desculpa") e Arigatou gozaimasu (muito obrigado).</li>
+            <li><strong>Compras</strong>: Ikura desu ka? (quanto custa?), se você não identificar o preço numa plaquinha.</li>
+            <li><strong>Pedir permissão</strong> rápido e educado: Ii desu ka? (eu posso? / tá tudo bem?)</li>
+            <li><strong>Pedir coisas</strong> com kudasai ou onegai shimasu: Mizu o kudasai (água, por favor), Madogawa o onegai shimasu (do lado da janela, por favor, no avião ou trem).</li>
+          </ul>
+
+          <p>Agora que a gente já sabe usar negação, afirmação, conjugar verbos e as palavras de pergunta, fiquem preparados para o teste que vem aí! Clica nos áudios de cada cartão pra ouvir a pronúncia detalhada, repete em voz alta no seu ritmo e, quando se sentir confortável, avança para o teste final. Combinado? Te vejo lá!</p>
+        </div>
       </div>
       <p><strong>Os 5 interrogativos curinga</strong> e as <strong>6 peças essenciais</strong> que salvam sua vida no Japão.</p>
       
@@ -660,7 +790,7 @@
           <span class="accordion-icon">⌄</span>
         </div>
         <div class="accordion-body">
-          <div class="structure-box">[Lugar/Serviço/Coisa] <strong>+ は どこですか？</strong><br/><span style="font-size:13px;color:var(--ink-soft);">= X wa doko desu ka?</span></div>
+          <div class="structure-box">[Lugar/Serviço/Coisa] <strong>+ は どこですか？ (wa doko desu ka?)</strong><br/><span style="font-size:13px;color:var(--ink-soft);">= X wa doko desu ka?</span></div>
           <div class="phrase-row">
             <div class="phrase-jp">トイレはどこですか？</div>
             <div class="phrase-roma">Toire wa doko desu ka?</div>
@@ -682,7 +812,7 @@
           <span class="accordion-icon">⌄</span>
         </div>
         <div class="accordion-body">
-          <div class="structure-box">[Item] <strong>+ が あります</strong> | <strong>+ が ありません</strong><br/><span style="font-size:13px;color:var(--ink-soft);">= X ga arimasu / arimasen</span></div>
+          <div class="structure-box">[Item] <strong>+ が あります (ga arimasu)</strong> | <strong>+ が ありません (ga arimasen)</strong><br/><span style="font-size:13px;color:var(--ink-soft);">= X ga arimasu / arimasen</span></div>
           <div class="phrase-row">
             <div class="phrase-jp">アレルギーがあります</div>
             <div class="phrase-roma">Arerugī ga arimasu</div>
@@ -726,7 +856,7 @@
           <span class="accordion-icon">⌄</span>
         </div>
         <div class="accordion-body">
-          <div class="structure-box">[Item] <strong>+ は いくらですか？</strong><br/><span style="font-size:13px;color:var(--ink-soft);">= X wa ikura desu ka?</span></div>
+          <div class="structure-box">[Item] <strong>+ は いくらですか？ (wa ikura desu ka?)</strong><br/><span style="font-size:13px;color:var(--ink-soft);">= X wa ikura desu ka?</span></div>
           <div class="phrase-row">
             <div class="phrase-jp">いくらですか？</div>
             <div class="phrase-roma">Ikura desu ka?</div>
@@ -742,7 +872,7 @@
           <span class="accordion-icon">⌄</span>
         </div>
         <div class="accordion-body">
-          <div class="structure-box"><strong>いいですか？</strong> (forma rápida)<br/><span style="font-size:13px;color:var(--ink-soft);">= Ii desu ka?</span></div>
+          <div class="structure-box"><strong>いいですか？ (ii desu ka?)</strong> (forma rápida)<br/><span style="font-size:13px;color:var(--ink-soft);">= Ii desu ka?</span></div>
           <div class="phrase-row">
             <div class="phrase-jp">いいですか？</div>
             <div class="phrase-roma">Ii desu ka?</div>
@@ -758,7 +888,7 @@
           <span class="accordion-icon">⌄</span>
         </div>
         <div class="accordion-body">
-          <div class="structure-box">[Objeto] <strong>+ を ください</strong> | <strong>+ を お願いします</strong><br/><span style="font-size:13px;color:var(--ink-soft);">= X wo kudasai / onegai shimasu</span></div>
+          <div class="structure-box">[Objeto] <strong>+ を ください (wo kudasai)</strong> | <strong>+ を お願いします (wo onegai shimasu)</strong><br/><span style="font-size:13px;color:var(--ink-soft);">= X wo kudasai / onegai shimasu</span></div>
           <div class="phrase-row">
             <div class="phrase-jp">水をください</div>
             <div class="phrase-roma">Mizu wo kudasai</div>
@@ -792,6 +922,25 @@
           <source src="audio/4-teste.mp3" type="audio/mpeg">
           Seu navegador não suporta áudio nativo.
         </audio>
+        <button class="transcript-btn" onclick="toggleTranscript(this)">📝 Ver transcrição</button>
+        <div class="transcript-text">
+          <p>Parabéns por ter chegado até aqui! Chegou a hora de colocar tudo em prática.</p>
+
+          <p>Então agora, neste Teste Final, a gente vai reunir os três pilares que você aprendeu na Aula Zero:</p>
+          <ul>
+            <li>A estrutura do desu;</li>
+            <li>As quatro terminações dos verbos;</li>
+            <li>E os interrogativos com as frases essenciais de sobrevivência.</li>
+          </ul>
+
+          <p>Elaborei questões rápidas de múltipla escolha pra testar sua fixação e o seu raciocínio no mundo real com a língua — desde identificar a conjugação certa até escolher a frase exata para a situação.</p>
+
+          <p>Como funciona: leia cada pergunta com calma, presença, presta atenção nas terminações, e acerte 80% ou mais pra validar a sua base da Aula Zero e desbloquear os 12 Mapas de Contexto e iniciar sua jornada completa.</p>
+
+          <p class="nota">E se você errar alguma coisa, não se preocupe: encare o teste como parte do aprendizado, pra ver exatamente onde vale a pena dar uma revisada rápida. Tem uma caixinha de feedback e eu conto com o seu feedback!</p>
+
+          <p>Pronto? Respira fundo, confie em você e no que você viu nas aulas, e bom teste! Te vejo nos mapas.</p>
+        </div>
       </div>
       <p>Acerte 80%+ para desbloquear os 12 Mapas e começar sua jornada! Teste suas habilidades agora.</p>
 
@@ -934,6 +1083,12 @@ function switchTab(tabIndex) {
 function toggleAccordion(header) {
   const accordion = header.parentElement;
   accordion.classList.toggle('open');
+}
+
+function toggleTranscript(btn) {
+  const box = btn.nextElementSibling;
+  box.classList.toggle('aberta');
+  btn.textContent = box.classList.contains('aberta') ? '📝 Esconder transcrição' : '📝 Ver transcrição';
 }
 
 // AUDIO
