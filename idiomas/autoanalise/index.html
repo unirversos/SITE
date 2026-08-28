@@ -46,6 +46,51 @@ body{font-family:'Zen Maru Gothic',sans-serif;color:var(--ink);background:var(--
 
 .form-box{background:#fff;border:1.5px solid var(--blush-2);border-radius:18px;padding:0;overflow:hidden;margin:20px 0 40px;}
 
+/* AUTH GATE (mesmo padrão da Aula Zero) */
+.auth-gate{background:#fff;border:2px solid var(--pink);border-radius:16px;padding:32px;max-width:420px;margin:20px auto;text-align:center;}
+.auth-gate h3{font-family:'Baloo 2',cursive;color:var(--pink-deep);margin-bottom:8px;font-size:20px;}
+.auth-gate p{color:var(--ink-soft);font-size:13px;margin-bottom:20px;}
+.auth-tabs{display:flex;gap:8px;margin-bottom:20px;justify-content:center;}
+.auth-tabs button{background:none;border:none;padding:8px 16px;font-size:13px;font-weight:600;color:var(--ink-soft);cursor:pointer;border-bottom:2px solid transparent;}
+.auth-tabs button.active{color:var(--pink-deep);border-color:var(--pink);}
+.auth-form{display:flex;flex-direction:column;gap:10px;text-align:left;}
+.auth-form input{padding:10px 14px;border:1.5px solid var(--blush-2);border-radius:8px;font-size:14px;font-family:inherit;}
+.auth-form button[type="submit"]{background:var(--pink);color:#fff;border:none;padding:12px;border-radius:8px;font-weight:600;cursor:pointer;margin-top:4px;}
+.auth-form button[type="submit"]:hover{background:var(--pink-deep);}
+.auth-divider{display:flex;align-items:center;gap:10px;margin:16px 0;color:var(--ink-soft);font-size:12px;}
+.auth-divider::before,.auth-divider::after{content:'';flex:1;height:1px;background:var(--blush-2);}
+.auth-google{width:100%;background:#fff;border:1.5px solid var(--blush-2);padding:12px;border-radius:8px;font-weight:600;cursor:pointer;font-size:13px;}
+.auth-google:hover{background:#f9f7f5;}
+.auth-error{color:#C0392B;font-size:12px;margin-top:8px;min-height:16px;}
+.auth-loggedin{background:var(--sage-soft);border-radius:10px;padding:10px 16px;font-size:13px;margin-bottom:16px;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px;}
+.auth-loggedin button{background:none;border:1px solid var(--ink-soft);border-radius:6px;padding:6px 12px;font-size:12px;cursor:pointer;}
+
+/* CHAT DA AUTOANÁLISE */
+.aula-zero-container{max-width:600px;margin:0 auto;}
+.chat-historico{display:flex;flex-direction:column;gap:16px;margin-bottom:20px;max-height:480px;overflow-y:auto;padding:4px 4px 4px 0;}
+.mensagem{display:flex;gap:12px;max-width:85%;}
+.mensagem.guia{align-self:flex-start;}
+.mensagem.aluno{align-self:flex-end;flex-direction:row-reverse;}
+.avatar-guia{width:32px;height:32px;background:var(--blush);color:var(--pink-deep);border-radius:50%;display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:15px;}
+.texto{background:#fff;padding:14px 16px;border-radius:16px;border:1px solid var(--blush-2);color:var(--ink);line-height:1.6;font-size:14.5px;}
+.mensagem.aluno .texto{background:var(--pink);color:#fff;border-color:var(--pink);}
+.mensagem.guia .texto{border-top-left-radius:4px;}
+.mensagem.aluno .texto{border-top-right-radius:4px;}
+.typing-dots{display:inline-flex;gap:4px;padding:6px 2px;}
+.typing-dots span{width:6px;height:6px;background:var(--pink-deep);border-radius:50%;opacity:.4;animation:typingBounce 1.2s infinite;}
+.typing-dots span:nth-child(2){animation-delay:.2s;}
+.typing-dots span:nth-child(3){animation-delay:.4s;}
+@keyframes typingBounce{0%,60%,100%{opacity:.4;transform:translateY(0);}30%{opacity:1;transform:translateY(-3px);}}
+.chat-input-area{display:flex;gap:10px;}
+.chat-input-area textarea{flex:1;padding:12px 14px;border-radius:12px;border:1.5px solid var(--blush-2);resize:none;min-height:52px;font-family:inherit;font-size:14.5px;}
+.chat-input-area button{background:var(--pink);color:#fff;border:none;border-radius:12px;padding:0 22px;cursor:pointer;font-weight:600;font-size:14px;}
+.chat-input-area button:hover{background:var(--pink-deep);}
+.chat-input-area button:disabled{opacity:.5;cursor:not-allowed;}
+.chat-progress{text-align:center;font-size:11.5px;color:var(--pink-deep);font-weight:600;margin-bottom:12px;letter-spacing:.5px;text-transform:uppercase;}
+.chat-done-cta{text-align:center;margin-top:24px;}
+.chat-done-cta a{display:inline-block;background:var(--pink);color:#fff;text-decoration:none;padding:14px 30px;border-radius:40px;font-weight:600;font-size:15px;}
+.chat-done-cta a:hover{background:var(--pink-deep);}
+
 .foot{border-top:1px solid var(--blush-2);padding:34px 0 50px;text-align:center;margin-top:20px;}
 .foot .big{font-family:'Baloo 2',cursive;font-size:17px;margin-bottom:14px;}
 .foot .tags{display:flex;gap:16px;justify-content:center;flex-wrap:wrap;font-size:13px;color:var(--pink-deep);}
@@ -94,8 +139,45 @@ body{font-family:'Zen Maru Gothic',sans-serif;color:var(--ink);background:var(--
     <h2>Responda com sinceridade</h2>
   </div>
 
-  <div class="form-box">
-    <iframe src="https://docs.google.com/forms/d/1YE_faJr8Ga0cvDtMUoHfYVMDqggj6Qqq29sg3oYHiIQ/viewform?embedded=true" width="100%" height="900" frameborder="0" marginheight="0" marginwidth="0" style="display:block;">Carregando…</iframe>
+  <div class="form-box" style="padding:24px;">
+    <!-- AUTH GATE: login pra conectar a autoanálise com sua conta -->
+    <div id="authGate">
+      <div class="auth-gate">
+        <h3>🔐 Entre pra começar</h3>
+        <p>Assim sua essência fica salva na sua conta e conecta com o resto da sua jornada no Unirversos.</p>
+        <div class="auth-tabs">
+          <button id="authTabLogin" class="active" onclick="switchAuthTab('login')">Entrar</button>
+          <button id="authTabSignup" onclick="switchAuthTab('signup')">Criar conta</button>
+        </div>
+        <form class="auth-form" id="authForm" onsubmit="handleAuthSubmit(event)">
+          <input type="email" id="authEmail" placeholder="Seu e-mail" required>
+          <input type="password" id="authPassword" placeholder="Senha (mín. 6 caracteres)" required minlength="6">
+          <button type="submit" id="authSubmitBtn">Entrar</button>
+        </form>
+        <div class="auth-divider">ou</div>
+        <button class="auth-google" onclick="handleGoogleSignIn()">🔵 Entrar com Google</button>
+        <div class="auth-error" id="authError"></div>
+      </div>
+    </div>
+
+    <!-- CHAT: só aparece depois de logar -->
+    <div id="chatGated" style="display:none;">
+      <div class="auth-loggedin">
+        <span>Logada como <strong id="authUserEmail"></strong></span>
+        <button onclick="handleLogout()">Sair</button>
+      </div>
+      <p class="chat-progress" id="chatProgress">Pergunta 1 de 3</p>
+      <div class="aula-zero-container">
+        <div class="chat-historico" id="chat-historico"></div>
+        <div class="chat-input-area" id="chatInputArea">
+          <textarea id="aluno-input" placeholder="Escreva com calma e sinceridade..."></textarea>
+          <button onclick="enviarMensagem()" id="enviarBtn">Enviar</button>
+        </div>
+        <div id="chatDoneCta" class="chat-done-cta" style="display:none;">
+          <a href="/idiomas/aula-zero/">Ir pra Aula Zero →</a>
+        </div>
+      </div>
+    </div>
   </div>
 
   <footer class="foot">
@@ -104,6 +186,247 @@ body{font-family:'Zen Maru Gothic',sans-serif;color:var(--ink);background:var(--
     <p class="credit">Aline Kikuti</p>
   </footer>
 </div>
+
+<script>
+// ============================================================
+// CHAT DA AUTOANÁLISE — perguntas fixas, transições escritas
+// pela Aline, sem IA nenhuma rodando. 100% previsível e gratuito.
+// ============================================================
+const QUESTIONS = [
+  'Por que você quer aprender esse idioma?',
+  'Quais são seus 3 maiores desafios hoje — na vida, não só no idioma?',
+  'Imagine a vida dos seus sonhos daqui a alguns anos. Como ela é?'
+];
+
+// Mostrada depois que a pessoa responde a pergunta de mesmo índice
+const TRANSICOES = [
+  'Obrigada por compartilhar isso comigo. Guardar o motivo real por trás de aprender um idioma muda tudo — é o que te sustenta nos dias mais cansados.',
+  'Reconhecer os próprios desafios já é um ato de coragem, viu? Aprender um idioma não vai apagar essas dificuldades, mas pode te dar um espacinho só seu, onde você recomeça a cada aula.'
+];
+
+let currentQuestion = 0;
+let respostas = [];
+
+function scrollChatToBottom() {
+  const hist = document.getElementById('chat-historico');
+  hist.scrollTop = hist.scrollHeight;
+}
+
+function addMensagem(role, texto) {
+  const hist = document.getElementById('chat-historico');
+  const div = document.createElement('div');
+  div.className = 'mensagem ' + role;
+  if (role === 'guia') {
+    div.innerHTML = '<div class="avatar-guia">✦</div><div class="texto">' + texto.replace(/\n/g, '<br><br>') + '</div>';
+  } else {
+    div.innerHTML = '<div class="texto"></div>';
+    div.querySelector('.texto').textContent = texto;
+  }
+  hist.appendChild(div);
+  scrollChatToBottom();
+}
+
+function mostrarDigitando() {
+  const hist = document.getElementById('chat-historico');
+  const div = document.createElement('div');
+  div.className = 'mensagem guia';
+  div.id = 'digitandoIndicator';
+  div.innerHTML = '<div class="avatar-guia">✦</div><div class="texto"><div class="typing-dots"><span></span><span></span><span></span></div></div>';
+  hist.appendChild(div);
+  scrollChatToBottom();
+}
+
+function removerDigitando() {
+  const el = document.getElementById('digitandoIndicator');
+  if (el) el.remove();
+}
+
+function falarComoGuia(texto, callback) {
+  mostrarDigitando();
+  const tempo = 900 + Math.random() * 700;
+  setTimeout(() => {
+    removerDigitando();
+    addMensagem('guia', texto);
+    if (callback) callback();
+  }, tempo);
+}
+
+function atualizarProgresso() {
+  const el = document.getElementById('chatProgress');
+  if (currentQuestion < QUESTIONS.length) {
+    el.textContent = `Pergunta ${currentQuestion + 1} de ${QUESTIONS.length}`;
+  } else {
+    el.textContent = 'Autoanálise concluída';
+  }
+}
+
+function iniciarChat() {
+  currentQuestion = 0;
+  respostas = [];
+  document.getElementById('chat-historico').innerHTML = '';
+  atualizarProgresso();
+  falarComoGuia(
+    'Olá. Sou o Guia do Unirversos. A Aline me pediu para te acompanhar nesta jornada de autoanálise. Respire fundo, não temos pressa.\n\n' + QUESTIONS[0]
+  );
+}
+
+window.enviarMensagem = function() {
+  const input = document.getElementById('aluno-input');
+  const texto = input.value.trim();
+  if (!texto) return;
+
+  addMensagem('aluno', texto);
+  respostas.push(texto);
+  input.value = '';
+  document.getElementById('enviarBtn').disabled = true;
+  input.disabled = true;
+
+  const perguntaRespondida = currentQuestion;
+  currentQuestion++;
+
+  if (currentQuestion < QUESTIONS.length) {
+    const transicao = TRANSICOES[perguntaRespondida] + '\n\n' + QUESTIONS[currentQuestion];
+    falarComoGuia(transicao, () => {
+      document.getElementById('enviarBtn').disabled = false;
+      input.disabled = false;
+      input.focus();
+      atualizarProgresso();
+    });
+  } else {
+    // Última pergunta respondida — monta o Retrato da Essência
+    const retrato =
+      `Olha só o que você me contou:\n\n` +
+      `Você quer aprender esse idioma por causa de: "${respostas[0]}"\n\n` +
+      `Hoje, um dos seus maiores desafios é: "${respostas[1]}"\n\n` +
+      `E a vida que você sonha é: "${respostas[2]}"\n\n` +
+      `Guardei tudo isso com você. Essa é sua Autoanálise sincera — o resto da jornada, a gente faz juntos, um pedacinho por vez. 🌱`;
+
+    falarComoGuia(retrato, () => {
+      atualizarProgresso();
+      document.getElementById('chatInputArea').style.display = 'none';
+      document.getElementById('chatDoneCta').style.display = 'block';
+      window.__uniSaveAutoanalise && window.__uniSaveAutoanalise(respostas, retrato);
+    });
+  }
+};
+
+document.addEventListener('keydown', function(e) {
+  if (e.target && e.target.id === 'aluno-input' && e.key === 'Enter' && !e.shiftKey) {
+    e.preventDefault();
+    if (!document.getElementById('enviarBtn').disabled) enviarMensagem();
+  }
+});
+</script>
+
+<!-- FIREBASE: login + salvar o Retrato da Essência -->
+<script type="module">
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+  import {
+    getAuth, onAuthStateChanged, createUserWithEmailAndPassword,
+    signInWithEmailAndPassword, GoogleAuthProvider, signInWithPopup, signOut
+  } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
+  import {
+    getFirestore, doc, setDoc
+  } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+
+  const firebaseConfig = {
+    apiKey: "AIzaSyCoo0UB5rWjD4ZGE3xKO32zXYPUQFYObmc",
+    authDomain: "unirversos-site.firebaseapp.com",
+    projectId: "unirversos-site",
+    storageBucket: "unirversos-site.firebasestorage.app",
+    messagingSenderId: "608479693630",
+    appId: "1:608479693630:web:38240bf82e09d72fd5ba6f",
+    measurementId: "G-V6K0D2KTJ1"
+  };
+
+  const app = initializeApp(firebaseConfig);
+  const auth = getAuth(app);
+  const db = getFirestore(app);
+
+  let authMode = 'login';
+  window.switchAuthTab = function(mode) {
+    authMode = mode;
+    document.getElementById('authTabLogin').classList.toggle('active', mode === 'login');
+    document.getElementById('authTabSignup').classList.toggle('active', mode === 'signup');
+    document.getElementById('authSubmitBtn').textContent = mode === 'login' ? 'Entrar' : 'Criar conta';
+    document.getElementById('authError').textContent = '';
+  };
+
+  window.handleAuthSubmit = async function(e) {
+    e.preventDefault();
+    const email = document.getElementById('authEmail').value.trim();
+    const password = document.getElementById('authPassword').value;
+    const errorEl = document.getElementById('authError');
+    errorEl.textContent = '';
+    try {
+      if (authMode === 'login') {
+        await signInWithEmailAndPassword(auth, email, password);
+      } else {
+        await createUserWithEmailAndPassword(auth, email, password);
+      }
+    } catch (err) {
+      errorEl.textContent = traduzErroFirebase(err.code);
+    }
+  };
+
+  window.handleGoogleSignIn = async function() {
+    const errorEl = document.getElementById('authError');
+    errorEl.textContent = '';
+    try {
+      await signInWithPopup(auth, new GoogleAuthProvider());
+    } catch (err) {
+      errorEl.textContent = traduzErroFirebase(err.code);
+    }
+  };
+
+  window.handleLogout = async function() {
+    await signOut(auth);
+  };
+
+  function traduzErroFirebase(code) {
+    const mapa = {
+      'auth/invalid-email': 'E-mail inválido.',
+      'auth/user-not-found': 'Não achei essa conta. Tenta "Criar conta"?',
+      'auth/wrong-password': 'Senha incorreta.',
+      'auth/invalid-credential': 'E-mail ou senha incorretos.',
+      'auth/email-already-in-use': 'Esse e-mail já tem conta. Tenta "Entrar"?',
+      'auth/weak-password': 'A senha precisa ter no mínimo 6 caracteres.',
+      'auth/popup-closed-by-user': 'Janela do Google fechada antes de terminar.'
+    };
+    return mapa[code] || 'Algo deu errado. Tenta de novo.';
+  }
+
+  // Salva o Retrato da Essência na conta — é isso que o Planeta Utopia
+  // vai poder ler no futuro pra já saber quem a pessoa é.
+  window.__uniSaveAutoanalise = async function(respostas, retrato) {
+    const user = auth.currentUser;
+    if (!user) return;
+    try {
+      await setDoc(doc(db, 'progress', user.uid), {
+        autoanaliseRespostas: respostas,
+        retratoEssencia: retrato,
+        retratoData: new Date().toISOString(),
+        email: user.email
+      }, { merge: true });
+    } catch (err) {
+      console.error('Erro ao salvar a autoanálise:', err);
+    }
+  };
+
+  onAuthStateChanged(auth, (user) => {
+    const gate = document.getElementById('authGate');
+    const gated = document.getElementById('chatGated');
+    if (user) {
+      gate.style.display = 'none';
+      gated.style.display = 'block';
+      document.getElementById('authUserEmail').textContent = user.email;
+      iniciarChat();
+    } else {
+      gate.style.display = 'block';
+      gated.style.display = 'none';
+    }
+  });
+</script>
 
 </body>
 </html>
