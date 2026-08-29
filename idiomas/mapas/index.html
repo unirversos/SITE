@@ -236,6 +236,7 @@ body::before{
       <a href="/" style="color:var(--ink-soft);text-decoration:none;">início</a>
       <a href="/idiomas/" style="color:var(--ink-soft);text-decoration:none;">idiomas</a>
       <a href="/memorias/" style="color:var(--ink-soft);text-decoration:none;">memórias</a>
+      <a href="/paralelos/" style="color:var(--ink-soft);text-decoration:none;">paralelos</a>
       <a href="/sobre/" style="color:var(--ink-soft);text-decoration:none;">sobre</a>
     </span>
   </header>
@@ -1605,7 +1606,9 @@ window.addEventListener('storage', () => {
     }
     try {
       const snap = await getDoc(doc(db, 'progress', user.uid));
-      window.__cloudAulaZeroStatus = snap.exists() && snap.data().aulaZeroCompleted === true;
+      const data = snap.exists() ? snap.data() : null;
+      window.__cloudAulaZeroStatus = !!(data && data.aulaZeroCompleted === true);
+      mostrarLembreteRevisao(data);
     } catch (err) {
       console.error('Erro ao checar progresso na nuvem:', err);
       window.__cloudAulaZeroStatus = false;
@@ -1613,6 +1616,20 @@ window.addEventListener('storage', () => {
     if (typeof renderMapasHub === 'function') renderMapasHub();
     if (typeof updateAulaZeroStatus === 'function') updateAulaZeroStatus();
   });
+
+  function mostrarLembreteRevisao(data) {
+    if (!data || !data.aulaZeroCompleted || !data.aulaZeroDate) return;
+    const dias = Math.floor((Date.now() - new Date(data.aulaZeroDate).getTime()) / 86400000);
+    if (dias < 14) return;
+
+    const banner = document.createElement('div');
+    banner.style.cssText = 'max-width:900px;margin:0 auto 20px;background:#FBF2DF;border:1.5px dashed #C0913F;border-radius:14px;padding:16px 20px;text-align:center;font-size:13.5px;color:#7A5B21;';
+    banner.innerHTML = `Já faz ${dias} dias desde sua Aula Zero — que tal <a href="/idiomas/aula-zero/" style="color:#7A5B21;font-weight:600;text-decoration:underline;">dar uma revisada</a>?`;
+    const grid = document.getElementById('mapasGrid');
+    if (grid && grid.parentNode) {
+      grid.parentNode.insertBefore(banner, grid);
+    }
+  }
 </script>
 </body>
 </html>
