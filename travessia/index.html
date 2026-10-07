@@ -1,0 +1,435 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Unirversos Travessia — a viagem ao Japão, do preparo à lembrança</title>
+    <meta name="description" content="Ferramentas gratuitas para preparar sua viagem ao Japão — guia de sobrevivência e cronograma de agendamentos — e a revista personalizada para guardar o que você viveu.">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --color-dark: #333333;
+            --color-rose: #c99699;
+            --color-gray: #777777;
+            --color-light-gray: #f5f5f5;
+            --color-white: #ffffff;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+            line-height: 1.8;
+            color: var(--color-dark);
+            background: var(--color-white);
+            font-size: 16px;
+        }
+
+        /* HEADER */
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 2rem 4rem;
+            border-bottom: 1px solid #e0e0e0;
+        }
+
+        .logo {
+            font-size: 13px;
+            font-weight: 700;
+            letter-spacing: 2px;
+            text-decoration: none;
+            color: var(--color-dark);
+            text-transform: uppercase;
+        }
+
+        nav {
+            display: flex;
+            gap: 2.5rem;
+        }
+
+        nav a {
+            text-decoration: none;
+            color: var(--color-rose);
+            font-size: 13px;
+            font-weight: 400;
+            letter-spacing: 0.5px;
+            transition: opacity 0.3s;
+        }
+
+        nav a:hover {
+            opacity: 0.7;
+        }
+
+        /* MAIN */
+        main {
+            max-width: 1100px;
+            margin: 0 auto;
+            padding: 0 4rem;
+        }
+
+        /* HERO */
+        .hero {
+            text-align: center;
+            padding: 4rem 0 2rem;
+        }
+
+        .hero h1 {
+            font-size: 3rem;
+            font-weight: 300;
+            line-height: 1.3;
+            margin-bottom: 1rem;
+            color: var(--color-dark);
+            letter-spacing: -0.5px;
+        }
+
+        .hero .highlight {
+            color: var(--color-rose);
+            font-weight: 400;
+        }
+
+        .hero p {
+            font-size: 1.2rem;
+            color: var(--color-gray);
+            max-width: 700px;
+            margin: 0 auto;
+        }
+
+        .epigraph {
+            max-width: 620px;
+            margin: 2.5rem auto 0;
+            padding: 1.5rem 2rem;
+            border-left: 4px solid var(--color-rose);
+            background: var(--color-light-gray);
+            border-radius: 8px;
+            text-align: left;
+            font-size: 1.05rem;
+            color: var(--color-gray);
+            line-height: 1.7;
+        }
+
+        /* SECTION */
+        section {
+            margin: 4rem 0;
+        }
+
+        .section-title {
+            font-size: 2rem;
+            font-weight: 400;
+            margin-bottom: 1rem;
+            color: var(--color-dark);
+            text-align: center;
+        }
+
+        .section-subtitle {
+            font-size: 1.1rem;
+            color: var(--color-gray);
+            text-align: center;
+            margin-bottom: 2.5rem;
+            max-width: 700px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .phase-label {
+            font-size: 0.75rem;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            color: var(--color-rose);
+            font-weight: 600;
+            text-align: center;
+            margin-bottom: 0.8rem;
+        }
+
+        /* CARDS */
+        .features {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 2rem;
+            margin: 2rem 0;
+        }
+
+        .feature {
+            padding: 2rem;
+            border: 1px solid #e8e8e8;
+            border-radius: 8px;
+            background: var(--color-white);
+            border-top: 4px solid var(--color-rose);
+            display: flex;
+            flex-direction: column;
+        }
+
+        .feature-icon {
+            font-size: 2rem;
+            margin-bottom: 1rem;
+            line-height: 1;
+            filter: drop-shadow(0 0 8px rgba(201, 150, 153, 0.3));
+        }
+
+        .feature h3 {
+            font-size: 1.2rem;
+            font-weight: 500;
+            margin-bottom: 0.3rem;
+            color: var(--color-dark);
+        }
+
+        .feature .tag {
+            display: inline-block;
+            align-self: flex-start;
+            font-size: 0.7rem;
+            letter-spacing: 1.2px;
+            text-transform: uppercase;
+            font-weight: 600;
+            color: var(--color-rose);
+            border: 1px solid var(--color-rose);
+            border-radius: 100px;
+            padding: 0.1rem 0.7rem;
+            margin-bottom: 0.9rem;
+        }
+
+        .feature p {
+            font-size: 0.95rem;
+            color: var(--color-gray);
+            line-height: 1.7;
+            flex: 1;
+            margin-bottom: 1.2rem;
+        }
+
+        .feature a.go {
+            align-self: flex-start;
+            font-size: 0.95rem;
+            font-weight: 500;
+            color: var(--color-rose);
+            text-decoration: none;
+            border-bottom: 1px solid #e8e8e8;
+            padding-bottom: 2px;
+            transition: border-color 0.3s;
+        }
+
+        .feature a.go:hover {
+            border-color: var(--color-rose);
+        }
+
+        .feature.soon {
+            border-top-color: #d8d8d8;
+        }
+
+        .feature.soon .tag {
+            color: var(--color-gray);
+            border-color: #d8d8d8;
+        }
+
+        /* CTA */
+        .cta-section {
+            text-align: center;
+            padding: 3rem 2rem;
+            margin: 4rem 0;
+            background: var(--color-light-gray);
+            border-radius: 8px;
+            border-left: 4px solid var(--color-rose);
+        }
+
+        .cta-section h2 {
+            font-size: 2rem;
+            font-weight: 400;
+            margin-bottom: 1rem;
+            color: var(--color-dark);
+        }
+
+        .cta-section p {
+            color: var(--color-gray);
+            font-size: 1.05rem;
+            margin-bottom: 1rem;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .cta-button {
+            display: inline-block;
+            padding: 1rem 2.5rem;
+            background: var(--color-rose);
+            color: white;
+            text-decoration: none;
+            border: none;
+            border-radius: 4px;
+            font-size: 1.1rem;
+            font-weight: 500;
+            font-family: inherit;
+            cursor: pointer;
+            transition: all 0.3s;
+            margin-top: 1rem;
+        }
+
+        .cta-button:hover {
+            background: var(--color-dark);
+            transform: scale(1.02);
+        }
+
+        /* FOOTER */
+        footer {
+            text-align: center;
+            padding: 2.5rem;
+            color: #999;
+            font-size: 0.85rem;
+            border-top: 1px solid #e0e0e0;
+            margin-top: 4rem;
+        }
+
+        footer a {
+            color: var(--color-dark);
+            text-decoration: none;
+        }
+
+        /* RESPONSIVE */
+        @media (max-width: 768px) {
+            header {
+                flex-direction: column;
+                gap: 1.5rem;
+                padding: 1.5rem;
+            }
+
+            nav {
+                flex-wrap: wrap;
+                justify-content: center;
+                gap: 1rem;
+            }
+
+            main {
+                padding: 0 1.5rem;
+            }
+
+            .hero h1 {
+                font-size: 1.8rem;
+            }
+
+            .hero p {
+                font-size: 1rem;
+            }
+
+            .section-title {
+                font-size: 1.5rem;
+            }
+
+            .features {
+                grid-template-columns: 1fr;
+            }
+
+            .epigraph {
+                padding: 1.2rem 1.4rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- HEADER -->
+    <header>
+        <a href="/" class="logo">UNIRVERSOS</a>
+        <nav>
+            <a href="https://unirversos.com/idiomas/">idiomas</a>
+            <a href="https://unirversos.com/travessia/">travessia</a>
+            <a href="https://unirversos.com/paralelos/">paralelos</a>
+            <a href="https://unirversos.com/sobre/">sobre</a>
+        </nav>
+    </header>
+
+    <main>
+        <!-- HERO -->
+        <section class="hero">
+            <h1>Eu entrego o guia.<br/><span class="highlight">Você vive as histórias.</span></h1>
+            <p>Vivi dez anos no Japão do lado de dentro. O que eu gostaria de ter tido quando cheguei — e o que eu queria ter guardado quando voltei — está tudo aqui.</p>
+            <p class="epigraph">Viagem boa não começa no aeroporto nem termina na bagagem desfeita. Começa semanas antes, quando você entende onde está pisando, e continua depois, toda vez que alguém pergunta como foi. <strong>Travessia é esse caminho inteiro.</strong></p>
+        </section>
+
+        <!-- FERRAMENTAS -->
+        <section id="ferramentas">
+            <p class="phase-label">Antes e durante · gratuito</p>
+            <h2 class="section-title">As ferramentas da travessia</h2>
+            <p class="section-subtitle">Tudo que eu queria que alguém tivesse me contado antes de embarcar. Aberto, sem cadastro, use à vontade.</p>
+
+            <div class="features">
+                <div class="feature">
+                    <div class="feature-icon">🗓️</div>
+                    <h3>Cronograma de agendamentos</h3>
+                    <span class="tag">Grátis</span>
+                    <p>Dezenas de atrações no Japão só vendem ingresso por loteria ou liberam o mês inteiro num minuto específico — quase sempre de madrugada no horário do Brasil. Diga quando você viaja e a página calcula o seu cronograma de compras, já convertido para Brasília.</p>
+                    <a class="go" href="/travessia/agendamentos/">Calcular meu cronograma →</a>
+                </div>
+
+                <div class="feature">
+                    <div class="feature-icon">🏮</div>
+                    <h3>Mini guia de sobrevivência</h3>
+                    <span class="tag">Grátis</span>
+                    <p>O caderno de bordo: o que falar, o que ler nas placas e o que fazer nas situações em que todo turista trava — do balcão da imigração ao caixa do konbini. Pensado para quem não fala japonês.</p>
+                    <a class="go" href="/travessia/guia-sobrevivencia/">Abrir o guia →</a>
+                </div>
+
+                <div class="feature soon">
+                    <div class="feature-icon">🧭</div>
+                    <h3>Roteiros e experiências</h3>
+                    <span class="tag">Em breve</span>
+                    <p>Os lugares que valem o deslocamento, os que não valem, e os que ninguém te conta. Organizados por região, por tipo de viajante e pelo tempo que você tem.</p>
+                </div>
+
+                <div class="feature soon">
+                    <div class="feature-icon">💬</div>
+                    <h3>Japonês de bolso</h3>
+                    <span class="tag">No universo Idiomas</span>
+                    <p>As frases que resolvem a viagem, em mapas de contexto que você estuda e depois testa num simulador de situações reais.</p>
+                    <a class="go" href="https://unirversos.com/idiomas/">Ir para Idiomas →</a>
+                </div>
+            </div>
+        </section>
+
+        <!-- PARA GUARDAR -->
+        <section id="guardar">
+            <p class="phase-label">Depois · produtos</p>
+            <h2 class="section-title">E para não deixar virar só foto no celular</h2>
+            <p class="section-subtitle">A viagem acaba. O que fica depende do que você fizer com ela nas semanas seguintes.</p>
+
+            <div class="features">
+                <div class="feature">
+                    <div class="feature-icon">📖</div>
+                    <h3>Revista Memórias</h3>
+                    <span class="tag">Personalizada</span>
+                    <p>Sua viagem vira uma revista de verdade: os seus lugares, as suas fotos, os seus carimbos e espaço para escrever o que só você viveu. Da galeria do celular para uma coisa que se segura na mão.</p>
+                    <a class="go" href="/travessia/revista/">Conhecer a revista →</a>
+                </div>
+
+                <div class="feature">
+                    <div class="feature-icon">✨</div>
+                    <h3>Monte sua edição</h3>
+                    <span class="tag">Sob medida</span>
+                    <p>Escolha os destinos do seu roteiro e receba a revista montada com o seu nome na capa — feita para a sua viagem, não para uma viagem genérica.</p>
+                    <a class="go" href="/travessia/seu-album.html">Começar a montar →</a>
+                </div>
+            </div>
+        </section>
+
+        <!-- CTA -->
+        <section class="cta-section">
+            <h2>Começa pelo começo</h2>
+            <p>Se a sua viagem ainda está sendo planejada, o cronograma de agendamentos é a primeira coisa a resolver — tem ingresso que esgota três meses antes.</p>
+            <a href="/travessia/agendamentos/" class="cta-button">Calcular meu cronograma</a>
+        </section>
+    </main>
+
+    <!-- FOOTER -->
+    <footer>
+        <p>unirversos — tudo conectado</p>
+        <p>
+            <a href="https://instagram.com/unirversos.idiomas">@unirversos.idiomas</a>
+            |
+            <a href="mailto:unirversos.idiomas@gmail.com">unirversos.idiomas@gmail.com</a>
+        </p>
+        <p style="margin-top: 1.5rem;">Aline Kikuti</p>
+    </footer>
+</body>
+</html>

@@ -11,19 +11,18 @@
     *{margin:0;padding:0;box-sizing:border-box;}
     :root{
       --paper:#FDF8F5;--pink:#E08C86;--pink-deep:#C26F6C;--lav:#8B90C4;--lav-soft:#D4D9F0;
-      --sage:#7FA893;--gold:#C0913F;--ink:#4A4149;--ink-soft:#7A6F7E;--roma:#5C4F60;--line:#E8DFDA;--line-d:#D8CCBF;
+      --sage:#7FA893;--gold:#C0913F;--ink:#4A4149;--ink-soft:#7A6F7E;--line:#E8DFDA;--line-d:#D8CCBF;
     }
     html,body{background:var(--paper);font-family:'Zen Maru Gothic',sans-serif;color:var(--ink);line-height:1.6;}
-
-    /* SITE NAV */
-    .site-nav{background:var(--paper);}
-    .site-nav .wrap{display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap;padding:20px 24px;}
-    .site-nav .logo{font-family:'Baloo 2',cursive;font-size:18px;font-weight:700;text-decoration:none;color:var(--ink);}
-    .site-nav .links{display:flex;gap:18px;font-size:13px;}
-    .site-nav .links a{color:var(--ink-soft);text-decoration:none;}
-    .site-nav .links a:hover{color:var(--pink-deep);}
-    .back-link{display:block;margin:0 24px 4px;color:var(--pink-deep);text-decoration:none;font-weight:500;font-size:14px;max-width:1040px;margin-left:auto;margin-right:auto;padding:0 24px;}
-    .back-link:hover{text-decoration:underline;}
+    
+    /* NAV GLOBAL */
+    .nav-global{background:#fff;border-bottom:1px solid var(--line);padding:16px 0;position:sticky;top:0;z-index:100;}
+    .nav-global .wrap{display:flex;justify-content:space-between;align-items:center;max-width:1000px;margin:0 auto;padding:0 24px;}
+    .nav-global .logo{font-family:'Baloo 2',cursive;font-size:18px;font-weight:700;text-decoration:none;color:inherit;}
+    .nav-global .logo span{color:var(--pink);}
+    .nav-global .links{display:flex;gap:24px;font-size:13px;}
+    .nav-global a{text-decoration:none;color:var(--ink-soft);transition:color .2s;}
+    .nav-global a:hover{color:var(--pink);}
     
     /* HEADER */
     header{background:linear-gradient(135deg, var(--pink) 0%, var(--lav) 100%);color:#fff;padding:24px 0;box-shadow:0 2px 8px rgba(0,0,0,.1);}
@@ -31,9 +30,25 @@
     header h1{font-family:'Baloo 2',cursive;font-size:28px;}
     header p{font-size:13px;opacity:.9;}
     
+    /* GRAVAÇÕES */
+    .gravacoes-section{background:#fff;border:1.5px solid var(--pink);border-radius:12px;padding:24px;margin-bottom:32px;}
+    .gravacoes-section h3{font-family:'Baloo 2',cursive;font-size:20px;color:var(--pink-deep);margin-bottom:12px;}
+    .gravacoes-section p{color:var(--ink-soft);font-size:14px;margin-bottom:16px;}
+    .audio-player{background:var(--lav-soft);padding:16px;border-radius:8px;margin-bottom:12px;}
+    .audio-player audio{width:100%;height:32px;}
+    .audio-placeholder{background:#f0f0f0;padding:16px;border-radius:8px;color:var(--ink-soft);font-size:13px;text-align:center;}
+    
+    /* NAVEGAÇÃO FINAL */
+    .nav-buttons{display:flex;gap:12px;margin-top:40px;padding-top:24px;border-top:1px solid var(--line);}
+    .nav-buttons a{flex:1;padding:14px 20px;border-radius:8px;text-decoration:none;font-weight:600;text-align:center;transition:all .3s;}
+    .btn-prev{background:var(--lav-soft);color:var(--lav);border:1.5px solid var(--lav);}
+    .btn-prev:hover{background:var(--lav);color:#fff;}
+    .btn-next{background:var(--pink);color:#fff;border:1.5px solid var(--pink);}
+    .btn-next:hover{background:var(--pink-deep);}
+    
     /* TABS NAVIGATION */
     .tabs-nav{
-      position:sticky;top:0;background:#fff;border-bottom:2px solid var(--line-d);box-shadow:0 2px 4px rgba(0,0,0,.05);z-index:99;
+      position:sticky;top:60px;background:#fff;border-bottom:2px solid var(--line-d);box-shadow:0 2px 4px rgba(0,0,0,.05);z-index:99;
     }
     .tabs-nav .wrap{display:flex;gap:0;overflow-x:auto;}
     .tab-btn{
@@ -43,9 +58,6 @@
     }
     .tab-btn:hover{background:var(--lav-soft);color:var(--pink);}
     .tab-btn.active{color:var(--pink);border-bottom-color:var(--pink);background:var(--lav-soft);}
-    .progress-track{height:4px;background:var(--line);width:100%;}
-    .progress-fill{height:100%;background:var(--pink);width:25%;transition:width .3s ease;}
-    .progress-label{text-align:center;font-size:11px;color:var(--roma);padding:6px 0 0;font-weight:600;}
     
     .wrap{max-width:1000px;margin:0 auto;padding:0 24px;}
     
@@ -80,7 +92,7 @@
       background:#f9f7f5;padding:12px;border-radius:6px;margin-bottom:8px;border-left:3px solid var(--pink);
     }
     .phrase-jp{font-size:16px;font-weight:600;}
-    .phrase-roma{font-size:13px;color:var(--roma);font-weight:500;}
+    .phrase-roma{font-size:13px;color:var(--ink-soft);}
     .phrase-pt{font-size:13px;color:var(--sage);}
     .audio-btn{
       padding:6px 12px;font-size:11px;background:var(--lav);color:#fff;border:none;border-radius:4px;
@@ -142,74 +154,31 @@
       .phrase-row{grid-template-columns:1fr;gap:8px;}
       .accordion-header{padding:16px;}
       .tab-btn{min-width:120px;font-size:12px;padding:12px 8px;}
-      .transcript-text{max-height:170px;font-size:12px;}
     }
-    .audio-narracao{background:var(--lav-soft, #EEEFF9);border:1.5px solid var(--pink, #E08C86);border-radius:16px;padding:16px 20px;margin:0 0 20px;}
-    .audio-narracao p{margin:0 0 10px !important;font-size:13.5px !important;font-weight:600;color:var(--pink-deep, #C26F6C) !important;}
-    .audio-narracao audio{width:100%;}
-    .transcript-btn{background:none;border:1.5px solid var(--pink);color:var(--pink-deep);border-radius:20px;padding:6px 14px;font-size:12px;font-weight:600;cursor:pointer;margin-top:10px;}
-    .transcript-btn:hover{background:var(--pink);color:#fff;}
-    .transcript-text{display:none;margin-top:10px;padding:12px 14px;background:#fff;border-radius:8px;font-size:13px;color:var(--ink);line-height:1.6;border-left:3px solid var(--pink);max-height:170px;overflow-y:auto;}
-    .transcript-text p{margin-bottom:10px;}
-    .transcript-text ul{margin:0 0 10px 18px;}
-    .transcript-text li{margin-bottom:4px;}
-    .transcript-text .nota{background:var(--gold-soft, #FBF2DF);padding:8px 10px;border-radius:6px;font-size:12.5px;font-style:italic;margin-bottom:10px;}
-    .transcript-text.aberta{display:block;}
-
-    /* AUTH GATE */
-    .auth-gate{background:#fff;border:2px solid var(--pink);border-radius:16px;padding:32px;max-width:420px;margin:20px auto;text-align:center;}
-    .auth-gate h3{font-family:'Baloo 2',cursive;color:var(--pink-deep);margin-bottom:8px;font-size:20px;}
-    .auth-gate p{color:var(--ink-soft);font-size:13px;margin-bottom:20px;}
-    .auth-tabs{display:flex;gap:8px;margin-bottom:20px;justify-content:center;}
-    .auth-tabs button{background:none;border:none;padding:8px 16px;font-size:13px;font-weight:600;color:var(--ink-soft);cursor:pointer;border-bottom:2px solid transparent;}
-    .auth-tabs button.active{color:var(--pink-deep);border-color:var(--pink);}
-    .auth-form{display:flex;flex-direction:column;gap:10px;text-align:left;}
-    .auth-form input{padding:10px 14px;border:1.5px solid var(--line);border-radius:8px;font-size:14px;font-family:inherit;}
-    .auth-form button[type="submit"]{background:var(--pink);color:#fff;border:none;padding:12px;border-radius:8px;font-weight:600;cursor:pointer;margin-top:4px;}
-    .auth-form button[type="submit"]:hover{background:var(--pink-deep);}
-    .auth-divider{display:flex;align-items:center;gap:10px;margin:16px 0;color:var(--ink-soft);font-size:12px;}
-    .auth-divider::before,.auth-divider::after{content:'';flex:1;height:1px;background:var(--line);}
-    .auth-google{width:100%;background:#fff;border:1.5px solid var(--line);padding:12px;border-radius:8px;font-weight:600;cursor:pointer;font-size:13px;}
-    .auth-google:hover{background:#f9f7f5;}
-    .auth-error{color:#C0392B;font-size:12px;margin-top:8px;min-height:16px;}
-    .auth-loggedin{background:var(--sage-soft, #EAF3EE);border-radius:10px;padding:10px 16px;font-size:13px;margin-bottom:16px;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px;}
-    .auth-loggedin button{background:none;border:1px solid var(--ink-soft);border-radius:6px;padding:6px 12px;font-size:12px;cursor:pointer;}
-
-    /* FEEDBACK BOX */
-    .feedback-box{background:#fff;border:1.5px solid var(--line);border-radius:14px;padding:20px;margin-top:16px;text-align:left;}
-    .feedback-box h4{font-family:'Baloo 2',cursive;color:var(--pink-deep);font-size:15px;margin-bottom:6px;}
-    .feedback-box p{font-size:12.5px;color:var(--ink-soft);margin-bottom:12px;}
-    .feedback-box textarea{width:100%;padding:10px;border:1.5px solid var(--line);border-radius:8px;font-family:inherit;font-size:13px;resize:vertical;}
-    .feedback-box button{margin-top:10px;background:var(--pink);color:#fff;border:none;padding:10px 20px;border-radius:8px;font-weight:600;cursor:pointer;font-size:13px;}
-    .feedback-box button:hover{background:var(--pink-deep);}
-    .feedback-box button:disabled{opacity:.6;cursor:not-allowed;}
   </style>
 </head>
 <body>
 
-<!-- SITE NAV -->
-<nav class="site-nav">
+<!-- NAVEGAÇÃO GLOBAL -->
+<nav class="nav-global">
   <div class="wrap">
-    <a href="/" class="logo">UNIRVERSOS</a>
+    <a href="/" class="logo">UNIRVERSOS<span>/</span>aula<span>zero</span></a>
     <div class="links">
       <a href="/idiomas/">idiomas</a>
-      <a href="/memorias/">memórias</a>
+      <a href="/travessia/">travessia</a>
       <a href="/paralelos/">paralelos</a>
       <a href="/sobre/">sobre</a>
-      <a href="/">início</a>
     </div>
   </div>
 </nav>
-<a href="/idiomas/" class="back-link">← voltar para idiomas</a>
 
 <!-- HEADER -->
 <header>
-  <div class="wrap" style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px;">
+  <div class="wrap">
     <div>
       <h1>🎓 Aula Zero</h1>
       <p>O essencial antes de explorar os mapas</p>
     </div>
-    <a href="/idiomas/aula-zero/resumo-essencial.pdf" download style="background:rgba(255,255,255,.2);color:#fff;text-decoration:none;padding:10px 18px;border-radius:30px;font-size:13px;font-weight:600;white-space:nowrap;border:1.5px solid rgba(255,255,255,.5);">📄 Baixar resumo (PDF)</a>
   </div>
 </header>
 
@@ -221,8 +190,6 @@
     <button class="tab-btn" onclick="switchTab(2)">❓ 3. Perguntas</button>
     <button class="tab-btn" onclick="switchTab(3)">🎯 4. Teste</button>
   </div>
-  <div class="progress-track"><div class="progress-fill" id="progressFill"></div></div>
-  <div class="progress-label" id="progressLabel">Passo 1 de 4 · 25%</div>
 </nav>
 
 <!-- CONTEÚDO DAS ABAS -->
@@ -232,52 +199,6 @@
   <div class="tab-content active" id="tab0">
     <div class="tab-section">
       <h2>Estrutura dos Moldes</h2>
-      <div class="audio-narracao">
-        <p>🎧 Ouça a Aline explicar antes de praticar</p>
-        <audio controls preload="none">
-          <source src="audio/1-estrutura.mp3" type="audio/mpeg">
-          Seu navegador não suporta áudio nativo.
-        </audio>
-        <button class="transcript-btn" onclick="toggleTranscript(this)">📝 Ver transcrição</button>
-        <div class="transcript-text">
-          <p>Olá, que bom ter você aqui! Eu sou a Aline. Preparei esse material com muito cuidado e carinho, e na Aula Zero vamos entender o funcionamento dos moldes. Aqui no site, a gente tem os mapas, que é onde você aprende o vocabulário por contexto, e o vocabulário são as peças que se encaixam nos moldes. E as quatro frentes para facilitar a organização do conteúdo é dividida em: fogo, água, ar e terra. E tem detalhes disponíveis na seção "Sobre", tá?</p>
-
-          <p>Então, o primeiro molde é o molde afirmativo <strong>desu</strong>. Equivale a "sou" ou "é" no tempo presente. Embora no português seja classificado como verbo, no japonês o desu possui regras próprias e não segue a conjugação padrão dos demais verbos.</p>
-          <p>Então:</p>
-          <ul>
-            <li>Eu sou Aline: <strong>Arine desu</strong>.</li>
-            <li>Eu sou brasileira: <strong>Burajirujin desu</strong>.</li>
-            <li>É verdade: <strong>Hontou desu</strong>.</li>
-          </ul>
-          <p>Desu afirma.</p>
-
-          <p>O molde negativo é o <strong>dewa arimasen, ja arimasen, janai</strong>, equivale a "não sou" ou "não é", e possui variações conforme o nível de polidez: dewa arimasen é mais formal, mais polido; ja arimasen é o intermediário; e janai é o menos formal, mas é o mais comum na fala, tá bom?</p>
-          <p>Então, aplicação:</p>
-          <ul>
-            <li>Não sou brasileira: <strong>Burajirujin dewa arimasen</strong> (formal); <strong>Burajirujin ja arimasen</strong> (neutro); <strong>Burajirujin janai</strong> (informal).</li>
-            <li>Eu não sou Aline: <strong>Arine dewa arimasen</strong>; <strong>Arine ja arimasen</strong>; <strong>Arine janai</strong>.</li>
-          </ul>
-
-          <p class="nota">Só um adendo: na fonologia japonesa não existe o fonema "L". Os nomes estrangeiros com "L", como Aline, são adaptados para o som de "R", tornando-se Arine. Então, quando eu falar Arine, vocês já sabem o porquê. E quem tiver um nome que tem "L", manda para mim que a gente vai converter seu nome para japonês.</p>
-
-          <p>O terceiro molde é o molde interrogativo: a partícula <strong>ka</strong>. A adição da partícula ka ao final de uma sentença transforma a estrutura em uma pergunta. Então ela funciona como um ponto de interrogação verbal — verbal no caso de falado, né? Mas aplica-se aos verbos, mas aplica-se também a outras estruturas sem verbo.</p>
-          <ul>
-            <li>Você é a Aline? <strong>Arine-san desu ka?</strong></li>
-            <li>Você é brasileira? <strong>Burajirujin desu ka?</strong></li>
-            <li>É verdade? <strong>Hontou desu ka?</strong></li>
-          </ul>
-
-          <p class="nota">Outro adendo aqui: Arine-san desu ka? — aqui eu coloquei o -san porque a gente tá perguntando para uma outra pessoa se ela é, né? A gente não usa o -san quando a gente tá falando da gente. Para se apresentar, você não vai colocar "eu sou a Aline-san", não. Você só vai dizer "eu sou a Aline". Mas para perguntar para a pessoa: "você é a senhora Aline?", aí sim, você vai pôr o -san. Arine-san desu ka?, Tanaka-san desu ka?, ok?</p>
-
-          <p>Então, recapitulando:</p>
-          <ul>
-            <li><strong>Desu</strong>: afirma.</li>
-            <li><strong>Janai, dewa arimasen, ja arimasen</strong>: nega.</li>
-            <li><strong>Desu ka?</strong>: pergunta.</li>
-          </ul>
-          <p>Com a prática dessas três estruturas-base — afirmação, negação e interrogação —, a gente vai construir a base necessária para se comunicar com clareza e segurança no idioma. Tudo bem até aqui? Manda pergunta se tiver pergunta, e vamos para o próximo: verbos!</p>
-        </div>
-      </div>
       <p><strong>A cópula</strong> (です) é o verbo "ser/estar" em japonês. É a base de tudo. Aprenda a afirmar, negar e perguntar.</p>
       
       <!-- Molde A: Desu -->
@@ -288,25 +209,19 @@
         </div>
         <div class="accordion-body">
           <p style="font-size:13px;color:var(--ink-soft);margin-bottom:16px;"><strong>Estrutura:</strong></p>
-          <div class="structure-box">[Item/Conceito] <strong>+ です (desu)</strong><br/><span style="font-size:13px;color:var(--ink-soft);margin-top:8px;display:block;">= X desu</span><br/><span style="font-size:13px;color:var(--pink-deep);margin-top:8px;display:block;font-weight:600;">Ex: [Seu nome] + です = Sou [seu nome]</span></div>
+          <div class="structure-box">[Item/Conceito] <strong>+ です</strong><br/><span style="font-size:13px;color:var(--ink-soft);margin-top:8px;display:block;">= X desu</span></div>
           <p style="font-size:13px;color:var(--ink-soft);margin-bottom:12px;font-weight:600;">Exemplos:</p>
           <div class="phrase-row">
+            <div class="phrase-jp">パスポートです</div>
+            <div class="phrase-roma">Pasupoto desu</div>
+            <div class="phrase-pt">É o passaporte</div>
+            <button class="audio-btn" onclick="speak('pasupoto desu', 'ja-JP')">🔊</button>
+          </div>
+          <div class="phrase-row">
             <div class="phrase-jp">ブラジル人です</div>
-            <div class="phrase-roma">Burajirujin desu</div>
+            <div class="phrase-roma">Burajiru jin desu</div>
             <div class="phrase-pt">Sou brasileiro(a)</div>
             <button class="audio-btn" onclick="speak('burajiru jin desu', 'ja-JP')">🔊</button>
-          </div>
-          <div class="phrase-row">
-            <div class="phrase-jp">ほんとうです</div>
-            <div class="phrase-roma">Hontou desu</div>
-            <div class="phrase-pt">É verdade</div>
-            <button class="audio-btn" onclick="speak('hontou desu', 'ja-JP')">🔊</button>
-          </div>
-          <div class="phrase-row">
-            <div class="phrase-jp">Aline desu</div>
-            <div class="phrase-roma">[Seu nome] + desu</div>
-            <div class="phrase-pt">Sou Aline</div>
-            <button class="audio-btn" onclick="speak('Aline desu', 'ja-JP')">🔊</button>
           </div>
         </div>
       </div>
@@ -319,13 +234,13 @@
         </div>
         <div class="accordion-body">
           <p style="font-size:13px;color:var(--ink-soft);margin-bottom:16px;"><strong>Estrutura:</strong></p>
-          <div class="structure-box sage">[Item/Conceito] <strong>+ ではありません (dewa arimasen)</strong><br/><span style="font-size:15px;color:var(--ink-soft);margin-top:12px;display:block;font-weight:600;">Variações: じゃありません (jya arimasen) | じゃない (jya nai)</span><br/><span style="font-size:13px;color:var(--ink-soft);margin-top:8px;display:block;">= X dewa arimasen / X jya arimasen / X jya nai</span><br/><span style="font-size:13px;color:var(--pink-deep);margin-top:8px;display:block;font-weight:600;">Ex: [Seu nome] + dewa arimasen = Não sou [seu nome]</span></div>
+          <div class="structure-box sage">[Item/Conceito] <strong>+ ではありません</strong><br/><span style="font-size:15px;color:var(--ink-soft);margin-top:12px;display:block;font-weight:600;">Variações: じゃありません (jya arimasen) | じゃない (jya nai)</span><br/><span style="font-size:13px;color:var(--ink-soft);margin-top:8px;display:block;">= X dewa arimasen / X jya arimasen / X jya nai</span></div>
           <p style="font-size:13px;color:var(--ink-soft);margin-bottom:12px;font-weight:600;">Exemplos:</p>
           <div class="phrase-row">
-            <div class="phrase-jp">日本人ではありません</div>
-            <div class="phrase-roma">Nihon jin dewa arimasen</div>
-            <div class="phrase-pt">Não sou japonês(a) (formal)</div>
-            <button class="audio-btn" onclick="speak('nihon jin dewa arimasen', 'ja-JP')">🔊</button>
+            <div class="phrase-jp">観光客ではありません</div>
+            <div class="phrase-roma">Kankou kyaku dewa arimasen</div>
+            <div class="phrase-pt">Não sou turista (formal)</div>
+            <button class="audio-btn" onclick="speak('kankou kyaku dewa arimasen', 'ja-JP')">🔊</button>
           </div>
           <div class="phrase-row">
             <div class="phrase-jp">日本人じゃありません</div>
@@ -334,16 +249,10 @@
             <button class="audio-btn" onclick="speak('nihon jin jya arimasen', 'ja-JP')">🔊</button>
           </div>
           <div class="phrase-row">
-            <div class="phrase-jp">ほんとうじゃない</div>
-            <div class="phrase-roma">Hontou jya nai</div>
-            <div class="phrase-pt">Não é verdade (informal)</div>
-            <button class="audio-btn" onclick="speak('hontou jya nai', 'ja-JP')">🔊</button>
-          </div>
-          <div class="phrase-row">
-            <div class="phrase-jp">Aline dewa arimasen</div>
-            <div class="phrase-roma">[Seu nome] + dewa arimasen</div>
-            <div class="phrase-pt">Não sou Aline</div>
-            <button class="audio-btn" onclick="speak('Aline dewa arimasen', 'ja-JP')">🔊</button>
+            <div class="phrase-jp">パスポートじゃない</div>
+            <div class="phrase-roma">Pasupoto jya nai</div>
+            <div class="phrase-pt">Não é o passaporte (informal)</div>
+            <button class="audio-btn" onclick="speak('pasupoto jya nai', 'ja-JP')">🔊</button>
           </div>
         </div>
       </div>
@@ -356,25 +265,25 @@
         </div>
         <div class="accordion-body">
           <p style="font-size:13px;color:var(--ink-soft);margin-bottom:16px;"><strong>Estrutura:</strong></p>
-          <div class="structure-box lav">[Frase] <strong>+ ですか？ (desu ka?)</strong><br/><span style="font-size:13px;color:var(--ink-soft);margin-top:8px;display:block;">= X desu ka?</span><br/><span style="font-size:13px;color:var(--pink-deep);margin-top:8px;display:block;font-weight:600;">Ex: [Seu nome] + desu ka? = Você é [seu nome]?</span></div>
+          <div class="structure-box lav">[Frase] <strong>+ ですか？</strong><br/><span style="font-size:13px;color:var(--ink-soft);margin-top:8px;display:block;">= X desu ka?</span></div>
           <p style="font-size:13px;color:var(--ink-soft);margin-bottom:12px;font-weight:600;">Exemplos:</p>
           <div class="phrase-row">
+            <div class="phrase-jp">観光客ですか？</div>
+            <div class="phrase-roma">Kankou kyaku desu ka?</div>
+            <div class="phrase-pt">Você é turista?</div>
+            <button class="audio-btn" onclick="speak('kankou kyaku desu ka', 'ja-JP')">🔊</button>
+          </div>
+          <div class="phrase-row">
             <div class="phrase-jp">ブラジル人ですか？</div>
-            <div class="phrase-roma">Burajirujin desu ka?</div>
+            <div class="phrase-roma">Burajiru jin desu ka?</div>
             <div class="phrase-pt">Você é brasileiro(a)?</div>
             <button class="audio-btn" onclick="speak('burajiru jin desu ka', 'ja-JP')">🔊</button>
           </div>
           <div class="phrase-row">
-            <div class="phrase-jp">ほんとうですか？</div>
-            <div class="phrase-roma">Hontou desu ka?</div>
-            <div class="phrase-pt">É verdade? / Sério?</div>
-            <button class="audio-btn" onclick="speak('hontou desu ka', 'ja-JP')">🔊</button>
-          </div>
-          <div class="phrase-row">
-            <div class="phrase-jp">Aline desu ka？</div>
-            <div class="phrase-roma">[Seu nome] + desu ka?</div>
-            <div class="phrase-pt">Você é Aline?</div>
-            <button class="audio-btn" onclick="speak('Aline desu ka', 'ja-JP')">🔊</button>
+            <div class="phrase-jp">パスポートですか？</div>
+            <div class="phrase-roma">Pasupoto desu ka?</div>
+            <div class="phrase-pt">É o passaporte?</div>
+            <button class="audio-btn" onclick="speak('pasupoto desu ka', 'ja-JP')">🔊</button>
           </div>
         </div>
       </div>
@@ -390,73 +299,6 @@
   <div class="tab-content" id="tab1">
     <div class="tab-section">
       <h2>Sistema Verbal (~ます)</h2>
-      <!-- Quando o áudio 2 (verbos) estiver pronto, troque SRC-DO-AUDIO-2-AQUI.mp3 pelo caminho real -->
-      <div class="audio-narracao">
-        <p>🎧 Ouça a Aline explicar antes de praticar</p>
-        <audio controls preload="none">
-          <source src="audio/2-verbos.mp3" type="audio/mpeg">
-          Seu navegador não suporta áudio nativo.
-        </audio>
-        <button class="transcript-btn" onclick="toggleTranscript(this)">📝 Ver transcrição</button>
-        <div class="transcript-text">
-          <p>Oi, gente! Então, continuando: agora a gente vai falar sobre o sistema verbal. Agora que você domina a estrutura do desu, a gente vai entrar no sistema de verbos.</p>
-
-          <p>O infinitivo em japonês é chamado de forma do dicionário, que é o <strong>jishokei</strong>. Os verbos são apresentados originalmente na sua forma do dicionário, equivalente ao infinitivo em português, como: ir, comer, beber, entender, vir (iku, taberu, nomu, wakaru, kuru). E a gente vai entender o molde das quatro conjugações verbais.</p>
-
-          <p class="nota">Tem uma regra, tá? No japonês, os verbos se dividem em grupos gramaticais, que são o Grupo 1, Grupo 2 e os irregulares, com regras específicas pra saber conjugar certinho e extrair a base de cada um. Mas agora, na Aula Zero, não é o momento pra gente se aprofundar nisso, porque senão vai complicar. O foco aqui é memorizar diretamente a base de cada verbo essencial e aprender a encaixar terminações polidas.</p>
-
-          <p>Então a gente tem quatro conjugações:</p>
-          <ul>
-            <li><strong>-masu</strong>: afirmativo no presente</li>
-            <li><strong>-masen</strong>: negativo no presente</li>
-            <li><strong>-mashita</strong>: afirmativo no passado</li>
-            <li><strong>-masen deshita</strong>: negativo no passado</li>
-          </ul>
-          <p>Calma que vai ficar mais fácil! O que a gente vai fazer agora é basicamente pegar a base do verbo e adicionar uma dessas quatro terminações, dependendo do que a gente quer falar.</p>
-
-          <p><strong>行く (Iku) — Ir.</strong> A base do iku vai ser <em>iki-</em>.</p>
-          <ul>
-            <li>Ikimasu: eu vou</li>
-            <li>Ikimasen: eu não vou</li>
-            <li>Ikimashita: eu fui</li>
-            <li>Ikimasen deshita: não fui</li>
-          </ul>
-
-          <p><strong>食べる (Taberu) — Comer.</strong> A base vai ser <em>tabe-</em>.</p>
-          <ul>
-            <li>Tabemasu: eu como</li>
-            <li>Tabemasen: não como</li>
-            <li>Tabemashita: comi</li>
-            <li>Tabemasen deshita: eu não comi</li>
-          </ul>
-
-          <p><strong>飲む (Nomu) — Beber.</strong> A base vai ser <em>nomi-</em>.</p>
-          <ul>
-            <li>Nomimasu, Nomimasen, Nomimashita, Nomimasen deshita</li>
-          </ul>
-
-          <p><strong>わかる (Wakaru) — Entender.</strong> A base vai ser <em>wakari-</em>.</p>
-          <ul>
-            <li>Wakarimasu: eu entendo</li>
-            <li>Wakarimasen: eu não entendo</li>
-            <li>Wakarimashita: eu entendi</li>
-            <li>Wakarimasen deshita: eu não entendi</li>
-          </ul>
-          <p>As conjugações não mudam — o que muda é só a base do verbo.</p>
-
-          <p><strong>来る (Kuru) — Vir</strong>, o verbo irregular da nossa lista. A forma base do kuru é <em>ki-</em>.</p>
-          <ul>
-            <li>Kimasu: eu venho</li>
-            <li>Kimasen: não venho</li>
-            <li>Kimashita: eu vim</li>
-            <li>Kimasen deshita: não vim</li>
-          </ul>
-
-          <p class="nota">Dica de fixação: repare na lógica das terminações. Afirmativo sempre termina em -masu. Afirmativo no passado ganha o -ta: -mashita. Negativo presente ganha o -masen. Negativo passado combina a negação com o passado: -masen deshita. Dominando esse molde você consegue conjugar qualquer verbo polido com facilidade.</p>
-
-          <p>Se tiver dúvidas, me mandem aqui, e vamos para a próxima parte, que são as palavras de pergunta. Te vejo lá!</p>
-        </div>
-      </div>
       <p><strong>Os verbos mudam de forma</strong> para indicar tempo e polidez. Cada verbo tem 4 conjugações: presente, negativo, passado e passado negativo.</p>
       
       <!-- VERBO 1: Iku -->
@@ -467,7 +309,7 @@
         </div>
         <div class="accordion-body">
           <p style="font-size:13px;color:var(--ink-soft);margin-bottom:16px;"><strong>Padrão:</strong></p>
-          <div class="structure-box">[Base] <strong>+ ます / ません / ました / ませんでした (masu / masen / mashita / masen deshita)</strong><br/><span style="font-size:13px;color:var(--ink-soft);margin-top:8px;display:block;">Iku → Iki + masu / masen / mashita / masen deshita</span></div>
+          <div class="structure-box">[Base] <strong>+ ます / ません / ました / ませんでした</strong><br/><span style="font-size:13px;color:var(--ink-soft);margin-top:8px;display:block;">Iku → Iki + masu / masen / mashita / masen deshita</span></div>
           <p style="font-size:13px;color:var(--ink-soft);margin-bottom:12px;font-weight:600;">Conjugações:</p>
           <div class="phrase-row">
             <div class="phrase-jp">行きます</div>
@@ -504,7 +346,7 @@
         </div>
         <div class="accordion-body">
           <p style="font-size:13px;color:var(--ink-soft);margin-bottom:16px;"><strong>Padrão:</strong></p>
-          <div class="structure-box">[Base] <strong>+ ます / ません / ました / ませんでした (masu / masen / mashita / masen deshita)</strong><br/><span style="font-size:13px;color:var(--ink-soft);margin-top:8px;display:block;">Taberu → Tabe + masu / masen / mashita / masen deshita</span></div>
+          <div class="structure-box">[Base] <strong>+ ます / ません / ました / ませんでした</strong><br/><span style="font-size:13px;color:var(--ink-soft);margin-top:8px;display:block;">Taberu → Tabe + masu / masen / mashita / masen deshita</span></div>
           <p style="font-size:13px;color:var(--ink-soft);margin-bottom:12px;font-weight:600;">Conjugações:</p>
           <div class="phrase-row">
             <div class="phrase-jp">食べます</div>
@@ -541,7 +383,7 @@
         </div>
         <div class="accordion-body">
           <p style="font-size:13px;color:var(--ink-soft);margin-bottom:16px;"><strong>Padrão:</strong></p>
-          <div class="structure-box">[Base] <strong>+ ます / ません / ました / ませんでした (masu / masen / mashita / masen deshita)</strong><br/><span style="font-size:13px;color:var(--ink-soft);margin-top:8px;display:block;">Nomu → Nomi + masu / masen / mashita / masen deshita</span></div>
+          <div class="structure-box">[Base] <strong>+ ます / ません / ました / ませんでした</strong><br/><span style="font-size:13px;color:var(--ink-soft);margin-top:8px;display:block;">Nomu → Nomi + masu / masen / mashita / masen deshita</span></div>
           <p style="font-size:13px;color:var(--ink-soft);margin-bottom:12px;font-weight:600;">Conjugações:</p>
           <div class="phrase-row">
             <div class="phrase-jp">飲みます</div>
@@ -578,7 +420,7 @@
         </div>
         <div class="accordion-body">
           <p style="font-size:13px;color:var(--ink-soft);margin-bottom:16px;"><strong>Padrão:</strong></p>
-          <div class="structure-box">[Base] <strong>+ ます / ません / ました / ませんでした (masu / masen / mashita / masen deshita)</strong><br/><span style="font-size:13px;color:var(--ink-soft);margin-top:8px;display:block;">Wakaru → Wakari + masu / masen / mashita / masen deshita</span></div>
+          <div class="structure-box">[Base] <strong>+ ます / ません / ました / ませんでした</strong><br/><span style="font-size:13px;color:var(--ink-soft);margin-top:8px;display:block;">Wakaru → Wakari + masu / masen / mashita / masen deshita</span></div>
           <p style="font-size:13px;color:var(--ink-soft);margin-bottom:12px;font-weight:600;">Conjugações:</p>
           <div class="phrase-row">
             <div class="phrase-jp">わかります</div>
@@ -615,7 +457,7 @@
         </div>
         <div class="accordion-body">
           <p style="font-size:13px;color:var(--ink-soft);margin-bottom:16px;"><strong>Padrão:</strong></p>
-          <div class="structure-box">[Base irregular] <strong>+ ます / ません / ました / ませんでした (masu / masen / mashita / masen deshita)</strong><br/><span style="font-size:13px;color:var(--ink-soft);margin-top:8px;display:block;">Kuru → Ki + masu / masen / mashita / masen deshita</span></div>
+          <div class="structure-box">[Base irregular] <strong>+ ます / ません / ました / ませんでした</strong><br/><span style="font-size:13px;color:var(--ink-soft);margin-top:8px;display:block;">Kuru → Ki + masu / masen / mashita / masen deshita</span></div>
           <p style="font-size:13px;color:var(--ink-soft);margin-bottom:12px;font-weight:600;">Conjugações:</p>
           <div class="phrase-row">
             <div class="phrase-jp">来ます</div>
@@ -655,42 +497,6 @@
   <div class="tab-content" id="tab2">
     <div class="tab-section">
       <h2>Interrogativos & Frases Essenciais</h2>
-      <!-- Quando o áudio 3 (perguntas) estiver pronto, troque o caminho pelo real -->
-      <div class="audio-narracao">
-        <p>🎧 Ouça a Aline explicar antes de praticar</p>
-        <audio controls preload="none">
-          <source src="audio/3-perguntas.mp3" type="audio/mpeg">
-          Seu navegador não suporta áudio nativo.
-        </audio>
-        <button class="transcript-btn" onclick="toggleTranscript(this)">📝 Ver transcrição</button>
-        <div class="transcript-text">
-          <p>Oi de novo! Agora que você já pegou o jeito dos moldes básicos e de como conjugar qualquer verbo no presente e no passado, a gente vai juntar essas peças pra fazer o que mais importa no dia a dia: perguntar e se virar em qualquer situação.</p>
-
-          <p>Lembra daquela partícula <strong>ka</strong> que vimos lá na primeira parte? Pois é, ela continua sendo a nossa chave de ouro aqui.</p>
-
-          <p>A primeira parte dessa página traz os <strong>5 Interrogativos Coringa</strong> — palavrinhas essenciais que você só precisa encaixar antes do desu ka pra perguntar qualquer coisa:</p>
-          <ul>
-            <li><strong>Nani / Nan</strong> — Nan desu ka? (O que é?)</li>
-            <li><strong>Doko</strong> — Doko desu ka? (Onde é? / Onde fica?)</li>
-            <li><strong>Dare</strong> — Dare desu ka? (Quem é?)</li>
-            <li><strong>Nande</strong> — Nande desu ka? (Por quê?)</li>
-            <li><strong>Itsu</strong> — Itsu desu ka? (Quando é?)</li>
-          </ul>
-          <p>Viu como a lógica é sempre a mesma? É só colocar a palavra de pergunta na frente do desu ka.</p>
-
-          <p>Mais abaixo, separei <strong>6 Peças Essenciais de Sobrevivência</strong> — frases quase prontas que salvam sua vida em viagens, aeroportos, restaurantes e lojas:</p>
-          <ul>
-            <li><strong>Localização</strong>: o lugar + wa + doko desu ka. Ex: Toire wa doko desu ka? (onde fica o banheiro?), Pasupooto wa doko desu ka? (cadê meu passaporte?)</li>
-            <li><strong>Posse/existência</strong> com arimasu (tenho/existe): Arerugii ga arimasu (tenho alergia), Furaito ga arimasu (tenho um voo). Todo esse vocabulário está no botãozinho "Vocabulário" aqui do lado.</li>
-            <li><strong>A duplinha de ouro</strong> da educação japonesa: Sumimasen (com licença — mas também serve como "desculpa") e Arigatou gozaimasu (muito obrigado).</li>
-            <li><strong>Compras</strong>: Ikura desu ka? (quanto custa?), se você não identificar o preço numa plaquinha.</li>
-            <li><strong>Pedir permissão</strong> rápido e educado: Ii desu ka? (eu posso? / tá tudo bem?)</li>
-            <li><strong>Pedir coisas</strong> com kudasai ou onegai shimasu: Mizu o kudasai (água, por favor), Madogawa o onegai shimasu (do lado da janela, por favor, no avião ou trem).</li>
-          </ul>
-
-          <p>Agora que a gente já sabe usar negação, afirmação, conjugar verbos e as palavras de pergunta, fiquem preparados para o teste que vem aí! Clica nos áudios de cada cartão pra ouvir a pronúncia detalhada, repete em voz alta no seu ritmo e, quando se sentir confortável, avança para o teste final. Combinado? Te vejo lá!</p>
-        </div>
-      </div>
       <p><strong>Os 5 interrogativos curinga</strong> e as <strong>6 peças essenciais</strong> que salvam sua vida no Japão.</p>
       
       <!-- SEÇÃO: 5 Interrogativos -->
@@ -779,18 +585,13 @@
       <!-- SEÇÃO: 6 Peças Essenciais -->
       <h3 style="font-family:'Baloo 2',cursive;font-size:20px;color:var(--pink-deep);margin:32px 0 20px;">6 Peças Essenciais de Sobrevivência</h3>
 
-      <div class="audio-narracao" style="background:var(--gold-soft, #FBF2DF);border-color:var(--gold, #C0913F);">
-        <p style="color:var(--gold, #C0913F) !important;">💡 Uma coisa que ajuda muito</p>
-        <p style="font-weight:400 !important;color:var(--ink) !important;font-size:13.5px !important;">Não dá pra traduzir palavra por palavra do português. Duas partículas fazem o trabalho pesado: <strong>は (wa)</strong> marca o assunto da frase — <em>"quanto ao banheiro, onde fica?"</em> — e <strong>を (o/wo)</strong> marca o que você quer receber — <em>"água, por favor"</em>. Elas não têm tradução direta, só a função de apontar qual palavra é o quê na frase.</p>
-      </div>
-
       <div class="accordion">
         <div class="accordion-header" onclick="toggleAccordion(this)">
           <h3>1. Onde fica X?</h3>
           <span class="accordion-icon">⌄</span>
         </div>
         <div class="accordion-body">
-          <div class="structure-box">[Lugar/Serviço/Coisa] <strong>+ は どこですか？ (wa doko desu ka?)</strong><br/><span style="font-size:13px;color:var(--ink-soft);">= X wa doko desu ka?</span></div>
+          <div class="structure-box">[Lugar/Serviço/Coisa] <strong>+ は どこですか？</strong><br/><span style="font-size:13px;color:var(--ink-soft);">= X wa doko desu ka?</span></div>
           <div class="phrase-row">
             <div class="phrase-jp">トイレはどこですか？</div>
             <div class="phrase-roma">Toire wa doko desu ka?</div>
@@ -812,7 +613,7 @@
           <span class="accordion-icon">⌄</span>
         </div>
         <div class="accordion-body">
-          <div class="structure-box">[Item] <strong>+ が あります (ga arimasu)</strong> | <strong>+ が ありません (ga arimasen)</strong><br/><span style="font-size:13px;color:var(--ink-soft);">= X ga arimasu / arimasen</span></div>
+          <div class="structure-box">[Item] <strong>+ が あります</strong> | <strong>+ が ありません</strong><br/><span style="font-size:13px;color:var(--ink-soft);">= X ga arimasu / arimasen</span></div>
           <div class="phrase-row">
             <div class="phrase-jp">アレルギーがあります</div>
             <div class="phrase-roma">Arerugī ga arimasu</div>
@@ -846,7 +647,6 @@
             <div class="phrase-pt">Muito obrigado(a)</div>
             <button class="audio-btn" onclick="speak('arigatou gozaimasu', 'ja-JP')">🔊</button>
           </div>
-          <p style="font-size:12.5px;color:var(--roma);margin-top:10px;background:#f9f7f5;padding:10px 12px;border-radius:6px;">💡 <strong>すみません</strong> é curinga: serve pra "com licença" (passando por alguém), "desculpa" (esbarrão) e até um "valeu" informal quando alguém te ajuda. É diferente de <strong>ごめんなさい</strong>, que é um pedido de desculpas mais sincero/sério, tipo quando você realmente magoou alguém.</p>
         </div>
       </div>
 
@@ -856,7 +656,7 @@
           <span class="accordion-icon">⌄</span>
         </div>
         <div class="accordion-body">
-          <div class="structure-box">[Item] <strong>+ は いくらですか？ (wa ikura desu ka?)</strong><br/><span style="font-size:13px;color:var(--ink-soft);">= X wa ikura desu ka?</span></div>
+          <div class="structure-box">[Item] <strong>+ は いくらですか？</strong><br/><span style="font-size:13px;color:var(--ink-soft);">= X wa ikura desu ka?</span></div>
           <div class="phrase-row">
             <div class="phrase-jp">いくらですか？</div>
             <div class="phrase-roma">Ikura desu ka?</div>
@@ -872,7 +672,7 @@
           <span class="accordion-icon">⌄</span>
         </div>
         <div class="accordion-body">
-          <div class="structure-box"><strong>いいですか？ (ii desu ka?)</strong> (forma rápida)<br/><span style="font-size:13px;color:var(--ink-soft);">= Ii desu ka?</span></div>
+          <div class="structure-box"><strong>いいですか？</strong> (forma rápida)<br/><span style="font-size:13px;color:var(--ink-soft);">= Ii desu ka?</span></div>
           <div class="phrase-row">
             <div class="phrase-jp">いいですか？</div>
             <div class="phrase-roma">Ii desu ka?</div>
@@ -888,7 +688,7 @@
           <span class="accordion-icon">⌄</span>
         </div>
         <div class="accordion-body">
-          <div class="structure-box">[Objeto] <strong>+ を ください (wo kudasai)</strong> | <strong>+ を お願いします (wo onegai shimasu)</strong><br/><span style="font-size:13px;color:var(--ink-soft);">= X wo kudasai / onegai shimasu</span></div>
+          <div class="structure-box">[Objeto] <strong>+ を ください</strong> | <strong>+ を お願いします</strong><br/><span style="font-size:13px;color:var(--ink-soft);">= X wo kudasai / onegai shimasu</span></div>
           <div class="phrase-row">
             <div class="phrase-jp">水をください</div>
             <div class="phrase-roma">Mizu wo kudasai</div>
@@ -915,89 +715,22 @@
   <div class="tab-content" id="tab3">
     <div class="tab-section">
       <h2>Teste Final</h2>
-      <!-- Quando o áudio 4 (teste) estiver pronto, troque o caminho pelo real -->
-      <div class="audio-narracao">
-        <p>🎧 Ouça a Aline explicar antes de praticar</p>
-        <audio controls preload="none">
-          <source src="audio/4-teste.mp3" type="audio/mpeg">
-          Seu navegador não suporta áudio nativo.
-        </audio>
-        <button class="transcript-btn" onclick="toggleTranscript(this)">📝 Ver transcrição</button>
-        <div class="transcript-text">
-          <p>Parabéns por ter chegado até aqui! Chegou a hora de colocar tudo em prática.</p>
-
-          <p>Então agora, neste Teste Final, a gente vai reunir os três pilares que você aprendeu na Aula Zero:</p>
-          <ul>
-            <li>A estrutura do desu;</li>
-            <li>As quatro terminações dos verbos;</li>
-            <li>E os interrogativos com as frases essenciais de sobrevivência.</li>
-          </ul>
-
-          <p>Elaborei questões rápidas de múltipla escolha pra testar sua fixação e o seu raciocínio no mundo real com a língua — desde identificar a conjugação certa até escolher a frase exata para a situação.</p>
-
-          <p>Como funciona: leia cada pergunta com calma, presença, presta atenção nas terminações, e acerte 80% ou mais pra validar a sua base da Aula Zero e desbloquear os 12 Mapas de Contexto e iniciar sua jornada completa.</p>
-
-          <p class="nota">E se você errar alguma coisa, não se preocupe: encare o teste como parte do aprendizado, pra ver exatamente onde vale a pena dar uma revisada rápida. Tem uma caixinha de feedback e eu conto com o seu feedback!</p>
-
-          <p>Pronto? Respira fundo, confie em você e no que você viu nas aulas, e bom teste! Te vejo nos mapas.</p>
-        </div>
-      </div>
       <p>Acerte 80%+ para desbloquear os 12 Mapas e começar sua jornada! Teste suas habilidades agora.</p>
-
-      <!-- AUTH GATE: só pede login pra fazer o teste -->
-      <div id="authGate">
-        <div class="auth-gate">
-          <h3>🔐 Entre pra fazer o teste</h3>
-          <p>Assim seu progresso fica salvo e os 12 Mapas continuam desbloqueados em qualquer aparelho.</p>
-          <div class="auth-tabs">
-            <button id="authTabLogin" class="active" onclick="switchAuthTab('login')">Entrar</button>
-            <button id="authTabSignup" onclick="switchAuthTab('signup')">Criar conta</button>
-          </div>
-          <form class="auth-form" id="authForm" onsubmit="handleAuthSubmit(event)">
-            <input type="email" id="authEmail" placeholder="Seu e-mail" required>
-            <input type="password" id="authPassword" placeholder="Senha (mín. 6 caracteres)" required minlength="6">
-            <button type="submit" id="authSubmitBtn">Entrar</button>
-          </form>
-          <div class="auth-divider">ou</div>
-          <button class="auth-google" onclick="handleGoogleSignIn()">🔵 Entrar com Google</button>
-          <div class="auth-error" id="authError"></div>
-        </div>
+      
+      <div class="test-section">
+        <h3 style="color:#fff;margin-bottom:20px;">Parte 1: Reconhecer a Frase (5 questões)</h3>
+        <div id="testPart1"></div>
       </div>
 
-      <!-- CONTEÚDO DO TESTE: só aparece depois de logar -->
-      <div id="testGated" style="display:none;">
-        <div class="auth-loggedin">
-          <span>Logado como <strong id="authUserEmail"></strong></span>
-          <button onclick="handleLogout()">Sair</button>
-        </div>
+      <div class="test-section" style="margin-top:24px;">
+        <h3 style="color:#fff;margin-bottom:20px;">Parte 2: Conectar Frases e Traduções (6 pares)</h3>
+        <div id="testPart2"></div>
+      </div>
 
-        <div class="test-section">
-          <h3 style="color:var(--pink-deep);margin-bottom:20px;">Parte 1: Reconhecer a Frase (15 questões)</h3>
-          <div id="testPart1"></div>
-        </div>
+      <div id="testResult"></div>
 
-        <div class="test-section" style="margin-top:24px;">
-          <h3 style="color:var(--pink-deep);margin-bottom:20px;">Parte 2: Conectar Frases e Traduções (6 pares)</h3>
-          <div id="testPart2"></div>
-        </div>
-
-        <div class="test-section" style="margin-top:24px;">
-          <h3 style="color:var(--pink-deep);margin-bottom:20px;">💧 Parte 3: Compreensão Auditiva (3 questões)</h3>
-          <p style="color:var(--pink-deep);font-size:12.5px;margin-bottom:16px;">Ouça o áudio e escolha o significado — sem ver o texto em japonês antes.</p>
-          <div id="testPart3"></div>
-        </div>
-
-        <div class="test-section" style="margin-top:24px;">
-          <h3 style="color:var(--pink-deep);margin-bottom:20px;">✍️ Parte 4: Produção (2 questões)</h3>
-          <p style="color:var(--pink-deep);font-size:12.5px;margin-bottom:16px;">Digite a resposta em romaji, sem opções prontas.</p>
-          <div id="testPart4"></div>
-        </div>
-
-        <div id="testResult"></div>
-
-        <div style="text-align:center;margin-top:32px;">
-          <button class="btn-nav" onclick="submitTest()" style="padding:14px 40px;font-size:16px;">📊 Enviar Teste</button>
-        </div>
+      <div style="text-align:center;margin-top:32px;">
+        <button class="btn-nav" onclick="submitTest()" style="padding:14px 40px;font-size:16px;">📊 Enviar Teste</button>
       </div>
 
       <div class="tab-nav-buttons">
@@ -1014,6 +747,23 @@
 <div class="vocab-sidebar" id="vocabSidebar">
   <h3>📖 Vocabulário</h3>
   <div id="vocabList"></div>
+</div>
+
+<!-- GRAVAÇÕES DE VOZ -->
+<div class="wrap" style="margin:40px 0;">
+  <div class="gravacoes-section">
+    <h3>🎙️ Explicação em voz</h3>
+    <p>Escuta a explicação de cada conceito diretamente em japonês:</p>
+    <div id="gravacoes-container">
+      <div class="audio-placeholder">As gravações serão adicionadas em breve...</div>
+    </div>
+  </div>
+  
+  <!-- BOTÕES DE NAVEGAÇÃO -->
+  <div class="nav-buttons">
+    <a href="/idiomas/" class="btn-prev">← Voltar para Idiomas</a>
+    <a href="/idiomas/mapas/" class="btn-next">Próximo: Mapas de Contexto →</a>
+  </div>
 </div>
 
 <footer>
@@ -1035,7 +785,6 @@ const vocabulary = [
   { jp: 'どこ', roma: 'Doko', pt: 'Onde?' },
   { jp: 'フライト', roma: 'Furaito', pt: 'Voo' },
   { jp: 'が', roma: 'Ga', pt: 'Partícula de sujeito' },
-  { jp: 'ほんとう', roma: 'Hontou', pt: 'Verdade / Sério' },
   { jp: 'いいですか', roma: 'Ii desu ka', pt: 'Pode? / Tudo bem?' },
   { jp: '行く', roma: 'Iku', pt: 'Ir' },
   { jp: 'いくら', roma: 'Ikura', pt: 'Quanto?' },
@@ -1058,8 +807,8 @@ const vocabulary = [
   { jp: 'すみません', roma: 'Sumimasen', pt: 'Com licença / Desculpa' },
   { jp: '食べる', roma: 'Taberu', pt: 'Comer' },
   { jp: 'トイレ', roma: 'Toire', pt: 'Banheiro' },
-  { jp: 'ブラジル人', roma: 'Burajirujin', pt: 'Brasileiro(a)' },
-  { jp: '観光客', roma: 'Kankoukyaku', pt: 'Turista' },
+  { jp: 'ブラジル人', roma: 'Burajiru jin', pt: 'Brasileiro(a)' },
+  { jp: '観光客', roma: 'Kankou kyaku', pt: 'Turista' },
   { jp: 'わかる', roma: 'Wakaru', pt: 'Entender' },
   { jp: 'は', roma: 'Wa', pt: 'Partícula de tópico' },
 ];
@@ -1071,10 +820,6 @@ function switchTab(tabIndex) {
   
   document.getElementById(`tab${tabIndex}`).classList.add('active');
   document.querySelectorAll('.tab-btn')[tabIndex].classList.add('active');
-
-  const pct = Math.round(((tabIndex + 1) / 4) * 100);
-  document.getElementById('progressFill').style.width = pct + '%';
-  document.getElementById('progressLabel').textContent = `Passo ${tabIndex + 1} de 4 · ${pct}%`;
   
   window.scrollTo(0, 0);
 }
@@ -1083,12 +828,6 @@ function switchTab(tabIndex) {
 function toggleAccordion(header) {
   const accordion = header.parentElement;
   accordion.classList.toggle('open');
-}
-
-function toggleTranscript(btn) {
-  const box = btn.nextElementSibling;
-  box.classList.toggle('aberta');
-  btn.textContent = box.classList.contains('aberta') ? '📝 Esconder transcrição' : '📝 Ver transcrição';
 }
 
 // AUDIO
@@ -1121,195 +860,61 @@ function renderVocabList() {
 
 // TESTE
 const testPart1Questions = [
-  { question: 'Como você diz "Onde fica o banheiro?"?', correct: 'トイレはどこですか？', explicacao: 'は marca "banheiro" como o assunto da frase, e どこですか pergunta onde. Junto: "quanto ao banheiro, onde é?"', options: [
-      { jp: 'トイレはどこですか？', roma: 'Toire wa doko desu ka?' },
-      { jp: '何ですか？', roma: 'Nan desu ka?' },
-      { jp: 'いくらですか？', roma: 'Ikura desu ka?' }
-    ] },
-  { question: 'Qual frase significa "Não entendo"?', correct: 'わかりません', explicacao: 'ます = presente afirmativo, ません = presente negativo. Wakarimasen é a negação de wakarimasu.', options: [
-      { jp: 'わかります', roma: 'Wakarimasu' },
-      { jp: 'わかりません', roma: 'Wakarimasen' },
-      { jp: 'わかりました', roma: 'Wakarimashita' }
-    ] },
-  { question: 'Como pedir água educadamente?', correct: '水をください', explicacao: 'を marca a água como o que você quer receber; ください fecha o pedido de forma educada.', options: [
-      { jp: '水です', roma: 'Mizu desu' },
-      { jp: '水をください', roma: 'Mizu wo kudasai' },
-      { jp: '水があります', roma: 'Mizu ga arimasu' }
-    ] },
-  { question: 'Qual é o significado de "ですか？"', correct: 'Pergunta polida', explicacao: 'か no final de uma frase japonesa sempre transforma ela numa pergunta educada.', options: [
-      { jp: 'Afirmação', roma: '' },
-      { jp: 'Pergunta polida', roma: '' },
-      { jp: 'Negação', roma: '' }
-    ] },
-  { question: 'Como você diz "Você é turista?"', correct: '観光客ですか？', explicacao: 'Mesma estrutura do です, só com か no final pra virar pergunta: "você é turista?"', options: [
-      { jp: '観光客です', roma: 'Kankoukyaku desu' },
-      { jp: '観光客ですか？', roma: 'Kankoukyaku desu ka?' },
-      { jp: '観光客ではありません', roma: 'Kankoukyaku dewa arimasen' }
-    ] },
-  { question: '食べました (Tabemashita) é qual flexão?', correct: 'Passado afirmativo', explicacao: 'ました é a marca do passado afirmativo — "comi".', options: [
-      { jp: 'Presente afirmativo', roma: '' },
-      { jp: 'Presente negativo', roma: '' },
-      { jp: 'Passado afirmativo', roma: '' },
-      { jp: 'Passado negativo', roma: '' }
-    ] },
-  { question: '行きません (Ikimasen) é qual flexão?', correct: 'Presente negativo', explicacao: 'ません é o presente negativo — "não vou".', options: [
-      { jp: 'Presente negativo', roma: '' },
-      { jp: 'Passado afirmativo', roma: '' },
-      { jp: 'Passado negativo', roma: '' },
-      { jp: 'Presente afirmativo', roma: '' }
-    ] },
-  { question: '飲みませんでした (Nomimasen deshita) é qual flexão?', correct: 'Passado negativo', explicacao: 'ませんでした junta negativo + passado — "não bebi".', options: [
-      { jp: 'Presente afirmativo', roma: '' },
-      { jp: 'Presente negativo', roma: '' },
-      { jp: 'Passado afirmativo', roma: '' },
-      { jp: 'Passado negativo', roma: '' }
-    ] },
-  { question: '来ます (Kimasu) é qual flexão?', correct: 'Presente afirmativo', explicacao: 'ます sozinho, sem negativo nem passado, é sempre presente/futuro afirmativo.', options: [
-      { jp: 'Presente afirmativo', roma: '' },
-      { jp: 'Presente negativo', roma: '' },
-      { jp: 'Passado afirmativo', roma: '' },
-      { jp: 'Passado negativo', roma: '' }
-    ] },
-  { question: 'Você tem alergia a amendoim e precisa avisar antes de comer algo. O que você diz?', correct: 'アレルギーがあります', explicacao: 'が marca o que você tem/existe; あります é "existe/tem" pra coisas (não-vivas).', options: [
-      { jp: 'アレルギーがあります', roma: 'Arerugī ga arimasu' },
-      { jp: 'フライトがあります', roma: 'Furaito ga arimasu' },
-      { jp: '水をください', roma: 'Mizu wo kudasai' }
-    ] },
-  { question: 'Alguém esbarra em você sem querer no metrô. Qual a resposta educada?', correct: 'すみません', explicacao: 'すみません cobre "com licença" e "desculpa" ao mesmo tempo — é o mais usado no dia a dia.', options: [
-      { jp: 'ありがとうございます', roma: 'Arigatou gozaimasu' },
-      { jp: 'すみません', roma: 'Sumimasen' },
-      { jp: 'いいですか？', roma: 'Ii desu ka?' }
-    ] },
-  { question: 'Você quer saber o preço de um item antes de comprar. O que você pergunta?', correct: 'いくらですか？', explicacao: 'いくら é o interrogativo específico pra perguntar preço.', options: [
-      { jp: 'いくらですか？', roma: 'Ikura desu ka?' },
-      { jp: 'なんでですか？', roma: 'Nande desu ka?' },
-      { jp: '誰ですか？', roma: 'Dare desu ka?' }
-    ] },
-  { question: 'Você quer tirar uma foto de alguém e precisa pedir permissão. O que você diz?', correct: 'いいですか？', explicacao: 'いいですか？ é a forma rápida de pedir permissão — "pode? tudo bem?"', options: [
-      { jp: 'いいですか？', roma: 'Ii desu ka?' },
-      { jp: '誰ですか？', roma: 'Dare desu ka?' },
-      { jp: 'どこですか？', roma: 'Doko desu ka?' }
-    ] },
-  { question: 'Você está com sede num restaurante e quer pedir água educadamente. O que você diz?', correct: '水をください', explicacao: 'を marca a água como o que você está pedindo; ください fecha educadamente.', options: [
-      { jp: '水をください', roma: 'Mizu wo kudasai' },
-      { jp: '水があります', roma: 'Mizu ga arimasu' },
-      { jp: '水です', roma: 'Mizu desu' }
-    ] },
-  { question: 'Alguém te conta algo surpreendente e você quer confirmar se é verdade. O que você pergunta?', correct: 'ほんとうですか？', explicacao: 'ほんとう = "verdade"; ですか transforma em pergunta de confirmação.', options: [
-      { jp: 'ほんとうですか？', roma: 'Hontou desu ka?' },
-      { jp: '誰ですか？', roma: 'Dare desu ka?' },
-      { jp: 'なんでですか？', roma: 'Nande desu ka?' }
-    ] },
-  { question: 'Você vê uma pessoa desconhecida numa foto e quer saber quem é. O que você pergunta?', correct: '誰ですか？', explicacao: '誰 é o interrogativo específico pra perguntar "quem".', options: [
-      { jp: '誰ですか？', roma: 'Dare desu ka?' },
-      { jp: 'どこですか？', roma: 'Doko desu ka?' },
-      { jp: '何ですか？', roma: 'Nan desu ka?' }
-    ] },
-  { question: 'Seu amigo cancelou os planos de repente e você quer saber o motivo. O que você pergunta?', correct: 'なんでですか？', explicacao: 'なんで pergunta o motivo — equivalente a "por quê".', options: [
-      { jp: 'なんでですか？', roma: 'Nande desu ka?' },
-      { jp: 'いつですか？', roma: 'Itsu desu ka?' },
-      { jp: 'いくらですか？', roma: 'Ikura desu ka?' }
-    ] },
-  { question: 'Você quer saber a data de um evento antes de se planejar. O que você pergunta?', correct: 'いつですか？', explicacao: 'いつ é o interrogativo de tempo, usado pra perguntar "quando".', options: [
-      { jp: 'いつですか？', roma: 'Itsu desu ka?' },
-      { jp: 'どこですか？', roma: 'Doko desu ka?' },
-      { jp: '誰ですか？', roma: 'Dare desu ka?' }
-    ] }
+  { question: 'Como você diz "Onde fica o banheiro?"?', correct: 'トイレはどこですか？', options: ['トイレはどこですか？', '何ですか？', 'いくらですか？'] },
+  { question: 'Qual frase significa "Não entendo"?', correct: 'わかりません', options: ['わかります', 'わかりません', 'わかりました'] },
+  { question: 'Como pedir água educadamente?', correct: '水をください', options: ['水です', '水をください', '水があります'] },
+  { question: 'Qual é o significado de "ですか？"', correct: 'Pergunta polida', options: ['Afirmação', 'Pergunta polida', 'Negação'] },
+  { question: 'Como você diz "Você é turista?"', correct: '観光客ですか？', options: ['観光客です', '観光客ですか？', '観光客ではありません'] }
 ];
 
 const testPart2Pairs = [
-  { jp: 'ありがとうございます', roma: 'Arigatou gozaimasu', pt: 'Muito obrigado(a)' },
-  { jp: 'すみません', roma: 'Sumimasen', pt: 'Com licença / Desculpa' },
-  { jp: 'いくらですか？', roma: 'Ikura desu ka?', pt: 'Quanto custa?' },
-  { jp: 'アレルギーがあります', roma: 'Arerugi ga arimasu', pt: 'Tenho alergia' },
-  { jp: 'どこですか？', roma: 'Doko desu ka?', pt: 'Onde é?' },
-  { jp: 'いつですか？', roma: 'Itsu desu ka?', pt: 'Quando é?' }
-];
-
-// Parte 3: Compreensão Auditiva — ouve o áudio, escolhe o significado (sem ver o texto japonês antes)
-const testListeningQuestions = [
-  { audio: 'wakarimasen', correct: 'Não entendo', explicacao: 'ません é o presente negativo — "wakarimasen" = "não entendo".', options: ['Entendo', 'Não entendo', 'Entendi'] },
-  { audio: 'arigatou gozaimasu', correct: 'Muito obrigado(a)', explicacao: 'Arigatou gozaimasu é a forma educada/completa de agradecer.', options: ['Com licença', 'Muito obrigado(a)', 'Desculpa'] },
-  { audio: 'ikura desu ka', correct: 'Quanto custa?', explicacao: 'いくら é o interrogativo específico de preço.', options: ['Onde é?', 'Quando é?', 'Quanto custa?'] }
-];
-
-// Parte 4: Produção — a pessoa digita a resposta em romaji, sem opções prontas
-const testProductionQuestions = [
-  { question: 'Como você diz "Não entendo" em japonês? (pode escrever em romaji)', accepted: ['wakarimasen'], explicacao: 'Wakarimasen = wakaru (entender) + ません (presente negativo).' },
-  { question: 'Como você pede água educadamente? (romaji)', accepted: ['mizu wo kudasai', 'mizu o kudasai', 'mizuwokudasai', 'mizuokudasai'], explicacao: 'Mizu (água) + を (marca o pedido) + kudasai (por favor).' }
+  { jp: 'ありがとうございます', pt: 'Muito obrigado(a)' },
+  { jp: 'すみません', pt: 'Com licença / Desculpa' },
+  { jp: 'いくらですか？', pt: 'Quanto custa?' },
+  { jp: 'アレルギーがあります', pt: 'Tenho alergia' },
+  { jp: 'どこですか？', pt: 'Onde é?' },
+  { jp: 'いつですか？', pt: 'Quando é?' }
 ];
 
 function renderTest() {
   const part1Html = testPart1Questions.map((q, i) => `
     <div style="background:#fff;border-radius:6px;padding:16px;margin-bottom:16px;">
-      <p style="font-weight:600;margin-bottom:12px;color:var(--ink);">${i + 1}. ${q.question}</p>
+      <p style="font-weight:600;margin-bottom:12px;color:#fff;">${i + 1}. ${q.question}</p>
       <div style="display:flex;flex-direction:column;gap:8px;">
         ${q.options.map(opt => `
-          <label style="color:var(--ink);display:flex;align-items:center;">
-            <input type="radio" name="q${i}" value="${opt.jp}" style="margin-right:8px;">
-            <span>${opt.jp}${opt.roma ? ` <span style="color:var(--roma);font-size:12px;font-weight:600;">(${opt.roma})</span>` : ''}</span>
+          <label style="color:#fff;display:flex;align-items:center;">
+            <input type="radio" name="q${i}" value="${opt}" style="margin-right:8px;">
+            ${opt}
           </label>
         `).join('')}
       </div>
-      <div id="fb-q${i}"></div>
     </div>
   `).join('');
   document.getElementById('testPart1').innerHTML = part1Html;
 
-  const ptOrder = testPart2Pairs.map((_, i) => i);
-  for (let i = ptOrder.length - 1; i > 0; i--) {
-    const j = Math.floor(Math.random() * (i + 1));
-    [ptOrder[i], ptOrder[j]] = [ptOrder[j], ptOrder[i]];
-  }
-
   const part2Html = `
     <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;">
       <div>
-        <strong style="color:var(--pink-deep);display:block;margin-bottom:8px;text-align:center;">Frases em Japonês</strong>
+        <strong style="color:#fff;display:block;margin-bottom:8px;text-align:center;">Frases em Japonês</strong>
         ${testPart2Pairs.map((p, i) => `
           <div style="padding:12px;background:#fff;border-radius:4px;border:2px solid var(--line);cursor:pointer;
             margin-bottom:8px;text-align:center;font-size:13px;" onclick="selectMatch('jp', ${i})" id="jp-${i}">
-            ${p.jp}<br><span style="color:var(--roma);font-size:11px;font-weight:600;">${p.roma}</span>
+            ${p.jp}
           </div>
         `).join('')}
       </div>
       <div>
-        <strong style="color:var(--pink-deep);display:block;margin-bottom:8px;text-align:center;">Traduções</strong>
-        ${ptOrder.map(i => `
+        <strong style="color:#fff;display:block;margin-bottom:8px;text-align:center;">Traduções</strong>
+        ${testPart2Pairs.map((p, i) => `
           <div style="padding:12px;background:#fff;border-radius:4px;border:2px solid var(--line);cursor:pointer;
             margin-bottom:8px;text-align:center;font-size:13px;" onclick="selectMatch('pt', ${i})" id="pt-${i}">
-            ${testPart2Pairs[i].pt}
+            ${p.pt}
           </div>
         `).join('')}
       </div>
     </div>
   `;
   document.getElementById('testPart2').innerHTML = part2Html;
-
-  const part3Html = testListeningQuestions.map((q, i) => `
-    <div style="background:#fff;border-radius:6px;padding:16px;margin-bottom:16px;">
-      <button type="button" onclick="speak('${q.audio}', 'ja-JP')" style="background:var(--lav);color:#fff;border:none;border-radius:20px;padding:8px 18px;font-size:14px;cursor:pointer;margin-bottom:12px;">🔊 Ouvir</button>
-      <div style="display:flex;flex-direction:column;gap:8px;">
-        ${q.options.map(opt => `
-          <label style="color:var(--ink);display:flex;align-items:center;">
-            <input type="radio" name="listen${i}" value="${opt}" style="margin-right:8px;">
-            ${opt}
-          </label>
-        `).join('')}
-      </div>
-      <div id="fb-listen${i}"></div>
-    </div>
-  `).join('');
-  document.getElementById('testPart3').innerHTML = part3Html;
-
-  const part4Html = testProductionQuestions.map((q, i) => `
-    <div style="background:#fff;border-radius:6px;padding:16px;margin-bottom:16px;">
-      <p style="font-weight:600;margin-bottom:10px;color:var(--ink);">${i + 1}. ${q.question}</p>
-      <input type="text" id="prod${i}" placeholder="Digite aqui..." style="width:100%;padding:10px;border:1.5px solid var(--line);border-radius:8px;font-size:14px;">
-      <div id="fb-prod${i}"></div>
-    </div>
-  `).join('');
-  document.getElementById('testPart4').innerHTML = part4Html;
 }
 
 let selectedMatch = { jp: null, pt: null };
@@ -1342,45 +947,14 @@ function selectMatch(type, index) {
 
 function submitTest() {
   let score = 0;
-  const total = testPart1Questions.length + testPart2Pairs.length + testListeningQuestions.length + testProductionQuestions.length;
-
-  function feedbackBox(correta, explicacao) {
-    return `<div style="margin-top:8px;padding:10px 12px;border-radius:6px;font-size:12.5px;
-      background:${correta ? '#e8f0e8' : '#fde8e5'};color:${correta ? '#5a7a68' : '#8a3a32'};">
-      ${correta ? '✓ Certinho!' : '✗ Não foi essa —'} ${explicacao}
-    </div>`;
-  }
+  const total = testPart1Questions.length + testPart2Pairs.length;
 
   testPart1Questions.forEach((q, i) => {
     const answer = document.querySelector(`input[name="q${i}"]:checked`)?.value;
-    const correta = answer === q.correct;
-    if (correta) score++;
-    const fb = document.getElementById(`fb-q${i}`);
-    if (fb) fb.innerHTML = feedbackBox(correta, q.explicacao || '');
+    if (answer === q.correct) score++;
   });
 
   score += matches.length;
-
-  testListeningQuestions.forEach((q, i) => {
-    const answer = document.querySelector(`input[name="listen${i}"]:checked`)?.value;
-    const correta = answer === q.correct;
-    if (correta) score++;
-    const fb = document.getElementById(`fb-listen${i}`);
-    if (fb) fb.innerHTML = feedbackBox(correta, q.explicacao || '');
-  });
-
-  function normalizarProducao(str){
-    return (str || '').toString().trim().toLowerCase().replace(/[？?.。！!]/g, '');
-  }
-  testProductionQuestions.forEach((q, i) => {
-    const raw = document.getElementById(`prod${i}`)?.value || '';
-    const val = normalizarProducao(raw);
-    const correta = q.accepted.some(a => normalizarProducao(a) === val);
-    if (correta) score++;
-    const fb = document.getElementById(`fb-prod${i}`);
-    if (fb) fb.innerHTML = feedbackBox(correta, correta ? (q.explicacao || '') : `${q.explicacao || ''} Resposta esperada: "${q.accepted[0]}".`);
-  });
-
   const percentage = Math.round((score / total) * 100);
   const passed = percentage >= 80;
 
@@ -1395,24 +969,15 @@ function submitTest() {
           : 'Você precisa de 80% para desbloquear. Revise o conteúdo acima e tente novamente!'}
       </p>
     </div>
-    <div class="feedback-box" id="feedbackBox">
-      <h4>💌 Como foi pra você?</h4>
-      <p>Achou fácil, difícil, alguma pergunta confusa? Sua opinião ajuda a melhorar a Aula Zero.</p>
-      <textarea id="feedbackText" placeholder="Escreva aqui (opcional)..." rows="3"></textarea>
-      <button onclick="enviarFeedback()" id="feedbackBtn">Enviar feedback</button>
-      <div id="feedbackMsg" style="font-size:12.5px;margin-top:8px;"></div>
-    </div>
   `;
   document.getElementById('testResult').innerHTML = resultHtml;
 
   if (passed) {
     localStorage.setItem('aulaZeroCompleted', 'true');
   }
-  window.__uniSaveAulaZero && window.__uniSaveAulaZero(passed, score, total, percentage);
 }
 
-// renderTest() agora só roda depois do login (ver bloco Firebase abaixo)
-
+document.addEventListener('DOMContentLoaded', renderTest);
 
 // Fechar sidebar ao clicar fora
 document.addEventListener('click', (e) => {
@@ -1422,161 +987,6 @@ document.addEventListener('click', (e) => {
     sidebar.classList.remove('open');
   }
 });
-</script>
-
-<!-- FIREBASE: login + progresso da Aula Zero -->
-<script type="module">
-  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
-  import {
-    getAuth, onAuthStateChanged, createUserWithEmailAndPassword,
-    signInWithEmailAndPassword, GoogleAuthProvider, signInWithPopup, signOut
-  } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
-  import {
-    getFirestore, doc, getDoc, setDoc, addDoc, collection
-  } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
-
-  const firebaseConfig = {
-    apiKey: "AIzaSyCoo0UB5rWjD4ZGE3xKO32zXYPUQFYObmc",
-    authDomain: "unirversos-site.firebaseapp.com",
-    projectId: "unirversos-site",
-    storageBucket: "unirversos-site.firebasestorage.app",
-    messagingSenderId: "608479693630",
-    appId: "1:608479693630:web:38240bf82e09d72fd5ba6f",
-    measurementId: "G-V6K0D2KTJ1"
-  };
-
-  const app = initializeApp(firebaseConfig);
-  const auth = getAuth(app);
-  const db = getFirestore(app);
-
-  let authMode = 'login';
-  window.switchAuthTab = function(mode) {
-    authMode = mode;
-    document.getElementById('authTabLogin').classList.toggle('active', mode === 'login');
-    document.getElementById('authTabSignup').classList.toggle('active', mode === 'signup');
-    document.getElementById('authSubmitBtn').textContent = mode === 'login' ? 'Entrar' : 'Criar conta';
-    document.getElementById('authError').textContent = '';
-  };
-
-  window.handleAuthSubmit = async function(e) {
-    e.preventDefault();
-    const email = document.getElementById('authEmail').value.trim();
-    const password = document.getElementById('authPassword').value;
-    const errorEl = document.getElementById('authError');
-    errorEl.textContent = '';
-    try {
-      if (authMode === 'login') {
-        await signInWithEmailAndPassword(auth, email, password);
-      } else {
-        await createUserWithEmailAndPassword(auth, email, password);
-      }
-    } catch (err) {
-      errorEl.textContent = traduzErroFirebase(err.code);
-    }
-  };
-
-  window.handleGoogleSignIn = async function() {
-    const errorEl = document.getElementById('authError');
-    errorEl.textContent = '';
-    try {
-      await signInWithPopup(auth, new GoogleAuthProvider());
-    } catch (err) {
-      errorEl.textContent = traduzErroFirebase(err.code);
-    }
-  };
-
-  window.handleLogout = async function() {
-    await signOut(auth);
-  };
-
-  function traduzErroFirebase(code) {
-    const mapa = {
-      'auth/invalid-email': 'E-mail inválido.',
-      'auth/user-not-found': 'Não achei essa conta. Tenta "Criar conta"?',
-      'auth/wrong-password': 'Senha incorreta.',
-      'auth/invalid-credential': 'E-mail ou senha incorretos.',
-      'auth/email-already-in-use': 'Esse e-mail já tem conta. Tenta "Entrar"?',
-      'auth/weak-password': 'A senha precisa ter no mínimo 6 caracteres.',
-      'auth/popup-closed-by-user': 'Janela do Google fechada antes de terminar.'
-    };
-    return mapa[code] || 'Algo deu errado. Tenta de novo.';
-  }
-
-  // Salva o resultado do teste na conta da pessoa logada
-  window.enviarFeedback = async function() {
-    const user = auth.currentUser;
-    const texto = document.getElementById('feedbackText').value.trim();
-    const btn = document.getElementById('feedbackBtn');
-    const msg = document.getElementById('feedbackMsg');
-    if (!texto) { msg.style.color = '#C0392B'; msg.textContent = 'Escreve algo antes de enviar :)'; return; }
-    btn.disabled = true;
-    msg.textContent = '';
-    try {
-      await addDoc(collection(db, 'feedback'), {
-        uid: user ? user.uid : null,
-        email: user ? user.email : null,
-        texto: texto,
-        pagina: 'aula-zero',
-        data: new Date().toISOString()
-      });
-      msg.style.color = '#7FA893';
-      msg.textContent = 'Obrigada! Feedback enviado 💗';
-      document.getElementById('feedbackText').value = '';
-      document.getElementById('feedbackText').disabled = true;
-      btn.textContent = 'Enviado ✓';
-    } catch (err) {
-      console.error('Erro ao enviar feedback:', err);
-      msg.style.color = '#C0392B';
-      msg.textContent = 'Não consegui enviar agora. Tenta de novo em instantes.';
-      btn.disabled = false;
-    }
-  };
-
-  window.__uniSaveAulaZero = async function(passed, score, total, percentage) {
-    const user = auth.currentUser;
-    if (!user) return;
-    try {
-      await setDoc(doc(db, 'progress', user.uid), {
-        aulaZeroCompleted: passed,
-        aulaZeroScore: score,
-        aulaZeroTotal: total,
-        aulaZeroPercentage: percentage,
-        aulaZeroDate: new Date().toISOString(),
-        email: user.email
-      }, { merge: true });
-    } catch (err) {
-      console.error('Erro ao salvar progresso:', err);
-    }
-  };
-
-  // Ao logar: libera o teste e mostra se já passou antes
-  onAuthStateChanged(auth, async (user) => {
-    const gate = document.getElementById('authGate');
-    const gated = document.getElementById('testGated');
-    if (user) {
-      gate.style.display = 'none';
-      gated.style.display = 'block';
-      document.getElementById('authUserEmail').textContent = user.email;
-      if (typeof renderTest === 'function') renderTest();
-
-      try {
-        const snap = await getDoc(doc(db, 'progress', user.uid));
-        if (snap.exists() && snap.data().aulaZeroCompleted) {
-          document.getElementById('testResult').innerHTML = `
-            <div style="margin-top:24px;padding:20px;border-radius:8px;text-align:center;font-weight:600;
-              background:#e8f0e8;color:#7FA893;border:2px solid #7FA893;">
-              <p style="font-size:20px;margin-bottom:8px;">🎉 Você já passou nesse teste!</p>
-              <p style="font-size:13px;">Os 12 Mapas já estão desbloqueados na sua conta. Pode refazer o teste se quiser tentar de novo.</p>
-            </div>`;
-        }
-      } catch (err) {
-        console.error('Erro ao ler progresso:', err);
-      }
-    } else {
-      gate.style.display = 'block';
-      gated.style.display = 'none';
-    }
-  });
 </script>
 
 </body>

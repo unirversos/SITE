@@ -45,26 +45,6 @@ body{font-family:'Zen Maru Gothic',sans-serif;color:var(--ink);background:var(--
 .btn-submit:hover{background:var(--pink-deep);transform:translateY(-2px);box-shadow:0 6px 20px rgba(224,140,134,.22);}
 .btn-submit:active{transform:translateY(0);}
 
-/* AUTH GATE (mesmo padrão do resto do site) */
-.auth-gate{text-align:center;padding:10px;}
-.auth-gate h3{font-family:'Baloo 2',cursive;color:var(--pink-deep);margin-bottom:8px;font-size:17px;}
-.auth-gate p{color:var(--ink-soft);font-size:13px;margin-bottom:16px;}
-.auth-tabs{display:flex;gap:8px;margin-bottom:16px;justify-content:center;}
-.auth-tabs button{background:none;border:none;padding:8px 16px;font-size:13px;font-weight:600;color:var(--ink-soft);cursor:pointer;border-bottom:2px solid transparent;}
-.auth-tabs button.active{color:var(--pink-deep);border-color:var(--pink);}
-.auth-form{display:flex;flex-direction:column;gap:10px;text-align:left;max-width:320px;margin:0 auto;}
-.auth-form input{padding:10px 14px;border:1.5px solid var(--blush-2);border-radius:8px;font-size:14px;font-family:inherit;}
-.auth-form button[type="submit"]{background:var(--pink);color:#fff;border:none;padding:12px;border-radius:8px;font-weight:600;cursor:pointer;margin-top:4px;}
-.auth-form button[type="submit"]:hover{background:var(--pink-deep);}
-.auth-divider{display:flex;align-items:center;gap:10px;margin:14px auto;color:var(--ink-soft);font-size:12px;max-width:320px;}
-.auth-divider::before,.auth-divider::after{content:'';flex:1;height:1px;background:var(--blush-2);}
-.auth-google{width:100%;max-width:320px;background:#fff;border:1.5px solid var(--blush-2);padding:11px;border-radius:8px;font-weight:600;cursor:pointer;font-size:13px;}
-.auth-google:hover{background:#f9f7f5;}
-.auth-error{color:#C0392B;font-size:12px;margin-top:8px;min-height:16px;}
-.auth-loggedin{background:var(--gold-soft);border-radius:10px;padding:8px 14px;font-size:12.5px;margin-bottom:14px;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px;}
-.auth-loggedin button{background:none;border:1px solid var(--ink-soft);border-radius:6px;padding:5px 10px;font-size:11.5px;cursor:pointer;}
-.post-sending{opacity:.6;pointer-events:none;}
-
 /* Posts da comunidade */
 .posts-container{display:flex;flex-direction:column;gap:14px;margin-bottom:32px;}
 .post{background:#fff;border:1px solid var(--blush-2);border-radius:16px;padding:18px 20px;transition:all .2s ease;}
@@ -95,7 +75,7 @@ body{font-family:'Zen Maru Gothic',sans-serif;color:var(--ink);background:var(--
     <a href="/" class="logo">UNIRVERSOS</a>
     <div class="links">
       <a href="/idiomas/">idiomas</a>
-      <a href="/memorias/">memórias</a>
+      <a href="/travessia/">travessia</a>
       <a href="/paralelos/">paralelos</a>
       <a href="/sobre/">sobre</a>
       <a href="/">início</a>
@@ -119,44 +99,18 @@ body{font-family:'Zen Maru Gothic',sans-serif;color:var(--ink);background:var(--
   </div>
 
   <div class="form-box">
-    <!-- AUTH GATE: login just to post, reading stays open -->
-    <div id="authGate">
-      <div class="auth-gate">
-        <h3>🔐 Sign in to share your thought</h3>
-        <p>Quick and prevents spam on the wall — reading stories stays open to everyone.</p>
-        <div class="auth-tabs">
-          <button id="authTabLogin" class="active" onclick="switchAuthTab('login')">Sign in</button>
-          <button id="authTabSignup" onclick="switchAuthTab('signup')">Create account</button>
-        </div>
-        <form class="auth-form" id="authForm" onsubmit="handleAuthSubmit(event)">
-          <input type="email" id="authEmail" placeholder="Your email" required>
-          <input type="password" id="authPassword" placeholder="Password (min. 6 characters)" required minlength="6">
-          <button type="submit" id="authSubmitBtn">Sign in</button>
-        </form>
-        <div class="auth-divider">or</div>
-        <button class="auth-google" onclick="handleGoogleSignIn()">🔵 Sign in with Google</button>
-        <div class="auth-error" id="authError"></div>
-      </div>
-    </div>
-
-    <!-- COMPOSER: only shows after signing in -->
-    <div id="postGated" style="display:none;">
-      <div class="auth-loggedin">
-        <span>Signed in as <strong id="authUserEmail"></strong></span>
-        <button onclick="handleLogout()">Sign out</button>
-      </div>
-      <h3>New post</h3>
+    <h3>New post</h3>
+    <form id="formPost">
       <div class="form-group">
-        <label for="author">What should we call you?</label>
-        <textarea id="author" placeholder="Your name or nickname" maxlength="50" rows="1"></textarea>
+        <label for="author">Your name:</label>
+        <textarea id="author" placeholder="How do you want to be known?" maxlength="50"></textarea>
       </div>
       <div class="form-group">
         <label for="text">Your sentence (in English):</label>
         <textarea id="text" placeholder="A moment, a thought, a discovery..." maxlength="280" required></textarea>
       </div>
-      <button class="btn-submit" onclick="publicarPost()" id="publicarBtn">Post →</button>
-      <div class="auth-error" id="postError"></div>
-    </div>
+      <button type="submit" class="btn-submit">Post →</button>
+    </form>
   </div>
 
   <div class="section-title">
@@ -165,7 +119,8 @@ body{font-family:'Zen Maru Gothic',sans-serif;color:var(--ink);background:var(--
 
   <div class="posts-container" id="postsContainer">
     <div class="empty-state">
-      <p>Loading community posts…</p>
+      <p>No posts yet. Be the first to share! 🌱</p>
+      <p class="note">Your posts are saved locally in your browser.</p>
     </div>
   </div>
 
@@ -179,180 +134,83 @@ body{font-family:'Zen Maru Gothic',sans-serif;color:var(--ink);background:var(--
 </div>
 
 <script>
-const IDIOMA_CODE = 'en';
+const STORAGE_KEY = 'paralelos_ingles_posts';
 
-function formatDate(d){
-  if (!d) return '';
-  try{
-    return new Date(d).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' });
-  }catch(e){ return ''; }
+// Sample initial posts
+const SAMPLE_POSTS = [
+  { author: 'Alice', text: 'Every small step forward is progress. Today I understood a new phrase.', date: '2024-08-03' },
+  { author: 'John', text: 'Learning a language is like planting seeds. You never know when they will bloom.', date: '2024-08-02' },
+  { author: 'Maria', text: 'Today I spoke without fear. The words came naturally.', date: '2024-08-01' }
+];
+
+function getPosts() {
+  const stored = localStorage.getItem(STORAGE_KEY);
+  return stored ? JSON.parse(stored) : SAMPLE_POSTS;
 }
 
-function escapeHtml(str){
-  const div = document.createElement('div');
-  div.textContent = str;
-  return div.innerHTML;
+function savePosts(posts) {
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(posts));
+  renderPosts();
 }
 
-function renderEmpty(msg){
-  document.getElementById('postsContainer').innerHTML = '<div class="empty-state"><p>' + msg + '</p></div>';
+function formatDate(date) {
+  return new Date(date).toLocaleDateString('en-US', { 
+    year: 'numeric', 
+    month: 'long', 
+    day: 'numeric' 
+  });
 }
 
-function renderPosts(posts){
+function renderPosts() {
+  const posts = getPosts();
   const container = document.getElementById('postsContainer');
-  if (!posts.length){
-    renderEmpty('No posts yet. Be the first to share! 🌱');
+  
+  if (posts.length === 0) {
+    container.innerHTML = `
+      <div class="empty-state">
+        <p>No posts yet. Be the first to share! 🌱</p>
+        <p class="note">Your posts are saved locally in your browser.</p>
+      </div>
+    `;
     return;
   }
-  const ordenados = posts.slice().sort(function(a, b){ return new Date(b.data) - new Date(a.data); });
-  container.innerHTML = ordenados.map(function(post){
-    return '<div class="post">' +
-      '<div class="post-header"><span class="post-author">' + escapeHtml(post.nome || 'Learner') + '</span>' +
-      '<span class="post-date">' + formatDate(post.data) + '</span></div>' +
-      '<div class="post-text">' + escapeHtml(post.texto) + '</div></div>';
-  }).join('');
+
+  container.innerHTML = posts.map((post, idx) => `
+    <div class="post">
+      <div class="post-header">
+        <span class="post-author">${post.author || 'Learner'}</span>
+        <span class="post-date">${formatDate(post.date)}</span>
+      </div>
+      <div class="post-text">${post.text}</div>
+    </div>
+  `).reverse().join('');
 }
-</script>
 
-<!-- FIREBASE: sign in to post, public read for the wall -->
-<script type="module">
-  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
-  import {
-    getAuth, onAuthStateChanged, createUserWithEmailAndPassword,
-    signInWithEmailAndPassword, GoogleAuthProvider, signInWithPopup, signOut
-  } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
-  import {
-    getFirestore, collection, addDoc, query, where, getDocs
-  } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
-
-  const firebaseConfig = {
-    apiKey: "AIzaSyCoo0UB5rWjD4ZGE3xKO32zXYPUQFYObmc",
-    authDomain: "unirversos-site.firebaseapp.com",
-    projectId: "unirversos-site",
-    storageBucket: "unirversos-site.firebasestorage.app",
-    messagingSenderId: "608479693630",
-    appId: "1:608479693630:web:38240bf82e09d72fd5ba6f",
-    measurementId: "G-V6K0D2KTJ1"
-  };
-
-  const app = initializeApp(firebaseConfig);
-  const auth = getAuth(app);
-  const db = getFirestore(app);
-
-  let authMode = 'login';
-  window.switchAuthTab = function(mode) {
-    authMode = mode;
-    document.getElementById('authTabLogin').classList.toggle('active', mode === 'login');
-    document.getElementById('authTabSignup').classList.toggle('active', mode === 'signup');
-    document.getElementById('authSubmitBtn').textContent = mode === 'login' ? 'Sign in' : 'Create account';
-    document.getElementById('authError').textContent = '';
-  };
-
-  window.handleAuthSubmit = async function(e) {
-    e.preventDefault();
-    const email = document.getElementById('authEmail').value.trim();
-    const password = document.getElementById('authPassword').value;
-    const errorEl = document.getElementById('authError');
-    errorEl.textContent = '';
-    try {
-      if (authMode === 'login') {
-        await signInWithEmailAndPassword(auth, email, password);
-      } else {
-        await createUserWithEmailAndPassword(auth, email, password);
-      }
-    } catch (err) {
-      errorEl.textContent = traduzErroFirebase(err.code);
-    }
-  };
-
-  window.handleGoogleSignIn = async function() {
-    const errorEl = document.getElementById('authError');
-    errorEl.textContent = '';
-    try {
-      await signInWithPopup(auth, new GoogleAuthProvider());
-    } catch (err) {
-      errorEl.textContent = traduzErroFirebase(err.code);
-    }
-  };
-
-  window.handleLogout = async function() {
-    await signOut(auth);
-  };
-
-  function traduzErroFirebase(code) {
-    const mapa = {
-      'auth/invalid-email': 'Invalid email.',
-      'auth/user-not-found': "Couldn't find that account. Try 'Create account'?",
-      'auth/wrong-password': 'Incorrect password.',
-      'auth/invalid-credential': 'Incorrect email or password.',
-      'auth/email-already-in-use': "That email already has an account. Try 'Sign in'?",
-      'auth/weak-password': 'Password needs at least 6 characters.',
-      'auth/popup-closed-by-user': 'Google window closed before finishing.'
-    };
-    return mapa[code] || 'Something went wrong. Try again.';
-  }
-
-  window.publicarPost = async function() {
-    const user = auth.currentUser;
-    if (!user) return;
-    const nome = document.getElementById('author').value.trim() || 'Learner';
-    const texto = document.getElementById('text').value.trim();
-    const errorEl = document.getElementById('postError');
-    errorEl.textContent = '';
-    if (!texto) { errorEl.textContent = 'Write your sentence before posting :)'; return; }
-
-    const btn = document.getElementById('publicarBtn');
-    btn.disabled = true;
-    btn.textContent = 'Posting...';
-    try {
-      await addDoc(collection(db, 'diario'), {
-        uid: user.uid,
-        nome: nome,
-        texto: texto,
-        idioma: IDIOMA_CODE,
-        data: new Date().toISOString()
-      });
-      document.getElementById('text').value = '';
-      await carregarPosts();
-    } catch (err) {
-      console.error('Error posting:', err);
-      errorEl.textContent = "Couldn't post right now. Try again shortly.";
-    }
-    btn.disabled = false;
-    btn.textContent = 'Post →';
-  };
-
-  async function carregarPosts() {
-    try {
-      const q = query(collection(db, 'diario'), where('idioma', '==', IDIOMA_CODE));
-      const snap = await getDocs(q);
-      const posts = snap.docs.map(d => d.data());
-      renderPosts(posts);
-    } catch (err) {
-      console.error('Error loading posts:', err);
-      renderEmpty('Could not load posts right now.');
-    }
-  }
-
-  onAuthStateChanged(auth, (user) => {
-    const gate = document.getElementById('authGate');
-    const gated = document.getElementById('postGated');
-    if (user) {
-      gate.style.display = 'none';
-      gated.style.display = 'block';
-      document.getElementById('authUserEmail').textContent = user.email;
-      if (!document.getElementById('author').value) {
-        document.getElementById('author').value = user.email.split('@')[0];
-      }
-    } else {
-      gate.style.display = 'block';
-      gated.style.display = 'none';
-    }
+document.getElementById('formPost').addEventListener('submit', function(e) {
+  e.preventDefault();
+  
+  const author = document.getElementById('author').value.trim() || 'Learner';
+  const text = document.getElementById('text').value.trim();
+  
+  if (!text) return;
+  
+  const posts = getPosts();
+  posts.push({
+    author: author,
+    text: text,
+    date: new Date().toISOString().split('T')[0]
   });
+  
+  savePosts(posts);
+  
+  document.getElementById('author').value = '';
+  document.getElementById('text').value = '';
+  document.getElementById('text').focus();
+});
 
-  carregarPosts();
+// Render posts on load
+renderPosts();
 </script>
-
 
 </body>
 </html>

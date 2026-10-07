@@ -1,0 +1,1083 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Agendamentos no Japão — quando comprar cada ingresso | Unirversos</title>
+    <meta name="description" content="As atrações do Japão que exigem reserva antecipada, com as regras de cada uma. Diga quando você viaja e a página calcula o seu cronograma de compras em horário de Brasília.">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --color-dark: #333333;
+            --color-rose: #c99699;
+            --color-gray: #777777;
+            --color-light-gray: #f5f5f5;
+            --color-white: #ffffff;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+            line-height: 1.8;
+            color: var(--color-dark);
+            background: var(--color-white);
+            font-size: 16px;
+        }
+
+        /* HEADER */
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 2rem 4rem;
+            border-bottom: 1px solid #e0e0e0;
+        }
+
+        .logo {
+            font-size: 13px;
+            font-weight: 700;
+            letter-spacing: 2px;
+            text-decoration: none;
+            color: var(--color-dark);
+            text-transform: uppercase;
+        }
+
+        nav {
+            display: flex;
+            gap: 2.5rem;
+        }
+
+        nav a {
+            text-decoration: none;
+            color: var(--color-rose);
+            font-size: 13px;
+            font-weight: 400;
+            letter-spacing: 0.5px;
+            transition: opacity 0.3s;
+        }
+
+        nav a:hover {
+            opacity: 0.7;
+        }
+
+        /* MAIN */
+        main {
+            max-width: 1100px;
+            margin: 0 auto;
+            padding: 0 4rem;
+        }
+
+        /* HERO */
+        .hero {
+            text-align: center;
+            padding: 4rem 0 2rem;
+        }
+
+        .hero h1 {
+            font-size: 3rem;
+            font-weight: 300;
+            line-height: 1.3;
+            margin-bottom: 1rem;
+            color: var(--color-dark);
+            letter-spacing: -0.5px;
+        }
+
+        .hero .highlight {
+            color: var(--color-rose);
+            font-weight: 400;
+        }
+
+        .hero p {
+            font-size: 1.2rem;
+            color: var(--color-gray);
+            max-width: 700px;
+            margin: 0 auto;
+        }
+
+        .free-badge {
+            display: inline-block;
+            margin-top: 1.5rem;
+            padding: 0.4rem 1.2rem;
+            border: 1px solid var(--color-rose);
+            border-radius: 100px;
+            color: var(--color-rose);
+            font-size: 0.85rem;
+            font-weight: 500;
+        }
+
+        /* SECTION */
+        section {
+            margin: 4rem 0;
+        }
+
+        .section-title {
+            font-size: 2rem;
+            font-weight: 400;
+            margin-bottom: 1rem;
+            color: var(--color-dark);
+            text-align: center;
+        }
+
+        .section-subtitle {
+            font-size: 1.1rem;
+            color: var(--color-gray);
+            text-align: center;
+            margin-bottom: 2.5rem;
+            max-width: 700px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        /* CALCULADORA */
+        .calc {
+            background: var(--color-light-gray);
+            border-radius: 8px;
+            border-left: 4px solid var(--color-rose);
+            padding: 2.5rem;
+            margin: 2rem 0;
+        }
+
+        .calc h2 {
+            font-size: 1.5rem;
+            font-weight: 400;
+            margin-bottom: 0.3rem;
+        }
+
+        .calc .sub {
+            color: var(--color-gray);
+            font-size: 0.95rem;
+            margin-bottom: 1.8rem;
+        }
+
+        .fields {
+            display: flex;
+            gap: 1.2rem;
+            flex-wrap: wrap;
+            align-items: flex-end;
+        }
+
+        .field {
+            flex: 1;
+            min-width: 170px;
+        }
+
+        .field label {
+            display: block;
+            font-size: 0.8rem;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            color: var(--color-gray);
+            margin-bottom: 0.4rem;
+            font-weight: 600;
+        }
+
+        .field input {
+            width: 100%;
+            font-family: inherit;
+            font-size: 1rem;
+            border: 1px solid #e0e0e0;
+            border-radius: 4px;
+            padding: 0.8rem 1rem;
+            background: var(--color-white);
+            color: var(--color-dark);
+            outline: none;
+        }
+
+        .field input:focus {
+            border-color: var(--color-rose);
+        }
+
+        .cta-button {
+            display: inline-block;
+            padding: 1rem 2.5rem;
+            background: var(--color-rose);
+            color: white;
+            text-decoration: none;
+            border: none;
+            border-radius: 4px;
+            font-size: 1.1rem;
+            font-weight: 500;
+            font-family: inherit;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .cta-button:hover {
+            background: var(--color-dark);
+            transform: scale(1.02);
+        }
+
+        .cta-button.small {
+            font-size: 0.95rem;
+            padding: 0.8rem 1.8rem;
+        }
+
+        .calc .hint {
+            font-size: 0.85rem;
+            color: #999;
+            margin-top: 1rem;
+        }
+
+        /* RESULTADO */
+        .result-head {
+            display: flex;
+            align-items: baseline;
+            justify-content: space-between;
+            gap: 1rem;
+            flex-wrap: wrap;
+            margin-bottom: 0.4rem;
+        }
+
+        .result-head h2 {
+            font-size: 1.6rem;
+            font-weight: 400;
+        }
+
+        .result-head .count {
+            font-size: 0.85rem;
+            color: var(--color-gray);
+        }
+
+        .result .note-top {
+            color: var(--color-gray);
+            font-size: 0.95rem;
+            margin-bottom: 2rem;
+        }
+
+        .tl {
+            position: relative;
+            margin-left: 0.5rem;
+            padding-left: 2rem;
+            border-left: 2px solid #e8e8e8;
+        }
+
+        .tl-item {
+            position: relative;
+            padding-bottom: 2rem;
+        }
+
+        .tl-item:last-child {
+            padding-bottom: 0.3rem;
+        }
+
+        .tl-item::before {
+            content: '';
+            position: absolute;
+            left: -2.56rem;
+            top: 0.7rem;
+            width: 11px;
+            height: 11px;
+            border-radius: 50%;
+            background: var(--color-white);
+            border: 2.5px solid var(--color-rose);
+        }
+
+        .tl-item.past::before {
+            border-color: #ddd;
+            background: #ddd;
+        }
+
+        .tl-item.soon::before {
+            background: var(--color-rose);
+            box-shadow: 0 0 0 4px rgba(201, 150, 153, 0.22);
+        }
+
+        .tl-item.past {
+            opacity: 0.5;
+        }
+
+        .tl-when {
+            font-size: 0.85rem;
+            font-weight: 600;
+            color: var(--color-rose);
+            letter-spacing: 0.3px;
+            margin-bottom: 0.1rem;
+            line-height: 1.6;
+        }
+
+        .tl-item.past .tl-when {
+            color: #aaa;
+        }
+
+        .tl-what {
+            font-weight: 600;
+            font-size: 1.1rem;
+            line-height: 1.5;
+            margin-bottom: 0.1rem;
+        }
+
+        .tl-what .pin {
+            font-weight: 400;
+            color: #aaa;
+            font-size: 0.9rem;
+        }
+
+        .tl-body {
+            color: var(--color-gray);
+            font-size: 0.95rem;
+            line-height: 1.7;
+        }
+
+        .tl-body strong {
+            color: var(--color-dark);
+            font-weight: 600;
+        }
+
+        .chip {
+            display: inline-block;
+            font-size: 0.68rem;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            font-weight: 700;
+            border-radius: 100px;
+            padding: 0.1rem 0.7rem;
+            vertical-align: middle;
+            margin-left: 0.5rem;
+            background: var(--color-light-gray);
+            color: var(--color-gray);
+        }
+
+        .chip.agora {
+            background: var(--color-rose);
+            color: var(--color-white);
+        }
+
+        .chip.loteria {
+            background: #efe7e8;
+            color: #a9767a;
+        }
+
+        .chip.corrida {
+            background: #f4efe6;
+            color: #96793f;
+        }
+
+        .chip.tranquilo,
+        .chip.anual {
+            background: #e9efe9;
+            color: #5f7d62;
+        }
+
+        .tl-link {
+            display: inline-block;
+            font-size: 0.85rem;
+            color: var(--color-rose);
+            text-decoration: none;
+            border-bottom: 1px solid #e8e8e8;
+            margin-top: 0.4rem;
+        }
+
+        .tl-link:hover {
+            border-color: var(--color-rose);
+        }
+
+        /* FILTROS + CATÁLOGO */
+        .filters {
+            display: flex;
+            gap: 0.6rem;
+            flex-wrap: wrap;
+            justify-content: center;
+            margin-bottom: 2rem;
+        }
+
+        .filt {
+            border: 1px solid #e0e0e0;
+            background: var(--color-white);
+            border-radius: 100px;
+            padding: 0.45rem 1.1rem;
+            cursor: pointer;
+            font-family: inherit;
+            font-size: 0.85rem;
+            color: var(--color-gray);
+            transition: all 0.3s;
+        }
+
+        .filt:hover {
+            border-color: var(--color-rose);
+        }
+
+        .filt.on {
+            border-color: var(--color-rose);
+            background: var(--color-rose);
+            color: var(--color-white);
+        }
+
+        .cards {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 1.5rem;
+        }
+
+        .card {
+            padding: 1.8rem;
+            border: 1px solid #e8e8e8;
+            border-radius: 8px;
+            background: var(--color-white);
+            border-top: 4px solid var(--color-rose);
+        }
+
+        .card.classico {
+            border-top-color: #8aa98d;
+        }
+
+        .card h4 {
+            font-size: 1.15rem;
+            font-weight: 500;
+            line-height: 1.4;
+            margin-bottom: 0.2rem;
+        }
+
+        .card .where {
+            font-size: 0.8rem;
+            color: #aaa;
+            margin-bottom: 0.9rem;
+        }
+
+        .card p {
+            font-size: 0.92rem;
+            color: var(--color-gray);
+            line-height: 1.7;
+            margin-bottom: 0.9rem;
+        }
+
+        .card .rule {
+            background: var(--color-light-gray);
+            border-radius: 4px;
+            padding: 0.8rem 1rem;
+            font-size: 0.88rem;
+            line-height: 1.6;
+            margin-bottom: 0.9rem;
+            color: var(--color-gray);
+        }
+
+        .card .rule b {
+            color: var(--color-dark);
+        }
+
+        .card a {
+            font-size: 0.85rem;
+            color: var(--color-rose);
+            text-decoration: none;
+            border-bottom: 1px solid #e8e8e8;
+        }
+
+        .card a:hover {
+            border-color: var(--color-rose);
+        }
+
+        /* ARMADILHAS */
+        .trap {
+            padding: 1.8rem 2rem;
+            border: 1px solid #e8e8e8;
+            border-left: 4px solid var(--color-rose);
+            border-radius: 8px;
+            background: var(--color-white);
+            margin-bottom: 1rem;
+        }
+
+        .trap h4 {
+            font-size: 1.15rem;
+            font-weight: 500;
+            margin-bottom: 0.4rem;
+        }
+
+        .trap h4 .n {
+            color: var(--color-rose);
+            font-weight: 300;
+            margin-right: 0.6rem;
+        }
+
+        .trap p {
+            font-size: 0.95rem;
+            color: var(--color-gray);
+            line-height: 1.75;
+        }
+
+        .trap p strong {
+            color: var(--color-dark);
+            font-weight: 600;
+        }
+
+        /* SEM RESERVA */
+        .free-list {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 1.2rem;
+        }
+
+        .fitem {
+            padding: 1.4rem;
+            background: var(--color-light-gray);
+            border-radius: 8px;
+        }
+
+        .fitem .loc {
+            font-size: 0.72rem;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            color: var(--color-rose);
+            font-weight: 600;
+            margin-bottom: 0.3rem;
+        }
+
+        .fitem h5 {
+            font-size: 1rem;
+            font-weight: 600;
+            margin-bottom: 0.2rem;
+        }
+
+        .fitem p {
+            font-size: 0.88rem;
+            color: var(--color-gray);
+            line-height: 1.6;
+        }
+
+        /* CTA */
+        .cta-section {
+            text-align: center;
+            padding: 3rem 2rem;
+            margin: 4rem 0;
+            background: var(--color-light-gray);
+            border-radius: 8px;
+            border-left: 4px solid var(--color-rose);
+        }
+
+        .cta-section h2 {
+            font-size: 2rem;
+            font-weight: 400;
+            margin-bottom: 1rem;
+        }
+
+        .cta-section p {
+            color: var(--color-gray);
+            font-size: 1.05rem;
+            margin-bottom: 1rem;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        /* FOOTER */
+        footer {
+            text-align: center;
+            padding: 2.5rem;
+            color: #999;
+            font-size: 0.85rem;
+            border-top: 1px solid #e0e0e0;
+            margin-top: 4rem;
+        }
+
+        footer a {
+            color: var(--color-dark);
+            text-decoration: none;
+        }
+
+        .disclaimer {
+            max-width: 700px;
+            margin: 1.5rem auto 0;
+            font-size: 0.78rem;
+            line-height: 1.7;
+            color: #aaa;
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        /* RESPONSIVE */
+        @media (max-width: 768px) {
+            header {
+                flex-direction: column;
+                gap: 1.5rem;
+                padding: 1.5rem;
+            }
+
+            nav {
+                flex-wrap: wrap;
+                justify-content: center;
+                gap: 1rem;
+            }
+
+            main {
+                padding: 0 1.5rem;
+            }
+
+            .hero h1 {
+                font-size: 1.8rem;
+            }
+
+            .hero p {
+                font-size: 1rem;
+            }
+
+            .section-title {
+                font-size: 1.5rem;
+            }
+
+            .cards,
+            .free-list {
+                grid-template-columns: 1fr;
+            }
+
+            .calc {
+                padding: 1.5rem;
+            }
+
+            .tl {
+                padding-left: 1.5rem;
+            }
+
+            .tl-item::before {
+                left: -2.06rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- HEADER -->
+    <header>
+        <a href="/" class="logo">UNIRVERSOS</a>
+        <nav>
+            <a href="https://unirversos.com/idiomas/">idiomas</a>
+            <a href="https://unirversos.com/travessia/">travessia</a>
+            <a href="https://unirversos.com/paralelos/">paralelos</a>
+            <a href="https://unirversos.com/sobre/">sobre</a>
+        </nav>
+    </header>
+
+    <main>
+        <!-- HERO -->
+        <section class="hero">
+            <h1>No Japão, o ingresso<br/><span class="highlight">some antes da viagem.</span></h1>
+            <p>Dezenas de atrações só vendem por loteria ou liberam o mês inteiro num minuto específico — quase sempre de madrugada no horário do Brasil. Diga quando você viaja e esta página monta o seu cronograma de compras, com cada data já convertida para Brasília.</p>
+            <span class="free-badge">✦ Grátis, sem cadastro — use quantas vezes quiser</span>
+        </section>
+
+        <!-- CALCULADORA -->
+        <div class="calc">
+            <h2>Monte o seu cronograma</h2>
+            <p class="sub">As regras são fixas e se repetem todo mês. O que muda é a sua data.</p>
+            <div class="fields">
+                <div class="field">
+                    <label for="ida">Chegada no Japão</label>
+                    <input type="date" id="ida">
+                </div>
+                <div class="field">
+                    <label for="volta">Volta para casa</label>
+                    <input type="date" id="volta">
+                </div>
+                <button class="cta-button small" id="go">Calcular</button>
+            </div>
+            <p class="hint">Nada é enviado para lugar nenhum — a conta acontece no seu próprio navegador.</p>
+        </div>
+
+        <!-- RESULTADO -->
+        <section class="result hidden" id="result">
+            <div class="result-head">
+                <h2 id="r-title">Seu cronograma</h2>
+                <span class="count" id="r-count"></span>
+            </div>
+            <p class="note-top" id="r-note"></p>
+            <div class="tl" id="tl"></div>
+        </section>
+
+        <!-- CATÁLOGO -->
+        <section id="catalogo">
+            <h2 class="section-title">O catálogo de regras</h2>
+            <p class="section-subtitle">Cada atração com a sua mecânica de venda, explicada uma vez. É daqui que o cronograma acima sai.</p>
+            <div class="filters" id="filters"></div>
+            <div class="cards" id="cards"></div>
+        </section>
+
+        <!-- ARMADILHAS -->
+        <section id="armadilhas">
+            <h2 class="section-title">As armadilhas que derrubam brasileiro</h2>
+            <p class="section-subtitle">Coisas que quase nenhum guia menciona, e que eu só sei porque morei dez anos lá.</p>
+
+            <div class="trap">
+                <h4><span class="n">01</span>Você não pode dirigir no Japão</h4>
+                <p>A Permissão Internacional brasileira é emitida sob a Convenção de Viena de 1968, e o Japão só reconhece a de <strong>Genebra de 1949</strong>, da qual o Brasil não é signatário. Nem a CNH, nem a PID, nem tradução juramentada valem. Isso elimina o <strong>kart de rua fantasiado</strong> por Shibuya, que aparece em todo roteiro de Tóquio — não é questão de risco, é ilegal para nós. Vale o mesmo para aluguel de carro.</p>
+            </div>
+
+            <div class="trap">
+                <h4><span class="n">02</span>O Ano Novo fecha o país</h4>
+                <p>De <strong>29 de dezembro a 3 de janeiro</strong>, boa parte dos museus, lojas e restaurantes fecha — vários dos grandes museus têm recesso de fim de ano. Ao mesmo tempo, templos e trens lotam e o hotel dispara. Não deixe nada caro e com reserva nessa faixa: use esses dias para templos, iluminações e eventos de rua.</p>
+            </div>
+
+            <div class="trap">
+                <h4><span class="n">03</span>O cartão vai ser recusado</h4>
+                <p>Sites japoneses de ingresso rejeitam cartão estrangeiro com frequência, principalmente na etapa do 3D Secure. Quem consegue, geralmente consegue <strong>trocando de cartão</strong>. Antes de começar: avise o banco, habilite compra internacional, tenha dois ou três cartões de bandeiras diferentes à mão e teste um numa compra pequena. Numa loteria você tem dias para pagar; numa venda por ordem de chegada, segundos.</p>
+            </div>
+
+            <div class="trap">
+                <h4><span class="n">04</span>Algumas contas exigem telefone japonês</h4>
+                <p>Certos sistemas de ingresso pedem verificação por chamada — você precisa ligar para um número japonês <strong>do mesmo telefone que cadastrou</strong>. Um número, uma conta. Decida qual telefone vai usar antes de criar a conta, confirme que ele faz ligação internacional, e não troque de chip no meio do processo.</p>
+            </div>
+
+            <div class="trap">
+                <h4><span class="n">05</span>Todo mundo é revendedor, quase ninguém é oficial</h4>
+                <p>Isso muda de atração para atração, e errar significa não entrar. Há lugares em que só o canal oficial e uma bilheteria específica valem, e outros em que revendedores grandes <strong>são</strong> canais legítimos. A regra segura: confira sempre na página oficial da atração quais revendedores ela reconhece — e nunca compre de terceiros em marketplaces, leilões ou mensagem direta.</p>
+            </div>
+
+            <div class="trap">
+                <h4><span class="n">06</span>Madrugada de Brasília é horário comercial no Japão</h4>
+                <p>O Japão está <strong>12 horas à frente</strong> de Brasília, e nunca tem horário de verão. Uma venda que abre às 14h no Japão cai às 2h da manhã aqui; às 10h de lá são 22h do dia anterior aqui. Todas as datas que esta página calcula já vêm convertidas — mas vale colocar despertador, porque é literalmente de madrugada.</p>
+            </div>
+        </section>
+
+        <!-- SEM RESERVA -->
+        <section id="livres">
+            <h2 class="section-title">E o que não precisa de reserva nenhuma</h2>
+            <p class="section-subtitle">Para equilibrar o roteiro: coisas enormes que são só chegar e entrar.</p>
+            <div class="free-list">
+                <div class="fitem"><div class="loc">Tóquio · Akihabara</div><h5>Electric Town</h5><p>Games retrô, figures, andares inteiros de gachapon e as lojas de componentes que são o Akihabara original.</p></div>
+                <div class="fitem"><div class="loc">Tóquio · Nakano</div><h5>Nakano Broadway</h5><p>Akihabara em miniatura e sem multidão. Colecionador de verdade prefere aqui.</p></div>
+                <div class="fitem"><div class="loc">Tóquio · Odaiba</div><h5>Gundam em tamanho real</h5><p>Os quase 20 metros do RX-0 que se transformam em horários marcados, com som e luz. Grátis.</p></div>
+                <div class="fitem"><div class="loc">Tóquio · Ogikubo</div><h5>Museu de Animação de Suginami</h5><p>Grátis. Como um anime é feito, do storyboard à dublagem, no bairro dos estúdios de verdade.</p></div>
+                <div class="fitem"><div class="loc">Kyoto · Karasuma Oike</div><h5>Museu Internacional do Mangá</h5><p>Uma escola antiga com 300 metros lineares de prateleira que você pode pegar e ler sentado no chão.</p></div>
+                <div class="fitem"><div class="loc">Kyoto · Fushimi</div><h5>Fushimi Inari</h5><p>Os milhares de torii vermelhos subindo a montanha. Aberto 24 horas, sem bilheteria — vá ao amanhecer.</p></div>
+                <div class="fitem"><div class="loc">Osaka · Nipponbashi</div><h5>Den Den Town</h5><p>O Akihabara de Osaka, com clima mais solto e bem menos turista.</p></div>
+                <div class="fitem"><div class="loc">Nov → fev</div><h5>Iluminações de inverno</h5><p>Quilômetros de avenida acesos em Tóquio e Osaka, de novembro até fevereiro. Quase tudo gratuito.</p></div>
+                <div class="fitem"><div class="loc">Em qualquer cidade</div><h5>Os konbini</h5><p>Abertos 24 horas, com comida de verdade, caixa eletrônico que aceita cartão estrangeiro e banheiro limpo.</p></div>
+            </div>
+        </section>
+
+        <!-- CTA -->
+        <section class="cta-section">
+            <h2>Isso é um pedacinho do guia</h2>
+            <p>O Unirversos Memórias transforma a sua viagem numa revista personalizada — com os seus lugares, as suas fotos e espaço para as suas lembranças.</p>
+            <a href="https://unirversos.com/travessia/" class="cta-button">Conhecer o Memórias</a>
+        </section>
+    </main>
+
+    <!-- FOOTER -->
+    <footer>
+        <p>unirversos — tudo conectado</p>
+        <p>
+            <a href="https://instagram.com/unirversos.idiomas">@unirversos.idiomas</a>
+            |
+            <a href="mailto:unirversos.idiomas@gmail.com">unirversos.idiomas@gmail.com</a>
+        </p>
+        <p style="margin-top: 1.5rem;">Aline Kikuti</p>
+        <p class="disclaimer">As regras desta página são as mecânicas fixas de venda de cada atração, não datas de uma temporada específica. Ainda assim, sistemas, preços e janelas mudam sem aviso no Japão: confirme sempre na página oficial antes de pagar. Levantamento revisado em outubro de 2026.</p>
+    </footer>
+
+<script>
+// ---------- catálogo de regras ----------
+const A = [
+ {id:'pokepark', nome:'PokéPark KANTO', onde:'Tóquio · Inagi', cat:'nerd', tag:'loteria',
+  regra:{t:'loteria', d1:1, d2:12, hora:'19:00', offset:3},
+  desc:'O primeiro parque Pokémon permanente ao ar livre do mundo: floresta com centenas de Pokémon em tamanho real, cidade de treinadores, ginásio e desfile.',
+  nota:'Não existe venda no dia — sem reserva, não entra. Baixe o app oficial antes: ele é obrigatório para loteria de show e reserva de horário.',
+  url:'https://ticket-en.pokepark-kanto.co.jp/'},
+
+ {id:'ghibli-mitaka', nome:'Museu Ghibli de Mitaka', onde:'Tóquio · Mitaka', cat:'nerd', tag:'corrida',
+  regra:{t:'mensal', dia:10, hora:'10:00', offset:1},
+  desc:'O museu que o próprio Miyazaki desenhou, com o Cinema Saturno exibindo curtas que não existem em nenhum outro lugar do mundo.',
+  nota:'Fim de semana esgota em minutos. Só pela Lawson Ticket em inglês — revendedor de terceiro não entra na porta.',
+  url:'https://www.ghibli-museum.jp/en/tickets/'},
+
+ {id:'ghibli-park', nome:'Ghibli Park', onde:'Aichi · perto de Nagoya', cat:'nerd', tag:'corrida',
+  regra:{t:'mensal', dia:10, hora:'14:00', offset:2},
+  desc:'Cinco áreas num parque enorme, incluindo a casa da Satsuki e da Mei e o Vale das Bruxas. Não tem relação com o museu de Mitaka, e um ingresso não vale no outro.',
+  nota:'O passe completo (Ōzanpo Premium) é o que esgota primeiro. Zero venda no dia.',
+  url:'https://ghibli-park.jp/en/ticket/'},
+
+ {id:'pokemon-cafe', nome:'Pokémon Café', onde:'Tóquio e Osaka', cat:'nerd', tag:'corrida',
+  regra:{t:'mensal', dia:null, hora:'18:00', offset:1, variavel:true},
+  desc:'Provavelmente a reserva mais difícil do Japão. Curry do Pikachu, panquecas e o Pikachu chef aparecendo no salão.',
+  nota:'O lote do mês inteiro abre de uma vez, e a data do lote é anunciada antes na página oficial — acompanhe desde o mês anterior. Cancelamentos voltam ao ar na véspera. A unidade de Osaka é bem mais fácil que a de Tóquio.',
+  url:'https://reserve.pokemon-cafe.jp/'},
+
+ {id:'kirby', nome:'Kirby Café', onde:'Tóquio e Osaka', cat:'nerd', tag:'corrida',
+  regra:{t:'mensal', dia:10, hora:'18:00', offset:1},
+  desc:'Pratos inspirados no poder de cópia do Kirby e louça temática que dá para levar.',
+  nota:'Abre no dia 10 cobrindo do dia 11 ao dia 10 do mês seguinte, e esgota em segundos: esteja logado com a data já decidida.',
+  url:'https://kirbycafe.jp/'},
+
+ {id:'disney', nome:'Tokyo Disneyland e DisneySea', onde:'Chiba · Maihama', cat:'nerd', tag:'corrida',
+  regra:{t:'mesesAntes', meses:2, hora:'14:00'},
+  desc:'Dois parques com ingressos separados e sem passe combinado. O DisneySea tem a área do Frozen, da Rapunzel e da Terra do Nunca.',
+  nota:'Cada dia abre dois meses antes, dia a dia. O fura-fila pago só se compra dentro do parque, pelo app — registre os ingressos no app na véspera.',
+  url:'https://www.tokyodisneyresort.jp/en/'},
+
+ {id:'doraemon', nome:'Museu Fujiko F. Fujio (Doraemon)', onde:'Kawasaki', cat:'nerd', tag:'corrida',
+  regra:{t:'mensal', dia:30, hora:'10:00', offset:1},
+  desc:'Cerca de 50 mil desenhos originais, teatro com filme exclusivo e o pátio com a Porta Mágica.',
+  nota:'Entrada com horário marcado, liberada sempre no dia 30. Não se vende no museu.',
+  url:'https://www.e-tix.jp/fujiko-museum'},
+
+ {id:'usj', nome:'Super Nintendo World (USJ)', onde:'Osaka · Universal City', cat:'nerd', tag:'corrida',
+  regra:{t:'antes', dias:30, hora:'10:00'},
+  desc:'Mario Kart, Yoshi e a expansão do Donkey Kong com o carrinho de minério. No mesmo parque fica o mundo do Harry Potter.',
+  nota:'Atenção ao erro clássico: a entrada do parque NÃO garante entrada na área da Nintendo. Procure um Express Pass que diga explicitamente "Area Entry", ou pegue a senha gratuita pelo app assim que o portão abrir. Em feriado, compre com muito mais antecedência.',
+  url:'https://www.usj.co.jp/web/en/us'},
+
+ {id:'harrypotter', nome:'Warner Bros. Studio Tour Tóquio', onde:'Tóquio · Nerima', cat:'nerd', tag:'corrida',
+  regra:{t:'antecedencia', meses:3},
+  desc:'A maior atração indoor de Harry Potter do mundo e a única na Ásia: cenários reais de filmagem, figurinos e efeitos. Três a quatro horas no mínimo.',
+  nota:'A venda vai liberando meses à frente — assim que a sua data aparecer no site, compre. Sem reembolso e sem reentrada.',
+  url:'https://www.wbstudiotour.jp/en/tickets/'},
+
+ {id:'teamlab-tokyo', nome:'teamLab Borderless e Planets', onde:'Tóquio', cat:'nerd', tag:'tranquilo',
+  regra:{t:'antecedencia', meses:2},
+  desc:'Dois museus diferentes, com ingressos separados. O Borderless é um museu sem mapa, onde as obras atravessam paredes; no Planets você anda descalço, com água até os joelhos.',
+  nota:'Fim de semana some rápido. Não marque os dois no mesmo dia: ficam em pontas opostas da cidade.',
+  url:'https://www.teamlab.art/'},
+
+ {id:'nintendo-museum', nome:'Museu da Nintendo', onde:'Kyoto · Uji', cat:'nerd', tag:'loteria',
+  regra:{t:'loteria', mesInteiro:true, hora:'—', offset:3, resultadoDia:1, pagamentoDia:7},
+  desc:'No prédio onde a Nintendo fabricava cartas e consertava consoles: das cartas hanafuda do século XIX até hoje, com experiências jogáveis feitas sob medida.',
+  nota:'Loteria mensal com conta Nintendo gratuita. O resultado sai no dia 1º do mês anterior à visita e o pagamento vence no dia 7 — perdeu o prazo, perdeu o ingresso. Se não ganhar, sobras aparecem por ordem de chegada.',
+  url:'https://museum.nintendo.com/en/index.html'},
+
+ {id:'biovortex', nome:'teamLab Biovortex Kyoto', onde:'Kyoto · estação central', cat:'nerd', tag:'tranquilo',
+  regra:{t:'antecedencia', meses:2},
+  desc:'O maior teamLab do Japão: quatro andares, mais de 50 obras, várias que estreiam ali.',
+  nota:'A sete minutos a pé da estação de Kyoto. Fora da baixa temporada é quase impossível comprar na hora.',
+  url:'https://www.teamlab.art/e/biovortex-kyoto/'},
+
+ {id:'toyosu', nome:'Leilão de atum de Toyosu', onde:'Tóquio · Toyosu', cat:'classico', tag:'loteria',
+  regra:{t:'loteria', d1:1, d2:7, hora:'—', offset:1},
+  desc:'O deque de observação de onde se vê o leilão de atum acontecendo embaixo, com os compradores dando lances por sinal de mão. Gratuito.',
+  nota:'Loteria na primeira semana do mês para visitas no mês seguinte; você escolhe até três datas e o sorteio é aleatório. Quem ganha precisa estar lá às 5h30 da manhã, e o leilão rola entre 5h30 e 6h30.',
+  url:'https://www.toyosu-market.or.jp/'},
+
+ {id:'shibuya-sky', nome:'Shibuya Sky', onde:'Tóquio · Shibuya', cat:'classico', tag:'corrida',
+  regra:{t:'antes', dias:14, hora:'00:00'},
+  desc:'Rooftop aberto no 47º andar, com a melhor vista da cidade e do cruzamento mais famoso do mundo.',
+  nota:'Entra à venda cerca de duas semanas antes, por volta da meia-noite no Japão. Os horários de pôr do sol somem no mesmo dia em que abrem — mire uma entrada 60 a 90 minutos antes do pôr do sol e online sai mais barato que na bilheteria.',
+  url:'https://www.shibuya-scramble-square.com/sky/'},
+
+ {id:'saihoji', nome:'Saihō-ji, o Templo dos Musgos', onde:'Kyoto · Matsuo', cat:'classico', tag:'tranquilo',
+  regra:{t:'antecedencia', meses:2},
+  desc:'O jardim de musgo mais famoso do Japão, com mais de cem espécies cobrindo o chão. Só entra quem reservou.',
+  nota:'Reserva online abre dois meses antes e fecha na véspera. Antes de ver o jardim, todo visitante participa de uma cópia de sutra guiada por um monge — cerca de 15 minutos. Idade mínima de 13 anos, sem exceção, e a entrada é cara para padrões de templo.',
+  url:'https://saihoji-kokedera.com/'},
+
+ {id:'katsura', nome:'Villas Imperiais (Katsura e Shugakuin)', onde:'Kyoto', cat:'classico', tag:'corrida',
+  regra:{t:'antecedencia', meses:1},
+  desc:'As duas obras-primas da arquitetura de jardim japonesa, administradas pela Agência da Casa Imperial. Visita guiada, em grupo, com hora marcada.',
+  nota:'Reserva pelo site da Agência da Casa Imperial, por ordem de chegada, e as vagas somem rápido. Um número limitado de senhas do dia é distribuído na portaria a partir das 8h40 — mas só para as visitas em japonês.',
+  url:'https://sankan.kunaicho.go.jp/english/'},
+
+ {id:'comiket', nome:'Comiket', onde:'Tóquio · Tokyo Big Sight', cat:'nerd', tag:'anual',
+  regra:{t:'anual', meses:[7,11], desc:'duas edições por ano: meados de agosto e fim de dezembro'},
+  desc:'A maior convenção de material autopublicado do mundo desde 1975, com dezenas de milhares de círculos e uma das maiores concentrações de cosplay do planeta.',
+  nota:'Entrada por pulseira paga, e as regras mudam a cada edição — leia as da edição do seu ano, nunca as da anterior. Leve dinheiro vivo: quase nenhum círculo aceita cartão.',
+  url:'https://www.comiket.co.jp/index_e.html'},
+
+ {id:'jumpfesta', nome:'Jump Festa', onde:'Chiba · Makuhari Messe', cat:'nerd', tag:'anual',
+  regra:{t:'anual', meses:[11], desc:'terceiro fim de semana de dezembro, todo ano'},
+  desc:'O megaevento anual da Shueisha: One Piece, Demon Slayer, Dragon Ball, com anúncios de temporada e painéis com dubladores.',
+  nota:'Entrada gratuita, mas exige solicitação pelo app oficial — não é chegar e entrar.',
+  url:'https://www.jumpfesta.com/'},
+
+ {id:'sumo', nome:'Sumô — torneios oficiais', onde:'Tóquio, Osaka, Nagoya e Fukuoka', cat:'classico', tag:'anual',
+  regra:{t:'anual', meses:[0,2,4,6,8,10], desc:'seis torneios por ano, de 15 dias, nos meses ímpares'},
+  desc:'Quinze dias de luta num ginásio lotado, com ritual xintoísta antes de cada combate. O de janeiro, em Tóquio, abre o ano.',
+  nota:'Ingressos abrem cerca de um mês antes e os melhores lugares somem rápido. Os ingressos de arquibancada mais alta costumam sobrar.',
+  url:'https://www.buysumotickets.com/'}
+];
+
+const MES = ['janeiro','fevereiro','março','abril','maio','junho','julho','agosto','setembro','outubro','novembro','dezembro'];
+
+// JST = Brasília + 12h
+function jstParaBrasilia(ano, mes, dia, horaStr){
+  const [h,m] = horaStr.split(':').map(Number);
+  const d = new Date(ano, mes, dia, h, m);
+  d.setHours(d.getHours() - 12);
+  return d;
+}
+function fmtData(d){ return d.getDate() + ' de ' + MES[d.getMonth()] + ' de ' + d.getFullYear(); }
+function fmtHora(d){ return String(d.getHours()).padStart(2,'0') + 'h' + String(d.getMinutes()).padStart(2,'0'); }
+function diasEntre(a,b){
+  return Math.round((new Date(b.getFullYear(),b.getMonth(),b.getDate()) - new Date(a.getFullYear(),a.getMonth(),a.getDate()))/86400000);
+}
+function mesesDaViagem(ida, volta){
+  const out=[]; const d=new Date(ida.getFullYear(), ida.getMonth(), 1);
+  while(d <= volta){ out.push({ano:d.getFullYear(), mes:d.getMonth()}); d.setMonth(d.getMonth()+1); }
+  return out;
+}
+
+function montar(ida, volta){
+  const itens=[];
+  const meses = mesesDaViagem(ida, volta);
+
+  for(const a of A){
+    const r = a.regra;
+
+    if(r.t === 'mensal'){
+      for(const mv of meses){
+        const alvo = new Date(mv.ano, mv.mes - r.offset, 1);
+        let quando, label;
+        if(r.variavel){
+          quando = jstParaBrasilia(alvo.getFullYear(), alvo.getMonth(), 15, r.hora);
+          label = 'em ' + MES[alvo.getMonth()] + ' de ' + alvo.getFullYear() + ', data anunciada no site';
+        } else {
+          quando = jstParaBrasilia(alvo.getFullYear(), alvo.getMonth(), r.dia, r.hora);
+          label = fmtData(quando) + ' · ' + fmtHora(quando) + ' de Brasília';
+        }
+        itens.push({quando, label, a,
+          detalhe:'Libera as datas de <strong>'+MES[mv.mes]+'</strong>. No Japão é dia '+(r.dia||'(a anunciar)')+' às '+r.hora+'.'});
+      }
+    }
+
+    else if(r.t === 'loteria'){
+      for(const mv of meses){
+        const alvo = new Date(mv.ano, mv.mes - r.offset, 1);
+        const quando = new Date(alvo.getFullYear(), alvo.getMonth(), r.mesInteiro ? 1 : r.d1, 9, 0);
+        const janela = r.mesInteiro
+          ? 'inscrições ao longo de ' + MES[alvo.getMonth()] + ' de ' + alvo.getFullYear()
+          : 'inscrições de ' + r.d1 + ' a ' + r.d2 + ' de ' + MES[alvo.getMonth()] + ' de ' + alvo.getFullYear();
+        let det = 'Janela de inscrição para visitar em <strong>'+MES[mv.mes]+'</strong>. O dia em que você se inscreve dentro da janela não muda nada — é sorteio.';
+        if(r.resultadoDia) det += ' Resultado no dia '+r.resultadoDia+' do mês anterior à visita, com pagamento até o dia '+r.pagamentoDia+'.';
+        itens.push({quando, label: janela, a, detalhe:det});
+      }
+    }
+
+    else if(r.t === 'mesesAntes'){
+      const quando = jstParaBrasilia(ida.getFullYear(), ida.getMonth() - r.meses, ida.getDate(), r.hora);
+      itens.push({quando, label: fmtData(quando) + ' · ' + fmtHora(quando) + ' de Brasília', a,
+        detalhe:'Cada dia abre exatamente '+r.meses+' meses antes. Esta é a data do seu primeiro dia — repita a conta para cada dia que quiser visitar.'});
+    }
+
+    else if(r.t === 'antes'){
+      const quando = jstParaBrasilia(ida.getFullYear(), ida.getMonth(), ida.getDate() - r.dias, r.hora);
+      itens.push({quando, label: fmtData(quando) + ' · ' + fmtHora(quando) + ' de Brasília', a,
+        detalhe:'Abre '+r.dias+' dias antes de cada data. Esta é a do seu primeiro dia — repita a conta para os outros dias que quiser.'});
+    }
+
+    else if(r.t === 'antecedencia'){
+      const quando = new Date(ida.getFullYear(), ida.getMonth() - r.meses, ida.getDate(), 9, 0);
+      itens.push({quando, label:'a partir de ' + fmtData(quando), a,
+        detalhe:'A venda abre cerca de '+r.meses+(r.meses>1?' meses':' mês')+' antes, por ordem de chegada. Quanto antes, melhor.'});
+    }
+
+    else if(r.t === 'anual'){
+      const bate = meses.some(mv => r.meses.includes(mv.mes));
+      if(bate){
+        const mv = meses.find(mv => r.meses.includes(mv.mes));
+        const quando = new Date(mv.ano, mv.mes - 1, 15, 9, 0);
+        itens.push({quando, label:'acompanhar a partir de ' + MES[(mv.mes+11)%12], a,
+          detalhe:'Acontece ' + r.desc + ' — e a sua viagem pega essa janela. Confirme a data exata do ano assim que for anunciada.'});
+      }
+    }
+  }
+
+  itens.sort((x,y) => x.quando - y.quando);
+  return itens;
+}
+
+function render(){
+  const vi = document.getElementById('ida').value;
+  const vv = document.getElementById('volta').value;
+  if(!vi || !vv){ alert('Preencha as duas datas da viagem.'); return; }
+  const ida = new Date(vi + 'T12:00:00');
+  const volta = new Date(vv + 'T12:00:00');
+  if(volta < ida){ alert('A volta precisa ser depois da chegada.'); return; }
+
+  const itens = montar(ida, volta);
+  const hoje = new Date();
+  const box = document.getElementById('result');
+  const tl = document.getElementById('tl');
+
+  let passados = 0;
+  tl.innerHTML = itens.map(it => {
+    const dd = diasEntre(hoje, it.quando);
+    const past = dd < 0;
+    if(past) passados++;
+    const soon = dd >= 0 && dd <= 14;
+    let aviso = '';
+    if(past) aviso = '<span class="chip">já passou</span>';
+    else if(dd === 0) aviso = '<span class="chip agora">é hoje</span>';
+    else if(soon) aviso = '<span class="chip agora">' + (dd === 1 ? 'falta 1 dia' : 'faltam ' + dd + ' dias') + '</span>';
+    return '<div class="tl-item ' + (past?'past':(soon?'soon':'')) + '">' +
+      '<div class="tl-when">' + it.label + aviso + '</div>' +
+      '<div class="tl-what">' + it.a.nome + ' <span class="pin">· ' + it.a.onde + '</span>' +
+        '<span class="chip ' + it.a.tag + '">' + it.a.tag + '</span></div>' +
+      '<div class="tl-body">' + it.detalhe + '</div>' +
+      (it.a.url ? '<a class="tl-link" href="' + it.a.url + '" target="_blank" rel="noopener">página oficial →</a>' : '') +
+      '</div>';
+  }).join('');
+
+  document.getElementById('r-title').textContent = 'Seu cronograma de compras';
+  document.getElementById('r-count').textContent = itens.length + ' ações · ' + passados + ' já passaram';
+  document.getElementById('r-note').innerHTML =
+    'Viagem de <strong>' + fmtData(ida) + '</strong> a <strong>' + fmtData(volta) + '</strong>. ' +
+    'Todos os horários já estão convertidos para Brasília. O que aparece apagado já passou — nesses casos, procure sobras, cancelamentos e revendas oficiais.';
+  box.classList.remove('hidden');
+  if(box.scrollIntoView) box.scrollIntoView({behavior:'smooth', block:'start'});
+}
+
+document.getElementById('go').addEventListener('click', render);
+
+// ---------- catálogo ----------
+function regraResumo(a){
+  const r = a.regra;
+  if(r.t === 'mensal'){
+    if(r.variavel) return '<b>Lote mensal</b>, às ' + r.hora + ' no Japão, com a data anunciada antes no site oficial. Cobre o mês seguinte.';
+    return '<b>Todo dia ' + r.dia + '</b>, às ' + r.hora + ' no Japão, liberando ' + (r.offset === 1 ? 'o mês seguinte' : r.offset + ' meses à frente') + '.';
+  }
+  if(r.t === 'loteria'){
+    const q = r.mesInteiro ? 'ao longo do mês' : 'entre os dias ' + r.d1 + ' e ' + r.d2;
+    return '<b>Loteria</b>: inscrições ' + q + ', para visitar ' + (r.offset === 1 ? 'no mês seguinte' : r.offset + ' meses depois') + '.';
+  }
+  if(r.t === 'mesesAntes') return '<b>Exatamente ' + r.meses + ' meses antes</b> de cada data de visita, às ' + r.hora + ' no Japão.';
+  if(r.t === 'antes') return '<b>' + r.dias + ' dias antes</b> da data da visita, às ' + r.hora + ' no Japão.';
+  if(r.t === 'antecedencia') return '<b>Cerca de ' + r.meses + (r.meses > 1 ? ' meses' : ' mês') + ' antes</b>, por ordem de chegada.';
+  if(r.t === 'anual') return '<b>Evento anual</b> — ' + r.desc + '.';
+  return '';
+}
+
+let filtroAtivo = 'todos';
+function renderCards(){
+  const cards = document.getElementById('cards');
+  const lista = A.filter(a => filtroAtivo === 'todos' || a.cat === filtroAtivo || a.tag === filtroAtivo);
+  cards.innerHTML = lista.map(a =>
+    '<div class="card ' + (a.cat === 'classico' ? 'classico' : '') + '">' +
+      '<h4>' + a.nome + '</h4>' +
+      '<div class="where">' + a.onde + '</div>' +
+      '<p>' + a.desc + '</p>' +
+      '<div class="rule">' + regraResumo(a) + '</div>' +
+      '<p>' + a.nota + '</p>' +
+      (a.url ? '<a href="' + a.url + '" target="_blank" rel="noopener">página oficial →</a>' : '') +
+    '</div>').join('');
+}
+const FILTROS = [
+  {id:'todos', nome:'tudo'},
+  {id:'nerd', nome:'🎮 nerd'},
+  {id:'classico', nome:'⛩ clássicos'},
+  {id:'loteria', nome:'loteria'},
+  {id:'corrida', nome:'corrida contra o relógio'},
+  {id:'anual', nome:'eventos anuais'}
+];
+document.getElementById('filters').innerHTML = FILTROS.map(f =>
+  '<button class="filt ' + (f.id === 'todos' ? 'on' : '') + '" data-f="' + f.id + '">' + f.nome + '</button>').join('');
+document.getElementById('filters').addEventListener('click', e => {
+  const b = e.target.closest('.filt'); if(!b) return;
+  filtroAtivo = b.getAttribute('data-f');
+  document.querySelectorAll('.filt').forEach(x => x.classList.toggle('on', x === b));
+  renderCards();
+});
+renderCards();
+
+// datas sugeridas
+(function(){
+  const d1 = new Date(); d1.setMonth(d1.getMonth() + 2);
+  const d2 = new Date(d1); d2.setDate(d2.getDate() + 14);
+  const iso = d => d.toISOString().slice(0,10);
+  document.getElementById('ida').value = iso(d1);
+  document.getElementById('volta').value = iso(d2);
+})();
+</script>
+</body>
+</html>
