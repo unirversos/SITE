@@ -750,11 +750,18 @@
             </div>
         </section>
 
+        <!-- PRÓXIMO PASSO -->
+        <section class="cta-section" style="background: var(--color-light-gray); color: var(--color-dark);">
+            <h2>Agora é só não perder o prazo</h2>
+            <p style="color: var(--color-gray);">Saber a data é metade. A outra metade é lembrar em que pé ficou cada ingresso — se você se inscreveu, se ganhou, e até quando precisa pagar. O rastreador guarda isso para você.</p>
+            <a href="/travessia/status/" class="cta-button">Acompanhar meus ingressos</a>
+        </section>
+
         <!-- CTA -->
         <section class="cta-section">
-            <h2>Isso é um pedacinho do guia</h2>
-            <p>O Unirversos Memórias transforma a sua viagem numa revista personalizada — com os seus lugares, as suas fotos e espaço para as suas lembranças.</p>
-            <a href="https://unirversos.com/travessia/" class="cta-button">Conhecer o Memórias</a>
+            <h2>Isso é um pedacinho da travessia</h2>
+            <p>Depois que a viagem acontece, a <em>Memórias</em> transforma ela numa revista de verdade — com os seus lugares, as suas fotos e espaço para escrever o que só você viveu.</p>
+            <a href="/travessia/revista/" class="cta-button">Conhecer a Memórias</a>
         </section>
     </main>
 
@@ -767,7 +774,7 @@
             <a href="mailto:unirversos.idiomas@gmail.com">unirversos.idiomas@gmail.com</a>
         </p>
         <p style="margin-top: 1.5rem;">Aline Kikuti</p>
-        <p class="disclaimer">As regras desta página são as mecânicas fixas de venda de cada atração, não datas de uma temporada específica. Ainda assim, sistemas, preços e janelas mudam sem aviso no Japão: confirme sempre na página oficial antes de pagar. Levantamento revisado em outubro de 2026.</p>
+        <p class="disclaimer">As regras desta página são as mecânicas fixas de venda de cada atração, não datas de uma temporada específica. Sistemas, preços e janelas mudam sem aviso no Japão: confirme sempre na página oficial antes de pagar — o link de cada atração leva até lá. Em 15 de outubro de 2026, onze das dezenove regras foram conferidas nas fontes oficiais e confirmadas: PokéPark KANTO, Museu Ghibli de Mitaka, Ghibli Park, Museu da Nintendo, Pokémon Café, Kirby Café, Tokyo Disney, Shibuya Sky, Comiket, Jump Festa e sumô. As oito restantes — Doraemon, USJ, Warner Bros, teamLab (ambos), Toyosu, Saihō-ji e Villas Imperiais — não puderam ser confirmadas porque as páginas oficiais não publicam a antecedência ou bloqueiam leitura automática; nessas, confirme no site oficial antes de contar com a data.</p>
     </footer>
 
 <script>
@@ -776,13 +783,13 @@ const A = [
  {id:'pokepark', nome:'PokéPark KANTO', onde:'Tóquio · Inagi', cat:'nerd', tag:'loteria',
   regra:{t:'loteria', d1:1, d2:12, hora:'19:00', offset:3},
   desc:'O primeiro parque Pokémon permanente ao ar livre do mundo: floresta com centenas de Pokémon em tamanho real, cidade de treinadores, ginásio e desfile.',
-  nota:'Não existe venda no dia — sem reserva, não entra. Baixe o app oficial antes: ele é obrigatório para loteria de show e reserva de horário.',
+  nota:'Resultado sai por volta do fim do mês, e quem é sorteado paga até o último dia do mês — perdeu o prazo, a vaga volta para uma repescagem. Não existe venda no dia: sem reserva, não entra.',
   url:'https://ticket-en.pokepark-kanto.co.jp/'},
 
  {id:'ghibli-mitaka', nome:'Museu Ghibli de Mitaka', onde:'Tóquio · Mitaka', cat:'nerd', tag:'corrida',
   regra:{t:'mensal', dia:10, hora:'10:00', offset:1},
   desc:'O museu que o próprio Miyazaki desenhou, com o Cinema Saturno exibindo curtas que não existem em nenhum outro lugar do mundo.',
-  nota:'Fim de semana esgota em minutos. Só pela Lawson Ticket em inglês — revendedor de terceiro não entra na porta.',
+  nota:'Pela Lawson Ticket, dia 10 às 10h do Japão, para o mês seguinte — revendedor de terceiro não entra na porta. Existe um segundo canal pelo JTB, que abre no dia 1º para o mês de três meses depois: se a data do mês seguinte já estiver esgotada, é por ali que dá para tentar com antecedência.',
   url:'https://www.ghibli-museum.jp/en/tickets/'},
 
  {id:'ghibli-park', nome:'Ghibli Park', onde:'Aichi · perto de Nagoya', cat:'nerd', tag:'corrida',
@@ -792,9 +799,9 @@ const A = [
   url:'https://ghibli-park.jp/en/ticket/'},
 
  {id:'pokemon-cafe', nome:'Pokémon Café', onde:'Tóquio e Osaka', cat:'nerd', tag:'corrida',
-  regra:{t:'mensal', dia:null, hora:'18:00', offset:1, variavel:true},
+  regra:{t:'mensal', dia:1, hora:'18:00', offset:1, variavel:true},
   desc:'Provavelmente a reserva mais difícil do Japão. Curry do Pikachu, panquecas e o Pikachu chef aparecendo no salão.',
-  nota:'O lote do mês inteiro abre de uma vez, e a data do lote é anunciada antes na página oficial — acompanhe desde o mês anterior. Cancelamentos voltam ao ar na véspera. A unidade de Osaka é bem mais fácil que a de Tóquio.',
+  nota:'O lote do mês inteiro abre de uma vez, no dia 1 do mês anterior. O café já mudou o sistema antes, então confirme a data na página oficial algumas semanas antes. Cancelamentos voltam ao ar na véspera. A unidade de Osaka é bem mais fácil que a de Tóquio.',
   url:'https://reserve.pokemon-cafe.jp/'},
 
  {id:'kirby', nome:'Kirby Café', onde:'Tóquio e Osaka', cat:'nerd', tag:'corrida',
@@ -806,7 +813,7 @@ const A = [
  {id:'disney', nome:'Tokyo Disneyland e DisneySea', onde:'Chiba · Maihama', cat:'nerd', tag:'corrida',
   regra:{t:'mesesAntes', meses:2, hora:'14:00'},
   desc:'Dois parques com ingressos separados e sem passe combinado. O DisneySea tem a área do Frozen, da Rapunzel e da Terra do Nunca.',
-  nota:'Cada dia abre dois meses antes, dia a dia. O fura-fila pago só se compra dentro do parque, pelo app — registre os ingressos no app na véspera.',
+  nota:'Cada dia abre dois meses antes, dia a dia, às 14h do Japão. Quando a data equivalente não existe no mês da compra, aquele lote sai às 14h do primeiro dia do mês seguinte. O fura-fila pago só se compra dentro do parque, pelo app — registre os ingressos no app na véspera.',
   url:'https://www.tokyodisneyresort.jp/en/'},
 
  {id:'doraemon', nome:'Museu Fujiko F. Fujio (Doraemon)', onde:'Kawasaki', cat:'nerd', tag:'corrida',
@@ -834,9 +841,9 @@ const A = [
   url:'https://www.teamlab.art/'},
 
  {id:'nintendo-museum', nome:'Museu da Nintendo', onde:'Kyoto · Uji', cat:'nerd', tag:'loteria',
-  regra:{t:'loteria', mesInteiro:true, hora:'—', offset:3, resultadoDia:1, pagamentoDia:7},
+  regra:{t:'loteria', mesInteiro:true, hora:'—', offset:3},
   desc:'No prédio onde a Nintendo fabricava cartas e consertava consoles: das cartas hanafuda do século XIX até hoje, com experiências jogáveis feitas sob medida.',
-  nota:'Loteria mensal com conta Nintendo gratuita. O resultado sai no dia 1º do mês anterior à visita e o pagamento vence no dia 7 — perdeu o prazo, perdeu o ingresso. Se não ganhar, sobras aparecem por ordem de chegada.',
+  nota:'Loteria mensal com conta Nintendo gratuita, uma inscrição por sorteio. As inscrições do mês ficam abertas até o último dia, 23h59 no horário do Japão. O resultado chega por e-mail e traz o prazo de pagamento — o site não publica essas datas de antemão. Se não ganhar, os meses mais próximos voltam a vender por ordem de chegada.',
   url:'https://museum.nintendo.com/en/index.html'},
 
  {id:'biovortex', nome:'teamLab Biovortex Kyoto', onde:'Kyoto · estação central', cat:'nerd', tag:'tranquilo',
@@ -848,19 +855,19 @@ const A = [
  {id:'toyosu', nome:'Leilão de atum de Toyosu', onde:'Tóquio · Toyosu', cat:'classico', tag:'loteria',
   regra:{t:'loteria', d1:1, d2:7, hora:'—', offset:1},
   desc:'O deque de observação de onde se vê o leilão de atum acontecendo embaixo, com os compradores dando lances por sinal de mão. Gratuito.',
-  nota:'Loteria na primeira semana do mês para visitas no mês seguinte; você escolhe até três datas e o sorteio é aleatório. Quem ganha precisa estar lá às 5h30 da manhã, e o leilão rola entre 5h30 e 6h30.',
+  nota:'ATENÇÃO: esta é a única regra desta página que não consegui conferir na fonte oficial em outubro de 2026 — o site do mercado bloqueia leitura automática e há indícios de que o sistema mudou. Trate as datas como indicação, não como fato, e confirme antes de contar com elas. O leilão em si acontece entre 5h30 e 6h30 da manhã.',
   url:'https://www.toyosu-market.or.jp/'},
 
  {id:'shibuya-sky', nome:'Shibuya Sky', onde:'Tóquio · Shibuya', cat:'classico', tag:'corrida',
   regra:{t:'antes', dias:14, hora:'00:00'},
   desc:'Rooftop aberto no 47º andar, com a melhor vista da cidade e do cruzamento mais famoso do mundo.',
-  nota:'Entra à venda cerca de duas semanas antes, por volta da meia-noite no Japão. Os horários de pôr do sol somem no mesmo dia em que abrem — mire uma entrada 60 a 90 minutos antes do pôr do sol e online sai mais barato que na bilheteria.',
+  nota:'A venda vai até duas semanas à frente. Os horários de pôr do sol somem no mesmo dia em que abrem — mire uma entrada 60 a 90 minutos antes do pôr do sol. Online sai mais barato que na bilheteria, e se esgotar na web a bilheteria também está esgotada. Ingresso infantil só na bilheteria, no próprio dia.',
   url:'https://www.shibuya-scramble-square.com/sky/'},
 
  {id:'saihoji', nome:'Saihō-ji, o Templo dos Musgos', onde:'Kyoto · Matsuo', cat:'classico', tag:'tranquilo',
   regra:{t:'antecedencia', meses:2},
   desc:'O jardim de musgo mais famoso do Japão, com mais de cem espécies cobrindo o chão. Só entra quem reservou.',
-  nota:'Reserva online abre dois meses antes e fecha na véspera. Antes de ver o jardim, todo visitante participa de uma cópia de sutra guiada por um monge — cerca de 15 minutos. Idade mínima de 13 anos, sem exceção, e a entrada é cara para padrões de templo.',
+  nota:'Só entra quem reservou: o templo mantém visita por inscrição prévia e em grupos pequenos desde 1977 — isso está na fonte oficial. A antecedência exata não é publicada na página inicial, então confirme no site antes de contar com os dois meses. Antes de ver o jardim, todo visitante participa de uma cópia de sutra guiada por um monge, cerca de 15 minutos.',
   url:'https://saihoji-kokedera.com/'},
 
  {id:'katsura', nome:'Villas Imperiais (Katsura e Shugakuin)', onde:'Kyoto', cat:'classico', tag:'corrida',
@@ -872,20 +879,20 @@ const A = [
  {id:'comiket', nome:'Comiket', onde:'Tóquio · Tokyo Big Sight', cat:'nerd', tag:'anual',
   regra:{t:'anual', meses:[7,11], desc:'duas edições por ano: meados de agosto e fim de dezembro'},
   desc:'A maior convenção de material autopublicado do mundo desde 1975, com dezenas de milhares de círculos e uma das maiores concentrações de cosplay do planeta.',
-  nota:'Entrada por pulseira paga, e as regras mudam a cada edição — leia as da edição do seu ano, nunca as da anterior. Leve dinheiro vivo: quase nenhum círculo aceita cartão.',
+  nota:'A edição de inverno é de 29 a 31 de dezembro de 2026, e a de verão, 14 e 15 de agosto de 2027. Entrada por pulseira paga, e as regras mudam a cada edição — leia as da edição do seu ano, nunca as da anterior. Leve dinheiro vivo: quase nenhum círculo aceita cartão.',
   url:'https://www.comiket.co.jp/index_e.html'},
 
  {id:'jumpfesta', nome:'Jump Festa', onde:'Chiba · Makuhari Messe', cat:'nerd', tag:'anual',
   regra:{t:'anual', meses:[11], desc:'terceiro fim de semana de dezembro, todo ano'},
   desc:'O megaevento anual da Shueisha: One Piece, Demon Slayer, Dragon Ball, com anúncios de temporada e painéis com dubladores.',
-  nota:'Entrada gratuita, mas exige solicitação pelo app oficial — não é chegar e entrar.',
+  nota:'Entrada gratuita, mas por inscrição prévia e convite — não é chegar e entrar. A edição de dezembro de 2026 acontece nos dias 19 e 20.',
   url:'https://www.jumpfesta.com/'},
 
  {id:'sumo', nome:'Sumô — torneios oficiais', onde:'Tóquio, Osaka, Nagoya e Fukuoka', cat:'classico', tag:'anual',
   regra:{t:'anual', meses:[0,2,4,6,8,10], desc:'seis torneios por ano, de 15 dias, nos meses ímpares'},
   desc:'Quinze dias de luta num ginásio lotado, com ritual xintoísta antes de cada combate. O de janeiro, em Tóquio, abre o ano.',
-  nota:'Ingressos abrem cerca de um mês antes e os melhores lugares somem rápido. Os ingressos de arquibancada mais alta costumam sobrar.',
-  url:'https://www.buysumotickets.com/'}
+  nota:'A cidade muda conforme o mês: janeiro, maio e setembro em Tóquio (Kokugikan), março em Osaka, julho em Nagoya e novembro em Fukuoka. A Associação publica, com anos de antecedência, a data exata em que as vendas abrem para cada torneio — fica entre um e dois meses antes do primeiro dia. Os melhores lugares somem rápido; arquibancada alta costuma sobrar.',
+  url:'https://www.sumo.or.jp/EnTicket/year_schedule/'}
 ];
 
 const MES = ['janeiro','fevereiro','março','abril','maio','junho','julho','agosto','setembro','outubro','novembro','dezembro'];

@@ -1,0 +1,1262 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Status dos ingressos — onde cada reserva está | Unirversos</title>
+    <meta name="description" content="Rastreie cada ingresso do Japão: o que já comprou, em que loteria se inscreveu, o que ganhou e qual pagamento está vencendo. Tudo salvo no seu navegador.">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --color-dark: #333333;
+            --color-rose: #c99699;
+            --color-gray: #777777;
+            --color-light-gray: #f5f5f5;
+            --color-white: #ffffff;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+            line-height: 1.8;
+            color: var(--color-dark);
+            background: var(--color-white);
+            font-size: 16px;
+        }
+
+        /* HEADER */
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 2rem 4rem;
+            border-bottom: 1px solid #e0e0e0;
+        }
+
+        .logo {
+            font-size: 13px;
+            font-weight: 700;
+            letter-spacing: 2px;
+            text-decoration: none;
+            color: var(--color-dark);
+            text-transform: uppercase;
+        }
+
+        nav {
+            display: flex;
+            gap: 2.5rem;
+        }
+
+        nav a {
+            text-decoration: none;
+            color: var(--color-rose);
+            font-size: 13px;
+            font-weight: 400;
+            letter-spacing: 0.5px;
+            transition: opacity 0.3s;
+        }
+
+        nav a:hover {
+            opacity: 0.7;
+        }
+
+        /* MAIN */
+        main {
+            max-width: 1100px;
+            margin: 0 auto;
+            padding: 0 4rem;
+        }
+
+        /* HERO */
+        .hero {
+            text-align: center;
+            padding: 4rem 0 2rem;
+        }
+
+        .hero h1 {
+            font-size: 3rem;
+            font-weight: 300;
+            line-height: 1.3;
+            margin-bottom: 1rem;
+            color: var(--color-dark);
+            letter-spacing: -0.5px;
+        }
+
+        .hero .highlight {
+            color: var(--color-rose);
+            font-weight: 400;
+        }
+
+        .hero p {
+            font-size: 1.2rem;
+            color: var(--color-gray);
+            max-width: 700px;
+            margin: 0 auto;
+        }
+
+        .hero p.par {
+            font-size: 0.95rem;
+            margin-top: 1.5rem;
+        }
+
+        .hero p.par a {
+            color: var(--color-rose);
+            text-decoration: none;
+            border-bottom: 1px solid rgba(201, 150, 153, 0.4);
+            padding-bottom: 2px;
+        }
+
+        .hero p.par a:hover {
+            border-bottom-color: var(--color-rose);
+        }
+
+        .disclaimer {
+            max-width: 700px;
+            margin: 1.5rem auto 0;
+            font-size: 0.78rem;
+            line-height: 1.7;
+            color: #aaa;
+        }
+
+        section {
+            margin: 3rem 0;
+        }
+
+        .section-title {
+            font-size: 2rem;
+            font-weight: 400;
+            margin-bottom: 1rem;
+            color: var(--color-dark);
+            text-align: center;
+        }
+
+        /* SETUP */
+        .setup {
+            background: var(--color-light-gray);
+            border-radius: 8px;
+            border-left: 4px solid var(--color-rose);
+            padding: 2rem 2.5rem;
+            margin: 2rem 0;
+        }
+
+        .setup h2 {
+            font-size: 1.4rem;
+            font-weight: 400;
+            margin-bottom: 0.3rem;
+        }
+
+        .setup .sub {
+            color: var(--color-gray);
+            font-size: 0.95rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .fields {
+            display: flex;
+            gap: 1.2rem;
+            flex-wrap: wrap;
+            align-items: flex-end;
+        }
+
+        .field {
+            flex: 1;
+            min-width: 170px;
+        }
+
+        .field label {
+            display: block;
+            font-size: 0.8rem;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            color: var(--color-gray);
+            margin-bottom: 0.4rem;
+            font-weight: 600;
+        }
+
+        .field input,
+        .field select {
+            width: 100%;
+            font-family: inherit;
+            font-size: 1rem;
+            border: 1px solid #e0e0e0;
+            border-radius: 4px;
+            padding: 0.8rem 1rem;
+            background: var(--color-white);
+            color: var(--color-dark);
+            outline: none;
+        }
+
+        .field input:focus,
+        .field select:focus {
+            border-color: var(--color-rose);
+        }
+
+        .cta-button {
+            display: inline-block;
+            padding: 1rem 2.5rem;
+            background: var(--color-rose);
+            color: white;
+            text-decoration: none;
+            border: none;
+            border-radius: 4px;
+            font-size: 1.1rem;
+            font-weight: 500;
+            font-family: inherit;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .cta-button:hover {
+            background: var(--color-dark);
+            transform: scale(1.02);
+        }
+
+        .cta-button.small {
+            font-size: 0.95rem;
+            padding: 0.8rem 1.8rem;
+        }
+
+        .btn-ghost {
+            background: none;
+            border: 1px solid #e0e0e0;
+            border-radius: 4px;
+            padding: 0.6rem 1.2rem;
+            font-family: inherit;
+            font-size: 0.9rem;
+            color: var(--color-gray);
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .btn-ghost:hover {
+            border-color: var(--color-rose);
+            color: var(--color-rose);
+        }
+
+        /* PAINEL */
+        .painel {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 1rem;
+            margin: 2rem 0;
+        }
+
+        .stat {
+            padding: 1.3rem 1.5rem;
+            border: 1px solid #e8e8e8;
+            border-radius: 8px;
+            border-top: 4px solid var(--color-rose);
+            text-align: center;
+        }
+
+        .stat.urgente {
+            border-top-color: #b5715a;
+            background: #fdf6f3;
+        }
+
+        .stat .n {
+            font-size: 2.2rem;
+            font-weight: 300;
+            color: var(--color-rose);
+            line-height: 1.2;
+        }
+
+        .stat.urgente .n {
+            color: #b5715a;
+        }
+
+        .stat .t {
+            font-size: 0.8rem;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            color: var(--color-gray);
+            font-weight: 600;
+        }
+
+        /* ALERTAS */
+        .alerta {
+            background: #fdf6f3;
+            border: 1px solid #e8cfc5;
+            border-left: 4px solid #b5715a;
+            border-radius: 8px;
+            padding: 1.2rem 1.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .alerta h4 {
+            font-size: 1rem;
+            font-weight: 600;
+            color: #8a4a32;
+            margin-bottom: 0.3rem;
+        }
+
+        .alerta p {
+            font-size: 0.92rem;
+            color: #8a4a32;
+        }
+
+        /* FILTROS */
+        .filtros {
+            display: flex;
+            gap: 0.6rem;
+            flex-wrap: wrap;
+            justify-content: center;
+            margin-bottom: 1.5rem;
+        }
+
+        .filt {
+            border: 1px solid #e0e0e0;
+            background: var(--color-white);
+            border-radius: 100px;
+            padding: 0.45rem 1.1rem;
+            cursor: pointer;
+            font-family: inherit;
+            font-size: 0.85rem;
+            color: var(--color-gray);
+            transition: all 0.3s;
+        }
+
+        .filt:hover {
+            border-color: var(--color-rose);
+        }
+
+        .filt.on {
+            border-color: var(--color-rose);
+            background: var(--color-rose);
+            color: var(--color-white);
+        }
+
+        /* ITENS */
+        .lista {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        .item {
+            border: 1px solid #e8e8e8;
+            border-left: 4px solid #e0e0e0;
+            border-radius: 8px;
+            padding: 1.5rem 1.8rem;
+            background: var(--color-white);
+            transition: border-color 0.3s;
+        }
+
+        .item.s-inscrito { border-left-color: #c4a24c; }
+        .item.s-ganhei   { border-left-color: #b5715a; background: #fdf6f3; }
+        .item.s-comprado { border-left-color: #7d8c7a; background: #f6f9f6; }
+        .item.s-perdi,
+        .item.s-pulei    { opacity: 0.55; }
+
+        .item-top {
+            display: flex;
+            align-items: baseline;
+            justify-content: space-between;
+            gap: 1rem;
+            flex-wrap: wrap;
+            margin-bottom: 0.3rem;
+        }
+
+        .item h4 {
+            font-size: 1.15rem;
+            font-weight: 500;
+            line-height: 1.4;
+        }
+
+        .item .onde {
+            font-size: 0.82rem;
+            color: #aaa;
+        }
+
+        .selo {
+            display: inline-block;
+            font-size: 0.68rem;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            font-weight: 700;
+            border-radius: 100px;
+            padding: 0.15rem 0.7rem;
+            background: var(--color-light-gray);
+            color: var(--color-gray);
+            white-space: nowrap;
+        }
+
+        .selo.loteria   { background: #efe7e8; color: #a9767a; }
+        .selo.corrida   { background: #f4efe6; color: #96793f; }
+        .selo.tranquilo,
+        .selo.anual     { background: #e9efe9; color: #5f7d62; }
+
+        .quando {
+            font-size: 0.9rem;
+            color: var(--color-rose);
+            font-weight: 600;
+            margin-bottom: 1rem;
+        }
+
+        .quando .passou { color: #aaa; font-weight: 400; }
+        .quando .urgente { color: #b5715a; }
+
+        .controles {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            gap: 1rem;
+            padding-top: 1rem;
+            border-top: 1px solid #f0f0f0;
+        }
+
+        .controles label {
+            display: block;
+            font-size: 0.72rem;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            color: var(--color-gray);
+            margin-bottom: 0.3rem;
+            font-weight: 600;
+        }
+
+        .controles input,
+        .controles select {
+            width: 100%;
+            font-family: inherit;
+            font-size: 0.92rem;
+            border: 1px solid #e0e0e0;
+            border-radius: 4px;
+            padding: 0.55rem 0.7rem;
+            background: var(--color-white);
+            color: var(--color-dark);
+            outline: none;
+        }
+
+        .controles input:focus,
+        .controles select:focus {
+            border-color: var(--color-rose);
+        }
+
+        .oculto { display: none; }
+
+        .link-oficial {
+            display: inline-block;
+            margin-top: 0.9rem;
+            font-size: 0.85rem;
+            color: var(--color-rose);
+            text-decoration: none;
+            border-bottom: 1px solid #e8e8e8;
+        }
+
+        .link-oficial:hover { border-color: var(--color-rose); }
+
+        .vazio {
+            text-align: center;
+            color: var(--color-gray);
+            padding: 3rem 1rem;
+            font-size: 1rem;
+        }
+
+        .rodape-acoes {
+            display: flex;
+            gap: 0.8rem;
+            justify-content: center;
+            flex-wrap: wrap;
+            margin-top: 2.5rem;
+        }
+
+        .aviso {
+            text-align: center;
+            font-size: 0.85rem;
+            color: #999;
+            margin-top: 1.5rem;
+            max-width: 620px;
+            margin-left: auto;
+            margin-right: auto;
+            line-height: 1.7;
+        }
+
+        /* FOOTER */
+        footer {
+            text-align: center;
+            padding: 2.5rem;
+            color: #999;
+            font-size: 0.85rem;
+            border-top: 1px solid #e0e0e0;
+            margin-top: 4rem;
+        }
+
+        footer a {
+            color: var(--color-dark);
+            text-decoration: none;
+        }
+
+        @media (max-width: 768px) {
+            header {
+                flex-direction: column;
+                gap: 1.5rem;
+                padding: 1.5rem;
+            }
+
+            nav {
+                flex-wrap: wrap;
+                justify-content: center;
+                gap: 1rem;
+            }
+
+            main { padding: 0 1.5rem; }
+            .hero h1 { font-size: 1.8rem; }
+            .hero p { font-size: 1rem; }
+            .section-title { font-size: 1.5rem; }
+            .painel { grid-template-columns: repeat(2, 1fr); }
+            .setup { padding: 1.5rem; }
+            .item { padding: 1.2rem; }
+        }
+
+        .controles input.erro {
+            border-color: #b04a4a;
+            background: #fdf4f4;
+        }
+
+        .dica-campo {
+            display: block;
+            margin-top: 0.4rem;
+            font-size: 0.78rem;
+            color: #999;
+        }
+
+        .erro-campo {
+            display: block;
+            margin-top: 0.4rem;
+            font-size: 0.78rem;
+            color: #b04a4a;
+        }
+
+        .aviso-pdf {
+            font-size: 0.85rem;
+            line-height: 1.6;
+            color: var(--color-gray);
+            text-align: center;
+            max-width: 620px;
+            margin: 0.8rem auto 0;
+        }
+
+        /* A folha só existe na impressão */
+        #folha { display: none; }
+
+        @media print {
+            @page { size: A4; margin: 18mm 16mm; }
+
+            /* esconde só o cabeçalho/rodapé do site, não os da folha */
+            body > header, body > footer, body > main, .aviso-pdf { display: none !important; }
+
+            #folha {
+                display: block;
+                color: #000;
+                font-family: Georgia, 'Times New Roman', serif;
+                font-size: 11pt;
+                line-height: 1.55;
+            }
+
+            .f-capa {
+                border-bottom: 2px solid #333;
+                padding-bottom: 14mm;
+                margin-bottom: 10mm;
+            }
+
+            .f-selo {
+                font-family: 'Segoe UI', sans-serif;
+                font-size: 8pt;
+                letter-spacing: 3px;
+                text-transform: uppercase;
+                color: #777;
+                margin-bottom: 6mm;
+            }
+
+            .f-titulo {
+                font-size: 30pt;
+                font-weight: normal;
+                line-height: 1.15;
+                margin-bottom: 5mm;
+            }
+
+            .f-sub { font-size: 13pt; color: #333; margin-bottom: 3mm; }
+            .f-nota { font-size: 9.5pt; color: #666; font-style: italic; }
+
+            .f-bloco { margin-bottom: 9mm; }
+            .f-quebra { break-before: page; page-break-before: always; }
+
+            .f-h2 {
+                font-family: 'Segoe UI', sans-serif;
+                font-size: 15pt;
+                font-weight: 600;
+                border-bottom: 1px solid #999;
+                padding-bottom: 2mm;
+                margin-bottom: 4mm;
+            }
+
+            .f-intro { font-size: 10pt; color: #555; margin-bottom: 5mm; }
+
+            .f-linha {
+                border-bottom: 1px dotted #bbb;
+                padding: 3.2mm 0 3.2mm 9mm;
+                position: relative;
+                break-inside: avoid;
+                page-break-inside: avoid;
+            }
+
+            .f-linha::before {
+                content: "☐";
+                position: absolute;
+                left: 0;
+                top: 3mm;
+                font-size: 12pt;
+                color: #555;
+            }
+
+            .f-linha.feito::before { content: "☑"; }
+            .f-linha.feito .f-nome { text-decoration: line-through; color: #777; }
+
+            .f-nome { font-size: 11.5pt; font-weight: bold; }
+            .f-onde { font-size: 9pt; color: #777; }
+            .f-quando { font-size: 10pt; color: #222; margin-top: 1mm; }
+            .f-marca {
+                font-family: 'Segoe UI', sans-serif;
+                font-size: 8pt;
+                text-transform: uppercase;
+                letter-spacing: 1px;
+                color: #666;
+                border: 1px solid #aaa;
+                padding: 0.4mm 2mm;
+                margin-left: 2mm;
+            }
+
+            .f-dado { font-size: 9.5pt; color: #444; margin-top: 1mm; }
+            .f-dado strong { font-family: 'Segoe UI', sans-serif; }
+
+            .f-vazio { font-size: 10pt; color: #777; font-style: italic; }
+
+            .f-orient {
+                break-inside: avoid;
+                page-break-inside: avoid;
+                margin-bottom: 6mm;
+            }
+
+            .f-orient h3 {
+                font-family: 'Segoe UI', sans-serif;
+                font-size: 11pt;
+                margin-bottom: 1.5mm;
+            }
+
+            .f-orient p { font-size: 10pt; }
+
+            .f-rodape {
+                display: block !important;
+                border-top: 1px solid #999;
+                padding-top: 4mm;
+                margin-top: 8mm;
+                font-size: 9pt;
+                color: #555;
+            }
+
+            .f-credito { font-size: 8.5pt; color: #888; margin-top: 1.5mm; }
+
+            a[href]::after { content: ""; }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <a href="/" class="logo">UNIRVERSOS</a>
+        <nav>
+            <a href="https://unirversos.com/idiomas/">idiomas</a>
+            <a href="https://unirversos.com/travessia/">travessia</a>
+            <a href="https://unirversos.com/paralelos/">paralelos</a>
+            <a href="https://unirversos.com/sobre/">sobre</a>
+        </nav>
+    </header>
+
+    <main>
+        <section class="hero">
+            <h1>Você comprou,<br/><span class="highlight">ou só pretendia comprar?</span></h1>
+            <p>O cronograma diz <em>quando</em> cada ingresso abre. Esta página guarda <em>o que você fez</em> com cada um — a inscrição na loteria, o resultado, e o prazo de pagamento que derruba quem ganhou e esqueceu.</p>
+            <p class="par"><a href="/travessia/agendamentos/">Ainda não viu as datas? Comece pelo cronograma de agendamento →</a></p>
+        </section>
+
+        <div class="setup">
+            <h2>As datas da sua viagem</h2>
+            <p class="sub">Elas definem quais atrações entram na sua lista e quando cada prazo cai.</p>
+            <div class="fields">
+                <div class="field">
+                    <label for="ida">Chegada no Japão</label>
+                    <input type="date" id="ida">
+                </div>
+                <div class="field">
+                    <label for="volta">Volta para casa</label>
+                    <input type="date" id="volta">
+                </div>
+                <button class="cta-button small" id="aplicar">Montar minha lista</button>
+            </div>
+        </div>
+
+        <div id="conteudo" class="oculto">
+            <div class="painel" id="painel"></div>
+            <div id="alertas"></div>
+            <div class="filtros" id="filtros"></div>
+            <div class="lista" id="lista"></div>
+
+            <div class="rodape-acoes">
+                <button class="cta-button small" id="gerarPdf">Gerar meu PDF da viagem</button>
+                <button class="btn-ghost" id="copiar">Copiar resumo</button>
+                <button class="btn-ghost" id="limpar">Limpar tudo</button>
+            </div>
+            <p class="aviso-pdf">O PDF leva o seu cronograma, o calendário do que você já resolveu e as orientações de cada tipo de venda — para levar na viagem, impresso ou no celular. É gratuito.</p>
+            <p class="aviso">Tudo que você marca aqui fica salvo <strong>só no seu navegador</strong>, neste aparelho — nada é enviado para lugar nenhum. Trocar de celular ou limpar os dados do navegador apaga as marcações, então o resumo copiado serve de backup.</p>
+        </div>
+    </main>
+
+    <!-- FOLHA DE IMPRESSÃO — invisível na tela, é o que vira o PDF -->
+    <div id="folha" aria-hidden="true">
+        <header class="f-capa">
+            <p class="f-selo">unirversos · travessia</p>
+            <h1 class="f-titulo">O seu Japão,<br>com hora marcada</h1>
+            <p class="f-sub" id="f-datas"></p>
+            <p class="f-nota">Todas as datas e horários já convertidos para o horário de Brasília.</p>
+        </header>
+
+        <section class="f-bloco">
+            <h2 class="f-h2">Seu cronograma de compras</h2>
+            <p class="f-intro">Em ordem de quando cada venda abre. Risque conforme resolver.</p>
+            <div id="f-cronograma"></div>
+        </section>
+
+        <section class="f-bloco f-quebra">
+            <h2 class="f-h2">O que você já resolveu</h2>
+            <div id="f-resolvidos"></div>
+        </section>
+
+        <section class="f-bloco f-quebra">
+            <h2 class="f-h2">Orientações</h2>
+
+            <div class="f-orient">
+                <h3>Loteria — o erro que mais derruba brasileiro</h3>
+                <p>A loteria não distribui ingressos: ela <strong>libera a compra</strong>. Você se inscreve, o sorteio acontece, e quem é sorteado ganha o direito de entrar no site e comprar — dentro de um prazo. Quem comemora e deixa o prazo passar não comprou nada, e a vaga volta para o sorteio. O prazo vem no próprio aviso de resultado, e cada atração usa o seu: anote assim que o aviso chegar.</p>
+            </div>
+
+            <div class="f-orient">
+                <h3>Venda por minuto exato</h3>
+                <p>Várias atrações liberam o mês inteiro num horário único, e as mais disputadas acabam rápido. Esteja logado e com o pagamento cadastrado <em>antes</em> da hora. Convertido para Brasília, esse horário quase sempre cai de madrugada — vale despertador.</p>
+            </div>
+
+            <div class="f-orient">
+                <h3>Cartão estrangeiro</h3>
+                <p>Nem todo site japonês aceita cartão emitido fora do Japão, e a verificação 3-D Secure costuma ser onde a compra trava. Teste o seu cartão numa compra pequena antes do dia, e deixe um segundo cartão de outra bandeira à mão.</p>
+            </div>
+
+            <div class="f-orient">
+                <h3>Antes de se inscrever duas vezes, leia as regras</h3>
+                <p>Cada atração define por conta própria quantas inscrições aceita por pessoa, e há sorteios que desclassificam quem duplica. Não existe regra única: confira o regulamento daquele sorteio antes de tentar mais de uma vez, inclusive se outra pessoa da viagem for se inscrever pela conta dela.</p>
+            </div>
+
+            <div class="f-orient">
+                <h3>Antes de pagar, confira na fonte</h3>
+                <p>As regras deste material são as mecânicas fixas de venda de cada atração, não datas de uma temporada específica. Sistemas, preços e janelas mudam sem aviso no Japão: confirme sempre na página oficial.</p>
+            </div>
+        </section>
+
+        <footer class="f-rodape">
+            <p><strong>unirversos.com/travessia</strong> — cronograma, rastreador e o mini guia de sobrevivência.</p>
+            <p class="f-credito">Gerado em <span id="f-gerado"></span> · Aline Kikuti</p>
+        </footer>
+    </div>
+
+    <footer>
+        <p>unirversos — tudo conectado</p>
+        <p>
+            <a href="https://instagram.com/unirversos.idiomas">@unirversos.idiomas</a>
+            |
+            <a href="mailto:unirversos.idiomas@gmail.com">unirversos.idiomas@gmail.com</a>
+        </p>
+        <p style="margin-top: 1.5rem;">Aline Kikuti</p>
+        <p class="disclaimer">As datas mostradas aqui vêm das mesmas regras de venda do cronograma de agendamento. Sistemas, preços e janelas mudam sem aviso no Japão: confirme sempre na página oficial antes de pagar.</p>
+    </footer>
+
+<script>
+const A = [
+ {id:'pokepark', nome:'PokéPark KANTO', onde:'Tóquio · Inagi', tag:'loteria',
+  regra:{t:'loteria', d1:1, d2:12, hora:'19:00', offset:3}, url:'https://ticket-en.pokepark-kanto.co.jp/'},
+ {id:'ghibli-mitaka', nome:'Museu Ghibli de Mitaka', onde:'Tóquio · Mitaka', tag:'corrida',
+  regra:{t:'mensal', dia:10, hora:'10:00', offset:1}, url:'https://www.ghibli-museum.jp/en/tickets/'},
+ {id:'ghibli-park', nome:'Ghibli Park', onde:'Aichi · perto de Nagoya', tag:'corrida',
+  regra:{t:'mensal', dia:10, hora:'14:00', offset:2}, url:'https://ghibli-park.jp/en/ticket/'},
+ {id:'pokemon-cafe', nome:'Pokémon Café', onde:'Tóquio e Osaka', tag:'corrida',
+  regra:{t:'mensal', dia:null, hora:'18:00', offset:1, variavel:true}, url:'https://reserve.pokemon-cafe.jp/'},
+ {id:'kirby', nome:'Kirby Café', onde:'Tóquio e Osaka', tag:'corrida',
+  regra:{t:'mensal', dia:10, hora:'18:00', offset:1}, url:'https://kirbycafe.jp/'},
+ {id:'disney', nome:'Tokyo Disneyland e DisneySea', onde:'Chiba · Maihama', tag:'corrida',
+  regra:{t:'mesesAntes', meses:2, hora:'14:00'}, url:'https://www.tokyodisneyresort.jp/en/'},
+ {id:'doraemon', nome:'Museu Fujiko F. Fujio (Doraemon)', onde:'Kawasaki', tag:'corrida',
+  regra:{t:'mensal', dia:30, hora:'10:00', offset:1}, url:'https://www.e-tix.jp/fujiko-museum'},
+ {id:'usj', nome:'Super Nintendo World (USJ)', onde:'Osaka · Universal City', tag:'corrida',
+  regra:{t:'antes', dias:30, hora:'10:00'}, url:'https://www.usj.co.jp/web/en/us'},
+ {id:'harrypotter', nome:'Warner Bros. Studio Tour Tóquio', onde:'Tóquio · Nerima', tag:'corrida',
+  regra:{t:'antecedencia', meses:3}, url:'https://www.wbstudiotour.jp/en/tickets/'},
+ {id:'teamlab-tokyo', nome:'teamLab Borderless e Planets', onde:'Tóquio', tag:'tranquilo',
+  regra:{t:'antecedencia', meses:2}, url:'https://www.teamlab.art/'},
+ {id:'nintendo-museum', nome:'Museu da Nintendo', onde:'Kyoto · Uji', tag:'loteria',
+  regra:{t:'loteria', mesInteiro:true, hora:'—', offset:3}, url:'https://museum.nintendo.com/en/index.html'},
+ {id:'biovortex', nome:'teamLab Biovortex Kyoto', onde:'Kyoto · estação central', tag:'tranquilo',
+  regra:{t:'antecedencia', meses:2}, url:'https://www.teamlab.art/e/biovortex-kyoto/'},
+ {id:'toyosu', nome:'Leilão de atum de Toyosu', onde:'Tóquio · Toyosu', tag:'loteria',
+  regra:{t:'loteria', d1:1, d2:7, hora:'—', offset:1}, url:'https://www.toyosu-market.or.jp/'},
+ {id:'shibuya-sky', nome:'Shibuya Sky', onde:'Tóquio · Shibuya', tag:'corrida',
+  regra:{t:'antes', dias:14, hora:'00:00'}, url:'https://www.shibuya-scramble-square.com/sky/'},
+ {id:'saihoji', nome:'Saihō-ji, o Templo dos Musgos', onde:'Kyoto · Matsuo', tag:'tranquilo',
+  regra:{t:'antecedencia', meses:2}, url:'https://saihoji-kokedera.com/'},
+ {id:'katsura', nome:'Villas Imperiais (Katsura e Shugakuin)', onde:'Kyoto', tag:'corrida',
+  regra:{t:'antecedencia', meses:1}, url:'https://sankan.kunaicho.go.jp/english/'},
+ {id:'comiket', nome:'Comiket', onde:'Tóquio · Tokyo Big Sight', tag:'anual',
+  regra:{t:'anual', meses:[7,11]}, url:'https://www.comiket.co.jp/index_e.html'},
+ {id:'jumpfesta', nome:'Jump Festa', onde:'Chiba · Makuhari Messe', tag:'anual',
+  regra:{t:'anual', meses:[11]}, url:'https://www.jumpfesta.com/'},
+ {id:'sumo', nome:'Sumô — torneios oficiais', onde:'Tóquio, Osaka, Nagoya e Fukuoka', tag:'anual',
+  regra:{t:'anual', meses:[0,2,4,6,8,10]}, url:'https://www.buysumotickets.com/'}
+];
+
+const MES = ['janeiro','fevereiro','março','abril','maio','junho','julho','agosto','setembro','outubro','novembro','dezembro'];
+
+const STATUS = [
+  {v:'novo',     nome:'Ainda não comecei'},
+  {v:'inscrito', nome:'Na fila · aguardando o sorteio'},
+  {v:'ganhei',   nome:'Sorteado · falta comprar'},
+  {v:'comprado', nome:'Ingresso em mãos'},
+  {v:'perdi',    nome:'Não consegui'},
+  {v:'pulei',    nome:'Decidi não ir'}
+];
+
+const CHAVE = 'travessiaStatusV1';
+let estado = { ida:'', volta:'', itens:{} };
+let filtro = 'todos';
+
+function carregar(){
+  try {
+    const bruto = localStorage.getItem(CHAVE);
+    if(bruto){
+      const s = JSON.parse(bruto);
+      if(s && typeof s === 'object'){
+        estado.ida = s.ida || '';
+        estado.volta = s.volta || '';
+        estado.itens = s.itens || {};
+      }
+    }
+  } catch(e){}
+}
+
+function salvar(){
+  try { localStorage.setItem(CHAVE, JSON.stringify(estado)); } catch(e){}
+}
+
+function item(id){
+  if(!estado.itens[id]) estado.itens[id] = {status:'novo', numero:'', conferir:'', prazo:'', nota:''};
+  return estado.itens[id];
+}
+
+// JST = Brasília + 12h
+function jstParaBrasilia(ano, mes, dia, horaStr){
+  const [h,m] = horaStr.split(':').map(Number);
+  const d = new Date(ano, mes, dia, h, m);
+  d.setHours(d.getHours() - 12);
+  return d;
+}
+function fmtData(d){ return d.getDate() + ' de ' + MES[d.getMonth()] + ' de ' + d.getFullYear(); }
+function fmtHora(d){ return String(d.getHours()).padStart(2,'0') + 'h' + String(d.getMinutes()).padStart(2,'0'); }
+function diasEntre(a,b){
+  return Math.round((new Date(b.getFullYear(),b.getMonth(),b.getDate()) - new Date(a.getFullYear(),a.getMonth(),a.getDate()))/86400000);
+}
+function mesesDaViagem(ida, volta){
+  const out=[]; const d=new Date(ida.getFullYear(), ida.getMonth(), 1);
+  while(d <= volta){ out.push({ano:d.getFullYear(), mes:d.getMonth()}); d.setMonth(d.getMonth()+1); }
+  return out;
+}
+
+// Um prazo de pagamento anterior à abertura da venda é impossível:
+// ninguém ganha uma loteria que ainda não aconteceu. Quase sempre é
+// o ano digitado errado.
+function prazoIncoerente(it, quando){
+  if(it.status !== 'ganhei' || !it.prazo || !quando) return false;
+  const p = new Date(it.prazo + 'T12:00:00');
+  if(isNaN(p)) return false;
+  const abertura = new Date(quando.getFullYear(), quando.getMonth(), quando.getDate());
+  return p < abertura;
+}
+
+// A conferência do resultado só pode vir depois de a inscrição abrir.
+function conferirIncoerente(it, quando){
+  if(it.status !== 'inscrito' || !it.conferir || !quando) return false;
+  const c = new Date(it.conferir + 'T12:00:00');
+  if(isNaN(c)) return false;
+  return c < new Date(quando.getFullYear(), quando.getMonth(), quando.getDate());
+}
+
+// a data de ação mais cedo para cada atração
+function dataPrincipal(a, ida, volta){
+  const r = a.regra;
+  const meses = mesesDaViagem(ida, volta);
+  let melhor = null;
+
+  function considerar(quando, label){
+    if(!melhor || quando < melhor.quando) melhor = {quando, label};
+  }
+
+  if(r.t === 'mensal'){
+    for(const mv of meses){
+      const alvo = new Date(mv.ano, mv.mes - r.offset, 1);
+      if(r.variavel){
+        const q = jstParaBrasilia(alvo.getFullYear(), alvo.getMonth(), 15, r.hora);
+        considerar(q, 'lote de ' + MES[mv.mes] + ' · data anunciada no site oficial');
+      } else {
+        const q = jstParaBrasilia(alvo.getFullYear(), alvo.getMonth(), r.dia, r.hora);
+        considerar(q, fmtData(q) + ' · ' + fmtHora(q) + ' de Brasília');
+      }
+    }
+  }
+  else if(r.t === 'loteria'){
+    for(const mv of meses){
+      const alvo = new Date(mv.ano, mv.mes - r.offset, 1);
+      const q = new Date(alvo.getFullYear(), alvo.getMonth(), r.mesInteiro ? 1 : r.d1, 9, 0);
+      const janela = r.mesInteiro
+        ? 'inscrições ao longo de ' + MES[alvo.getMonth()] + ' de ' + alvo.getFullYear()
+        : 'inscrições de ' + r.d1 + ' a ' + r.d2 + ' de ' + MES[alvo.getMonth()] + ' de ' + alvo.getFullYear();
+      considerar(q, janela);
+    }
+  }
+  else if(r.t === 'mesesAntes'){
+    const q = jstParaBrasilia(ida.getFullYear(), ida.getMonth() - r.meses, ida.getDate(), r.hora);
+    considerar(q, fmtData(q) + ' · ' + fmtHora(q) + ' de Brasília');
+  }
+  else if(r.t === 'antes'){
+    const q = jstParaBrasilia(ida.getFullYear(), ida.getMonth(), ida.getDate() - r.dias, r.hora);
+    considerar(q, fmtData(q) + ' · ' + fmtHora(q) + ' de Brasília');
+  }
+  else if(r.t === 'antecedencia'){
+    const q = new Date(ida.getFullYear(), ida.getMonth() - r.meses, ida.getDate(), 9, 0);
+    considerar(q, 'a partir de ' + fmtData(q));
+  }
+  else if(r.t === 'anual'){
+    const mv = meses.find(mv => r.meses.includes(mv.mes));
+    if(!mv) return null;
+    const q = new Date(mv.ano, mv.mes - 1, 15, 9, 0);
+    considerar(q, 'acompanhar a partir de ' + MES[(mv.mes+11)%12]);
+  }
+  return melhor;
+}
+
+function relevantes(){
+  const ida = new Date(estado.ida + 'T12:00:00');
+  const volta = new Date(estado.volta + 'T12:00:00');
+  const out = [];
+  for(const a of A){
+    const d = dataPrincipal(a, ida, volta);
+    if(d) out.push({a, quando:d.quando, label:d.label});
+  }
+  out.sort((x,y) => x.quando - y.quando);
+  return out;
+}
+
+function render(){
+  if(!estado.ida || !estado.volta) return;
+  const lista = relevantes();
+  const hoje = new Date();
+
+  // painel
+  let resolvidos = 0, aguardando = 0, pagarAgora = 0, prazoPerto = 0, conferirAgora = 0;
+  const alertas = [];
+
+  for(const {a, quando, label} of lista){
+    const it = item(a.id);
+    if(it.status === 'comprado' || it.status === 'perdi' || it.status === 'pulei') resolvidos++;
+    if(it.status === 'inscrito'){
+      aguardando++;
+      if(!it.conferir){
+        alertas.push({t:'Quando sai o resultado? · ' + a.nome, p:'Você está na fila. Anote o dia de conferir o e-mail — sem essa data, ninguém te lembra de olhar.'});
+      } else if(conferirIncoerente(it, quando)){
+        alertas.push({t:'Essa data não fecha · ' + a.nome, p:'Você marcou conferir em ' + fmtData(new Date(it.conferir + 'T12:00:00')) + ', mas as inscrições só abrem em ' + fmtData(quando) + '. O resultado vem depois disso — o ano pode ter saído errado.'});
+      } else {
+        const dc = diasEntre(hoje, new Date(it.conferir + 'T12:00:00'));
+        if(dc < 0){
+          conferirAgora++;
+          alertas.push({t:'Resultado já saiu · ' + a.nome, p:'Era para conferir em ' + fmtData(new Date(it.conferir + 'T12:00:00')) + '. Olhe o e-mail da atração: se você foi sorteada, o prazo de compra já está correndo.'});
+        } else if(dc <= 3){
+          conferirAgora++;
+          alertas.push({t:(dc === 0 ? 'Confira hoje' : 'Resultado em ' + dc + ' dia' + (dc>1?'s':'')) + ' · ' + a.nome, p:'Olhe o e-mail da atração nesse dia. Se foi sorteada, volte aqui e mude o status — o prazo de compra é curto.'});
+        }
+      }
+    }
+    if(it.status === 'ganhei'){
+      pagarAgora++;
+      if(it.prazo){
+        const dPrazo = new Date(it.prazo + 'T12:00:00');
+        if(prazoIncoerente(it, quando)){
+          alertas.push({t:'Essa data não fecha · ' + a.nome, p:'Você anotou compra até ' + fmtData(dPrazo) + ', mas as inscrições só abrem em ' + fmtData(quando) + '. O sorteio vem depois disso, então a data está antes do que deveria — o ano pode ter saído errado.'});
+        } else {
+          const dd = diasEntre(hoje, dPrazo);
+          if(dd < 0) alertas.push({t:'Prazo de compra vencido · ' + a.nome, p:'O prazo para comprar era ' + fmtData(dPrazo) + '. Confira se a sua vaga ainda está de pé.'});
+          else if(dd <= 5) alertas.push({t:'Prazo de compra vence em ' + (dd === 0 ? 'hoje' : dd + ' dia' + (dd>1?'s':'')) + ' · ' + a.nome, p:'Ser sorteada não entrega o ingresso: dá o direito de comprar. Se você não comprar até ' + fmtData(dPrazo) + ', a vaga volta para o sorteio.'});
+        }
+      } else {
+        alertas.push({t:'Falta anotar o prazo de compra · ' + a.nome, p:'Você foi sorteada. Anote até quando pode comprar, senão o alerta não aparece.'});
+      }
+    }
+    if(it.status === 'novo'){
+      const dd = diasEntre(hoje, quando);
+      if(dd >= 0 && dd <= 7){
+        prazoPerto++;
+        alertas.push({t:(dd === 0 ? 'Abre hoje' : 'Faltam ' + dd + ' dia' + (dd>1?'s':'')) + ' · ' + a.nome, p:label});
+      }
+    }
+  }
+
+  document.getElementById('painel').innerHTML =
+    '<div class="stat"><div class="n">' + lista.length + '</div><div class="t">na sua lista</div></div>' +
+    '<div class="stat"><div class="n">' + resolvidos + '</div><div class="t">resolvidos</div></div>' +
+    '<div class="stat"><div class="n">' + aguardando + '</div><div class="t">aguardando</div></div>' +
+    '<div class="stat' + ((pagarAgora + prazoPerto + conferirAgora) ? ' urgente' : '') + '"><div class="n">' + (pagarAgora + prazoPerto + conferirAgora) + '</div><div class="t">pedem ação</div></div>';
+
+  document.getElementById('alertas').innerHTML = alertas.map(x =>
+    '<div class="alerta"><h4>' + x.t + '</h4><p>' + x.p + '</p></div>').join('');
+
+  // filtros
+  const FILTROS = [
+    {id:'todos', nome:'tudo'},
+    {id:'pendente', nome:'só o que falta'},
+    {id:'acao', nome:'pedem ação'},
+    {id:'comprado', nome:'em mãos'}
+  ];
+  document.getElementById('filtros').innerHTML = FILTROS.map(f =>
+    '<button class="filt' + (f.id === filtro ? ' on' : '') + '" data-f="' + f.id + '">' + f.nome + '</button>').join('');
+
+  // lista
+  const visiveis = lista.filter(({a, quando}) => {
+    const it = item(a.id);
+    const dd = diasEntre(hoje, quando);
+    if(filtro === 'pendente') return it.status === 'novo' || it.status === 'inscrito' || it.status === 'ganhei';
+    if(filtro === 'acao') return it.status === 'ganhei' || (it.status === 'novo' && dd >= 0 && dd <= 7) || (it.status === 'inscrito' && (!it.conferir || diasEntre(hoje, new Date(it.conferir + 'T12:00:00')) <= 3));
+    if(filtro === 'comprado') return it.status === 'comprado';
+    return true;
+  });
+
+  if(!visiveis.length){
+    document.getElementById('lista').innerHTML = '<p class="vazio">Nada nesse filtro por enquanto.</p>';
+  } else {
+    document.getElementById('lista').innerHTML = visiveis.map(({a, quando, label}) => {
+      const it = item(a.id);
+      const dd = diasEntre(hoje, quando);
+      let classeData = '', sufixo = '';
+      if(dd < 0){ classeData = 'passou'; sufixo = ' · já passou'; }
+      else if(dd === 0){ classeData = 'urgente'; sufixo = ' · é hoje'; }
+      else if(dd <= 7){ classeData = 'urgente'; sufixo = ' · faltam ' + dd + ' dia' + (dd>1?'s':''); }
+
+      const mostraNumero = it.status === 'inscrito' || it.status === 'ganhei' || it.status === 'comprado';
+      const mostraPrazo = it.status === 'ganhei';
+      const mostraConferir = it.status === 'inscrito';
+
+      return '<div class="item s-' + it.status + '" data-id="' + a.id + '">' +
+        '<div class="item-top">' +
+          '<div><h4>' + a.nome + '</h4><div class="onde">' + a.onde + '</div></div>' +
+          '<span class="selo ' + a.tag + '">' + a.tag + '</span>' +
+        '</div>' +
+        '<div class="quando"><span class="' + classeData + '">' + label + sufixo + '</span></div>' +
+        '<div class="controles">' +
+          '<div><label>Em que pé está</label>' +
+            '<select data-campo="status">' + STATUS.map(s =>
+              '<option value="' + s.v + '"' + (s.v === it.status ? ' selected' : '') + '>' + s.nome + '</option>').join('') +
+            '</select></div>' +
+          '<div' + (mostraNumero ? '' : ' class="oculto"') + '><label>Número / referência</label>' +
+            '<input type="text" data-campo="numero" value="' + String(it.numero).replace(/"/g,'&quot;') + '" placeholder="código da inscrição"></div>' +
+          '<div' + (mostraConferir ? '' : ' class="oculto"') + '><label>Conferir resultado em</label>' +
+            '<input type="date" data-campo="conferir" value="' + (it.conferir || '') + '"' +
+              (conferirIncoerente(it, quando) ? ' class="erro"' : '') + '>' +
+            (conferirIncoerente(it, quando) ? '<span class="erro-campo">anterior à abertura das inscrições</span>' : '<span class="dica-campo">o dia em que você vai olhar o e-mail</span>') +
+          '</div>' +
+          '<div' + (mostraPrazo ? '' : ' class="oculto"') + '><label>Comprar até</label>' +
+            '<input type="date" data-campo="prazo" value="' + it.prazo + '"' +
+              (prazoIncoerente(it, quando) ? ' class="erro"' : '') + '>' +
+            (prazoIncoerente(it, quando) ? '<span class="erro-campo">anterior à abertura das inscrições</span>' : '') +
+          '</div>' +
+          '<div><label>Anotação</label>' +
+            '<input type="text" data-campo="nota" value="' + String(it.nota).replace(/"/g,'&quot;') + '" placeholder="qual conta usei, com quem vou..."></div>' +
+        '</div>' +
+        (a.url ? '<a class="link-oficial" href="' + a.url + '" target="_blank" rel="noopener">página oficial →</a>' : '') +
+      '</div>';
+    }).join('');
+  }
+
+  document.getElementById('conteudo').classList.remove('oculto');
+}
+
+function aplicarDatas(){
+  const ida = document.getElementById('ida').value;
+  const volta = document.getElementById('volta').value;
+  if(!ida || !volta){ alert('Preencha as duas datas da viagem.'); return; }
+  if(new Date(volta) < new Date(ida)){ alert('A volta precisa ser depois da chegada.'); return; }
+  estado.ida = ida;
+  estado.volta = volta;
+  salvar();
+  render();
+}
+
+document.getElementById('aplicar').addEventListener('click', aplicarDatas);
+
+document.getElementById('filtros').addEventListener('click', function(e){
+  const b = e.target.closest('.filt');
+  if(!b) return;
+  filtro = b.getAttribute('data-f');
+  render();
+});
+
+document.getElementById('lista').addEventListener('change', function(e){
+  const campo = e.target.getAttribute && e.target.getAttribute('data-campo');
+  if(!campo) return;
+  const caixa = e.target.closest('.item');
+  if(!caixa) return;
+  const it = item(caixa.getAttribute('data-id'));
+  it[campo] = e.target.value;
+  salvar();
+  if(campo === 'status' || campo === 'prazo' || campo === 'conferir') render();
+});
+
+document.getElementById('lista').addEventListener('input', function(e){
+  const campo = e.target.getAttribute && e.target.getAttribute('data-campo');
+  if(!campo || campo === 'status') return;
+  const caixa = e.target.closest('.item');
+  if(!caixa) return;
+  item(caixa.getAttribute('data-id'))[campo] = e.target.value;
+  salvar();
+});
+
+// ---------- folha de impressão (o PDF gratuito) ----------
+function esc(s){
+  return String(s).replace(/[&<>"]/g, function(c){
+    return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c];
+  });
+}
+
+function montarFolha(){
+  const lista = relevantes();
+
+  document.getElementById('f-datas').textContent =
+    'Viagem de ' + fmtData(new Date(estado.ida + 'T12:00:00')) +
+    ' a ' + fmtData(new Date(estado.volta + 'T12:00:00'));
+
+  document.getElementById('f-gerado').textContent = fmtData(new Date());
+
+  // cronograma: tudo que ainda não foi resolvido, em ordem de data
+  const pendentes = lista.filter(function(x){
+    const s = item(x.a.id).status;
+    return s !== 'comprado' && s !== 'perdi' && s !== 'pulei';
+  });
+
+  document.getElementById('f-cronograma').innerHTML = pendentes.length
+    ? pendentes.map(function(x){
+        const it = item(x.a.id);
+        let extra = '';
+        if(it.status === 'inscrito') extra = '<div class="f-dado"><strong>Na fila</strong>' + (it.numero ? ' · nº ' + esc(it.numero) : '') + (it.conferir && !conferirIncoerente(it, x.quando) ? ' — conferir o resultado em ' + fmtData(new Date(it.conferir + 'T12:00:00')) : ' — anote quando sai o resultado') + '</div>';
+        if(it.status === 'ganhei'){
+          if(!it.prazo){
+            extra = '<div class="f-dado"><strong>Sorteada!</strong> Confirme até quando pode comprar</div>';
+          } else if(prazoIncoerente(it, x.quando)){
+            extra = '<div class="f-dado"><strong>Sorteada!</strong> Confira o prazo: a data anotada (' + fmtData(new Date(it.prazo + 'T12:00:00')) + ') é anterior à abertura das inscrições</div>';
+          } else {
+            extra = '<div class="f-dado"><strong>Sorteada!</strong> Comprar até ' + fmtData(new Date(it.prazo + 'T12:00:00')) + '</div>';
+          }
+        }
+        return '<div class="f-linha">' +
+          '<div class="f-nome">' + esc(x.a.nome) + '<span class="f-marca">' + esc(x.a.tag) + '</span></div>' +
+          '<div class="f-onde">' + esc(x.a.onde) + '</div>' +
+          '<div class="f-quando">' + esc(x.label) + '</div>' +
+          extra +
+          (it.nota ? '<div class="f-dado">' + esc(it.nota) + '</div>' : '') +
+          '</div>';
+      }).join('')
+    : '<p class="f-vazio">Nada pendente — está tudo resolvido.</p>';
+
+  // o que já foi resolvido
+  const feitos = lista.filter(function(x){
+    const s = item(x.a.id).status;
+    return s === 'comprado' || s === 'perdi' || s === 'pulei';
+  });
+
+  document.getElementById('f-resolvidos').innerHTML = feitos.length
+    ? feitos.map(function(x){
+        const it = item(x.a.id);
+        const s = STATUS.find(function(y){ return y.v === it.status; });
+        return '<div class="f-linha feito">' +
+          '<div class="f-nome">' + esc(x.a.nome) + '</div>' +
+          '<div class="f-onde">' + esc(x.a.onde) + '</div>' +
+          '<div class="f-dado"><strong>' + esc(s ? s.nome : it.status) + '</strong>' +
+            (it.numero ? ' · nº ' + esc(it.numero) : '') + '</div>' +
+          (it.nota ? '<div class="f-dado">' + esc(it.nota) + '</div>' : '') +
+          '</div>';
+      }).join('')
+    : '<p class="f-vazio">Ainda nada por aqui. Conforme você for marcando no site, esta página se preenche.</p>';
+}
+
+document.getElementById('gerarPdf').addEventListener('click', function(){
+  if(!estado.ida || !estado.volta) return;
+  montarFolha();
+  window.print();
+});
+
+document.getElementById('copiar').addEventListener('click', function(){
+  const lista = relevantes();
+  const linhas = ['STATUS DOS INGRESSOS — viagem de ' + estado.ida + ' a ' + estado.volta, ''];
+  for(const {a, label} of lista){
+    const it = item(a.id);
+    const s = STATUS.find(x => x.v === it.status);
+    let l = '• ' + a.nome + ' — ' + (s ? s.nome : it.status);
+    if(it.numero) l += ' (nº ' + it.numero + ')';
+    if(it.prazo) l += ' · pagar até ' + it.prazo;
+    if(it.nota) l += ' · ' + it.nota;
+    linhas.push(l);
+    linhas.push('   quando: ' + label);
+  }
+  const texto = linhas.join('\n');
+  const t = document.createElement('textarea');
+  t.value = texto;
+  t.style.position = 'fixed';
+  t.style.opacity = '0';
+  document.body.appendChild(t);
+  t.select();
+  try { document.execCommand('copy'); this.textContent = 'Copiado!'; }
+  catch(err){ this.textContent = 'Não consegui copiar'; }
+  document.body.removeChild(t);
+  const btn = this;
+  setTimeout(function(){ btn.textContent = 'Copiar resumo'; }, 2200);
+});
+
+document.getElementById('limpar').addEventListener('click', function(){
+  if(!confirm('Apagar todas as marcações? As datas da viagem continuam.')) return;
+  estado.itens = {};
+  salvar();
+  render();
+});
+
+// início
+carregar();
+if(estado.ida && estado.volta){
+  document.getElementById('ida').value = estado.ida;
+  document.getElementById('volta').value = estado.volta;
+  render();
+} else {
+  const d1 = new Date(); d1.setMonth(d1.getMonth() + 2);
+  const d2 = new Date(d1); d2.setDate(d2.getDate() + 14);
+  const iso = d => d.toISOString().slice(0,10);
+  document.getElementById('ida').value = iso(d1);
+  document.getElementById('volta').value = iso(d2);
+}
+</script>
+</body>
+</html>
