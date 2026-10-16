@@ -10,7 +10,7 @@ const tok=s=>{ if(typeof s!=='string') return s; const [k,r]=s.split('|'); retur
 function speak(t,rate){ try{ if(!window.speechSynthesis) return; speechSynthesis.cancel(); const u=new SpeechSynthesisUtterance(t); u.lang='ja-JP'; u.rate=rate||.85;
   const v=speechSynthesis.getVoices().find(x=>/^ja/i.test(x.lang)); if(v) u.voice=v; speechSynthesis.speak(u);}catch(e){} }
 const WORD_XP=5;
-const TITULOS={aeroporto:'Aeroporto',hotel:'Hotel',restaurante:'Restaurante',kombini:'Kombini',trens:'Trens',compras:'Compras',roupas:'Roupas',emergencia:'Emergência',apresentacao:'Apresentação',horas:'Horas',planos:'Planos',sinalizacao:'Sinalização'};
+const TITULOS={aeroporto:'Aeroporto',hotel:'Hotel',restaurante:'Restaurante',kombini:'Konbini',trens:'Trens',compras:'Compras',roupas:'Roupas',emergencia:'Emergência',apresentacao:'Apresentação',horas:'Horas',planos:'Planos',sinalizacao:'Sinalização'};
 const ORDEM=Object.keys(TITULOS);
 
 /* ---------- desenhos próprios (Aeroporto) ---------- */
