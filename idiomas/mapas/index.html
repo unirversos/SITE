@@ -1468,10 +1468,12 @@ function renderProva(){
   const m=MAPS()[cur], lang=LANGS[curLang].key;
   const txt = PROVA_TXT[UI()===undefined?'pt':(LANGS[curLang].key==='pt'?'en':'pt')];
   const el=document.getElementById('prova-cta');
+  const AULA_SLUG={aeroporto:'aeroporto',hotel:'hotel',conbini:'kombini',restaurante:'restaurante',trens:'trens',compras:'compras',roupas:'roupas',sos:'emergencia',base:'apresentacao',numeros:'horas',planos:'planos',placas:'sinalizacao'};
+  const aulaLink = (lang==='ja' && AULA_SLUG[m.id]) ? '<p style="margin:0 0 14px"><a href="/idiomas/mapas/'+AULA_SLUG[m.id]+'/aula/">🎒 Fazer a aula deste mapa com o seu avatar →</a></p>' : '';
   if(PROVAS[lang] && PROVAS[lang].includes(m.id)){
-    el.innerHTML='<h3>'+txt.t+'</h3><p>'+txt.p+'</p><a href="/idiomas/planeta-utopia/?lang='+lang+'&terr='+m.id+'&from=mapas">'+txt.b+'</a>';
+    el.innerHTML=aulaLink+'<h3>'+txt.t+'</h3><p>'+txt.p+'</p><a href="/idiomas/planeta-utopia/?lang='+lang+'&terr='+m.id+'&from=mapas">'+txt.b+'</a>';
   } else {
-    el.innerHTML='<p class="soon">'+txt.soon+'</p>';
+    el.innerHTML=aulaLink+'<p class="soon">'+txt.soon+'</p>';
   }
 }
 
@@ -1501,18 +1503,18 @@ function switchHubTab(tabName) {
 }
 
 const mapasHub = [
-  { id: 1, emoji: '✈️', titulo: 'Chegada', descricao: 'Aeroporto, documentação, primeiras palavras' },
-  { id: 2, emoji: '🏨', titulo: 'Hotel', descricao: 'Check-in, quarto, serviços' },
-  { id: 3, emoji: '🍱', titulo: 'Restaurante', descricao: 'Cardápio, pedidos, preferências' },
-  { id: 4, emoji: '🛍️', titulo: 'Compras', descricao: 'Preços, tamanhos, devoluções' },
-  { id: 5, emoji: '🚕', titulo: 'Transporte', descricao: 'Táxi, metrô, direções' },
-  { id: 6, emoji: '🏥', titulo: 'Saúde', descricao: 'Farmácia, médico, emergências' },
-  { id: 7, emoji: '🏦', titulo: 'Banco', descricao: 'Câmbio, caixa, dúvidas financeiras' },
-  { id: 8, emoji: '📞', titulo: 'Comunicação', descricao: 'Telefone, internet, postal' },
-  { id: 9, emoji: '🎭', titulo: 'Lazer', descricao: 'Museu, cinema, eventos' },
-  { id: 10, emoji: '🏠', titulo: 'Moradia', descricao: 'Aluguel, condomínio, vizinhos' },
-  { id: 11, emoji: '👔', titulo: 'Trabalho', descricao: 'Escritório, reuniões, carreira' },
-  { id: 12, emoji: '💍', titulo: 'Relacionamentos', descricao: 'Família, amigos, encontros' }
+  { id: 1, slug:'aeroporto', emoji: '✈️', titulo: 'Aeroporto', descricao: 'Imigração, reserva, bagagem' },
+  { id: 2, slug:'hotel', emoji: '🏨', titulo: 'Hotel', descricao: 'Check-in, café da manhã, problemas no quarto' },
+  { id: 3, slug:'restaurante', emoji: '🍜', titulo: 'Restaurante', descricao: 'Quantas pessoas, pedido, conta' },
+  { id: 4, slug:'kombini', emoji: '🏪', titulo: 'Kombini', descricao: 'Esquentar, sacola, recibo' },
+  { id: 5, slug:'trens', emoji: '🚆', titulo: 'Trens', descricao: 'Destino, preço, plataforma' },
+  { id: 6, slug:'compras', emoji: '🎁', titulo: 'Compras', descricao: 'Preço, desconto, これ・それ・あれ' },
+  { id: 7, slug:'roupas', emoji: '👚', titulo: 'Roupas', descricao: 'Provar, tamanho, cor' },
+  { id: 8, slug:'emergencia', emoji: '🆘', titulo: 'Emergência', descricao: 'Perdi, dói aqui, chame ajuda' },
+  { id: 9, slug:'apresentacao', emoji: '🤝', titulo: 'Apresentação', descricao: 'Nome, país, trabalho, hobby' },
+  { id: 10, slug:'horas', emoji: '🕒', titulo: 'Horas', descricao: 'Que horas são, marcar horário' },
+  { id: 11, slug:'planos', emoji: '🎬', titulo: 'Planos', descricao: 'Convidar, aceitar, recusar' },
+  { id: 12, slug:'sinalizacao', emoji: '🪧', titulo: 'Sinalização', descricao: 'Placas, saída, proibido, perigo' }
 ];
 
 function checkAulaZeroStatus() {
@@ -1527,7 +1529,8 @@ function renderMapasHub() {
   
   mapasHub.forEach(mapa => {
     const card = document.createElement('a');
-    card.href = aulaZeroCompleted ? '#' : '#';
+    card.href = aulaZeroCompleted ? '/idiomas/mapas/' + mapa.slug + '/aula/' : '#';
+    let feito = false; try { const pm = JSON.parse(localStorage.getItem('utopiaMapas1') || '{}'); feito = !!(pm[mapa.slug] && pm[mapa.slug].steps && pm[mapa.slug].steps[4]); } catch(e) {}
     card.className = `mapa-card ${!aulaZeroCompleted ? 'locked' : ''}`;
     
     let html = '';
@@ -1538,7 +1541,7 @@ function renderMapasHub() {
       <div class="number">Mapa ${mapa.id}</div>
       <div class="emoji">${mapa.emoji}</div>
       <h3>${mapa.titulo}</h3>
-      <p>${mapa.descricao}</p>
+      <p>${mapa.descricao}</p>${feito ? '<p style="color:var(--rose);font-weight:700;margin-top:6px;">🏅 aula concluída</p>' : ''}
     `;
     
     card.innerHTML = html;
