@@ -127,7 +127,7 @@ function markup(sel,opt){
    </g>`;
 }
 function svg(sel,opt){ opt=opt||{}; return `<svg viewBox="${opt.viewBox||'0 0 240 300'}" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="${opt.label||'Avatar'}" style="display:block;width:100%;height:100%">${markup(sel,opt)}</svg>`; }
-const TITLES=[['見習い旅人','みならい たびびと','aprendiz de viagem'],['駆け出し冒険者','かけだし ぼうけんしゃ','iniciante na aventura'],['言葉の探検家','ことばの たんけんか','quem explora palavras'],['ユートピアの案内人','ユートピアの あんないにん','guia de Utopia'],['言葉の魔法使い','ことばの まほうつかい','mestre das palavras'],['伝説の旅人','でんせつの たびびと','lenda das viagens']];
+const TITLES=[['見習い旅人','みならい たびびと','aprendiz de viagem','Apprentice Traveler'],['駆け出し冒険者','かけだし ぼうけんしゃ','iniciante na aventura','Novice Adventurer'],['言葉の探検家','ことばの たんけんか','quem explora palavras','Word Explorer'],['ユートピアの案内人','ユートピアの あんないにん','guia de Utopia','Guide of Utopia'],['言葉の魔法使い','ことばの まほうつかい','mestre das palavras','Word Master'],['伝説の旅人','でんせつの たびびと','lenda das viagens','Legendary Traveler']];
 function title(level){ return TITLES[Math.max(0,Math.min(TITLES.length-1,(level||1)-1))]; }
 function titleHTML(level){ const t=title(level); return `<ruby>${t[0]}<rt>${t[1]}</rt></ruby>`; }
 const KEY='utopiaAvatar1';

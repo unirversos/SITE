@@ -84,8 +84,8 @@ $('bar').style.width=(ids.length/TOTAL*100)+'%';
 if(!ids.length){ $('list').innerHTML='<p class="empty">Ainda não há palavras aqui. Monte seu avatar no Ateliê: cada escolha nova entra neste caderno.</p>'; }
 else {
   const groups={}; ids.forEach(id=>{ const w=WORDS[id]; (groups[w.catPt]=groups[w.catPt]||[]).push(w); });
-  $('list').innerHTML=Object.entries(groups).map(([cat,ws])=>`<section class="grp"><h2>${esc(cat)}<small>${ws.length}</small></h2>
-    <div class="chips">${ws.map(w=>`<button class="chip" type="button" data-id="${w.id}"><b>${ruby(w)}</b><small>${w.ro} · ${w.pt}</small></button>`).join('')}</div></section>`).join('');
+  $('list').innerHTML=Object.entries(groups).map(([cat,ws])=>`<section class="grp"><h2>${esc(cat)} <i lang="en" style="font-family:var(--f-body);font-weight:500;font-size:13px;color:var(--muted)">${esc(ws[0].catEn||'')}</i><small>${ws.length}</small></h2>
+    <div class="chips">${ws.map(w=>`<button class="chip" type="button" data-id="${w.id}"><b>${ruby(w)}</b><small>${w.ro} · ${w.pt} · <i lang="en">${w.en}</i></small></button>`).join('')}</div></section>`).join('');
 }
 $('list').addEventListener('click',e=>{ const b=e.target.closest('.chip'); if(b) speak(WORDS[b.dataset.id].kana); });
 </script>
