@@ -1,0 +1,55 @@
+(function(){
+const R=(k,f)=>`<ruby>${k}<rt>${f}</rt></ruby>`;
+(window.AULAS=window.AULAS||{}).restaurante={
+  slug:'restaurante', num:'02', titulo:'Restaurante', emoji:'🍽️', jp:R('食堂','しょくどう'), h1:'Uma tigela de lámen',
+  fim:'Você pediu, comeu e pagou falando japonês.',
+  intro:{titulo:'🍜 Hora de comer!',
+    txt:['Você entra num restaurante pequeno de lámen. Assim que a porta abre, todo mundo grita <b>いらっしゃいませ！</b> ("bem-vindo!"). Não precisa responder: é só um cumprimento da casa.',
+         'Logo vão perguntar quantas pessoas são, o que você vai pedir e o que vai beber. No fim, você agradece e pede a conta.'],
+    metas:['dizer quantas pessoas são','pedir apontando: "vou querer este"','pedir água, garfo ou a conta','dizer いただきます antes de comer']},
+  npc:{nome:'Atendente', sel:{hair:'mijikai',hairColor:'chairo',face:'egao',clothes:'tshirt',clothColor:'shiro',acc:[],traits:['hige'],skin:5},
+    extra:'<rect x="56" y="86" width="128" height="11" rx="5" fill="#d2463f"/><path d="M84 236 H156 V300 H84 Z" fill="#3e4f7a"/><path d="M92 236 L104 214 M148 236 L136 214" stroke="#3e4f7a" stroke-width="5"/>'},
+  cen:{wall:'#fbeee0', floor:'#e8d3bd',
+    back:`<path d="M20 14 H250" stroke="#8a5a3a" stroke-width="5"/>${[0,1,2,3].map(k=>`<path d="M${24+k*56} 16 h52 v62 q-26 8 -52 0 z" fill="#3e4f7a"/>`).join('')}<circle cx="135" cy="46" r="16" fill="#fff" opacity=".9"/><text x="135" y="52" text-anchor="middle" font-family="Zen Maru Gothic, sans-serif" font-size="14" font-weight="700" fill="#3e4f7a">めし</text>
+      <g transform="translate(232 84)"><ellipse cx="0" cy="18" rx="14" ry="18" fill="#e5605a"/><path d="M-14 18 h28" stroke="#c94a4a" stroke-width="2"/><rect x="-5" y="-4" width="10" height="5" fill="#3a2b38"/></g>`,
+    board:`<rect width="106" height="62" rx="6" fill="#c98b5e"/><rect x="5" y="5" width="96" height="52" rx="4" fill="#fff8ec"/><text x="53" y="19" text-anchor="middle" font-family="Zen Maru Gothic, sans-serif" font-size="10" font-weight="700" fill="#3a2b38">メニュー</text><g fill="#7c6a78" font-family="Zen Maru Gothic, sans-serif" font-size="8"><text x="12" y="33">ラーメン</text><text x="72" y="33">¥900</text><text x="12" y="45">ぎょうざ</text><text x="72" y="45">¥400</text></g>`,
+    counter:{label:'カウンター', color:'#c98b5e', top:'#e7c49f'},
+    prop:'<g transform="translate(6 12)"><path d="M0 12 h40 a20 16 0 0 1 -40 0z" fill="#d2463f"/><path d="M4 12 q16 -10 32 0" fill="#f3d39a"/><path d="M22 -6 L34 12 M26 -8 L38 10" stroke="#8a5a3a" stroke-width="2"/></g>'},
+  words:[
+    {id:'futari',h:R('二人','ふたり'),k:'ふたり',r:'futari',pt:'duas pessoas',en:'two people',ic:'👥',tip:'Para pessoas: ひとり (1), ふたり (2), e a partir de 3 é さんにん, よにん…'},
+    {id:'menyuu',k:'メニュー',r:'menyū',pt:'cardápio',en:'menu',ic:'📖',tip:'Do inglês "menu".'},
+    {id:'kore',k:'これ',r:'kore',pt:'isto, este',en:'this',ic:'👉',tip:'Não sabe o nome do prato? Aponte e diga これ.'},
+    {id:'osusume',h:'お'+R('勧','すす')+'め',k:'おすすめ',r:'osusume',pt:'recomendação da casa',en:'recommendation',ic:'⭐',tip:'Perguntar おすすめは？ ("qual a recomendação?") é um ótimo truque.'},
+    {id:'mizu',h:R('水','みず'),k:'みず',r:'mizu',pt:'água',en:'water',ic:'💧',tip:'Em muitos restaurantes a água é de graça e você mesmo se serve.'},
+    {id:'fooku',k:'フォーク',r:'fōku',pt:'garfo',en:'fork',ic:'🍴',tip:'Do inglês "fork". Os hashi são おはし.'},
+    {id:'okaikei',h:'お'+R('会計','かいけい'),k:'おかいけい',r:'okaikei',pt:'a conta',en:'the bill',ic:'🧾',tip:'No Japão normalmente se paga no caixa, na saída.'},
+    {id:'itadakimasu',k:'いただきます',r:'itadakimasu',pt:'(dito antes de comer)',en:'(said before eating)',ic:'🙏',tip:'Agradece pela comida. Depois de comer se diz ごちそうさまでした.'}
+  ],
+  moldes:[
+    {titulo:'"Somos ___."', tpl:'<i>pessoas</i> です', tplRo:'[pessoas] desu', parts:[0,'です|desu'],
+     slots:[[['ひとり|hitori','Uma pessoa (só eu).','Just one person.',R('一人','ひとり')],['ふたり|futari','Duas pessoas.','Two people.',R('二人','ふたり')],['さんにん|sannin','Três pessoas.','Three people.',R('三人','さんにん')]]],
+     gram:'Contar pessoas tem um jeito próprio: <b>ひとり</b> e <b>ふたり</b> são especiais. De 3 em diante: número + <b>にん</b> (さんにん, よにん…).', use:'Na cena: responder quantas pessoas são.'},
+    {titulo:'"Vou querer ___."', tpl:'<i>prato</i> に します', tplRo:'[prato] ni shimasu', parts:[0,'に|ni','します|shimasu'],
+     slots:[[['これ|kore','Vou querer este.',"I'll have this."],['おすすめ|osusume','Vou querer a recomendação da casa.',"I'll have the recommendation."],['ラーメン|rāmen','Vou querer lámen.',"I'll have ramen."]]],
+     gram:'<b>に します</b> = "decido por…". É o jeito mais simples de fazer o pedido.', use:'Na cena: fazer o pedido.'},
+    {titulo:'"___, por favor."', tpl:'<i>coisa</i> を おねがいします', tplRo:'[coisa] o onegaishimasu', parts:[0,'を|o','おねがいします|onegaishimasu'],
+     slots:[[['みず|mizu','Água, por favor.','Water, please.',R('水','みず')],['フォーク|fōku','Um garfo, por favor.','A fork, please.'],['おかいけい|okaikei','A conta, por favor.','The bill, please.','お'+R('会計','かいけい')]]],
+     gram:'O mesmo molde do hotel! <b>を おねがいします</b> serve para pedir quase tudo.', use:'Na cena: pedir a bebida e a conta.'},
+    {titulo:'Antes e depois de comer', tpl:'<i>momento</i>', tplRo:'[momento]', parts:[0],
+     slots:[[['いただきます|itadakimasu','(antes de comer) Vou receber esta comida.','(before eating) Thank you for the food.'],['ごちそうさまでした|gochisōsama deshita','(depois de comer) Obrigada pela refeição.','(after eating) Thank you for the meal.']]],
+     gram:'Duas expressões fixas que todo japonês usa. Dizer <b>ごちそうさまでした</b> ao sair do restaurante deixa qualquer cozinheiro feliz.', use:'Na cena: quando a comida chega.'}
+  ],
+  cenas:[
+    {q:'いらっしゃいませ！'+R('何名様','なんめいさま')+'ですか？', say:'いらっしゃいませ！なんめいさまですか？', ro:'Irasshaimase! Nanmei-sama desu ka?', pt:'Bem-vindos! Quantas pessoas?',
+     ans:['ふたり|futari','です|desu'], extra:['ひとつ|hitotsu','を|o','これ|kore'], ansPt:'Duas pessoas.', molde:0, distr:['Bem-vindos! O que vão beber?','Bem-vindos! Têm reserva?']},
+    {q:'ご'+R('注文','ちゅうもん')+'は お'+R('決','き')+'まりですか？', say:'ごちゅうもんは おきまりですか？', ro:'Go-chūmon wa o-kimari desu ka?', pt:'Já decidiram o pedido?',
+     ans:['これ|kore','に|ni','します|shimasu'], extra:['を|o','おねがいします|onegaishimasu','です|desu'], ansPt:'Vou querer este. (apontando)', molde:1, dica:'Aponte para o cardápio.', distr:['A comida está boa?','Querem mais água?']},
+    {q:'お'+R('飲','の')+'み'+R('物','もの')+'は いかがですか？', say:'おのみものは いかがですか？', ro:'O-nomimono wa ikaga desu ka?', pt:'E para beber?',
+     ans:['みず|mizu','を|o','おねがいします|onegaishimasu'], extra:['に|ni','フォーク|fōku','です|desu'], ansPt:'Água, por favor.', molde:2, distr:['E de sobremesa?','Quantas pessoas?']},
+    {q:'お'+R('待','ま')+'たせしました。ラーメンです。', say:'おまたせしました。ラーメンです。', ro:'O-matase shimashita. Rāmen desu.', pt:'Desculpe a espera. Aqui está o lámen.',
+     ans:['いただきます|itadakimasu'], extra:['ごちそうさまでした|gochisōsama deshita','おかいけい|okaikei'], ansPt:'(antes de comer) いただきます！', molde:3, distr:['O lámen acabou.','O lámen custa 900 ienes.']},
+    {q:'ほかに ご'+R('注文','ちゅうもん')+'は？', say:'ほかに ごちゅうもんは？', ro:'Hoka ni go-chūmon wa?', pt:'Mais algum pedido?',
+     ans:['おかいけい|okaikei','を|o','おねがいします|onegaishimasu'], extra:['これ|kore','に|ni','みず|mizu'], ansPt:'A conta, por favor.', molde:2, distr:['Mais alguma bebida?','Vai pagar com cartão?']}
+  ]
+};
+})();

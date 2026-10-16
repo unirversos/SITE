@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Aula · Mapas de contexto · Unirversos</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@500;700;800&family=Zen+Maru+Gothic:wght@400;500;700&display=swap">
+<link rel="stylesheet" href="/idiomas/dados/mapa-aula.css?v=20261016m">
+</head>
+<body data-mapa="restaurante">
+<div class="wrap">
+  <nav class="sitebar" aria-label="Site"><a class="brand" href="/idiomas/">unirversos <span>/ idiomas</span></a><span class="navlinks"><a href="/">início</a><a href="/idiomas/">idiomas</a><a href="/idiomas/mapas/">mapas</a><a href="/sobre/">sobre</a></span></nav>
+  <nav class="trail" aria-label="Trilha"><a href="/idiomas/planeta-utopia/">🪐 Planeta Utopia</a><a href="/idiomas/planeta-utopia/atelie/">🎨 Ateliê de Avatar</a><a href="/idiomas/planeta-utopia/caderno/">📒 Caderno</a><a href="/idiomas/hiragana/">あ Hiragana</a><a href="/idiomas/katakana/">ア Katakana</a><a href="/idiomas/aula-zero/">🎓 Aula Zero</a><a href="/idiomas/mapas/" aria-current="page">🗺️ Mapas de contexto</a></nav>
+
+  <header class="top">
+    <div>
+      <p class="eyebrow" id="eyebrow">Mapa de contexto</p>
+      <h1 id="h1">Aula</h1>
+    </div>
+    <div class="tools">
+      <span class="xp" id="xp">XP 0</span>
+      <button class="btn small" type="button" id="btnRo" aria-pressed="true">Romaji: sim</button>
+      <button class="btn small ar" type="button" id="btnAr">🌬️ Ar · socorro</button>
+    </div>
+  </header>
+
+  <nav class="steps" id="steps" aria-label="Etapas da aula"></nav>
+
+  <section class="scene" aria-live="polite">
+    <div class="stage-wrap">
+      <svg class="stage" id="stage" viewBox="0 0 400 250" role="img" aria-label="Cena"></svg>
+      <div class="fx" id="fx" aria-hidden="true"></div>
+    </div>
+    <div class="panel" id="panel"></div>
+  </section>
+
+  <nav class="links" id="links" aria-label="Navegação dos mapas"></nav>
+
+  <div class="drawer" id="drawer" hidden>
+    <div class="drawer-card" role="dialog" aria-label="Ar: frases de socorro">
+      <div class="drawer-head"><b>🌬️ Ar · frases para manter a conversa viva</b><button class="btn small" type="button" id="btnArClose">Fechar</button></div>
+      <p class="pt">Travou? Tudo bem. Use uma destas e respire.</p>
+      <div id="arList" class="ar-list"></div>
+    </div>
+  </div>
+
+  <p class="note">O personagem da direita é o seu avatar do Ateliê. Cada palavra nova vale 5 XP, e terminar a cena vale mais 20. Áudio pela voz japonesa do seu aparelho.</p>
+</div>
+
+<script src="/idiomas/dados/avatar.js?v=20261016g"></script>
+<script src="/idiomas/dados/aulas/restaurante.js?v=20261016m"></script>
+<script src="/idiomas/dados/mapa-aula.js?v=20261016m"></script>
+</body>
+</html>
