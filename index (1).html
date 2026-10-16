@@ -1,0 +1,584 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>Ateliê de Avatar — Planeta Utopia | Unirversos Idiomas</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@500;700;800&family=Zen+Maru+Gothic:wght@400;500;700&display=swap">
+<style>
+/* Layout: caderno pontilhado — palco do avatar (fita washi) à esquerda, estúdio de escolhas à direita, caderno de palavras embaixo */
+:root{
+  --paper:#fdf6f4; --card:#ffffff; --ink:#3a2b38; --muted:#7c6a78; --line:#ecdadd;
+  --blush:#f8dde1; --pink:#d9506f; --sage:#7fa487; --sage-soft:#e8efe8; --gold:#c9962c; --lavender:#b7a6dc;
+  --f-display:"Baloo 2", "Zen Maru Gothic", system-ui, sans-serif;
+  --f-body:"Zen Maru Gothic", "Hiragino Maru Gothic ProN", "Noto Sans JP", system-ui, sans-serif;
+  --r:18px;
+}
+
+*{box-sizing:border-box}
+body{background:var(--paper);color:var(--ink);font-family:var(--f-body);font-size:15px;line-height:1.6;
+  background-image:radial-gradient(var(--line) 1.2px, transparent 1.3px);background-size:22px 22px;
+  padding-left:max(16px, env(safe-area-inset-left,0px));padding-right:max(16px, env(safe-area-inset-right,0px));padding-block:20px 48px}
+.wrap{max-width:1120px;margin:0 auto;display:flex;flex-direction:column;gap:22px}
+button{font:inherit;color:inherit;cursor:pointer}
+button:focus-visible{outline:3px solid var(--lavender);outline-offset:2px}
+ruby rt{font-size:.5em;color:var(--muted);font-weight:500}
+
+/* topo */
+.top{display:flex;flex-wrap:wrap;align-items:flex-end;justify-content:space-between;gap:16px}
+.eyebrow{font-size:12px;letter-spacing:.14em;text-transform:uppercase;color:var(--muted)}
+h1{font-family:var(--f-display);font-weight:800;font-size:clamp(30px,5vw,44px);line-height:1.05;margin:2px 0 0;text-wrap:balance}
+h1 .jp{font-family:var(--f-body);font-weight:700;font-size:.5em;color:var(--pink);margin-left:8px;vertical-align:middle}
+.xp{background:var(--card);border:1.5px solid var(--line);border-radius:var(--r);padding:12px 16px;min-width:260px;display:grid;gap:6px}
+.xp-row{display:flex;justify-content:space-between;align-items:baseline;gap:12px;font-variant-numeric:tabular-nums}
+.lvl{font-family:var(--f-display);font-weight:700;font-size:18px}
+.lvl small{font-family:var(--f-body);font-weight:500;color:var(--muted);font-size:12px;margin-left:4px}
+.bar{height:10px;border-radius:99px;background:var(--blush);overflow:hidden}
+.bar i{display:block;height:100%;width:0;background:linear-gradient(90deg,var(--pink),var(--gold));border-radius:99px;transition:width .5s cubic-bezier(.3,1.4,.5,1)}
+.xp .meta{font-size:12px;color:var(--muted)}
+
+/* grade principal */
+.main{display:grid;grid-template-columns:minmax(0,380px) minmax(0,1fr);gap:22px;align-items:start}
+@media (max-width:860px){.main{grid-template-columns:minmax(0,1fr)}}
+
+.stage{position:relative;background:var(--card);border:1.5px solid var(--line);border-radius:var(--r);padding:20px 18px 18px;display:grid;gap:14px}
+@media (min-width:861px){.stage{position:sticky;top:calc(env(safe-area-inset-top,0px) + 12px)}}
+.tape{position:absolute;width:92px;height:24px;top:-11px;opacity:.85;border-radius:2px;
+  background:repeating-linear-gradient(45deg,var(--blush) 0 8px,color-mix(in srgb,var(--lavender) 55%,transparent) 8px 16px)}
+.tape.l{left:18px;transform:rotate(-6deg)} .tape.r{right:18px;transform:rotate(5deg);
+  background:repeating-linear-gradient(-45deg,var(--sage-soft) 0 8px,color-mix(in srgb,var(--sage) 45%,transparent) 8px 16px)}
+.avatar-box{border-radius:14px;overflow:hidden;aspect-ratio:240/300;max-width:100%;width:100%;margin:0 auto;box-shadow:0 1px 0 var(--line)}
+.avatar-box svg{display:block;width:100%;height:100%}
+.stage-tools{display:flex;flex-wrap:wrap;gap:10px;align-items:center;justify-content:space-between}
+.skins{display:flex;flex-wrap:wrap;gap:6px;align-items:center;font-size:12px;color:var(--muted)}
+.skins>span{flex-basis:100%;font-size:13px}.skins b{color:var(--ink)}
+.skin{position:relative;width:24px;height:24px;border-radius:50%;border:2px solid var(--card);box-shadow:0 0 0 1.5px var(--line);padding:0}
+.skin[aria-pressed="true"]{box-shadow:0 0 0 2.5px var(--pink)}
+.btn{position:relative;display:inline-flex;align-items:center;gap:6px;border:1.5px solid var(--line);background:var(--card);border-radius:99px;padding:7px 14px;font-size:13px;font-weight:700}
+.btn:hover{border-color:var(--pink)}
+.btn.primary{background:var(--pink);border-color:var(--pink);color:#fff}
+.btn svg{width:16px;height:16px}
+
+/* idade */
+.ficha{display:grid;gap:10px;border-top:1.5px dashed var(--line);padding-top:12px}
+.ficha-h{display:flex;justify-content:space-between;align-items:baseline;gap:8px;font-weight:700;font-size:16px}
+.ficha-h small{font-weight:500;color:var(--muted);font-size:12px}
+#age{width:100%;accent-color:var(--pink)}
+.ages{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.numbox{position:relative;display:grid;justify-items:start;gap:0;text-align:left;border:1.5px solid var(--line);background:var(--paper);border-radius:14px;padding:8px 12px;line-height:1.35;min-width:0}
+.numbox b{font-family:var(--f-display);font-size:24px;font-variant-numeric:tabular-nums}
+.numbox span{font-size:15px;font-weight:700;overflow-wrap:anywhere}
+.numbox small{font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:.12em}
+.numbox:hover{border-color:var(--pink)}
+.numbox.irr{border-color:var(--pink);background:var(--blush)}
+.numbox.irr span{color:var(--pink)}
+.age-note{margin:0;background:var(--blush);border-left:4px solid var(--pink)}
+.age-note strong{color:var(--pink)}
+
+/* descrição */
+.intro h3{font-family:var(--f-display);font-size:17px;margin:0;display:flex;justify-content:space-between;align-items:center;gap:8px}
+.intro h3 span{font-family:var(--f-body);font-weight:500;font-size:12px;color:var(--muted)}
+.lines{display:grid;gap:6px;margin-top:8px}
+.line{display:grid;text-align:left;border:0;background:var(--sage-soft);border-radius:12px;padding:8px 12px;border-left:4px solid var(--sage)}
+.line:hover{filter:brightness(.98)}
+.line b{font-weight:700;font-size:15.5px;letter-spacing:.02em}
+.line small{color:var(--muted);font-size:12px}
+
+/* estúdio */
+.studio{display:grid;gap:16px;min-width:0}
+.tabs{display:flex;gap:8px;overflow-x:auto;padding-bottom:4px;scrollbar-width:thin}
+.tab{flex:0 0 auto;border:1.5px solid var(--line);background:var(--card);border-radius:14px;padding:6px 14px 8px;display:grid;justify-items:center;line-height:1.2}
+.tab .j{font-weight:700;font-size:16px}
+.tab .p{font-size:11px;color:var(--muted)}
+.tab[aria-selected="true"]{background:var(--ink);border-color:var(--ink);color:var(--paper)}
+.tab[aria-selected="true"] .p, .tab[aria-selected="true"] rt{color:color-mix(in srgb,var(--paper) 75%,transparent)}
+.tab .count{font-size:10px;font-variant-numeric:tabular-nums;color:var(--pink);font-weight:700}
+
+.opts{display:grid;grid-template-columns:repeat(auto-fill,minmax(118px,1fr));gap:10px}
+.opt{position:relative;border:1.5px solid var(--line);background:var(--card);border-radius:16px;padding:12px 10px 10px;display:grid;justify-items:center;gap:2px;text-align:center;transition:transform .15s}
+.opt:hover{transform:translateY(-2px);border-color:var(--lavender)}
+.opt[aria-pressed="true"]{border-color:var(--pink);box-shadow:0 0 0 2px var(--pink) inset}
+.opt .j{font-size:21px;font-weight:700;line-height:1.5}
+.opt .p{font-size:12px;color:var(--muted)}
+.opt .sw{width:22px;height:22px;border-radius:50%;box-shadow:0 0 0 1.5px var(--line);margin-bottom:2px}
+.opt .badge{position:absolute;top:6px;right:8px;font-size:10px;font-weight:700;color:var(--gold);font-family:var(--f-display)}
+.opt .done{position:absolute;top:7px;right:9px;width:8px;height:8px;border-radius:50%;background:var(--sage)}
+.float{position:absolute;left:50%;top:0;transform:translateX(-50%);font-family:var(--f-display);font-weight:800;color:var(--gold);pointer-events:none;animation:up 1s ease-out forwards}
+@keyframes up{to{transform:translate(-50%,-38px);opacity:0}}
+
+/* cartão da palavra */
+.word{background:var(--card);border:1.5px solid var(--line);border-left:5px solid var(--pink);border-radius:var(--r);padding:18px 20px;display:grid;grid-template-columns:auto minmax(0,1fr);gap:6px 20px;align-items:center}
+.word .big{font-size:clamp(40px,7vw,56px);font-weight:700;line-height:1.3;grid-row:span 3}
+.word .big ruby rt{font-size:.32em}
+.word .cat{font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--muted)}
+.word .pt{font-family:var(--f-display);font-weight:700;font-size:22px;line-height:1.1}
+.word .ro{color:var(--muted);font-size:13px}
+.word .acts{grid-column:1/-1;display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin-top:6px}
+.tip{grid-column:1/-1;background:var(--sage-soft);border-radius:12px;padding:10px 14px;font-size:13.5px;max-width:65ch}
+.tip strong{color:var(--sage)}
+.word.anim .big{animation:pop .45s cubic-bezier(.3,1.5,.5,1)}
+.kana-in span{display:inline-block;animation:drop .35s backwards}
+@keyframes drop{from{transform:translateY(-10px);opacity:0}}
+@media (max-width:480px){.word{grid-template-columns:minmax(0,1fr)}.word .big{grid-row:auto}}
+
+/* carteirinha */
+.passe{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.35fr);gap:22px;align-items:start}
+@media (max-width:860px){.passe{grid-template-columns:minmax(0,1fr)}}
+.passe-form{background:var(--card);border:1.5px solid var(--line);border-radius:var(--r);padding:18px 20px;display:grid;gap:12px}
+.passe-form h2{font-family:var(--f-display);font-size:22px;margin:0;line-height:1.2}
+.passe-form h2 span{display:block;font-family:var(--f-body);font-size:13px;color:var(--muted);font-weight:500}
+.field{display:grid;gap:4px;font-size:13px;color:var(--muted)}
+.field input{font:inherit;font-size:16px;color:var(--ink);background:var(--paper);border:1.5px solid var(--line);border-radius:12px;padding:9px 12px;min-width:0}
+.field input:focus-visible{outline:3px solid var(--lavender);outline-offset:1px}
+.prons{display:flex;flex-wrap:wrap;gap:8px}
+.pron{position:relative;border:1.5px solid var(--line);background:var(--card);border-radius:12px;padding:6px 12px 7px;display:grid;justify-items:center;line-height:1.25}
+.pron b{font-size:17px}.pron small{font-size:11px;color:var(--muted)}
+.pron[aria-pressed="true"]{border-color:var(--pink);box-shadow:0 0 0 2px var(--pink) inset}
+.card{--cb:color-mix(in srgb,var(--gold) 14%,var(--card));position:relative;border-radius:16px;overflow:hidden;border:1.5px solid color-mix(in srgb,var(--gold) 55%,var(--line));
+  background:repeating-radial-gradient(circle at 85% 20%,transparent 0 9px,color-mix(in srgb,var(--gold) 9%,transparent) 9px 10px),var(--card);display:grid}
+.c-top{display:flex;justify-content:space-between;align-items:center;gap:10px;background:var(--ink);color:var(--paper);padding:9px 16px;font-size:12px;letter-spacing:.14em}
+.c-top b{font-family:var(--f-body);letter-spacing:.06em;font-size:15px;color:var(--gold)}
+.c-top .lv{font-family:var(--f-display);font-weight:800;letter-spacing:0;font-size:15px}
+.c-body{display:grid;grid-template-columns:minmax(0,150px) minmax(0,1fr);gap:16px;padding:16px}
+@media (max-width:480px){.c-body{grid-template-columns:minmax(0,108px) minmax(0,1fr);gap:12px}}
+.c-photo{border-radius:10px;overflow:hidden;border:3px solid var(--card);box-shadow:0 0 0 1.5px var(--line);aspect-ratio:240/300;align-self:start}
+.c-photo svg{display:block;width:100%;height:100%}
+.c-data{margin:0;display:grid;gap:7px;min-width:0}
+.c-data dt,.c-intro dt{font-size:10.5px;letter-spacing:.12em;color:var(--muted)}
+.c-data dd{margin:0;font-weight:700;font-size:15px;overflow-wrap:anywhere}
+.c-data dd small{font-weight:500;color:var(--muted);font-size:12px;margin-left:4px}
+.c-data ul{margin:2px 0 0;padding:0;list-style:none;font-weight:500;font-size:13.5px;display:grid;gap:1px}
+.c-data li::before{content:"・";color:var(--pink)}
+.c-intro{margin:0 16px;padding:10px 14px;background:var(--sage-soft);border-left:4px solid var(--sage);border-radius:0 12px 12px 0}
+.c-intro p{margin:2px 0 0;font-size:15.5px;font-weight:700;line-height:1.7;overflow-wrap:anywhere}
+.c-foot{display:grid;grid-template-columns:auto minmax(0,1fr);gap:14px;align-items:end;padding:14px 16px 16px}
+.qr{width:76px;height:76px;padding:4px;background:#fff;border-radius:8px;border:1.5px solid var(--line)}
+.qr img,.qr canvas{width:100%!important;height:100%!important;display:block}
+.c-meta{display:grid;gap:5px;font-size:12px;color:var(--muted);font-variant-numeric:tabular-nums}
+.c-meta b{color:var(--ink)}
+.c-meta .bar{height:8px}
+
+/* caderno */
+.caderno{background:var(--card);border:1.5px solid var(--line);border-radius:var(--r);padding:18px 20px;display:grid;gap:12px}
+.caderno header{display:flex;flex-wrap:wrap;justify-content:space-between;align-items:center;gap:10px}
+.caderno h2{font-family:var(--f-display);font-size:22px;margin:0}
+.caderno h2 span{font-family:var(--f-body);font-size:13px;color:var(--muted);font-weight:500;margin-left:6px}
+.chips{display:flex;flex-wrap:wrap;gap:8px}
+.chip{border:1.5px solid var(--line);background:var(--paper);border-radius:99px;padding:4px 12px;font-size:14px}
+.chip small{color:var(--muted);margin-left:4px;font-size:11px}
+.empty{color:var(--muted);font-size:13.5px}
+.challenge{border-top:1.5px dashed var(--line);padding-top:14px;display:grid;gap:10px}
+.challenge .q{display:flex;align-items:center;gap:10px;flex-wrap:wrap;font-weight:700}
+.answers{display:flex;flex-wrap:wrap;gap:8px}
+.answers .btn{font-size:14px;padding:9px 16px}
+.answers .ok{background:var(--sage);border-color:var(--sage);color:#fff}
+.answers .no{border-color:var(--pink);color:var(--pink)}
+.fb{font-size:14px}
+.note{font-size:12px;color:var(--muted)}
+
+/* animações do avatar */
+.pop{animation:pop .5s cubic-bezier(.3,1.6,.5,1);transform-box:fill-box;transform-origin:center}
+.fade{animation:fade .5s ease}
+@keyframes pop{0%{transform:scale(.55);opacity:0}100%{transform:scale(1);opacity:1}}
+@keyframes fade{from{opacity:0}}
+.char{animation:bob 3.4s ease-in-out infinite}
+@keyframes bob{50%{transform:translateY(-4px)}}
+.petal{animation:fall 7s linear infinite}
+@keyframes fall{from{transform:translate(0,-40px) rotate(0)}to{transform:translate(-30px,340px) rotate(260deg)}}
+.twinkle{animation:tw 2.4s ease-in-out infinite}
+@keyframes tw{50%{opacity:.25}}
+.zz{animation:zz 2.2s ease-in-out infinite}
+@keyframes zz{from{opacity:0;transform:translate(0,6px)}50%{opacity:1}to{opacity:0;transform:translate(8px,-10px)}}
+@media (prefers-reduced-motion:reduce){*,*::before,*::after{animation:none!important;transition:none!important}}
+
+.line small.en,.opt .p.en,.word .pt .en,.c-tr i,.tab .p i{color:var(--muted);font-style:italic}
+.opt .p.en{font-size:11.5px;margin-top:-2px}
+.word .pt .en{display:block;font-family:var(--f-body);font-weight:500;font-size:15px;margin-top:2px}
+.c-tr{margin:4px 0 0!important;font-size:12px!important;font-weight:500!important;color:var(--muted);line-height:1.5!important}
+
+.ro{display:none;font-family:var(--f-body);font-style:italic;font-weight:500;font-size:.78em;color:var(--muted);letter-spacing:.01em}
+body.show-ro .ro{display:inline}
+body.show-ro .opt .ro,body.show-ro .tab .ro,body.show-ro .line .ro,body.show-ro .pron .ro,body.show-ro .c-ro,body.show-ro .numbox .ro{display:block}
+.opt .ro{font-size:12px}.c-ro{margin:2px 0 0!important;font-size:13px!important}
+.ro-toggle{float:right;margin:0 0 6px 10px}
+.ro-toggle[aria-pressed="true"]{background:var(--ink);border-color:var(--ink);color:var(--paper)}
+.ro-toggle[aria-pressed="true"] rt{color:inherit}
+
+/* carteirinha e Planeta Utopia na coluna da direita */
+.studio .passe{grid-template-columns:minmax(0,1fr)}
+.studio .passe-sec{display:grid;gap:16px}
+.planet{background:var(--card);border:1.5px solid var(--line);border-left:5px solid var(--lavender);border-radius:var(--r);padding:16px 18px;display:grid;gap:12px}
+.planet-h{display:flex;gap:12px;align-items:flex-start}
+.planet-ic{font-size:30px;line-height:1}
+.planet h2{font-family:var(--f-display);font-size:20px;margin:0;line-height:1.2}
+.planet p{margin:2px 0 0;color:var(--muted);font-size:14px}
+.planet-stats{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}
+.planet-stats div{background:var(--paper);border-radius:12px;padding:8px 10px;display:grid;justify-items:center}
+.planet-stats b{font-family:var(--f-display);font-size:22px;font-variant-numeric:tabular-nums}
+.planet-stats small{font-size:11.5px;color:var(--muted)}
+.planet .go{text-decoration:none;justify-self:start}
+@media print{
+  body{background:#fff!important;padding:0}
+  body *{visibility:hidden}
+  #card,#card *{visibility:visible}
+  #card{position:absolute;left:50%;top:12mm;transform:translateX(-50%);width:171mm;max-width:171mm;outline:1.5px dashed #999;outline-offset:6mm}
+}
+
+.eyebrow.back{text-decoration:none;color:var(--muted)}.eyebrow.back:hover{color:var(--pink)}
+.xp .go{justify-content:center;text-decoration:none;margin-top:4px}
+.actions a.btn{text-decoration:none}
+.qr-note{font-size:11.5px}
+.lv-toast{position:fixed;left:50%;bottom:calc(20px + env(safe-area-inset-bottom,0px));transform:translateX(-50%);background:var(--ink);color:var(--paper);padding:12px 18px;border-radius:14px;font-weight:700;z-index:20;box-shadow:0 6px 24px rgba(0,0,0,.18);max-width:calc(100% - 32px)}
+.lv-toast rt{color:inherit;opacity:.8}
+
+[hidden]{display:none!important}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header class="top">
+    <div>
+      <a class="eyebrow back" href="/idiomas/planeta-utopia/">← Unirversos · Planeta Utopia</a>
+      <button class="btn ro-toggle" id="roToggle" type="button" aria-pressed="false" title="Mostrar romaji embaixo do japonês">ローマ<ruby>字<rt>じ</rt></ruby> · Romaji</button>
+      <h1>Ateliê de Avatar <span class="jp" data-ro="abatā kōbō">アバター<ruby>工房<rt>こうぼう</rt></ruby></span></h1>
+    </div>
+    <div class="xp" aria-live="polite">
+      <div class="xp-row"><span class="lvl" id="lvl">Nv. 1 <small>たまご</small></span><span id="xpn">0 XP</span></div>
+      <div class="bar"><i id="xpbar"></i></div>
+      <div class="xp-row meta"><span id="wcount">0 palavras aprendidas</span><span id="nextlvl"></span></div>
+      <a class="btn primary go" href="/idiomas/planeta-utopia/"><span data-ro="yūtopia e tabidatsu">ユートピアへ<ruby>旅立<rt>たびだ</rt></ruby>つ</span> →</a>
+    </div>
+  </header>
+
+  <div class="main">
+    <section class="stage" aria-label="Seu avatar">
+      <span class="tape l"></span><span class="tape r"></span>
+      <div class="avatar-box"><svg id="avatar" viewBox="0 0 240 300" role="img" aria-label="Avatar"></svg></div>
+      <div class="stage-tools">
+        <div class="skins" id="skins"><span>Tom de pele</span></div>
+        <button class="btn" id="dice" type="button">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="4"/><circle cx="8.5" cy="8.5" r="1.3" fill="currentColor"/><circle cx="15.5" cy="15.5" r="1.3" fill="currentColor"/><circle cx="12" cy="12" r="1.3" fill="currentColor"/></svg>
+          Sortear
+        </button>
+      </div>
+      <div class="ficha">
+        <div class="ficha-h"><span><span data-ro="nenrei"><ruby>年齢<rt>ねんれい</rt></ruby></span> · Idade</span><small>arraste: o número é falado ao soltar</small></div>
+        <input type="range" id="age" min="1" max="100" aria-label="Idade do avatar">
+        <div class="ages">
+          <button class="numbox" type="button" id="sayNum"><small>número</small><b id="numDigit"></b><span id="numKana"></span></button>
+          <button class="numbox" type="button" id="sayAge"><small>idade · ouvir</small><b id="ageDigit"></b><span id="ageKana"></span></button>
+        </div>
+        <p class="tip age-note" id="ageNote" hidden></p>
+      </div>
+      <p class="tip" style="margin:0">Curiosidade: はだいろ (cor de pele) já foi o nome de um único lápis bege nos estojos japoneses. Hoje ele se chama うすだいだい ou ペールオレンジ, porque pele tem muitas cores.</p>
+      <div class="intro">
+        <h3><span data-ro="jikoshōkai">じこしょうかい</span> <span>como seu avatar se descreve</span></h3>
+        <div class="lines" id="lines"></div>
+        <div style="margin-top:10px"><button class="btn primary" id="sayall" type="button">
+          <svg viewBox="0 0 24 24" fill="currentColor"><path d="M4 9v6h4l5 4V5L8 9H4zm12.5 3a4.5 4.5 0 0 0-2.5-4v8a4.5 4.5 0 0 0 2.5-4z"/></svg>
+          Ouvir a descrição inteira</button></div>
+      </div>
+    </section>
+
+    <section class="studio" aria-label="Escolhas">
+      <div class="tabs" role="tablist" id="tabs"></div>
+      <p class="note" id="multiNote" hidden>Pode escolher mais de um. Toque de novo para tirar.</p>
+      <div class="opts" id="opts"></div>
+      <article class="word" id="word" aria-live="polite"></article>
+  <section class="passe-sec">
+      <div class="passe">
+        <div class="passe-form">
+          <h2>Carteirinha de aventureiro<span data-ro="yūtopia bōkenshashō">ユートピア<ruby>冒険者証<rt>ぼうけんしゃしょう</rt></ruby></span></h2>
+          <label class="field" for="pName">Seu nome
+            <input id="pName" type="text" maxlength="24" autocomplete="off" placeholder="Ex.: Ana, Kenji, Tiago">
+          </label>
+          <label class="field" for="pKata">Seu nome em katakana (opcional — é assim que japoneses escrevem nomes estrangeiros)
+            <input id="pKata" type="text" maxlength="24" autocomplete="off" placeholder="Ex.: アナ, ケンジ, チアゴ" lang="ja">
+          </label>
+          <div class="field">Como seu avatar diz "eu"
+            <div class="prons" id="prons"></div>
+          </div>
+          <p class="tip" id="pronTip" style="margin:0"></p>
+        </div>
+        <div style="display:grid;gap:10px">
+          <article class="card" id="card" aria-label="Carteirinha de aventureiro">
+            <header class="c-top"><span>PLANETA UTOPIA</span><b><ruby>冒険者証<rt>ぼうけんしゃしょう</rt></ruby></b><span class="lv" id="cLv"></span></header>
+            <div class="c-body">
+              <div class="c-photo"><svg id="cardAvatar" viewBox="0 0 240 300" role="img" aria-label="Foto do avatar"></svg></div>
+              <dl class="c-data">
+                <div><dt><span data-ro="namae"><ruby>名前<rt>なまえ</rt></ruby></span> · NOME</dt><dd id="cName"></dd></div>
+                <div><dt><span data-ro="nenrei"><ruby>年齢<rt>ねんれい</rt></ruby></span> · IDADE</dt><dd id="cAge"></dd></div>
+                <div><dt><span data-ro="shōgō"><ruby>称号<rt>しょうごう</rt></ruby></span> · TÍTULO</dt><dd id="cTitle"></dd></div>
+                <div><dt><span data-ro="tokuchō"><ruby>特徴<rt>とくちょう</rt></ruby></span> · CARACTERÍSTICAS</dt><dd><ul id="cFeat"></ul></dd></div>
+              </dl>
+            </div>
+            <dl class="c-intro" style="margin-block:0"><dt><span data-ro="jikoshōkai"><ruby>自己紹介<rt>じこしょうかい</rt></ruby></span></dt><dd style="margin:0"><p id="cIntro"></p><p class="c-ro ro" id="cIntroRo"></p><p class="c-tr" id="cIntroTr"></p></dd></dl>
+            <footer class="c-foot">
+              <div class="qr" id="qr" title="Abre o Planeta Utopia"></div>
+              <div class="c-meta">
+                <span class="qr-note">QR: abre o seu <ruby>単語帳<rt>たんごちょう</rt></ruby> (caderno de palavras)</span>
+              <span><span data-ro="hakkōbi"><ruby>発行日<rt>はっこうび</rt></ruby></span>: <b id="cDate"></b></span>
+                <span id="cXp"></span>
+                <div class="bar"><i id="cBar"></i></div>
+              </div>
+            </footer>
+          </article>
+          <div class="actions" style="display:flex;flex-wrap:wrap;gap:8px"><button class="btn primary" type="button" id="sayIntro">
+            <svg viewBox="0 0 24 24" fill="currentColor"><path d="M4 9v6h4l5 4V5L8 9H4zm12.5 3a4.5 4.5 0 0 0-2.5-4v8a4.5 4.5 0 0 0 2.5-4z"/></svg>
+            Ouvir o <ruby>自己紹介<rt>じこしょうかい</rt></ruby></button>
+          <button class="btn" type="button" id="btnPrint">Imprimir para recortar</button>
+          <button class="btn" type="button" id="btnPng">Baixar imagem (PNG)</button>
+          <a class="btn primary" href="/idiomas/planeta-utopia/"><span data-ro="yūtopia e tabidatsu">ユートピアへ<ruby>旅立<rt>たびだ</rt></ruby>つ</span> →</a></div>
+        </div>
+      </div>
+    </section>
+      <section class="planet" aria-label="Planeta Utopia">
+        <div class="planet-h">
+          <span class="planet-ic" aria-hidden="true">🪐</span>
+          <div><h2>Planeta Utopia</h2><p>Leve seu avatar para as cenas: aeroporto, hotel, kombini, trem. O XP do Ateliê já conta lá.</p></div>
+        </div>
+        <div class="planet-stats">
+          <div><b id="pLv">1</b><small>nível</small></div>
+          <div><b id="pXp">0</b><small>XP</small></div>
+          <div><b id="pStamps">0</b><small>carimbos</small></div>
+        </div>
+        <a class="btn primary go" href="/idiomas/planeta-utopia/"><span data-ro="yūtopia e tabidatsu">ユートピアへ<ruby>旅立<rt>たびだ</rt></ruby>つ</span> →</a>
+      </section>
+    </section>
+  </div>
+
+
+
+  <section class="caderno">
+    <header>
+      <h2>Caderno de palavras <span data-ro="tangochō"><ruby>単語帳<rt>たんごちょう</rt></ruby></span></h2>
+      <button class="btn primary" id="chStart" type="button">Desafio de ouvido · +15 XP</button>
+    </header>
+    <div class="chips" id="chips"></div>
+    <div class="challenge" id="challenge" hidden></div>
+    <p class="note" id="voiceNote">Áudio: por enquanto, a voz japonesa do próprio aparelho.</p>
+  </section>
+</div>
+<div class="lv-toast" id="lvToast" role="status" hidden></div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+<script src="/idiomas/dados/avatar.js?v=20261016d"></script>
+<script src="/idiomas/dados/atelie-dados.js?v=20261016d"></script>
+<script>
+/* ---------- estado: avatar (utopiaAvatar1) + progresso do jogo (utopiaSave1) ---------- */
+const AV=UtopiaAvatar, GKEY='utopiaSave1'; AV.injectCSS();
+const saved=AV.load()||{};
+let state={sel:Object.assign({},AV.DEFAULT,saved.sel||{}),profile:Object.assign({name:'',kata:'',pron:'watashi'},saved.profile||{}),learned:saved.learned||{},cat:'hair',focus:'mijikai'};
+let g=null; try{ g=JSON.parse(localStorage.getItem(GKEY)||'null'); }catch(e){}
+g=Object.assign({name:'',xp:0,maxXp:100,level:1,hp:10,maxHp:10,done:{}},g||{});
+if(!state.profile.name && g.name && g.name!=='Viajante') state.profile.name=g.name;
+CATS.forEach(c=>{ if(c.multi&&!Array.isArray(state.sel[c.key])) state.sel[c.key]=state.sel[c.key]?[state.sel[c.key]]:[]; });
+const isSel=(c,id)=>c.multi?state.sel[c.key].includes(id):state.sel[c.key]===id;
+const has=id=>state.sel.acc.includes(id)||state.sel.traits.includes(id);
+const $=id=>document.getElementById(id);
+function save(){
+  AV.save({sel:state.sel,profile:state.profile,learned:state.learned});
+  const nm=displayName(); if(nm) g.name=nm;
+  try{ localStorage.setItem(GKEY,JSON.stringify(g)); }catch(e){}
+}
+function gain(n){ g.xp+=n; let up=false;
+  while(g.xp>=g.maxXp){ g.xp-=g.maxXp; g.level++; g.maxHp+=5; g.hp=g.maxHp; g.maxXp=Math.round(g.maxXp*1.2); up=true; }
+  if(up) levelToast(); }
+function levelToast(){ const t=$('lvToast'); if(!t) return; t.innerHTML=`Nível ${g.level}! Novo título: ${AV.titleHTML(g.level)}`; t.hidden=false; clearTimeout(t._h); t._h=setTimeout(()=>t.hidden=true,3200); }
+
+/* ---------- descrição em japonês ---------- */
+function sentences(){
+  const S=state.sel, hs=find(HAIR,S.hair), hc=find(COLORS,S.hairColor), cl=find(CLOTHES,S.clothes), cc=find(COLORS,S.clothColor),
+        fa=find(FACE,S.face), bg=find(BG,S.bg);
+  const sk=skinWord(S.skin);
+  const out=[{jp:`わたしは ${ageInfo(S.age).kana}です。`,pt:`Tenho ${S.age} anos.`,en:`I'm ${S.age} years old.`},{jp:`はだの いろは ${sk.kana}です。`,pt:sk.ptSay,en:sk.en?`My skin is ${sk.en}.`:''}];
+  if(!S.acc.includes('hijabu')) out.push({jp:`かみは ${hs.kana}です。`,pt:hs.ptSay,en:hs.enSay||''},{jp:`かみの いろは ${hc.kana}です。`,pt:`A cor do cabelo é ${hc.pt}.`,en:hc.en?`My hair is ${hc.en}.`:''});
+  out.push({jp:`${cc.mod} ${cl.kana}を きています。`,pt:`Estou vestindo ${cl.pt} (${cc.pt}).`,en:cc.en&&cl.en?`I'm wearing a ${cc.en} ${cl.en}.`:''},{jp:fa.say,pt:fa.ptSay,en:fa.enSay||''});
+  S.acc.forEach(id=>{const a=find(ACC,id); if(a.say) out.push({jp:a.say,pt:a.ptSay,en:a.enSay||''});});
+  S.traits.forEach(id=>{const t=find(TRAITS,id); out.push({jp:t.say,pt:t.ptSay,en:t.enSay||''});});
+  out.push({jp:bg.say,pt:bg.ptSay,en:bg.enSay||''});
+  return out;
+}
+function renderLines(){
+  $('lines').innerHTML=sentences().map((l,i)=>`<button class="line" type="button" data-i="${i}"><b>${l.jp}</b><small class="ro">${kana2ro(l.jp)}</small><small>${l.pt}</small><small class="en" lang="en">${l.en||''}</small></button>`).join('');
+}
+
+/* ---------- estúdio ---------- */
+function renderTabs(){
+  $('tabs').innerHTML=CATS.map(c=>{const n=c.opts.filter(o=>state.learned[o.id]).length;
+    return `<button class="tab" role="tab" type="button" data-cat="${c.key}" aria-selected="${state.cat===c.key}">
+      <span class="j">${ruby(c)}</span><span class="ro">${kana2ro(c.kana)}</span><span class="p">${c.pt} · <i lang="en">${c.en||''}</i></span><span class="count">${n}/${c.opts.length}</span></button>`}).join('');
+}
+function renderOpts(){
+  const cat=CATS.find(c=>c.key===state.cat);
+  $('multiNote').hidden=!cat.multi;
+  $('opts').innerHTML=cat.opts.map(o=>`<button class="opt" type="button" data-id="${o.id}" aria-pressed="${isSel(cat,o.id)}">
+     ${state.learned[o.id]?'<span class="done" title="Aprendida"></span>':`<span class="badge">+${WORD_XP}</span>`}
+     ${cat.color?`<span class="sw" style="background:${o.hex}"></span>`:''}
+     <span class="j">${ruby(o)}</span><span class="ro">${o.ro}</span><span class="p">${o.pt}</span><span class="p en" lang="en">${o.en||''}</span></button>`).join('');
+}
+function renderWord(animate){
+  const w=WORDS[state.focus]||HAIR[0];
+  const kana=[...w.kana].map((ch,i)=>`<span style="animation-delay:${i*60}ms">${ch}</span>`).join('');
+  $('word').className='word'+(animate?' anim':'');
+  $('word').innerHTML=`<div class="big">${ruby(w)}</div>
+    <div class="cat">${w.catPt}</div>
+    <div class="pt">${w.pt}<span class="en" lang="en">${w.en||''}</span></div>
+    <div class="ro"><span class="${animate?'kana-in':''}">${kana}</span> · ${w.ro}</div>
+    <div class="acts"><button class="btn primary" type="button" id="replay">
+      <svg viewBox="0 0 24 24" fill="currentColor"><path d="M4 9v6h4l5 4V5L8 9H4zm12.5 3a4.5 4.5 0 0 0-2.5-4v8a4.5 4.5 0 0 0 2.5-4z"/></svg>Ouvir de novo</button></div>
+    ${w.tip?`<div class="tip"><strong>Dica · </strong>${w.tip}</div>`:''}`;
+  $('replay').onclick=()=>speak(w.kana);
+}
+function renderPlanet(){ if(!$('pLv')) return; $('pLv').textContent=g.level; $('pXp').textContent=g.xp; $('pStamps').textContent=Object.keys(g.done||{}).length; }
+function renderXP(){ renderPlanet();
+  $('lvl').innerHTML=`Nv. ${g.level} <small>${AV.titleHTML(g.level)} <span class="ro">${kana2ro(AV.title(g.level)[1])}</span></small>`;
+  $('xpn').textContent=`${g.xp}/${g.maxXp} XP`;
+  $('xpbar').style.width=(g.xp/g.maxXp*100)+'%';
+  const n=Object.keys(state.learned).length;
+  $('wcount').textContent=`${n} de ${TOTAL} palavras`;
+  $('nextlvl').textContent=`faltam ${g.maxXp-g.xp} XP`;
+}
+function renderChips(){
+  const ids=Object.keys(state.learned);
+  $('chips').innerHTML=ids.length?ids.map(id=>{const w=WORDS[id];return `<button class="chip" type="button" data-id="${id}">${ruby(w)} <span class="ro">${w.ro}</span><small>${w.pt} · <i lang="en">${w.en||''}</i></small></button>`}).join('')
+    :'<p class="empty">Toque nas opções do ateliê. Cada palavra nova entra aqui e vale +5 XP.</p>';
+}
+function renderSkins(){
+  const sw=skinWord(state.sel.skin);
+  $('skins').innerHTML=`<span>はだ · Pele: <b>${ruby(sw)}</b> <span class="ro">${sw.ro}</span> ${sw.pt} · <i lang="en">${sw.en||''}</i>${state.learned[sw.id]?'':' <b style="color:var(--gold)">+'+WORD_XP+'</b>'}</span>`+AV.SKINS.map((h,i)=>`<button class="skin" type="button" data-skin="${i}" aria-label="Tom ${i+1}" aria-pressed="${state.sel.skin===i}" style="background:${h}"></button>`).join('');
+}
+function renderAge(){
+  const n=state.sel.age, a=ageInfo(n), irr=a.kana!==numKana(n)+'さい';
+  $('age').value=n; $('numDigit').textContent=n; $('numKana').innerHTML=`${numKana(n)} <span class="ro">${kana2ro(numKana(n))}</span>`;
+  $('ageDigit').innerHTML=`${n}<ruby>歳<rt>さい</rt></ruby>`; $('ageKana').innerHTML=`${a.kana} <span class="ro">${kana2ro(a.kana)}</span>`;
+  $('sayAge').classList.toggle('irr',irr);
+  $('ageNote').hidden=!irr; if(irr) $('ageNote').innerHTML='<strong>Muda a pronúncia! </strong>'+a.why;
+}
+function displayName(){ const p=state.profile; return (p.kata||p.name||'').trim(); }
+function introText(){
+  const pr=find(PRONS,state.profile.pron), nm=displayName()||'＿＿＿';
+  return `こんにちは！${pr.kana}は ${nm}です。${ageInfo(state.sel.age).kana}です。ユートピアで にほんごを べんきょうしています。よろしく おねがいします！`;
+}
+function introTr(){ const nm=esc(displayName()||'___'), n=state.sel.age;
+  return `Olá! Eu sou ${nm}. Tenho ${n} anos. Estou estudando japonês em Utopia. Prazer em conhecer!<br><i lang="en">Hi! I'm ${nm}. I'm ${n} years old. I'm studying Japanese in Utopia. Nice to meet you!</i>`; }
+function renderCard(){
+  const S=state.sel,p=state.profile;
+  $('cLv').textContent='★ Lv. '+g.level;
+  const nm=(p.kata||'').trim(), lat=(p.name||'').trim();
+  $('cName').innerHTML=nm||lat?esc(nm||lat)+(nm&&lat?`<small>${esc(lat)}</small>`:''):'<small>escreva seu nome ao lado</small>';
+  $('cAge').innerHTML=`<ruby>${S.age}歳<rt>${ageInfo(S.age).kana}</rt></ruby><span class="ro">${kana2ro(ageInfo(S.age).kana)}</span>`;
+  $('cTitle').innerHTML=`${AV.titleHTML(g.level)} <span class="ro">${kana2ro(AV.title(g.level)[1])}</span><small>${AV.title(g.level)[2]} · <i lang="en">${AV.title(g.level)[3]||''}</i></small>`;
+  const f=[];
+  if(!S.acc.includes('hijabu')) f.push(`かみ: ${find(HAIR,S.hair).kana}・${find(COLORS,S.hairColor).kana}`);
+  f.push(`${find(COLORS,S.clothColor).mod} ${find(CLOTHES,S.clothes).kana}`);
+  S.acc.forEach(id=>f.push(find(ACC,id).kana)); S.traits.forEach(id=>f.push(find(TRAITS,id).kana));
+  $('cFeat').innerHTML=f.map(x=>`<li>${x} <span class="ro">${kana2ro(x.replace(/[:・]/g,' '))}</span></li>`).join('');
+  $('cIntro').textContent=introText(); { const nm=displayName(); $('cIntroRo').textContent=nm?kana2ro(introText().replace(nm,'＠')).replace('＠',nm):kana2ro(introText()).replace('＿＿＿','___'); } $('cIntroTr').innerHTML=introTr();
+  const d=new Date(); $('cDate').innerHTML=dateJa(d);
+    $('cXp').innerHTML=`EXP <b>${g.xp}/${g.maxXp}</b> · ${Object.keys(state.learned).length} palavras`;
+  $('cBar').style.width=(g.xp/g.maxXp*100)+'%';
+  updateQR();
+}
+function renderProns(){
+  $('prons').innerHTML=PRONS.map(o=>`<button class="pron" type="button" data-id="${o.id}" aria-pressed="${state.profile.pron===o.id}"><b>${ruby(o)}</b><span class="ro">${o.ro}</span><small>${o.pt}</small><small lang="en"><i>${o.en||''}</i></small></button>`).join('');
+  $('pronTip').innerHTML=find(PRONS,state.profile.pron).tip;
+}
+function renderAvatar(changed){ $('avatar').innerHTML=AV.markup(state.sel,{changed}); $('cardAvatar').innerHTML=AV.markup(state.sel,{}); }
+let qr=null, lastQR='';
+function updateQR(){ const url=cadernoURL({name:displayName(),learned:state.learned,sel:state.sel}); if(url===lastQR) return; lastQR=url;
+  try{ if(!qr) qr=new QRCode($('qr'),{text:url,width:160,height:160,colorDark:'#3a2b38',colorLight:'#ffffff',correctLevel:QRCode.CorrectLevel.L}); else qr.makeCode(url); $('qr').title='Abre o seu caderno de palavras'; }catch(e){ $('qr').hidden=true; } }
+function applyRomaji(){ document.body.classList.toggle('show-ro',!!state.profile.romaji); const b=$('roToggle'); if(b) b.setAttribute('aria-pressed',!!state.profile.romaji); }
+document.querySelectorAll('[data-ro]').forEach(el=>el.insertAdjacentHTML('beforeend',` <span class="ro">${el.dataset.ro}</span>`));
+if($('roToggle')) $('roToggle').onclick=()=>{ state.profile.romaji=!state.profile.romaji; applyRomaji(); save(); };
+function renderAll(changed,animate){ applyRomaji(); renderCard(); renderProns(); renderAge(); renderAvatar(changed); renderLines(); renderTabs(); renderOpts(); renderWord(animate); renderXP(); renderChips(); renderSkins(); save(); }
+
+function floatXP(el,amount){ const f=document.createElement('span'); f.className='float'; f.textContent='+'+amount; el.appendChild(f); setTimeout(()=>f.remove(),1000); }
+
+/* ---------- eventos ---------- */
+$('tabs').addEventListener('click',e=>{const b=e.target.closest('.tab'); if(!b) return; state.cat=b.dataset.cat;
+  const cat=CATS.find(c=>c.key===state.cat); const v=state.sel[cat.key]; state.focus=cat.multi?(v[v.length-1]||cat.opts[0].id):v; renderAll(null,true); });
+$('opts').addEventListener('click',e=>{
+  const b=e.target.closest('.opt'); if(!b) return; const cat=CATS.find(c=>c.key===state.cat), id=b.dataset.id;
+  if(cat.multi){ let arr=state.sel[cat.key];
+    if(id==='nashi') arr=[]; else arr=arr.includes(id)?arr.filter(x=>x!==id):[...arr.filter(x=>x!=='nashi'),id];
+    state.sel[cat.key]=arr; } else state.sel[cat.key]=id;
+  state.focus=id;
+  const isNew=!state.learned[id]; if(isNew){ state.learned[id]=true; gain(WORD_XP); }
+  speak(WORDS[id].kana);
+  renderAll(cat.layer,true);
+  if(isNew){ const nb=$('opts').querySelector(`[data-id="${id}"]`); nb&&floatXP(nb,WORD_XP); }
+});
+$('lines').addEventListener('click',e=>{const b=e.target.closest('.line'); if(b) speak(sentences()[+b.dataset.i].jp);});
+$('age').addEventListener('input',e=>{ state.sel.age=+e.target.value; renderAge(); });
+$('age').addEventListener('change',e=>{ state.sel.age=+e.target.value; speak(numKana(state.sel.age)); renderLines(); save(); });
+$('sayNum').onclick=()=>speak(numKana(state.sel.age));
+$('sayAge').onclick=()=>{ const a=ageInfo(state.sel.age); speak(a.kana);
+  const ids=['sai',...(a.word?[a.word]:[])]; let got=0;
+  ids.forEach(id=>{ if(!state.learned[id]){ state.learned[id]=true; got+=WORD_XP; } });
+  state.focus=a.word||'sai';
+  if(got){ gain(got); } renderAll(null,true); if(got) floatXP($('sayAge'),got); };
+$('pName').value=state.profile.name; $('pKata').value=state.profile.kata;
+$('pName').addEventListener('input',e=>{state.profile.name=e.target.value; renderCard(); save();});
+$('pKata').addEventListener('input',e=>{state.profile.kata=e.target.value; renderCard(); save();});
+$('prons').addEventListener('click',e=>{const b=e.target.closest('.pron'); if(!b) return; const id=b.dataset.id; state.profile.pron=id;
+  const isNew=!state.learned[id]; if(isNew){state.learned[id]=true; gain(WORD_XP);} state.focus=id; speak(WORDS[id].kana); renderAll(null,false);
+  if(isNew){const nb=$('prons').querySelector(`[data-id="${id}"]`); nb&&floatXP(nb,WORD_XP);} });
+$('sayIntro').onclick=()=>speak(introText());
+$('sayall').onclick=()=>speak(sentences().map(l=>l.jp).join(' '));
+$('skins').addEventListener('click',e=>{const b=e.target.closest('.skin'); if(!b) return; state.sel.skin=+b.dataset.skin;
+  const w=skinWord(state.sel.skin), isNew=!state.learned[w.id]; if(isNew){state.learned[w.id]=true; gain(WORD_XP);}
+  state.focus=w.id; speak(w.kana); renderAll('skin',true);
+  if(isNew){const nb=$('skins').querySelector(`[data-skin="${state.sel.skin}"]`); nb&&floatXP(nb,WORD_XP);} });
+$('chips').addEventListener('click',e=>{const b=e.target.closest('.chip'); if(b){ speak(WORDS[b.dataset.id].kana); state.focus=b.dataset.id; renderWord(true);} });
+$('dice').onclick=()=>{ CATS.forEach(c=>{ const o=c.opts[Math.floor(Math.random()*c.opts.length)].id;
+    state.sel[c.key]=c.multi?(Math.random()<.5||o==='nashi'?[]:[o]):o; });
+  state.sel.skin=Math.floor(Math.random()*AV.SKINS.length); {const c=CATS.find(x=>x.key===state.cat),v=state.sel[c.key]; state.focus=c.multi?(v[0]||c.opts[0].id):v;} renderAll('body',true);
+  document.querySelectorAll('#avatar .char > g').forEach(g=>g.classList.add('pop')); };
+
+/* ---------- desafio de ouvido ---------- */
+let ch=null;
+function newChallenge(){
+  const pool=Object.keys(state.learned);
+  const box=$('challenge'); box.hidden=false;
+  if(pool.length<3){ box.innerHTML=`<p class="fb">Aprenda pelo menos 3 palavras no ateliê para liberar o desafio. Faltam ${3-pool.length}.</p>`; return; }
+  const ans=WORDS[pool[Math.floor(Math.random()*pool.length)]];
+  const others=Object.values(WORDS).filter(w=>w.pt!==ans.pt).sort(()=>Math.random()-.5);
+  const picks=[ans]; for(const w of others){ if(picks.length===3) break; if(!picks.some(p=>p.pt===w.pt)) picks.push(w); }
+  ch={ans,choices:picks.sort(()=>Math.random()-.5),done:false};
+  box.innerHTML=`<div class="q">Ouça e escolha o significado
+      <button class="btn" type="button" id="chPlay"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M4 9v6h4l5 4V5L8 9H4zm12.5 3a4.5 4.5 0 0 0-2.5-4v8a4.5 4.5 0 0 0 2.5-4z"/></svg>Tocar</button></div>
+    <div class="answers">${ch.choices.map(w=>`<button class="btn" type="button" data-id="${w.id}">${w.pt} <small lang="en"><i>· ${w.en||''}</i></small></button>`).join('')}</div>
+    <div class="fb" id="chFb"></div>`;
+  $('chPlay').onclick=()=>speak(ans.kana);
+  speak(ans.kana);
+}
+$('chStart').onclick=newChallenge;
+$('challenge').addEventListener('click',e=>{
+  const b=e.target.closest('.answers .btn'); if(!b||!ch||ch.done) return; ch.done=true;
+  const right=b.dataset.id===ch.ans.id;
+  $('challenge').querySelectorAll('.answers .btn').forEach(x=>{ if(x.dataset.id===ch.ans.id) x.classList.add('ok'); else if(x===b) x.classList.add('no'); });
+  if(right){ gain(15); floatXP(b,15); }
+  $('chFb').innerHTML=(right?`<b>せいかい！</b> ${ruby(ch.ans)} <span class="ro">${ch.ans.ro}</span> = ${ch.ans.pt} · <i lang="en">${ch.ans.en||''}</i>. +15 XP`:`<b>ざんねん…</b> Era ${ruby(ch.ans)} <span class="ro">${ch.ans.ro}</span> (${ch.ans.pt} · <i lang="en">${ch.ans.en||''}</i>).`)+
+    ` <button class="btn" type="button" id="chNext">Próxima</button>`;
+  $('chNext').onclick=newChallenge; renderXP(); save();
+});
+
+renderAll(null,false);
+
+/* imprimir e baixar (só funcionam no site) */
+if($('btnPrint')) $('btnPrint').onclick=()=>window.print();
+if($('btnPng')) $('btnPng').onclick=async()=>{
+  const b=$('btnPng'); b.disabled=true; const old=b.textContent; b.textContent='Gerando…';
+  try{
+    if(!window.html2canvas) await new Promise((ok,er)=>{const sc=document.createElement('script');sc.src='https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js';sc.onload=ok;sc.onerror=er;document.head.appendChild(sc);});
+    const c=await html2canvas($('card'),{scale:2,backgroundColor:'#ffffff'});
+    const a=document.createElement('a'); a.download='carteirinha-utopia.png'; a.href=c.toDataURL('image/png'); document.body.appendChild(a); a.click(); a.remove();
+  }catch(e){ b.textContent='Não deu certo, tente de novo'; setTimeout(()=>b.textContent=old,2500); b.disabled=false; return; }
+  b.textContent=old; b.disabled=false;
+};
+</script>
+</body>
+</html>
