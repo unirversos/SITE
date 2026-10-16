@@ -223,6 +223,7 @@ function showMolde(speakIt){
       <p class="pt" style="margin:0">👆 Troque a palavra e ouça a frase mudar.</p>
     </div>
     <div class="gram">📐 ${m.gram}</div>
+    ${m.audio?audioBox(m.audio):''}
     <p class="pt" style="margin:0">🎯 ${m.use}</p>
     <div class="row">
       <button class="btn" type="button" id="mPrev" ${mi===0?'disabled':''}>← Anterior</button><span class="spacer"></span>
@@ -267,6 +268,7 @@ function loadCena(n){
   ci=n; const c=CENAS[ci]; bank=shuffle([].concat(...c.ans).concat(c.extra)); placed=[]; mood='idle';
   $('panel').innerHTML=`
     <div class="row"><h2>Responda na cena</h2><span class="spacer"></span><div class="stamps" id="stamps"></div></div>
+    ${ci===0&&A.cenaAudio?audioBox(A.cenaAudio):''}
     <div class="talk" style="padding:0"><div class="bubble npc" id="npcBubble"></div><div class="bubble me" id="meBubble"></div></div>
     <p class="hint" id="hint"></p>
     <div class="bank" id="bank"></div>
@@ -282,6 +284,7 @@ function loadCena(n){
   speak(c.say);
 }
 function hint(t){ $('hint').innerHTML=t; }
+function audioBox(a){ return `<div class="voz"><div class="voz-t">🎙️ ${a.titulo||'Explicação da professora'}</div><audio controls preload="none" src="${a.src}"></audio>${a.nota?`<div class="pt">${a.nota}</div>`:''}</div>`; }
 function renderCena(){
   setStage({stamp:!!done[ci]});
   const c=CENAS[ci], ok=!!done[ci];
