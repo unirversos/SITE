@@ -2,726 +2,210 @@
 <html lang="pt-BR">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-<title>Hiragana — Trilha autoguiada | Unirversos Idiomas</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@500;700;800&family=Zen+Maru+Gothic:wght@400;500;700&display=swap">
-<style>/* Layout: caderno pontilhado; cabeçalho com avatar, faixa das 5 pedras do Quadrado, e o palco da etapa escolhida */
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Unirversos Idiomas — aprenda a se comunicar a partir da sua essência</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Baloo+2:wght@500;600;700&family=Zen+Maru+Gothic:wght@400;500;700&display=swap');
 :root{
-  --paper:#fdf6f4; --card:#ffffff; --ink:#3a2b38; --muted:#7c6a78; --line:#ecdadd;
-  --blush:#f8dde1; --pink:#d9506f; --sage:#7fa487; --sage-soft:#e8efe8; --gold:#c9962c; --lavender:#b7a6dc;
-  --fire:#e0703f; --water:#4f8fc4; --earth:#6f9a5c; --air:#8a9bb8; --spirit:#b18ad6;
-  --f-display:"Baloo 2","Zen Maru Gothic",system-ui,sans-serif;
-  --f-body:"Zen Maru Gothic","Hiragino Maru Gothic ProN","Noto Sans JP",system-ui,sans-serif;
-  --r:18px;
+  --pink:#E08C86; --pink-deep:#C26F6C; --pink-soft:rgba(224,140,134,.14);
+  --blush:#FBEBE7; --blush-2:#F0DFDA; --cream:#FDF8F5;
+  --ink:#4A4149; --ink-soft:#8A7F86;
+  --gold:#C0913F; --gold-soft:#FBF2DF;
+  --sage:#7FA893; --sage-soft:#EAF3EE;
+  --lav:#8B90C4; --lav-soft:#EEEFF9;
 }
+*{box-sizing:border-box;margin:0;padding:0;}
+@media (prefers-reduced-motion: reduce){ *{transition:none !important;} }
+body{font-family:'Zen Maru Gothic',sans-serif;color:var(--ink);background:var(--cream);line-height:1.7;font-size:16px;-webkit-font-smoothing:antialiased;}
+.wrap{max-width:840px;margin:0 auto;padding:0 24px;}
 
-*{box-sizing:border-box}
-[hidden]{display:none!important}
-body{margin:0;background:var(--paper);color:var(--ink);font-family:var(--f-body);font-size:15px;line-height:1.6;
-  background-image:radial-gradient(var(--line) 1.2px,transparent 1.3px);background-size:22px 22px;
-  padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));padding-block:20px 48px}
-.wrap{max-width:1080px;margin:0 auto;display:grid;gap:20px}
-button{font:inherit;color:inherit;cursor:pointer}
-button:focus-visible,a:focus-visible{outline:3px solid var(--lavender);outline-offset:2px}
-a{color:inherit}
-.btn{position:relative;display:inline-flex;align-items:center;justify-content:center;gap:6px;border:1.5px solid var(--line);background:var(--card);border-radius:99px;padding:8px 15px;font-size:14px;font-weight:700}
-.btn:hover{border-color:var(--pink)}
-.btn.primary{background:var(--pink);border-color:var(--pink);color:#fff}
-.btn.big{padding:12px 22px;font-size:16px}
-.btn svg{width:18px;height:18px}
-.btn[aria-pressed="false"]{opacity:.6}
-.note{font-size:12.5px;color:var(--muted);margin:0}
-.fb{min-height:1.6em;margin:0;font-size:15px}
+.nav{display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap;padding:22px 0;}
+.logo{font-family:'Baloo 2',cursive;font-size:18px;font-weight:700;text-decoration:none;color:inherit;}
+.logo i{font-style:normal;color:var(--pink);}
+.nav .links{display:flex;gap:18px;font-size:13px;}
+.nav .links a{color:var(--ink-soft);text-decoration:none;}
+.nav .links a:hover{color:var(--pink-deep);}
+.nav .links a.on{color:var(--pink);}
 
-/* topo */
-.top{display:flex;flex-wrap:wrap;justify-content:space-between;align-items:flex-end;gap:16px}
-.back{font-size:12px;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);text-decoration:none}
-.back:hover{color:var(--pink)}
-h1{font-family:var(--f-body);font-weight:700;font-size:clamp(34px,6vw,52px);line-height:1.1;margin:4px 0 10px;letter-spacing:.04em}
-h1 small{font-family:var(--f-display);font-size:.42em;color:var(--pink);letter-spacing:0;margin-left:6px}
-.switch{display:inline-flex;border:1.5px solid var(--line);border-radius:99px;overflow:hidden;background:var(--card)}
-.switch button{border:0;background:none;padding:7px 16px;font-weight:700;font-size:15px}
-.switch button small{font-weight:500;color:var(--muted);font-size:11px;margin-left:4px}
-.switch button[aria-selected="true"]{background:var(--ink);color:var(--paper)}
-.switch button[aria-selected="true"] small{color:color-mix(in srgb,var(--paper) 75%,transparent)}
-.me{display:flex;gap:12px;align-items:center;background:var(--card);border:1.5px solid var(--line);border-radius:var(--r);padding:10px 14px;min-width:250px}
-.me-av{width:52px;height:52px;border-radius:50%;overflow:hidden;background:var(--blush);flex:none;display:grid;place-items:center;font-size:26px}
-.me-av svg{width:100%;height:100%;display:block}
-.me-info{display:grid;gap:2px;min-width:0;flex:1;font-size:13px}
-.me-info b{font-size:15px;overflow-wrap:anywhere}
-.me-info rt{font-size:.55em;color:var(--muted)}
-.me-xp{font-size:12px;color:var(--muted);font-variant-numeric:tabular-nums}
-.bar{height:8px;border-radius:99px;background:var(--blush);overflow:hidden}
-.bar i{display:block;height:100%;width:0;background:linear-gradient(90deg,var(--pink),var(--gold));transition:width .5s}
+.hero{padding:30px 0 40px;text-align:center;}
+.hero .eyebrow{font-size:11px;letter-spacing:4px;text-transform:uppercase;color:var(--pink);margin-bottom:14px;font-weight:600;}
+.hero h1{font-family:'Baloo 2',cursive;font-weight:700;font-size:clamp(26px,4.6vw,40px);line-height:1.25;max-width:600px;margin:0 auto 16px;}
+.hero h1 em{font-style:normal;color:var(--pink);}
+.hero p{color:var(--ink-soft);max-width:520px;margin:0 auto 26px;font-size:16px;}
+.cta{display:inline-block;font-weight:500;font-size:15px;background:var(--pink);color:#fff;border-radius:40px;padding:13px 30px;text-decoration:none;transition:all .2s ease;box-shadow:0 6px 20px rgba(224,140,134,.22);}
+.cta:hover{background:var(--pink-deep);transform:translateY(-2px);}
+.cta.ghost{background:#fff;color:var(--pink-deep);border:1.5px solid var(--pink);box-shadow:none;}
+.cta.ghost:hover{background:var(--blush);}
 
-/* pedras */
-.stones{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:10px}
-@media (max-width:640px){.stones{grid-template-columns:repeat(3,minmax(0,1fr))}}
-.stone{--c:var(--muted);position:relative;border:1.5px solid var(--line);background:var(--card);border-radius:16px;padding:10px 8px 12px;display:grid;justify-items:center;gap:0;line-height:1.25;text-align:center}
-.stone .em{font-size:24px;filter:grayscale(1);opacity:.55;transition:filter .3s,opacity .3s,transform .3s}
-.stone b{font-family:var(--f-display);font-size:15px}
-.stone small{font-size:11px;color:var(--muted)}
-.stone .pg{font-size:11px;font-weight:700;color:var(--c);font-variant-numeric:tabular-nums;margin-top:2px}
-.stone[data-st="fogo"]{--c:var(--fire)}.stone[data-st="agua"]{--c:var(--water)}.stone[data-st="terra"]{--c:var(--earth)}.stone[data-st="ar"]{--c:var(--air)}.stone[data-st="esp"]{--c:var(--spirit)}
-.stone.lit{border-color:var(--c);box-shadow:0 0 0 2px color-mix(in srgb,var(--c) 35%,transparent) inset}
-.stone.lit .em{filter:none;opacity:1;transform:scale(1.12)}
-.stone[aria-current="true"]{background:color-mix(in srgb,var(--c) 10%,var(--card));border-color:var(--c)}
-.stone:hover{border-color:var(--c)}
+.strip{background:var(--pink);color:#fff;padding:13px 0;text-align:center;font-size:14px;}
+.strip a{color:#fff;text-decoration:underline;text-underline-offset:3px;}
 
-/* palco */
-.stage{background:var(--card);border:1.5px solid var(--line);border-radius:var(--r);padding:18px 20px 22px;display:grid;gap:16px}
-.stage-h h2{font-family:var(--f-display);font-size:22px;margin:0;line-height:1.2}
-.stage-h p{margin:2px 0 0;color:var(--muted);max-width:68ch}
+.section-intro{padding:44px 0 8px;text-align:center;}
+.section-intro .eyebrow{font-size:11px;letter-spacing:4px;text-transform:uppercase;color:var(--pink);margin-bottom:10px;font-weight:600;}
+.section-intro h2{font-family:'Baloo 2',cursive;font-weight:700;font-size:clamp(23px,3.8vw,31px);margin-bottom:10px;}
+.section-intro p{color:var(--ink-soft);max-width:560px;margin:0 auto;}
 
-/* fogo */
-.fogo{display:grid;grid-template-columns:minmax(0,1.25fr) minmax(0,1fr);gap:18px;align-items:start}
-@media (max-width:820px){.fogo{grid-template-columns:minmax(0,1fr)}}
-.grid{display:grid;gap:6px}
-.krow{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:6px}
-.kbtn{position:relative;aspect-ratio:1/1;max-width:100%;border:1.5px solid var(--line);background:var(--paper);border-radius:12px;display:grid;place-items:center;align-content:center;gap:0;line-height:1}
-.kbtn b{font-size:clamp(22px,4.4vw,30px);font-weight:700}
-.kbtn small{font-size:11px;color:var(--muted);margin-top:4px}
-.kbtn.seen{background:var(--card);border-color:color-mix(in srgb,var(--fire) 45%,var(--line))}
-.kbtn.seen::after{content:"";position:absolute;top:6px;right:6px;width:6px;height:6px;border-radius:50%;background:var(--fire)}
-.kbtn[aria-pressed="true"]{border-color:var(--pink);box-shadow:0 0 0 2px var(--pink) inset}
-.kbtn.empty{visibility:hidden}
-.kbtn:hover{transform:translateY(-1px)}
-.kcard{border:1.5px solid var(--line);border-left:5px solid var(--fire);border-radius:var(--r);padding:16px 18px;display:grid;gap:8px;position:sticky;top:12px}
-.kcard .huge{font-size:clamp(84px,14vw,120px);line-height:1;font-weight:700;text-align:center;animation:pop .45s cubic-bezier(.3,1.5,.5,1)}
-.kcard .ro{text-align:center;font-family:var(--f-display);font-size:24px;font-weight:700;color:var(--pink)}
-.kcard .ex{background:var(--paper);border-radius:12px;padding:10px 12px;display:flex;justify-content:space-between;align-items:center;gap:10px}
-.kcard .ex b{font-size:22px}.kcard .ex b mark{background:color-mix(in srgb,var(--fire) 25%,transparent);color:inherit;border-radius:4px;padding:0 1px}
-.kcard .ex span{color:var(--muted);font-size:13px}
-.kcard .tip{background:var(--sage-soft);border-left:4px solid var(--sage);border-radius:0 12px 12px 0;padding:8px 12px;font-size:13.5px}
-@keyframes pop{0%{transform:scale(.6);opacity:0}100%{transform:scale(1);opacity:1}}
-.extras{border-top:1.5px dashed var(--line);padding-top:12px}
-.extras summary{cursor:pointer;font-weight:700}
-.ex-info{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:10px;margin:12px 0}
-.ex-info article{background:var(--paper);border-radius:14px;padding:12px 14px;font-size:13.5px}
-.ex-info h3{font-family:var(--f-display);font-size:16px;margin:0 0 4px}
-.ex-info .exs{display:flex;flex-wrap:wrap;gap:6px;margin-top:6px}
-.ex-info .exs button{border:1.5px solid var(--line);background:var(--card);border-radius:10px;padding:4px 10px;font-size:13px}
-.ex-grids{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:14px}
-.ex-grids h3{font-size:14px;margin:0 0 6px}
-.mini{display:flex;flex-wrap:wrap;gap:5px}
-.mini button{border:1.5px solid var(--line);background:var(--paper);border-radius:10px;padding:4px 8px;min-width:48px;display:grid;justify-items:center;line-height:1.2}
-.mini button b{font-size:18px}.mini button small{font-size:10.5px;color:var(--muted)}
+/* blocos expansíveis */
+.accordion{padding:20px 0 10px;}
+details{
+  background:#fff;border:1px solid var(--blush-2);border-radius:18px;margin-bottom:12px;overflow:hidden;transition:all .2s ease;
+}
+details[open]{box-shadow:0 8px 26px rgba(36,28,63,.05);}
+summary{
+  list-style:none;cursor:pointer;padding:20px 24px;display:flex;align-items:center;gap:14px;
+  font-family:'Baloo 2',cursive;font-weight:600;font-size:18px;transition:background .18s ease;
+}
+summary::-webkit-details-marker{display:none;}
+summary:hover{background:var(--blush);}
+summary .ic{font-size:22px;line-height:1;}
+summary .txt{flex:1;}
+summary .txt small{display:block;font-family:'Zen Maru Gothic',sans-serif;font-weight:400;font-size:12.5px;color:var(--ink-soft);margin-top:2px;}
+summary .arrow{color:var(--pink);font-size:14px;transition:transform .2s ease;}
+details[open] summary .arrow{transform:rotate(90deg);}
+.detail-body{padding:4px 24px 24px;}
+.detail-body p{color:var(--ink-soft);font-size:14.5px;margin-bottom:12px;}
+.detail-body p:last-child{margin-bottom:0;}
+.detail-body p strong{color:var(--ink);}
 
-/* quizzes */
-.quiz{display:grid;gap:14px;justify-items:center;text-align:center;padding:10px 0}
-.answers{display:flex;flex-wrap:wrap;gap:10px;justify-content:center}
-.answers button{border:1.5px solid var(--line);background:var(--paper);border-radius:16px;min-width:84px;padding:10px 16px;font-size:30px;font-weight:700;line-height:1.2}
-.answers.ro button{font-size:18px;font-family:var(--f-display)}
-.answers button:hover{border-color:var(--pink)}
-.answers .ok{background:var(--sage);border-color:var(--sage);color:#fff}
-.answers .no{border-color:var(--pink);color:var(--pink)}
-.word-big{font-size:clamp(44px,9vw,72px);font-weight:700;letter-spacing:.06em}
+/* grid interno dos elementos */
+.quad{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:12px;margin-top:6px;}
+.el{background:var(--cream);border:1px solid var(--blush-2);border-radius:14px;padding:16px;}
+.el .icon{font-size:20px;display:block;margin-bottom:6px;}
+.el h4{font-family:'Baloo 2',cursive;font-weight:600;font-size:14px;}
+.el .tag{font-size:11.5px;color:var(--pink);margin-bottom:8px;}
+.el ul{list-style:none;}
+.el li{font-size:13px;color:var(--ink);padding:2px 0 2px 14px;position:relative;}
+.el li::before{content:'·';position:absolute;left:2px;color:var(--pink);font-weight:700;}
+.fifth-note{margin-top:12px;background:var(--blush);border:1px dashed var(--pink);border-radius:14px;padding:16px;font-size:13.5px;color:var(--ink-soft);}
+.fifth-note b{color:var(--pink-deep);}
 
-/* terra */
-.terra{display:grid;grid-template-columns:minmax(0,340px) minmax(0,1fr);gap:20px;align-items:start}
-@media (max-width:700px){.terra{grid-template-columns:minmax(0,1fr)}}
-.pad-wrap{position:relative;width:100%;max-width:340px;aspect-ratio:1/1;border:1.5px solid var(--line);border-radius:16px;background:
-  linear-gradient(var(--line),var(--line)) center/1px 100% no-repeat,linear-gradient(90deg,var(--line),var(--line)) center/100% 1px no-repeat,var(--paper);overflow:hidden;touch-action:none}
-.guide{position:absolute;inset:0;display:grid;place-items:center;font-size:min(230px,62vw);line-height:1;color:color-mix(in srgb,var(--ink) 13%,transparent);pointer-events:none;user-select:none;font-family:var(--f-body)}
-#pad{position:absolute;inset:0;width:100%;height:100%;cursor:crosshair}
-.terra-side{display:grid;gap:12px;align-content:start}
-.t-now{display:flex;align-items:baseline;gap:10px}
-.t-now b{font-size:44px}.t-now span{font-family:var(--f-display);font-size:20px;color:var(--pink);font-weight:700}
-.row-btns{display:flex;flex-wrap:wrap;gap:8px}
+/* lista de itens dentro dos blocos */
+.ilist{display:flex;flex-direction:column;gap:10px;margin-top:4px;}
+.irow{border:1px solid var(--blush-2);border-radius:14px;padding:14px 16px;background:var(--cream);}
+.irow .st{font-size:11px;letter-spacing:1.5px;text-transform:uppercase;color:var(--pink-deep);}
+.irow h4{font-size:14.5px;font-weight:600;margin:2px 0;}
+.irow p{font-size:13px;color:var(--ink-soft);margin:0;}
+.irow a{color:var(--pink-deep);text-decoration:none;border-bottom:1px solid var(--blush-2);}
+.irow a:hover{border-color:var(--pink);}
+.bolsa{margin-top:12px;background:var(--gold-soft);border:1px dashed var(--gold);border-radius:14px;padding:14px 16px;font-size:13.5px;color:#7A5B21;}
+.bolsa strong{color:#5E4416;}
 
-/* espírito */
-.esp{display:grid;gap:12px}
-.out-wrap{border:1.5px solid var(--line);border-radius:16px;background:var(--paper);padding:12px 16px;min-height:76px;display:grid;gap:2px}
-.out{font-size:34px;font-weight:700;letter-spacing:.05em;min-height:1.3em;overflow-wrap:anywhere}
-.out-ro{font-family:var(--f-display);color:var(--muted)}
-.kb{display:grid;grid-template-columns:repeat(10,minmax(0,1fr));gap:4px}
-.kb button{border:1.5px solid var(--line);background:var(--card);border-radius:8px;padding:6px 0;font-size:clamp(15px,2.6vw,20px);font-weight:700;min-width:0}
-.kb button:hover{border-color:var(--pink)}
-.kb .gap{visibility:hidden}
-.esp .tip{background:var(--sage-soft);border-left:4px solid var(--sage);border-radius:0 12px 12px 0;padding:10px 14px;font-size:13.5px}
-.esp .tip b{color:var(--ink)}
+.quote{padding:52px 0;text-align:center;}
+.quote p{font-family:'Baloo 2',cursive;font-weight:600;font-size:clamp(19px,3.2vw,26px);line-height:1.5;color:var(--ink);max-width:600px;margin:0 auto;}
+.quote span{color:var(--pink);}
 
-.foot a{color:var(--pink)}
-.float{position:absolute;left:50%;top:-6px;transform:translateX(-50%);font-family:var(--f-display);font-weight:800;color:var(--gold);pointer-events:none;animation:up 1s ease-out forwards;font-size:15px}
-@keyframes up{to{transform:translate(-50%,-34px);opacity:0}}
-.lv-toast{position:fixed;left:50%;bottom:calc(20px + env(safe-area-inset-bottom,0px));transform:translateX(-50%);background:var(--ink);color:var(--paper);padding:12px 18px;border-radius:14px;font-weight:700;z-index:20;max-width:calc(100% - 32px)}
-.lv-toast rt{color:inherit;opacity:.8}
-@media (prefers-reduced-motion:reduce){*,*::before,*::after{animation:none!important;transition:none!important}}
+.zero{background:var(--blush);padding:52px 0;text-align:center;border-radius:24px;margin:20px 0;}
+.zero .eyebrow{font-size:11px;letter-spacing:4px;text-transform:uppercase;color:var(--pink-deep);margin-bottom:10px;font-weight:600;}
+.zero h2{font-family:'Baloo 2',cursive;font-weight:700;font-size:clamp(24px,4vw,34px);margin-bottom:14px;}
+.zero p{color:var(--ink-soft);max-width:520px;margin:0 auto 16px;}
+.zero .kit{display:flex;gap:10px;justify-content:center;flex-wrap:wrap;margin:20px 0 26px;}
+.zero .kit span{background:#fff;border:1px solid var(--blush-2);border-radius:30px;padding:8px 16px;font-size:13.5px;}
 
-/* ordem dos traços */
-.so{display:block;width:100%;height:auto}
-.so .bg path{fill:none;stroke:#eadfe2;stroke-width:3.4;stroke-linecap:round;stroke-linejoin:round}
-.so .fg path{fill:none;stroke:var(--ink);stroke-width:3.4;stroke-linecap:round;stroke-linejoin:round;stroke-dasharray:1;stroke-dashoffset:1;animation:soDraw .65s ease forwards}
-.so .nums text{font-family:var(--f-display);font-size:7px;font-weight:700;fill:var(--pink);opacity:0;animation:soNum .2s ease forwards}
-.so.so-still .nums text{opacity:1;animation:none}
-.so-guide .bg path{stroke:color-mix(in srgb,var(--ink) 14%,transparent);stroke-width:4}
-@keyframes soDraw{to{stroke-dashoffset:0}}
-@keyframes soNum{to{opacity:1}}
-.so-box{width:min(220px,70%);margin:0 auto;aspect-ratio:1/1;background:linear-gradient(var(--line),var(--line)) center/1px 100% no-repeat,linear-gradient(90deg,var(--line),var(--line)) center/100% 1px no-repeat;border-radius:12px}
-.so-fallback{font-size:100px;text-align:center}
-.so-n{font-family:var(--f-body);font-size:13px;color:var(--muted);font-weight:500}
-.guide .so{width:100%;height:100%}
-@media (prefers-reduced-motion:reduce){.so .fg path{stroke-dashoffset:0}.so .nums text{opacity:1}}
+.foot{border-top:1px solid var(--blush-2);padding:34px 0 50px;text-align:center;}
+.foot .big{font-family:'Baloo 2',cursive;font-size:17px;margin-bottom:14px;}
+.foot .tags{display:flex;gap:16px;justify-content:center;flex-wrap:wrap;font-size:13px;color:var(--pink-deep);}
+.foot .credit{margin-top:16px;font-size:11.5px;color:var(--ink-soft);opacity:.7;}
 
-.prints-box{border-top:1.5px dashed var(--line);padding-top:14px;display:grid;gap:8px}
-.prints-box h3{font-family:var(--f-display);font-size:17px;margin:0}
-.prints-box a.btn{text-decoration:none}
-
-.pchoice{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:16px}
-.pq{display:grid;gap:6px;align-content:start}
-.pq b{font-size:14.5px}.pq>small{font-size:12px;color:var(--muted)}
-.seg{display:flex;flex-wrap:wrap;gap:8px}
-.seg button{border:1.5px solid var(--line);background:var(--card);border-radius:14px;padding:8px 14px;font-weight:700;display:flex;align-items:center;gap:8px;text-align:left;line-height:1.2}
-.seg button small{display:block;font-weight:500;font-size:11.5px;color:var(--muted)}
-.seg button[aria-pressed="true"]{border-color:var(--pink);box-shadow:0 0 0 2px var(--pink) inset}
-.gsw{width:34px;height:34px;flex:none;border:1px solid var(--line);border-radius:6px;background:var(--paper)}
-#gswDark .so .bg path{stroke:#a7999f}#gswLight .so .bg path{stroke:#e2d8dc}
-.seg-guide button{flex-wrap:nowrap}
-.prints-box a{color:var(--pink)}
-.prints-box a.btn.primary{color:#fff}
-
-/* ar: linhas e desenhos */
-.arrows{display:flex;flex-wrap:wrap;gap:6px}
-.arrows button{border:1.5px solid var(--line);background:var(--card);border-radius:12px;padding:6px 12px;display:grid;justify-items:center;line-height:1.2;min-width:52px}
-.arrows button b{font-size:20px}.arrows button small{font-size:11px;color:var(--muted);font-variant-numeric:tabular-nums}
-.arrows button[aria-selected="true"]{border-color:var(--air);box-shadow:0 0 0 2px var(--air) inset}
-.arrows button:disabled{opacity:.45;cursor:not-allowed}
-.answers.pics button{font-size:52px;min-width:104px;padding:10px 16px;line-height:1.1}
-.gal-h{display:flex;justify-content:space-between;align-items:baseline;gap:10px;border-top:1.5px dashed var(--line);padding-top:12px}
-.gal-h h3{font-family:var(--f-display);font-size:17px;margin:0}
-.gallery{display:grid;grid-template-columns:repeat(auto-fill,minmax(132px,1fr));gap:10px}
-.wcard{position:relative;border:1.5px solid var(--line);background:var(--paper);border-radius:14px;padding:10px 8px;display:grid;justify-items:center;text-align:center;gap:1px;line-height:1.3}
-.wcard .pic{font-size:36px;line-height:1.2}
-.wcard b{font-size:19px}.wcard small{font-size:11.5px;color:var(--muted)}
-.wcard.done{border-color:color-mix(in srgb,var(--air) 60%,var(--line))}
-.wcard.done::after{content:"✓";position:absolute;top:6px;right:9px;color:var(--air);font-weight:700}
-.wcard:hover{border-color:var(--pink)}
-
-/* na área de escrever, a animação é só uma demonstração: rosa clarinho */
-.so-guide .fg path{stroke:color-mix(in srgb,var(--pink) 55%,transparent);stroke-width:3}
-
-.tword{display:grid;gap:10px;background:var(--paper);border-radius:14px;padding:12px}
-.tw-top{display:flex;align-items:center;gap:12px}
-.tw-top>div{display:grid;flex:1;min-width:0}
-.tw-top b{font-family:var(--f-display);font-size:18px}.tw-top small{color:var(--muted);font-size:12.5px}
-.tw-pic{font-size:44px;line-height:1}
-.tw-slots{display:flex;flex-wrap:wrap;gap:6px}
-.slot{width:44px;height:44px;border:1.5px dashed var(--line);border-radius:10px;display:grid;place-items:center;font-size:24px;font-weight:700;background:var(--card)}
-.slot.ok{border-style:solid;border-color:var(--earth);color:var(--earth)}
-.slot.now{border-style:solid;border-color:var(--pink);color:var(--pink)}
-
-.prints-stage .prints-box{border-top:0;padding-top:0}
-
-.tw-word{font-family:var(--f-body)!important;font-size:30px!important;letter-spacing:.08em}
-.tw-word .done{color:var(--earth)}.tw-word .cur{color:var(--pink);text-decoration:underline;text-decoration-thickness:3px;text-underline-offset:6px}.tw-word .todo{color:var(--ink)}
-.slot{color:color-mix(in srgb,var(--ink) 22%,transparent)}
-.tw-step{margin:0;font-size:15px}
-.pad-label{position:absolute;top:8px;left:10px;font-size:12px;color:var(--muted);pointer-events:none;z-index:1}
-
-.tw-ro{font-family:var(--f-display)!important;font-size:24px!important}
-.slot{width:auto;min-width:48px;padding:0 6px}
-.slot small{font-family:var(--f-display);font-size:13px;color:var(--muted);font-weight:700}
-.slot.now small{color:var(--pink)}
 </style>
 </head>
-<body data-kind="hira">
-<div class="wrap">
-  <header class="top">
-    <div class="who">
-      <a class="back" href="/idiomas/">← Unirversos · Idiomas</a>
-      <h1><span id="tTitle">ひらがな</span> <small id="tPt">Hiragana</small></h1>
-      <div class="switch" role="tablist" aria-label="Escrita">
-        <button type="button" role="tab" data-kind="hira" id="swHira">ひらがな <small>Hiragana</small></button>
-        <button type="button" role="tab" data-kind="kata" id="swKata">カタカナ <small>Katakana</small></button>
-      </div>
-    </div>
-    <div class="me">
-      <div class="me-av" id="meAv"></div>
-      <div class="me-info">
-        <b id="meName">Viajante</b>
-        <span id="meLv"></span>
-        <div class="bar"><i id="meBar"></i></div>
-        <span class="me-xp" id="meXp"></span>
-      </div>
-    </div>
-  </header>
+<body>
 
-  <nav class="stones" aria-label="Etapas do Quadrado Elemental">
-    <button type="button" class="stone" data-st="fogo"><span class="em">🔥</span><b>Fogo</b><small>descobrir</small><span class="pg" id="pgFogo"></span></button>
-    <button type="button" class="stone" data-st="agua"><span class="em">💧</span><b>Água</b><small>escutar</small><span class="pg" id="pgAgua"></span></button>
-    <button type="button" class="stone" data-st="ar"><span class="em">🌬️</span><b>Ar</b><small>ler palavras</small><span class="pg" id="pgAr"></span></button>
-    <button type="button" class="stone" data-st="terra"><span class="em">🌍</span><b>Terra</b><small>escrever</small><span class="pg" id="pgTerra"></span></button>
-    <button type="button" class="stone spirit" data-st="esp"><span class="em">✨</span><b>Espírito</b><small id="espSub">usar de verdade</small><span class="pg" id="pgEsp"></span></button>
+<div class="wrap">
+  <nav class="nav">
+    <a href="/" class="logo">UNIRVERSOS</a>
+    <div class="links">
+      <a href="/idiomas/" class="on">idiomas</a>
+      <a href="/travessia/">travessia</a>
+      <a href="/paralelos/">paralelos</a>
+      <a href="/sobre/">sobre</a>
+      <a href="/">início</a>
+    </div>
   </nav>
 
-  <!-- FOGO -->
-  <section class="stage" id="st-fogo">
-    <div class="stage-h"><h2>🔥 Fogo · descobrir as letras</h2><p>Toque em cada letra para ouvir e ver uma palavra que usa ela. Cada letra nova vale +2 XP.</p></div>
-    <div class="fogo">
-      <div class="grid" id="kGrid"></div>
-      <article class="kcard" id="kCard" aria-live="polite"></article>
-    </div>
-    <details class="extras">
-      <summary>Extras: sons com tenten, combinações e mais</summary>
-      <div class="ex-info" id="exInfo"></div>
-      <div class="ex-grids">
-        <div><h3>Com tenten ゛ e maru ゜</h3><div class="mini" id="exDaku"></div></div>
-        <div><h3>Combinações com ゃ ゅ ょ</h3><div class="mini" id="exYoon"></div></div>
+  <header class="hero">
+    <p class="eyebrow">unirversos idiomas</p>
+    <h1>Aprenda a se comunicar a partir da sua <em>essência</em>.</h1>
+    <p>Trilhas de inglês, português e japonês criadas a partir de uma metodologia autoral, lapidada ao longo de anos. Primeiro, comece por você e descubra a sua voz — depois, escolha a sua jornada e faça seu próprio caminho.</p>
+    <a href="#aula-zero" class="cta">Começar pela aula zero</a>
+  </header>
+</div>
+
+<div class="strip">
+  <div class="wrap">✦ Turmas ao vivo com acompanhamento individual: <strong>vagas até dezembro</strong>. <a href="#ao-vivo">Ver as modalidades</a></div>
+</div>
+
+<div class="wrap">
+
+  <div class="section-intro">
+    <p class="eyebrow">explore no seu tempo</p>
+    <h2>O que você quer conhecer?</h2>
+    <p>Toque em cada tema para abrir. Nada aparece antes de você pedir.</p>
+  </div>
+
+  <div class="accordion">
+
+    <!-- TRILHAS AUTOGUIADAS -->
+    <details>
+      <summary>
+        <span class="ic">🧭</span>
+        <span class="txt">As trilhas autoguiadas<small>Para caminhar no seu ritmo, sem hora marcada</small></span>
+        <span class="arrow">▶</span>
+      </summary>
+      <div class="detail-body">
+        <div class="ilist">
+          <div class="irow"><span class="st">autoguiado · bônus</span><h4><a href="/idiomas/hiragana/">Hiragana →</a></h4><p>As 46 letras do japonês pelo Quadrado Elemental: descobrir, escutar, escrever e usar, começando pelas palavras do seu avatar.</p></div>
+          <div class="irow"><span class="st">autoguiado · bônus</span><h4><a href="/idiomas/katakana/">Katakana →</a></h4><p>As letras das palavras estrangeiras, como パーカー e ヘッドホン. No final, você escreve o seu nome na carteirinha de Utopia.</p></div>
+          <div class="irow"><span class="st">autoguiado · rpg</span><h4><a href="/idiomas/planeta-utopia/">Planeta Utopia →</a></h4><p>O livro-jogo gamificado: crie seu avatar, suba de nível e ganhe XP praticando idiomas.</p></div>
+          <div class="irow"><span class="st">autoguiado</span><h4><a href="/idiomas/mapas/">Mapas de contexto →</a></h4><p>Doze mapas em japonês e trilhas iniciais em inglês e português. Peças, moldes e radar de escuta.</p></div>
+          <div class="irow"><span class="st">flashcard · trilíngue</span><h4><a href="/idiomas/amuleto/">Amuleto de Bolso →</a></h4><p>52 expressões essenciais em 3 idiomas. Flashcards com pronúncia, kanji destacado e variações de gênero.</p></div>
+          <div class="irow"><span class="st">diário · comunidade</span><h4><a href="/paralelos/">Diário →</a></h4><p>Um acontecimento ou pensamento com constância, no idioma alvo. Compartilhe sua frase e acompanhe a jornada de outros aprendizes.</p></div>
+        </div>
       </div>
     </details>
-  </section>
 
-  <!-- ÁGUA -->
-  <section class="stage" id="st-agua" hidden>
-    <div class="stage-h"><h2>💧 Água · escutar</h2><p>Ouça o som e toque na letra certa. Cada letra que você acerta pela primeira vez vale +2 XP. Meta: acertar 10 letras diferentes.</p></div>
-    <div class="quiz">
-      <button class="btn primary big" type="button" id="aPlay"><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M4 9v6h4l5 4V5L8 9H4zm12.5 3a4.5 4.5 0 0 0-2.5-4v8a4.5 4.5 0 0 0 2.5-4z"/></svg>Ouvir de novo</button>
-      <div class="answers" id="aOpts"></div>
-      <p class="fb" id="aFb"></p>
-      <p class="note" id="aPool"></p>
-    </div>
-  </section>
-
-  <!-- AR -->
-  <section class="stage" id="st-ar" hidden>
-    <div class="stage-h"><h2>🌬️ Ar · ler palavras de verdade</h2><p>Escolha uma linha, leia a palavra e toque no desenho certo. Cada linha usa só as letras que você já descobriu até ela. Meta: 8 palavras.</p></div>
-    <div class="arrows" id="rRows" role="tablist" aria-label="Linhas"></div>
-    <div class="quiz">
-      <div class="word-big" id="rWord"></div>
-      <div class="answers pics" id="rOpts"></div>
-      <p class="fb" id="rFb"></p>
-    </div>
-    <div class="gal-h"><h3 id="rGalT">Palavras desta linha</h3><span class="note">toque para ouvir</span></div>
-    <div class="gallery" id="rGal"></div>
-  </section>
-
-  <!-- TERRA -->
-  <section class="stage" id="st-terra" hidden>
-    <div class="stage-h"><h2>🌍 Terra · escrever com a mão</h2><p id="tIntro">Escreva por cima da letra clarinha, com o dedo ou o mouse, um traço de cada vez e na ordem dos números. Depois toque em Conferir. Meta: 10 letras diferentes.</p></div>
-    <div class="seg" id="tMode" role="tablist" aria-label="O que escrever">
-      <button type="button" data-v="letras" aria-pressed="true">Letras</button>
-      <button type="button" data-v="palavras" aria-pressed="false" id="tModeW">Palavras do Ar</button>
-    </div>
-    <div class="terra">
-      <div class="pad-wrap"><span class="pad-label" id="padLabel">escreva aqui ✍️</span><span class="guide" id="tGuide">あ</span><canvas id="pad" width="520" height="520" aria-label="Área para escrever"></canvas></div>
-      <div class="terra-side">
-        <div class="tword" id="tWord" hidden></div>
-        <div class="t-now"><b id="tNow">あ</b><span id="tNowRo">a</span></div>
-        <div class="row-btns">
-          <button class="btn" type="button" id="tClear">Limpar</button>
-          <button class="btn" type="button" id="tUndo">Desfazer traço</button>
-          <button class="btn" type="button" id="tGuideBtn" aria-pressed="true">Letra-guia</button>
-          <button class="btn" type="button" id="tShow">Ver a ordem dos traços</button>
+    <!-- MODALIDADES AO VIVO -->
+    <details id="ao-vivo">
+      <summary>
+        <span class="ic">🌟</span>
+        <span class="txt">Acompanhamento ao vivo<small>Vagas até dezembro — o formato mais intenso</small></span>
+        <span class="arrow">▶</span>
+      </summary>
+      <div class="detail-body">
+        <p>Turmas com acompanhamento individual ou em grupo, ao vivo, com material feito sob medida. É o formato que exige presença de nós dois.</p>
+        <div class="ilist">
+          <div class="irow"><span class="st">adultos · individual</span><h4>Do Caos ao Cosmos</h4><p>Para quem não abre mão de viver uma vida extraordinária, aprendendo sempre. Aulas individuais, PDF semanal, quest mensal e conteúdo feito para você.</p></div>
+          <div class="irow"><span class="st">a partir de 7 anos · em grupo e individual</span><h4>Trilha em grupo e individual</h4><p>Com a interação como motor, numa dinâmica relacional que reacende o interesse. Aulas em grupo ou individual, material incluso e quest mensal.</p></div>
         </div>
-        <button class="btn primary" type="button" id="tOk">Conferir ✓</button>
-        <p class="fb" id="tFb" aria-live="polite"></p>
-        <div class="row-btns">
-          <button class="btn" type="button" id="tPrev">← Anterior</button>
-          <button class="btn" type="button" id="tNext">Próxima →</button>
-        </div>
-        <p class="note">Os números mostram a ordem dos traços. Em geral: de cima para baixo e da esquerda para a direita.</p>
+        <div class="bolsa"><strong>20% das vagas em grupo são bolsas de até 100%</strong>, destinadas a alunos da rede pública (sujeitas a análise). Essas vagas existem graças às turmas que patrocinam esse sonho.</div>
       </div>
-    </div>
+    </details>
 
+  </div>
+
+  <div class="quote">
+    <p>Não é sobre sair da zona de conforto.<br>É sobre <span>aumentar</span> a zona de conforto.</p>
+  </div>
+
+  <!-- AULA ZERO -->
+  <section class="zero" id="aula-zero">
+    <p class="eyebrow">a porta de entrada</p>
+    <h2>Aula zero: autoanálise sincerona</h2>
+    <p>Antes de qualquer conteúdo, a gente começa por você. Porque sozinhos não somos nada — mas, antes, é importante saber quem somos.</p>
+    <div class="kit">
+      <span>⏱ 30 minutinhos</span>
+      <span>🥤 um copão de água</span>
+      <span>💗 um coração aberto</span>
+    </div>
+    <p><a href="/idiomas/aula-zero/" class="cta">Fazer a aula zero</a></p>
   </section>
 
-  <!-- ESPÍRITO -->
-  <section class="stage" id="st-esp" hidden>
-    <div class="stage-h"><h2>✨ Espírito · usar com alguém de verdade</h2><p id="espIntro"></p></div>
-    <div class="esp">
-      <div class="out-wrap"><output class="out" id="eOut" aria-live="polite"></output><span class="out-ro" id="eOutRo"></span></div>
-      <div class="kb" id="kb"></div>
-      <div class="row-btns">
-        <button class="btn" type="button" id="eDaku">゛ tenten</button>
-        <button class="btn" type="button" id="eHan">゜ maru</button>
-        <button class="btn" type="button" id="eSmall">letra pequena</button>
-        <button class="btn" type="button" id="eLong" hidden>ー barra</button>
-        <button class="btn" type="button" id="eSpace">espaço</button>
-        <button class="btn" type="button" id="eBack">⌫ apagar</button>
-      </div>
-      <div class="row-btns">
-        <button class="btn" type="button" id="eSay">Ouvir</button>
-        <button class="btn primary" type="button" id="eDone"></button>
-      </div>
-      <p class="fb" id="eFb"></p>
-      <div class="tip" id="eTip"></div>
-    </div>
-  </section>
+  <footer class="foot">
+    <p class="big">unirversos — tudo conectado</p>
+    <div class="tags"><span>@unirversos.idiomas</span><span>unirversos.idiomas@gmail.com</span></div>
+    <p class="credit">Aline Kikuti</p>
+  </footer>
 
-  <section class="stage prints-stage" id="printBox" aria-label="Folhas para imprimir">
-    <div class="prints-box">
-      <h3>Folhas para imprimir</h3>
-      <p class="note">Um pacote de 13 páginas em A4: a tabela com a ordem dos traços, uma folha para cada linha e a tabela para cobrir no final.</p>
-      <div class="pchoice">
-        <div class="pq"><b>Com qual mão você escreve?</b>
-          <div class="seg" id="pHand">
-            <button type="button" data-v="destro" aria-pressed="true">Direita</button>
-            <button type="button" data-v="canhoto" aria-pressed="false">Esquerda</button>
-          </div>
-          <small>Para canhotos, o modelo fica do lado direito, para a mão não cobrir a letra.</small>
-        </div>
-        <div class="pq"><b>Letra para cobrir</b>
-          <div class="seg seg-guide" id="pGuide">
-            <button type="button" data-v="escura" aria-pressed="true"><span class="gsw" id="gswDark"></span>Mais escura<small>para começar</small></button>
-            <button type="button" data-v="clara" aria-pressed="false"><span class="gsw" id="gswLight"></span>Mais clara<small>já pegou o jeito</small></button>
-          </div>
-        </div>
-      </div>
-      <div class="row-btns"><a class="btn primary" id="pDl" href="#" target="_blank" rel="noopener">Baixar folhas</a></div>
-      <p class="note">Quer treinar uma letra só? <a id="pCards" href="#" target="_blank" rel="noopener">Baixe a ficha grande de cada letra</a> (46 páginas, imprima só as que quiser).</p>
-    </div>
-  </section>
-
-  <p class="note foot">Áudio: por enquanto, a voz japonesa do próprio aparelho. Ordem dos traços: <a href="http://kanjivg.tagaini.net" rel="noopener">KanjiVG</a> (Ulrich Apel), CC BY-SA 3.0. O XP desta trilha soma no Planeta Utopia. · <a href="/idiomas/planeta-utopia/atelie/">Ateliê de Avatar</a> · <a href="/idiomas/planeta-utopia/">Planeta Utopia</a></p>
 </div>
-<div class="lv-toast" id="lvToast" role="status" hidden></div>
 
-<script>window.KANA_PATHS={hira:'/idiomas/hiragana/',kata:'/idiomas/katakana/'};window.ATELIE_URL='/idiomas/planeta-utopia/atelie/';</script>
-<script src="/idiomas/dados/avatar.js?v=20261016f"></script>
-<script src="/idiomas/dados/atelie-dados.js?v=20261016f"></script>
-<script src="/idiomas/dados/kana-dados.js?v=20261016f"></script>
-<script src="/idiomas/dados/kana-tracos.js?v=20261016f"></script>
-<script>
-/* Trilhas de Hiragana e Katakana — Quadrado Elemental. Usa avatar.js, atelie-dados.js (speak, kana2ro) e kana-dados.js. */
-const $=id=>document.getElementById(id);
-const AV=window.UtopiaAvatar, KD=window.KanaData;
-const KKEY='utopiaKana1', GKEY='utopiaSave1';
-const GOALS={agua:10,terra:10,ar:8};
-let kind=document.body.dataset.kind||'hira', stage='fogo', focusK=null, tIdx=0;
-let prog={}; try{ prog=JSON.parse(localStorage.getItem(KKEY)||'{}')||{}; }catch(e){}
-function P(){ return prog[kind]=prog[kind]||{seen:{},agua:{},terra:{},ar:{},esp:false}; }
-function saveProg(){ try{ localStorage.setItem(KKEY,JSON.stringify(prog)); }catch(e){} }
-let g=null; try{ g=JSON.parse(localStorage.getItem(GKEY)||'null'); }catch(e){}
-g=Object.assign({name:'',xp:0,maxXp:100,level:1,hp:10,maxHp:10,done:{}},g||{});
-function saveG(){ try{ localStorage.setItem(GKEY,JSON.stringify(g)); }catch(e){} }
-function gain(n,el){
-  g.xp+=n; let up=false;
-  while(g.xp>=g.maxXp){ g.xp-=g.maxXp; g.level++; g.maxHp+=5; g.hp=g.maxHp; g.maxXp=Math.round(g.maxXp*1.2); up=true; }
-  saveG(); renderMe();
-  if(el){ const f=document.createElement('span'); f.className='float'; f.textContent='+'+n; el.appendChild(f); setTimeout(()=>f.remove(),1000); }
-  if(up){ const t=$('lvToast'); t.innerHTML=`Nível ${g.level}! Novo título: ${AV?AV.titleHTML(g.level):''}`; t.hidden=false; clearTimeout(t._h); t._h=setTimeout(()=>t.hidden=true,3200); }
-}
-const D=()=>KD[kind];
-const say=t=>{ try{ speak(t); }catch(e){} };
-const rnd=a=>a[Math.floor(Math.random()*a.length)];
-const shuffle=a=>a.map(x=>[Math.random(),x]).sort((p,q)=>p[0]-q[0]).map(x=>x[1]);
-
-/* ---------- cabeçalho ---------- */
-function renderMe(){
-  const a=AV&&AV.load(), p=a&&a.profile, nm=(p&&(p.kata||p.name))||g.name||'Viajante';
-  $('meAv').innerHTML=a&&a.sel&&AV?AV.svg(a.sel,{viewBox:'40 46 160 160',still:true}):'🧳';
-  $('meName').textContent=nm;
-  $('meLv').innerHTML=`Nv. ${g.level} · ${AV?AV.titleHTML(g.level):''}`;
-  $('meBar').style.width=(g.xp/g.maxXp*100)+'%';
-  $('meXp').textContent=`${g.xp}/${g.maxXp} XP`;
-}
-function renderHead(){
-  $('tTitle').textContent=D().name; $('tPt').textContent=D().ptName;
-  $('swHira').setAttribute('aria-selected',kind==='hira'); $('swKata').setAttribute('aria-selected',kind==='kata');
-  document.title=`${D().ptName} — Trilha autoguiada | Unirversos`;
-}
-function counts(){ const p=P(); return {fogo:Object.keys(p.seen).length,agua:Object.keys(p.agua).length,terra:Object.keys(p.terra).length,ar:Object.keys(p.ar).length}; }
-function renderStones(){
-  const c=counts(), tot=D().all.length, p=P();
-  const lit={fogo:c.fogo>=tot,agua:c.agua>=GOALS.agua,terra:c.terra>=GOALS.terra,ar:c.ar>=GOALS.ar};
-  lit.esp=p.esp&&lit.fogo&&lit.agua&&lit.terra&&lit.ar;
-  $('pgFogo').textContent=`${c.fogo}/${tot}`; $('pgAgua').textContent=`${Math.min(c.agua,GOALS.agua)}/${GOALS.agua}`;
-  $('pgTerra').textContent=`${Math.min(c.terra,GOALS.terra)}/${GOALS.terra}`; $('pgAr').textContent=`${Math.min(c.ar,GOALS.ar)}/${GOALS.ar}`;
-  $('pgEsp').textContent=lit.esp?'aceso':(p.esp?'feito · acende com as 4':'—');
-  $('espSub').textContent=kind==='kata'?'seu nome':'uma mensagem';
-  document.querySelectorAll('.stone').forEach(b=>{ b.classList.toggle('lit',!!lit[b.dataset.st]); b.setAttribute('aria-current',b.dataset.st===stage); });
-}
-function showStage(s){
-  stage=s; ['fogo','agua','terra','ar','esp'].forEach(x=>$('st-'+x).hidden=x!==s); $('printBox').hidden=s==='esp'; renderStones();
-  if(s==='agua') newListen(); if(s==='terra') renderTerra(); if(s==='ar') newRead(); if(s==='esp') renderEsp();
-}
-
-/* ---------- ordem dos traços (dados: KanjiVG, CC BY-SA 3.0) ---------- */
-function strokeSVG(ch,opt){
-  opt=opt||{}; const d=(window.KanaStrokes||{})[ch]; if(!d) return `<div class="so-fallback">${ch}</div>`;
-  const step=opt.step||0.75, nums=opt.nums!==false;
-  const bg=d.p.map(p=>`<path d="${p}"/>`).join('');
-  const fg=opt.still?'':d.p.map((p,i)=>`<path d="${p}" pathLength="1" style="animation-delay:${(i*step).toFixed(2)}s"/>`).join('');
-  const nn=nums?d.n.map(([x,y],i)=>`<text x="${x}" y="${y}" style="animation-delay:${opt.still?0:(i*step).toFixed(2)}s">${i+1}</text>`).join(''):'';
-  return `<svg class="so ${opt.guide?'so-guide':''} ${opt.still?'so-still':''}" viewBox="0 0 109 109" role="img" aria-label="Ordem dos traços de ${ch}: ${d.p.length} traços"><g class="bg">${bg}</g><g class="fg">${fg}</g><g class="nums">${nn}</g></svg>`;
-}
-let orderTimer=null;
-function showOrder(ch){ clearTimeout(orderTimer); const wasOn=$('tGuide').style.visibility!=='hidden'; $('tGuide').style.visibility='visible'; $('tGuide').innerHTML=strokeSVG(ch,{guide:true});
-  const n=strokeCount(ch); orderTimer=setTimeout(()=>{ $('tGuide').innerHTML=strokeSVG(ch,{still:true,guide:true}); if(!wasOn) $('tGuide').style.visibility='hidden'; }, n*750+1400); }
-function strokeCount(ch){ const d=(window.KanaStrokes||{})[ch]; return d?d.p.length:0; }
-
-/* ---------- 🔥 Fogo ---------- */
-function renderGrid(){
-  const p=P();
-  $('kGrid').innerHTML=D().rows.map(r=>{
-    let cells=r.kana; if(r.id==='ya') cells=[r.kana[0],null,r.kana[1],null,r.kana[2]];
-    return `<div class="krow">${cells.map(o=>o?`<button type="button" class="kbtn ${p.seen[o.k]?'seen':''}" data-k="${o.k}" aria-pressed="${focusK===o.k}"><b>${o.k}</b><small>${o.ro}</small></button>`:'<span class="kbtn empty"></span>').join('')}</div>`;
-  }).join('');
-}
-function findK(k){ return D().all.find(o=>o.k===k)||D().all[0]; }
-function renderCard(){
-  const o=findK(focusK), i=D().all.indexOf(o);
-  let ex='';
-  if(o.ex&&o.ex[0]!=='—'){ const w=o.ex[0].split(o.k).join(`<mark>${o.k}</mark>`);
-    ex=`<button type="button" class="ex" id="exSay" title="Ouvir a palavra"><b>${w}</b><span>${o.ex[1]} · ${o.ex[2]} · <i lang="en">${o.ex[3]}</i></span></button>`; }
-  else if(o.ex) ex=`<div class="ex"><span>${o.ex[2]}</span></div>`;
-  $('kCard').innerHTML=`<div class="so-box" id="soBox">${strokeSVG(o.k)}</div><div class="ro">${o.ro} <small class="so-n">${strokeCount(o.k)} traços</small></div>
-    <div class="row-btns" style="justify-content:center"><button class="btn primary" type="button" id="kSay">Ouvir</button><button class="btn" type="button" id="kReplay">Ver os traços de novo</button></div>
-    ${ex}${o.tip?`<div class="tip">${o.tip}</div>`:''}
-    <div class="row-btns" style="justify-content:space-between"><button class="btn" type="button" id="kPrev" ${i<=0?'disabled':''}>← ${i>0?D().all[i-1].k:''}</button><button class="btn" type="button" id="kNext" ${i>=D().all.length-1?'disabled':''}>${i<D().all.length-1?D().all[i+1].k:''} →</button></div>`;
-  $('kSay').onclick=()=>say(o.k);
-  $('kReplay').onclick=()=>{ $('soBox').innerHTML=strokeSVG(o.k); };
-  if($('exSay')) $('exSay').onclick=()=>say(o.ex[0]);
-  $('kPrev').onclick=()=>pickK(D().all[i-1].k);
-  $('kNext').onclick=()=>pickK(D().all[i+1].k);
-}
-function pickK(k,el){
-  focusK=k; say(k); const p=P(), isNew=!p.seen[k];
-  if(isNew){ p.seen[k]=true; saveProg(); }
-  renderGrid(); renderCard(); renderStones();
-  if(isNew){ gain(2,$('kGrid').querySelector(`[data-k="${k}"]`)); }
-}
-function renderExtras(){
-  const d=D();
-  $('exInfo').innerHTML=d.info.map(x=>`<article><h3>${x.title}</h3><p style="margin:0">${x.body}</p><div class="exs">${x.ex.map(e=>`<button type="button" data-say="${e[0]}">${e[0]} <small>${e[1]} · ${e[2]}</small></button>`).join('')}</div></article>`).join('');
-  $('exDaku').innerHTML=d.daku.concat(d.handaku).map(o=>`<button type="button" data-say="${o.k}"><b>${o.k}</b><small>${o.ro}</small></button>`).join('');
-  $('exYoon').innerHTML=[].concat(...d.yoon).map(o=>`<button type="button" data-say="${o.k}"><b>${o.k}</b><small>${o.ro}</small></button>`).join('');
-}
-
-/* ---------- 💧 Água ---------- */
-let L=null;
-function listenPool(){ const seen=D().all.filter(o=>P().seen[o.k]); return seen.length>=4?seen:D().rows[0].kana.concat(D().rows[1].kana); }
-function newListen(){
-  const pool=listenPool(), ans=rnd(pool);
-  const others=shuffle(pool.filter(o=>o.k!==ans.k)).slice(0,3);
-  L={ans,opts:shuffle([ans,...others]),done:false};
-  $('aOpts').className='answers';
-  $('aOpts').innerHTML=L.opts.map(o=>`<button type="button" data-k="${o.k}">${o.k}</button>`).join('');
-  $('aFb').textContent='';
-  $('aPool').textContent=P().seen&&Object.keys(P().seen).length>=4?`Sorteando entre as ${pool.length} letras que você já descobriu.`:'Por enquanto, sorteando entre as linhas あ e か. Descubra mais letras no Fogo para ampliar.';
-  say(ans.k);
-}
-$('aPlay').onclick=()=>L&&say(L.ans.k);
-$('aOpts').addEventListener('click',e=>{
-  const b=e.target.closest('button'); if(!b||!L||L.done) return; L.done=true;
-  const ok=b.dataset.k===L.ans.k;
-  $('aOpts').querySelectorAll('button').forEach(x=>{ if(x.dataset.k===L.ans.k) x.classList.add('ok'); else if(x===b) x.classList.add('no'); });
-  if(ok){ const p=P(); const isNew=!p.agua[L.ans.k]; $('aFb').innerHTML=`<b>せいかい！</b> ${L.ans.k} = ${L.ans.ro}`;
-    if(isNew){ p.agua[L.ans.k]=true; saveProg(); gain(2,b); } renderStones(); setTimeout(newListen,1100); }
-  else { $('aFb').innerHTML=`<b>ざんねん…</b> Era ${L.ans.k} (${L.ans.ro}). <button class="btn" type="button" id="aNext">Próxima</button>`; $('aNext').onclick=newListen; }
-});
-
-/* ---------- 🌍 Terra ---------- */
-const pad=$('pad'), ctx=pad.getContext('2d'); let drawing=false, last=null, strokes=[];
-function padClear(){ ctx.clearRect(0,0,pad.width,pad.height); strokes=[]; $('tFb').innerHTML=''; }
-function padRedraw(){ ctx.clearRect(0,0,pad.width,pad.height); ctx.strokeStyle=getComputedStyle(document.body).color; ctx.lineWidth=22; ctx.lineCap='round'; ctx.lineJoin='round';
-  strokes.forEach(s=>{ ctx.beginPath(); s.forEach((p,i)=>i?ctx.lineTo(p.x,p.y):ctx.moveTo(p.x,p.y)); ctx.stroke(); }); }
-function pos(e){ const r=pad.getBoundingClientRect(); return {x:(e.clientX-r.left)*pad.width/r.width,y:(e.clientY-r.top)*pad.height/r.height}; }
-pad.addEventListener('pointerdown',e=>{ drawing=true; last=pos(e); strokes.push([last]); try{pad.setPointerCapture(e.pointerId);}catch(_){} });
-pad.addEventListener('pointermove',e=>{ if(!drawing) return; const p=pos(e); ctx.strokeStyle=getComputedStyle(document.body).color; ctx.lineWidth=22; ctx.lineCap='round'; ctx.lineJoin='round';
-  ctx.beginPath(); ctx.moveTo(last.x,last.y); ctx.lineTo(p.x,p.y); ctx.stroke(); last=p; if(strokes.length) strokes[strokes.length-1].push(p); });
-['pointerup','pointercancel','pointerleave'].forEach(t=>pad.addEventListener(t,()=>drawing=false));
-let pdfOpt={hand:'destro',guide:'escura'};
-function renderPdfLinks(){ const nm=kind==='kata'?'katakana':'hiragana', base=(window.PDF_BASE||'/idiomas/kana-pdf/')+nm;
-  $('pDl').href=`${base}-folhas-guia-${pdfOpt.guide}-${pdfOpt.hand}.pdf`;
-  $('pDl').textContent=`Baixar folhas de ${D().ptName} · ${pdfOpt.hand==='destro'?'mão direita':'mão esquerda'} · guia ${pdfOpt.guide}`;
-  $('pCards').href=`${base}-fichas-por-letra.pdf`;
-  document.querySelectorAll('#pHand button').forEach(x=>x.setAttribute('aria-pressed',x.dataset.v===pdfOpt.hand));
-  document.querySelectorAll('#pGuide button').forEach(x=>x.setAttribute('aria-pressed',x.dataset.v===pdfOpt.guide));
-  const ch=D().all[0].k; $('gswDark').innerHTML=strokeSVG(ch,{still:true,nums:false}); $('gswLight').innerHTML=strokeSVG(ch,{still:true,nums:false}); }
-$('pHand').addEventListener('click',e=>{ const b=e.target.closest('button'); if(b){ pdfOpt.hand=b.dataset.v; renderPdfLinks(); } });
-$('pGuide').addEventListener('click',e=>{ const b=e.target.closest('button'); if(b){ pdfOpt.guide=b.dataset.v; renderPdfLinks(); } });
-let tMode='letras', tw=null;
-function wordsForTerra(){ return D().read.filter(w=>P().ar[w[0]]); }
-function pickWord(){ const L=wordsForTerra(); if(!L.length){ tw=null; return; }
-  let w=rnd(L); for(let t=0;t<6&&tw&&L.length>1&&w[0]===tw.w[0];t++) w=rnd(L);
-  tw={w,chars:[...w[0]].filter(c=>c!==' '&&(window.KanaStrokes||{})[c]),i:0}; }
-function curChar(){ return tMode==='letras'?D().all[tIdx].k:(tw?tw.chars[tw.i]:null); }
-function renderTerra(keepFb){
-  renderPdfLinks(); strokes=[]; ctx.clearRect(0,0,pad.width,pad.height); clearTimeout(orderTimer);
-  if(!keepFb&&$('tFb')) $('tFb').innerHTML='';
-  document.querySelectorAll('#tMode button').forEach(b=>b.setAttribute('aria-pressed',b.dataset.v===tMode));
-  $('tIntro').innerHTML=tMode==='letras'?'Escreva por cima da letra clarinha, com o dedo ou o mouse, um traço de cada vez e na ordem dos números. Depois toque em Conferir. Meta: 10 letras diferentes.':'Escreva <b>de memória</b> as palavras que você leu no 🌬️ Ar, uma letra de cada vez: ouça a palavra, veja o som de cada letra e escreva no quadro, do tamanho que quiser. Toque em Conferir depois de cada letra.';
-  $('padLabel').textContent='escreva aqui ✍️';
-  const nW=wordsForTerra().length; $('tModeW').textContent=nW?`Palavras do Ar (${nW})`:'Palavras do Ar 🔒';
-  $('tPrev').hidden=tMode!=='letras'; $('tNext').textContent=tMode==='letras'?'Próxima →':'Outra palavra →';
-  if(tMode==='letras'){
-    $('tWord').hidden=true; setGuide(true); const o=D().all[tIdx];
-    $('tGuide').innerHTML=strokeSVG(o.k,{still:true,guide:true}); $('tNow').textContent=o.k; $('tNowRo').textContent=o.ro+(P().terra[o.k]?' · ✓ feita':''); return;
-  }
-  $('tWord').hidden=false;
-  if(!tw) pickWord();
-  if(!tw){ $('tWord').innerHTML='<p class="tw-step">🔒 Primeiro leia as palavras no 🌬️ Ar. Cada palavra que você <b>acertar</b> lá aparece aqui para você escrever.</p><button class="btn primary" type="button" id="goAr">Ir para o 🌬️ Ar</button>'; $('goAr').onclick=()=>showStage('ar'); $('tGuide').innerHTML=''; $('tNow').textContent=''; $('tNowRo').textContent=''; return; }
-  const w=tw.w, done=P().terraW&&P().terraW[w[0]];
-  const roOf=c=>c==='ー'||c==='ｰ'?'ー (alonga)':/[っッ]/.test(c)?'っ (pausa)':/[ゃゅょャュョぁぃぅぇぉァィゥェォ]/.test(c)?`${kana2ro(c)} pequeno`:kana2ro(c);
-  const cur=tw.chars[tw.i];
-  $('tWord').innerHTML=`<div class="tw-top"><span class="tw-pic">${w[4]}</span><div><b class="tw-ro">${w[1]}</b><small>${w[2]} · <i lang="en">${w[3]}</i>${done?' · ✓ já escrita':''}</small></div><button class="btn" type="button" id="twSay">Ouvir</button></div>
-    <div class="tw-slots">${tw.chars.map((c,i)=>`<span class="slot ${i<tw.i?'ok':i===tw.i?'now':''}">${i<tw.i?c:`<small>${roOf(c)}</small>`}</span>`).join('')}</div>
-    <p class="tw-step">${tw.i<tw.chars.length?`👉 Escreva a letra do som <b>${roOf(cur)}</b>, de memória. Travou? Toque em <b>Dica</b>.`:'✓ Palavra completa!'}</p>`;
-  $('twSay').onclick=()=>say(w[0]);
-  if(tw.i>=tw.chars.length){ $('tGuide').innerHTML=''; $('tNow').textContent=w[0]; $('tNowRo').textContent='palavra completa'; return; }
-  const ch=curChar(); $('tGuide').innerHTML=strokeSVG(ch,{still:true,guide:true}); setGuide(false);
-  $('tNow').textContent='?'; $('tNowRo').textContent=`letra ${tw.i+1} de ${tw.chars.length}`;
-}
-$('tMode').addEventListener('click',e=>{ const b=e.target.closest('button'); if(!b) return; tMode=b.dataset.v; if(tMode==='palavras'&&!tw) pickWord(); renderTerra(); });
-$('tClear').onclick=padClear;
-$('tUndo').onclick=()=>{ strokes.pop(); padRedraw(); $('tFb').innerHTML=''; };
-$('tShow').onclick=()=>showOrder(curChar());
-function setGuide(on){ $('tGuideBtn').setAttribute('aria-pressed',on); $('tGuide').style.visibility=on?'visible':'hidden'; $('tGuideBtn').textContent=tMode==='palavras'?(on?'Esconder dica':'Dica'):'Letra-guia'; }
-$('tGuideBtn').onclick=()=>setGuide($('tGuideBtn').getAttribute('aria-pressed')!=='true');
-$('tPrev').onclick=()=>{ tIdx=(tIdx-1+D().all.length)%D().all.length; renderTerra(); };
-$('tNext').onclick=()=>{ if(tMode==='letras') tIdx=(tIdx+1)%D().all.length; else pickWord(); renderTerra(); };
-/* conferência: compara os traços desenhados com os do KanjiVG (unidades 0-109) */
-const sampleCache={};
-function samples(ch){
-  if(sampleCache[ch]) return sampleCache[ch];
-  const d=(window.KanaStrokes||{})[ch]; if(!d) return null;
-  const ns='http://www.w3.org/2000/svg', svg=document.createElementNS(ns,'svg'); svg.setAttribute('width','0'); svg.setAttribute('height','0'); svg.style.position='absolute'; document.body.appendChild(svg);
-  const out=d.p.map(dd=>{ const el=document.createElementNS(ns,'path'); el.setAttribute('d',dd); svg.appendChild(el);
-    const L=el.getTotalLength(), pts=[]; for(let s=0;s<=L;s+=1.5){ const q=el.getPointAtLength(s); pts.push([q.x,q.y]); }
-    const e=el.getPointAtLength(L); pts.push([e.x,e.y]); return pts; });
-  svg.remove(); return sampleCache[ch]=out;
-}
-const dist=(a,b)=>Math.hypot(a[0]-b[0],a[1]-b[1]);
-const near=(pt,set,tol)=>set.some(q=>dist(pt,q)<tol);
-function bbox(pts){ let a=1e9,b=1e9,c=-1e9,d=-1e9; pts.forEach(([x,y])=>{a=Math.min(a,x);b=Math.min(b,y);c=Math.max(c,x);d=Math.max(d,y);}); return {x:a,y:b,w:Math.max(c-a,1),h:Math.max(d-b,1)}; }
-function guideOn(){ return $('tGuide').style.visibility!=='hidden'; }
-function checkDrawing(ch){
-  const G=samples(ch); if(!G) return {ok:true};
-  const k=109/pad.width; let U=strokes.filter(s=>s.length>1).map(s=>s.map(p=>[p.x*k,p.y*k]));
-  if(!guideOn() && U.length){ /* de memória: encaixa o desenho do aluno no tamanho e na posição da letra */
-    const gb=bbox([].concat(...G)), ub=bbox([].concat(...U)), sc=Math.max(gb.w,gb.h)/Math.max(ub.w,ub.h);
-    const gcx=gb.x+gb.w/2, gcy=gb.y+gb.h/2, ucx=ub.x+ub.w/2, ucy=ub.y+ub.h/2;
-    U=U.map(s=>s.map(([x,y])=>[gcx+(x-ucx)*sc, gcy+(y-ucy)*sc]));
-  }
-  const n=G.length, TOL=13, COV=11;
-  if(!U.length) return {ok:false,msg:'Escreva a letra no quadro primeiro.'};
-  if(U.length!==n) return {ok:false,msg:`A letra ${ch} tem ${n} traço${n>1?'s':''} e você fez ${U.length}. Cada traço é uma linha sem tirar o lápis.`};
-  const inside=(u,g)=>u.filter(pt=>near(pt,g,TOL)).length/u.length;
-  const cover=(u,g)=>g.filter(pt=>near(pt,u,COV)).length/g.length;
-  for(let i=0;i<n;i++){
-    const u=U[i], g=G[i];
-    if(inside(u,g)<0.7||cover(u,g)<0.55){
-      const j=G.findIndex((gg,jj)=>jj!==i&&inside(u,gg)>=0.7&&cover(u,gg)>=0.55);
-      if(j>=0) return {ok:false,msg:`O seu traço ${i+1} parece ser o traço ${j+1}. Confira a ordem: siga os números.`,show:true};
-      return {ok:false,msg:`O traço ${i+1} ficou fora do lugar ou curto demais. Siga o número ${i+1} até o fim.`,show:true};
-    }
-    const s=u[0], e=u[u.length-1], gs=g[0], ge=g[g.length-1];
-    if(dist(s,ge)+dist(e,gs) < dist(s,gs)+dist(e,ge)-10) return {ok:false,msg:`O traço ${i+1} foi feito ao contrário. Comece perto do número ${i+1}.`,show:true};
-  }
-  return {ok:true};
-}
-$('tOk').onclick=()=>{
-  const ch=curChar(); if(!ch) return; const p=P(), r=checkDrawing(ch);
-  ctx.clearRect(0,0,pad.width,pad.height); strokes=[];
-  if(!r.ok){ $('tFb').innerHTML=`<b>Quase!</b> ${r.msg} <span class="note">O quadro foi limpo: tente de novo.</span>`; if(r.show) showOrder(ch); return; }
-  if(tMode==='letras'){
-    $('tFb').innerHTML=`<b>せいかい！</b> ${ch} ficou certinho, na ordem certa.`;
-    if(!p.terra[ch]){ p.terra[ch]=true; saveProg(); gain(2,$('tOk')); } renderStones();
-    setTimeout(()=>{ tIdx=(tIdx+1)%D().all.length; renderTerra(); },1200); return;
-  }
-  tw.i++;
-  if(tw.i<tw.chars.length){ $('tFb').innerHTML=`<b>✓ ${ch}</b> Agora a próxima letra.`; renderTerra(true); return; }
-  const w=tw.w; say(w[0]); $('tFb').innerHTML=`<b>せいかい！</b> Você escreveu ${w[0]} (${w[1]} · ${w[2]}).`;
-  p.terraW=p.terraW||{}; if(!p.terraW[w[0]]){ p.terraW[w[0]]=true; saveProg(); gain(3,$('tOk')); }
-  renderTerra(true); setTimeout(()=>{ pickWord(); renderTerra(); },1800);
-};
-
-/* ---------- 🌬️ Ar: palavras com desenhos, linha por linha ---------- */
-let R=null, arRow=null;
-const ROW_IDS=['a','ka','sa','ta','na','ha','ma','ya','ra','wa'];
-function rowUnlocked(i){ const seen=P().seen; return D().rows.slice(0,i+1).every(r=>r.kana.every(o=>seen[o.k])); }
-function renderArRows(){
-  const rows=D().rows; let maxU=-1; rows.forEach((r,i)=>{ if(rowUnlocked(i)) maxU=i; });
-  if(arRow===null||!rowUnlocked(ROW_IDS.indexOf(arRow))) arRow=maxU>=0?ROW_IDS[maxU]:null;
-  $('rRows').innerHTML=rows.map((r,i)=>{ const ok=rowUnlocked(i), n=(D().readRows[r.id]||[]).length, done=(D().readRows[r.id]||[]).filter(w=>P().ar[w[0]]).length;
-    return `<button type="button" role="tab" data-row="${r.id}" ${ok?'':'disabled'} aria-selected="${arRow===r.id}"><b>${r.label}</b><small>${ok?`${done}/${n}`:'🔒'}</small></button>`; }).join('');
-}
-function arPool(){ return D().readRows[arRow]||[]; }
-function newRead(){
-  renderArRows();
-  if(!arRow){ R=null; $('rWord').textContent=''; $('rOpts').innerHTML=''; $('rGal').innerHTML=''; $('rGalT').textContent='Palavras desta linha';
-    $('rFb').innerHTML=`Para abrir a primeira linha, descubra no 🔥 Fogo todas as letras de ${D().rows[0].kana.map(o=>o.k).join(' ')}.`; return; }
-  const pool=arPool(), ans=rnd(pool);
-  let others=shuffle(pool.filter(w=>w[0]!==ans[0]));
-  if(others.length<2){ const idx=ROW_IDS.indexOf(arRow); const extra=shuffle([].concat(...ROW_IDS.slice(0,idx+3).map(r=>D().readRows[r]||[])).filter(w=>w[0]!==ans[0]&&w[4]!==ans[4])); others=others.concat(extra); }
-  others=others.filter((w,i,a)=>a.findIndex(x=>x[4]===w[4])===i&&w[4]!==ans[4]).slice(0,2);
-  R={ans,opts:shuffle([ans,...others]),done:false};
-  $('rWord').textContent=ans[0];
-  $('rOpts').innerHTML=R.opts.map(w=>`<button type="button" data-w="${w[0]}" aria-label="desenho">${w[4]}</button>`).join(''); $('rFb').textContent='';
-  renderGallery();
-}
-function renderGallery(){
-  const label=D().rows.find(r=>r.id===arRow).label;
-  $('rGalT').textContent=`Palavras da linha ${label}`;
-  $('rGal').innerHTML=arPool().map(w=>`<button type="button" class="wcard ${P().ar[w[0]]?'done':''}" data-say="${w[0]}"><span class="pic">${w[4]}</span><b>${w[0]}</b><small>${w[1]} · ${w[2]}</small><small lang="en"><i>${w[3]}</i></small></button>`).join('');
-}
-$('rRows').addEventListener('click',e=>{ const b=e.target.closest('button[data-row]'); if(!b||b.disabled) return; arRow=b.dataset.row; newRead(); });
-$('rOpts').addEventListener('click',e=>{
-  const b=e.target.closest('button'); if(!b||!R||R.done) return; R.done=true;
-  const ok=b.dataset.w===R.ans[0];
-  $('rOpts').querySelectorAll('button').forEach(x=>{ if(x.dataset.w===R.ans[0]) x.classList.add('ok'); else if(x===b) x.classList.add('no'); });
-  say(R.ans[0]);
-  const meaning=`${R.ans[0]} = <b>${R.ans[1]}</b> · ${R.ans[2]} · <i lang="en">${R.ans[3]}</i>`;
-  if(ok){ const p=P(), isNew=!p.ar[R.ans[0]]; if(isNew){ p.ar[R.ans[0]]=true; saveProg(); gain(3,b); } renderStones(); renderArRows(); renderGallery(); }
-  $('rFb').innerHTML=`${ok?'<b>せいかい！</b>':'<b>ざんねん…</b>'} ${meaning} <button class="btn" type="button" id="rNext">Próxima</button>`; $('rNext').onclick=newRead;
-});
-
-/* ---------- ✨ Espírito ---------- */
-let msg='';
-function kbLetters(){ const rows=D().rows; const out=[];
-  rows.forEach(r=>{ const k=r.id==='ya'?[r.kana[0],null,r.kana[1],null,r.kana[2]]:r.id==='wa'?[r.kana[0],r.kana[1],r.kana[2],null,null]:r.kana; out.push(k); });
-  const grid=[]; for(let v=0;v<5;v++) for(let c=0;c<out.length;c++) grid.push(out[c][v]||null);
-  return grid; }
-function renderEsp(){
-  const kata=kind==='kata';
-  $('espIntro').innerHTML=kata?'Escreva o seu nome em katakana. Ele vai direto para a sua carteirinha no Ateliê de Avatar.':'Escreva uma mensagem curta em hiragana e mande para alguém de verdade: um amigo, alguém da família, a sua professora.';
-  $('eDone').textContent=kata?'Salvar na minha carteirinha':'Copiar mensagem';
-  $('eLong').hidden=!kata; $('eSpace').hidden=kata;
-  $('eTip').innerHTML=kata
-    ? '<b>Como adaptar nomes:</b> o katakana segue o som, não a escrita. Ana → アナ · Lucas → ルーカス · Tiago → チアゴ · Rafael → ラファエル · Beatriz → ベアトリス. Sílaba que termina em consoante ganha uma vogal: "s" vira ス (su).'
-    : '<b>Ideias:</b> ありがとう (obrigado/a) · おはよう (bom dia) · おやすみ (boa noite) · がんばって (força!) · よろしく (conto com você)';
-  if(kata&&!msg){ const a=AV&&AV.load(); if(a&&a.profile&&a.profile.kata) msg=a.profile.kata; }
-  $('kb').innerHTML=kbLetters().map(o=>o?`<button type="button" data-k="${o.k}">${o.k}</button>`:'<span class="gap"></span>').join('');
-  renderOut(); $('eFb').textContent='';
-}
-function renderOut(){ $('eOut').textContent=msg; $('eOutRo').textContent=msg?kana2ro(msg):'toque nas letras abaixo'; }
-function modify(list){ const lastC=msg.slice(-1); const f=list.find(o=>o.from===lastC); if(f){ msg=msg.slice(0,-1)+f.k; renderOut(); } }
-$('kb').addEventListener('click',e=>{ const b=e.target.closest('button'); if(!b) return; msg+=b.dataset.k; say(b.dataset.k); renderOut(); });
-$('eDaku').onclick=()=>modify(D().daku); $('eHan').onclick=()=>modify(D().handaku);
-$('eSmall').onclick=()=>{ const lastC=msg.slice(-1); const s=D().small.find(x=>x[0]===lastC); if(s){ msg=msg.slice(0,-1)+s[1]; renderOut(); } };
-$('eLong').onclick=()=>{ msg+='ー'; renderOut(); };
-$('eSpace').onclick=()=>{ msg+=' '; renderOut(); };
-$('eBack').onclick=()=>{ msg=[...msg].slice(0,-1).join(''); renderOut(); };
-$('eSay').onclick=()=>msg&&say(msg);
-$('eDone').onclick=async()=>{
-  if(!msg.trim()){ $('eFb').textContent='Escreva pelo menos uma palavra primeiro.'; return; }
-  const p=P(), isNew=!p.esp;
-  if(kind==='kata'){
-    const a=(AV&&AV.load())||{}; a.profile=Object.assign({name:'',kata:'',pron:'watashi'},a.profile||{}); a.profile.kata=msg.trim(); if(AV) AV.save(a);
-    g.name=msg.trim(); saveG(); renderMe();
-    $('eFb').innerHTML='Salvo! Seu nome já aparece na carteirinha do <a href="'+(window.ATELIE_URL||'#')+'">Ateliê</a>.';
-  } else {
-    let ok=false; try{ await navigator.clipboard.writeText(msg); ok=true; }catch(e){}
-    $('eFb').innerHTML=ok?'Copiado! Agora cole numa conversa e mande para alguém.':'Não consegui copiar sozinho. Selecione a mensagem acima e copie.';
-  }
-  if(isNew){ p.esp=true; saveProg(); gain(20,$('eDone')); } renderStones();
-};
-
-/* ---------- geral ---------- */
-document.addEventListener('click',e=>{ const b=e.target.closest('[data-say]'); if(b) say(b.dataset.say); });
-$('kGrid').addEventListener('click',e=>{ const b=e.target.closest('.kbtn[data-k]'); if(b) pickK(b.dataset.k); });
-document.querySelectorAll('.stone').forEach(b=>b.onclick=()=>showStage(b.dataset.st));
-function setKind(k){
-  if(k===kind) return;
-  if(window.KANA_PATHS){ location.href=window.KANA_PATHS[k]; return; }
-  kind=k; focusK=D().all[0].k; tIdx=0; msg=''; tw=null; renderAll();
-}
-$('swHira').onclick=()=>setKind('hira'); $('swKata').onclick=()=>setKind('kata');
-function renderAll(){ renderPdfLinks(); renderHead(); renderMe(); renderGrid(); if(!focusK) focusK=D().all[0].k; renderCard(); renderExtras(); showStage(stage); }
-focusK=D().all[0].k; renderAll();
-</script>
 </body>
 </html>
