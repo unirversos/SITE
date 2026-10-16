@@ -182,7 +182,7 @@ function endQuiz(){
 
 /* ---------- 3. moldes ---------- */
 function moldeParts(m,sel){ return m.parts.map(p=>typeof p==='number'?Object.assign({slot:true},sel[p]):tok(p)); }
-function moldeText(m,sel,key){ const t=m[key]; if(t) return t.replace(/\{(\d)\}/g,(_,d)=>sel[+d][key]); return sel[0][key]; }
+function moldeText(m,sel,key){ const t=m[key]; if(typeof t==='function') return t(sel); if(t) return t.replace(/\{(\d)\}/g,(_,d)=>sel[+d][key]); return sel[0][key]; }
 function stMoldes(){ msel=A.moldes[mi].slots.map(s=>s[0]); showMolde(false); }
 function showMolde(speakIt){
   const MS=A.moldes, m=MS[mi], parts=moldeParts(m,msel);
@@ -292,7 +292,8 @@ function wireCena(){
     if(ci<CENAS.length-1) return loadCena(ci+1);
     const first=!P.steps[4]; finish(4); renderSteps(); if(first) gainXP(20);
     mood='ok'; setStage({stamp:true}); sparkle(['🌍','💖','✨','🎉','🌸','⭐']);
-    hint(`${A.emoji} <b>Insígnia ${A.titulo} conquistada!</b> ${A.fim}${first?' <span class="newxp">+20 XP</span>':''}`); $('btnNext').hidden=true;
+    hint(`${A.emoji} <b>${A.insignia||('Insígnia '+A.titulo+' conquistada!')}</b> ${A.fim}${first?' <span class="newxp">+20 XP</span>':''}${A.fimLink?` <a href="${A.fimLink[1]}">${A.fimLink[0]}</a>`:''}`); $('btnNext').hidden=true;
+    if(typeof A.onFinish==='function'){ try{ A.onFinish(); }catch(e){} }
   };
 }
 
@@ -305,11 +306,12 @@ function loadAula(slug){
   CENAS=raw.cenas.map(prep);
   P=M[slug]=Object.assign({words:{},steps:{}},M[slug]||{});
   step=0; wi=0; mi=0; oi=0; ci=0; done={}; $('fx').innerHTML='';
-  document.title=`Aula: ${A.titulo} · Mapas de contexto`;
-  $('eyebrow').innerHTML=`Mapa de contexto ${A.num} · ${A.titulo} · <span style="text-transform:none;letter-spacing:.05em">${A.jp}</span>`;
+  document.title=A.docTitle||`Aula: ${A.titulo} · Mapas de contexto`;
+  $('eyebrow').innerHTML=`${A.eyebrow||('Mapa de contexto '+A.num)} · ${A.titulo} · <span style="text-transform:none;letter-spacing:.05em">${A.jp}</span>`;
   $('h1').textContent=A.h1;
   $('stage').setAttribute('aria-label','Cena: '+A.titulo);
-  const L=$('links'); if(L&&A.links!==false){
+  const L=$('links'); if(L&&A.linkList){ L.innerHTML=A.linkList.map(([t,h])=>`<a href="${h}">${t}</a>`).join(''); }
+  else if(L&&A.links!==false){
     const order=ORDEM; const k=order.indexOf(slug), nx=order[k+1];
     L.innerHTML=`<a href="/idiomas/mapas/${slug}/">← Exercícios do mapa</a><a href="/idiomas/mapas/">🗺️ Todos os mapas</a>${nx?`<a href="/idiomas/mapas/${nx}/aula/">Próxima aula: ${TITULOS[nx]||nx} →</a>`:''}`; }
   showXP(); go(0);
