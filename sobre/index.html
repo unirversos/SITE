@@ -55,6 +55,17 @@ body{font-family:'Zen Maru Gothic',sans-serif;color:var(--ink);background:var(--
 .fifth{margin-top:16px;background:var(--blush);border:1px dashed var(--pink);border-radius:18px;padding:22px;text-align:center;}
 .fifth h3{font-family:'Baloo 2',cursive;font-size:16px;margin-bottom:6px;}
 .fifth p{font-size:13.5px;color:var(--ink-soft);max-width:520px;margin:0 auto;}
+/* práticas do método (vieram da página de idiomas) */
+.pratica{margin-top:16px;background:#fff;border:1px solid var(--blush-2);border-radius:18px;padding:22px;}
+.pratica h3{font-family:'Baloo 2',cursive;font-size:16px;margin-bottom:4px;}
+.pratica .sub{font-size:13px;color:var(--ink-soft);margin-bottom:12px;}
+.prow{display:grid;grid-template-columns:110px 1fr;gap:4px 14px;padding:12px 0;border-top:1px dashed var(--blush-2);}
+.prow:first-of-type{border-top:0;}
+.prow .st{font-size:12px;color:var(--pink);font-weight:600;}
+.prow h4{font-family:'Baloo 2',cursive;font-size:15px;font-weight:600;line-height:1.3;}
+.prow h4 a{color:inherit;text-decoration-color:var(--pink);text-underline-offset:3px;}
+.prow p{font-size:13.5px;color:var(--ink-soft);grid-column:2;}
+@media (max-width:520px){.prow{grid-template-columns:1fr;}.prow p{grid-column:1;}}
 
 /* universos detalhados */
 .udetail{padding:48px 0;border-top:1px solid var(--blush-2);}
@@ -144,6 +155,15 @@ body{font-family:'Zen Maru Gothic',sans-serif;color:var(--ink);background:var(--
     <div class="fifth">
       <h3>✦ E o quinto elemento: o Espírito</h3>
       <p>Não vem pronto — é cocriado. Nasce quando os quatro se encontram numa interação viva, cada pessoa dando corpo ao seu avatar e falando na primeira pessoa.</p>
+    </div>
+
+    <div class="pratica">
+      <h3>Como cada elemento vira prática</h3>
+      <p class="sub">As ferramentas do método, do jeito que aparecem nas aulas.</p>
+      <div class="prow"><span class="st">🔥 fogo</span><h4><a href="/idiomas/mapas/">Mapas de contexto</a></h4><p>Situações reais viram mapas com peças, moldes e radar de escuta. Aprenda a lógica uma vez e ela abre centenas de frases.</p></div>
+      <div class="prow"><span class="st">💧 água</span><h4>Quebra-cabeça da fluência</h4><p>Toda palavra que faltar na hora de falar vira sua lista. Você sempre busca o que faltou — e avança um pouco por dia.</p></div>
+      <div class="prow"><span class="st">🌱 terra</span><h4><a href="/paralelos/">Desafio do diário</a></h4><p>Três acontecimentos, três pensamentos, todo dia, no idioma alvo. A língua vira o impulso de emanar naturalmente.</p></div>
+      <div class="prow"><span class="st">🌬 ar + ✦ espírito</span><h4>Quests</h4><p>Role play de um cenário no idioma, cada um com seu avatar, na primeira pessoa. Desinibição, eloquência e transmissão de ideias.</p></div>
     </div>
   </section>
 

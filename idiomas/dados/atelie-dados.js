@@ -149,3 +149,37 @@ function decodeSel(str){ const p=String(str||'').split('.'); if(p.length<10) ret
   return {hair:p[0],hairColor:p[1],face:p[2],clothes:p[3],clothColor:p[4],bg:p[5],skin:+p[6]||0,age:+p[7]||20,acc:p[8]?p[8].split('-'):[],traits:p[9]?p[9].split('-'):[]}; }
 const SITE='https://unirversos.com';
 function cadernoURL(data){ const q=new URLSearchParams({n:data.name||'',w:encodeWords(data.learned||{}),a:encodeSel(data.sel)}); return SITE+'/idiomas/planeta-utopia/caderno/?'+q.toString(); }
+
+/* ---------- romaji (Hepburn, com mácron) ---------- */
+const RO_DI={きゃ:'kya',きゅ:'kyu',きょ:'kyo',しゃ:'sha',しゅ:'shu',しょ:'sho',ちゃ:'cha',ちゅ:'chu',ちょ:'cho',にゃ:'nya',にゅ:'nyu',にょ:'nyo',ひゃ:'hya',ひゅ:'hyu',ひょ:'hyo',みゃ:'mya',みゅ:'myu',みょ:'myo',りゃ:'rya',りゅ:'ryu',りょ:'ryo',ぎゃ:'gya',ぎゅ:'gyu',ぎょ:'gyo',じゃ:'ja',じゅ:'ju',じょ:'jo',びゃ:'bya',びゅ:'byu',びょ:'byo',ぴゃ:'pya',ぴゅ:'pyu',ぴょ:'pyo',てぃ:'ti',でぃ:'di',ふぁ:'fa',ふぃ:'fi',ふぇ:'fe',ふぉ:'fo',うぃ:'wi',うぇ:'we',うぉ:'wo',しぇ:'she',じぇ:'je',ちぇ:'che',ゔぁ:'va'};
+const RO_1={あ:'a',い:'i',う:'u',え:'e',お:'o',か:'ka',き:'ki',く:'ku',け:'ke',こ:'ko',さ:'sa',し:'shi',す:'su',せ:'se',そ:'so',た:'ta',ち:'chi',つ:'tsu',て:'te',と:'to',な:'na',に:'ni',ぬ:'nu',ね:'ne',の:'no',は:'ha',ひ:'hi',ふ:'fu',へ:'he',ほ:'ho',ま:'ma',み:'mi',む:'mu',め:'me',も:'mo',や:'ya',ゆ:'yu',よ:'yo',ら:'ra',り:'ri',る:'ru',れ:'re',ろ:'ro',わ:'wa',を:'o',ん:'n',が:'ga',ぎ:'gi',ぐ:'gu',げ:'ge',ご:'go',ざ:'za',じ:'ji',ず:'zu',ぜ:'ze',ぞ:'zo',だ:'da',ぢ:'ji',づ:'zu',で:'de',ど:'do',ば:'ba',び:'bi',ぶ:'bu',べ:'be',ぼ:'bo',ぱ:'pa',ぴ:'pi',ぷ:'pu',ぺ:'pe',ぽ:'po',ぁ:'a',ぃ:'i',ぅ:'u',ぇ:'e',ぉ:'o',ゃ:'ya',ゅ:'yu',ょ:'yo',ゔ:'vu'};
+const MAC={a:'ā',i:'ī',u:'ū',e:'ē',o:'ō'};
+const RO_PART='はをがにでのへともや';
+function roSplit(tok){
+  const m=tok.match(/^(.*?)([。！？、!?]*)$/); let core=m[1]; const p=m[2];
+  if(/^(こんにちは|こんばんは)$/.test(core)) return [core+p];
+  if(core.length>2 && core.endsWith('です')) return [core.slice(0,-2),'です'+p];
+  if(core.length>4 && /[てで]います$/.test(core)) return [core.slice(0,-3),'います'+p];
+  if(/(びと|ひと|おと|うと|こと|もの|くに|なに)$/.test(core)) return [core+p];
+  if(core.length>2 && RO_PART.includes(core.slice(-1))) return [core.slice(0,-1),core.slice(-1)+p];
+  return [core+p];
+}
+function roTok(tok){
+  if(/^は[。！？、!?]*$/.test(tok)) return 'wa'+tok.slice(1).replace(/[。！？、]/g,c=>({'。':'.','！':'!','？':'?','、':','}[c]));
+  if(/^へ[。！？、!?]*$/.test(tok)) return 'e'+tok.slice(1);
+  let out='',i=0;
+  while(i<tok.length){
+    const two=tok.slice(i,i+2), c=tok[i];
+    if(c==='っ'){ const nx=RO_DI[tok.slice(i+1,i+3)]||RO_1[tok[i+1]]||''; out+=nx.startsWith('ch')?'t':(nx[0]||''); i++; continue; }
+    if(c==='ー'){ const v=out.slice(-1); out=MAC[v]?out.slice(0,-1)+MAC[v]:out; i++; continue; }
+    if(RO_DI[two]){ out+=RO_DI[two]; i+=2; continue; }
+    if(c==='は' && /^(こんにちは|こんばんは)$/.test(tok.slice(0,i+1)) && i>=4){ out+='wa'; i++; continue; }
+    if(RO_1[c]!==undefined){ out+=RO_1[c]; i++; continue; }
+    out+=({'。':'.','、':',','！':'!','？':'?','・':' / ','（':'(','）':')'}[c]??c); i++;
+  }
+  return out.replace(/ou/g,'ō').replace(/uu/g,'ū');
+}
+function kana2ro(str){
+  const h=String(str).replace(/[ァ-ヶ]/g,c=>String.fromCharCode(c.charCodeAt(0)-0x60));
+  return h.split(/\s+/).filter(Boolean).flatMap(t=>t.split(/(?<=[！!。？?])/)).flatMap(roSplit).map(roTok).join(' ').replace(/ ([.,!?])/g,'$1');
+}
