@@ -35,7 +35,7 @@ const R=(k,f)=>`<ruby>${k}<rt>${f}</rt></ruby>`;
      gram:'<b>です</b> (desu) fecha a frase com educação e já quer dizer "é". Responder só <b>かんこう です</b> é perfeitamente natural.', use:'Na cena: responder o motivo da viagem.'},
     {titulo:'"Meu destino é ___."', tpl:'もくてきち は <i>lugar</i> です', tplRo:'mokutekichi wa [lugar] desu', parts:[{k:'もくてきち',r:'mokutekichi',h:R('目的地','もくてきち')},'は|wa',0,'です|desu'],
      slots:[[['とうきょう|Tōkyō','Meu destino é Tóquio.','My destination is Tokyo.',R('東京','とうきょう')],['おおさか|Ōsaka','Meu destino é Osaka.','My destination is Osaka.'],['きょうと|Kyōto','Meu destino é Kyoto.','My destination is Kyoto.']]],
-     gram:'<b>は</b> se escreve は mas se lê <b>wa</b> quando marca o assunto da frase: "sobre o destino… é Tóquio".', use:'Na cena: dizer para onde você vai.'},
+     gram:'<b>は</b> é a letra <ruby class="rk">は<rt>ha</rt></ruby>, mas se lê <b>wa</b> quando marca o assunto da frase: "sobre o destino… é Tóquio".', use:'Na cena: dizer para onde você vai.'},
     {titulo:'"Tenho ___." / "Não tenho ___."', tpl:'<i>coisa</i> が <i>tenho / não tenho</i>', tplRo:'[coisa] ga arimasu / arimasen', parts:[0,'が|ga',1], pt:'{1} {0}.', en:'{1} {0}.',
      slots:[[['よやく|yoyaku','reserva','a reservation',R('予約','よやく')],['ビザ|biza','visto','a visa'],['パスポート|pasupōto','passaporte','a passport']],[['あります|arimasu','Tenho','I have'],['ありません|arimasen','Não tenho',"I don't have"]]],
      gram:'<b>あります</b> = tenho, existe. <b>ありません</b> = não tenho, não existe. Só muda o final: <b>-masu</b> vira <b>-masen</b>. A partícula <b>が</b> (ga) aponta a coisa que existe.', use:'Na cena: falar da reserva e do visto.'},
