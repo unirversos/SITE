@@ -378,12 +378,14 @@ function acharHora(t){
   if(m2) return p2(+m2[1])+':'+(m2[2]||m2[3]||'00');
   return '';
 }
-function aposRotulo(t,rot,n){ // primeira data/hora logo depois de um rótulo como "check-in"
+function aposRotulo(t,rot,n,ultima){ // primeira data/hora logo depois de um rótulo como "check-in"
   const re=new RegExp(rot.source,'gi'); let m;
   while((m=re.exec(t))){ const ini=m.index+m[0].length; let jan=t.slice(ini,ini+(n||140));
     const prox=jan.search(/check-?in|check-?out|sa[ií]da|entrada|chegada|departure|arrival|チェック/i); if(prox>=0) jan=jan.slice(0,prox);
     const ds=acharDatas(jan);
-    if(ds.length) return {data:ds[0].v,hora:acharHora(jan.slice(ds[0].i+4))}; }
+    if(ds.length){ const depois=jan.slice(ds[0].i+4); let hora=acharHora(depois);
+      if(ultima){ const fx=depois.match(/(\d{1,2}:\d{2})\s*[–—-]\s*(\d{1,2}:\d{2})/); if(fx) hora=p2(+fx[2].split(':')[0])+':'+fx[2].split(':')[1]; }
+      return {data:ds[0].v,hora}; } }
   return null;
 }
 const CID_ALIAS=[['Tóquio',/t[oó]qui?o|tokyo|東京/i],['Kyoto',/kyoto|quioto|京都/i],['Osaka',/[oō]saka|大阪/i],['Nara',/\bnara\b|奈良/i],['Kobe',/k[oō]be|神戸/i],['Yokohama',/yokohama|横浜/i],['Kamakura',/kamakura|鎌倉/i],['Hakone',/hakone|箱根/i],['Nikko',/nikk[oō]|日光/i],['Chiba',/chiba|urayasu|maihama|千葉|浦安/i],['Nagoya',/nagoya|名古屋/i],['Takayama',/takayama|高山/i],['Kanazawa',/kanazawa|金沢/i],['Hiroshima',/hiroshima|広島/i],['Fukuoka',/fukuoka|hakata|福岡|博多/i],['Sapporo',/sapporo|札幌/i],['Okinawa',/okinawa|naha|沖縄|那覇/i],['Himeji',/himeji|姫路/i]];
@@ -395,9 +397,9 @@ function linhaApos(t,re){ const m=t.match(re); if(!m) return ''; let v=(m[1]||''
 function lerTexto(t){
   t=t.replace(/\r/g,''); const r={}, achou=[], low=t.toLowerCase();
   r.plataforma=(PLATS.find(p=>p[1].test(t))||[''])[0];
-  const cod=t.match(/(?:n[uú]mero\s+de\s+confirma[cç][aã]o|c[oó]digo\s+de\s+confirma[cç][aã]o|confirmation\s+(?:number|no\.?|code)|booking\s+(?:number|id|no\.?|reference)|n[uú]mero\s+da\s+reserva|c[oó]digo\s+(?:da|de)\s+reserva|id\s+da\s+reserva|reservation\s+(?:number|code|no\.?|id)|予約番号)\s*[:：#nº°.]*\s*([A-Z0-9][A-Z0-9\-.]{3,}[A-Z0-9])/i);
+  const cod=t.match(/(?:n[uú]mero\s+de\s+confirma[cç][aã]o|c[oó]digo\s+de\s+confirma[cç][aã]o|confirmation\s+(?:number|no\.?|code)|booking\s+(?:number|id|no\.?|reference)|n[uú]mero\s+da\s+reserva|c[oó]digo\s+(?:da|de)\s+reserva|id\s+da\s+reserva|reservation\s+(?:number|code|no\.?|id)|予約番号)[ \t]*[:：#nº°.]*[ \t]*([A-Z0-9\-.]*\d[A-Z0-9\-.]*[A-Z0-9])/i);
   r.reserva=cod?cod[1].replace(/\.$/,''):'';
-  const vou=t.match(/(?:c[oó]digo\s+do\s+voucher|voucher\s*(?:no\.?|number|code|n[uú]mero)?|ticket\s*(?:no\.?|number|code)|n[uú]mero\s+do\s+ingresso|order\s*(?:no\.?|number|id)|n[uú]mero\s+do\s+pedido|booking\s+code|チケット番号|受付番号)\s*[:：#nº°]*\s*([A-Z0-9][A-Z0-9\-]{3,})/i);
+  const vou=t.match(/(?:c[oó]digo\s+do\s+voucher|voucher\s*(?:no\.?|number|code|n[uú]mero)?|ticket\s*(?:no\.?|number|code)|n[uú]mero\s+do\s+ingresso|order\s*(?:no\.?|number|id)|n[uú]mero\s+do\s+pedido|booking\s+code|チケット番号|受付番号)[ \t]*[:：#nº°]*[ \t]*([A-Z0-9\-]*\d[A-Z0-9\-]*)/i);
   r.voucher=vou?vou[1]:'';
   const tel=t.match(/(?:telefone|phone|tel\.?|電話)\s*[:：]?\s*(\+?\d[\d\s\-().]{7,}\d)/i); r.telefone=tel?tel[1].trim():'';
   let end=linhaApos(t,/(?:endere[cç]o|address|localiza[cç][aã]o|location|住所)\s*[:：]?[ \t]*([^\n]*)/i);
@@ -405,7 +407,7 @@ function lerTexto(t){
   if(/[぀-ヿ一-鿿]/.test(end)) r.endereco=end; else r.enderecoLat=end;
   r.cidade=acharCidade(end,t);
   r.atr=acharAtracao(t);
-  const ent=aposRotulo(t,/check-?in|entrada|chegada|arrival|チェックイン/), sai=aposRotulo(t,/check-?out|sa[ií]da|departure|チェックアウト/);
+  const ent=aposRotulo(t,/check-?in|entrada|chegada|arrival|チェックイン/), sai=aposRotulo(t,/check-?out|sa[ií]da|departure|チェックアウト/,140,true);
   const vis=aposRotulo(t,/data\s+da\s+visita|date\s+of\s+(?:visit|use)|visit\s+date|data\s+de\s+uso|data\s+do\s+evento|event\s+date|利用日|来場日|入場日/);
   const todas=acharDatas(t);
   // tipo
@@ -420,8 +422,10 @@ function lerTexto(t){
   // nome do hotel
   let nome=linhaApos(t,/(?:nome\s+do\s+hotel|hotel\s+name|propriedade|property|acomoda[cç][aã]o|accommodation|hospedagem|宿泊施設)\s*[:：][ \t]*([^\n]*)/i);
   if(!nome){ for(const l of t.split('\n')){ for(const seg of l.split(/\.\s+|\s+[|•·—–-]\s+|\s{2,}/)){ const s=seg.trim(); if(s.length>3&&s.length<70&&/\b(hotel|hostel|ryokan|inn|resort|guest\s*house|lodge|capsule|minshuku)\b|ホテル|旅館/i.test(s)&&!/check|confirma|reserva|booking\.com|agoda|obrigad|thank|dear|prezad/i.test(s)){ nome=s; break; } } if(nome) break; } }
+  if(!nome) nome=linhaApos(t,/(?:atividade|activity|produto|product|evento|event|bilhete|ticket\s+name)[ \t]*[:：][ \t]*([^\n]*)/i);
   r.nome=nome.replace(/[.,;]+$/,'');
-  r.comprado=!!r.voucher||/pagamento\s+confirmado|payment\s+(?:completed|confirmed|received)|compra\s+confirmada|order\s+confirmed|purchase\s+(?:complete|confirmed)|thank\s+you\s+for\s+your\s+(?:purchase|order)|購入完了/i.test(t);
+  r.pagarLocal=/pagar\s+(?:no|na)\s+(?:local|hotel|propriedade|acomoda)|pay\s+at\s+(?:the\s+)?(?:property|hotel)|payment\s+at\s+(?:the\s+)?(?:property|hotel)|pagamento\s+(?:no|na)\s+(?:hotel|propriedade|acomoda)/i.test(t);
+  r.comprado=!!r.voucher||/pagamento\s+confirmado|payment\s+(?:completed|confirmed|received)|compra\s+confirmada|order\s+confirmed|confirmado\s+e\s+emitido|emitido|issued|purchase\s+(?:complete|confirmed)|thank\s+you\s+for\s+your\s+(?:purchase|order)|購入完了/i.test(t);
   return r;
 }
 /* .ics */
@@ -489,7 +493,7 @@ function resumo(r,tipo){
 function mostrarPrevia(r,tipo){
   tipo=tipo||r.tipo;
   if(tipo==='hotel'){
-    formHotel({id:'',cidade:r.cidade||'Tóquio',nome:r.nome||'',entrada:r.entrada||'',saida:r.saida||'',checkin:r.checkin||'15:00',checkout:r.checkout||'11:00',reserva:r.reserva||r.voucher||'',plataforma:r.plataforma||'',status:'pago',enderecoLat:r.enderecoLat||'',endereco:r.endereco||'',telefone:r.telefone||'',nota:''},'importBox',resumo(r,'hotel'));
+    formHotel({id:'',cidade:r.cidade||'Tóquio',nome:r.nome||'',entrada:r.entrada||'',saida:r.saida||'',checkin:r.checkin||'15:00',checkout:r.checkout||'11:00',reserva:r.reserva||r.voucher||'',plataforma:r.plataforma||'',status:r.pagarLocal?'local':'pago',enderecoLat:r.enderecoLat||'',endereco:r.endereco||'',telefone:r.telefone||'',nota:''},'importBox',resumo(r,'hotel'));
   } else formIngImport(r);
   document.getElementById('trocaTipo').onclick=()=>mostrarPrevia(r,tipo==='hotel'?'ingresso':'hotel');
 }
@@ -606,7 +610,7 @@ ida.value=S.ida||''; volta.value=S.volta||'';
 [ida,volta].forEach(x=>x.onchange=()=>{ S=ler(KS,S); S.itens=S.itens||{}; S.ida=ida.value; S.volta=volta.value; salvarS(); curSem=curMes=null; tudo(); });
 document.getElementById('vjw').onclick=async()=>{
   const h=hoteisOrd()[0]; if(!h){ msg('Cadastre a primeira hospedagem antes.'); return; }
-  const tel=(h.telefone||'').trim(), tel81=!tel?'':(tel.startsWith('+')?tel:'+81 '+tel.replace(/^0/,''));
+  const tel=(h.telefone||'').trim(), dig=tel.replace(/\D/g,''), tel81=!dig?'':(dig.startsWith('81')&&(tel.startsWith('+')||dig.length>10)?'+'+dig:'+81'+dig.replace(/^0/,''));
   const lat=h.enderecoLat||'', naoLatino=/[^\x20-\x7E]/;
   const end=!lat?'(falta preencher o endereço em alfabeto latino na hospedagem)':lat+(naoLatino.test(lat)?'  ← tem letras fora do alfabeto latino (acento ou japonês): o Visit Japan Web pode recusar':'');
   const txt=['Nome do hotel: '+(h.nome||'(preencha o nome na hospedagem)')+(h.nome&&naoLatino.test(h.nome)?'  ← use o nome em alfabeto latino':''),'Endereço: '+end,'Telefone: '+(tel81||'(falta preencher o telefone na hospedagem)')].join('\n');
