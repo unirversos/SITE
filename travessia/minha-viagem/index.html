@@ -72,9 +72,41 @@ main{max-width:980px;margin:0 auto;padding:0 24px 60px}
 footer{text-align:center;padding:40px 20px;border-top:1px solid var(--line);color:var(--gray);font-size:14px}
 footer a{color:var(--rose)}
 [hidden]{display:none!important}
-@media (max-width:640px){header{padding:1.2rem 16px}main{padding:0 16px 50px}.ev{grid-template-columns:minmax(0,1fr)}}
+/* semana e mês */
+.cal-nav{display:flex;justify-content:space-between;align-items:center;gap:8px;margin-bottom:12px}
+.cal-nav h3{font-family:'Baloo 2',sans-serif;font-size:22px;text-align:center;line-height:1.2}
+.legenda{display:flex;flex-wrap:wrap;gap:6px 14px;justify-content:center;font-size:13px;color:var(--gray);margin-bottom:12px}
+.legenda i{display:inline-block;width:12px;height:12px;border-radius:4px;vertical-align:-1px;margin-right:4px}
+.semana{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:6px}
+.dcol{border:1.5px solid var(--line);border-radius:14px;min-height:230px;background:#fff;display:flex;flex-direction:column;overflow:hidden}
+.dcol.fora{background:#fafafa;color:#aaa}
+.dcol.hoje{border-color:var(--rose)}
+.dh{padding:6px 8px;font-weight:700;font-size:13px;border-bottom:1px solid var(--line)}
+.cidade{font-size:12px;font-weight:700;padding:3px 8px;color:#fff}
+.mv{font-size:12px;padding:4px 8px;color:var(--dark);border-bottom:1px dashed var(--line)}
+.ei{font-size:12.5px;line-height:1.35;margin:5px 6px 0;padding:5px 7px;border-radius:8px;background:var(--cream);border-left:4px solid #bbb}
+.ei b{display:block;font-size:12px}
+.ei .st{font-size:11px;color:var(--gray)}
+.ei .w{font-size:11px;color:var(--red);font-weight:700}
+.ei.c-ok{border-color:var(--sage)}.ei.c-mid{border-color:var(--gold)}.ei.c-no{border-color:var(--red)}
+.mes{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:4px}
+.mh{text-align:center;font-size:12px;color:var(--gray);font-weight:700;padding-bottom:2px}
+.md{font:inherit;text-align:left;border:1px solid var(--line);border-radius:10px;min-height:96px;padding:4px 5px;font-size:12px;cursor:pointer;background:#fff;display:flex;flex-direction:column;gap:2px;overflow:hidden;color:var(--dark)}
+.md:hover{border-color:var(--rose)}
+.md.vazia{visibility:hidden}
+.md.fora{background:#fafafa;color:#aaa}
+.md.hoje{border-color:var(--rose);border-width:2px}
+.md .num{font-weight:700;font-size:13px}
+.md .cb{font-size:10.5px;font-weight:700;color:#fff;border-radius:4px;padding:0 4px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;min-height:7px;line-height:1.5}
+.md .e{white-space:nowrap;overflow:hidden;text-overflow:ellipsis;font-size:11.5px}
+.md .e.c-no{color:var(--red);font-weight:700}
+.cal-nav .btn{flex:none}
+.md .dots{display:none;font-size:11px;color:var(--rose-deep);font-weight:700}
+@media (max-width:640px){header{padding:1.2rem 16px}main{padding:0 16px 50px}.ev{grid-template-columns:minmax(0,1fr)}
+  .semana{grid-template-columns:minmax(0,1fr)}.dcol{min-height:0;padding-bottom:6px}
+  .md{min-height:58px;padding:3px}.md .e{display:none}.md .dots{display:block}.md .cb{font-size:0;padding:0;height:6px;min-height:6px}.cal-nav .lbl{display:none}.cal-nav h3{font-size:19px}}
 @media print{
-  header,nav,.tabs,.datas,.acoes,.aviso,footer,.sec .btn,.form,.no-print,#vistaMesa{display:none!important}
+  header,nav,.tabs,.datas,.acoes,.aviso,footer,.sec .btn,.form,.no-print,#vistaMesa,#vistaSemana,#vistaMes{display:none!important}
   #vistaLinha{display:block!important}
   body{font-size:11pt}
   .base{break-inside:avoid;margin-bottom:8mm}
@@ -102,7 +134,9 @@ footer a{color:var(--rose)}
   </div>
 
   <div class="tabs" role="tablist">
-    <button type="button" id="tLinha" aria-pressed="true">🗓️ Dia a dia</button>
+    <button type="button" id="tLinha" aria-pressed="true">🏨 Por hospedagem</button>
+    <button type="button" id="tSemana" aria-pressed="false">🗓️ Semana</button>
+    <button type="button" id="tMes" aria-pressed="false">📅 Mês</button>
     <button type="button" id="tMesa" aria-pressed="false">🧾 Reservas e compras</button>
   </div>
 
@@ -110,6 +144,8 @@ footer a{color:var(--rose)}
 
   <!-- VISTA 1: LINHA DO TEMPO -->
   <section id="vistaLinha"></section>
+  <section id="vistaSemana" hidden></section>
+  <section id="vistaMes" hidden></section>
 
   <!-- VISTA 2: MESA DE COMPRAS -->
   <section id="vistaMesa" hidden>
@@ -118,7 +154,7 @@ footer a{color:var(--rose)}
     <div id="tabHoteis"></div>
 
     <div class="sec"><h2>🎫 Ingressos com janela de compra</h2><a class="btn small" href="/travessia/status/">Atualizar status →</a></div>
-    <p class="aviso" style="text-align:left;margin:0 0 8px">O status vem da página Meus ingressos. Aqui você só marca <b>o dia e a hora da visita</b>, para o ingresso aparecer no dia a dia.</p>
+    <p class="aviso" style="text-align:left;margin:0 0 8px">O status vem da página Meus ingressos. Aqui você só marca <b>o dia e a hora da visita</b>, para o ingresso aparecer nas vistas por hospedagem, semana e mês.</p>
     <div id="tabIngressos"></div>
     <label class="f" style="margin-top:10px;max-width:420px">Vai visitar outra atração do cronograma?<select id="addIng"></select></label>
 
@@ -339,7 +375,7 @@ document.getElementById('vistaMesa').addEventListener('click',e=>{
 document.getElementById('vistaMesa').addEventListener('change',e=>{
   const i=e.target; const id=i.dataset.vd||i.dataset.vh; if(!id) return;
   V.visitas[id]=V.visitas[id]||{}; if(i.dataset.vd) V.visitas[id].data=i.value; else V.visitas[id].hora=i.value;
-  salvarV(); renderLinha(); renderAlertas(); msg('Dia da visita salvo.');
+  salvarV(); renderLinha(); renderSemana(); renderMes(); renderAlertas(); msg('Dia da visita salvo.');
 });
 document.getElementById('addHotel').onclick=()=>formHotel();
 document.getElementById('addIng').onchange=function(){ if(!this.value) return; V.visitas[this.value]=V.visitas[this.value]||{data:'',hora:''}; salvarV(); renderMesa(); msg('Atração adicionada. Marque o dia da visita.'); };
@@ -347,14 +383,59 @@ document.getElementById('addExtra').onclick=()=>formExtra();
 
 /* ---------- geral ---------- */
 function renderAlertas(){ document.getElementById('alertas').innerHTML=alertas().map(([c,t])=>`<div class="alerta ${c}">${t}</div>`).join(''); }
-function tudo(){ renderAlertas(); renderLinha(); renderMesa(); }
-function aba(qual){ const l=qual==='linha'; document.getElementById('vistaLinha').hidden=!l; document.getElementById('vistaMesa').hidden=l;
-  document.getElementById('tLinha').setAttribute('aria-pressed',l); document.getElementById('tMesa').setAttribute('aria-pressed',!l); try{ localStorage.setItem('travessiaViagemAba',qual); }catch(e){} }
-document.getElementById('tLinha').onclick=()=>aba('linha');
-document.getElementById('tMesa').onclick=()=>aba('mesa');
+/* ---------- semana e mês ---------- */
+const CORES=['#c99699','#7fa893','#c0913f','#7b8fb5','#a07cb0','#5f9ea0','#c4685f','#8d7b68'];
+function corCidade(c){ const cs=[...new Set(hoteisOrd().map(h=>h.cidade))]; const i=cs.indexOf(c); return CORES[(i<0?0:i)%CORES.length]; }
+const iso=d=>d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');
+const HOJE=iso(new Date());
+const segunda=s=>{ const dow=(D(s).getDay()+6)%7; return addDia(s,-dow); };
+const naViagem=d=>!S.ida||!S.volta||(d>=S.ida&&d<=S.volta);
+function inicioPadrao(){ const h=hoteisOrd()[0], e=eventos()[0]; return S.ida||(h&&h.entrada)||(e&&e.data)||HOJE; }
+let curSem=null, curMes=null;
+function dia(d){ const hs=hoteisOrd(); return {noite:hs.find(h=>h.entrada&&h.saida&&h.entrada<=d&&d<h.saida), entra:hs.filter(h=>h.entrada===d), sai:hs.filter(h=>h.saida===d), evs:eventos().filter(e=>e.data===d)}; }
+function legenda(){ const cs=[...new Set(hoteisOrd().map(h=>h.cidade))]; return cs.length?`<div class="legenda">${cs.map(c=>`<span><i style="background:${corCidade(c)}"></i>${esc(c)}</span>`).join('')}<span>🔑 check-in · ↩ check-out</span></div>`:''; }
+function renderSemana(){
+  if(!curSem) curSem=segunda(inicioPadrao());
+  const fim=addDia(curSem,6), a=D(curSem), b=D(fim);
+  const titulo=a.getMonth()===b.getMonth()?`${a.getDate()} a ${b.getDate()} de ${MES[b.getMonth()]}`:`${a.getDate()}/${MES[a.getMonth()]} a ${b.getDate()}/${MES[b.getMonth()]}`;
+  let h=`<div class="cal-nav"><button class="btn small" type="button" data-sem="-7">‹<span class="lbl"> anterior</span></button><h3>${titulo} ${b.getFullYear()}</h3><button class="btn small" type="button" data-sem="7"><span class="lbl">próxima </span>›</button></div>${legenda()}<div class="semana">`;
+  for(let i=0;i<7;i++){ const d=addDia(curSem,i), x=dia(d), dd=D(d);
+    h+=`<div class="dcol${naViagem(d)?'':' fora'}${d===HOJE?' hoje':''}"><div class="dh">${SEM[dd.getDay()]} ${dd.getDate()}/${MES[dd.getMonth()]}</div>`;
+    if(x.noite) h+=`<div class="cidade" style="background:${corCidade(x.noite.cidade)}">🛏️ ${esc(x.noite.cidade)}</div>`;
+    x.sai.forEach(o=>h+=`<div class="mv">↩ check-out ${esc(o.checkout||'')}<br>${esc(o.nome||o.cidade)}</div>`);
+    x.entra.forEach(o=>h+=`<div class="mv">🔑 check-in ${esc(o.checkin||'')}<br>${esc(o.nome||o.cidade)}${o.reserva?'<br>reserva <b>'+esc(o.reserva)+'</b>':''}</div>`);
+    x.evs.forEach(e=>{ const w=conflito(e); h+=`<div class="ei ${e.chip[1]}">${e.hora?esc(e.hora)+' ':''}${e.ic} <b>${esc(e.nome)}</b><span class="st">${e.chip[0]}${e.cod?' · '+esc(e.cod):''}</span>${w?'<div class="w">⚠️ outra região</div>':''}</div>`; });
+    h+='</div>'; }
+  document.getElementById('vistaSemana').innerHTML=h+'</div>';
+}
+function renderMes(){
+  if(!curMes) curMes=inicioPadrao().slice(0,8)+'01';
+  const m=D(curMes), ini=segunda(curMes), ultimo=iso(new Date(m.getFullYear(),m.getMonth()+1,0));
+  const nomes=['janeiro','fevereiro','março','abril','maio','junho','julho','agosto','setembro','outubro','novembro','dezembro'];
+  let h=`<div class="cal-nav"><button class="btn small" type="button" data-mes="-1">‹<span class="lbl"> anterior</span></button><h3>${nomes[m.getMonth()]} ${m.getFullYear()}</h3><button class="btn small" type="button" data-mes="1"><span class="lbl">próximo </span>›</button></div>${legenda()}<div class="mes">`;
+  h+=['seg','ter','qua','qui','sex','sáb','dom'].map(n=>`<div class="mh">${n}</div>`).join('');
+  for(let d=ini; d<=ultimo || (D(d).getDay()+6)%7!==0; d=addDia(d,1)){
+    if(d.slice(0,7)!==curMes.slice(0,7)){ h+='<div class="md vazia"></div>'; continue; }
+    const x=dia(d), dd=D(d), primeira=x.noite&&(x.noite.entrada===d||dd.getDay()===1||dd.getDate()===1);
+    h+=`<button type="button" class="md${naViagem(d)?'':' fora'}${d===HOJE?' hoje':''}" data-dia="${d}" title="Ver a semana"><span class="num">${dd.getDate()}</span>`;
+    if(x.noite) h+=`<span class="cb" style="background:${corCidade(x.noite.cidade)}">${primeira?esc(x.noite.cidade):''}</span>`;
+    const itens=[...x.sai.map(o=>`<span class="e">↩ ${esc(o.checkout||'')} out</span>`),...x.entra.map(o=>`<span class="e">🔑 ${esc(o.checkin||'')} in</span>`),...x.evs.map(e=>`<span class="e ${e.chip[1]==='c-no'?'c-no':''}">${e.hora?esc(e.hora)+' ':''}${esc(e.nome)}</span>`)];
+    h+=itens.slice(0,3).join('')+(itens.length>3?`<span class="e">+${itens.length-3}</span>`:'')+(itens.length?`<span class="dots">${'•'.repeat(Math.min(itens.length,4))}</span>`:'')+'</button>';
+  }
+  document.getElementById('vistaMes').innerHTML=h+'</div><p class="aviso">Toque num dia para ver a semana inteira.</p>';
+}
+document.getElementById('vistaSemana').addEventListener('click',e=>{ const b=e.target.closest('[data-sem]'); if(b){ curSem=addDia(curSem,+b.dataset.sem); renderSemana(); } });
+document.getElementById('vistaMes').addEventListener('click',e=>{
+  const b=e.target.closest('[data-mes]'); if(b){ const m=D(curMes); curMes=iso(new Date(m.getFullYear(),m.getMonth()+(+b.dataset.mes),1)); renderMes(); return; }
+  const c=e.target.closest('[data-dia]'); if(c){ curSem=segunda(c.dataset.dia); renderSemana(); aba('semana'); window.scrollTo({top:document.querySelector('.tabs').offsetTop-10,behavior:'smooth'}); } });
+function tudo(){ renderAlertas(); renderLinha(); renderSemana(); renderMes(); renderMesa(); }
+const ABAS={linha:['tLinha','vistaLinha'],semana:['tSemana','vistaSemana'],mes:['tMes','vistaMes'],mesa:['tMesa','vistaMesa']};
+function aba(qual){ if(!ABAS[qual]) qual='linha'; for(const [k,[t,v]] of Object.entries(ABAS)){ document.getElementById(v).hidden=k!==qual; document.getElementById(t).setAttribute('aria-pressed',k===qual); }
+  try{ localStorage.setItem('travessiaViagemAba',qual); }catch(e){} }
+for(const [k,[t]] of Object.entries(ABAS)) document.getElementById(t).onclick=()=>aba(k);
 const ida=document.getElementById('ida'), volta=document.getElementById('volta');
 ida.value=S.ida||''; volta.value=S.volta||'';
-[ida,volta].forEach(x=>x.onchange=()=>{ S=ler(KS,S); S.itens=S.itens||{}; S.ida=ida.value; S.volta=volta.value; salvarS(); tudo(); });
+[ida,volta].forEach(x=>x.onchange=()=>{ S=ler(KS,S); S.itens=S.itens||{}; S.ida=ida.value; S.volta=volta.value; salvarS(); curSem=curMes=null; tudo(); });
 document.getElementById('vjw').onclick=async()=>{
   const h=hoteisOrd()[0]; if(!h){ msg('Cadastre a primeira hospedagem antes.'); return; }
   const tel=(h.telefone||'').trim(), tel81=!tel?'':(tel.startsWith('+')?tel:'+81 '+tel.replace(/^0/,''));
