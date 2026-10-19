@@ -120,6 +120,7 @@ footer a{color:var(--rose)}
     <div class="sec"><h2>🎫 Ingressos com janela de compra</h2><a class="btn small" href="/travessia/status/">Atualizar status →</a></div>
     <p class="aviso" style="text-align:left;margin:0 0 8px">O status vem da página Meus ingressos. Aqui você só marca <b>o dia e a hora da visita</b>, para o ingresso aparecer no dia a dia.</p>
     <div id="tabIngressos"></div>
+    <label class="f" style="margin-top:10px;max-width:420px">Vai visitar outra atração do cronograma?<select id="addIng"></select></label>
 
     <div class="sec"><h2>📌 Outras atividades</h2><button class="btn primary small" type="button" id="addExtra">+ Atividade</button></div>
     <div id="formExtra"></div>
@@ -164,7 +165,7 @@ const TK=[
  {id:'jumpfesta',nome:'Jump Festa',onde:'Chiba · Makuhari Messe',reg:'kanto'},
  {id:'sumo',nome:'Sumô — torneios oficiais',onde:'Tóquio, Osaka, Nagoya e Fukuoka',reg:null}
 ];
-const ST_ING={novo:['Ainda não comecei','c-neu'],inscrito:['Na loteria · aguardando','c-mid'],ganhei:['Sorteado · falta pagar','c-no'],comprado:['Ingresso em mãos','c-ok'],perdi:['Não consegui','c-neu'],pulei:['Decidi não ir','c-neu']};
+const ST_ING={novo:['Falta comprar','c-no'],inscrito:['Na loteria · aguardando','c-mid'],ganhei:['Sorteado · falta pagar','c-no'],comprado:['Ingresso em mãos','c-ok'],perdi:['Não consegui','c-neu'],pulei:['Decidi não ir','c-neu']};
 const CIDADES=[['Tóquio','kanto'],['Yokohama','kanto'],['Kamakura','kanto'],['Hakone','kanto'],['Nikko','kanto'],['Chiba','kanto'],['Kyoto','kansai'],['Osaka','kansai'],['Nara','kansai'],['Kobe','kansai'],['Himeji','kansai'],['Nagoya','chubu'],['Takayama','chubu'],['Kanazawa','chubu'],['Hiroshima','oeste'],['Fukuoka','kyushu'],['Sapporo','hokkaido'],['Okinawa','okinawa'],['Outra','']];
 const REG_NOME={kanto:'região de Tóquio',kansai:'região de Kyoto e Osaka',chubu:'região de Nagoya',oeste:'Hiroshima',kyushu:'Kyushu',hokkaido:'Hokkaido',okinawa:'Okinawa'};
 const ST_HOTEL={pago:['Confirmado e pago','c-ok'],local:['Reservado · pagar no local','c-mid'],pendente:['Falta reservar','c-no']};
@@ -320,7 +321,10 @@ function renderMesa(){
   document.getElementById('tabIngressos').innerHTML=tks.length?`<div class="scroll"><table class="tbl"><tr><th>Atração</th><th>Situação</th><th>Código</th><th>Dia da visita</th><th>Hora</th></tr>${tks.map(t=>{ const it=S.itens[t.id]||{}, st=ST_ING[it.status||'novo'], v=V.visitas[t.id]||{};
     let extra=''; if(it.status==='ganhei'&&it.prazo) extra=`<br><span class="chip c-no">pagar até ${fmt(it.prazo)}</span>`; if(it.status==='inscrito'&&it.conferir) extra=`<br><span class="chip c-mid">resultado em ${fmt(it.conferir)}</span>`;
     return `<tr><td><b>${esc(t.nome)}</b><br><span style="color:var(--gray);font-size:13px">${esc(t.onde)}</span></td><td><span class="chip ${st[1]}">${st[0]}</span>${extra}</td><td>${esc(it.numero||'')}</td><td><input type="date" data-vd="${t.id}" value="${esc(v.data||'')}"></td><td><input type="time" data-vh="${t.id}" value="${esc(v.hora||'')}"></td></tr>`; }).join('')}</table></div>`
-    :'<p class="vazio">Você ainda não marcou nenhum ingresso. Abra <a href="/travessia/status/">Meus ingressos</a>, mude o status de uma atração e ela aparece aqui.</p>';
+    :'<p class="vazio">Nenhum ingresso ainda. Escolha abaixo uma atração do cronograma, ou mude o status dela em <a href="/travessia/status/">Meus ingressos</a>.</p>';
+  const resto=TK.filter(t=>!tks.includes(t));
+  document.getElementById('addIng').innerHTML='<option value="">Escolher atração…</option>'+resto.map(t=>`<option value="${t.id}">${esc(t.nome)} · ${esc(t.onde)}</option>`).join('');
+  document.getElementById('addIng').parentNode.hidden=!resto.length;
   const ex=V.extras.slice().sort((a,b)=>(a.data+a.hora).localeCompare(b.data+b.hora));
   document.getElementById('tabExtras').innerHTML=ex.length?`<div class="scroll"><table class="tbl"><tr><th>Atividade</th><th>Quando</th><th>Situação</th><th>Código</th><th></th></tr>${ex.map(e=>{ const st=ST_EXTRA[e.status||'livre'];
     return `<tr><td><b>${esc(e.nome)}</b><br><span style="color:var(--gray);font-size:13px">${esc(e.cidade)}</span></td><td>${fmt(e.data)} ${esc(e.hora||'')}</td><td><span class="chip ${st[1]}">${st[0]}</span></td><td>${esc(e.codigo||'')}</td><td style="white-space:nowrap"><button class="btn link" data-ee="${e.id}">editar</button><button class="btn link" data-re="${e.id}">remover</button></td></tr>`; }).join('')}</table></div>`:'<p class="vazio">Jantares, onsen, shows, passeios: tudo que tem dia marcado e não está no cronograma.</p>';
@@ -338,6 +342,7 @@ document.getElementById('vistaMesa').addEventListener('change',e=>{
   salvarV(); renderLinha(); renderAlertas(); msg('Dia da visita salvo.');
 });
 document.getElementById('addHotel').onclick=()=>formHotel();
+document.getElementById('addIng').onchange=function(){ if(!this.value) return; V.visitas[this.value]=V.visitas[this.value]||{data:'',hora:''}; salvarV(); renderMesa(); msg('Atração adicionada. Marque o dia da visita.'); };
 document.getElementById('addExtra').onclick=()=>formExtra();
 
 /* ---------- geral ---------- */
@@ -352,7 +357,8 @@ ida.value=S.ida||''; volta.value=S.volta||'';
 [ida,volta].forEach(x=>x.onchange=()=>{ S=ler(KS,S); S.itens=S.itens||{}; S.ida=ida.value; S.volta=volta.value; salvarS(); tudo(); });
 document.getElementById('vjw').onclick=async()=>{
   const h=hoteisOrd()[0]; if(!h){ msg('Cadastre a primeira hospedagem antes.'); return; }
-  const txt=['Hotel: '+(h.nome||''),'Cidade: '+(h.cidade||''),'Endereço: '+(h.endereco||'(preencha o endereço na hospedagem)'),'Telefone: '+(h.telefone||'(preencha o telefone na hospedagem)'),'Entrada: '+(h.entrada||'')].join('\n');
+  const tel=(h.telefone||'').trim(), tel81=!tel?'':(tel.startsWith('+')?tel:'+81 '+tel.replace(/^0/,''));
+  const txt=['Nome do hotel: '+(h.nome||'(preencha o nome na hospedagem)'),'Endereço: '+(h.endereco||'(falta preencher o endereço na hospedagem)'),'Telefone: '+(tel81||'(falta preencher o telefone na hospedagem)')].join('\n');
   try{ await navigator.clipboard.writeText(txt); msg('Dados do 1º hotel copiados. Cole no Visit Japan Web.'); }catch(e){ msg('Não deu para copiar automaticamente. '+txt.replace(/\n/g,' · ')); }
 };
 document.getElementById('imprimir').onclick=()=>{ aba('linha'); setTimeout(()=>window.print(),100); };
