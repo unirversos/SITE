@@ -282,7 +282,7 @@ function renderLinha(){
       <div class="base-h"><div class="cid">📍 ${esc(h.cidade||'Cidade?')} <small>${esc(h.nome||'')}</small></div>
         <div class="meta"><span>📅 <b>${fmt(h.entrada)}</b> a <b>${fmt(h.saida)}</b> (${n} noite${n===1?'':'s'})</span> <span class="chip ${st[1]}">${st[0]}</span></div>
         <div class="meta"><span>🔑 Check-in <b>${esc(h.checkin||'—')}</b> · Check-out <b>${esc(h.checkout||'—')}</b></span>${h.reserva?`<span>Reserva: <b>${esc(h.reserva)}</b>${h.plataforma?' ('+esc(h.plataforma)+')':''}</span>`:''}</div>
-        ${h.endereco?`<div class="meta"><span>🏠 ${esc(h.endereco)}</span></div>`:''}${h.telefone?`<div class="meta"><span>☎️ ${esc(h.telefone)}</span></div>`:''}
+        ${h.enderecoLat?`<div class="meta"><span>🏠 ${esc(h.enderecoLat)}</span></div>`:''}${h.endereco?`<div class="meta"><span>🚕 ${esc(h.endereco)}</span></div>`:''}${h.telefone?`<div class="meta"><span>☎️ ${esc(h.telefone)}</span></div>`:''}
       </div>
       <div class="base-b"><h4>Ingressos e atividades neste período</h4>${dentro.length?dentro.map(evHTML).join(''):'<p class="livre">Nada marcado ainda.</p>'}${livres.length&&dentro.length?`<p class="livre">Dias livres: ${livres.map(fmt).join(', ')}</p>`:''}</div>
     </article>`;
@@ -296,7 +296,7 @@ function renderLinha(){
 /* ---------- vista 2: reservas e compras ---------- */
 function opts(list,cur){ return list.map(([v,n])=>`<option value="${esc(v)}"${v===cur?' selected':''}>${esc(n)}</option>`).join(''); }
 function formHotel(h){
-  h=h||{id:'',cidade:'Tóquio',nome:'',entrada:'',saida:'',checkin:'15:00',checkout:'11:00',reserva:'',plataforma:'',status:'pago',endereco:'',telefone:'',nota:''};
+  h=h||{id:'',cidade:'Tóquio',nome:'',entrada:'',saida:'',checkin:'15:00',checkout:'11:00',reserva:'',plataforma:'',status:'pago',enderecoLat:'',endereco:'',telefone:'',nota:''};
   const cidadeOutra=h.cidade&&!CIDADES.some(c=>c[0]===h.cidade);
   document.getElementById('formHotel').innerHTML=`<form class="form" id="fh">
     <div class="grid">
@@ -312,7 +312,8 @@ function formHotel(h){
       <label class="f">Situação<select name="status">${opts(Object.entries(ST_HOTEL).map(([k,v])=>[k,v[0]]),h.status)}</select></label>
       <label class="f">Telefone do hotel<input name="telefone" value="${esc(h.telefone)}"></label>
     </div>
-    <label class="f">Endereço (de preferência também em japonês, para mostrar no táxi)<textarea name="endereco">${esc(h.endereco)}</textarea></label>
+    <label class="f">Endereço em alfabeto latino, exigido pelo Visit Japan Web<input name="enderecoLat" value="${esc(h.enderecoLat||'')}" placeholder="ex.: 1-19-1 Kabukicho, Shinjuku-ku, Tokyo"></label>
+    <label class="f">Endereço em japonês, para mostrar no táxi (opcional)<textarea name="endereco" placeholder="ex.: 東京都新宿区歌舞伎町1-19-1">${esc(h.endereco)}</textarea></label>
     <label class="f">Anotações<input name="nota" value="${esc(h.nota)}" placeholder="link do mapa, quem reservou…"></label>
     <datalist id="plats"><option>Booking</option><option>Agoda</option><option>Airbnb</option><option>Expedia</option><option>Site oficial</option><option>Jalan</option><option>Rakuten Travel</option></datalist>
     <p class="warn" id="fhErr" style="color:var(--red);font-size:14px"></p>
@@ -325,7 +326,7 @@ function formHotel(h){
     const x=Object.fromEntries(new FormData(f).entries());
     if(!x.entrada||!x.saida||x.saida<=x.entrada){ document.getElementById('fhErr').textContent='A saída precisa ser depois da entrada.'; return; }
     const cidade=x.cidadeSel==='Outra'?(x.cidadeOutra||'Outra'):x.cidadeSel;
-    const novo={id:h.id||uid(),cidade,nome:x.nome,entrada:x.entrada,saida:x.saida,checkin:x.checkin,checkout:x.checkout,reserva:x.reserva,plataforma:x.plataforma,status:x.status,endereco:x.endereco,telefone:x.telefone,nota:x.nota};
+    const novo={id:h.id||uid(),cidade,nome:x.nome,entrada:x.entrada,saida:x.saida,checkin:x.checkin,checkout:x.checkout,reserva:x.reserva,plataforma:x.plataforma,status:x.status,enderecoLat:(x.enderecoLat||'').trim(),endereco:x.endereco,telefone:x.telefone,nota:x.nota};
     const i=V.hoteis.findIndex(z=>z.id===novo.id); if(i>=0) V.hoteis[i]=novo; else V.hoteis.push(novo);
     salvarV(); document.getElementById('formHotel').innerHTML=''; tudo(); msg('Hospedagem salva.'); };
   f.scrollIntoView({behavior:'smooth',block:'center'});
@@ -354,9 +355,9 @@ function renderMesa(){
     return `<tr><td><b>${esc(h.cidade)}</b><br>${esc(h.nome||'')}</td><td>${fmt(h.entrada)} a ${fmt(h.saida)}</td><td><span class="chip ${st[1]}">${st[0]}</span></td><td>${esc(h.plataforma||'')}${h.reserva?'<br><b>'+esc(h.reserva)+'</b>':''}</td><td>${esc(h.checkin||'—')} / ${esc(h.checkout||'—')}</td><td style="white-space:nowrap"><button class="btn link" data-eh="${h.id}">editar</button><button class="btn link" data-rh="${h.id}">remover</button></td></tr>`; }).join('')}</table></div>`:'<p class="vazio">Nenhuma hospedagem ainda.</p>';
   // ingressos: os que a pessoa já mexeu na página Meus ingressos
   const tks=TK.filter(t=>{ const it=S.itens[t.id]; return (it&&it.status&&it.status!=='novo'&&it.status!=='pulei')||V.visitas[t.id]; });
-  document.getElementById('tabIngressos').innerHTML=tks.length?`<div class="scroll"><table class="tbl"><tr><th>Atração</th><th>Situação</th><th>Código</th><th>Dia da visita</th><th>Hora</th></tr>${tks.map(t=>{ const it=S.itens[t.id]||{}, st=ST_ING[it.status||'novo'], v=V.visitas[t.id]||{};
+  document.getElementById('tabIngressos').innerHTML=tks.length?`<div class="scroll"><table class="tbl"><tr><th>Atração</th><th>Situação</th><th>Código</th><th>Dia da visita</th><th>Hora</th><th></th></tr>${tks.map(t=>{ const it=S.itens[t.id]||{}, st=ST_ING[it.status||'novo'], v=V.visitas[t.id]||{};
     let extra=''; if(it.status==='ganhei'&&it.prazo) extra=`<br><span class="chip c-no">pagar até ${fmt(it.prazo)}</span>`; if(it.status==='inscrito'&&it.conferir) extra=`<br><span class="chip c-mid">resultado em ${fmt(it.conferir)}</span>`;
-    return `<tr><td><b>${esc(t.nome)}</b><br><span style="color:var(--gray);font-size:13px">${esc(t.onde)}</span></td><td><span class="chip ${st[1]}">${st[0]}</span>${extra}</td><td>${esc(it.numero||'')}</td><td><input type="date" data-vd="${t.id}" value="${esc(v.data||'')}"></td><td><input type="time" data-vh="${t.id}" value="${esc(v.hora||'')}"></td></tr>`; }).join('')}</table></div>`
+    return `<tr><td><b>${esc(t.nome)}</b><br><span style="color:var(--gray);font-size:13px">${esc(t.onde)}</span></td><td><span class="chip ${st[1]}">${st[0]}</span>${extra}</td><td>${esc(it.numero||'')}</td><td><input type="date" data-vd="${t.id}" value="${esc(v.data||'')}"></td><td><input type="time" data-vh="${t.id}" value="${esc(v.hora||'')}"></td><td>${(!it.status||it.status==='novo'||it.status==='pulei')?`<button class="btn link" type="button" data-ri="${t.id}">remover</button>`:'<span style="font-size:12px;color:var(--gray)">status em Meus ingressos</span>'}</td></tr>`; }).join('')}</table></div>`
     :'<p class="vazio">Nenhum ingresso ainda. Escolha abaixo uma atração do cronograma, ou mude o status dela em <a href="/travessia/status/">Meus ingressos</a>.</p>';
   const resto=TK.filter(t=>!tks.includes(t));
   document.getElementById('addIng').innerHTML='<option value="">Escolher atração…</option>'+resto.map(t=>`<option value="${t.id}">${esc(t.nome)} · ${esc(t.onde)}</option>`).join('');
@@ -369,6 +370,7 @@ document.getElementById('vistaMesa').addEventListener('click',e=>{
   const b=e.target.closest('button'); if(!b) return;
   if(b.dataset.eh) formHotel(V.hoteis.find(h=>h.id===b.dataset.eh));
   if(b.dataset.rh){ if(b.dataset.confirm){ V.hoteis=V.hoteis.filter(h=>h.id!==b.dataset.rh); salvarV(); tudo(); msg('Hospedagem removida.'); } else { b.dataset.confirm='1'; b.textContent='confirmar?'; } }
+  if(b.dataset.ri){ if(b.dataset.confirm){ delete V.visitas[b.dataset.ri]; salvarV(); tudo(); msg('Atração tirada da lista. Dá para pôr de volta no seletor.'); } else { b.dataset.confirm='1'; b.textContent='confirmar?'; } }
   if(b.dataset.ee) formExtra(V.extras.find(x=>x.id===b.dataset.ee));
   if(b.dataset.re){ if(b.dataset.confirm){ V.extras=V.extras.filter(x=>x.id!==b.dataset.re); salvarV(); tudo(); msg('Atividade removida.'); } else { b.dataset.confirm='1'; b.textContent='confirmar?'; } }
 });
@@ -439,7 +441,9 @@ ida.value=S.ida||''; volta.value=S.volta||'';
 document.getElementById('vjw').onclick=async()=>{
   const h=hoteisOrd()[0]; if(!h){ msg('Cadastre a primeira hospedagem antes.'); return; }
   const tel=(h.telefone||'').trim(), tel81=!tel?'':(tel.startsWith('+')?tel:'+81 '+tel.replace(/^0/,''));
-  const txt=['Nome do hotel: '+(h.nome||'(preencha o nome na hospedagem)'),'Endereço: '+(h.endereco||'(falta preencher o endereço na hospedagem)'),'Telefone: '+(tel81||'(falta preencher o telefone na hospedagem)')].join('\n');
+  const lat=h.enderecoLat||'', naoLatino=/[^\x20-\x7E]/;
+  const end=!lat?'(falta preencher o endereço em alfabeto latino na hospedagem)':lat+(naoLatino.test(lat)?'  ← tem letras fora do alfabeto latino (acento ou japonês): o Visit Japan Web pode recusar':'');
+  const txt=['Nome do hotel: '+(h.nome||'(preencha o nome na hospedagem)')+(h.nome&&naoLatino.test(h.nome)?'  ← use o nome em alfabeto latino':''),'Endereço: '+end,'Telefone: '+(tel81||'(falta preencher o telefone na hospedagem)')].join('\n');
   try{ await navigator.clipboard.writeText(txt); msg('Dados do 1º hotel copiados. Cole no Visit Japan Web.'); }catch(e){ msg('Não deu para copiar automaticamente. '+txt.replace(/\n/g,' · ')); }
 };
 document.getElementById('imprimir').onclick=()=>{ aba('linha'); setTimeout(()=>window.print(),100); };
