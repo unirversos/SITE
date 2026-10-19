@@ -10,7 +10,7 @@ const tok=s=>{ if(typeof s!=='string') return s; const [k,r]=s.split('|'); retur
 function speak(t,rate){ try{ if(!window.speechSynthesis) return; speechSynthesis.cancel(); const u=new SpeechSynthesisUtterance(t); u.lang='ja-JP'; u.rate=rate||.85;
   const v=speechSynthesis.getVoices().find(x=>/^ja/i.test(x.lang)); if(v) u.voice=v; speechSynthesis.speak(u);}catch(e){} }
 const WORD_XP=5;
-const TITULOS={aeroporto:'Aeroporto',hotel:'Hotel',restaurante:'Restaurante',kombini:'Kombini',trens:'Trens',compras:'Compras',roupas:'Roupas',emergencia:'Emergência',apresentacao:'Apresentação',horas:'Horas',planos:'Planos',sinalizacao:'Sinalização'};
+const TITULOS={aeroporto:'Aeroporto',hotel:'Hotel',restaurante:'Restaurante',kombini:'Konbini',trens:'Trens',compras:'Compras',roupas:'Roupas',emergencia:'Emergência',apresentacao:'Apresentação',horas:'Horas',planos:'Planos',sinalizacao:'Sinalização'};
 const ORDEM=Object.keys(TITULOS);
 
 /* ---------- desenhos próprios (Aeroporto) ---------- */
@@ -79,15 +79,34 @@ function showXP(){ $('xp').textContent=`Nv ${g.level} · XP ${g.xp}/${g.maxXp}`;
 function toast(html){ const t=document.createElement('div'); t.className='toast'; t.innerHTML=html; document.body.appendChild(t); setTimeout(()=>t.remove(),3200); }
 
 /* ---------- estado ---------- */
-const STEPS=['Situação','Palavras','Moldes','Ouvir','Cena'];
+let STEPS=['Situação','Palavras','Moldes','Ouvir','Cena','Consulta'];
+const RR=(k,f)=>`<ruby>${k}<rt>${f}</rt></ruby>`;
 const AR=[
-  {k:'すみません',r:'sumimasen',pt:'com licença / desculpe (abre qualquer conversa)'},
-  {k:'もういちど おねがいします',r:'mō ichido onegaishimasu',pt:'mais uma vez, por favor'},
-  {k:'ゆっくり おねがいします',r:'yukkuri onegaishimasu',pt:'mais devagar, por favor'},
-  {k:'わかりません',r:'wakarimasen',pt:'não entendi'},
-  {k:'にほんごが すこし わかります',r:'nihongo ga sukoshi wakarimasu',pt:'eu entendo um pouco de japonês'},
-  {k:'ちょっと まって ください',r:'chotto matte kudasai',pt:'um momento, por favor'}
+  {ic:'⏳',quero:'Preciso de um tempinho',sub:'Respirar · ganhar tempo antes de responder',frases:[
+    {h:'えーと…',k:'えーと',r:'ēto…',pt:'hum… (é natural, não é falha)'},
+    {h:'ちょっと '+RR('待','ま')+'って ください',k:'ちょっと まって ください',r:'chotto matte kudasai',pt:'um momento, por favor'},
+    {h:'すみません',k:'すみません',r:'sumimasen',pt:'com licença / desculpe'}],
+   nota:'すみません abre todas as outras gavetas. Se você só levar uma palavra, leve essa.'},
+  {ic:'🙋',quero:'Quero avisar que não falo bem japonês',sub:'Declarar · avisar antes, não depois',frases:[
+    {h:'わかりません',k:'わかりません',r:'wakarimasen',pt:'não entendi'},
+    {h:RR('日本語','にほんご')+'が '+RR('少','すこ')+'しだけ わかります',k:'にほんごが すこしだけ わかります',r:'nihongo ga sukoshi dake wakarimasu',pt:'eu entendo só um pouco de japonês'}],
+   nota:'Declarar cedo muda o jeito que a pessoa fala com você: quase todo mundo desacelera.'},
+  {ic:'🐢',quero:'Quero que fale devagar, repita ou escreva',sub:'Pedir ajuste · mudar como a pessoa está falando',frases:[
+    {h:'もう'+RR('一度','いちど')+' お'+RR('願','ねが')+'いします',k:'もういちど おねがいします',r:'mō ichido onegaishimasu',pt:'mais uma vez, por favor'},
+    {h:'ゆっくり お'+RR('願','ねが')+'いします',k:'ゆっくり おねがいします',r:'yukkuri onegaishimasu',pt:'mais devagar, por favor'},
+    {h:RR('書','か')+'いて ください',k:'かいて ください',r:'kaite kudasai',pt:'escreva, por favor'},
+    {h:RR('英語','えいご')+'で お'+RR('願','ねが')+'いします',k:'えいごで おねがいします',r:'eigo de onegaishimasu',pt:'em inglês, por favor'}]},
+  {ic:'🔎',quero:'Quero confirmar se entendi',sub:'Confirmar · checar antes de seguir',frases:[
+    {h:'これですか',k:'これですか',r:'kore desu ka',pt:'é este?'},
+    {h:'〇〇ですか',k:'ですか',r:'~ desu ka',pt:'é ~? (repita o que entendeu + ka)'}],
+   nota:'A técnica mais útil de todas: repita o pedaço que você entendeu, com か no fim. Não precisa de gramática nova.'},
+  {ic:'🚪',quero:'Quero encerrar com educação',sub:'Sair com elegância · sem constrangimento',frases:[
+    {h:RR('大丈夫','だいじょうぶ')+'です',k:'だいじょうぶです',r:'daijōbu desu',pt:'está tudo bem / não precisa'},
+    {h:'また '+RR('来','き')+'ます',k:'また きます',r:'mata kimasu',pt:'eu volto depois'},
+    {h:'ありがとうございます',k:'ありがとうございます',r:'arigatō gozaimasu',pt:'muito obrigado(a)'}],
+   nota:'Desistir de uma conversa é uma habilidade, não uma derrota.'}
 ];
+const AR_NAO=['Sorrir e assentir sem entender. Custa mais caro depois.','Repetir はい como quem concorda: muitas vezes はい quer dizer só "estou ouvindo".','Esperar entender tudo antes de falar. Não funciona assim para ninguém.'];
 let A=null, P=null;   // aula atual e progresso dela
 let step=0, wi=0, quiz=null, mi=0, msel=[], oi=0, oAns=null, ci=0, bank=[], placed=[], done={}, mood='idle', stageOpt={}, OUVIR=[], CENAS=[];
 
@@ -131,9 +150,10 @@ function sparkle(list){ const fx=$('fx');
     s.style.left=(60+Math.random()*35)+'%'; s.style.top=(30+Math.random()*40)+'%'; s.style.animationDelay=(k*0.07)+'s';
     fx.appendChild(s); setTimeout(()=>s.remove(),1800); } }
 function renderSteps(){
+  STEPS=C()?['Situação','Palavras','Moldes','Ouvir','Cena','Consulta']:['Situação','Palavras','Moldes','Ouvir','Cena'];
   $('steps').innerHTML=STEPS.map((s,k)=>`<button type="button" class="step ${k===step?'now':P.steps[k]?'done':''}" data-s="${k}"><span class="n">${P.steps[k]&&k!==step?'✓':k+1}</span>${s}</button>`).join('');
 }
-function go(n){ step=n; mood='idle'; renderSteps(); [stSituacao,stPalavras,stMoldes,stOuvir,stCena][n](); try{ $('steps').scrollIntoView({block:'start',behavior:'smooth'}); }catch(e){} }
+function go(n){ step=n; mood='idle'; renderSteps(); [stSituacao,stPalavras,stMoldes,stOuvir,stCena,stConsulta][n](); try{ $('steps').scrollIntoView({block:'start',behavior:'smooth'}); }catch(e){} }
 function finish(n){ P.steps[n]=1; persist(); }
 const wordH=w=>w.h||w.k;
 
@@ -322,7 +342,39 @@ function wireCena(){
     mood='ok'; setStage({stamp:true}); sparkle(['🌍','💖','✨','🎉','🌸','⭐']);
     hint(`${A.emoji} <b>${A.insignia||('Insígnia '+A.titulo+' conquistada!')}</b> ${A.fim}${first?' <span class="newxp">+20 XP</span>':''}${A.fimLink?` <a href="${A.fimLink[1]}">${A.fimLink[0]}</a>`:''}`); $('btnNext').hidden=true;
     if(typeof A.onFinish==='function'){ try{ A.onFinish(); }catch(e){} }
+    if(C()){ const b=document.createElement('button'); b.className='btn primary'; b.type='button'; b.textContent='📚 Abrir a consulta deste mapa →'; b.onclick=()=>go(5); $('btnNext').after(b); }
   };
+}
+
+/* ---------- 6. consulta (caderno de campo do mapa) ---------- */
+const C=()=>(window.CONSULTA||{})[A.slug];
+const CAT={obj:['coisa','#C0913F','#FBF2DF'],act:['ação','#5E9179','#EAF3EE'],dir:['direção','#6E77BE','#EEEFF9'],urg:['urgência','#C4685F','#FBEAE6']};
+function stConsulta(){
+  const c=C(); mood='idle'; setStage({});
+  if(!c){ $('panel').innerHTML='<h2>Consulta</h2><p class="lead">Este mapa ainda não tem consulta.</p>'; return; }
+  finish(5); renderSteps();
+  const says=[];
+  const sayBtn=t=>{ says.push(t); return `<button class="say" type="button" data-say="${says.length-1}" aria-label="Ouvir">🔊</button>`; };
+  $('panel').innerHTML=`
+    <h2>📚 Consulta · ${A.titulo}</h2>
+    <p class="lead">Seu caderno de campo deste mapa: todas as peças, os moldes, o que prestar atenção ao ouvir e frases de exemplo. Volte aqui sempre que precisar.</p>
+    ${c.missao?`<p class="gram">${rk(c.missao)}</p>`:''}
+    <h3 class="ch">🧩 Todas as peças</h3>
+    <div class="legend">${Object.values(CAT).map(([n,col,bg])=>`<span style="border-color:${col};background:${bg}">${n}</span>`).join('')}</div>
+    <div class="cgrid">${c.pecas.map(p=>{ const k=CAT[p.cat]||CAT.obj; return `<div class="cpeca" style="border-left-color:${k[1]}"><div class="jp">${p.h} ${sayBtn(p.s)}</div><div class="ro">${p.r}</div><div class="pt">${rk(p.pt)}</div></div>`; }).join('')}</div>
+    <h3 class="ch">📐 Moldes</h3>
+    <div class="clist">${c.moldes.map(m=>`<div class="cmolde"><div class="who">${m.label}</div><div class="jp">${m.h} ${m.s?sayBtn(m.s):''}</div><div class="ro">${m.r}</div><div><b>${rk(m.pt)}</b></div>${m.troca&&m.troca.length>1?`<div class="pt">Troque por: ${m.troca.map(t=>`${t.h} <span class="ro">(${t.r})</span>`).join(' · ')}</div>`:''}${m.hint?`<div class="pt">💡 ${rk(m.hint)}</div>`:''}</div>`).join('')}</div>
+    <h3 class="ch">📡 Radar: o que prestar atenção ao ouvir</h3>
+    <div class="clist">${c.radar.map(r=>`<div class="cradar"><div class="kw">${r.kw}</div><div><b>${rk(r.mean)}</b></div><div class="pt">${rk(r.resp)}</div></div>`).join('')}</div>
+    ${c.frases.length?`<h3 class="ch">💬 Frases de exemplo</h3><div class="clist">${c.frases.map(f=>`<div class="cfrase"><span class="tagw">${f.who==='ouvido'?'👂 você ouve':'👄 você fala'}</span><div class="jp">${f.h} ${sayBtn(f.s)}</div><div class="ro">${f.r}</div><div class="pt">${rk(f.pt)}</div></div>`).join('')}</div>`:''}
+    ${c.quiz.length?`<h3 class="ch">✅ Teste rápido</h3><div class="clist">${c.quiz.map((q,qi)=>`<div class="cquiz" data-q="${qi}"><b>${rk(q.q)}</b><div class="opts">${q.opts.map((o,oi)=>`<button type="button" class="opt" data-o="${oi}">${o}</button>`).join('')}</div><div class="pt why" hidden>${rk(q.why)}</div></div>`).join('')}</div>`:''}
+    <div class="row"><button class="btn" type="button" id="cTop">↑ Voltar ao topo</button><span class="spacer"></span><button class="btn primary" type="button" id="cCena">Refazer a cena →</button></div>`;
+  $('panel').querySelectorAll('[data-say]').forEach(b=>b.onclick=()=>speak(says[+b.dataset.say]));
+  $('panel').querySelectorAll('.cquiz').forEach(box=>box.onclick=e=>{ const b=e.target.closest('.opt'); if(!b) return; const q=c.quiz[+box.dataset.q];
+    box.querySelectorAll('.opt').forEach(x=>x.classList.remove('right','wrong')); b.classList.add(+b.dataset.o===q.a?'right':'wrong');
+    if(+b.dataset.o===q.a) box.querySelector('.why').hidden=false; });
+  $('cTop').onclick=()=>{ try{ $('steps').scrollIntoView({behavior:'smooth'}); }catch(e){} };
+  $('cCena').onclick=()=>{ done={}; ci=0; go(4); };
 }
 
 /* ---------- montagem ---------- */
@@ -343,13 +395,14 @@ function loadAula(slug){
   const L=$('links'); if(L&&A.linkList){ L.innerHTML=A.linkList.map(([t,h])=>`<a href="${h}">${t}</a>`).join(''); }
   else if(L&&A.links!==false){
     const order=ORDEM; const k=order.indexOf(slug), nx=order[k+1];
-    L.innerHTML=`<a href="/idiomas/mapas/${slug}/">← Exercícios do mapa</a><a href="/idiomas/mapas/">🗺️ Todos os mapas</a>${nx?`<a href="/idiomas/mapas/${nx}/aula/">Próxima aula: ${TITULOS[nx]||nx} →</a>`:''}`; }
+    L.innerHTML=`<a href="/idiomas/mapas/">🗺️ Todos os mapas</a>${nx?`<a href="/idiomas/mapas/${nx}/aula/">Próxima aula: ${TITULOS[nx]||nx} →</a>`:''}`; }
   showXP(); go(0);
 }
 
 /* ---------- ar, romaji, seletor ---------- */
-$('arList').innerHTML=AR.map((a,k)=>`<button type="button" class="arp" data-k="${k}"><span>🔊</span><span><span class="jp">${a.k}</span><br><span class="ro">${a.r}</span> <span class="pt">${a.pt}</span></span></button>`).join('');
-$('arList').onclick=e=>{ const b=e.target.closest('.arp'); if(b) speak(AR[+b.dataset.k].k); };
+$('arList').innerHTML=AR.map((g,gi)=>`<details class="gaveta"><summary><span class="gi">${g.ic}</span><span><b>${g.quero}</b><small>${g.sub}</small></span></summary><div class="gbody">${g.frases.map((f,fi)=>`<button type="button" class="arp" data-g="${gi}" data-f="${fi}"><span>🔊</span><span><span class="jp">${f.h}</span><br><span class="ro">${f.r}</span> <span class="pt">${f.pt}</span></span></button>`).join('')}${g.nota?`<p class="pt gnota">💡 ${rk(g.nota)}</p>`:''}</div></details>`).join('')+`<details class="gaveta nao"><summary><span class="gi">🚫</span><span><b>O que não fazer</b><small>armadilhas comuns</small></span></summary><div class="gbody"><ul>${AR_NAO.map(t=>`<li class="pt">${rk(t)}</li>`).join('')}</ul></div></details>`;
+$('arList').onclick=e=>{ const b=e.target.closest('.arp'); if(b) speak(AR[+b.dataset.g].frases[+b.dataset.f].k); };
+$('arList').addEventListener('toggle',e=>{ if(e.target.open) $('arList').querySelectorAll('details.gaveta').forEach(d=>{ if(d!==e.target) d.open=false; }); },true);
 $('btnAr').onclick=()=>{ $('drawer').hidden=false; };
 $('btnArClose').onclick=()=>{ $('drawer').hidden=true; };
 $('drawer').onclick=e=>{ if(e.target===$('drawer')) $('drawer').hidden=true; };

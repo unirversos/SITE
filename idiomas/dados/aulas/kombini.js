@@ -1,10 +1,10 @@
 (function(){
 const R=(k,f)=>`<ruby>${k}<rt>${f}</rt></ruby>`;
 (window.AULAS=window.AULAS||{}).kombini={
-  slug:'kombini', num:'03', titulo:'Kombini', emoji:'🏪', jp:'コンビニ', h1:'Lanche na loja de conveniência',
+  slug:'kombini', num:'03', titulo:'Konbini', emoji:'🏪', jp:'コンビニ', h1:'Lanche na loja de conveniência',
   fim:'Você comprou o seu lanche e respondeu todas as perguntas do caixa.',
-  intro:{titulo:'🏪 Uma passadinha no kombini',
-    txt:['O <b>コンビニ</b> (kombini) é a loja de conveniência aberta 24 horas. Lá você compra onigiri, bentô, bebidas, paga contas e saca dinheiro.',
+  intro:{titulo:'🏪 Uma passadinha no konbini',
+    txt:['O <b>コンビニ</b> (konbini) é a loja de conveniência aberta 24 horas. Lá você compra onigiri, bentô, bebidas, paga contas e saca dinheiro.',
          'O caixa fala rápido e faz sempre as mesmas perguntas: quer esquentar? quer sacola? tem cartão de pontos? Depois desta aula você vai reconhecer todas.'],
     metas:['perguntar onde fica alguma coisa','aceitar ou recusar com educação','dizer que não precisa de sacola','pedir o recibo']},
   npc:{nome:'Caixa', sel:{hair:'kurukuru',hairColor:'kuro',face:'egao',clothes:'tshirt',clothColor:'midori',acc:[],traits:[],skin:6},
@@ -15,7 +15,7 @@ const R=(k,f)=>`<ruby>${k}<rt>${f}</rt></ruby>`;
     counter:{label:'レジ', color:'#cfdccf', top:'#eef3ee'},
     prop:'<g transform="translate(8 12)"><path d="M16 0 L32 26 H0 Z" fill="#fff" stroke="#ddd" stroke-width="1.5" stroke-linejoin="round"/><rect x="6" y="14" width="20" height="12" fill="#3a2b38"/></g>'},
   words:[
-    {id:'onigiri',k:'おにぎり',r:'onigiri',pt:'bolinho de arroz',en:'rice ball',ic:'🍙',tip:'O lanche mais famoso do kombini.'},
+    {id:'onigiri',k:'おにぎり',r:'onigiri',pt:'bolinho de arroz',en:'rice ball',ic:'🍙',tip:'O lanche mais famoso do konbini.'},
     {id:'obentou',h:'お'+R('弁当','べんとう'),k:'おべんとう',r:'obentō',pt:'marmita (bentô)',en:'boxed meal',ic:'🍱',tip:'O caixa costuma perguntar se quer esquentar.'},
     {id:'atatamemasu',h:R('温','あたた')+'めます',k:'あたためます',r:'atatamemasu',pt:'esquentar',en:'to heat up',ic:'🔥',tip:'Você vai ouvir como pergunta: あたためますか？'},
     {id:'fukuro',h:R('袋','ふくろ'),k:'ふくろ',r:'fukuro',pt:'sacola',en:'bag',ic:'🛍️',tip:'As sacolas são pagas no Japão, por isso o caixa sempre pergunta.'},

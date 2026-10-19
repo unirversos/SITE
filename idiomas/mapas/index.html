@@ -230,12 +230,12 @@ body::before{
 <main class="page">
 
   <header class="top">
-    <a href="/idiomas/" class="brand" style="text-decoration:none;color:inherit;">unirversos <span>/ idiomas</span></a>
+    <a href="/" class="brand" style="text-decoration:none;color:inherit;">unirversos <span>/ idiomas</span></a>
     <span style="display:flex;gap:14px;align-items:center;font-size:12.5px;flex-wrap:wrap;">
       <span class="crumb"></span>
-      <a href="/" style="color:var(--ink-soft);text-decoration:none;">início</a>
       <a href="/idiomas/" style="color:var(--ink-soft);text-decoration:none;">idiomas</a>
       <a href="/travessia/" style="color:var(--ink-soft);text-decoration:none;">travessia</a>
+      <a href="/paralelos/" style="color:var(--ink-soft);text-decoration:none;">paralelos</a>
       <a href="/sobre/" style="color:var(--ink-soft);text-decoration:none;">sobre</a>
     </span>
   </header>
@@ -245,7 +245,7 @@ body::before{
   <!-- ABAS DO HUB -->
   <div class="hub-tabs">
     <button class="active" onclick="switchHubTab('trilhas')">🧭 Trilhas</button>
-    <button onclick="switchHubTab('mapas')">🗺️ Explorar</button>
+    <button onclick="switchHubTab('mapas')">🗺️ Explorar · inglês e português</button>
   </div>
 
   <!-- ABA 1: HUB DE TRILHAS -->
@@ -254,22 +254,24 @@ body::before{
       <div class="aula-zero-card" id="aulaZeroCard" onclick="location.href='../aula-zero/';">
         <span class="emoji">🧩</span>
         <h2>Aula Zero</h2>
-        <div class="status">Pré-requisito</div>
-        <p>Estrutura básica de japonês em 4 abas. Aprenda o essencial para sobreviver em qualquer situação.</p>
+        <div class="status">Comece por aqui</div>
+        <p>As chaves antes dos mapas: afirmar, negar e perguntar (desu, ja nai, desu ka), os verbos com -masu e como pedir, com o seu avatar.</p>
         <a href="../aula-zero/" class="btn-start">Começar</a>
         <div class="progress" id="aulaZeroProgress"></div>
+        <p style="margin-top:12px;font-size:13px"><button type="button" id="pularAZ" onclick="event.stopPropagation();pularAulaZero()" style="background:none;border:0;color:var(--ink-soft);text-decoration:underline;cursor:pointer;font:inherit">Já sei o básico: pular a Aula Zero e abrir os mapas</button></p>
       </div>
     </div>
 
     <div class="hub-section hub-mapas-section">
       <h2>12 Mapas de Contexto</h2>
-      <p class="intro">Desbloqueados após completar a Aula Zero. Cada mapa é uma trilha de aprendizado em um contexto real.</p>
+      <p class="intro">Abrem depois da Aula Zero (ou se você já sabe o básico). Cada mapa é uma aula com o seu avatar: história, palavras, moldes, ouvido, cena e uma consulta para revisar.</p>
       <div class="mapas-hub-grid" id="mapasGrid"></div>
     </div>
   </div>
 
   <!-- ABA 2: EXPLORAR MAPAS (conteúdo original) -->
   <div class="hub-content" id="tab-mapas">
+  <p style="margin:6px auto 0;max-width:640px;text-align:center;background:#EAF3EE;border-radius:14px;padding:12px 16px;font-size:14.5px">🇯🇵 O <b>japonês</b> agora mora nas <b>Trilhas</b>: cada mapa virou uma aula com o seu avatar, com uma consulta no final. Aqui ficam as trilhas de <b>inglês</b> e <b>português</b>.</p>
   <section class="hero">
     <p class="jp">地図をつくる</p>
     <h1>Eu crio <em>mapas.</em><br>Você constrói as pontes.</h1>
@@ -1207,6 +1209,7 @@ const LANGS = [
 /* =========================================================
    MOTOR
    ========================================================= */
+(function(){ const i = LANGS.findIndex(l => l.key === 'ja'); if (i >= 0) LANGS.splice(i, 1); })();
 let curLang = 0, cur = 0, selPiece = null;
 const inputVals = {}, deepOpen = {}, quizPicks = {};
 
@@ -1506,7 +1509,7 @@ const mapasHub = [
   { id: 1, slug:'aeroporto', emoji: '✈️', titulo: 'Aeroporto', descricao: 'Imigração, reserva, bagagem' },
   { id: 2, slug:'hotel', emoji: '🏨', titulo: 'Hotel', descricao: 'Check-in, café da manhã, problemas no quarto' },
   { id: 3, slug:'restaurante', emoji: '🍜', titulo: 'Restaurante', descricao: 'Quantas pessoas, pedido, conta' },
-  { id: 4, slug:'kombini', emoji: '🏪', titulo: 'Kombini', descricao: 'Esquentar, sacola, recibo' },
+  { id: 4, slug:'kombini', emoji: '🏪', titulo: 'Konbini', descricao: 'Esquentar, sacola, recibo' },
   { id: 5, slug:'trens', emoji: '🚆', titulo: 'Trens', descricao: 'Destino, preço, plataforma' },
   { id: 6, slug:'compras', emoji: '🎁', titulo: 'Compras', descricao: 'Preço, desconto, これ・それ・あれ' },
   { id: 7, slug:'roupas', emoji: '👚', titulo: 'Roupas', descricao: 'Provar, tamanho, cor' },
@@ -1518,7 +1521,12 @@ const mapasHub = [
 ];
 
 function checkAulaZeroStatus() {
-  return localStorage.getItem('aulaZeroCompleted') === 'true';
+  try { return localStorage.getItem('aulaZeroCompleted') === 'true' || localStorage.getItem('aulaZeroPulada') === 'true'; } catch(e) { return false; }
+}
+function pularAulaZero() {
+  try { localStorage.setItem('aulaZeroPulada', 'true'); } catch(e) {}
+  const g = document.getElementById('mapasGrid'); if (g) { g.innerHTML = ''; renderMapasHub(); }
+  updateAulaZeroStatus();
 }
 
 function renderMapasHub() {
@@ -1557,7 +1565,11 @@ function updateAulaZeroStatus() {
   
   const completed = checkAulaZeroStatus();
   
-  if (completed) {
+  const pulou = (function(){ try { return localStorage.getItem('aulaZeroCompleted') !== 'true' && localStorage.getItem('aulaZeroPulada') === 'true'; } catch(e) { return false; } })();
+  const pb = document.getElementById('pularAZ'); if (pb) pb.parentElement.hidden = completed;
+  if (pulou) {
+    progress.innerHTML = '✓ Mapas abertos. A Aula Zero continua aqui quando você quiser.';
+  } else if (completed) {
     card.classList.add('completed');
     progress.innerHTML = '✓ Aula Zero concluída! Todos os Mapas desbloqueados.';
   } else {

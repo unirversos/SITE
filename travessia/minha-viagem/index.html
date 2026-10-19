@@ -1,0 +1,457 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Minha viagem: hotéis e ingressos num lugar só | Unirversos Travessia</title>
+<meta name="description" content="O painel da sua viagem ao Japão: hospedagens, ingressos e atividades dia a dia, com códigos de reserva, check-in e alertas. Tudo salvo no seu navegador.">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@500;600;700&family=Zen+Maru+Gothic:wght@400;500;700&display=swap">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{--dark:#333;--rose:#c99699;--rose-deep:#a8767a;--rose-soft:#f8eeee;--gray:#777;--line:#e8e2e2;--bg:#fff;--cream:#fbf8f6;--sage:#7fa893;--sage-soft:#eaf3ee;--gold:#c0913f;--gold-soft:#fbf2df;--red:#c4685f;--red-soft:#fbeae6}
+body{font-family:'Zen Maru Gothic','Segoe UI',system-ui,sans-serif;line-height:1.7;color:var(--dark);background:var(--bg);font-size:16px}
+header{display:flex;justify-content:space-between;align-items:center;gap:16px;flex-wrap:wrap;padding:1.6rem 4rem;border-bottom:1px solid #e0e0e0}
+.logo{font-size:13px;font-weight:700;letter-spacing:2px;text-decoration:none;color:var(--dark)}
+nav{display:flex;gap:2rem;flex-wrap:wrap}
+nav a{text-decoration:none;color:var(--rose);font-size:14px}
+main{max-width:980px;margin:0 auto;padding:0 24px 60px}
+.hero{text-align:center;padding:48px 0 24px}
+.hero h1{font-family:'Baloo 2',sans-serif;font-size:clamp(28px,4.4vw,42px);line-height:1.2;font-weight:700}
+.hero h1 span{color:var(--rose)}
+.hero p{color:var(--gray);max-width:620px;margin:12px auto 0}
+.hero .par a{color:var(--rose-deep);font-size:14px}
+.btn{font:inherit;cursor:pointer;border:1.5px solid var(--line);background:#fff;border-radius:999px;padding:8px 16px;font-weight:700;font-size:14px;color:var(--dark)}
+.btn:hover{border-color:var(--rose)}
+.btn.primary{background:var(--rose);border-color:var(--rose);color:#fff}
+.btn.primary:hover{background:var(--rose-deep)}
+.btn.small{padding:5px 12px;font-size:13px}
+.btn.link{border:0;background:none;color:var(--rose-deep);padding:4px 6px;text-decoration:underline}
+.tabs{display:flex;gap:8px;justify-content:center;flex-wrap:wrap;margin:8px 0 22px}
+.tabs button{font:inherit;cursor:pointer;border:1.5px solid var(--line);background:#fff;border-radius:999px;padding:9px 20px;font-weight:700}
+.tabs button[aria-pressed="true"]{background:var(--dark);border-color:var(--dark);color:#fff}
+.datas{display:flex;flex-wrap:wrap;gap:12px;align-items:end;justify-content:center;background:var(--cream);border:1px solid var(--line);border-radius:18px;padding:16px;margin-bottom:18px}
+.f{display:grid;gap:4px;font-size:13px;color:var(--gray)}
+.f input,.f select,.f textarea{font:inherit;font-size:15px;color:var(--dark);border:1.5px solid var(--line);border-radius:10px;padding:7px 10px;background:#fff;min-width:0}
+.f textarea{min-height:60px}
+.alerta{border-left:5px solid var(--red);background:var(--red-soft);border-radius:12px;padding:10px 14px;margin-bottom:8px;font-size:14.5px}
+.alerta.leve{border-color:var(--gold);background:var(--gold-soft)}
+.vazio{color:var(--gray);text-align:center;padding:24px;border:1.5px dashed var(--line);border-radius:16px}
+/* linha do tempo */
+.base{border:1.5px solid var(--line);border-radius:18px;background:#fff;overflow:hidden}
+.base-h{padding:16px 18px;background:var(--cream);border-bottom:1px solid var(--line);display:grid;gap:4px}
+.base-h .cid{font-family:'Baloo 2',sans-serif;font-size:21px;font-weight:700;line-height:1.2}
+.base-h .cid small{font-family:'Zen Maru Gothic',sans-serif;font-weight:500;font-size:15px;color:var(--gray)}
+.meta{display:flex;flex-wrap:wrap;gap:6px 16px;font-size:14px;color:var(--dark)}
+.meta b{font-weight:700}
+.base-b{padding:12px 18px 16px;display:grid;gap:8px}
+.base-b h4{font-size:12.5px;letter-spacing:1px;text-transform:uppercase;color:var(--gray);font-weight:700}
+.ev{display:grid;grid-template-columns:110px minmax(0,1fr);gap:10px;align-items:start;padding:8px 10px;border-radius:12px;background:var(--cream)}
+.ev .q{font-weight:700;font-size:14px}
+.ev .n{font-size:15px}
+.ev .s{font-size:13px;color:var(--gray)}
+.ev .warn{font-size:13px;color:var(--red);font-weight:700}
+.livre{font-size:14px;color:var(--gray);padding:2px 10px}
+.trajeto{text-align:center;color:var(--gray);font-size:14px;padding:8px 0}
+.chip{display:inline-block;font-size:12px;font-weight:700;border-radius:999px;padding:2px 10px;white-space:nowrap}
+.c-ok{background:var(--sage-soft);color:#3f6b55}.c-mid{background:var(--gold-soft);color:#7a5b21}.c-no{background:var(--red-soft);color:#8f3f37}.c-neu{background:#eee;color:#555}
+/* mesa */
+.sec{margin:26px 0 10px;display:flex;flex-wrap:wrap;gap:10px;justify-content:space-between;align-items:center}
+.sec h2{font-family:'Baloo 2',sans-serif;font-size:24px}
+.tbl{width:100%;border-collapse:collapse;font-size:14.5px}
+.tbl th{background:#2C3E50;color:#fff;text-align:left;font-weight:700;padding:8px 10px;font-size:13px}
+.tbl td{padding:9px 10px;border-bottom:1px solid var(--line);vertical-align:top}
+.tbl tr:nth-child(even) td{background:var(--cream)}
+.tbl input{font:inherit;font-size:14px;border:1.5px solid var(--line);border-radius:8px;padding:4px 6px;max-width:140px}
+.scroll{overflow-x:auto;border:1px solid var(--line);border-radius:14px}
+.form{border:1.5px solid var(--rose);border-radius:18px;padding:16px;margin:10px 0;display:grid;gap:12px;background:#fff}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:10px}
+.acoes{display:flex;flex-wrap:wrap;gap:8px;justify-content:center;margin-top:28px}
+.ok-msg{text-align:center;color:#3f6b55;font-weight:700;min-height:1.5em;margin-top:8px}
+.aviso{font-size:13px;color:var(--gray);text-align:center;max-width:680px;margin:14px auto 0}
+footer{text-align:center;padding:40px 20px;border-top:1px solid var(--line);color:var(--gray);font-size:14px}
+footer a{color:var(--rose)}
+[hidden]{display:none!important}
+/* semana e mês */
+.cal-nav{display:flex;justify-content:space-between;align-items:center;gap:8px;margin-bottom:12px}
+.cal-nav h3{font-family:'Baloo 2',sans-serif;font-size:22px;text-align:center;line-height:1.2}
+.legenda{display:flex;flex-wrap:wrap;gap:6px 14px;justify-content:center;font-size:13px;color:var(--gray);margin-bottom:12px}
+.legenda i{display:inline-block;width:12px;height:12px;border-radius:4px;vertical-align:-1px;margin-right:4px}
+.semana{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:6px}
+.dcol{border:1.5px solid var(--line);border-radius:14px;min-height:230px;background:#fff;display:flex;flex-direction:column;overflow:hidden}
+.dcol.fora{background:#fafafa;color:#aaa}
+.dcol.hoje{border-color:var(--rose)}
+.dh{padding:6px 8px;font-weight:700;font-size:13px;border-bottom:1px solid var(--line)}
+.cidade{font-size:12px;font-weight:700;padding:3px 8px;color:#fff}
+.mv{font-size:12px;padding:4px 8px;color:var(--dark);border-bottom:1px dashed var(--line)}
+.ei{font-size:12.5px;line-height:1.35;margin:5px 6px 0;padding:5px 7px;border-radius:8px;background:var(--cream);border-left:4px solid #bbb}
+.ei b{display:block;font-size:12px}
+.ei .st{font-size:11px;color:var(--gray)}
+.ei .w{font-size:11px;color:var(--red);font-weight:700}
+.ei.c-ok{border-color:var(--sage)}.ei.c-mid{border-color:var(--gold)}.ei.c-no{border-color:var(--red)}
+.mes{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:4px}
+.mh{text-align:center;font-size:12px;color:var(--gray);font-weight:700;padding-bottom:2px}
+.md{font:inherit;text-align:left;border:1px solid var(--line);border-radius:10px;min-height:96px;padding:4px 5px;font-size:12px;cursor:pointer;background:#fff;display:flex;flex-direction:column;gap:2px;overflow:hidden;color:var(--dark)}
+.md:hover{border-color:var(--rose)}
+.md.vazia{visibility:hidden}
+.md.fora{background:#fafafa;color:#aaa}
+.md.hoje{border-color:var(--rose);border-width:2px}
+.md .num{font-weight:700;font-size:13px}
+.md .cb{font-size:10.5px;font-weight:700;color:#fff;border-radius:4px;padding:0 4px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;min-height:7px;line-height:1.5}
+.md .e{white-space:nowrap;overflow:hidden;text-overflow:ellipsis;font-size:11.5px}
+.md .e.c-no{color:var(--red);font-weight:700}
+.cal-nav .btn{flex:none}
+.md .dots{display:none;font-size:11px;color:var(--rose-deep);font-weight:700}
+@media (max-width:640px){header{padding:1.2rem 16px}main{padding:0 16px 50px}.ev{grid-template-columns:minmax(0,1fr)}
+  .semana{grid-template-columns:minmax(0,1fr)}.dcol{min-height:0;padding-bottom:6px}
+  .md{min-height:58px;padding:3px}.md .e{display:none}.md .dots{display:block}.md .cb{font-size:0;padding:0;height:6px;min-height:6px}.cal-nav .lbl{display:none}.cal-nav h3{font-size:19px}}
+@media print{
+  header,nav,.tabs,.datas,.acoes,.aviso,footer,.sec .btn,.form,.no-print,#vistaMesa,#vistaSemana,#vistaMes{display:none!important}
+  #vistaLinha{display:block!important}
+  body{font-size:11pt}
+  .base{break-inside:avoid;margin-bottom:8mm}
+  .hero{padding:0 0 6mm}.hero p,.hero .par{display:none}
+}
+</style>
+</head>
+<body>
+<header>
+  <a href="/" class="logo">UNIRVERSOS</a>
+  <nav><a href="/idiomas/">idiomas</a><a href="/travessia/">travessia</a><a href="/paralelos/">paralelos</a><a href="/sobre/">sobre</a></nav>
+</header>
+
+<main>
+  <section class="hero">
+    <h1>Minha viagem:<br><span>onde eu durmo, o que eu vejo.</span></h1>
+    <p>Hotéis e ingressos na mesma tela. Cada hospedagem traz os ingressos daquele período, com código de reserva, horário de check-in e endereço à mão.</p>
+    <p class="par"><a href="/travessia/agendamentos/">Cronograma de ingressos</a> · <a href="/travessia/status/">Meus ingressos</a></p>
+  </section>
+
+  <div class="datas">
+    <label class="f">Chegada no Japão<input type="date" id="ida"></label>
+    <label class="f">Volta para casa<input type="date" id="volta"></label>
+    <span class="f" style="max-width:260px">As mesmas datas da página Meus ingressos. Mudou aqui, muda lá.</span>
+  </div>
+
+  <div class="tabs" role="tablist">
+    <button type="button" id="tLinha" aria-pressed="true">🏨 Por hospedagem</button>
+    <button type="button" id="tSemana" aria-pressed="false">🗓️ Semana</button>
+    <button type="button" id="tMes" aria-pressed="false">📅 Mês</button>
+    <button type="button" id="tMesa" aria-pressed="false">🧾 Reservas e compras</button>
+  </div>
+
+  <div id="alertas"></div>
+
+  <!-- VISTA 1: LINHA DO TEMPO -->
+  <section id="vistaLinha"></section>
+  <section id="vistaSemana" hidden></section>
+  <section id="vistaMes" hidden></section>
+
+  <!-- VISTA 2: MESA DE COMPRAS -->
+  <section id="vistaMesa" hidden>
+    <div class="sec"><h2>🏨 Hospedagens</h2><button class="btn primary small" type="button" id="addHotel">+ Hospedagem</button></div>
+    <div id="formHotel"></div>
+    <div id="tabHoteis"></div>
+
+    <div class="sec"><h2>🎫 Ingressos com janela de compra</h2><a class="btn small" href="/travessia/status/">Atualizar status →</a></div>
+    <p class="aviso" style="text-align:left;margin:0 0 8px">O status vem da página Meus ingressos. Aqui você só marca <b>o dia e a hora da visita</b>, para o ingresso aparecer nas vistas por hospedagem, semana e mês.</p>
+    <div id="tabIngressos"></div>
+    <label class="f" style="margin-top:10px;max-width:420px">Vai visitar outra atração do cronograma?<select id="addIng"></select></label>
+
+    <div class="sec"><h2>📌 Outras atividades</h2><button class="btn primary small" type="button" id="addExtra">+ Atividade</button></div>
+    <div id="formExtra"></div>
+    <div id="tabExtras"></div>
+  </section>
+
+  <div class="acoes no-print">
+    <button class="btn" type="button" id="vjw">📋 Copiar dados do 1º hotel (Visit Japan Web)</button>
+    <button class="btn" type="button" id="imprimir">🖨️ Imprimir resumo para a mala</button>
+    <button class="btn" type="button" id="limpar">Apagar hotéis e atividades</button>
+  </div>
+  <p class="ok-msg" id="msg" aria-live="polite"></p>
+  <p class="aviso">Tudo fica salvo <strong>só no seu navegador</strong>, neste aparelho. Nada é enviado para lugar nenhum. Imprima o resumo ou guarde como PDF para ter os códigos sem internet.</p>
+</main>
+
+<footer>
+  <p>unirversos — tudo conectado</p>
+  <p><a href="https://instagram.com/unirversos.idiomas">@unirversos.idiomas</a> | <a href="mailto:unirversos.idiomas@gmail.com">unirversos.idiomas@gmail.com</a></p>
+  <p style="margin-top:1rem">Aline Kikuti</p>
+</footer>
+
+<script>
+/* Atrações do cronograma (mesmos ids da página Meus ingressos) com a região de cada uma */
+const TK=[
+ {id:'pokepark',nome:'PokéPark KANTO',onde:'Tóquio · Inagi',reg:'kanto'},
+ {id:'ghibli-mitaka',nome:'Museu Ghibli de Mitaka',onde:'Tóquio · Mitaka',reg:'kanto'},
+ {id:'ghibli-park',nome:'Ghibli Park',onde:'Aichi · perto de Nagoya',reg:'chubu'},
+ {id:'pokemon-cafe',nome:'Pokémon Café',onde:'Tóquio e Osaka',reg:null},
+ {id:'kirby',nome:'Kirby Café',onde:'Tóquio e Osaka',reg:null},
+ {id:'disney',nome:'Tokyo Disneyland e DisneySea',onde:'Chiba · Maihama',reg:'kanto'},
+ {id:'doraemon',nome:'Museu Fujiko F. Fujio (Doraemon)',onde:'Kawasaki',reg:'kanto'},
+ {id:'usj',nome:'Super Nintendo World (USJ)',onde:'Osaka · Universal City',reg:'kansai'},
+ {id:'harrypotter',nome:'Warner Bros. Studio Tour Tóquio',onde:'Tóquio · Nerima',reg:'kanto'},
+ {id:'teamlab-tokyo',nome:'teamLab Borderless e Planets',onde:'Tóquio',reg:'kanto'},
+ {id:'nintendo-museum',nome:'Museu da Nintendo',onde:'Kyoto · Uji',reg:'kansai'},
+ {id:'biovortex',nome:'teamLab Biovortex Kyoto',onde:'Kyoto · estação central',reg:'kansai'},
+ {id:'toyosu',nome:'Leilão de atum de Toyosu',onde:'Tóquio · Toyosu',reg:'kanto'},
+ {id:'shibuya-sky',nome:'Shibuya Sky',onde:'Tóquio · Shibuya',reg:'kanto'},
+ {id:'saihoji',nome:'Saihō-ji, o Templo dos Musgos',onde:'Kyoto · Matsuo',reg:'kansai'},
+ {id:'katsura',nome:'Villas Imperiais (Katsura e Shugakuin)',onde:'Kyoto',reg:'kansai'},
+ {id:'comiket',nome:'Comiket',onde:'Tóquio · Tokyo Big Sight',reg:'kanto'},
+ {id:'jumpfesta',nome:'Jump Festa',onde:'Chiba · Makuhari Messe',reg:'kanto'},
+ {id:'sumo',nome:'Sumô — torneios oficiais',onde:'Tóquio, Osaka, Nagoya e Fukuoka',reg:null}
+];
+const ST_ING={novo:['Falta comprar','c-no'],inscrito:['Na loteria · aguardando','c-mid'],ganhei:['Sorteado · falta pagar','c-no'],comprado:['Ingresso em mãos','c-ok'],perdi:['Não consegui','c-neu'],pulei:['Decidi não ir','c-neu']};
+const CIDADES=[['Tóquio','kanto'],['Yokohama','kanto'],['Kamakura','kanto'],['Hakone','kanto'],['Nikko','kanto'],['Chiba','kanto'],['Kyoto','kansai'],['Osaka','kansai'],['Nara','kansai'],['Kobe','kansai'],['Himeji','kansai'],['Nagoya','chubu'],['Takayama','chubu'],['Kanazawa','chubu'],['Hiroshima','oeste'],['Fukuoka','kyushu'],['Sapporo','hokkaido'],['Okinawa','okinawa'],['Outra','']];
+const REG_NOME={kanto:'região de Tóquio',kansai:'região de Kyoto e Osaka',chubu:'região de Nagoya',oeste:'Hiroshima',kyushu:'Kyushu',hokkaido:'Hokkaido',okinawa:'Okinawa'};
+const ST_HOTEL={pago:['Confirmado e pago','c-ok'],local:['Reservado · pagar no local','c-mid'],pendente:['Falta reservar','c-no']};
+const ST_EXTRA={pendente:['Falta comprar','c-no'],comprado:['Comprado','c-ok'],livre:['Sem reserva','c-neu']};
+const MES=['jan','fev','mar','abr','mai','jun','jul','ago','set','out','nov','dez'];
+const SEM=['dom','seg','ter','qua','qui','sex','sáb'];
+
+/* ---------- dados ---------- */
+const KS='travessiaStatusV1', KV='travessiaViagemV1';
+function ler(k,def){ try{ const v=JSON.parse(localStorage.getItem(k)||'null'); return v&&typeof v==='object'?v:def; }catch(e){ return def; } }
+function gravar(k,v){ try{ localStorage.setItem(k,JSON.stringify(v)); }catch(e){} }
+let S=ler(KS,{ida:'',volta:'',itens:{}}); S.itens=S.itens||{};
+let V=ler(KV,{hoteis:[],visitas:{},extras:[]}); V.hoteis=V.hoteis||[]; V.visitas=V.visitas||{}; V.extras=V.extras||[];
+const salvarV=()=>gravar(KV,V), salvarS=()=>gravar(KS,S);
+const uid=()=>Math.random().toString(36).slice(2,9);
+const esc=s=>String(s==null?'':s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const D=s=>new Date(s+'T12:00:00');
+const fmt=s=>{ if(!s) return '—'; const d=D(s); return SEM[d.getDay()]+', '+d.getDate()+'/'+MES[d.getMonth()]; };
+const noites=(a,b)=>Math.round((D(b)-D(a))/864e5);
+const addDia=(s,n)=>{ const d=D(s); d.setDate(d.getDate()+n); return d.toISOString().slice(0,10); };
+const regCidade=c=>{ const x=CIDADES.find(z=>z[0]===c); return x?x[1]:''; };
+function msg(t){ const m=document.getElementById('msg'); m.textContent=t; clearTimeout(msg.h); msg.h=setTimeout(()=>m.textContent='',3500); }
+
+/* ---------- eventos (ingressos com data + atividades) ---------- */
+function eventos(){
+  const out=[];
+  for(const t of TK){ const v=V.visitas[t.id], it=S.itens[t.id]; if(!v||!v.data) continue;
+    if(it&&(it.status==='pulei'||it.status==='perdi')) continue;
+    const st=ST_ING[(it&&it.status)||'novo'];
+    out.push({ic:'🎫',data:v.data,hora:v.hora||'',nome:t.nome,onde:t.onde,reg:t.reg,chip:st,cod:it&&it.numero}); }
+  for(const e of V.extras){ if(!e.data) continue; const st=ST_EXTRA[e.status||'livre'];
+    out.push({ic:'📌',data:e.data,hora:e.hora||'',nome:e.nome,onde:e.cidade,reg:regCidade(e.cidade)||null,chip:st,cod:e.codigo,nota:e.nota}); }
+  return out.sort((a,b)=>(a.data+a.hora).localeCompare(b.data+b.hora));
+}
+const hoteisOrd=()=>V.hoteis.slice().sort((a,b)=>(a.entrada||'').localeCompare(b.entrada||''));
+function hotelDoDia(dia){ // a noite de "dia" (entrada <= dia < saida); no dia da saída, conta o próximo hotel
+  return hoteisOrd().find(h=>h.entrada&&h.saida&&h.entrada<=dia&&dia<h.saida) || hoteisOrd().find(h=>h.saida===dia);
+}
+
+/* ---------- alertas ---------- */
+function alertas(){
+  const out=[];
+  // noites sem hospedagem
+  if(S.ida&&S.volta&&V.hoteis.length){
+    const falta=[]; for(let d=S.ida; d<S.volta; d=addDia(d,1)){ if(!V.hoteis.some(h=>h.entrada&&h.saida&&h.entrada<=d&&d<h.saida)) falta.push(d); }
+    if(falta.length) out.push(['leve','Noites sem hospedagem cadastrada: '+falta.map(fmt).join(', ')+'.']);
+  }
+  // hotéis sobrepostos
+  const hs=hoteisOrd(); for(let i=1;i<hs.length;i++){ if(hs[i-1].saida&&hs[i].entrada&&hs[i].entrada<hs[i-1].saida) out.push(['','Duas hospedagens na mesma noite: '+esc(hs[i-1].nome||hs[i-1].cidade)+' e '+esc(hs[i].nome||hs[i].cidade)+' ('+fmt(hs[i].entrada)+').']); }
+  for(const h of hs){ if(h.status==='pendente') out.push(['leve','Falta reservar a hospedagem em '+esc(h.cidade||'?')+' ('+fmt(h.entrada)+' a '+fmt(h.saida)+').']); }
+  return out;
+}
+function conflito(ev){
+  if(!ev.reg) return '';
+  const h=hotelDoDia(ev.data); if(!h) return '';
+  const r=regCidade(h.cidade); if(!r||r===ev.reg) return '';
+  return 'Atenção: nesse dia sua hospedagem é em '+esc(h.cidade)+' ('+REG_NOME[r]+'), e '+esc(ev.nome)+' fica na '+REG_NOME[ev.reg]+'.';
+}
+
+/* ---------- vista 1: dia a dia ---------- */
+function evHTML(ev){
+  const w=conflito(ev);
+  return `<div class="ev"><div class="q">${fmt(ev.data)}${ev.hora?'<br>'+esc(ev.hora):''}</div><div><div class="n">${ev.ic} ${esc(ev.nome)} <span class="chip ${ev.chip[1]}">${ev.chip[0]}</span></div><div class="s">${esc(ev.onde||'')}${ev.cod?' · código: <b>'+esc(ev.cod)+'</b>':''}${ev.nota?' · '+esc(ev.nota):''}</div>${w?`<div class="warn">⚠️ ${w}</div>`:''}</div></div>`;
+}
+function renderLinha(){
+  const el=document.getElementById('vistaLinha'), hs=hoteisOrd(), evs=eventos();
+  if(!hs.length&&!evs.length){ el.innerHTML='<p class="vazio">Comece cadastrando as hospedagens em <b>Reservas e compras</b>. Os ingressos com dia marcado aparecem aqui sozinhos.</p>'; return; }
+  const usados=new Set(); let html='', ant=null;
+  hs.forEach((h,i)=>{
+    const ultimo=i===hs.length-1;
+    const dentro=evs.filter((e,k)=>{ const ok=h.entrada&&h.saida&&e.data>=h.entrada&&(e.data<h.saida||(ultimo&&e.data===h.saida)); if(ok) usados.add(k); return ok; });
+    if(ant&&ant.cidade!==h.cidade) html+=`<div class="trajeto">▼ ${esc(ant.cidade)} → ${esc(h.cidade)}</div>`; else if(ant) html+='<div class="trajeto">▼</div>';
+    const st=ST_HOTEL[h.status||'pendente'];
+    const n=h.entrada&&h.saida?noites(h.entrada,h.saida):0;
+    const dias=[]; if(h.entrada&&h.saida){ for(let d=h.entrada; d<h.saida; d=addDia(d,1)) dias.push(d); }
+    const livres=dias.filter(d=>!dentro.some(e=>e.data===d)).slice(1);
+    html+=`<article class="base">
+      <div class="base-h"><div class="cid">📍 ${esc(h.cidade||'Cidade?')} <small>${esc(h.nome||'')}</small></div>
+        <div class="meta"><span>📅 <b>${fmt(h.entrada)}</b> a <b>${fmt(h.saida)}</b> (${n} noite${n===1?'':'s'})</span> <span class="chip ${st[1]}">${st[0]}</span></div>
+        <div class="meta"><span>🔑 Check-in <b>${esc(h.checkin||'—')}</b> · Check-out <b>${esc(h.checkout||'—')}</b></span>${h.reserva?`<span>Reserva: <b>${esc(h.reserva)}</b>${h.plataforma?' ('+esc(h.plataforma)+')':''}</span>`:''}</div>
+        ${h.enderecoLat?`<div class="meta"><span>🏠 ${esc(h.enderecoLat)}</span></div>`:''}${h.endereco?`<div class="meta"><span>🚕 ${esc(h.endereco)}</span></div>`:''}${h.telefone?`<div class="meta"><span>☎️ ${esc(h.telefone)}</span></div>`:''}
+      </div>
+      <div class="base-b"><h4>Ingressos e atividades neste período</h4>${dentro.length?dentro.map(evHTML).join(''):'<p class="livre">Nada marcado ainda.</p>'}${livres.length&&dentro.length?`<p class="livre">Dias livres: ${livres.map(fmt).join(', ')}</p>`:''}</div>
+    </article>`;
+    ant=h;
+  });
+  const soltos=evs.filter((e,k)=>!usados.has(k));
+  if(soltos.length) html+=`<article class="base" style="margin-top:16px"><div class="base-h"><div class="cid">❔ Sem hospedagem cadastrada</div><div class="meta">Estes dias ainda não têm hotel. Cadastre para ver tudo junto.</div></div><div class="base-b">${soltos.map(evHTML).join('')}</div></article>`;
+  el.innerHTML=html;
+}
+
+/* ---------- vista 2: reservas e compras ---------- */
+function opts(list,cur){ return list.map(([v,n])=>`<option value="${esc(v)}"${v===cur?' selected':''}>${esc(n)}</option>`).join(''); }
+function formHotel(h){
+  h=h||{id:'',cidade:'Tóquio',nome:'',entrada:'',saida:'',checkin:'15:00',checkout:'11:00',reserva:'',plataforma:'',status:'pago',enderecoLat:'',endereco:'',telefone:'',nota:''};
+  const cidadeOutra=h.cidade&&!CIDADES.some(c=>c[0]===h.cidade);
+  document.getElementById('formHotel').innerHTML=`<form class="form" id="fh">
+    <div class="grid">
+      <label class="f">Cidade<select name="cidadeSel">${opts(CIDADES.map(c=>[c[0],c[0]]),cidadeOutra?'Outra':h.cidade)}</select></label>
+      <label class="f" ${cidadeOutra?'':'hidden'} id="outraWrap">Qual cidade?<input name="cidadeOutra" value="${cidadeOutra?esc(h.cidade):''}"></label>
+      <label class="f">Nome do hotel<input name="nome" value="${esc(h.nome)}" placeholder="ex.: Hotel Gracery Shinjuku"></label>
+      <label class="f">Entrada (check-in)<input type="date" name="entrada" value="${esc(h.entrada)}" required></label>
+      <label class="f">Saída (check-out)<input type="date" name="saida" value="${esc(h.saida)}" required></label>
+      <label class="f">Horário do check-in<input type="time" name="checkin" value="${esc(h.checkin)}"></label>
+      <label class="f">Horário do check-out<input type="time" name="checkout" value="${esc(h.checkout)}"></label>
+      <label class="f">Nº da reserva<input name="reserva" value="${esc(h.reserva)}"></label>
+      <label class="f">Plataforma<input name="plataforma" value="${esc(h.plataforma)}" placeholder="Booking, Agoda, site oficial…" list="plats"></label>
+      <label class="f">Situação<select name="status">${opts(Object.entries(ST_HOTEL).map(([k,v])=>[k,v[0]]),h.status)}</select></label>
+      <label class="f">Telefone do hotel<input name="telefone" value="${esc(h.telefone)}"></label>
+    </div>
+    <label class="f">Endereço em alfabeto latino, exigido pelo Visit Japan Web<input name="enderecoLat" value="${esc(h.enderecoLat||'')}" placeholder="ex.: 1-19-1 Kabukicho, Shinjuku-ku, Tokyo"></label>
+    <label class="f">Endereço em japonês, para mostrar no táxi (opcional)<textarea name="endereco" placeholder="ex.: 東京都新宿区歌舞伎町1-19-1">${esc(h.endereco)}</textarea></label>
+    <label class="f">Anotações<input name="nota" value="${esc(h.nota)}" placeholder="link do mapa, quem reservou…"></label>
+    <datalist id="plats"><option>Booking</option><option>Agoda</option><option>Airbnb</option><option>Expedia</option><option>Site oficial</option><option>Jalan</option><option>Rakuten Travel</option></datalist>
+    <p class="warn" id="fhErr" style="color:var(--red);font-size:14px"></p>
+    <div style="display:flex;gap:8px;flex-wrap:wrap"><button class="btn primary" type="submit">${h.id?'Salvar alterações':'Adicionar hospedagem'}</button><button class="btn" type="button" id="fhCancel">Cancelar</button></div>
+  </form>`;
+  const f=document.getElementById('fh');
+  f.cidadeSel.onchange=()=>{ document.getElementById('outraWrap').hidden=f.cidadeSel.value!=='Outra'; };
+  document.getElementById('fhCancel').onclick=()=>{ document.getElementById('formHotel').innerHTML=''; };
+  f.onsubmit=e=>{ e.preventDefault();
+    const x=Object.fromEntries(new FormData(f).entries());
+    if(!x.entrada||!x.saida||x.saida<=x.entrada){ document.getElementById('fhErr').textContent='A saída precisa ser depois da entrada.'; return; }
+    const cidade=x.cidadeSel==='Outra'?(x.cidadeOutra||'Outra'):x.cidadeSel;
+    const novo={id:h.id||uid(),cidade,nome:x.nome,entrada:x.entrada,saida:x.saida,checkin:x.checkin,checkout:x.checkout,reserva:x.reserva,plataforma:x.plataforma,status:x.status,enderecoLat:(x.enderecoLat||'').trim(),endereco:x.endereco,telefone:x.telefone,nota:x.nota};
+    const i=V.hoteis.findIndex(z=>z.id===novo.id); if(i>=0) V.hoteis[i]=novo; else V.hoteis.push(novo);
+    salvarV(); document.getElementById('formHotel').innerHTML=''; tudo(); msg('Hospedagem salva.'); };
+  f.scrollIntoView({behavior:'smooth',block:'center'});
+}
+function formExtra(e){
+  e=e||{id:'',nome:'',cidade:'Tóquio',data:'',hora:'',status:'livre',codigo:'',nota:''};
+  document.getElementById('formExtra').innerHTML=`<form class="form" id="fe"><div class="grid">
+      <label class="f">Atividade<input name="nome" value="${esc(e.nome)}" required placeholder="ex.: jantar de aniversário, onsen, show"></label>
+      <label class="f">Cidade<select name="cidade">${opts(CIDADES.map(c=>[c[0],c[0]]),e.cidade)}</select></label>
+      <label class="f">Dia<input type="date" name="data" value="${esc(e.data)}" required></label>
+      <label class="f">Hora<input type="time" name="hora" value="${esc(e.hora)}"></label>
+      <label class="f">Situação<select name="status">${opts(Object.entries(ST_EXTRA).map(([k,v])=>[k,v[0]]),e.status)}</select></label>
+      <label class="f">Código / voucher<input name="codigo" value="${esc(e.codigo)}"></label></div>
+    <label class="f">Anotações<input name="nota" value="${esc(e.nota)}"></label>
+    <div style="display:flex;gap:8px;flex-wrap:wrap"><button class="btn primary" type="submit">${e.id?'Salvar alterações':'Adicionar atividade'}</button><button class="btn" type="button" id="feCancel">Cancelar</button></div></form>`;
+  const f=document.getElementById('fe');
+  document.getElementById('feCancel').onclick=()=>{ document.getElementById('formExtra').innerHTML=''; };
+  f.onsubmit=ev=>{ ev.preventDefault(); const x=Object.fromEntries(new FormData(f).entries());
+    const novo=Object.assign({id:e.id||uid()},x); const i=V.extras.findIndex(z=>z.id===novo.id); if(i>=0) V.extras[i]=novo; else V.extras.push(novo);
+    salvarV(); document.getElementById('formExtra').innerHTML=''; tudo(); msg('Atividade salva.'); };
+  f.scrollIntoView({behavior:'smooth',block:'center'});
+}
+function renderMesa(){
+  const hs=hoteisOrd();
+  document.getElementById('tabHoteis').innerHTML=hs.length?`<div class="scroll"><table class="tbl"><tr><th>Cidade · hotel</th><th>Período</th><th>Situação</th><th>Reserva</th><th>In / out</th><th></th></tr>${hs.map(h=>{ const st=ST_HOTEL[h.status||'pendente'];
+    return `<tr><td><b>${esc(h.cidade)}</b><br>${esc(h.nome||'')}</td><td>${fmt(h.entrada)} a ${fmt(h.saida)}</td><td><span class="chip ${st[1]}">${st[0]}</span></td><td>${esc(h.plataforma||'')}${h.reserva?'<br><b>'+esc(h.reserva)+'</b>':''}</td><td>${esc(h.checkin||'—')} / ${esc(h.checkout||'—')}</td><td style="white-space:nowrap"><button class="btn link" data-eh="${h.id}">editar</button><button class="btn link" data-rh="${h.id}">remover</button></td></tr>`; }).join('')}</table></div>`:'<p class="vazio">Nenhuma hospedagem ainda.</p>';
+  // ingressos: os que a pessoa já mexeu na página Meus ingressos
+  const tks=TK.filter(t=>{ const it=S.itens[t.id]; return (it&&it.status&&it.status!=='novo'&&it.status!=='pulei')||V.visitas[t.id]; });
+  document.getElementById('tabIngressos').innerHTML=tks.length?`<div class="scroll"><table class="tbl"><tr><th>Atração</th><th>Situação</th><th>Código</th><th>Dia da visita</th><th>Hora</th><th></th></tr>${tks.map(t=>{ const it=S.itens[t.id]||{}, st=ST_ING[it.status||'novo'], v=V.visitas[t.id]||{};
+    let extra=''; if(it.status==='ganhei'&&it.prazo) extra=`<br><span class="chip c-no">pagar até ${fmt(it.prazo)}</span>`; if(it.status==='inscrito'&&it.conferir) extra=`<br><span class="chip c-mid">resultado em ${fmt(it.conferir)}</span>`;
+    return `<tr><td><b>${esc(t.nome)}</b><br><span style="color:var(--gray);font-size:13px">${esc(t.onde)}</span></td><td><span class="chip ${st[1]}">${st[0]}</span>${extra}</td><td>${esc(it.numero||'')}</td><td><input type="date" data-vd="${t.id}" value="${esc(v.data||'')}"></td><td><input type="time" data-vh="${t.id}" value="${esc(v.hora||'')}"></td><td>${(!it.status||it.status==='novo'||it.status==='pulei')?`<button class="btn link" type="button" data-ri="${t.id}">remover</button>`:'<span style="font-size:12px;color:var(--gray)">status em Meus ingressos</span>'}</td></tr>`; }).join('')}</table></div>`
+    :'<p class="vazio">Nenhum ingresso ainda. Escolha abaixo uma atração do cronograma, ou mude o status dela em <a href="/travessia/status/">Meus ingressos</a>.</p>';
+  const resto=TK.filter(t=>!tks.includes(t));
+  document.getElementById('addIng').innerHTML='<option value="">Escolher atração…</option>'+resto.map(t=>`<option value="${t.id}">${esc(t.nome)} · ${esc(t.onde)}</option>`).join('');
+  document.getElementById('addIng').parentNode.hidden=!resto.length;
+  const ex=V.extras.slice().sort((a,b)=>(a.data+a.hora).localeCompare(b.data+b.hora));
+  document.getElementById('tabExtras').innerHTML=ex.length?`<div class="scroll"><table class="tbl"><tr><th>Atividade</th><th>Quando</th><th>Situação</th><th>Código</th><th></th></tr>${ex.map(e=>{ const st=ST_EXTRA[e.status||'livre'];
+    return `<tr><td><b>${esc(e.nome)}</b><br><span style="color:var(--gray);font-size:13px">${esc(e.cidade)}</span></td><td>${fmt(e.data)} ${esc(e.hora||'')}</td><td><span class="chip ${st[1]}">${st[0]}</span></td><td>${esc(e.codigo||'')}</td><td style="white-space:nowrap"><button class="btn link" data-ee="${e.id}">editar</button><button class="btn link" data-re="${e.id}">remover</button></td></tr>`; }).join('')}</table></div>`:'<p class="vazio">Jantares, onsen, shows, passeios: tudo que tem dia marcado e não está no cronograma.</p>';
+}
+document.getElementById('vistaMesa').addEventListener('click',e=>{
+  const b=e.target.closest('button'); if(!b) return;
+  if(b.dataset.eh) formHotel(V.hoteis.find(h=>h.id===b.dataset.eh));
+  if(b.dataset.rh){ if(b.dataset.confirm){ V.hoteis=V.hoteis.filter(h=>h.id!==b.dataset.rh); salvarV(); tudo(); msg('Hospedagem removida.'); } else { b.dataset.confirm='1'; b.textContent='confirmar?'; } }
+  if(b.dataset.ri){ if(b.dataset.confirm){ delete V.visitas[b.dataset.ri]; salvarV(); tudo(); msg('Atração tirada da lista. Dá para pôr de volta no seletor.'); } else { b.dataset.confirm='1'; b.textContent='confirmar?'; } }
+  if(b.dataset.ee) formExtra(V.extras.find(x=>x.id===b.dataset.ee));
+  if(b.dataset.re){ if(b.dataset.confirm){ V.extras=V.extras.filter(x=>x.id!==b.dataset.re); salvarV(); tudo(); msg('Atividade removida.'); } else { b.dataset.confirm='1'; b.textContent='confirmar?'; } }
+});
+document.getElementById('vistaMesa').addEventListener('change',e=>{
+  const i=e.target; const id=i.dataset.vd||i.dataset.vh; if(!id) return;
+  V.visitas[id]=V.visitas[id]||{}; if(i.dataset.vd) V.visitas[id].data=i.value; else V.visitas[id].hora=i.value;
+  salvarV(); renderLinha(); renderSemana(); renderMes(); renderAlertas(); msg('Dia da visita salvo.');
+});
+document.getElementById('addHotel').onclick=()=>formHotel();
+document.getElementById('addIng').onchange=function(){ if(!this.value) return; V.visitas[this.value]=V.visitas[this.value]||{data:'',hora:''}; salvarV(); renderMesa(); msg('Atração adicionada. Marque o dia da visita.'); };
+document.getElementById('addExtra').onclick=()=>formExtra();
+
+/* ---------- geral ---------- */
+function renderAlertas(){ document.getElementById('alertas').innerHTML=alertas().map(([c,t])=>`<div class="alerta ${c}">${t}</div>`).join(''); }
+/* ---------- semana e mês ---------- */
+const CORES=['#c99699','#7fa893','#c0913f','#7b8fb5','#a07cb0','#5f9ea0','#c4685f','#8d7b68'];
+function corCidade(c){ const cs=[...new Set(hoteisOrd().map(h=>h.cidade))]; const i=cs.indexOf(c); return CORES[(i<0?0:i)%CORES.length]; }
+const iso=d=>d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');
+const HOJE=iso(new Date());
+const segunda=s=>{ const dow=(D(s).getDay()+6)%7; return addDia(s,-dow); };
+const naViagem=d=>!S.ida||!S.volta||(d>=S.ida&&d<=S.volta);
+function inicioPadrao(){ const h=hoteisOrd()[0], e=eventos()[0]; return S.ida||(h&&h.entrada)||(e&&e.data)||HOJE; }
+let curSem=null, curMes=null;
+function dia(d){ const hs=hoteisOrd(); return {noite:hs.find(h=>h.entrada&&h.saida&&h.entrada<=d&&d<h.saida), entra:hs.filter(h=>h.entrada===d), sai:hs.filter(h=>h.saida===d), evs:eventos().filter(e=>e.data===d)}; }
+function legenda(){ const cs=[...new Set(hoteisOrd().map(h=>h.cidade))]; return cs.length?`<div class="legenda">${cs.map(c=>`<span><i style="background:${corCidade(c)}"></i>${esc(c)}</span>`).join('')}<span>🔑 check-in · ↩ check-out</span></div>`:''; }
+function renderSemana(){
+  if(!curSem) curSem=segunda(inicioPadrao());
+  const fim=addDia(curSem,6), a=D(curSem), b=D(fim);
+  const titulo=a.getMonth()===b.getMonth()?`${a.getDate()} a ${b.getDate()} de ${MES[b.getMonth()]}`:`${a.getDate()}/${MES[a.getMonth()]} a ${b.getDate()}/${MES[b.getMonth()]}`;
+  let h=`<div class="cal-nav"><button class="btn small" type="button" data-sem="-7">‹<span class="lbl"> anterior</span></button><h3>${titulo} ${b.getFullYear()}</h3><button class="btn small" type="button" data-sem="7"><span class="lbl">próxima </span>›</button></div>${legenda()}<div class="semana">`;
+  for(let i=0;i<7;i++){ const d=addDia(curSem,i), x=dia(d), dd=D(d);
+    h+=`<div class="dcol${naViagem(d)?'':' fora'}${d===HOJE?' hoje':''}"><div class="dh">${SEM[dd.getDay()]} ${dd.getDate()}/${MES[dd.getMonth()]}</div>`;
+    if(x.noite) h+=`<div class="cidade" style="background:${corCidade(x.noite.cidade)}">🛏️ ${esc(x.noite.cidade)}</div>`;
+    x.sai.forEach(o=>h+=`<div class="mv">↩ check-out ${esc(o.checkout||'')}<br>${esc(o.nome||o.cidade)}</div>`);
+    x.entra.forEach(o=>h+=`<div class="mv">🔑 check-in ${esc(o.checkin||'')}<br>${esc(o.nome||o.cidade)}${o.reserva?'<br>reserva <b>'+esc(o.reserva)+'</b>':''}</div>`);
+    x.evs.forEach(e=>{ const w=conflito(e); h+=`<div class="ei ${e.chip[1]}">${e.hora?esc(e.hora)+' ':''}${e.ic} <b>${esc(e.nome)}</b><span class="st">${e.chip[0]}${e.cod?' · '+esc(e.cod):''}</span>${w?'<div class="w">⚠️ outra região</div>':''}</div>`; });
+    h+='</div>'; }
+  document.getElementById('vistaSemana').innerHTML=h+'</div>';
+}
+function renderMes(){
+  if(!curMes) curMes=inicioPadrao().slice(0,8)+'01';
+  const m=D(curMes), ini=segunda(curMes), ultimo=iso(new Date(m.getFullYear(),m.getMonth()+1,0));
+  const nomes=['janeiro','fevereiro','março','abril','maio','junho','julho','agosto','setembro','outubro','novembro','dezembro'];
+  let h=`<div class="cal-nav"><button class="btn small" type="button" data-mes="-1">‹<span class="lbl"> anterior</span></button><h3>${nomes[m.getMonth()]} ${m.getFullYear()}</h3><button class="btn small" type="button" data-mes="1"><span class="lbl">próximo </span>›</button></div>${legenda()}<div class="mes">`;
+  h+=['seg','ter','qua','qui','sex','sáb','dom'].map(n=>`<div class="mh">${n}</div>`).join('');
+  for(let d=ini; d<=ultimo || (D(d).getDay()+6)%7!==0; d=addDia(d,1)){
+    if(d.slice(0,7)!==curMes.slice(0,7)){ h+='<div class="md vazia"></div>'; continue; }
+    const x=dia(d), dd=D(d), primeira=x.noite&&(x.noite.entrada===d||dd.getDay()===1||dd.getDate()===1);
+    h+=`<button type="button" class="md${naViagem(d)?'':' fora'}${d===HOJE?' hoje':''}" data-dia="${d}" title="Ver a semana"><span class="num">${dd.getDate()}</span>`;
+    if(x.noite) h+=`<span class="cb" style="background:${corCidade(x.noite.cidade)}">${primeira?esc(x.noite.cidade):''}</span>`;
+    const itens=[...x.sai.map(o=>`<span class="e">↩ ${esc(o.checkout||'')} out</span>`),...x.entra.map(o=>`<span class="e">🔑 ${esc(o.checkin||'')} in</span>`),...x.evs.map(e=>`<span class="e ${e.chip[1]==='c-no'?'c-no':''}">${e.hora?esc(e.hora)+' ':''}${esc(e.nome)}</span>`)];
+    h+=itens.slice(0,3).join('')+(itens.length>3?`<span class="e">+${itens.length-3}</span>`:'')+(itens.length?`<span class="dots">${'•'.repeat(Math.min(itens.length,4))}</span>`:'')+'</button>';
+  }
+  document.getElementById('vistaMes').innerHTML=h+'</div><p class="aviso">Toque num dia para ver a semana inteira.</p>';
+}
+document.getElementById('vistaSemana').addEventListener('click',e=>{ const b=e.target.closest('[data-sem]'); if(b){ curSem=addDia(curSem,+b.dataset.sem); renderSemana(); } });
+document.getElementById('vistaMes').addEventListener('click',e=>{
+  const b=e.target.closest('[data-mes]'); if(b){ const m=D(curMes); curMes=iso(new Date(m.getFullYear(),m.getMonth()+(+b.dataset.mes),1)); renderMes(); return; }
+  const c=e.target.closest('[data-dia]'); if(c){ curSem=segunda(c.dataset.dia); renderSemana(); aba('semana'); window.scrollTo({top:document.querySelector('.tabs').offsetTop-10,behavior:'smooth'}); } });
+function tudo(){ renderAlertas(); renderLinha(); renderSemana(); renderMes(); renderMesa(); }
+const ABAS={linha:['tLinha','vistaLinha'],semana:['tSemana','vistaSemana'],mes:['tMes','vistaMes'],mesa:['tMesa','vistaMesa']};
+function aba(qual){ if(!ABAS[qual]) qual='linha'; for(const [k,[t,v]] of Object.entries(ABAS)){ document.getElementById(v).hidden=k!==qual; document.getElementById(t).setAttribute('aria-pressed',k===qual); }
+  try{ localStorage.setItem('travessiaViagemAba',qual); }catch(e){} }
+for(const [k,[t]] of Object.entries(ABAS)) document.getElementById(t).onclick=()=>aba(k);
+const ida=document.getElementById('ida'), volta=document.getElementById('volta');
+ida.value=S.ida||''; volta.value=S.volta||'';
+[ida,volta].forEach(x=>x.onchange=()=>{ S=ler(KS,S); S.itens=S.itens||{}; S.ida=ida.value; S.volta=volta.value; salvarS(); curSem=curMes=null; tudo(); });
+document.getElementById('vjw').onclick=async()=>{
+  const h=hoteisOrd()[0]; if(!h){ msg('Cadastre a primeira hospedagem antes.'); return; }
+  const tel=(h.telefone||'').trim(), tel81=!tel?'':(tel.startsWith('+')?tel:'+81 '+tel.replace(/^0/,''));
+  const lat=h.enderecoLat||'', naoLatino=/[^\x20-\x7E]/;
+  const end=!lat?'(falta preencher o endereço em alfabeto latino na hospedagem)':lat+(naoLatino.test(lat)?'  ← tem letras fora do alfabeto latino (acento ou japonês): o Visit Japan Web pode recusar':'');
+  const txt=['Nome do hotel: '+(h.nome||'(preencha o nome na hospedagem)')+(h.nome&&naoLatino.test(h.nome)?'  ← use o nome em alfabeto latino':''),'Endereço: '+end,'Telefone: '+(tel81||'(falta preencher o telefone na hospedagem)')].join('\n');
+  try{ await navigator.clipboard.writeText(txt); msg('Dados do 1º hotel copiados. Cole no Visit Japan Web.'); }catch(e){ msg('Não deu para copiar automaticamente. '+txt.replace(/\n/g,' · ')); }
+};
+document.getElementById('imprimir').onclick=()=>{ aba('linha'); setTimeout(()=>window.print(),100); };
+document.getElementById('limpar').onclick=function(){ if(!this.dataset.confirm){ this.dataset.confirm='1'; this.textContent='Tem certeza? Toque de novo para apagar'; return; }
+  V={hoteis:[],visitas:{},extras:[]}; salvarV(); this.dataset.confirm=''; this.textContent='Apagar hotéis e atividades'; tudo(); msg('Hotéis e atividades apagados. Seus ingressos continuam em Meus ingressos.'); };
+let abaSalva='linha'; try{ abaSalva=localStorage.getItem('travessiaViagemAba')||'linha'; }catch(e){}
+aba(V.hoteis.length?abaSalva:'mesa');
+tudo();
+</script>
+</body>
+</html>
