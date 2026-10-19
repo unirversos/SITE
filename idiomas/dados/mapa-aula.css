@@ -199,6 +199,18 @@ body.no-ro .rk rt{display:none}
 .slotph{color:var(--pink);background:#fff4f6;border:1.5px dashed #e9b6c1;border-radius:8px;padding:0 6px;font-size:.7em}
 .cquiz .opts{display:grid;gap:6px;margin-top:4px}
 
+/* Ar em gavetas */
+.gaveta{border:1.5px solid var(--line);border-radius:16px;background:#fff;overflow:hidden}
+.gaveta summary{list-style:none;cursor:pointer;display:flex;gap:12px;align-items:center;padding:12px 14px}
+.gaveta summary::-webkit-details-marker{display:none}
+.gaveta summary b{display:block;font-size:15.5px}
+.gaveta summary small{display:block;color:var(--muted);font-size:12.5px}
+.gaveta .gi{font-size:22px}
+.gaveta[open] summary{background:var(--sage-soft)}
+.gbody{display:grid;gap:8px;padding:10px 12px 14px}
+.gnota{margin:0;background:#fff8e6;border-radius:10px;padding:8px 10px}
+.gaveta.nao ul{margin:0;padding-left:18px;display:grid;gap:4px}
+
 /* navegação do site */
 .sitebar{display:flex;align-items:center;justify-content:space-between;gap:10px 14px;flex-wrap:wrap}
 .sitebar .brand{font-family:var(--f-display);font-size:18px;font-weight:700;text-decoration:none;color:var(--ink)}

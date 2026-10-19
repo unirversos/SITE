@@ -80,14 +80,33 @@ function toast(html){ const t=document.createElement('div'); t.className='toast'
 
 /* ---------- estado ---------- */
 let STEPS=['Situação','Palavras','Moldes','Ouvir','Cena','Consulta'];
+const RR=(k,f)=>`<ruby>${k}<rt>${f}</rt></ruby>`;
 const AR=[
-  {k:'すみません',r:'sumimasen',pt:'com licença / desculpe (abre qualquer conversa)'},
-  {k:'もういちど おねがいします',r:'mō ichido onegaishimasu',pt:'mais uma vez, por favor'},
-  {k:'ゆっくり おねがいします',r:'yukkuri onegaishimasu',pt:'mais devagar, por favor'},
-  {k:'わかりません',r:'wakarimasen',pt:'não entendi'},
-  {k:'にほんごが すこし わかります',r:'nihongo ga sukoshi wakarimasu',pt:'eu entendo um pouco de japonês'},
-  {k:'ちょっと まって ください',r:'chotto matte kudasai',pt:'um momento, por favor'}
+  {ic:'⏳',quero:'Preciso de um tempinho',sub:'Respirar · ganhar tempo antes de responder',frases:[
+    {h:'えーと…',k:'えーと',r:'ēto…',pt:'hum… (é natural, não é falha)'},
+    {h:'ちょっと '+RR('待','ま')+'って ください',k:'ちょっと まって ください',r:'chotto matte kudasai',pt:'um momento, por favor'},
+    {h:'すみません',k:'すみません',r:'sumimasen',pt:'com licença / desculpe'}],
+   nota:'すみません abre todas as outras gavetas. Se você só levar uma palavra, leve essa.'},
+  {ic:'🙋',quero:'Quero avisar que não falo bem japonês',sub:'Declarar · avisar antes, não depois',frases:[
+    {h:'わかりません',k:'わかりません',r:'wakarimasen',pt:'não entendi'},
+    {h:RR('日本語','にほんご')+'が '+RR('少','すこ')+'しだけ わかります',k:'にほんごが すこしだけ わかります',r:'nihongo ga sukoshi dake wakarimasu',pt:'eu entendo só um pouco de japonês'}],
+   nota:'Declarar cedo muda o jeito que a pessoa fala com você: quase todo mundo desacelera.'},
+  {ic:'🐢',quero:'Quero que fale devagar, repita ou escreva',sub:'Pedir ajuste · mudar como a pessoa está falando',frases:[
+    {h:'もう'+RR('一度','いちど')+' お'+RR('願','ねが')+'いします',k:'もういちど おねがいします',r:'mō ichido onegaishimasu',pt:'mais uma vez, por favor'},
+    {h:'ゆっくり お'+RR('願','ねが')+'いします',k:'ゆっくり おねがいします',r:'yukkuri onegaishimasu',pt:'mais devagar, por favor'},
+    {h:RR('書','か')+'いて ください',k:'かいて ください',r:'kaite kudasai',pt:'escreva, por favor'},
+    {h:RR('英語','えいご')+'で お'+RR('願','ねが')+'いします',k:'えいごで おねがいします',r:'eigo de onegaishimasu',pt:'em inglês, por favor'}]},
+  {ic:'🔎',quero:'Quero confirmar se entendi',sub:'Confirmar · checar antes de seguir',frases:[
+    {h:'これですか',k:'これですか',r:'kore desu ka',pt:'é este?'},
+    {h:'〇〇ですか',k:'ですか',r:'~ desu ka',pt:'é ~? (repita o que entendeu + ka)'}],
+   nota:'A técnica mais útil de todas: repita o pedaço que você entendeu, com か no fim. Não precisa de gramática nova.'},
+  {ic:'🚪',quero:'Quero encerrar com educação',sub:'Sair com elegância · sem constrangimento',frases:[
+    {h:RR('大丈夫','だいじょうぶ')+'です',k:'だいじょうぶです',r:'daijōbu desu',pt:'está tudo bem / não precisa'},
+    {h:'また '+RR('来','き')+'ます',k:'また きます',r:'mata kimasu',pt:'eu volto depois'},
+    {h:'ありがとうございます',k:'ありがとうございます',r:'arigatō gozaimasu',pt:'muito obrigado(a)'}],
+   nota:'Desistir de uma conversa é uma habilidade, não uma derrota.'}
 ];
+const AR_NAO=['Sorrir e assentir sem entender. Custa mais caro depois.','Repetir はい como quem concorda: muitas vezes はい quer dizer só "estou ouvindo".','Esperar entender tudo antes de falar. Não funciona assim para ninguém.'];
 let A=null, P=null;   // aula atual e progresso dela
 let step=0, wi=0, quiz=null, mi=0, msel=[], oi=0, oAns=null, ci=0, bank=[], placed=[], done={}, mood='idle', stageOpt={}, OUVIR=[], CENAS=[];
 
@@ -381,8 +400,9 @@ function loadAula(slug){
 }
 
 /* ---------- ar, romaji, seletor ---------- */
-$('arList').innerHTML=AR.map((a,k)=>`<button type="button" class="arp" data-k="${k}"><span>🔊</span><span><span class="jp">${a.k}</span><br><span class="ro">${a.r}</span> <span class="pt">${a.pt}</span></span></button>`).join('');
-$('arList').onclick=e=>{ const b=e.target.closest('.arp'); if(b) speak(AR[+b.dataset.k].k); };
+$('arList').innerHTML=AR.map((g,gi)=>`<details class="gaveta"><summary><span class="gi">${g.ic}</span><span><b>${g.quero}</b><small>${g.sub}</small></span></summary><div class="gbody">${g.frases.map((f,fi)=>`<button type="button" class="arp" data-g="${gi}" data-f="${fi}"><span>🔊</span><span><span class="jp">${f.h}</span><br><span class="ro">${f.r}</span> <span class="pt">${f.pt}</span></span></button>`).join('')}${g.nota?`<p class="pt gnota">💡 ${rk(g.nota)}</p>`:''}</div></details>`).join('')+`<details class="gaveta nao"><summary><span class="gi">🚫</span><span><b>O que não fazer</b><small>armadilhas comuns</small></span></summary><div class="gbody"><ul>${AR_NAO.map(t=>`<li class="pt">${rk(t)}</li>`).join('')}</ul></div></details>`;
+$('arList').onclick=e=>{ const b=e.target.closest('.arp'); if(b) speak(AR[+b.dataset.g].frases[+b.dataset.f].k); };
+$('arList').addEventListener('toggle',e=>{ if(e.target.open) $('arList').querySelectorAll('details.gaveta').forEach(d=>{ if(d!==e.target) d.open=false; }); },true);
 $('btnAr').onclick=()=>{ $('drawer').hidden=false; };
 $('btnArClose').onclick=()=>{ $('drawer').hidden=true; };
 $('drawer').onclick=e=>{ if(e.target===$('drawer')) $('drawer').hidden=true; };
