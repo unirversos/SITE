@@ -79,7 +79,7 @@ function showXP(){ $('xp').textContent=`Nv ${g.level} · XP ${g.xp}/${g.maxXp}`;
 function toast(html){ const t=document.createElement('div'); t.className='toast'; t.innerHTML=html; document.body.appendChild(t); setTimeout(()=>t.remove(),3200); }
 
 /* ---------- estado ---------- */
-const STEPS=['Situação','Palavras','Moldes','Ouvir','Cena'];
+let STEPS=['Situação','Palavras','Moldes','Ouvir','Cena','Consulta'];
 const AR=[
   {k:'すみません',r:'sumimasen',pt:'com licença / desculpe (abre qualquer conversa)'},
   {k:'もういちど おねがいします',r:'mō ichido onegaishimasu',pt:'mais uma vez, por favor'},
@@ -131,9 +131,10 @@ function sparkle(list){ const fx=$('fx');
     s.style.left=(60+Math.random()*35)+'%'; s.style.top=(30+Math.random()*40)+'%'; s.style.animationDelay=(k*0.07)+'s';
     fx.appendChild(s); setTimeout(()=>s.remove(),1800); } }
 function renderSteps(){
+  STEPS=C()?['Situação','Palavras','Moldes','Ouvir','Cena','Consulta']:['Situação','Palavras','Moldes','Ouvir','Cena'];
   $('steps').innerHTML=STEPS.map((s,k)=>`<button type="button" class="step ${k===step?'now':P.steps[k]?'done':''}" data-s="${k}"><span class="n">${P.steps[k]&&k!==step?'✓':k+1}</span>${s}</button>`).join('');
 }
-function go(n){ step=n; mood='idle'; renderSteps(); [stSituacao,stPalavras,stMoldes,stOuvir,stCena][n](); try{ $('steps').scrollIntoView({block:'start',behavior:'smooth'}); }catch(e){} }
+function go(n){ step=n; mood='idle'; renderSteps(); [stSituacao,stPalavras,stMoldes,stOuvir,stCena,stConsulta][n](); try{ $('steps').scrollIntoView({block:'start',behavior:'smooth'}); }catch(e){} }
 function finish(n){ P.steps[n]=1; persist(); }
 const wordH=w=>w.h||w.k;
 
@@ -322,7 +323,39 @@ function wireCena(){
     mood='ok'; setStage({stamp:true}); sparkle(['🌍','💖','✨','🎉','🌸','⭐']);
     hint(`${A.emoji} <b>${A.insignia||('Insígnia '+A.titulo+' conquistada!')}</b> ${A.fim}${first?' <span class="newxp">+20 XP</span>':''}${A.fimLink?` <a href="${A.fimLink[1]}">${A.fimLink[0]}</a>`:''}`); $('btnNext').hidden=true;
     if(typeof A.onFinish==='function'){ try{ A.onFinish(); }catch(e){} }
+    if(C()){ const b=document.createElement('button'); b.className='btn primary'; b.type='button'; b.textContent='📚 Abrir a consulta deste mapa →'; b.onclick=()=>go(5); $('btnNext').after(b); }
   };
+}
+
+/* ---------- 6. consulta (caderno de campo do mapa) ---------- */
+const C=()=>(window.CONSULTA||{})[A.slug];
+const CAT={obj:['coisa','#C0913F','#FBF2DF'],act:['ação','#5E9179','#EAF3EE'],dir:['direção','#6E77BE','#EEEFF9'],urg:['urgência','#C4685F','#FBEAE6']};
+function stConsulta(){
+  const c=C(); mood='idle'; setStage({});
+  if(!c){ $('panel').innerHTML='<h2>Consulta</h2><p class="lead">Este mapa ainda não tem consulta.</p>'; return; }
+  finish(5); renderSteps();
+  const says=[];
+  const sayBtn=t=>{ says.push(t); return `<button class="say" type="button" data-say="${says.length-1}" aria-label="Ouvir">🔊</button>`; };
+  $('panel').innerHTML=`
+    <h2>📚 Consulta · ${A.titulo}</h2>
+    <p class="lead">Seu caderno de campo deste mapa: todas as peças, os moldes, o que prestar atenção ao ouvir e frases de exemplo. Volte aqui sempre que precisar.</p>
+    ${c.missao?`<p class="gram">${rk(c.missao)}</p>`:''}
+    <h3 class="ch">🧩 Todas as peças</h3>
+    <div class="legend">${Object.values(CAT).map(([n,col,bg])=>`<span style="border-color:${col};background:${bg}">${n}</span>`).join('')}</div>
+    <div class="cgrid">${c.pecas.map(p=>{ const k=CAT[p.cat]||CAT.obj; return `<div class="cpeca" style="border-left-color:${k[1]}"><div class="jp">${p.h} ${sayBtn(p.s)}</div><div class="ro">${p.r}</div><div class="pt">${rk(p.pt)}</div></div>`; }).join('')}</div>
+    <h3 class="ch">📐 Moldes</h3>
+    <div class="clist">${c.moldes.map(m=>`<div class="cmolde"><div class="who">${m.label}</div><div class="jp">${m.h} ${m.s?sayBtn(m.s):''}</div><div class="ro">${m.r}</div><div><b>${rk(m.pt)}</b></div>${m.troca&&m.troca.length>1?`<div class="pt">Troque por: ${m.troca.map(t=>`${t.h} <span class="ro">(${t.r})</span>`).join(' · ')}</div>`:''}${m.hint?`<div class="pt">💡 ${rk(m.hint)}</div>`:''}</div>`).join('')}</div>
+    <h3 class="ch">📡 Radar: o que prestar atenção ao ouvir</h3>
+    <div class="clist">${c.radar.map(r=>`<div class="cradar"><div class="kw">${r.kw}</div><div><b>${rk(r.mean)}</b></div><div class="pt">${rk(r.resp)}</div></div>`).join('')}</div>
+    ${c.frases.length?`<h3 class="ch">💬 Frases de exemplo</h3><div class="clist">${c.frases.map(f=>`<div class="cfrase"><span class="tagw">${f.who==='ouvido'?'👂 você ouve':'👄 você fala'}</span><div class="jp">${f.h} ${sayBtn(f.s)}</div><div class="ro">${f.r}</div><div class="pt">${rk(f.pt)}</div></div>`).join('')}</div>`:''}
+    ${c.quiz.length?`<h3 class="ch">✅ Teste rápido</h3><div class="clist">${c.quiz.map((q,qi)=>`<div class="cquiz" data-q="${qi}"><b>${rk(q.q)}</b><div class="opts">${q.opts.map((o,oi)=>`<button type="button" class="opt" data-o="${oi}">${o}</button>`).join('')}</div><div class="pt why" hidden>${rk(q.why)}</div></div>`).join('')}</div>`:''}
+    <div class="row"><button class="btn" type="button" id="cTop">↑ Voltar ao topo</button><span class="spacer"></span><button class="btn primary" type="button" id="cCena">Refazer a cena →</button></div>`;
+  $('panel').querySelectorAll('[data-say]').forEach(b=>b.onclick=()=>speak(says[+b.dataset.say]));
+  $('panel').querySelectorAll('.cquiz').forEach(box=>box.onclick=e=>{ const b=e.target.closest('.opt'); if(!b) return; const q=c.quiz[+box.dataset.q];
+    box.querySelectorAll('.opt').forEach(x=>x.classList.remove('right','wrong')); b.classList.add(+b.dataset.o===q.a?'right':'wrong');
+    if(+b.dataset.o===q.a) box.querySelector('.why').hidden=false; });
+  $('cTop').onclick=()=>{ try{ $('steps').scrollIntoView({behavior:'smooth'}); }catch(e){} };
+  $('cCena').onclick=()=>{ done={}; ci=0; go(4); };
 }
 
 /* ---------- montagem ---------- */
@@ -343,7 +376,7 @@ function loadAula(slug){
   const L=$('links'); if(L&&A.linkList){ L.innerHTML=A.linkList.map(([t,h])=>`<a href="${h}">${t}</a>`).join(''); }
   else if(L&&A.links!==false){
     const order=ORDEM; const k=order.indexOf(slug), nx=order[k+1];
-    L.innerHTML=`<a href="/idiomas/mapas/${slug}/">← Exercícios do mapa</a><a href="/idiomas/mapas/">🗺️ Todos os mapas</a>${nx?`<a href="/idiomas/mapas/${nx}/aula/">Próxima aula: ${TITULOS[nx]||nx} →</a>`:''}`; }
+    L.innerHTML=`<a href="/idiomas/mapas/">🗺️ Todos os mapas</a>${nx?`<a href="/idiomas/mapas/${nx}/aula/">Próxima aula: ${TITULOS[nx]||nx} →</a>`:''}`; }
   showXP(); go(0);
 }
 
