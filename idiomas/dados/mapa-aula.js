@@ -48,7 +48,7 @@ const iconInStage=(ic,x,y,s)=>isSvg(ic)?`<svg x="${x}" y="${y}" width="${s}" hei
 const RO_DI={きゃ:'kya',きゅ:'kyu',きょ:'kyo',しゃ:'sha',しゅ:'shu',しょ:'sho',ちゃ:'cha',ちゅ:'chu',ちょ:'cho',にゃ:'nya',にゅ:'nyu',にょ:'nyo',ひゃ:'hya',ひゅ:'hyu',ひょ:'hyo',みゃ:'mya',みゅ:'myu',みょ:'myo',りゃ:'rya',りゅ:'ryu',りょ:'ryo',ぎゃ:'gya',ぎゅ:'gyu',ぎょ:'gyo',じゃ:'ja',じゅ:'ju',じょ:'jo',びゃ:'bya',びゅ:'byu',びょ:'byo',ぴゃ:'pya',ぴゅ:'pyu',ぴょ:'pyo',ふぁ:'fa',ふぃ:'fi',ふぇ:'fe',ふぉ:'fo',てぃ:'ti',でぃ:'di',うぃ:'wi',うぇ:'we',うぉ:'wo',ちぇ:'che',しぇ:'she',じぇ:'je'};
 const RO_1={あ:'a',い:'i',う:'u',え:'e',お:'o',か:'ka',き:'ki',く:'ku',け:'ke',こ:'ko',さ:'sa',し:'shi',す:'su',せ:'se',そ:'so',た:'ta',ち:'chi',つ:'tsu',て:'te',と:'to',な:'na',に:'ni',ぬ:'nu',ね:'ne',の:'no',は:'ha',ひ:'hi',ふ:'fu',へ:'he',ほ:'ho',ま:'ma',み:'mi',む:'mu',め:'me',も:'mo',や:'ya',ゆ:'yu',よ:'yo',ら:'ra',り:'ri',る:'ru',れ:'re',ろ:'ro',わ:'wa',を:'o',ん:'n',が:'ga',ぎ:'gi',ぐ:'gu',げ:'ge',ご:'go',ざ:'za',じ:'ji',ず:'zu',ぜ:'ze',ぞ:'zo',だ:'da',ぢ:'ji',づ:'zu',で:'de',ど:'do',ば:'ba',び:'bi',ぶ:'bu',べ:'be',ぼ:'bo',ぱ:'pa',ぴ:'pi',ぷ:'pu',ぺ:'pe',ぽ:'po',ぁ:'a',ぃ:'i',ぅ:'u',ぇ:'e',ぉ:'o',ゃ:'ya',ゅ:'yu',ょ:'yo',ゔ:'vu'};
 const MAC={a:'ā',i:'ī',u:'ū',e:'ē',o:'ō'};
-const RK_FIX={'は':'wa','へ':'e','を':'o','こんにちは':'konnichiwa','こんばんは':'konbanwa','せんせい':'sensei','すみません':'sumimasen','ううん':'uun','じゃない':'ja nai','ここが':'koko ga','では':'dewa','じゃ':'ja'};
+const RK_FIX={'は':'wa','へ':'e','を':'o','こんにちは':'konnichiwa','こんばんは':'konbanwa','せんせい':'sensei','すみません':'sumimasen','ううん':'uun','じゃない':'janai','ここが':'koko ga','では':'dewa','じゃ':'ja'};
 function roWord(k){ if(RK_FIX[k]) return RK_FIX[k];
   let m;
   if(k.length>2 && /(です|ます|ません)か$/.test(k)) return roWord(k.slice(0,-1))+' ka';
@@ -180,8 +180,8 @@ function stSituacao(){
   $('panel').innerHTML=`
     <h2>${it.titulo}</h2>
     ${it.txt.map(t=>`<p class="lead">${t}</p>`).join('')}
-    <div><p class="pt" style="margin:0 0 6px">No fim desta aula você vai conseguir:</p>
-    <ul class="goals">${it.metas.map(m=>`<li>${m}</li>`).join('')}</ul></div>
+    <div><p class="goals-t">No fim desta aula você vai conseguir:</p>
+    <ul class="goals">${it.metas.map((m,i)=>`<li><span class="gn">${String(i+1).padStart(2,'0')}</span><span>${m}</span></li>`).join('')}</ul></div>
     <p class="pt" style="margin:0">Travou em qualquer momento? Toque em <b>🌬️ Ar · socorro</b>, lá em cima.</p>
     <div class="row"><span class="spacer"></span><button class="btn primary" type="button" id="goWords">Conhecer as palavras →</button></div>`;
   $('goWords').onclick=()=>{ finish(0); go(1); };
