@@ -24,7 +24,9 @@ const NOUN={'パスポート':[['É o passaporte.','Não é o passaporte.','É o
   cen:{wall:'#f3efe6', floor:'#e2d5c0',
     back:`<rect x="16" y="14" width="200" height="88" rx="6" fill="#4d6b58" stroke="#b98a5e" stroke-width="6"/>
       <text x="30" y="40" font-family="Zen Maru Gothic, sans-serif" font-size="16" font-weight="700" fill="#fff" opacity=".92">です・ですか</text>
+      <text class="ro" x="132" y="40" font-family="Baloo 2, sans-serif" font-size="9" fill="#f3c969">desu · desu ka</text>
       <text x="30" y="64" font-family="Zen Maru Gothic, sans-serif" font-size="14" fill="#fff" opacity=".85">ます → ました</text>
+      <text class="ro" x="132" y="64" font-family="Baloo 2, sans-serif" font-size="9" fill="#f3c969">masu → mashita</text>
       <rect x="150" y="96" width="22" height="5" rx="2" fill="#fff"/><rect x="178" y="96" width="14" height="5" rx="2" fill="#f19bb5"/>`,
     board:`<rect x="10" y="4" width="86" height="54" rx="6" fill="#fff" stroke="#e5d3b8" stroke-width="3"/><text x="53" y="28" text-anchor="middle" font-family="Zen Maru Gothic, sans-serif" font-size="13" font-weight="700" fill="#d9506f">ようこそ</text><text x="53" y="46" text-anchor="middle" font-family="Baloo 2, sans-serif" font-size="9" fill="#7c6a78">bem-vinda!</text>`,
     counter:{label:'', color:'#c98b5e', top:'#e7c49f'},
