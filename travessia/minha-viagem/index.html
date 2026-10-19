@@ -156,7 +156,7 @@ footer a{color:var(--rose)}
 
   <!-- VISTA 2: MESA DE COMPRAS -->
   <section id="vistaMesa" hidden>
-    <div class="importar"><button class="btn primary" type="button" id="btnImport">📥 Importar reserva ou ingresso</button><span>Cole o e-mail de confirmação ou use um arquivo de calendário (.ics). Você confere tudo antes de salvar.</span></div>
+    <div class="importar"><button class="btn primary" type="button" id="btnImport">📥 Importar reserva ou ingresso</button><span>Cole o e-mail de confirmação, ou use o PDF da reserva ou um arquivo de calendário (.ics). Você confere tudo antes de salvar.</span></div>
     <div id="importBox"></div>
     <div class="sec"><h2>🏨 Hospedagens</h2><button class="btn primary small" type="button" id="addHotel">+ Hospedagem</button></div>
     <div id="formHotel"></div>
@@ -458,7 +458,7 @@ function abrirImport(){
   document.getElementById('formHotel').innerHTML=''; document.getElementById('formExtra').innerHTML='';
   box().innerHTML=`<div class="form" id="imp"><h3 style="font-family:'Baloo 2',sans-serif;font-size:21px">📥 Importar reserva ou ingresso</h3>
     <p style="font-size:14px;color:var(--gray)">A leitura é feita aqui mesmo, no seu navegador: o texto não é enviado para lugar nenhum. Antes de salvar, você confere e corrige cada campo.</p>
-    <label class="drop" id="drop"><input type="file" id="impFile" accept=".ics,text/calendar" hidden><b>📁 Escolher arquivo de calendário (.ics)</b><span>ou arraste o arquivo para cá</span></label>
+    <label class="drop" id="drop"><input type="file" id="impFile" accept=".ics,text/calendar,.pdf,application/pdf" hidden><b>📁 Escolher o PDF da reserva ou o arquivo de calendário (.ics)</b><span>ou arraste o arquivo para cá</span></label>
     <div class="ou">ou</div>
     <label class="f">Cole aqui o texto do e-mail de confirmação ou do voucher<textarea id="impTxt" rows="7" placeholder="Abra o e-mail, selecione tudo, copie e cole aqui."></textarea></label>
     <p id="impErr" style="color:var(--red);font-size:14px"></p>
@@ -472,7 +472,30 @@ function abrirImport(){
   d.addEventListener('drop',e=>{ const f=e.dataTransfer.files[0]; if(f) lerArquivo(f); });
   box().scrollIntoView({behavior:'smooth',block:'start'});
 }
+const PDFJS='https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/';
+let pdfjsPronto=null;
+function carregarPDFjs(){
+  if(window.pdfjsLib) return Promise.resolve(window.pdfjsLib);
+  if(!pdfjsPronto) pdfjsPronto=new Promise((ok,erro)=>{ const sc=document.createElement('script'); sc.src=PDFJS+'pdf.min.js';
+    sc.onload=()=>{ try{ pdfjsLib.GlobalWorkerOptions.workerSrc=PDFJS+'pdf.worker.min.js'; ok(pdfjsLib); }catch(e){ erro(e); } };
+    sc.onerror=()=>{ pdfjsPronto=null; erro(new Error('rede')); }; document.head.appendChild(sc); });
+  return pdfjsPronto;
+}
+async function textoDoPDF(f){ // lido aqui no navegador; o arquivo não é enviado
+  const lib=await carregarPDFjs(); const pdf=await lib.getDocument({data:await f.arrayBuffer()}).promise; let txt='';
+  for(let i=1;i<=pdf.numPages;i++){ const pg=await pdf.getPage(i), c=await pg.getTextContent(); let y=null;
+    for(const it of c.items){ const yy=it.transform?it.transform[5]:null; if(y!==null&&yy!==null&&Math.abs(yy-y)>2) txt+='\n'; else if(txt&&!/\s$/.test(txt)) txt+=' ';
+      txt+=it.str; if(it.hasEOL) txt+='\n'; if(yy!==null) y=yy; }
+    txt+='\n'; }
+  return txt.replace(/[ \t]+\n/g,'\n').replace(/\n{3,}/g,'\n\n');
+}
 function lerArquivo(f){
+  const err=t=>{ const e=document.getElementById('impErr'); if(e) e.textContent=t; };
+  if(/\.pdf$/i.test(f.name)||f.type==='application/pdf'){ err(''); const go=document.getElementById('impGo'); if(go){ go.disabled=true; go.textContent='Lendo o PDF…'; }
+    textoDoPDF(f).then(t=>{ if(t.replace(/\s/g,'').length<30){ err('Não achei texto nesse PDF. Ele parece ser uma foto ou imagem escaneada: digite os dados em + Hospedagem ou + Atividade.'); if(go){ go.disabled=false; go.textContent='Identificar dados ✨'; } return; }
+      mostrarPrevia(lerTexto(t)); })
+    .catch(e=>{ err(e&&e.message==='rede'?'Não consegui abrir o leitor de PDF, que precisa de internet. Abra o PDF, copie o texto e cole na caixa abaixo.':'Não consegui ler esse PDF. Abra o arquivo, copie o texto e cole na caixa abaixo.'); if(go){ go.disabled=false; go.textContent='Identificar dados ✨'; } });
+    return; }
   const fr=new FileReader(); fr.onload=()=>{ const evs=lerICS(String(fr.result||''));
     if(!evs.length){ document.getElementById('impErr').textContent='Não achei nenhum evento nesse arquivo. Ele é mesmo um .ics de calendário?'; return; }
     if(evs.length===1){ mostrarPrevia(icsParaDados(evs[0])); return; }
