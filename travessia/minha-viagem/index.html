@@ -72,6 +72,13 @@ main{max-width:980px;margin:0 auto;padding:0 24px 60px}
 footer{text-align:center;padding:40px 20px;border-top:1px solid var(--line);color:var(--gray);font-size:14px}
 footer a{color:var(--rose)}
 [hidden]{display:none!important}
+/* importar */
+.importar{display:flex;flex-wrap:wrap;gap:10px 16px;align-items:center;background:var(--rose-soft);border-radius:16px;padding:14px 16px;margin-top:6px;font-size:14px;color:var(--dark)}
+.drop{display:grid;gap:4px;text-align:center;border:2px dashed var(--rose);border-radius:16px;padding:20px;cursor:pointer;background:var(--cream);font-size:14px}
+.drop span{color:var(--gray)}.drop.sobre{background:var(--rose-soft)}
+.ou{text-align:center;color:var(--gray);font-size:13px;letter-spacing:2px;text-transform:uppercase}
+.previa{background:var(--sage-soft);border-radius:14px;padding:12px 14px;display:grid;gap:6px;font-size:14px}
+.previa .chip{margin:2px 0}
 /* semana e mês */
 .cal-nav{display:flex;justify-content:space-between;align-items:center;gap:8px;margin-bottom:12px}
 .cal-nav h3{font-family:'Baloo 2',sans-serif;font-size:22px;text-align:center;line-height:1.2}
@@ -106,7 +113,7 @@ footer a{color:var(--rose)}
   .semana{grid-template-columns:minmax(0,1fr)}.dcol{min-height:0;padding-bottom:6px}
   .md{min-height:58px;padding:3px}.md .e{display:none}.md .dots{display:block}.md .cb{font-size:0;padding:0;height:6px;min-height:6px}.cal-nav .lbl{display:none}.cal-nav h3{font-size:19px}}
 @media print{
-  header,nav,.tabs,.datas,.acoes,.aviso,footer,.sec .btn,.form,.no-print,#vistaMesa,#vistaSemana,#vistaMes{display:none!important}
+  .importar,#importBox,header,nav,.tabs,.datas,.acoes,.aviso,footer,.sec .btn,.form,.no-print,#vistaMesa,#vistaSemana,#vistaMes{display:none!important}
   #vistaLinha{display:block!important}
   body{font-size:11pt}
   .base{break-inside:avoid;margin-bottom:8mm}
@@ -149,6 +156,8 @@ footer a{color:var(--rose)}
 
   <!-- VISTA 2: MESA DE COMPRAS -->
   <section id="vistaMesa" hidden>
+    <div class="importar"><button class="btn primary" type="button" id="btnImport">📥 Importar reserva ou ingresso</button><span>Cole o e-mail de confirmação ou use um arquivo de calendário (.ics). Você confere tudo antes de salvar.</span></div>
+    <div id="importBox"></div>
     <div class="sec"><h2>🏨 Hospedagens</h2><button class="btn primary small" type="button" id="addHotel">+ Hospedagem</button></div>
     <div id="formHotel"></div>
     <div id="tabHoteis"></div>
@@ -295,10 +304,11 @@ function renderLinha(){
 
 /* ---------- vista 2: reservas e compras ---------- */
 function opts(list,cur){ return list.map(([v,n])=>`<option value="${esc(v)}"${v===cur?' selected':''}>${esc(n)}</option>`).join(''); }
-function formHotel(h){
+function formHotel(h,alvo,topo){
+  const caixa=document.getElementById(alvo||'formHotel'); if(alvo) document.getElementById('formHotel').innerHTML='';
   h=h||{id:'',cidade:'Tóquio',nome:'',entrada:'',saida:'',checkin:'15:00',checkout:'11:00',reserva:'',plataforma:'',status:'pago',enderecoLat:'',endereco:'',telefone:'',nota:''};
   const cidadeOutra=h.cidade&&!CIDADES.some(c=>c[0]===h.cidade);
-  document.getElementById('formHotel').innerHTML=`<form class="form" id="fh">
+  caixa.innerHTML=`<form class="form" id="fh">${topo||''}
     <div class="grid">
       <label class="f">Cidade<select name="cidadeSel">${opts(CIDADES.map(c=>[c[0],c[0]]),cidadeOutra?'Outra':h.cidade)}</select></label>
       <label class="f" ${cidadeOutra?'':'hidden'} id="outraWrap">Qual cidade?<input name="cidadeOutra" value="${cidadeOutra?esc(h.cidade):''}"></label>
@@ -321,14 +331,14 @@ function formHotel(h){
   </form>`;
   const f=document.getElementById('fh');
   f.cidadeSel.onchange=()=>{ document.getElementById('outraWrap').hidden=f.cidadeSel.value!=='Outra'; };
-  document.getElementById('fhCancel').onclick=()=>{ document.getElementById('formHotel').innerHTML=''; };
+  document.getElementById('fhCancel').onclick=()=>{ caixa.innerHTML=''; };
   f.onsubmit=e=>{ e.preventDefault();
     const x=Object.fromEntries(new FormData(f).entries());
     if(!x.entrada||!x.saida||x.saida<=x.entrada){ document.getElementById('fhErr').textContent='A saída precisa ser depois da entrada.'; return; }
     const cidade=x.cidadeSel==='Outra'?(x.cidadeOutra||'Outra'):x.cidadeSel;
     const novo={id:h.id||uid(),cidade,nome:x.nome,entrada:x.entrada,saida:x.saida,checkin:x.checkin,checkout:x.checkout,reserva:x.reserva,plataforma:x.plataforma,status:x.status,enderecoLat:(x.enderecoLat||'').trim(),endereco:x.endereco,telefone:x.telefone,nota:x.nota};
     const i=V.hoteis.findIndex(z=>z.id===novo.id); if(i>=0) V.hoteis[i]=novo; else V.hoteis.push(novo);
-    salvarV(); document.getElementById('formHotel').innerHTML=''; tudo(); msg('Hospedagem salva.'); };
+    salvarV(); caixa.innerHTML=''; tudo(); msg('Hospedagem salva.'); };
   f.scrollIntoView({behavior:'smooth',block:'center'});
 }
 function formExtra(e){
@@ -348,6 +358,165 @@ function formExtra(e){
     const novo=Object.assign({id:e.id||uid()},x); const i=V.extras.findIndex(z=>z.id===novo.id); if(i>=0) V.extras[i]=novo; else V.extras.push(novo);
     salvarV(); document.getElementById('formExtra').innerHTML=''; tudo(); msg('Atividade salva.'); };
   f.scrollIntoView({behavior:'smooth',block:'center'});
+}
+/* ---------- importar: e-mail colado ou arquivo .ics (tudo lido aqui no navegador) ---------- */
+const MESES={jan:1,janeiro:1,january:1,fev:2,fevereiro:2,feb:2,february:2,mar:3,'março':3,marco:3,march:3,abr:4,abril:4,apr:4,april:4,mai:5,maio:5,may:5,jun:6,junho:6,june:6,jul:7,julho:7,july:7,ago:8,agosto:8,aug:8,august:8,set:9,setembro:9,sep:9,sept:9,september:9,out:10,outubro:10,oct:10,october:10,nov:11,novembro:11,november:11,dez:12,dezembro:12,dec:12,december:12};
+const p2=n=>String(n).padStart(2,'0');
+function okData(y,m,d){ y=+y;m=+m;d=+d; if(!(y>2000&&y<2100&&m>=1&&m<=12&&d>=1&&d<=31)) return ''; return y+'-'+p2(m)+'-'+p2(d); }
+function acharDatas(t){
+  const out=[], add=(i,v)=>{ if(v&&!out.some(o=>Math.abs(o.i-i)<3)) out.push({i,v}); }; let m;
+  const R1=/(\d{4})[-\/.年](\d{1,2})[-\/.月](\d{1,2})/g; while((m=R1.exec(t))) add(m.index,okData(m[1],m[2],m[3]));
+  const R2=/\b(\d{1,2})[\/.](\d{1,2})[\/.](\d{4})\b/g; while((m=R2.exec(t))){ let d=+m[1],mo=+m[2]; if(mo>12&&d<=12){const x=d;d=mo;mo=x;} add(m.index,okData(m[3],mo,d)); }
+  const R3=/\b(\d{1,2})(?:º|°)?\s*(?:de\s+)?([a-zA-Zçã]{3,9})\.?,?\s*(?:de\s+)?(\d{4})\b/g; while((m=R3.exec(t))){ const mo=MESES[m[2].toLowerCase()]; if(mo) add(m.index,okData(m[3],mo,m[1])); }
+  const R4=/\b([a-zA-Zçã]{3,9})\.?\s+(\d{1,2})(?:st|nd|rd|th)?,?\s+(\d{4})\b/g; while((m=R4.exec(t))){ const mo=MESES[m[1].toLowerCase()]; if(mo) add(m.index,okData(m[3],mo,m[2])); }
+  return out.sort((a,b)=>a.i-b.i);
+}
+function acharHora(t){
+  let m=t.match(/\b(\d{1,2})(?::(\d{2}))?\s*(a\.?m\.?|p\.?m\.?)(?![a-z])/i);
+  const m2=t.match(/\b([01]?\d|2[0-3])(?::([0-5]\d)|h([0-5]\d)?)(?!\d)/i);
+  if(m&&(!m2||m.index<=m2.index)){ let h=+m[1]%12; if(/p/i.test(m[3])) h+=12; return p2(h)+':'+(m[2]||'00'); }
+  if(m2) return p2(+m2[1])+':'+(m2[2]||m2[3]||'00');
+  return '';
+}
+function aposRotulo(t,rot,n,ultima){ // primeira data/hora logo depois de um rótulo como "check-in"
+  const re=new RegExp(rot.source,'gi'); let m;
+  while((m=re.exec(t))){ const ini=m.index+m[0].length; let jan=t.slice(ini,ini+(n||140));
+    const prox=jan.search(/check-?in|check-?out|sa[ií]da|entrada|chegada|departure|arrival|チェック/i); if(prox>=0) jan=jan.slice(0,prox);
+    const ds=acharDatas(jan);
+    if(ds.length){ const depois=jan.slice(ds[0].i+4); let hora=acharHora(depois);
+      if(ultima){ const fx=depois.match(/(\d{1,2}:\d{2})\s*[–—-]\s*(\d{1,2}:\d{2})/); if(fx) hora=p2(+fx[2].split(':')[0])+':'+fx[2].split(':')[1]; }
+      return {data:ds[0].v,hora}; } }
+  return null;
+}
+const CID_ALIAS=[['Tóquio',/t[oó]qui?o|tokyo|東京/i],['Kyoto',/kyoto|quioto|京都/i],['Osaka',/[oō]saka|大阪/i],['Nara',/\bnara\b|奈良/i],['Kobe',/k[oō]be|神戸/i],['Yokohama',/yokohama|横浜/i],['Kamakura',/kamakura|鎌倉/i],['Hakone',/hakone|箱根/i],['Nikko',/nikk[oō]|日光/i],['Chiba',/chiba|urayasu|maihama|千葉|浦安/i],['Nagoya',/nagoya|名古屋/i],['Takayama',/takayama|高山/i],['Kanazawa',/kanazawa|金沢/i],['Hiroshima',/hiroshima|広島/i],['Fukuoka',/fukuoka|hakata|福岡|博多/i],['Sapporo',/sapporo|札幌/i],['Okinawa',/okinawa|naha|沖縄|那覇/i],['Himeji',/himeji|姫路/i]];
+function acharCidade(...txts){ for(const t of txts){ if(!t) continue; let best=null; for(const [c,re] of CID_ALIAS){ const m=t.match(re); if(m&&(!best||m.index<best.i)) best={c,i:m.index}; } if(best) return best.c; } return ''; }
+const ATR=[['pokepark',/pok[eé]park/i],['ghibli-park',/ghibli\s*park|ジブリパーク/i],['ghibli-mitaka',/ghibli|ジブリ美術館/i],['pokemon-cafe',/pok[eé]mon\s*caf[eé]|ポケモンカフェ/i],['kirby',/kirby|カービィ/i],['disney',/disney(land|sea)?|ディズニー/i],['doraemon',/fujiko|doraemon|藤子/i],['usj',/universal\s*studios|\busj\b|super\s*nintendo\s*world|ユニバーサル/i],['harrypotter',/warner\s*bros|harry\s*potter|ハリー/i],['biovortex',/biovortex/i],['teamlab-tokyo',/team\s*lab/i],['nintendo-museum',/nintendo\s*museum|museu\s*da\s*nintendo|ニンテンドーミュージアム/i],['toyosu',/toyosu|豊洲/i],['shibuya-sky',/shibuya\s*sky/i],['saihoji',/saih[oō]-?ji|koke-?dera|西芳寺|苔寺/i],['katsura',/katsura|sh[uū]gakuin|桂離宮|修学院/i],['comiket',/comiket|comic\s*market|コミケ/i],['jumpfesta',/jump\s*festa|ジャンプフェスタ/i],['sumo',/\bsum[oô]\b|相撲/i]];
+const acharAtracao=t=>{ for(const [id,re] of ATR) if(re.test(t)) return id; return ''; };
+const PLATS=[['Booking',/booking\.com/i],['Agoda',/agoda/i],['Airbnb',/airbnb/i],['Expedia',/expedia/i],['Hotels.com',/hotels\.com/i],['Rakuten Travel',/rakuten/i],['Jalan',/jalan/i],['Trip.com',/trip\.com/i],['Klook',/klook/i],['KKday',/kkday/i],['Lawson Ticket',/lawson|l-tike/i],['Ticket Pia',/ticket\s*pia|チケットぴあ/i]];
+function linhaApos(t,re){ const m=t.match(re); if(!m) return ''; let v=(m[1]||'').trim(); if(!v){ const resto=t.slice(m.index+m[0].length).split(/\n/).map(s=>s.trim()).filter(Boolean); v=resto[0]||''; } return v.slice(0,160); }
+function lerTexto(t){
+  t=t.replace(/\r/g,''); const r={}, achou=[], low=t.toLowerCase();
+  r.plataforma=(PLATS.find(p=>p[1].test(t))||[''])[0];
+  const cod=t.match(/(?:n[uú]mero\s+de\s+confirma[cç][aã]o|c[oó]digo\s+de\s+confirma[cç][aã]o|confirmation\s+(?:number|no\.?|code)|booking\s+(?:number|id|no\.?|reference)|n[uú]mero\s+da\s+reserva|c[oó]digo\s+(?:da|de)\s+reserva|id\s+da\s+reserva|reservation\s+(?:number|code|no\.?|id)|予約番号)[ \t]*[:：#nº°.]*[ \t]*([A-Z0-9\-.]*\d[A-Z0-9\-.]*[A-Z0-9])/i);
+  r.reserva=cod?cod[1].replace(/\.$/,''):'';
+  const vou=t.match(/(?:c[oó]digo\s+do\s+voucher|voucher\s*(?:no\.?|number|code|n[uú]mero)?|ticket\s*(?:no\.?|number|code)|n[uú]mero\s+do\s+ingresso|order\s*(?:no\.?|number|id)|n[uú]mero\s+do\s+pedido|booking\s+code|チケット番号|受付番号)[ \t]*[:：#nº°]*[ \t]*([A-Z0-9\-]*\d[A-Z0-9\-]*)/i);
+  r.voucher=vou?vou[1]:'';
+  const tel=t.match(/(?:telefone|phone|tel\.?|電話)\s*[:：]?\s*(\+?\d[\d\s\-().]{7,}\d)/i); r.telefone=tel?tel[1].trim():'';
+  let end=linhaApos(t,/(?:endere[cç]o|address|localiza[cç][aã]o|location|住所)\s*[:：]?[ \t]*([^\n]*)/i);
+  if(!end){ const l=t.split('\n').map(s=>s.trim()).find(s=>/\d+-\d+(-\d+)?\b.*(-ku|-shi|-cho|chome|tokyo|kyoto|osaka)|[都道府]\S*[区市町村]/i.test(s)); end=l||''; }
+  if(/[぀-ヿ一-鿿]/.test(end)) r.endereco=end; else r.enderecoLat=end;
+  r.cidade=acharCidade(end,t);
+  r.atr=acharAtracao(t);
+  const ent=aposRotulo(t,/check-?in|entrada|chegada|arrival|チェックイン/), sai=aposRotulo(t,/check-?out|sa[ií]da|departure|チェックアウト/,140,true);
+  const vis=aposRotulo(t,/data\s+da\s+visita|date\s+of\s+(?:visit|use)|visit\s+date|data\s+de\s+uso|data\s+do\s+evento|event\s+date|利用日|来場日|入場日/);
+  const todas=acharDatas(t);
+  // tipo
+  let sh=0, si=0;
+  if(sai) sh+=2; if(ent) sh+=1; if(/\b(hotel|hostel|ryokan|inn|resort|guest\s*house|apartment|lodge|capsule|minshuku)\b|noites?|nights?|泊/i.test(t)) sh+=1; if(['Booking','Agoda','Airbnb','Expedia','Hotels.com','Rakuten Travel','Jalan'].includes(r.plataforma)) sh+=1;
+  if(r.atr) si+=2; if(vis) si+=2; if(/voucher|ingresso|e-?ticket|ticket|admission|qr\s*code|チケット|入場/i.test(t)) si+=1; if(['Klook','KKday','Lawson Ticket','Ticket Pia'].includes(r.plataforma)) si+=1;
+  r.tipo=si>sh?'ingresso':'hotel';
+  // datas
+  r.entrada=ent?ent.data:(todas[0]?todas[0].v:''); r.checkin=ent?ent.hora:'';
+  r.saida=sai?sai.data:(todas.find(d=>d.v>r.entrada)||{}).v||''; r.checkout=sai?sai.hora:'';
+  const v1=vis||ent; r.data=v1?v1.data:(todas[0]?todas[0].v:''); r.hora=v1?v1.hora:acharHora(t);
+  // nome do hotel
+  let nome=linhaApos(t,/(?:nome\s+do\s+hotel|hotel\s+name|propriedade|property|acomoda[cç][aã]o|accommodation|hospedagem|宿泊施設)\s*[:：][ \t]*([^\n]*)/i);
+  if(!nome){ for(const l of t.split('\n')){ for(const seg of l.split(/\.\s+|\s+[|•·—–-]\s+|\s{2,}/)){ const s=seg.trim(); if(s.length>3&&s.length<70&&/\b(hotel|hostel|ryokan|inn|resort|guest\s*house|lodge|capsule|minshuku)\b|ホテル|旅館/i.test(s)&&!/check|confirma|reserva|booking\.com|agoda|obrigad|thank|dear|prezad/i.test(s)){ nome=s; break; } } if(nome) break; } }
+  if(!nome) nome=linhaApos(t,/(?:atividade|activity|produto|product|evento|event|bilhete|ticket\s+name)[ \t]*[:：][ \t]*([^\n]*)/i);
+  r.nome=nome.replace(/[.,;]+$/,'');
+  r.pagarLocal=/pagar\s+(?:no|na)\s+(?:local|hotel|propriedade|acomoda)|pay\s+at\s+(?:the\s+)?(?:property|hotel)|payment\s+at\s+(?:the\s+)?(?:property|hotel)|pagamento\s+(?:no|na)\s+(?:hotel|propriedade|acomoda)/i.test(t);
+  r.comprado=!!r.voucher||/pagamento\s+confirmado|payment\s+(?:completed|confirmed|received)|compra\s+confirmada|order\s+confirmed|confirmado\s+e\s+emitido|emitido|issued|purchase\s+(?:complete|confirmed)|thank\s+you\s+for\s+your\s+(?:purchase|order)|購入完了/i.test(t);
+  return r;
+}
+/* .ics */
+function lerICS(txt){
+  txt=txt.replace(/\r?\n[ \t]/g,''); const evs=[]; const re=/BEGIN:VEVENT([\s\S]*?)END:VEVENT/g; let m;
+  const un=v=>v.replace(/\\n/gi,'\n').replace(/\\([,;\\])/g,'$1');
+  while((m=re.exec(txt))){ const b=m[1];
+    const prop=n=>{ const x=b.match(new RegExp('^'+n+'((?:;[^:\\n]*)?):(.*)$','mi')); return x?{p:x[1]||'',v:un(x[2].trim())}:null; };
+    const dt=x=>{ if(!x) return null; const d=x.v.match(/^(\d{4})(\d{2})(\d{2})(?:T(\d{2})(\d{2})(?:\d{2})?)?(Z)?/); if(!d) return null;
+      if(d[4]&&d[6]){ const u=new Date(Date.UTC(+d[1],+d[2]-1,+d[3],+d[4],+d[5])+9*3600e3); return {data:u.toISOString().slice(0,10),hora:u.toISOString().slice(11,16),dia:false}; }
+      return {data:d[1]+'-'+d[2]+'-'+d[3],hora:d[4]?d[4]+':'+d[5]:'',dia:!d[4]}; };
+    const sum=prop('SUMMARY'), loc=prop('LOCATION'), desc=prop('DESCRIPTION'), ini=dt(prop('DTSTART')), fim=dt(prop('DTEND'));
+    evs.push({titulo:sum?sum.v:'(sem título)',local:loc?loc.v:'',desc:desc?desc.v:'',ini,fim}); }
+  return evs;
+}
+function icsParaDados(e){
+  const r=lerTexto([e.titulo,e.desc,e.local?'Endereço: '+e.local:''].join('\n'));
+  if(e.local){ if(/[぀-ヿ一-鿿]/.test(e.local)){ r.endereco=e.local; r.enderecoLat=''; } else { r.enderecoLat=e.local; r.endereco=''; } r.cidade=acharCidade(e.local,e.titulo,e.desc)||r.cidade; }
+  const noites=e.ini&&e.fim?noites_(e.ini.data,e.fim.data):0;
+  if(noites>=1&&!r.atr) r.tipo='hotel';
+  if(e.ini){ r.entrada=e.ini.data; r.checkin=e.ini.hora||r.checkin; r.data=e.ini.data; r.hora=e.ini.hora||r.hora; }
+  if(e.fim&&noites>=1){ r.saida=e.fim.data; r.checkout=e.fim.hora||r.checkout; }
+  if(!r.nome) r.nome=e.titulo;
+  return r;
+}
+const noites_=(a,b)=>Math.round((D(b)-D(a))/864e5);
+/* painel */
+const box=()=>document.getElementById('importBox');
+function abrirImport(){
+  document.getElementById('formHotel').innerHTML=''; document.getElementById('formExtra').innerHTML='';
+  box().innerHTML=`<div class="form" id="imp"><h3 style="font-family:'Baloo 2',sans-serif;font-size:21px">📥 Importar reserva ou ingresso</h3>
+    <p style="font-size:14px;color:var(--gray)">A leitura é feita aqui mesmo, no seu navegador: o texto não é enviado para lugar nenhum. Antes de salvar, você confere e corrige cada campo.</p>
+    <label class="drop" id="drop"><input type="file" id="impFile" accept=".ics,text/calendar" hidden><b>📁 Escolher arquivo de calendário (.ics)</b><span>ou arraste o arquivo para cá</span></label>
+    <div class="ou">ou</div>
+    <label class="f">Cole aqui o texto do e-mail de confirmação ou do voucher<textarea id="impTxt" rows="7" placeholder="Abra o e-mail, selecione tudo, copie e cole aqui."></textarea></label>
+    <p id="impErr" style="color:var(--red);font-size:14px"></p>
+    <div style="display:flex;gap:8px;flex-wrap:wrap"><button class="btn primary" type="button" id="impGo">Identificar dados ✨</button><button class="btn" type="button" id="impX">Cancelar</button></div></div>`;
+  const d=document.getElementById('drop');
+  document.getElementById('impX').onclick=()=>box().innerHTML='';
+  document.getElementById('impGo').onclick=()=>{ const t=document.getElementById('impTxt').value.trim(); if(t.length<20){ document.getElementById('impErr').textContent='Cole o texto do e-mail inteiro: quanto mais texto, mais coisa eu acho.'; return; } mostrarPrevia(lerTexto(t)); };
+  document.getElementById('impFile').onchange=e=>{ const f=e.target.files[0]; if(f) lerArquivo(f); };
+  ['dragenter','dragover'].forEach(ev=>d.addEventListener(ev,e=>{ e.preventDefault(); d.classList.add('sobre'); }));
+  ['dragleave','drop'].forEach(ev=>d.addEventListener(ev,e=>{ e.preventDefault(); d.classList.remove('sobre'); }));
+  d.addEventListener('drop',e=>{ const f=e.dataTransfer.files[0]; if(f) lerArquivo(f); });
+  box().scrollIntoView({behavior:'smooth',block:'start'});
+}
+function lerArquivo(f){
+  const fr=new FileReader(); fr.onload=()=>{ const evs=lerICS(String(fr.result||''));
+    if(!evs.length){ document.getElementById('impErr').textContent='Não achei nenhum evento nesse arquivo. Ele é mesmo um .ics de calendário?'; return; }
+    if(evs.length===1){ mostrarPrevia(icsParaDados(evs[0])); return; }
+    box().innerHTML=`<div class="form"><h3 style="font-family:'Baloo 2',sans-serif;font-size:21px">O arquivo tem ${evs.length} eventos. Qual você quer importar?</h3>${evs.map((e,i)=>`<button class="btn" type="button" style="text-align:left;border-radius:14px" data-ics="${i}">${esc(e.titulo)} · ${e.ini?fmt(e.ini.data):'sem data'}${e.fim&&e.ini&&e.fim.data!==e.ini.data?' a '+fmt(e.fim.data):''}</button>`).join('')}<button class="btn link" type="button" id="impX">Cancelar</button></div>`;
+    document.getElementById('impX').onclick=()=>box().innerHTML='';
+    box().querySelectorAll('[data-ics]').forEach(b=>b.onclick=()=>mostrarPrevia(icsParaDados(evs[+b.dataset.ics])));
+  }; fr.readAsText(f);
+}
+function resumo(r,tipo){
+  const campos=tipo==='hotel'?[['nome','hotel'],['entrada','entrada'],['saida','saída'],['checkin','hora do check-in'],['checkout','hora do check-out'],['reserva','nº da reserva'],['plataforma','plataforma'],['enderecoLat','endereço'],['telefone','telefone'],['cidade','cidade']]
+    :[['atr','atração do cronograma'],['data','dia'],['hora','hora'],['voucher','código'],['plataforma','plataforma'],['cidade','cidade']];
+  const tem=campos.filter(c=>r[c[0]]||(c[0]==='enderecoLat'&&r.endereco)), falta=campos.filter(c=>!tem.includes(c));
+  return `<div class="previa"><p><b>✨ Li como ${tipo==='hotel'?'hospedagem':'ingresso ou atividade'}.</b> <button class="btn link" type="button" id="trocaTipo">Na verdade é ${tipo==='hotel'?'um ingresso ou atividade':'uma hospedagem'}</button></p>
+    <p>Encontrei: ${tem.length?tem.map(c=>`<span class="chip c-ok">${c[1]}</span>`).join(' '):'quase nada'}</p>
+    ${falta.length?`<p>Não encontrei: ${falta.map(c=>`<span class="chip c-neu">${c[1]}</span>`).join(' ')}</p>`:''}
+    <p style="font-size:13.5px;color:var(--gray)">Confira os campos abaixo: a leitura automática pode errar, principalmente datas e nomes.</p></div>`;
+}
+function mostrarPrevia(r,tipo){
+  tipo=tipo||r.tipo;
+  if(tipo==='hotel'){
+    formHotel({id:'',cidade:r.cidade||'Tóquio',nome:r.nome||'',entrada:r.entrada||'',saida:r.saida||'',checkin:r.checkin||'15:00',checkout:r.checkout||'11:00',reserva:r.reserva||r.voucher||'',plataforma:r.plataforma||'',status:r.pagarLocal?'local':'pago',enderecoLat:r.enderecoLat||'',endereco:r.endereco||'',telefone:r.telefone||'',nota:''},'importBox',resumo(r,'hotel'));
+  } else formIngImport(r);
+  document.getElementById('trocaTipo').onclick=()=>mostrarPrevia(r,tipo==='hotel'?'ingresso':'hotel');
+}
+function formIngImport(r){
+  const ehOutra=!r.atr;
+  box().innerHTML=`<form class="form" id="fi">${resumo(r,'ingresso')}<div class="grid">
+    <label class="f">Atração<select name="atr">${opts([...TK.map(t=>[t.id,t.nome]),['','Outra atividade (fora do cronograma)']],r.atr||'')}</select></label>
+    <label class="f" data-so-outra ${ehOutra?'':'hidden'}>Nome da atividade<input name="nome" value="${esc(r.nome||'')}"></label>
+    <label class="f" data-so-outra ${ehOutra?'':'hidden'}>Cidade<select name="cidade">${opts(CIDADES.map(c=>[c[0],c[0]]),r.cidade||'Tóquio')}</select></label>
+    <label class="f">Dia da visita<input type="date" name="data" value="${esc(r.data||'')}" required></label>
+    <label class="f">Hora<input type="time" name="hora" value="${esc(r.hora||'')}"></label>
+    <label class="f">Código / voucher<input name="codigo" value="${esc(r.voucher||r.reserva||'')}"></label></div>
+    <label style="font-size:14.5px;display:flex;gap:8px;align-items:center"><input type="checkbox" name="comprado" ${r.comprado?'checked':''}> Já comprei: marcar como “Ingresso em mãos”</label>
+    <div style="display:flex;gap:8px;flex-wrap:wrap"><button class="btn primary" type="submit">Confirmar e adicionar ✅</button><button class="btn" type="button" id="fiX">Cancelar</button></div></form>`;
+  const f=document.getElementById('fi');
+  f.atr.onchange=()=>f.querySelectorAll('[data-so-outra]').forEach(x=>x.hidden=!!f.atr.value);
+  document.getElementById('fiX').onclick=()=>box().innerHTML='';
+  f.onsubmit=e=>{ e.preventDefault(); const x=Object.fromEntries(new FormData(f).entries()), comprado=!!x.comprado;
+    if(x.atr){ V.visitas[x.atr]={data:x.data,hora:x.hora};
+      if(comprado||x.codigo){ S=ler(KS,S); S.itens=S.itens||{}; const it=Object.assign({status:'novo',numero:'',conferir:'',prazo:'',nota:''},S.itens[x.atr]); if(comprado) it.status='comprado'; if(x.codigo) it.numero=x.codigo; S.itens[x.atr]=it; salvarS(); }
+    } else V.extras.push({id:uid(),nome:x.nome||'Atividade importada',cidade:x.cidade,data:x.data,hora:x.hora,status:comprado?'comprado':'pendente',codigo:x.codigo,nota:''});
+    salvarV(); box().innerHTML=''; tudo(); msg(x.atr&&comprado?'Ingresso adicionado e marcado como comprado em Meus ingressos.':'Adicionado.'); };
+  f.scrollIntoView({behavior:'smooth',block:'start'});
 }
 function renderMesa(){
   const hs=hoteisOrd();
@@ -379,7 +548,8 @@ document.getElementById('vistaMesa').addEventListener('change',e=>{
   V.visitas[id]=V.visitas[id]||{}; if(i.dataset.vd) V.visitas[id].data=i.value; else V.visitas[id].hora=i.value;
   salvarV(); renderLinha(); renderSemana(); renderMes(); renderAlertas(); msg('Dia da visita salvo.');
 });
-document.getElementById('addHotel').onclick=()=>formHotel();
+document.getElementById('addHotel').onclick=()=>{ document.getElementById('importBox').innerHTML=''; formHotel(); };
+document.getElementById('btnImport').onclick=abrirImport;
 document.getElementById('addIng').onchange=function(){ if(!this.value) return; V.visitas[this.value]=V.visitas[this.value]||{data:'',hora:''}; salvarV(); renderMesa(); msg('Atração adicionada. Marque o dia da visita.'); };
 document.getElementById('addExtra').onclick=()=>formExtra();
 
@@ -440,7 +610,7 @@ ida.value=S.ida||''; volta.value=S.volta||'';
 [ida,volta].forEach(x=>x.onchange=()=>{ S=ler(KS,S); S.itens=S.itens||{}; S.ida=ida.value; S.volta=volta.value; salvarS(); curSem=curMes=null; tudo(); });
 document.getElementById('vjw').onclick=async()=>{
   const h=hoteisOrd()[0]; if(!h){ msg('Cadastre a primeira hospedagem antes.'); return; }
-  const tel=(h.telefone||'').trim(), tel81=!tel?'':(tel.startsWith('+')?tel:'+81 '+tel.replace(/^0/,''));
+  const tel=(h.telefone||'').trim(), dig=tel.replace(/\D/g,''), tel81=!dig?'':(dig.startsWith('81')&&(tel.startsWith('+')||dig.length>10)?'+'+dig:'+81'+dig.replace(/^0/,''));
   const lat=h.enderecoLat||'', naoLatino=/[^\x20-\x7E]/;
   const end=!lat?'(falta preencher o endereço em alfabeto latino na hospedagem)':lat+(naoLatino.test(lat)?'  ← tem letras fora do alfabeto latino (acento ou japonês): o Visit Japan Web pode recusar':'');
   const txt=['Nome do hotel: '+(h.nome||'(preencha o nome na hospedagem)')+(h.nome&&naoLatino.test(h.nome)?'  ← use o nome em alfabeto latino':''),'Endereço: '+end,'Telefone: '+(tel81||'(falta preencher o telefone na hospedagem)')].join('\n');
