@@ -102,6 +102,11 @@ tr:nth-child(even) td{background:#faf6f5}
 .res .tot{background:color-mix(in srgb,var(--pink) 12%,var(--card))}
 .fontes{font-size:13.5px;color:var(--muted);margin:0;padding-left:18px}
 .fontes a{color:var(--ink)}
+.abas{display:flex;gap:6px;background:var(--card);border:1.5px solid var(--line);border-radius:999px;padding:5px;width:max-content;max-width:100%;overflow-x:auto}
+.abas a{flex:0 0 auto;text-decoration:none;font-family:var(--f-display);font-weight:700;font-size:15px;padding:8px 16px;border-radius:999px;color:var(--muted);white-space:nowrap}
+.abas a[aria-current="page"]{background:var(--ink);color:#fff}
+.abas a:not([aria-current]):hover{color:var(--pink)}
+@media (max-width:520px){.abas{width:100%}.abas a{flex:1 1 0;text-align:center;padding:8px 10px;font-size:14px;white-space:normal;line-height:1.25}}
 </style>
 </head>
 <body>
@@ -109,6 +114,12 @@ tr:nth-child(even) td{background:#faf6f5}
   <nav class="sitebar" aria-label="Site">
     <a class="logo" href="/">UNI<span>R</span>VERSOS</a>
     <span class="navlinks"><a href="/idiomas/">idiomas</a><a href="/travessia/">travessia</a><a href="/paralelos/">paralelos</a><a href="/loja/">achados</a><a href="/sobre/">sobre</a></span>
+  </nav>
+
+  <nav class="abas" aria-label="Achados no Japão">
+    <a href="/loja/">🛒 Vitrine</a>
+    <a href="/loja/encomendas/">🛍️ Encomendas</a>
+    <a href="/loja/brecho/">🧥 Brechó</a>
   </nav>
 
   <header class="hero">
