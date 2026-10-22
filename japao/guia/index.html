@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>Guia de compra e alfândega · Achados no Japão</title>
+<meta name="description" content="Como juntar compras de lojas diferentes do Japão numa caixa só e quanto se paga de imposto de importação no Brasil. Guia atualizado em outubro de 2026.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@500;700;800&family=Zen+Maru+Gothic:wght@400;500;700&display=swap">
+<style>
+:root{
+  --paper:#fdf6f4; --card:#ffffff; --ink:#3a2b38; --muted:#6b5a67; --line:#ecdadd;
+  --blush:#f8dde1; --pink:#d9506f; --sage:#7fa487; --sage-soft:#e8efe8; --gold:#c9962c; --lavender:#b7a6dc; --sky:#5b8fc7;
+  --f-display:"Baloo 2","Zen Maru Gothic",system-ui,sans-serif;
+  --f-body:"Zen Maru Gothic","Hiragino Maru Gothic ProN","Noto Sans JP",system-ui,sans-serif;
+  --r:20px;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;background:var(--paper);color:var(--ink);font-family:var(--f-body);font-size:16px;line-height:1.7;
+  background-image:radial-gradient(var(--line) 1.2px,transparent 1.3px);background-size:22px 22px;
+  padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));padding-block:18px 40px}
+a{color:inherit}
+a:focus-visible,button:focus-visible{outline:3px solid var(--lavender);outline-offset:3px;border-radius:8px}
+.wrap{max-width:1060px;margin:0 auto;display:grid;gap:44px}
+.sitebar{display:flex;flex-wrap:wrap;justify-content:space-between;align-items:center;gap:10px 18px}
+.logo{font-family:var(--f-display);font-weight:800;font-size:19px;letter-spacing:.14em;text-decoration:none}
+.logo span{color:var(--pink)}
+.navlinks{display:flex;flex-wrap:wrap;gap:6px 20px;font-size:14px}
+.navlinks a{text-decoration:none;color:var(--muted)}
+.navlinks a:hover{color:var(--pink)}
+
+.hero{display:grid;gap:14px;max-width:720px;padding-top:12px}
+.eyebrow{font-size:12px;letter-spacing:.2em;text-transform:uppercase;color:var(--pink);font-weight:700;margin:0}
+h1{font-family:var(--f-display);font-weight:800;font-size:clamp(38px,6.4vw,62px);line-height:1.02;margin:0;text-wrap:balance;letter-spacing:-.01em}
+h1 .jp{display:block;font-family:"Zen Maru Gothic",sans-serif;font-size:.36em;letter-spacing:.3em;color:var(--pink);margin-bottom:10px;font-weight:700}
+h1 .jp rt{font-size:.5em;letter-spacing:.05em}
+.lede{font-size:clamp(17px,2vw,19px);font-weight:500;margin:0;max-width:56ch}
+.acts{display:flex;flex-wrap:wrap;gap:10px;margin-top:6px}
+.btn{display:inline-flex;align-items:center;gap:8px;text-decoration:none;font-family:var(--f-display);font-weight:700;font-size:16px;padding:10px 20px;border-radius:999px;border:1.5px solid var(--pink)}
+.btn.pri{background:var(--pink);color:#fff;box-shadow:0 6px 16px -8px color-mix(in srgb,var(--pink) 70%,transparent)}
+.btn.sec{background:var(--card);color:var(--pink)}
+.btn:hover{filter:brightness(.96)}
+.aviso{margin:0;font-size:13.5px;color:var(--muted);background:var(--sage-soft);border-radius:14px;padding:10px 14px;max-width:72ch}
+
+.filtros{display:flex;flex-wrap:wrap;gap:8px}
+.filtros button{font:inherit;font-weight:700;font-size:14.5px;border:1.5px solid var(--line);background:var(--card);color:var(--ink);padding:7px 14px;border-radius:999px;cursor:pointer;display:inline-flex;gap:6px;align-items:center}
+.filtros button[aria-pressed="true"]{background:var(--ink);color:#fff;border-color:var(--ink)}
+.filtros .n{font-size:12px;font-weight:500;opacity:.75}
+
+.cats{display:grid;gap:40px}
+.cat-h{display:grid;gap:2px;margin-bottom:14px}
+.cat-h h2{font-family:var(--f-display);font-size:clamp(24px,3.4vw,30px);line-height:1.15;margin:0}
+.cat-h p{margin:0;color:var(--muted);font-size:15px;max-width:62ch}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:18px}
+.card{--c:var(--pink);position:relative;background:var(--card);border:1.5px solid var(--line);border-radius:var(--r);overflow:hidden;display:grid;grid-template-rows:auto 1fr;box-shadow:0 10px 24px -18px rgba(58,43,56,.35)}
+.card[data-cat="nerd"]{--c:var(--lavender)} .card[data-cat="tech"]{--c:var(--sky)} .card[data-cat="moda"]{--c:var(--gold)}
+.foto{aspect-ratio:4/3;background:color-mix(in srgb,var(--c) 14%,var(--card));display:grid;place-items:center;font-size:56px;border-bottom:1.5px solid var(--line)}
+.foto img{width:100%;height:100%;object-fit:cover;display:block}
+.corpo{padding:14px 16px 16px;display:grid;gap:8px;align-content:start}
+.tag{font-size:11px;letter-spacing:.16em;text-transform:uppercase;font-weight:700;color:color-mix(in srgb,var(--c) 75%,var(--ink));margin:0}
+.card h3{font-family:var(--f-display);font-size:19px;line-height:1.2;margin:0}
+.card p.d{margin:0;font-size:14.5px}
+.preco{font-family:var(--f-display);font-weight:700;font-size:17px;margin:2px 0 0}
+.preco small{font-family:var(--f-body);font-weight:500;font-size:12px;color:var(--muted)}
+.quero{justify-self:stretch;text-align:center;margin-top:4px;text-decoration:none;font-weight:700;font-size:14.5px;padding:9px 14px;border-radius:999px;background:var(--pink);color:#fff}
+.quero:hover{filter:brightness(.95)}
+.quero.off{background:var(--paper);color:var(--muted);border:1.5px dashed var(--line);cursor:default}
+.ex{position:absolute;top:10px;left:10px;background:#fff;border:1.5px dashed var(--pink);color:var(--pink);font-size:11px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;padding:2px 8px;border-radius:999px}
+.vazio{margin:0;color:var(--muted);font-size:14.5px;background:var(--card);border:1.5px dashed var(--line);border-radius:14px;padding:14px 16px}
+
+.guia-card{position:relative;background:var(--card);border:1.5px solid var(--line);border-left:6px solid var(--sage);border-radius:var(--r);padding:22px 22px 20px;display:grid;gap:10px}
+.guia-card h2{font-family:var(--f-display);font-size:clamp(22px,3vw,28px);margin:0;line-height:1.15}
+.guia-card p{margin:0}
+footer{border-top:1.5px dashed var(--line);padding-top:22px;display:flex;flex-wrap:wrap;justify-content:space-between;gap:12px 24px;font-size:14px;color:var(--muted)}
+footer a{text-decoration:none;color:var(--ink)}
+footer a:hover{color:var(--pink)}
+@media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}}
+
+.passos{margin:0;padding:0;list-style:none;display:grid;gap:12px;counter-reset:p}
+.passos li{display:grid;grid-template-columns:30px minmax(0,1fr);gap:12px;align-items:start}
+.passos li::before{counter-increment:p;content:counter(p,decimal-leading-zero);font-family:var(--f-display);font-weight:800;color:#a08c7a;font-size:18px;line-height:1.5}
+.passos b{display:block}
+.box{background:var(--card);border:1.5px solid var(--line);border-left:6px solid var(--c,var(--sage));border-radius:var(--r);padding:22px;display:grid;gap:14px}
+.box h2{font-family:var(--f-display);font-size:clamp(24px,3.4vw,30px);line-height:1.15;margin:0}
+.box p{margin:0}
+.nota{background:var(--sage-soft);border-radius:14px;padding:12px 14px;font-size:14.5px}
+.alerta{background:var(--blush);border-radius:14px;padding:12px 14px;font-size:14.5px}
+.tab-wrap{overflow-x:auto;border-radius:14px;border:1.5px solid var(--line)}
+table{border-collapse:collapse;width:100%;min-width:560px;font-size:14.5px;background:var(--card)}
+th{background:#2C3E50;color:#fff;text-align:left;padding:10px 12px;font-weight:700}
+td{padding:10px 12px;border-top:1px solid var(--line);vertical-align:top}
+tr:nth-child(even) td{background:#faf6f5}
+.calc{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:12px}
+.calc label{display:grid;gap:4px;font-weight:700;font-size:14.5px}
+.calc input,.calc select{font:inherit;font-weight:500;padding:9px 12px;border:1.5px solid var(--line);border-radius:12px;background:#fff;color:var(--ink);width:100%}
+.res{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px}
+.res div{background:var(--paper);border-radius:14px;padding:10px 12px}
+.res small{display:block;color:var(--muted);font-size:12.5px}
+.res b{font-family:var(--f-display);font-size:20px}
+.res .tot{background:color-mix(in srgb,var(--pink) 12%,var(--card))}
+.fontes{font-size:13.5px;color:var(--muted);margin:0;padding-left:18px}
+.fontes a{color:var(--ink)}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <nav class="sitebar" aria-label="Site">
+    <a class="logo" href="/">UNI<span>R</span>VERSOS</a>
+    <span class="navlinks"><a href="/idiomas/">idiomas</a><a href="/travessia/">travessia</a><a href="/paralelos/">paralelos</a><a href="/japao/">achados</a><a href="/sobre/">sobre</a></span>
+  </nav>
+
+  <header class="hero">
+    <p class="eyebrow">achados no japão · guia</p>
+    <h1>Guia de compra &amp; alfândega</h1>
+    <p class="lede">Como juntar compras de lojas diferentes do Japão numa caixa só, quanto se paga de imposto para entrar no Brasil e como pagar sem cair em golpe.</p>
+    <p class="aviso">📅 Regras conferidas em <b>22 de outubro de 2026</b>. As regras de importação mudam com frequência; confira sempre no site da Receita Federal. Este guia é informativo e não substitui orientação de um contador.</p>
+    <div class="acts"><a class="btn sec" href="/japao/">← Voltar aos achados</a></div>
+  </header>
+
+  <section class="box" aria-labelledby="t-carrinho" style="--c:var(--pink)">
+    <h2 id="t-carrinho">🧺 O carrinho único</h2>
+    <p>Muitas lojas japonesas não enviam para o Brasil. Um <b>serviço de redirecionamento</b> (como ZenMarket ou Buyee) resolve isso: ele compra em seu nome, recebe tudo num armazém no Japão e manda numa caixa só. Assim, um tênis, um cosmético e um item nerd de lojas diferentes viajam juntos.</p>
+    <ol class="passos">
+      <li><span><b>Crie sua conta no redirecionador.</b>Cada serviço tem suas taxas (por item, por pedido, de consolidação). Confira a tabela no site dele antes de comprar.</span></li>
+      <li><span><b>Escolha os achados.</b>Use o botão do achado aqui no site ou cole no redirecionador o link da loja japonesa.</span></li>
+      <li><span><b>Espere tudo chegar ao armazém.</b>Os itens ficam guardados lá até você mandar enviar. Verifique por quantos dias o armazenamento é grátis.</span></li>
+      <li><span><b>Junte numa caixa só.</b>Peça a consolidação: os itens vão juntos, e você paga um frete internacional só.</span></li>
+      <li><span><b>Escolha o frete e pague.</b>O frete internacional é pago ao redirecionador. O imposto do Brasil é cobrado depois, quando a caixa chega (veja abaixo).</span></li>
+    </ol>
+    <p class="nota">💡 Juntar tudo economiza frete, mas também soma o valor da caixa, e o imposto é calculado sobre o total. Dividir uma compra só para fugir do imposto é proibido: a lei manda as plataformas detectarem o “fracionamento artificial”.</p>
+  </section>
+
+  <section class="box" aria-labelledby="t-imposto" style="--c:var(--gold)">
+    <h2 id="t-imposto">🛃 Quanto se paga de imposto</h2>
+    <p>O envio é internacional, direto do Japão. <b>O imposto de importação, o ICMS do seu estado e o frete são de responsabilidade de quem compra.</b> O imposto incide sobre o valor do produto <b>mais</b> o frete e o seguro.</p>
+    <div class="tab-wrap"><table>
+      <thead><tr><th>Situação</th><th>Imposto de importação</th><th>ICMS</th><th>Quando paga</th></tr></thead>
+      <tbody>
+        <tr><td><b>Fora do Remessa Conforme</b><br><small>o caso mais comum de quem compra por redirecionador</small></td><td>60%, sem desconto, mesmo abaixo de US$ 50</td><td>17% a 20%, conforme o estado</td><td>Depois que a encomenda chega ao Brasil</td></tr>
+        <tr><td><b>Plataforma certificada no Remessa Conforme</b>, até US$ 50</td><td>0% (desde 12/05/2026)</td><td>17% a 20%</td><td>Na hora da compra</td></tr>
+        <tr><td><b>Plataforma certificada no Remessa Conforme</b>, de US$ 50 a US$ 3.000</td><td>60%, com desconto de US$ 30 (a lei permite ao governo baixar para até 30%)</td><td>17% a 20%</td><td>Na hora da compra</td></tr>
+      </tbody>
+    </table></div>
+    <p class="nota">📌 O imposto zero até US$ 50 veio da Medida Provisória 1.357/2026, aprovada pelo Congresso e sancionada em 10/09/2026. Ele vale só para remessas que cumprem as condições da lei, como as das plataformas certificadas. Antes de comprar, procure o redirecionador na <b>lista de empresas certificadas do Remessa Conforme</b>, no site da Receita Federal. Se ele não estiver lá, conte com a linha de 60%.</p>
+  </section>
+
+  <section class="box" aria-labelledby="t-calc" style="--c:var(--sky)">
+    <h2 id="t-calc">🧮 Calculadora: quanto vou pagar de imposto?</h2>
+    <p>Estimativa para compras <b>fora do Remessa Conforme</b> (60% + ICMS). Coloque em reais o valor da caixa inteira: produtos + frete + seguro.</p>
+    <div class="calc">
+      <label>Valor da caixa (R$)<input id="v" type="number" inputmode="decimal" min="0" step="0.01" value="500"></label>
+      <label>ICMS do seu estado
+        <select id="icms"><option value="17">17%</option><option value="18">18%</option><option value="19">19%</option><option value="20" selected>20%</option></select>
+      </label>
+    </div>
+    <div class="res" aria-live="polite">
+      <div><small>Imposto de importação (60%)</small><b id="r-ii">—</b></div>
+      <div><small>ICMS</small><b id="r-icms">—</b></div>
+      <div><small>Total de impostos</small><b id="r-imp">—</b></div>
+      <div class="tot"><small>Caixa + impostos</small><b id="r-tot">—</b></div>
+    </div>
+    <p class="aviso">O ICMS é calculado “por dentro”: [(valor + imposto de importação) ÷ (1 − alíquota)] × alíquota. A conta é só uma estimativa: a alíquota de cada estado, a cotação do dólar usada pela Receita e as tarifas dos Correios ou da transportadora podem mudar o valor final. Confira a alíquota de ICMS do seu estado.</p>
+  </section>
+
+  <section class="box" aria-labelledby="t-pagar" style="--c:var(--sage)">
+    <h2 id="t-pagar">💳 Como pagar as taxas com segurança</h2>
+    <ol class="passos">
+      <li><span><b>Pelos Correios:</b>acompanhe a encomenda pelo site ou app oficial dos Correios, na área de importações (“Minhas Importações”). Se houver imposto, o pagamento é feito lá, e a entrega só sai depois da confirmação. Os Correios também podem cobrar uma tarifa de despacho postal; confira o valor no site deles.</span></li>
+      <li><span><b>Por transportadora (courier):</b>se o redirecionador mandar por DHL, FedEx ou parecida, a cobrança vem pelo canal oficial dessa transportadora.</span></li>
+      <li><span><b>Guarde os comprovantes:</b>fatura do redirecionador e da loja. Eles ajudam se a Receita pedir o valor declarado ou se você quiser contestar a cobrança.</span></li>
+    </ol>
+    <p class="alerta">⚠️ <b>Cuidado com golpe:</b> a Receita Federal <b>não envia boleto, não liga e não manda e-mail</b> cobrando esses impostos. Nunca pague por link recebido em mensagem: entre no site oficial dos Correios ou da transportadora digitando o endereço você mesma.</p>
+  </section>
+
+  <section class="box" aria-labelledby="t-check" style="--c:var(--lavender)">
+    <h2 id="t-check">✅ Antes de fechar a compra</h2>
+    <ol class="passos">
+      <li><span><b>Eletrônicos:</b>a tomada no Japão é de 100 V, com pinos chatos. Veja se o aparelho aceita 110–240 V e se o menu tem português ou inglês.</span></li>
+      <li><span><b>Tamanhos:</b>tênis vêm em centímetros e as roupas japonesas costumam ser menores. Confira a tabela de medidas da loja.</span></li>
+      <li><span><b>Itens com restrição de envio:</b>baterias, sprays, perfumes e líquidos inflamáveis podem ser barrados pela companhia aérea. O redirecionador avisa o que não pode ir.</span></li>
+      <li><span><b>Some tudo antes:</b>produto + taxas do redirecionador + frete + imposto. Use a calculadora acima.</span></li>
+    </ol>
+  </section>
+
+  <section aria-labelledby="t-fontes" style="display:grid;gap:8px">
+    <h2 id="t-fontes" style="font-family:var(--f-display);font-size:20px;margin:0">Fontes</h2>
+    <ul class="fontes">
+      <li><a href="https://www.legisweb.com.br/noticia/?id=34369" target="_blank" rel="noopener">LegisWeb: sancionada a MP que zera o imposto de importação até US$ 50 (10/09/2026)</a></li>
+      <li><a href="https://www12.senado.leg.br/noticias/materias/2026/09/03/senado-zera-taxa-das-blusinhas-nas-remessas-internacionais-de-ate-us-50" target="_blank" rel="noopener">Agência Senado: Senado aprova o fim da “taxa das blusinhas” (03/09/2026)</a></li>
+      <li><a href="https://forbes.com.br/forbes-money/2026/09/taxa-das-blusinhas-veja-como-ficam-as-compras-internacionais/" target="_blank" rel="noopener">Forbes Brasil: como ficam as compras internacionais (set/2026)</a></li>
+      <li><a href="https://toexceed.com.br/blog/2026/09/12/taxado-em-compra-internacional-o-que-significa-e-quanto-voce-pode-pagar/" target="_blank" rel="noopener">Toexceed: compra taxada, cálculo do ICMS e alerta de golpe (set/2026)</a></li>
+      <li><a href="https://www.correios.com.br/receber/encomenda/internacional" target="_blank" rel="noopener">Correios: recebimento de encomendas internacionais</a></li>
+    </ul>
+  </section>
+
+  <footer>
+    <span>unirversos — tudo conectado · Aline Kikuti</span>
+    <span><a href="/japao/">achados no japão</a> · <a href="/">início</a></span>
+  </footer>
+</div>
+<script>
+(function(){
+  const brl=n=>n.toLocaleString('pt-BR',{style:'currency',currency:'BRL'});
+  const v=document.getElementById('v'), s=document.getElementById('icms');
+  function calc(){
+    const val=Math.max(0,parseFloat(String(v.value).replace(',','.'))||0), a=(+s.value)/100;
+    const ii=val*0.60, icms=(val+ii)/(1-a)*a;
+    document.getElementById('r-ii').textContent=brl(ii);
+    document.getElementById('r-icms').textContent=brl(icms);
+    document.getElementById('r-imp').textContent=brl(ii+icms);
+    document.getElementById('r-tot').textContent=brl(val+ii+icms);
+  }
+  v.addEventListener('input',calc); s.addEventListener('change',calc); calc();
+})();
+</script>
+</body>
+</html>
