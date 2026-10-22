@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-<title>Guia de compra e alfândega · Achados no Japão</title>
+<title>Guia de compra e alfândega · Unirversos Tesouros</title>
 <meta name="description" content="Como juntar compras de lojas diferentes do Japão numa caixa só e quanto se paga de imposto de importação no Brasil. Guia atualizado em outubro de 2026.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -102,21 +102,32 @@ tr:nth-child(even) td{background:#faf6f5}
 .res .tot{background:color-mix(in srgb,var(--pink) 12%,var(--card))}
 .fontes{font-size:13.5px;color:var(--muted);margin:0;padding-left:18px}
 .fontes a{color:var(--ink)}
+.abas{display:flex;gap:6px;background:var(--card);border:1.5px solid var(--line);border-radius:999px;padding:5px;width:max-content;max-width:100%;overflow-x:auto}
+.abas a{flex:0 0 auto;text-decoration:none;font-family:var(--f-display);font-weight:700;font-size:15px;padding:8px 16px;border-radius:999px;color:var(--muted);white-space:nowrap}
+.abas a[aria-current="page"]{background:var(--ink);color:#fff}
+.abas a:not([aria-current]):hover{color:var(--pink)}
+@media (max-width:520px){.abas{width:100%}.abas a{flex:1 1 0;text-align:center;padding:8px 10px;font-size:14px;white-space:normal;line-height:1.25}}
 </style>
 </head>
 <body>
 <div class="wrap">
   <nav class="sitebar" aria-label="Site">
     <a class="logo" href="/">UNI<span>R</span>VERSOS</a>
-    <span class="navlinks"><a href="/idiomas/">idiomas</a><a href="/travessia/">travessia</a><a href="/paralelos/">paralelos</a><a href="/loja/">achados</a><a href="/sobre/">sobre</a></span>
+    <span class="navlinks"><a href="/idiomas/">idiomas</a><a href="/travessia/">travessia</a><a href="/paralelos/">paralelos</a><a href="/loja/">loja</a><a href="/sobre/">sobre</a></span>
+  </nav>
+
+  <nav class="abas" aria-label="Unirversos Tesouros">
+    <a href="/loja/">🛒 Vitrine</a>
+    <a href="/loja/encomendas/">🛍️ Encomendas</a>
+    <a href="/loja/brecho/">🧥 Brechó</a>
   </nav>
 
   <header class="hero">
-    <p class="eyebrow">achados no japão · guia</p>
+    <p class="eyebrow">unirversos tesouros · guia</p>
     <h1>Guia de compra &amp; alfândega</h1>
     <p class="lede">Como juntar compras de lojas diferentes do Japão numa caixa só, quanto se paga de imposto para entrar no Brasil e como pagar sem cair em golpe.</p>
     <p class="aviso">📅 Regras conferidas em <b>22 de outubro de 2026</b>. As regras de importação mudam com frequência; confira sempre no site da Receita Federal. Este guia é informativo e não substitui orientação de um contador.</p>
-    <div class="acts"><a class="btn sec" href="/loja/">← Voltar aos achados</a></div>
+    <div class="acts"><a class="btn sec" href="/loja/">← Voltar à vitrine</a></div>
   </header>
 
   <section class="box" aria-labelledby="t-carrinho" style="--c:var(--pink)">
@@ -198,7 +209,7 @@ tr:nth-child(even) td{background:#faf6f5}
 
   <footer>
     <span>unirversos — tudo conectado · Aline Kikuti</span>
-    <span><a href="/loja/">achados no japão</a> · <a href="/">início</a></span>
+    <span><a href="/loja/">unirversos tesouros</a> · <a href="/">início</a></span>
   </footer>
 </div>
 <script>

@@ -124,12 +124,12 @@ footer a{color:var(--rose)}
 <body>
 <header>
   <a href="/" class="logo">UNIRVERSOS</a>
-  <nav><a href="/idiomas/">idiomas</a><a href="/travessia/">travessia</a><a href="/paralelos/">paralelos</a><a href="/sobre/">sobre</a></nav>
+  <nav><a href="/idiomas/">idiomas</a><a href="/travessia/">travessia</a><a href="/paralelos/">paralelos</a><a href="/loja/">loja</a><a href="/sobre/">sobre</a></nav>
 </header>
 
 <main>
   <section class="hero">
-    <h1>Minha viagem:<br><span>onde eu durmo, o que eu vejo.</span></h1>
+    <h1>Minha viagem:<br><span>hospedagem e atrações</span></h1>
     <p>Hotéis e ingressos na mesma tela. Cada hospedagem traz os ingressos daquele período, com código de reserva, horário de check-in e endereço à mão.</p>
     <p class="par"><a href="/travessia/agendamentos/">Cronograma de ingressos</a> · <a href="/travessia/status/">Meus ingressos</a></p>
   </section>
@@ -397,7 +397,7 @@ function linhaApos(t,re){ const m=t.match(re); if(!m) return ''; let v=(m[1]||''
 function lerTexto(t){
   t=t.replace(/\r/g,''); const r={}, achou=[], low=t.toLowerCase();
   r.plataforma=(PLATS.find(p=>p[1].test(t))||[''])[0];
-  const cod=t.match(/(?:n[uú]mero\s+de\s+confirma[cç][aã]o|c[oó]digo\s+de\s+confirma[cç][aã]o|confirmation\s+(?:number|no\.?|code)|booking\s+(?:number|id|no\.?|reference)|n[uú]mero\s+da\s+reserva|c[oó]digo\s+(?:da|de)\s+reserva|id\s+da\s+reserva|reservation\s+(?:number|code|no\.?|id)|予約番号)[ \t]*[:：#nº°.]*[ \t]*([A-Z0-9\-.]*\d[A-Z0-9\-.]*[A-Z0-9])/i);
+  const cod=t.match(/(?:confirma[cç][aã]o\s+(?:de|da)\s+reserva|n[uú]mero\s+de\s+confirma[cç][aã]o|c[oó]digo\s+de\s+confirma[cç][aã]o|confirmation\s+(?:number|no\.?|code)|booking\s+(?:number|id|no\.?|reference)|n[uú]mero\s+da\s+reserva|c[oó]digo\s+(?:da|de)\s+reserva|id\s+da\s+reserva|reservation\s+(?:number|code|no\.?|id)|予約番号)[ \t]*[:：#nº°.]*[ \t]*([A-Z0-9\-.]*\d[A-Z0-9\-.]*[A-Z0-9])/i);
   r.reserva=cod?cod[1].replace(/\.$/,''):'';
   const vou=t.match(/(?:c[oó]digo\s+do\s+voucher|voucher\s*(?:no\.?|number|code|n[uú]mero)?|ticket\s*(?:no\.?|number|code)|n[uú]mero\s+do\s+ingresso|order\s*(?:no\.?|number|id)|n[uú]mero\s+do\s+pedido|booking\s+code|チケット番号|受付番号)[ \t]*[:：#nº°]*[ \t]*([A-Z0-9\-]*\d[A-Z0-9\-]*)/i);
   r.voucher=vou?vou[1]:'';
@@ -424,7 +424,7 @@ function lerTexto(t){
   if(!nome){ for(const l of t.split('\n')){ for(const seg of l.split(/\.\s+|\s+[|•·—–-]\s+|\s{2,}/)){ const s=seg.trim(); if(s.length>3&&s.length<70&&/\b(hotel|hostel|ryokan|inn|resort|guest\s*house|lodge|capsule|minshuku)\b|ホテル|旅館/i.test(s)&&!/check|confirma|reserva|booking\.com|agoda|obrigad|thank|dear|prezad/i.test(s)){ nome=s; break; } } if(nome) break; } }
   if(!nome) nome=linhaApos(t,/(?:atividade|activity|produto|product|evento|event|bilhete|ticket\s+name)[ \t]*[:：][ \t]*([^\n]*)/i);
   r.nome=nome.replace(/[.,;]+$/,'');
-  r.pagarLocal=/pagar\s+(?:no|na)\s+(?:local|hotel|propriedade|acomoda)|pay\s+at\s+(?:the\s+)?(?:property|hotel)|payment\s+at\s+(?:the\s+)?(?:property|hotel)|pagamento\s+(?:no|na)\s+(?:hotel|propriedade|acomoda)/i.test(t);
+  r.pagarLocal=/pagar\s+(?:no|na)\s+(?:local|hotel|propriedade|acomoda)|pay\s+at\s+(?:the\s+)?(?:property|hotel)|payment\s+at\s+(?:the\s+)?(?:property|hotel)|pagamento\s+(?:no|na)\s+(?:hotel|propriedade|acomoda|check-?in)|pay\s+(?:during|upon|on)\s+(?:your\s+)?(?:stay|arrival)|pay\s+(?:at|upon)\s+check-?in|paga(?:r|mento)\s+(?:ao|no)\s+chegar/i.test(t);
   r.comprado=!!r.voucher||/pagamento\s+confirmado|payment\s+(?:completed|confirmed|received)|compra\s+confirmada|order\s+confirmed|confirmado\s+e\s+emitido|emitido|issued|purchase\s+(?:complete|confirmed)|thank\s+you\s+for\s+your\s+(?:purchase|order)|購入完了/i.test(t);
   return r;
 }
