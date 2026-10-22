@@ -18,7 +18,7 @@ const NOUN={'パスポート':[['É o passaporte.','Não é o passaporte.','É o
   linkList:[['← Idiomas','/idiomas/'],['🎨 Ateliê de Avatar','/idiomas/planeta-utopia/atelie/'],['🗺️ Mapas de contexto →','/idiomas/mapas/']],
   intro:{titulo:'🎒 Antes de embarcar, uma aula com a せんせい',
     txt:['Cada mapa é uma situação da viagem: aeroporto, hotel, restaurante… Mas todos eles usam as mesmas <b>chaves</b>: dizer que algo <b>é</b> ou <b>não é</b>, fazer uma <b>pergunta</b>, falar de <b>ações</b> (ir, comer, beber, entender) e <b>pedir</b> algo.',
-         'A professora vai te mostrar essas chaves com calma. No fim, ela faz algumas perguntas de verdade. Respondeu tudo? Os 12 mapas se abrem.'],
+         'A professora vai te guiar passo a passo por essas chaves. No fim, tem um pequeno desafio prático: responda tudo e os 12 mapas se abrem.'],
     metas:['afirmar, negar e perguntar com です','dizer "não é" do jeito formal e do jeito de amigos (じゃない)','usar os verbos com ます, no presente e no passado','perguntar onde, o quê, quanto, quando e quem','pedir as coisas com educação']},
   npc:{nome:'せんせい (professora)', sel:{hair:'nagai',hairColor:'shiro',face:'egao',clothes:'seetaa',clothColor:'midori',acc:['megane'],traits:[],skin:2}},
   cen:{wall:'#f3efe6', floor:'#e2d5c0',

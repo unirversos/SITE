@@ -109,7 +109,10 @@ body.no-ro .ro, body.no-ro .tile small, body.no-ro .slot small, body.no-ro .chip
 .panel h2{font-family:var(--f-display);font-size:22px;margin:0;line-height:1.2}
 .lead{margin:0;font-size:15.5px}
 .goals{margin:0;padding:0;list-style:none;display:grid;gap:6px}
-.goals li{background:var(--paper);border-left:4px solid var(--sage);border-radius:10px;padding:8px 12px}
+.goals li{background:var(--paper);border-left:4px solid var(--sage);border-radius:10px;padding:8px 12px;display:flex;gap:10px;align-items:baseline}
+.goals .gn{font-family:var(--f-display);font-weight:700;font-size:13px;color:#a08c7a;min-width:1.6em}
+.goals-t{margin:0 0 6px;font-size:14px;font-weight:600;color:var(--ink)}
+.rk{font-weight:600}
 .row{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
 .spacer{flex:1}
 
