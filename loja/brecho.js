@@ -8,7 +8,7 @@
      origem  : bairro ou brechó + cidade, ex.: 'Shimokitazawa, Tóquio'
      detalhe : tamanho, medidas, estado, marca (1 ou 2 frases)
      de, ate : faixa de preço em ienes (só números; preço único = repita o número)
-     foto    : caminho da foto, ex.: '/japao/fotos/br-001.jpg' ('' mostra um ícone)
+     foto    : caminho da foto, ex.: '/loja/fotos/br-001.jpg' ('' mostra um ícone)
      status  : 'disponivel' | 'reservada' | 'vendida'
      exemplo : true só nos cards de exemplo. Apague os exemplos quando colocar as suas peças.
    ========================================================= */

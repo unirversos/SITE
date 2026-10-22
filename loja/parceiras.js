@@ -2,7 +2,7 @@
    ACHADOS NO JAPÃO · parceiras de Personal Shopper
    Para cada parceira, preencha um bloco { ... }. Campos:
      nome      : nome da parceira
-     foto      : caminho da foto de perfil, ex.: '/japao/fotos/parceira-ana.jpg' ('' mostra as iniciais)
+     foto      : caminho da foto de perfil, ex.: '/loja/fotos/parceira-ana.jpg' ('' mostra as iniciais)
      provincia : onde ela mora no Japão, ex.: 'Tóquio' ou 'Osaka'
      nichos    : lista de especialidades, ex.: ['Brechós vintage','Pokémon']
      bio       : mini-bio de 1 a 3 frases

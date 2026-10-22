@@ -6,7 +6,7 @@
      nome   : nome do produto
      desc   : por que é um achado (1 ou 2 frases)
      de, ate: faixa de preço em ienes (só números). Se for preço único, repita o número.
-     foto   : caminho da imagem, ex.: '/japao/fotos/protetor.jpg' (deixe '' para usar o ícone)
+     foto   : caminho da imagem, ex.: '/loja/fotos/protetor.jpg' (deixe '' para usar o ícone)
      link   : link de afiliado ou do redirecionador (ZenMarket, Buyee...). Deixe '' para "link em breve".
      exemplo: true só nos cards de exemplo. Apague os exemplos quando colocar os seus.
    ========================================================= */
