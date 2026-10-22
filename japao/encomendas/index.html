@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-<title>Encomendas & Personal Shopper · Achados no Japão</title>
+<title>Garimpo sob medida · Achados no Japão</title>
 <meta name="description" content="Encomendas sob medida no Japão: brasileiras que moram lá fazem o garimpo físico de peças vintage, itens de colecionador e o que você procurar.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -93,7 +93,7 @@ footer{border-top:1.5px dashed var(--line);padding-top:22px;display:flex;flex-wr
 footer a{text-decoration:none;color:var(--ink)}
 footer a:hover{color:var(--pink)}
 @media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}}
-.passos{margin:0;padding:0;list-style:none;display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:14px;counter-reset:p}
+.passos{margin:0;padding:0;list-style:none;display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:14px;counter-reset:p}
 .passos li{background:var(--card);border:1.5px solid var(--line);border-left:5px solid var(--sage);border-radius:16px;padding:14px 16px;display:grid;gap:4px;align-content:start}
 .passos li::before{counter-increment:p;content:counter(p,decimal-leading-zero);font-family:var(--f-display);font-weight:800;color:#a08c7a;font-size:18px;line-height:1}
 .passos b{font-family:var(--f-display);font-size:17px}
@@ -118,6 +118,8 @@ footer a:hover{color:var(--pink)}
 .pc.vaga .av{background:#fff;color:var(--line);border-style:dashed}
 .ph{height:12px;border-radius:6px;background:var(--line);opacity:.7}
 .ph.w60{width:60%}.ph.w40{width:40%}.ph.w80{width:80%}
+.pc.vaga h3.lbl{color:var(--muted);font-size:18px}
+.pc.vaga i{color:var(--muted)}
 .pc.vaga .em{margin:0;font-size:14px;color:var(--muted)}
 .ct .off{background:var(--paper);color:var(--muted);border:1.5px dashed var(--line);cursor:default}
 </style>
@@ -136,8 +138,8 @@ footer a:hover{color:var(--pink)}
 
   <header class="hero">
     <p class="eyebrow">achados no japão · encomendas</p>
-    <h1>Encomendas & Personal Shopper</h1>
-    <p class="lede">Quer um item exclusivo que só tem no Japão, uma peça vintage de brechó em Tóquio ou um colecionável específico? Conectamos você diretamente com brasileiras especialistas que fazem o garimpo físico para você.</p>
+    <h1 style="font-size:clamp(32px,5vw,50px);max-width:20ch">Garimpo sob medida: encomendas com personal shoppers no Japão</h1>
+    <p class="lede">Quer aquela peça vintage de brechó achada em uma ruela de Shimokitazawa, um item de colecionador raríssimo ou um produto específico que não está nas prateleiras virtuais? Além da nossa vitrine de autosserviço, conectamos você diretamente com brasileiras especialistas que moram no Japão, fazem o garimpo físico nas lojas locais e cuidam de todo o envio para você com segurança e atendimento humanizado.</p>
     <div class="acts">
       <a class="btn pri" href="#parceiras">Conhecer as personal shoppers ↓</a>
       <a class="btn sec" href="/japao/guia/">Imposto e alfândega →</a>
@@ -147,10 +149,9 @@ footer a:hover{color:var(--pink)}
   <section aria-labelledby="t-como" style="display:grid;gap:16px">
     <h2 class="sec-t" id="t-como">Como funciona</h2>
     <ol class="passos">
-      <li><b>Escolha a parceira</b><span>Veja onde cada uma mora e em que ela é especialista.</span></li>
-      <li><b>Conte o que procura</b><span>Mande mensagem pelo botão do card: a mensagem já vai escrita, é só completar com o item.</span></li>
-      <li><b>Receba o orçamento</b><span>Ela garimpa e passa o valor: produto, taxa do serviço e frete.</span></li>
-      <li><b>Combinem e recebam</b><span>Pagamento, prazo e envio são combinados direto com ela. O imposto de importação fica por conta de quem compra.</span></li>
+      <li><b>Escolha a profissional</b><span>Veja o perfil e o nicho que mais combinam com o que você procura.</span></li>
+      <li><b>Entre em contato direto</b><span>Pelo WhatsApp ou pelo Direct, informe o produto ou o link desejado.</span></li>
+      <li><b>Ela garimpa e envia</b><span>Faz a cotação, vai até a loja física no Japão, consolida o seu pacote e envia direto para o Brasil.</span></li>
     </ol>
   </section>
 
@@ -176,22 +177,22 @@ footer a:hover{color:var(--pink)}
   const lista=(window.PARCEIRAS||[]).filter(Boolean);
   const html=lista.map(p=>{
     if(p.vaga||!p.nome){
-      return `<article class="pc vaga" aria-label="Espaço reservado para uma parceira">
-        <div class="top"><div class="av" aria-hidden="true">?</div><div style="flex:1;display:grid;gap:8px"><div class="ph w80"></div><div class="ph w40"></div></div></div>
-        <div style="display:grid;gap:8px"><div class="ph"></div><div class="ph w80"></div><div class="ph w60"></div></div>
-        <p class="em">Em breve: uma nova personal shopper brasileira no Japão.</p>
-        <div class="ct"><a class="off" aria-disabled="true">Contato em breve</a></div>
+      return `<article class="pc vaga" aria-label="Espaço reservado para uma personal shopper">
+        <div class="top"><div class="av" aria-hidden="true">📷</div><div><h3 class="lbl">Nome da profissional / marca</h3><p class="prov">📍 Região no Japão: <i>ex.: base em Tóquio</i></p></div></div>
+        <p class="bio"><b>Especialidade:</b> <i>ex.: brechós e moda vintage · colecionáveis e itens otaku · geral e farmácia</i></p>
+        <p class="em">Espaço reservado: em breve, uma personal shopper brasileira no Japão.</p>
+        <div class="ct"><a class="off" aria-disabled="true">💬 Fazer encomenda via WhatsApp</a></div>
       </article>`;
     }
     const foto=p.foto?`<img src="${esc(p.foto)}" alt="Foto de ${esc(p.nome)}" loading="lazy">`:esc(ini(p.nome));
     const wa=String(p.whatsapp||'').replace(/\D/g,'');
     const ig=String(p.instagram||'').replace(/^@/,'').trim();
     const bts=[];
-    if(wa) bts.push(`<a class="wa" href="https://wa.me/${wa}?text=${encodeURIComponent(p.mensagem||PADRAO)}" target="_blank" rel="noopener">💬 Encomendar pelo WhatsApp</a>`);
+    if(wa) bts.push(`<a class="wa" href="https://wa.me/${wa}?text=${encodeURIComponent(p.mensagem||PADRAO)}" target="_blank" rel="noopener">💬 Fazer encomenda via WhatsApp</a>`);
     if(ig) bts.push(`<a class="ig" href="https://ig.me/m/${encodeURIComponent(ig)}" target="_blank" rel="noopener">📩 Direct no Instagram</a>`);
     return `<article class="pc">
       <div class="top"><div class="av">${foto}</div><div><h3>${esc(p.nome)}</h3>${p.provincia?`<p class="prov">📍 ${esc(p.provincia)}, Japão</p>`:''}</div></div>
-      ${(p.nichos||[]).length?`<ul class="chips">${p.nichos.map(n=>`<li>${esc(n)}</li>`).join('')}</ul>`:''}
+      ${(p.nichos||[]).length?`<p class="prov" style="margin:0"><b>Especialidade</b></p><ul class="chips">${p.nichos.map(n=>`<li>${esc(n)}</li>`).join('')}</ul>`:''}
       ${p.bio?`<p class="bio">${esc(p.bio)}</p>`:''}
       <div class="ct">${bts.join('')||'<a class="off" aria-disabled="true">Contato em breve</a>'}</div>
     </article>`;
