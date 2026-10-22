@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>Brechó · peças únicas de Tóquio · Achados no Japão</title>
+<meta name="description" content="Brechó da Unirversos: peças vintage únicas garimpadas em brechós físicos de Tóquio. Cada peça tem 1 unidade só.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@500;700;800&family=Zen+Maru+Gothic:wght@400;500;700&display=swap">
+<style>
+:root{
+  --paper:#fdf6f4; --card:#ffffff; --ink:#3a2b38; --muted:#6b5a67; --line:#ecdadd;
+  --blush:#f8dde1; --pink:#d9506f; --sage:#7fa487; --sage-soft:#e8efe8; --gold:#c9962c; --lavender:#b7a6dc; --sky:#5b8fc7;
+  --f-display:"Baloo 2","Zen Maru Gothic",system-ui,sans-serif;
+  --f-body:"Zen Maru Gothic","Hiragino Maru Gothic ProN","Noto Sans JP",system-ui,sans-serif;
+  --r:20px;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;background:var(--paper);color:var(--ink);font-family:var(--f-body);font-size:16px;line-height:1.7;
+  background-image:radial-gradient(var(--line) 1.2px,transparent 1.3px);background-size:22px 22px;
+  padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));padding-block:18px 40px}
+a{color:inherit}
+a:focus-visible,button:focus-visible{outline:3px solid var(--lavender);outline-offset:3px;border-radius:8px}
+.wrap{max-width:1060px;margin:0 auto;display:grid;gap:44px}
+.sitebar{display:flex;flex-wrap:wrap;justify-content:space-between;align-items:center;gap:10px 18px}
+.logo{font-family:var(--f-display);font-weight:800;font-size:19px;letter-spacing:.14em;text-decoration:none}
+.logo span{color:var(--pink)}
+.navlinks{display:flex;flex-wrap:wrap;gap:6px 20px;font-size:14px}
+.navlinks a{text-decoration:none;color:var(--muted)}
+.navlinks a:hover{color:var(--pink)}
+
+.hero{display:grid;gap:14px;max-width:720px;padding-top:12px}
+.eyebrow{font-size:12px;letter-spacing:.2em;text-transform:uppercase;color:var(--pink);font-weight:700;margin:0}
+h1{font-family:var(--f-display);font-weight:800;font-size:clamp(38px,6.4vw,62px);line-height:1.02;margin:0;text-wrap:balance;letter-spacing:-.01em}
+h1 .jp{display:block;font-family:"Zen Maru Gothic",sans-serif;font-size:.36em;letter-spacing:.3em;color:var(--pink);margin-bottom:10px;font-weight:700}
+h1 .jp rt{font-size:.5em;letter-spacing:.05em}
+.lede{font-size:clamp(17px,2vw,19px);font-weight:500;margin:0;max-width:56ch}
+.acts{display:flex;flex-wrap:wrap;gap:10px;margin-top:6px}
+.btn{display:inline-flex;align-items:center;gap:8px;text-decoration:none;font-family:var(--f-display);font-weight:700;font-size:16px;padding:10px 20px;border-radius:999px;border:1.5px solid var(--pink)}
+.btn.pri{background:var(--pink);color:#fff;box-shadow:0 6px 16px -8px color-mix(in srgb,var(--pink) 70%,transparent)}
+.btn.sec{background:var(--card);color:var(--pink)}
+.btn:hover{filter:brightness(.96)}
+.aviso{margin:0;font-size:13.5px;color:var(--muted);background:var(--sage-soft);border-radius:14px;padding:10px 14px;max-width:72ch}
+
+.filtros{display:flex;flex-wrap:wrap;gap:8px}
+.filtros button{font:inherit;font-weight:700;font-size:14.5px;border:1.5px solid var(--line);background:var(--card);color:var(--ink);padding:7px 14px;border-radius:999px;cursor:pointer;display:inline-flex;gap:6px;align-items:center}
+.filtros button[aria-pressed="true"]{background:var(--ink);color:#fff;border-color:var(--ink)}
+.filtros .n{font-size:12px;font-weight:500;opacity:.75}
+
+.cats{display:grid;gap:40px}
+.cat-h{display:grid;gap:2px;margin-bottom:14px}
+.cat-h h2{font-family:var(--f-display);font-size:clamp(24px,3.4vw,30px);line-height:1.15;margin:0}
+.cat-h p{margin:0;color:var(--muted);font-size:15px;max-width:62ch}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:18px}
+.card{--c:var(--pink);position:relative;background:var(--card);border:1.5px solid var(--line);border-radius:var(--r);overflow:hidden;display:grid;grid-template-rows:auto 1fr;box-shadow:0 10px 24px -18px rgba(58,43,56,.35)}
+.card[data-cat="nerd"]{--c:var(--lavender)} .card[data-cat="tech"]{--c:var(--sky)} .card[data-cat="moda"]{--c:var(--gold)}
+.foto{aspect-ratio:4/3;background:color-mix(in srgb,var(--c) 14%,var(--card));display:grid;place-items:center;font-size:56px;border-bottom:1.5px solid var(--line)}
+.foto img{width:100%;height:100%;object-fit:cover;display:block}
+.corpo{padding:14px 16px 16px;display:grid;gap:8px;align-content:start}
+.tag{font-size:11px;letter-spacing:.16em;text-transform:uppercase;font-weight:700;color:color-mix(in srgb,var(--c) 75%,var(--ink));margin:0}
+.card h3{font-family:var(--f-display);font-size:19px;line-height:1.2;margin:0}
+.card p.d{margin:0;font-size:14.5px}
+.preco{font-family:var(--f-display);font-weight:700;font-size:17px;margin:2px 0 0}
+.preco small{font-family:var(--f-body);font-weight:500;font-size:12px;color:var(--muted)}
+.quero{justify-self:stretch;text-align:center;margin-top:4px;text-decoration:none;font-weight:700;font-size:14.5px;padding:9px 14px;border-radius:999px;background:var(--pink);color:#fff}
+.quero:hover{filter:brightness(.95)}
+.quero.off{background:var(--paper);color:var(--muted);border:1.5px dashed var(--line);cursor:default}
+.ex{position:absolute;top:10px;left:10px;background:#fff;border:1.5px dashed var(--pink);color:var(--pink);font-size:11px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;padding:2px 8px;border-radius:999px}
+.vazio{margin:0;color:var(--muted);font-size:14.5px;background:var(--card);border:1.5px dashed var(--line);border-radius:14px;padding:14px 16px}
+
+.abas{display:flex;gap:6px;background:var(--card);border:1.5px solid var(--line);border-radius:999px;padding:5px;width:max-content;max-width:100%;overflow-x:auto}
+.abas a{flex:0 0 auto;text-decoration:none;font-family:var(--f-display);font-weight:700;font-size:15px;padding:8px 16px;border-radius:999px;color:var(--muted);white-space:nowrap}
+.abas a[aria-current="page"]{background:var(--ink);color:#fff}
+.abas a:not([aria-current]):hover{color:var(--pink)}
+@media (max-width:520px){.abas{width:100%}.abas a{flex:1 1 0;text-align:center;padding:8px 10px;font-size:14px;white-space:normal;line-height:1.25}}
+.calcbox{background:var(--card);border:1.5px solid var(--line);border-left:6px solid var(--sky);border-radius:var(--r);padding:22px;display:grid;gap:14px}
+.calcbox h2{font-family:var(--f-display);font-size:clamp(22px,3vw,28px);margin:0;line-height:1.15}
+.calcbox p{margin:0}
+.calc{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:12px}
+.calc label{display:grid;gap:4px;font-weight:700;font-size:14.5px}
+.calc input,.calc select{font:inherit;font-weight:500;padding:9px 12px;border:1.5px solid var(--line);border-radius:12px;background:#fff;color:var(--ink);width:100%}
+.res{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px}
+.res div{background:var(--paper);border-radius:14px;padding:10px 12px}
+.res small{display:block;color:var(--muted);font-size:12.5px}
+.res b{font-family:var(--f-display);font-size:20px}
+.res .tot{background:color-mix(in srgb,var(--pink) 12%,var(--card))}
+.guia-card{position:relative;background:var(--card);border:1.5px solid var(--line);border-left:6px solid var(--sage);border-radius:var(--r);padding:22px 22px 20px;display:grid;gap:10px}
+.guia-card h2{font-family:var(--f-display);font-size:clamp(22px,3vw,28px);margin:0;line-height:1.15}
+.guia-card p{margin:0}
+footer{border-top:1.5px dashed var(--line);padding-top:22px;display:flex;flex-wrap:wrap;justify-content:space-between;gap:12px 24px;font-size:14px;color:var(--muted)}
+footer a{text-decoration:none;color:var(--ink)}
+footer a:hover{color:var(--pink)}
+@media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}}
+.passos{margin:0;padding:0;list-style:none;display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:14px;counter-reset:p}
+.passos li{background:var(--card);border:1.5px solid var(--line);border-left:5px solid var(--sage);border-radius:16px;padding:14px 16px;display:grid;gap:4px;align-content:start}
+.passos li::before{counter-increment:p;content:counter(p,decimal-leading-zero);font-family:var(--f-display);font-weight:800;color:#a08c7a;font-size:18px;line-height:1}
+.passos b{font-family:var(--f-display);font-size:17px}
+.passos span{font-size:14.5px}
+.sec-t{font-family:var(--f-display);font-size:clamp(24px,3.4vw,30px);line-height:1.15;margin:0}
+.parc{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:18px}
+.pc{background:var(--card);border:1.5px solid var(--line);border-radius:var(--r);padding:22px 20px 20px;display:grid;gap:12px;align-content:start;box-shadow:0 10px 24px -18px rgba(58,43,56,.35)}
+.pc .top{display:flex;gap:14px;align-items:center}
+.av{width:72px;height:72px;border-radius:50%;flex:0 0 auto;background:var(--blush);display:grid;place-items:center;font-family:var(--f-display);font-weight:800;font-size:24px;color:var(--pink);overflow:hidden;border:3px solid #fff;box-shadow:0 0 0 1.5px var(--line)}
+.av img{width:100%;height:100%;object-fit:cover}
+.pc h3{font-family:var(--f-display);font-size:21px;line-height:1.15;margin:0}
+.pc .prov{margin:2px 0 0;font-size:14px;color:var(--muted)}
+.chips{display:flex;flex-wrap:wrap;gap:6px;margin:0;padding:0;list-style:none}
+.chips li{font-size:12.5px;font-weight:700;background:var(--sage-soft);color:#4e6b55;padding:3px 10px;border-radius:999px}
+.pc p.bio{margin:0;font-size:14.5px}
+.ct{display:grid;gap:8px}
+.ct a{display:flex;justify-content:center;align-items:center;gap:8px;text-decoration:none;font-weight:700;font-size:14.5px;padding:9px 14px;border-radius:999px}
+.ct .wa{background:#25863f;color:#fff}
+.ct .ig{background:var(--card);color:var(--pink);border:1.5px solid var(--pink)}
+.ct a:hover{filter:brightness(.95)}
+.pc.vaga{background:repeating-linear-gradient(-45deg,#fff 0 12px,#fdf6f4 12px 24px);border-style:dashed;box-shadow:none}
+.pc.vaga .av{background:#fff;color:var(--line);border-style:dashed}
+.ph{height:12px;border-radius:6px;background:var(--line);opacity:.7}
+.ph.w60{width:60%}.ph.w40{width:40%}.ph.w80{width:80%}
+.pc.vaga h3.lbl{color:var(--muted);font-size:18px}
+.pc.vaga i{color:var(--muted)}
+.pc.vaga .em{margin:0;font-size:14px;color:var(--muted)}
+.ct .off{background:var(--paper);color:var(--muted);border:1.5px dashed var(--line);cursor:default}
+.gal{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:18px}
+.pz{position:relative;background:var(--card);border:1.5px solid var(--line);border-radius:var(--r);overflow:hidden;display:grid;grid-template-rows:auto 1fr;box-shadow:0 10px 24px -18px rgba(58,43,56,.35)}
+.pz .ft{aspect-ratio:3/4;background:color-mix(in srgb,var(--gold) 14%,var(--card));display:grid;place-items:center;font-size:60px;border-bottom:1.5px solid var(--line);position:relative}
+.pz .ft img{width:100%;height:100%;object-fit:cover;display:block}
+.pz .un{position:absolute;bottom:10px;left:10px;background:var(--ink);color:#fff;font-size:11px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;padding:3px 9px;border-radius:999px}
+.pz .cb{padding:14px 16px 16px;display:grid;gap:7px;align-content:start}
+.pz .og{margin:0;font-size:13px;color:var(--muted)}
+.pz h3{font-family:var(--f-display);font-size:19px;line-height:1.2;margin:0}
+.pz p.dt{margin:0;font-size:14px}
+.pz .cod{font-size:11.5px;color:var(--muted);letter-spacing:.06em}
+.pz .preco{font-family:var(--f-display);font-weight:700;font-size:17px;margin:2px 0 0}
+.pz .go{text-align:center;margin-top:4px;text-decoration:none;font-weight:700;font-size:14.5px;padding:9px 14px;border-radius:999px;background:#25863f;color:#fff}
+.pz .go:hover{filter:brightness(.95)}
+.pz .go.off{background:var(--paper);color:var(--muted);border:1.5px dashed var(--line);cursor:default}
+.pz .ex{position:absolute;top:10px;left:10px;z-index:1;background:#fff;border:1.5px dashed var(--pink);color:var(--pink);font-size:11px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;padding:2px 8px;border-radius:999px}
+.pz.st-res .ft::after,.pz.st-vend .ft::after{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%) rotate(-12deg);font-family:var(--f-display);font-weight:800;font-size:22px;letter-spacing:.12em;text-transform:uppercase;padding:4px 16px;border:3px solid currentColor;border-radius:10px;background:rgba(255,255,255,.85)}
+.pz.st-res .ft::after{content:"reservada";color:var(--gold)}
+.pz.st-vend .ft::after{content:"vendida";color:var(--pink)}
+.pz.st-vend .ft > *{opacity:.45;filter:grayscale(.6)}
+.filtros{display:flex;flex-wrap:wrap;gap:8px}
+.filtros button{font:inherit;font-weight:700;font-size:14.5px;border:1.5px solid var(--line);background:var(--card);color:var(--ink);padding:7px 14px;border-radius:999px;cursor:pointer;display:inline-flex;gap:6px;align-items:center}
+.filtros button[aria-pressed="true"]{background:var(--ink);color:#fff;border-color:var(--ink)}
+.filtros .n{font-size:12px;font-weight:500;opacity:.75}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <nav class="sitebar" aria-label="Site">
+    <a class="logo" href="/">UNI<span>R</span>VERSOS</a>
+    <span class="navlinks"><a href="/idiomas/">idiomas</a><a href="/travessia/">travessia</a><a href="/paralelos/">paralelos</a><a href="/loja/">achados</a><a href="/sobre/">sobre</a></span>
+  </nav>
+
+  <nav class="abas" aria-label="Achados no Japão">
+    <a href="/loja/">🛒 Vitrine</a>
+    <a href="/loja/encomendas/">🛍️ Encomendas</a>
+    <a href="/loja/brecho/" aria-current="page">🧥 Brechó</a>
+  </nav>
+
+  <header class="hero">
+    <p class="eyebrow">achados no japão · brechó</p>
+    <h1 style="font-size:clamp(32px,5vw,52px);max-width:20ch">Brechó: peças únicas garimpadas em Tóquio</h1>
+    <p class="lede">Achados vintage e peças exclusivas de brechós físicos de Tóquio, de Shimokitazawa a Kōenji. Cada peça existe numa unidade só: viu, gostou, garanta pelo WhatsApp antes que alguém leve.</p>
+    <p class="aviso">🧥 Peça única: quem confirma primeiro pelo WhatsApp garante. Peça reservada está esperando pagamento; se ele não acontecer, ela volta para a galeria. O imposto de importação fica por conta de quem compra: veja o <a href="/loja/guia/">guia de compra & alfândega</a>.</p>
+  </header>
+
+  <section aria-label="Galeria do brechó" style="display:grid;gap:18px">
+    <div class="filtros" role="group" aria-label="Filtrar peças" id="filtros"></div>
+    <div class="gal" id="gal"></div>
+  </section>
+
+  <footer>
+    <span>unirversos — tudo conectado · Aline Kikuti</span>
+    <span><a href="/loja/">achados no japão</a> · <a href="/">início</a></span>
+  </footer>
+</div>
+
+<script src="/loja/brecho.js?v=1"></script>
+<script>
+(function(){
+  const esc=s=>String(s==null?'':s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+  const iene=n=>'¥ '+Number(n||0).toLocaleString('pt-BR');
+  const faixa=x=>{ const de=+x.de||0, ate=+x.ate||de; if(!de&&!ate) return ''; return de===ate? iene(de) : iene(de)+' – '+iene(ate).replace('¥ ',''); };
+  const WA=String(window.BRECHO_WHATSAPP||'').replace(/\D/g,'');
+  const PECAS=(window.BRECHO||[]).filter(x=>x&&x.nome);
+  const ORD={disponivel:0,reservada:1,vendida:2};
+  PECAS.sort((a,b)=>(ORD[a.status]??0)-(ORD[b.status]??0));
+  let filtro='todas';
+  function card(x){
+    const st=x.status||'disponivel';
+    const foto=x.foto?`<img src="${esc(x.foto)}" alt="${esc(x.nome)}" loading="lazy">`:'<span aria-hidden="true">🧥</span>';
+    let bt;
+    if(st==='vendida') bt='<span class="go off" aria-disabled="true">Peça vendida</span>';
+    else if(st==='reservada') bt='<span class="go off" aria-disabled="true">Reservada no momento</span>';
+    else if(WA){
+      const msg=`Olá! Vim pelo site da Unirversos e quero garantir a peça ${x.cod?x.cod+' · ':''}${x.nome} do brechó.`;
+      bt=`<a class="go" href="https://wa.me/${WA}?text=${encodeURIComponent(msg)}" target="_blank" rel="noopener">💬 Garantir este achado via WhatsApp</a>`;
+    } else bt='<span class="go off" aria-disabled="true">💬 WhatsApp em breve</span>';
+    const p=faixa(x);
+    return `<article class="pz ${st==='vendida'?'st-vend':st==='reservada'?'st-res':''}">
+      ${x.exemplo?'<span class="ex">exemplo</span>':''}
+      <div class="ft">${foto}<span class="un">1 unidade</span></div>
+      <div class="cb">
+        ${x.origem?`<p class="og">📍 ${esc(x.origem)}</p>`:''}
+        <h3>${esc(x.nome)}</h3>
+        ${x.detalhe?`<p class="dt">${esc(x.detalhe)}</p>`:''}
+        ${p?`<p class="preco">${p}</p>`:''}
+        ${x.cod?`<span class="cod">código ${esc(x.cod)}</span>`:''}
+        ${bt}
+      </div></article>`;
+  }
+  function render(){
+    const disp=PECAS.filter(x=>(x.status||'disponivel')==='disponivel');
+    document.getElementById('filtros').innerHTML=[['todas','Todas as peças',PECAS.length],['disp','Disponíveis',disp.length]]
+      .map(([id,t,n])=>`<button type="button" data-f="${id}" aria-pressed="${id===filtro}">${t} <span class="n">${n}</span></button>`).join('');
+    const lista=filtro==='disp'?disp:PECAS;
+    document.getElementById('gal').innerHTML=lista.length?lista.map(card).join(''):'<p class="aviso">Novas peças chegam em breve.</p>';
+  }
+  document.getElementById('filtros').addEventListener('click',e=>{ const b=e.target.closest('button[data-f]'); if(!b) return; filtro=b.dataset.f; render(); });
+  render();
+})();
+</script>
+</body>
+</html>
