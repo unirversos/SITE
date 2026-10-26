@@ -64,12 +64,14 @@ const msg = e => ERR[e && e.code] || 'Algo deu errado. Tente de novo.';
 
 /* ---------- portão de login ---------- */
 let modo = 'criar';
-function gate(){
+/* opc: { titulo, texto } — abre o mesmo portão, com botão de fechar (para quem não é página obrigatória) */
+function gate(opc){
   if (document.getElementById('uni-gate')) return;
+  const fecha = !!opc; opc = opc || {};
   const g = document.createElement('div'); g.id = 'uni-gate'; g.setAttribute('role','dialog'); g.setAttribute('aria-modal','true'); g.setAttribute('aria-labelledby','uni-gate-t');
   g.innerHTML = `<div class="cx">
-    <h2 id="uni-gate-t">Crie sua conta grátis para começar</h2>
-    <p>Com a conta, o seu avatar, as aulas feitas e os carimbos ficam guardados e vão junto para qualquer celular ou computador.</p>
+    <h2 id="uni-gate-t">${opc.titulo || 'Crie sua conta grátis para começar'}</h2>
+    <p>${opc.texto || 'Com a conta, o seu avatar, as aulas feitas e os carimbos ficam guardados e vão junto para qualquer celular ou computador.'}</p>
     <div class="tabs" role="group" aria-label="Escolha"><button type="button" data-m="criar" aria-pressed="true">Criar conta</button><button type="button" data-m="entrar" aria-pressed="false">Já tenho conta</button></div>
     <button type="button" class="gg" id="uni-g">Continuar com o Google</button>
     <div class="ou">ou com e-mail</div>
@@ -78,9 +80,11 @@ function gate(){
       <button type="submit" class="pri" id="uni-b">Criar conta</button></form>
     <button type="button" class="lk" id="uni-esq" hidden>Esqueci a senha</button>
     <p class="err" id="uni-err" aria-live="polite"></p>
-    <p class="peq">Guardamos só o seu e-mail e o seu progresso nos estudos. <a href="/privacidade/">Como cuidamos dos seus dados</a> · <a href="/idiomas/">voltar para Idiomas</a></p>
+    <p class="peq">${opc.peq || 'Guardamos só o seu e-mail e o seu progresso nos estudos.'} <a href="/privacidade/">Como cuidamos dos seus dados</a>${fecha ? '' : ' · <a href="/idiomas/">voltar para Idiomas</a>'}</p>
+    ${fecha ? '<button type="button" class="lk" id="uni-x">fechar</button>' : ''}
   </div>`;
   document.body.appendChild(g);
+  if (fecha) { document.getElementById('uni-x').onclick = tiraGate; g.addEventListener('keydown', e => { if (e.key === 'Escape') tiraGate(); }); }
   const $ = id => document.getElementById(id), err = t => { $('uni-err').textContent = t || ''; };
   g.querySelector('.tabs').onclick = e => { const b = e.target.closest('button[data-m]'); if (!b) return; modo = b.dataset.m;
     g.querySelectorAll('.tabs button').forEach(x => x.setAttribute('aria-pressed', String(x === b)));
@@ -103,7 +107,7 @@ function chip(user){
   const nome = (user.displayName || user.email || 'você').split(' ')[0].split('@')[0];
   c.innerHTML = `👤 ${nome.replace(/[<>&"]/g,'')} <button type="button">sair</button>`;
   c.querySelector('button').onclick = async () => { await enviar(); await signOut(auth); };
-  const alvo = document.querySelector('.sitebar .navlinks');
+  const alvo = document.querySelector('.sitebar .navlinks') || document.querySelector('.nav .links');
   if (alvo) alvo.appendChild(c); else { c.classList.add('solta'); document.body.appendChild(c); }
 }
 
@@ -152,7 +156,9 @@ async function puxa(user){
 }
 
 /* ---------- estado do login ---------- */
-window.UniConta = { auth, sair: () => signOut(auth), enviar };
+const entrar = opc => gate(opc || {});
+window.UniConta = { auth, db, entrar, sair: () => signOut(auth), enviar };
+export { auth, db, entrar };
 onAuthStateChanged(auth, async user => {
   if (user) {
     tiraGate(); html.classList.add('uni-ok'); chip(user);
