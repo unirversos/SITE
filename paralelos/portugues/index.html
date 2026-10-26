@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<html lang="pt-BR">
+<html lang="pt-BR" data-diario="pt">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Unirversos Português — diário comunitário</title>
+<title>Unirversos Português — diário trilíngue</title>
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Baloo+2:wght@500;600;700&family=Zen+Maru+Gothic:wght@400;500;700&display=swap');
 :root{
@@ -21,7 +21,7 @@ body{font-family:'Zen Maru Gothic',sans-serif;color:var(--ink);background:var(--
 .nav{display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap;padding:22px 0;}
 .logo{font-family:'Baloo 2',cursive;font-size:18px;font-weight:700;text-decoration:none;color:inherit;}
 .logo i{font-style:normal;color:var(--pink);}
-.nav .links{display:flex;gap:18px;font-size:13px;}
+.nav .links{display:flex;flex-wrap:wrap;align-items:center;gap:8px 18px;font-size:13px;}
 .nav .links a{color:var(--ink-soft);text-decoration:none;}
 .nav .links a:hover{color:var(--pink-deep);}
 
@@ -66,6 +66,15 @@ body{font-family:'Zen Maru Gothic',sans-serif;color:var(--ink);background:var(--
 .foot .tags{display:flex;gap:16px;justify-content:center;flex-wrap:wrap;font-size:13px;color:var(--pink-deep);}
 .foot .credit{margin-top:16px;font-size:11.5px;color:var(--ink-soft);opacity:.7;}
 
+
+.form-group input{width:100%;font-family:'Zen Maru Gothic',sans-serif;font-size:15px;padding:10px 14px;border:1px solid var(--blush-2);border-radius:12px;}
+.form-group input:focus{outline:none;border-color:var(--pink);box-shadow:0 0 0 3px var(--pink-soft);}
+.nota-pub{font-size:13px;color:var(--ink-soft);margin:0 0 14px;}
+.aviso{font-size:13px;color:#b3261e;min-height:1.2em;margin-top:8px;}
+.btn-submit:disabled{opacity:.6;cursor:wait;transform:none;}
+.post-pe{display:flex;justify-content:flex-end;margin-top:8px;}
+.post-acao{font:inherit;font-size:12px;color:var(--ink-soft);background:none;border:0;padding:0;cursor:pointer;text-decoration:underline;}
+.post-acao:hover{color:var(--pink-deep);}
 </style>
 </head>
 <body>
@@ -82,10 +91,10 @@ body{font-family:'Zen Maru Gothic',sans-serif;color:var(--ink);background:var(--
     </div>
   </nav>
 
-  <a href="/paralelos/" class="back-link">← voltar para idiomas</a>
+  <a href="/paralelos/" class="back-link">← voltar para Paralelos</a>
 
   <header class="hero">
-    <p class="eyebrow">diário comunitário</p>
+    <p class="eyebrow">diário trilíngue</p>
     <h1>Português</h1>
     <p class="lang-label">Comunidade de Português</p>
     <p>Compartilhe um acontecimento ou pensamento do dia, em português. Inspire e seja inspirado.</p>
@@ -100,16 +109,19 @@ body{font-family:'Zen Maru Gothic',sans-serif;color:var(--ink);background:var(--
 
   <div class="form-box">
     <h3>Novo post</h3>
-    <form id="formPost">
+    <div id="diarioEntrar"><p class="nota-pub">Para publicar, entre com a sua conta grátis. Ler é livre.</p><button type="button" class="btn-submit">Entrar para publicar →</button></div>
+    <form id="formPost" hidden>
       <div class="form-group">
-        <label for="author">Seu nome:</label>
-        <textarea id="author" placeholder="Como você quer ser conhecido?" maxlength="50"></textarea>
+        <label for="author">Seu nome no diário:</label>
+        <input id="author" type="text" placeholder="Como você quer aparecer?" maxlength="40" autocomplete="nickname">
       </div>
       <div class="form-group">
         <label for="text">Sua frase (em português):</label>
         <textarea id="text" placeholder="Um acontecimento, um pensamento, uma descoberta..." maxlength="280" required></textarea>
       </div>
+      <p class="nota-pub">Seu post fica público, com o nome que você escolher. Não escreva telefone, endereço ou outros dados pessoais.</p>
       <button type="submit" class="btn-submit">Publicar →</button>
+      <p id="diarioAviso" class="aviso" aria-live="polite"></p>
     </form>
   </div>
 
@@ -117,12 +129,7 @@ body{font-family:'Zen Maru Gothic',sans-serif;color:var(--ink);background:var(--
     <h2>📖 Histórias da comunidade</h2>
   </div>
 
-  <div class="posts-container" id="postsContainer">
-    <div class="empty-state">
-      <p>Nenhum post ainda. Seja o primeiro a compartilhar! 🌱</p>
-      <p class="note">Seus posts são salvos localmente no seu navegador.</p>
-    </div>
-  </div>
+  <div class="posts-container" id="postsContainer" aria-live="polite"></div>
 
   <footer class="foot">
     <p class="big">unirversos — tudo conectado</p>
@@ -133,84 +140,7 @@ body{font-family:'Zen Maru Gothic',sans-serif;color:var(--ink);background:var(--
 
 </div>
 
-<script>
-const STORAGE_KEY = 'paralelos_portugues_posts';
-
-// Exemplos de posts iniciais
-const SAMPLE_POSTS = [
-  { author: 'Sofia', text: 'Acordei cedo e vi o sol nascendo. Uma nova oportunidade todos os dias.', date: '2024-08-03' },
-  { author: 'Marcos', text: 'Hoje consegui entender uma conversa completa. O esforço compensa.', date: '2024-08-02' },
-  { author: 'Clara', text: 'Aprender um idioma é plantar sementes. Nunca sabemos quando vão brotar.', date: '2024-08-01' }
-];
-
-function getPosts() {
-  const stored = localStorage.getItem(STORAGE_KEY);
-  return stored ? JSON.parse(stored) : SAMPLE_POSTS;
-}
-
-function savePosts(posts) {
-  localStorage.setItem(STORAGE_KEY, JSON.stringify(posts));
-  renderPosts();
-}
-
-function formatDate(date) {
-  return new Date(date).toLocaleDateString('pt-BR', { 
-    year: 'numeric', 
-    month: 'long', 
-    day: 'numeric' 
-  });
-}
-
-function renderPosts() {
-  const posts = getPosts();
-  const container = document.getElementById('postsContainer');
-  
-  if (posts.length === 0) {
-    container.innerHTML = `
-      <div class="empty-state">
-        <p>Nenhum post ainda. Seja o primeiro a compartilhar! 🌱</p>
-        <p class="note">Seus posts são salvos localmente no seu navegador.</p>
-      </div>
-    `;
-    return;
-  }
-
-  container.innerHTML = posts.map((post, idx) => `
-    <div class="post">
-      <div class="post-header">
-        <span class="post-author">${post.author || 'Aprendiz'}</span>
-        <span class="post-date">${formatDate(post.date)}</span>
-      </div>
-      <div class="post-text">${post.text}</div>
-    </div>
-  `).reverse().join('');
-}
-
-document.getElementById('formPost').addEventListener('submit', function(e) {
-  e.preventDefault();
-  
-  const author = document.getElementById('author').value.trim() || 'Aprendiz';
-  const text = document.getElementById('text').value.trim();
-  
-  if (!text) return;
-  
-  const posts = getPosts();
-  posts.push({
-    author: author,
-    text: text,
-    date: new Date().toISOString().split('T')[0]
-  });
-  
-  savePosts(posts);
-  
-  document.getElementById('author').value = '';
-  document.getElementById('text').value = '';
-  document.getElementById('text').focus();
-});
-
-// Renderizar posts ao carregar
-renderPosts();
-</script>
+<script type="module" src="/paralelos/diario.js?v=1"></script>
 
 </body>
 </html>

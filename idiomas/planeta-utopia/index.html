@@ -1,7 +1,10 @@
 <!DOCTYPE html>
-<html lang="pt-BR">
+<html lang="pt-BR" data-login="obrigatorio">
 <head>
 <meta charset="UTF-8">
+<style>html[data-login="obrigatorio"]:not(.uni-ok) body>*:not(#uni-gate){visibility:hidden}</style>
+<script type="module" src="/idiomas/dados/conta.js?v=2"></script>
+<script>setTimeout(function(){var h=document.documentElement;if(!h.classList.contains('uni-ok')&&!document.getElementById('uni-gate'))h.classList.add('uni-ok')},10000)</script>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Planeta Utopia — simulador de situações | Unirversos Idiomas</title>
 <style>
@@ -221,7 +224,7 @@ details.pieces .plist{display:flex;gap:8px;flex-wrap:wrap;padding:0 16px 14px;}
     <span class="b">unirversos — tudo conectado</span>
     <span>planeta utopia · simulador de situações</span>
   </footer>
-  <p class="note">🔊 usa a voz do navegador no idioma do território. Progresso vale só nesta sessão.</p>
+  <p class="note">🔊 usa a voz do navegador no idioma do território. Seu progresso fica salvo na sua conta.</p>
 </main>
 <div class="toast" id="toast"></div>
 <div class="stamp-pop" id="stamp-pop">
@@ -231,7 +234,7 @@ details.pieces .plist{display:flex;gap:8px;flex-wrap:wrap;padding:0 16px 14px;}
     <p id="stamp-sub"></p>
     <button class="btn" onclick="closeStamp()">continuar a jornada →</button>
     <p id="stamp-next" style="margin-top:10px;"></p>
-    <p id="stamp-backmap" style="margin-top:6px;display:none;"><a href="/idiomas/mapas/" style="font-size:13px;color:var(--rose-deep);">↩ voltar aos mapas de contexto</a></p>
+    <p id="stamp-backmap" style="margin-top:6px;display:none;"><a href="/idiomas/japones/" style="font-size:13px;color:var(--rose-deep);">↩ voltar aos mapas de contexto</a></p>
   </div>
 </div>
 
@@ -587,7 +590,8 @@ let cameFromMaps=false;
 (function(){
   const q=new URLSearchParams(location.search);
   const l=q.get('lang'), t=q.get('terr');
-  cameFromMaps = q.get('from')==='mapas';
+  cameFromMaps = q.get('from')==='mapas' || q.get('from')==='trilha';
+  if(q.get('from')==='trilha'){ const bl=document.querySelector('#stamp-backmap a'); if(bl){ bl.href='/idiomas/japones/'; bl.textContent='↩ voltar para a minha trilha'; } }
   const hasSave = loadGame();
   const valid = l && t && PACKS[l] && PACKS[l].territories.some(x=>x.id===t) && SCENES[l] && SCENES[l].scenes[t];
   if(!hasSave && !valid) return; // primeira visita sem link: fica no setup

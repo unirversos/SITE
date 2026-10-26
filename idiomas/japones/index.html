@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html lang="pt-BR" data-login="obrigatorio">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>Trilha do japonês · Unirversos Idiomas</title>
+<meta name="description" content="A trilha do japonês da Unirversos, em ordem: crie seu avatar, aprenda as letras, faça a Aula Zero e os 12 mapas de contexto, cada um com prova e carimbo.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@500;700;800&family=Zen+Maru+Gothic:wght@400;500;700&display=swap">
+<style>html[data-login="obrigatorio"]:not(.uni-ok) body>*:not(#uni-gate){visibility:hidden}</style>
+<script type="module" src="/idiomas/dados/conta.js?v=2"></script>
+<script>setTimeout(function(){var h=document.documentElement;if(!h.classList.contains('uni-ok')&&!document.getElementById('uni-gate'))h.classList.add('uni-ok')},10000)</script>
+<style>
+:root{
+  --paper:#fdf6f4; --card:#ffffff; --ink:#3a2b38; --muted:#6b5a67; --line:#ecdadd;
+  --blush:#f8dde1; --pink:#d9506f; --pink-d:#b23a57; --sage:#4f7a58; --sage-soft:#e8efe8; --taupe:#8a7461; --gold:#8f6b1d;
+  --f-display:"Baloo 2","Zen Maru Gothic",system-ui,sans-serif;
+  --f-body:"Zen Maru Gothic","Hiragino Maru Gothic ProN","Noto Sans JP",system-ui,sans-serif;
+  --r:20px;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;background:var(--paper);color:var(--ink);font-family:var(--f-body);font-size:16px;line-height:1.65;
+  background-image:radial-gradient(var(--line) 1.2px,transparent 1.3px);background-size:22px 22px;
+  padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));padding-block:18px 40px}
+a{color:inherit}
+a:focus-visible,button:focus-visible{outline:3px solid #b7a6dc;outline-offset:3px;border-radius:8px}
+.wrap{max-width:900px;margin:0 auto;display:grid;gap:32px}
+.sitebar{display:flex;flex-wrap:wrap;justify-content:space-between;align-items:center;gap:10px 18px}
+.logo{font-family:var(--f-display);font-weight:800;font-size:19px;letter-spacing:.14em;text-decoration:none}
+.logo span{color:var(--pink)}
+.navlinks{display:flex;flex-wrap:wrap;align-items:center;gap:6px 20px;font-size:14px}
+.navlinks a{text-decoration:none;color:var(--muted)}
+.navlinks a:hover,.navlinks a[aria-current]{color:var(--pink)}
+.crumb{font-size:14px;margin:0}
+.crumb a{color:var(--muted);text-decoration:none}
+.hero{display:grid;gap:12px}
+.eyebrow{font-size:12px;letter-spacing:.2em;text-transform:uppercase;color:var(--pink-d);font-weight:700;margin:0}
+h1{font-family:var(--f-display);font-weight:800;font-size:clamp(34px,5.6vw,52px);line-height:1.05;margin:0}
+.lede{margin:0;font-size:17px;max-width:60ch}
+.barra{display:grid;gap:6px;max-width:520px}
+.barra .tx{font-size:14px;color:var(--muted)}
+.barra .tr{height:10px;border-radius:999px;background:#fff;border:1.5px solid var(--line);overflow:hidden}
+.barra .tr i{display:block;height:100%;background:var(--sage);border-radius:999px;width:0;transition:width .4s}
+.cont{justify-self:start;display:inline-flex;align-items:center;gap:8px;background:var(--pink);color:#fff;text-decoration:none;font-family:var(--f-display);font-weight:700;font-size:17px;padding:11px 22px;border-radius:999px;box-shadow:0 6px 16px -8px rgba(217,80,111,.7)}
+.cont:hover{filter:brightness(.96)}
+.ferr{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+.ferr b{font-size:13px;letter-spacing:.14em;text-transform:uppercase;color:var(--taupe);margin-right:4px}
+.ferr a{text-decoration:none;background:#fff;border:1.5px solid var(--line);border-radius:999px;padding:6px 14px;font-weight:700;font-size:14px}
+.ferr a:hover{border-color:var(--pink);color:var(--pink-d)}
+.passos{list-style:none;margin:0;padding:0;display:grid;gap:12px}
+.ps{position:relative;background:var(--card);border:1.5px solid var(--line);border-left:6px solid var(--line);border-radius:18px;padding:16px 18px;display:grid;grid-template-columns:56px minmax(0,1fr);gap:4px 14px;align-items:start}
+.ps.feito{border-left-color:var(--sage)}
+.ps.pulado{border-left-color:#b9b0a6}
+.ps.prox{border-left-color:var(--pink);box-shadow:0 10px 26px -18px rgba(217,80,111,.65)}
+.ps .n{grid-row:span 3;font-family:var(--f-display);font-weight:800;font-size:22px;color:var(--taupe);line-height:1.2}
+.ps h2{font-family:var(--f-display);font-size:21px;line-height:1.2;margin:0;display:flex;flex-wrap:wrap;align-items:center;gap:6px 10px}
+.ps p{margin:0;font-size:14.5px;color:var(--muted)}
+.st{font-family:var(--f-body);font-size:12px;font-weight:700;letter-spacing:.04em;padding:2px 10px;border-radius:999px;background:var(--paper);color:var(--muted);white-space:nowrap}
+.feito .st{background:var(--sage-soft);color:#3e6347}
+.prox .st{background:var(--blush);color:var(--pink-d)}
+.ac{display:flex;flex-wrap:wrap;gap:8px;margin-top:6px}
+.ac a,.ac button{font:inherit;font-size:14px;font-weight:700;text-decoration:none;border-radius:999px;padding:7px 14px;cursor:pointer;border:1.5px solid var(--line);background:#fff;color:var(--ink)}
+.ac .pri{background:var(--ink);color:#fff;border-color:var(--ink)}
+.prox .ac .pri{background:var(--pink);border-color:var(--pink)}
+.ac .ok{border-color:#cfe0d3;background:var(--sage-soft);color:#3e6347}
+.ac .lk{border:0;background:none;color:var(--muted);text-decoration:underline;padding:7px 4px;font-weight:500}
+.sec{font-family:var(--f-display);font-size:24px;margin:10px 0 0}
+.carimbo{font-size:12.5px;font-weight:700;color:var(--gold)}
+footer{border-top:1.5px dashed var(--line);padding-top:20px;display:flex;flex-wrap:wrap;justify-content:space-between;gap:12px 24px;font-size:14px;color:var(--muted)}
+footer a{color:var(--ink);text-decoration:none}
+@media (max-width:520px){.ps{grid-template-columns:40px minmax(0,1fr)}.ps .n{font-size:18px}}
+@media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}.barra .tr i{transition:none}}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <nav class="sitebar" aria-label="Site">
+    <a class="logo" href="/">UNI<span>R</span>VERSOS</a>
+    <span class="navlinks"><a href="/idiomas/" aria-current="page">idiomas</a><a href="/travessia/">travessia</a><a href="/paralelos/">paralelos</a><a href="/loja/">loja</a><a href="/sobre/">sobre</a></span>
+  </nav>
+  <p class="crumb"><a href="/idiomas/">← Idiomas</a></p>
+
+  <header class="hero">
+    <p class="eyebrow">trilha do japonês</p>
+    <h1>Sua trilha do japonês</h1>
+    <p class="lede">Um passo de cada vez, nesta ordem. Pode pular o que você já sabe: a trilha guarda o que foi feito e mostra o próximo passo.</p>
+    <div class="barra"><span class="tx" id="ptx">—</span><span class="tr" aria-hidden="true"><i id="pbar"></i></span></div>
+    <a class="cont" id="cont" href="#">Continuar →</a>
+  </header>
+
+  <nav class="ferr" aria-label="Ferramentas">
+    <b>Ferramentas</b>
+    <a href="/idiomas/planeta-utopia/atelie/">🎨 Meu avatar</a>
+    <a href="/idiomas/planeta-utopia/caderno/">📒 Caderno de palavras</a>
+    <a href="/idiomas/amuleto/">💎 Amuleto de bolso</a>
+  </nav>
+
+  <section aria-labelledby="t-inicio">
+    <h2 class="sec" id="t-inicio">Antes dos mapas</h2>
+    <ol class="passos" id="antes"></ol>
+  </section>
+  <section aria-labelledby="t-mapas">
+    <h2 class="sec" id="t-mapas">Os 12 mapas</h2>
+    <ol class="passos" id="mapas"></ol>
+  </section>
+  <section aria-labelledby="t-pass">
+    <h2 class="sec" id="t-pass">Passaporte</h2>
+    <ol class="passos" id="pass"></ol>
+  </section>
+
+  <footer>
+    <span>unirversos — tudo conectado · Aline Kikuti</span>
+    <span><a href="/idiomas/">idiomas</a> · <a href="/privacidade/">privacidade</a></span>
+  </footer>
+</div>
+<script>
+(function(){
+  const MAPAS=[
+    ['aeroporto','✈️','Aeroporto','Imigração, reserva, bagagem','aeroporto'],
+    ['hotel','🏨','Hotel','Check-in, café da manhã, problemas no quarto','hotel'],
+    ['restaurante','🍜','Restaurante','Quantas pessoas, pedido, conta','restaurante'],
+    ['kombini','🏪','Konbini','Esquentar, sacola, recibo','conbini'],
+    ['trens','🚆','Trens','Destino, preço, plataforma','trens'],
+    ['compras','🎁','Compras','Preço, desconto, これ・それ・あれ','compras'],
+    ['roupas','👚','Roupas','Provar, tamanho, cor','roupas'],
+    ['emergencia','🆘','Emergência','Perdi, dói aqui, chame ajuda','sos'],
+    ['apresentacao','🤝','Apresentação','Nome, país, trabalho, hobby','base'],
+    ['horas','🕒','Horas','Que horas são, marcar horário','numeros'],
+    ['planos','🎬','Planos','Convidar, aceitar, recusar','planos'],
+    ['sinalizacao','🪧','Sinalização','Placas, saída, proibido, perigo','placas']
+  ];
+  const ler=k=>{ try{ const v=localStorage.getItem(k); return v==null?null:JSON.parse(v); }catch(e){ try{ return localStorage.getItem(k); }catch(_){ return null; } } };
+  const grava=(k,v)=>{ try{ localStorage.setItem(k,typeof v==='string'?v:JSON.stringify(v)); }catch(e){} };
+  const esc=s=>String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+
+  function estado(){
+    const av=ler('utopiaAvatar1'), kana=ler('utopiaKana1')||{}, pulos=ler('utopiaPulos1')||{}, M=ler('utopiaMapas1')||{}, save=ler('utopiaSave1')||{};
+    const done=(save&&save.done)||{};
+    const az=ler('aulaZeroCompleted'), azp=ler('aulaZeroPulada');
+    const kv=k=>{ const p=kana[k]||{}; return {seen:Object.keys(p.seen||{}).length, fim:!!p.esp}; };
+    return {
+      avatar: !!(av&&av.sel),
+      hira: kv('hira'), kata: kv('kata'), letrasPulo: !!pulos.letras,
+      az: az===true||az==='true', azPulo: azp===true||azp==='true',
+      mapa: MAPAS.map(m=>({aula: !!(M[m[0]]&&M[m[0]].steps&&M[m[0]].steps[4]), prova: !!done['ja:'+m[4]]}))
+    };
+  }
+
+  function card(o){
+    const cls=o.cls?` ${o.cls}`:'';
+    return `<li class="ps${cls}" ${o.id?`id="${o.id}"`:''}>
+      <span class="n" aria-hidden="true">${o.n}</span>
+      <h2>${o.t} <span class="st">${o.st}</span></h2>
+      <p>${o.d}</p>
+      <div class="ac">${o.ac||''}</div></li>`;
+  }
+
+  function render(){
+    const E=estado();
+    /* status de cada etapa */
+    const letrasOk=(E.hira.fim&&E.kata.fim), letrasFeito=letrasOk||E.letrasPulo;
+    const azFeito=E.az||E.azPulo;
+    /* próximo passo: primeira etapa não feita */
+    let prox=null;
+    if(!E.avatar) prox={id:'p-avatar',href:'/idiomas/planeta-utopia/atelie/',t:'Crie seu avatar'};
+    else if(!letrasFeito) prox={id:'p-letras',href:E.hira.fim?'/idiomas/katakana/':'/idiomas/hiragana/',t:E.hira.fim?'Katakana':'Hiragana'};
+    else if(!azFeito) prox={id:'p-az',href:'/idiomas/aula-zero/',t:'Aula Zero'};
+    else { for(let i=0;i<MAPAS.length;i++){ const m=MAPAS[i], s=E.mapa[i];
+      if(!s.aula){ prox={id:'p-'+m[0],href:`/idiomas/mapas/${m[0]}/aula/`,t:`Mapa ${i+1} · ${m[2]}`}; break; }
+      if(!s.prova){ prox={id:'p-'+m[0],href:`/idiomas/planeta-utopia/?lang=ja&terr=${m[4]}&from=trilha`,t:`Prova do mapa ${i+1} · ${m[2]}`}; break; } } }
+    const st=(feito,pulado,id)=>feito?'✓ feito':pulado?'✓ pulado':(prox&&prox.id===id?'próximo passo':'a fazer');
+    const cl=(feito,pulado,id)=>feito?'feito':pulado?'pulado':(prox&&prox.id===id?'prox':'');
+
+    /* antes dos mapas */
+    const antes=[];
+    antes.push(card({id:'p-avatar',n:'01',t:'🎨 Crie seu avatar',st:st(E.avatar,false,'p-avatar'),cls:cl(E.avatar,false,'p-avatar'),
+      d:'No Ateliê você monta o seu personagem e já aprende as primeiras palavras. Ele acompanha você em todas as aulas.',
+      ac:`<a class="pri" href="/idiomas/planeta-utopia/atelie/">${E.avatar?'Editar meu avatar':'Abrir o Ateliê'}</a>`}));
+    const hiraTx=E.hira.fim?'Hiragana ✓':`Hiragana${E.hira.seen?` · ${E.hira.seen} letras vistas`:''}`;
+    const kataTx=E.kata.fim?'Katakana ✓':`Katakana${E.kata.seen?` · ${E.kata.seen} letras vistas`:''}`;
+    antes.push(card({id:'p-letras',n:'02',t:'あ As letras',st:st(letrasOk,E.letrasPulo&&!letrasOk,'p-letras'),cls:cl(letrasOk,E.letrasPulo&&!letrasOk,'p-letras'),
+      d:'Hiragana e Katakana, com a ordem dos traços e folhas para imprimir. Recomendado: dá para fazer junto com as aulas.',
+      ac:`<a class="${E.hira.fim?'ok':'pri'}" href="/idiomas/hiragana/">${esc(hiraTx)}</a><a class="${E.kata.fim?'ok':''}" href="/idiomas/katakana/">${esc(kataTx)}</a>`+
+         (letrasOk?'':E.letrasPulo?`<button type="button" class="lk" data-acao="desfaz-letras">desfazer o pulo</button>`:`<button type="button" class="lk" data-acao="pula-letras">Já sei ler: pular</button>`)}));
+    antes.push(card({id:'p-az',n:'03',t:'🎓 Aula Zero',st:st(E.az,E.azPulo&&!E.az,'p-az'),cls:cl(E.az,E.azPulo&&!E.az,'p-az'),
+      d:'As chaves antes dos mapas: afirmar, negar e perguntar com です, じゃない e ですか, os verbos com ます e como pedir.',
+      ac:`<a class="pri" href="/idiomas/aula-zero/">${E.az?'Rever a Aula Zero':'Fazer a Aula Zero'}</a>`+
+         (E.az?'':E.azPulo?`<button type="button" class="lk" data-acao="desfaz-az">desfazer o pulo</button>`:`<button type="button" class="lk" data-acao="pula-az">Já sei o básico: pular</button>`)}));
+    document.getElementById('antes').innerHTML=antes.join('');
+
+    /* mapas */
+    document.getElementById('mapas').innerHTML=MAPAS.map((m,i)=>{
+      const s=E.mapa[i], id='p-'+m[0], feito=s.aula&&s.prova;
+      const n=String(i+4).padStart(2,'0');
+      const stTx=feito?'✓ feito':(prox&&prox.id===id?'próximo passo':s.aula?'falta a prova':'a fazer');
+      return card({id,n,t:`${m[1]} Mapa ${i+1} · ${m[2]}`,st:stTx,cls:feito?'feito':(prox&&prox.id===id?'prox':''),
+        d:esc(m[3])+(s.prova?` · <span class="carimbo">🏅 carimbo ganho</span>`:''),
+        ac:`<a class="${s.aula?'ok':'pri'}" href="/idiomas/mapas/${m[0]}/aula/">${s.aula?'Aula ✓':'Aula'}</a>`+
+           `<a class="${s.prova?'ok':(s.aula?'pri':'')}" href="/idiomas/planeta-utopia/?lang=ja&terr=${m[4]}&from=trilha">${s.prova?'Prova ✓':'Prova'}</a>`});
+    }).join('');
+
+    /* passaporte */
+    const carimbos=E.mapa.filter(s=>s.prova).length;
+    document.getElementById('pass').innerHTML=card({n:'★',t:'🛂 Seu passaporte',st:`${carimbos} de 12 carimbos`,cls:carimbos===12?'feito':'',
+      d:'Cada prova que você passa vira um carimbo. Aqui ficam todos juntos.',
+      ac:`<a href="/idiomas/planeta-utopia/">Ver o passaporte</a>`});
+
+    /* barra e continuar */
+    const total=3+12, feitos=(E.avatar?1:0)+(letrasFeito?1:0)+(azFeito?1:0)+E.mapa.filter(s=>s.aula&&s.prova).length;
+    document.getElementById('ptx').textContent=`${feitos} de ${total} etapas · ${carimbos} ${carimbos===1?'carimbo':'carimbos'}`;
+    document.getElementById('pbar').style.width=Math.round(feitos/total*100)+'%';
+    const c=document.getElementById('cont');
+    if(prox){ c.href=prox.href; c.textContent=`Continuar: ${prox.t} →`; c.hidden=false; }
+    else { c.href='/idiomas/planeta-utopia/'; c.textContent='Trilha completa! Ver o passaporte →'; }
+  }
+
+  document.addEventListener('click',e=>{
+    const b=e.target.closest('button[data-acao]'); if(!b) return;
+    const pulos=ler('utopiaPulos1')||{};
+    if(b.dataset.acao==='pula-letras'){ pulos.letras=true; grava('utopiaPulos1',pulos); }
+    if(b.dataset.acao==='desfaz-letras'){ pulos.letras=false; grava('utopiaPulos1',pulos); }
+    if(b.dataset.acao==='pula-az'){ grava('aulaZeroPulada','true'); }
+    if(b.dataset.acao==='desfaz-az'){ try{ localStorage.removeItem('aulaZeroPulada'); }catch(_){}; grava('aulaZeroPulada','false'); }
+    render();
+  });
+  document.addEventListener('uni-progresso',render);
+  render();
+})();
+</script>
+</body>
+</html>

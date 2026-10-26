@@ -1,7 +1,11 @@
 <!DOCTYPE html>
-<html lang="pt-BR">
+<html lang="pt-BR" data-login="obrigatorio">
 <head>
 <meta charset="UTF-8">
+<script>/* o japonês agora mora na trilha; aqui fica só o Explorar de inglês e português */(function(){try{if(!new URLSearchParams(location.search).get('explorar'))location.replace('/idiomas/japones/');}catch(e){}})();</script>
+<style>html[data-login="obrigatorio"]:not(.uni-ok) body>*:not(#uni-gate){visibility:hidden}</style>
+<script type="module" src="/idiomas/dados/conta.js?v=2"></script>
+<script>setTimeout(function(){var h=document.documentElement;if(!h.classList.contains('uni-ok')&&!document.getElementById('uni-gate'))h.classList.add('uni-ok')},10000)</script>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Eu crio mapas — trilhas de idiomas para viagem | Unirversos Idiomas</title>
 <style>
@@ -1650,5 +1654,11 @@ if(window.AUDIO_CREDITO){ const cr=document.createElement('p'); cr.style.cssText
 </script>
 <script src="/idiomas/dados/avatar.js?v=20261016g"></script>
 <script src="/idiomas/dados/avatar-badge.js?v=20261016g"></script>
+<script>
+(function(){ try{ const q=new URLSearchParams(location.search).get('explorar'); if(!q) return;
+  const i=LANGS.findIndex(l=>l.key===q); if(i<0) return;
+  const b=document.querySelector('.hub-tabs button:nth-child(2)'); if(b) b.click();
+  setLang(i); }catch(e){} })();
+</script>
 </body>
 </html>

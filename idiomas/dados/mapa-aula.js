@@ -404,14 +404,14 @@ function loadAula(slug){
   CENAS=raw.cenas.map(prep).map(c=>Object.assign(c,{pt:rk(c.pt),ansPt:rk(c.ansPt),dica:c.dica?rk(c.dica):c.dica,distr:(c.distr||[]).map(rk)}));
   P=M[slug]=Object.assign({words:{},steps:{}},M[slug]||{});
   step=0; wi=0; mi=0; oi=0; ci=0; done={}; $('fx').innerHTML='';
-  document.title=A.docTitle||`Aula: ${A.titulo} · Mapas de contexto`;
+  document.title=A.docTitle||`Aula ${String(ORDEM.indexOf(A.slug)+1).padStart(2,'0')} · ${A.titulo} | Mapas de contexto · Unirversos`;
   $('eyebrow').innerHTML=`${A.eyebrow||('Mapa de contexto '+A.num)} · ${A.titulo} · <span style="text-transform:none;letter-spacing:.05em">${A.jp}</span>`;
   $('h1').textContent=A.h1;
   $('stage').setAttribute('aria-label','Cena: '+A.titulo);
   const L=$('links'); if(L&&A.linkList){ L.innerHTML=A.linkList.map(([t,h])=>`<a href="${h}">${t}</a>`).join(''); }
   else if(L&&A.links!==false){
     const order=ORDEM; const k=order.indexOf(slug), nx=order[k+1];
-    L.innerHTML=`<a href="/idiomas/mapas/">🗺️ Todos os mapas</a>${nx?`<a href="/idiomas/mapas/${nx}/aula/">Próxima aula: ${TITULOS[nx]||nx} →</a>`:''}`; }
+    L.innerHTML=`<a href="/idiomas/japones/">🗺️ Todos os mapas</a>${nx?`<a href="/idiomas/mapas/${nx}/aula/">Próxima aula: ${TITULOS[nx]||nx} →</a>`:''}`; }
   showXP(); go(0);
 }
 

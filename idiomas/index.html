@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Unirversos Idiomas — aprenda a se comunicar a partir da sua essência</title>
+<title>Unirversos Idiomas — japonês, inglês e português a partir de você</title>
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Baloo+2:wght@500;600;700&family=Zen+Maru+Gothic:wght@400;500;700&display=swap');
 :root{
@@ -22,7 +22,7 @@ body{font-family:'Zen Maru Gothic',sans-serif;color:var(--ink);background:var(--
 .nav{display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap;padding:22px 0;}
 .logo{font-family:'Baloo 2',cursive;font-size:18px;font-weight:700;text-decoration:none;color:inherit;}
 .logo i{font-style:normal;color:var(--pink);}
-.nav .links{display:flex;gap:18px;font-size:13px;}
+.nav .links{display:flex;flex-wrap:wrap;align-items:center;gap:8px 18px;font-size:13px;}
 .nav .links a{color:var(--ink-soft);text-decoration:none;}
 .nav .links a:hover{color:var(--pink-deep);}
 .nav .links a.on{color:var(--pink);}
@@ -103,6 +103,20 @@ section.block{padding:40px 0 10px;}
 .foot .comm b{color:var(--ink);}
 .foot .comm a{color:var(--pink-deep);font-weight:700;text-decoration:none;}
 .foot .credit{margin-top:18px;font-size:12px;color:var(--ink-soft);text-align:center;}
+.passo0{font-size:14px!important;margin:18px auto 0!important}
+.passo0 a{color:var(--pink-deep);font-weight:700}
+.trilhas{display:grid;gap:14px;margin-top:22px}
+.tri{display:grid;grid-template-columns:56px minmax(0,1fr) auto;gap:16px;align-items:center;background:#fff;border:1.5px solid var(--blush-2);border-left:6px solid var(--c);border-radius:18px;padding:18px 20px;text-decoration:none;color:inherit;transition:transform .15s ease,box-shadow .15s ease}
+.tri:hover{transform:translateY(-2px);box-shadow:0 12px 26px -18px rgba(74,65,73,.5)}
+.tri.ja{--c:#C26F6C}.tri.en{--c:#5b7fb0}.tri.pt{--c:#5e8f72}
+.tri .fl{width:56px;height:56px;border-radius:50%;display:grid;place-items:center;font-family:'Baloo 2',cursive;font-weight:800;font-size:18px;color:#fff;background:var(--c)}
+.tri .tx{display:grid;gap:2px}
+.tri b{font-family:'Baloo 2',cursive;font-size:22px;line-height:1.15}
+.tri small{font-size:12px;letter-spacing:1.2px;text-transform:uppercase;color:var(--c);font-weight:700}
+.tri .tx span{font-size:14px;color:var(--ink-soft)}
+.tri .go{font-weight:700;color:var(--c);white-space:nowrap}
+@media (max-width:560px){.tri{grid-template-columns:44px minmax(0,1fr)}.tri .fl{width:44px;height:44px;font-size:15px}.tri .go{grid-column:2}}
+.diario{text-align:center;font-size:14.5px;color:var(--ink-soft);margin-top:16px}
 </style>
 </head>
 <body>
@@ -122,45 +136,51 @@ section.block{padding:40px 0 10px;}
 
   <header class="hero">
     <p class="eyebrow">unirversos idiomas</p>
-    <h1>Aprenda a se comunicar a partir da sua <em>essência</em>.</h1>
-    <p>Trilhas de inglês, japonês e português criadas com uma metodologia autoral e prática. Primeiro, descubra a sua voz — depois, trace o seu próprio caminho rumo à fluência.</p>
+    <h1>Um idioma que começa em <em>você</em>.</h1>
+    <p>Trilhas de japonês, inglês e português com uma metodologia autoral e prática. Escolha o idioma, siga os passos em ordem e pule o que você já sabe.</p>
     <div class="ctas">
-      <a href="/idiomas/aula-zero/" class="cta">Fazer a Aula Zero gratuita</a>
+      <a href="#trilhas" class="cta">Escolher o meu idioma ↓</a>
       <a href="#ao-vivo" class="live">Ver turmas ao vivo <b>vagas abertas</b></a>
     </div>
+    <p class="passo0">Quer se conhecer antes? <a href="/idiomas/autoanalise/">Passo Zero: a autoanálise</a> (opcional, 30 minutos).</p>
   </header>
 
-  <!-- TRILHAS AUTOGUIADAS -->
-  <section class="block" id="trilhas">
+  <!-- A PORTA: UMA TRILHA POR IDIOMA -->
+  <section class="block" id="trilhas" style="scroll-margin-top:16px">
     <div class="section-intro" style="padding-top:0">
-      <h2>Aprenda no seu próprio ritmo</h2>
-      <p>Quatro experiências práticas para estudar quando e onde quiser. Escolha por onde começar:</p>
+      <p class="eyebrow">comece aqui</p>
+      <h2>Qual idioma você quer?</h2>
+      <p>Cada idioma tem uma trilha só, com os passos em ordem. A conta é grátis e guarda o seu progresso em qualquer aparelho.</p>
+    </div>
+    <div class="trilhas">
+      <a class="tri ja" href="/idiomas/japones/"><span class="fl">JA</span><span class="tx"><b>Japonês</b><small>trilha completa</small><span>Seu avatar, as letras, a Aula Zero e 12 mapas de viagem, cada um com prova e carimbo.</span></span><span class="go">Começar →</span></a>
+      <a class="tri en" href="/idiomas/mapas/?explorar=en"><span class="fl">EN</span><span class="tx"><b>Inglês</b><small>trilha inicial · 5 mapas</small><span>As situações essenciais de viagem, com moldes prontos e escuta.</span></span><span class="go">Começar →</span></a>
+      <a class="tri pt" href="/idiomas/mapas/?explorar=pt"><span class="fl">PT</span><span class="tx"><b>Português</b><small>for foreigners · 5 maps</small><span>Portuguese for travelers and newcomers to Brazil.</span></span><span class="go">Start →</span></a>
+    </div>
+  </section>
+
+  <!-- FERRAMENTAS -->
+  <section class="block" id="ferramentas">
+    <div class="section-intro" style="padding-top:0">
+      <h2>Sempre à mão</h2>
+      <p>Ferramentas que ajudam em qualquer trilha. Não são lições: use quando quiser.</p>
     </div>
     <div class="grid2">
-      <div class="card"><span class="ic">🧭</span><h3>Mapas de Contexto</h3>
-        <p><b>Situações reais decodificadas.</b> 12 mapas em japonês e introduções para inglês e português, com estruturas prontas e treino de escuta ativa.</p>
-        <a class="go" href="/idiomas/mapas/">Explorar os mapas →</a></div>
-      <div class="card"><span class="ic">🪐</span><h3>Planeta Utopia<small>livro-jogo</small></h3>
-        <p><b>Fluência gamificada.</b> Crie seu avatar, complete missões no idioma escolhido e ganhe XP enquanto expande seu vocabulário.</p>
-        <a class="go" href="/idiomas/planeta-utopia/atelie/">Criar meu avatar →</a></div>
-      <div class="card"><span class="ic">🔮</span><h3>Amuleto de Bolso</h3>
-        <p><b>O essencial na ponta da língua.</b> 52 expressões em 3 idiomas organizadas em flashcards, com pronúncia, kanji e nuances culturais.</p>
-        <a class="go" href="/idiomas/amuleto/">Conhecer o amuleto →</a></div>
-      <div class="card"><span class="ic">📓</span><h3>Diário trilíngue</h3>
-        <p><b>Constância e expressão diária.</b> Escreva pensamentos curtos no idioma-alvo e pratique com uma comunidade ativa de aprendizes.</p>
-        <a class="go" href="/paralelos/">Escrever no diário →</a></div>
+      <div class="card"><span class="ic">🎨</span><h3>Meu avatar</h3>
+        <p><b>Seu personagem nas aulas.</b> Monte no Ateliê e aprenda as primeiras palavras enquanto escolhe cabelo, roupa e cores.</p>
+        <a class="go" href="/idiomas/planeta-utopia/atelie/">Abrir o Ateliê →</a></div>
+      <div class="card"><span class="ic">📒</span><h3>Caderno de palavras</h3>
+        <p><b>Tudo o que você já aprendeu.</b> As palavras das aulas e do Ateliê num lugar só, com áudio.</p>
+        <a class="go" href="/idiomas/planeta-utopia/caderno/">Abrir o caderno →</a></div>
+      <div class="card"><span class="ic">💎</span><h3>Amuleto de bolso</h3>
+        <p><b>Frases prontas para levar.</b> 52 expressões em 3 idiomas em flashcards, com pronúncia e nuances culturais.</p>
+        <a class="go" href="/idiomas/amuleto/">Abrir o amuleto →</a></div>
+      <div class="card"><span class="ic">🌬️</span><h3>Ar · socorro</h3>
+        <p><b>Quando a conversa aperta.</b> As 5 gavetas para ganhar tempo, pedir ajuste e sair com elegância. Fica dentro de cada aula.</p>
+        <a class="go" href="/idiomas/japones/">Ver na trilha →</a></div>
     </div>
+    <p class="diario">✍️ Para praticar escrevendo, use o <a class="textlink" href="/paralelos/">Diário trilíngue</a>, em Paralelos.</p>
   </section>
-
-  <!-- AULA ZERO -->
-  <section class="highlight" id="aula-zero">
-    <span class="tag">Grátis · Passo inicial</span>
-    <h2>Não sabe por onde começar? Experimente a Aula Zero.</h2>
-    <p>Frases essenciais de sobrevivência e pronúncia imediata para dar os primeiros passos com segurança antes de avançar nas trilhas.</p>
-    <a href="/idiomas/aula-zero/" class="cta">Acessar a Aula Zero →</a>
-  </section>
-
-  <!-- METODOLOGIA -->
   <section class="block" id="metodo">
     <div class="manifesto"><p>Não é sobre sair da sua zona de conforto.<br>É sobre <span>expandi-la</span>.</p></div>
     <div class="section-intro">
@@ -171,7 +191,7 @@ section.block{padding:40px 0 10px;}
       <div class="elrow" style="--c:#E0805A"><span class="e">🔥</span><div><h4>Fogo <small>· Mapas de Contexto</small></h4><p>A estrutura lógica que destrava centenas de frases a partir de moldes do dia a dia.</p></div></div>
       <div class="elrow" style="--c:#6E9BC9"><span class="e">💧</span><div><h4>Água <small>· Quebra-Cabeça da Fluência</small></h4><p>Cada palavra que falta vira aprendizado imediato para sua lista de expansão diária.</p></div></div>
       <div class="elrow" style="--c:#7FA893"><span class="e">🌱</span><div><h4>Terra <small>· Desafio do Diário</small></h4><p>Pequenos registros diários no idioma-alvo para fixar a língua de forma orgânica e tangível.</p></div></div>
-      <div class="elrow" style="--c:#8B90C4"><span class="e">🌬️</span><div><h4>Ar <small>· Quests &amp; Roleplay</small></h4><p>Simulações práticas com seu avatar para ganhar ritmo, espontaneidade e segurança ao falar.</p></div></div>
+      <div class="elrow" style="--c:#8B90C4"><span class="e">🌬️</span><div><h4>Ar <small>· Manter a conversa viva</small></h4><p>As 5 gavetas (respirar, declarar, pedir ajuste, confirmar e sair) para ganhar fôlego e não travar quando o diálogo aperta. Ficam no botão Ar · socorro, dentro de cada aula.</p></div></div>
       <div class="elrow fifth" style="--c:#C0913F"><span class="e">✦</span><div><h4>O Quinto Elemento <small>· Espírito</small></h4><p>A conexão que acontece quando tudo se junta numa troca autêntica em primeira pessoa.</p></div></div>
     </div>
     <p class="center"><a class="textlink" href="/sobre/">Entenda o método completo →</a></p>
