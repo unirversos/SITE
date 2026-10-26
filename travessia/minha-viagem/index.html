@@ -648,5 +648,37 @@ let abaSalva='linha'; try{ abaSalva=localStorage.getItem('travessiaViagemAba')||
 aba(V.hoteis.length?abaSalva:'mesa');
 tudo();
 </script>
+<script>
+/* Rascunho: o que a pessoa começou a preencher em "Adicionar hospedagem" ou "Adicionar atividade"
+   fica guardado neste navegador até ela salvar ou cancelar. Assim, ir às aulas e voltar não apaga nada. */
+(function(){
+  var K='travessiaRascunho1';
+  function ler(){ try{ return JSON.parse(localStorage.getItem(K)||'{}'); }catch(e){ return {}; } }
+  function grava(o){ try{ localStorage.setItem(K,JSON.stringify(o)); }catch(e){} }
+  function chave(f){ var b=f.querySelector('button[type=submit]'); return (b&&/^Adicionar/.test(b.textContent.trim()))?f.id:null; }
+  function prepara(f){
+    if(f.dataset.rasc) return; f.dataset.rasc='1';
+    var k=chave(f); if(!k) return;
+    var R=ler(), d=R[k];
+    if(d){
+      Object.keys(d).forEach(function(n){ var el=f.elements[n]; if(el&&el.type!=='checkbox'&&el.type!=='radio') el.value=d[n]; });
+      if(f.cidadeSel&&f.cidadeSel.onchange) f.cidadeSel.onchange();
+      var aviso=document.createElement('p'); aviso.style.cssText='margin:0 0 8px;font-size:14px;color:#4f7a58;font-weight:700';
+      aviso.textContent='Recuperei o que você estava preenchendo.'; f.insertBefore(aviso,f.firstChild);
+    }
+    f.addEventListener('input',function(){ var o={}; new FormData(f).forEach(function(v,n){ o[n]=v; }); var R=ler(); R[k]=o; grava(R); });
+    f.addEventListener('change',function(){ f.dispatchEvent(new Event('input')); });
+    var apaga=function(){ var R=ler(); delete R[k]; grava(R); };
+    f.addEventListener('submit',apaga,true);
+    var c=f.querySelector('#fhCancel,#feCancel'); if(c) c.addEventListener('click',apaga,true);
+  }
+  new MutationObserver(function(){ document.querySelectorAll('form#fh,form#fe').forEach(prepara); }).observe(document.body,{childList:true,subtree:true});
+  /* voltou com algo começado: reabre o formulário na aba Reservas */
+  var R0=ler();
+  if(R0.fh||R0.fe){ try{ aba('mesa'); }catch(e){}
+    if(R0.fh){ var bh=document.getElementById('addHotel'); if(bh) bh.click(); }
+    if(R0.fe){ var be=document.getElementById('addExtra'); if(be) be.click(); } }
+})();
+</script>
 </body>
 </html>
