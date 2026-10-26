@@ -124,11 +124,34 @@ const TOTAL=Object.keys(WORDS).length;
 let jaVoice=null;
 function pickVoice(){ if(!window.speechSynthesis) return; const v=speechSynthesis.getVoices(); jaVoice=v.find(x=>/^ja/i.test(x.lang))||null; }
 if(window.speechSynthesis){ pickVoice(); speechSynthesis.onvoiceschanged=pickVoice; }
-function speak(text){
-  if(!window.speechSynthesis){ if(document.getElementById('voiceNote')) $('voiceNote').textContent='Este navegador não tem voz sintetizada. Na versão final, o áudio vem de gravações.'; return; }
+/* voz: toca a gravação da もち子 quando existe (window.AUDIO_MAP); senão, a voz do aparelho */
+const chaveAudio=t=>String(t||'').replace(/[\s、。，．,.!！?？…・「」『』（）()]/g,'');
+let audioAtual=null;
+function speakTTS(text){
+  if(!window.speechSynthesis){ if(document.getElementById('voiceNote')) $('voiceNote').textContent='Este navegador não tem voz sintetizada.'; return; }
   speechSynthesis.cancel();
   const u=new SpeechSynthesisUtterance(text); u.lang='ja-JP'; u.rate=.85; if(jaVoice) u.voice=jaVoice;
   speechSynthesis.speak(u);
+}
+/* ids dos áudios para um texto: a frase inteira, ou todas as frases soltas (se todas existirem) */
+function idsDoTexto(text,opc){
+  const M=window.AUDIO_MAP||{}; if(!window.AUDIO_MAP) return null;
+  if(opc&&opc.letra&&[...String(text)].length===1&&M['letra_'+text]) return [M['letra_'+text]];
+  const um=M[chaveAudio(text)]; if(um) return [um];
+  const partes=String(text).split(/(?<=[。！？!?])\s*/).filter(x=>chaveAudio(x));
+  if(partes.length<2) return null;
+  const ids=partes.map(x=>M[chaveAudio(x)]); return ids.every(Boolean)?ids:null;
+}
+function speak(text,opc){
+  try{ if(audioAtual){ audioAtual.pause(); audioAtual=null; } if(window.speechSynthesis) speechSynthesis.cancel(); }catch(e){}
+  const ids=idsDoTexto(text,opc);
+  if(!ids) return speakTTS(text);
+  let i=0, caiu=false; const base=window.AUDIO_BASE||'/idiomas/audio/';
+  const cair=()=>{ if(caiu) return; caiu=true; audioAtual=null; speakTTS(text); };
+  const toca=()=>{ try{ const a=new Audio(base+ids[i]+'.mp3'); audioAtual=a;
+    a.onerror=cair; a.onended=()=>{ if(audioAtual!==a) return; i++; if(i<ids.length) toca(); else audioAtual=null; };
+    const pr=a.play(); if(pr&&pr.catch) pr.catch(cair); }catch(e){ cair(); } };
+  toca();
 }
 
 const MONTH_K=['','いちがつ','にがつ','さんがつ','しがつ','ごがつ','ろくがつ','しちがつ','はちがつ','くがつ','じゅうがつ','じゅういちがつ','じゅうにがつ'];
@@ -183,3 +206,5 @@ function kana2ro(str){
   const h=String(str).replace(/[ァ-ヶ]/g,c=>String.fromCharCode(c.charCodeAt(0)-0x60));
   return h.split(/\s+/).filter(Boolean).flatMap(t=>t.split(/(?<=[！!。？?])/)).flatMap(roSplit).map(roTok).join(' ').replace(/ ([.,!?])/g,'$1');
 }
+/* crédito da voz (exigido pela licença do VOICEVOX) */
+if(window.AUDIO_CREDITO&&document.body&&!document.querySelector('.credito-voz')){ const cr=document.createElement('p'); cr.className='credito-voz'; cr.style.cssText='margin:24px 16px;text-align:center;font-size:12px;color:#6b5a67'; cr.textContent='Vozes sintéticas: '+window.AUDIO_CREDITO+'.'; document.body.appendChild(cr); }

@@ -398,10 +398,11 @@ h1 small{font-family:var(--f-display);font-size:.42em;color:var(--pink);letter-s
 <div class="lv-toast" id="lvToast" role="status" hidden></div>
 
 <script>window.KANA_PATHS={hira:'/idiomas/hiragana/',kata:'/idiomas/katakana/'};window.ATELIE_URL='/idiomas/planeta-utopia/atelie/';</script>
-<script src="/idiomas/dados/avatar.js?v=20261016f"></script>
-<script src="/idiomas/dados/atelie-dados.js?v=20261016f"></script>
-<script src="/idiomas/dados/kana-dados.js?v=20261016f"></script>
-<script src="/idiomas/dados/kana-tracos.js?v=20261016f"></script>
+<script src="/idiomas/dados/avatar.js?v=20261027a"></script>
+<script src="/idiomas/dados/audio-mapa.js?v=0b6639ea"></script>
+<script src="/idiomas/dados/atelie-dados.js?v=20261027a"></script>
+<script src="/idiomas/dados/kana-dados.js?v=20261027a"></script>
+<script src="/idiomas/dados/kana-tracos.js?v=20261027a"></script>
 <script>
 /* Trilhas de Hiragana e Katakana — Quadrado Elemental. Usa avatar.js, atelie-dados.js (speak, kana2ro) e kana-dados.js. */
 const $=id=>document.getElementById(id);
@@ -423,7 +424,7 @@ function gain(n,el){
   if(up){ const t=$('lvToast'); t.innerHTML=`Nível ${g.level}! Novo título: ${AV?AV.titleHTML(g.level):''}`; t.hidden=false; clearTimeout(t._h); t._h=setTimeout(()=>t.hidden=true,3200); }
 }
 const D=()=>KD[kind];
-const say=t=>{ try{ speak(t); }catch(e){} };
+const say=t=>{ try{ speak(t,{letra:true}); }catch(e){} };
 const rnd=a=>a[Math.floor(Math.random()*a.length)];
 const shuffle=a=>a.map(x=>[Math.random(),x]).sort((p,q)=>p[0]-q[0]).map(x=>x[1]);
 
