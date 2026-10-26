@@ -7,12 +7,12 @@
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Baloo+2:wght@500;600;700&family=Zen+Maru+Gothic:wght@400;500;700&display=swap');
 :root{
-  --pink:#E08C86; --pink-deep:#C26F6C; --pink-soft:rgba(224,140,134,.14);
+  --pink:#b5514d; --pink-deep:#b5514d; --pink-soft:rgba(224,140,134,.14);
   --blush:#FBEBE7; --blush-2:#F0DFDA; --cream:#FDF8F5;
-  --ink:#4A4149; --ink-soft:#8A7F86;
+  --ink:#4A4149; --ink-soft:#71676e;
   --gold:#C0913F; --gold-soft:#FBF2DF;
-  --sage:#7FA893; --sage-soft:#EAF3EE;
-  --lav:#8B90C4; --lav-soft:#EEEFF9;
+  --sage:#4f7461; --sage-soft:#EAF3EE;
+  --lav:#686eb2; --lav-soft:#EEEFF9;
 }
 *{box-sizing:border-box;margin:0;padding:0;}
 @media (prefers-reduced-motion: reduce){ *{transition:none !important;} }
@@ -91,7 +91,7 @@ section.block{padding:40px 0 10px;}
 .bolsa{margin-top:12px;background:var(--gold-soft);border:1px dashed var(--gold);border-radius:14px;padding:14px 16px;font-size:13.5px;color:#7A5B21;}
 
 .zero{background:var(--sage-soft);padding:44px 24px;text-align:center;border-radius:24px;margin:40px 0 20px;}
-.zero .eyebrow{font-size:11px;letter-spacing:4px;text-transform:uppercase;color:#4F7A63;margin-bottom:10px;font-weight:600;}
+.zero .eyebrow{font-size:11px;letter-spacing:4px;text-transform:uppercase;color:#4c755f;margin-bottom:10px;font-weight:600;}
 .zero h2{font-family:'Baloo 2',cursive;font-weight:700;font-size:clamp(24px,4vw,32px);margin-bottom:12px;}
 .zero p{color:var(--ink-soft);max-width:520px;margin:0 auto 14px;}
 .zero .kit{display:flex;gap:10px;justify-content:center;flex-wrap:wrap;margin:16px 0 24px;}
@@ -108,7 +108,7 @@ section.block{padding:40px 0 10px;}
 .trilhas{display:grid;gap:14px;margin-top:22px}
 .tri{display:grid;grid-template-columns:56px minmax(0,1fr) auto;gap:16px;align-items:center;background:#fff;border:1.5px solid var(--blush-2);border-left:6px solid var(--c);border-radius:18px;padding:18px 20px;text-decoration:none;color:inherit;transition:transform .15s ease,box-shadow .15s ease}
 .tri:hover{transform:translateY(-2px);box-shadow:0 12px 26px -18px rgba(74,65,73,.5)}
-.tri.ja{--c:#C26F6C}.tri.en{--c:#5b7fb0}.tri.pt{--c:#5e8f72}
+.tri.ja{--c:#b5514d}.tri.en{--c:#5176a8}.tri.pt{--c:#537e65}
 .tri .fl{width:56px;height:56px;border-radius:50%;display:grid;place-items:center;font-family:'Baloo 2',cursive;font-weight:800;font-size:18px;color:#fff;background:var(--c)}
 .tri .tx{display:grid;gap:2px}
 .tri b{font-family:'Baloo 2',cursive;font-size:22px;line-height:1.15}
@@ -118,6 +118,8 @@ section.block{padding:40px 0 10px;}
 @media (max-width:560px){.tri{grid-template-columns:44px minmax(0,1fr)}.tri .fl{width:44px;height:44px;font-size:15px}.tri .go{grid-column:2}}
 .diario{text-align:center;font-size:14.5px;color:var(--ink-soft);margin-top:16px}
 </style>
+<link rel="stylesheet" href="/estilo-celular.css?v=2">
+<script defer src="/menu-ativo.js?v=1"></script>
 </head>
 <body>
 
@@ -190,8 +192,8 @@ section.block{padding:40px 0 10px;}
     <div class="elements">
       <div class="elrow" style="--c:#E0805A"><span class="e">🔥</span><div><h4>Fogo <small>· Mapas de Contexto</small></h4><p>A estrutura lógica que destrava centenas de frases a partir de moldes do dia a dia.</p></div></div>
       <div class="elrow" style="--c:#6E9BC9"><span class="e">💧</span><div><h4>Água <small>· Quebra-Cabeça da Fluência</small></h4><p>Cada palavra que falta vira aprendizado imediato para sua lista de expansão diária.</p></div></div>
-      <div class="elrow" style="--c:#7FA893"><span class="e">🌱</span><div><h4>Terra <small>· Desafio do Diário</small></h4><p>Pequenos registros diários no idioma-alvo para fixar a língua de forma orgânica e tangível.</p></div></div>
-      <div class="elrow" style="--c:#8B90C4"><span class="e">🌬️</span><div><h4>Ar <small>· Manter a conversa viva</small></h4><p>As 5 gavetas (respirar, declarar, pedir ajuste, confirmar e sair) para ganhar fôlego e não travar quando o diálogo aperta. Ficam no botão Ar · socorro, dentro de cada aula.</p></div></div>
+      <div class="elrow" style="--c:#4f7461"><span class="e">🌱</span><div><h4>Terra <small>· Desafio do Diário</small></h4><p>Pequenos registros diários no idioma-alvo para fixar a língua de forma orgânica e tangível.</p></div></div>
+      <div class="elrow" style="--c:#686eb2"><span class="e">🌬️</span><div><h4>Ar <small>· Manter a conversa viva</small></h4><p>As 5 gavetas (respirar, declarar, pedir ajuste, confirmar e sair) para ganhar fôlego e não travar quando o diálogo aperta. Ficam no botão Ar · socorro, dentro de cada aula.</p></div></div>
       <div class="elrow fifth" style="--c:#C0913F"><span class="e">✦</span><div><h4>O Quinto Elemento <small>· Espírito</small></h4><p>A conexão que acontece quando tudo se junta numa troca autêntica em primeira pessoa.</p></div></div>
     </div>
     <p class="center"><a class="textlink" href="/sobre/">Entenda o método completo →</a></p>

@@ -12,11 +12,11 @@
 @import url('https://fonts.googleapis.com/css2?family=Baloo+2:wght@500;600;700&family=Zen+Maru+Gothic:wght@400;500;700&family=JetBrains+Mono:wght@400;600&display=swap');
 :root{
   --paper:#FDF8F6; --white:#FFFFFF;
-  --ink:#4A4149; --ink-soft:#8A7F86;
+  --ink:#4A4149; --ink-soft:#71676e;
   --line:#F0E6E2; --line-2:#E7DCE4;
-  --rose:#E08C86; --rose-deep:#C26F6C; --rose-soft:#FBEBE7;
-  --lav:#8B90C4; --lav-soft:#EEEFF9;
-  --sage:#7FA893; --sage-soft:#EAF3EE;
+  --rose:#b5514d; --rose-deep:#b5514d; --rose-soft:#FBEBE7;
+  --lav:#686eb2; --lav-soft:#EEEFF9;
+  --sage:#4f7461; --sage-soft:#EAF3EE;
   --c-obj:#C0913F; --c-obj-bg:#FBF2DF;
   --c-act:#5E9179; --c-act-bg:#EAF3EE;
   --c-dir:#6E77BE; --c-dir-bg:#EEEFF9;
@@ -230,6 +230,8 @@ body::before{
 
 ruby rt{font-size:.5em;font-weight:500;letter-spacing:0;opacity:.85}
 </style>
+<link rel="stylesheet" href="/estilo-celular.css?v=2">
+<script defer src="/menu-ativo.js?v=1"></script>
 </head>
 <body>
 <main class="page">
@@ -249,13 +251,10 @@ ruby rt{font-size:.5em;font-weight:500;letter-spacing:0;opacity:.85}
   <div id="utopia-badge" style="margin:0 0 14px"></div>
 
   <!-- ABAS DO HUB -->
-  <div class="hub-tabs">
-    <button class="active" onclick="switchHubTab('trilhas')">🧭 Trilhas</button>
-    <button onclick="switchHubTab('mapas')">🗺️ Explorar</button>
-  </div>
+  <p class="ir-trilha" style="text-align:center;margin:0 0 10px;font-size:15px"><a href="/idiomas/japones/" style="color:var(--pink-deep,#C26F6C);font-weight:700;text-decoration:none;border-bottom:1px solid currentColor">Japonês: ver a minha trilha →</a></p>
 
   <!-- ABA 1: HUB DE TRILHAS -->
-  <div class="hub-content active" id="tab-trilhas">
+  <div class="hub-content" id="tab-trilhas" hidden>
     <div class="hub-section aula-zero">
       <div class="aula-zero-card" id="aulaZeroCard" onclick="location.href='../aula-zero/';">
         <span class="emoji">🧩</span>
@@ -276,11 +275,11 @@ ruby rt{font-size:.5em;font-weight:500;letter-spacing:0;opacity:.85}
   </div>
 
   <!-- ABA 2: EXPLORAR MAPAS (conteúdo original) -->
-  <div class="hub-content" id="tab-mapas">
+  <div class="hub-content active" id="tab-mapas">
   <section class="hero">
     <p class="jp">地図をつくる</p>
     <h1>Eu crio <em>mapas.</em><br>Você constrói as pontes.</h1>
-    <p>Cada mapa percorre o <strong>Quadrado Elemental</strong>: fogo para descobrir as peças, ar para montar a fala, água para escutar o outro, terra para materializar — e o espírito, que nasce quando você usa tudo isso com alguém de verdade. Escolha o idioma da sua travessia:</p>
+    <p>Cada mapa percorre o <strong>Quadrado Elemental</strong>: 🔥 Fogo para descobrir as peças, 💧 Água para escutar e guardar as palavras, 🌱 Terra para registrar no caderno, 🌬️ Ar para manter a conversa viva (as 5 gavetas) — e ✦ o Espírito, que nasce na troca real com alguém. Escolha o idioma da sua travessia:</p>
   </section>
 
   <p style="text-align:center;font-family:'JetBrains Mono',monospace;font-size:10.5px;letter-spacing:1.6px;text-transform:uppercase;color:var(--ink-soft);margin-top:18px;">escolha sua trilha</p>
@@ -1650,10 +1649,10 @@ window.addEventListener('storage', () => {
 });
 </script>
 <script>
-if(window.AUDIO_CREDITO){ const cr=document.createElement('p'); cr.style.cssText='text-align:center;font-size:12px;color:#888;margin:18px 16px 28px'; cr.textContent='Vozes sintéticas em japonês: '+window.AUDIO_CREDITO+'. Aos poucos, as gravações da professora vão substituindo.'; document.body.appendChild(cr); }
+if(window.AUDIO_CREDITO){ const cr=document.createElement('p'); cr.style.cssText='text-align:center;font-size:12px;color:#707070;margin:18px 16px 28px'; cr.textContent='Vozes sintéticas em japonês: '+window.AUDIO_CREDITO+'. Aos poucos, as gravações da professora vão substituindo.'; document.body.appendChild(cr); }
 </script>
 <script src="/idiomas/dados/avatar.js?v=20261016g"></script>
-<script src="/idiomas/dados/avatar-badge.js?v=20261016g"></script>
+<script src="/idiomas/dados/avatar-badge.js?v=20261026a"></script>
 <script>
 (function(){ try{ const q=new URLSearchParams(location.search).get('explorar'); if(!q) return;
   const i=LANGS.findIndex(l=>l.key===q); if(i<0) return;

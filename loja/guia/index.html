@@ -11,7 +11,7 @@
 <style>
 :root{
   --paper:#fdf6f4; --card:#ffffff; --ink:#3a2b38; --muted:#6b5a67; --line:#ecdadd;
-  --blush:#f8dde1; --pink:#d9506f; --sage:#7fa487; --sage-soft:#e8efe8; --gold:#c9962c; --lavender:#b7a6dc; --sky:#5b8fc7;
+  --blush:#f8dde1; --pink:#c23f5e; --sage:#517158; --sage-soft:#e8efe8; --gold:#8e6a1f; --lavender:#b7a6dc; --sky:#5b8fc7;
   --f-display:"Baloo 2","Zen Maru Gothic",system-ui,sans-serif;
   --f-body:"Zen Maru Gothic","Hiragino Maru Gothic ProN","Noto Sans JP",system-ui,sans-serif;
   --r:20px;
@@ -80,7 +80,7 @@ footer a:hover{color:var(--pink)}
 
 .passos{margin:0;padding:0;list-style:none;display:grid;gap:12px;counter-reset:p}
 .passos li{display:grid;grid-template-columns:30px minmax(0,1fr);gap:12px;align-items:start}
-.passos li::before{counter-increment:p;content:counter(p,decimal-leading-zero);font-family:var(--f-display);font-weight:800;color:#a08c7a;font-size:18px;line-height:1.5}
+.passos li::before{counter-increment:p;content:counter(p,decimal-leading-zero);font-family:var(--f-display);font-weight:800;color:#7f6c5b;font-size:18px;line-height:1.5}
 .passos b{display:block}
 .box{background:var(--card);border:1.5px solid var(--line);border-left:6px solid var(--c,var(--sage));border-radius:var(--r);padding:22px;display:grid;gap:14px}
 .box h2{font-family:var(--f-display);font-size:clamp(24px,3.4vw,30px);line-height:1.15;margin:0}
@@ -108,6 +108,8 @@ tr:nth-child(even) td{background:#faf6f5}
 .abas a:not([aria-current]):hover{color:var(--pink)}
 @media (max-width:520px){.abas{width:100%}.abas a{flex:1 1 0;text-align:center;padding:8px 10px;font-size:14px;white-space:normal;line-height:1.25}}
 </style>
+<link rel="stylesheet" href="/estilo-celular.css?v=2">
+<script defer src="/menu-ativo.js?v=1"></script>
 </head>
 <body>
 <div class="wrap">
@@ -163,17 +165,17 @@ tr:nth-child(even) td{background:#faf6f5}
     <p>Estimativa para compras <b>fora do Remessa Conforme</b> (60% + ICMS). Coloque em reais o valor da caixa inteira: produtos + frete + seguro.</p>
     <div class="calc">
       <label>Valor da caixa (R$)<input id="v" type="number" inputmode="decimal" min="0" step="0.01" value="500"></label>
-      <label>ICMS do seu estado
-        <select id="icms"><option value="17">17%</option><option value="18">18%</option><option value="19">19%</option><option value="20" selected>20%</option></select>
+      <label>Seu estado
+        <select id="icms"><option value="20">Acre (20%)</option><option value="20">Alagoas (20%)</option><option value="17">Amapá (17%)</option><option value="17">Amazonas (17%)</option><option value="20">Bahia (20%)</option><option value="20">Ceará (20%)</option><option value="17">Distrito Federal (17%)</option><option value="17">Espírito Santo (17%)</option><option value="17">Goiás (17%)</option><option value="17">Maranhão (17%)</option><option value="17">Mato Grosso (17%)</option><option value="17">Mato Grosso do Sul (17%)</option><option value="20">Minas Gerais (20%)</option><option value="17">Pará (17%)</option><option value="20">Paraíba (20%)</option><option value="17">Paraná (17%)</option><option value="17">Pernambuco (17%)</option><option value="20">Piauí (20%)</option><option value="17">Rio de Janeiro (17%)</option><option value="20">Rio Grande do Norte (20%)</option><option value="17">Rio Grande do Sul (17%)</option><option value="17">Rondônia (17%)</option><option value="20">Roraima (20%)</option><option value="17">Santa Catarina (17%)</option><option value="17" selected>São Paulo (17%)</option><option value="20">Sergipe (20%)</option><option value="17">Tocantins (17%)</option></select>
       </label>
     </div>
     <div class="res" aria-live="polite">
       <div><small>Imposto de importação (60%)</small><b id="r-ii">—</b></div>
-      <div><small>ICMS</small><b id="r-icms">—</b></div>
+      <div><small id="r-icms-t">ICMS</small><b id="r-icms">—</b></div>
       <div><small>Total de impostos</small><b id="r-imp">—</b></div>
       <div class="tot"><small>Caixa + impostos</small><b id="r-tot">—</b></div>
     </div>
-    <p class="aviso">O ICMS é calculado “por dentro”: [(valor + imposto de importação) ÷ (1 − alíquota)] × alíquota. A conta é só uma estimativa: a alíquota de cada estado, a cotação do dólar usada pela Receita e as tarifas dos Correios ou da transportadora podem mudar o valor final. Confira a alíquota de ICMS do seu estado.</p>
+    <p class="aviso">O ICMS é calculado “por dentro”: [(valor + imposto de importação) ÷ (1 − alíquota)] × alíquota. A conta é só uma estimativa: a alíquota de cada estado, a cotação do dólar usada pela Receita e as tarifas dos Correios ou da transportadora podem mudar o valor final. Alíquotas de ICMS para compras internacionais: 20% no Acre, Alagoas, Bahia, Ceará, Minas Gerais, Paraíba, Piauí, Rio Grande do Norte, Roraima e Sergipe (desde abril de 2025); 17% nos demais estados. Os estados podem mudar a alíquota, então confira na Secretaria da Fazenda do seu estado.</p>
   </section>
 
   <section class="box" aria-labelledby="t-pagar" style="--c:var(--sage)">
@@ -203,6 +205,7 @@ tr:nth-child(even) td{background:#faf6f5}
       <li><a href="https://www12.senado.leg.br/noticias/materias/2026/09/03/senado-zera-taxa-das-blusinhas-nas-remessas-internacionais-de-ate-us-50" target="_blank" rel="noopener">Agência Senado: Senado aprova o fim da “taxa das blusinhas” (03/09/2026)</a></li>
       <li><a href="https://forbes.com.br/forbes-money/2026/09/taxa-das-blusinhas-veja-como-ficam-as-compras-internacionais/" target="_blank" rel="noopener">Forbes Brasil: como ficam as compras internacionais (set/2026)</a></li>
       <li><a href="https://toexceed.com.br/blog/2026/09/12/taxado-em-compra-internacional-o-que-significa-e-quanto-voce-pode-pagar/" target="_blank" rel="noopener">Toexceed: compra taxada, cálculo do ICMS e alerta de golpe (set/2026)</a></li>
+      <li><a href="https://agenciabrasil.ebc.com.br/economia/noticia/2025-03/aliquota-do-icms-sobre-compras-internacionais-sobe-de-17-para-20/" target="_blank" rel="noopener">Agência Brasil: ICMS sobre compras internacionais sobe para 20% em 10 estados (31/03/2025)</a></li>
       <li><a href="https://www.correios.com.br/receber/encomenda/internacional" target="_blank" rel="noopener">Correios: recebimento de encomendas internacionais</a></li>
     </ul>
   </section>
@@ -221,6 +224,7 @@ tr:nth-child(even) td{background:#faf6f5}
     const ii=val*0.60, icms=(val+ii)/(1-a)*a;
     document.getElementById('r-ii').textContent=brl(ii);
     document.getElementById('r-icms').textContent=brl(icms);
+    document.getElementById('r-icms-t').textContent='ICMS ('+s.value+'%)';
     document.getElementById('r-imp').textContent=brl(ii+icms);
     document.getElementById('r-tot').textContent=brl(val+ii+icms);
   }

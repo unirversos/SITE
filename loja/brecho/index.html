@@ -11,7 +11,7 @@
 <style>
 :root{
   --paper:#fdf6f4; --card:#ffffff; --ink:#3a2b38; --muted:#6b5a67; --line:#ecdadd;
-  --blush:#f8dde1; --pink:#d9506f; --sage:#7fa487; --sage-soft:#e8efe8; --gold:#c9962c; --lavender:#b7a6dc; --sky:#5b8fc7;
+  --blush:#f8dde1; --pink:#c23f5e; --sage:#517158; --sage-soft:#e8efe8; --gold:#8e6a1f; --lavender:#b7a6dc; --sky:#5b8fc7;
   --f-display:"Baloo 2","Zen Maru Gothic",system-ui,sans-serif;
   --f-body:"Zen Maru Gothic","Hiragino Maru Gothic ProN","Noto Sans JP",system-ui,sans-serif;
   --r:20px;
@@ -95,7 +95,7 @@ footer a:hover{color:var(--pink)}
 @media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}}
 .passos{margin:0;padding:0;list-style:none;display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:14px;counter-reset:p}
 .passos li{background:var(--card);border:1.5px solid var(--line);border-left:5px solid var(--sage);border-radius:16px;padding:14px 16px;display:grid;gap:4px;align-content:start}
-.passos li::before{counter-increment:p;content:counter(p,decimal-leading-zero);font-family:var(--f-display);font-weight:800;color:#a08c7a;font-size:18px;line-height:1}
+.passos li::before{counter-increment:p;content:counter(p,decimal-leading-zero);font-family:var(--f-display);font-weight:800;color:#7f6c5b;font-size:18px;line-height:1}
 .passos b{font-family:var(--f-display);font-size:17px}
 .passos span{font-size:14.5px}
 .sec-t{font-family:var(--f-display);font-size:clamp(24px,3.4vw,30px);line-height:1.15;margin:0}
@@ -146,6 +146,8 @@ footer a:hover{color:var(--pink)}
 .filtros button[aria-pressed="true"]{background:var(--ink);color:#fff;border-color:var(--ink)}
 .filtros .n{font-size:12px;font-weight:500;opacity:.75}
 </style>
+<link rel="stylesheet" href="/estilo-celular.css?v=2">
+<script defer src="/menu-ativo.js?v=1"></script>
 </head>
 <body>
 <div class="wrap">

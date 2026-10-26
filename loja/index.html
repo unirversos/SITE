@@ -11,7 +11,7 @@
 <style>
 :root{
   --paper:#fdf6f4; --card:#ffffff; --ink:#3a2b38; --muted:#6b5a67; --line:#ecdadd;
-  --blush:#f8dde1; --pink:#d9506f; --sage:#7fa487; --sage-soft:#e8efe8; --gold:#c9962c; --lavender:#b7a6dc; --sky:#5b8fc7;
+  --blush:#f8dde1; --pink:#c23f5e; --sage:#517158; --sage-soft:#e8efe8; --gold:#8e6a1f; --lavender:#b7a6dc; --sky:#5b8fc7;
   --f-display:"Baloo 2","Zen Maru Gothic",system-ui,sans-serif;
   --f-body:"Zen Maru Gothic","Hiragino Maru Gothic ProN","Noto Sans JP",system-ui,sans-serif;
   --r:20px;
@@ -96,6 +96,8 @@ footer a{text-decoration:none;color:var(--ink)}
 footer a:hover{color:var(--pink)}
 @media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}}
 </style>
+<link rel="stylesheet" href="/estilo-celular.css?v=2">
+<script defer src="/menu-ativo.js?v=1"></script>
 </head>
 <body>
 <div class="wrap">
@@ -133,13 +135,13 @@ footer a:hover{color:var(--pink)}
     <p>Caixas que chegam por redirecionador seguem a tributação comum da alfândega: <b>60% de imposto de importação + ICMS do seu estado</b>, mesmo abaixo de US$ 50. Coloque em reais o valor da caixa inteira (produtos + frete + seguro).</p>
     <div class="calc">
       <label>Valor da caixa (R$)<input id="v" type="number" inputmode="decimal" min="0" step="0.01" value="500"></label>
-      <label>ICMS do seu estado
-        <select id="icms"><option value="17">17%</option><option value="18">18%</option><option value="19">19%</option><option value="20" selected>20%</option></select>
+      <label>Seu estado
+        <select id="icms"><option value="20">Acre (20%)</option><option value="20">Alagoas (20%)</option><option value="17">Amapá (17%)</option><option value="17">Amazonas (17%)</option><option value="20">Bahia (20%)</option><option value="20">Ceará (20%)</option><option value="17">Distrito Federal (17%)</option><option value="17">Espírito Santo (17%)</option><option value="17">Goiás (17%)</option><option value="17">Maranhão (17%)</option><option value="17">Mato Grosso (17%)</option><option value="17">Mato Grosso do Sul (17%)</option><option value="20">Minas Gerais (20%)</option><option value="17">Pará (17%)</option><option value="20">Paraíba (20%)</option><option value="17">Paraná (17%)</option><option value="17">Pernambuco (17%)</option><option value="20">Piauí (20%)</option><option value="17">Rio de Janeiro (17%)</option><option value="20">Rio Grande do Norte (20%)</option><option value="17">Rio Grande do Sul (17%)</option><option value="17">Rondônia (17%)</option><option value="20">Roraima (20%)</option><option value="17">Santa Catarina (17%)</option><option value="17" selected>São Paulo (17%)</option><option value="20">Sergipe (20%)</option><option value="17">Tocantins (17%)</option></select>
       </label>
     </div>
     <div class="res" aria-live="polite">
       <div><small>Imposto de importação (60%)</small><b id="r-ii">—</b></div>
-      <div><small>ICMS</small><b id="r-icms">—</b></div>
+      <div><small id="r-icms-t">ICMS</small><b id="r-icms">—</b></div>
       <div><small>Total de impostos</small><b id="r-imp">—</b></div>
       <div class="tot"><small>Caixa + impostos</small><b id="r-tot">—</b></div>
     </div>
@@ -221,6 +223,7 @@ footer a:hover{color:var(--pink)}
     const ii=val*0.60, icms=(val+ii)/(1-a)*a;
     document.getElementById('r-ii').textContent=brl(ii);
     document.getElementById('r-icms').textContent=brl(icms);
+    document.getElementById('r-icms-t').textContent='ICMS ('+s.value+'%)';
     document.getElementById('r-imp').textContent=brl(ii+icms);
     document.getElementById('r-tot').textContent=brl(val+ii+icms);
   }

@@ -1,7 +1,7 @@
 /* Aula de mapa de contexto (motor compartilhado pelos 12 mapas): palco ilustrado no topo com o avatar, painel da etapa embaixo */
 :root{
-  --paper:#fdf6f4; --card:#ffffff; --ink:#3a2b38; --muted:#7c6a78; --line:#ecdadd;
-  --blush:#f8dde1; --pink:#d9506f; --sage:#7fa487; --sage-soft:#e8efe8; --gold:#c9962c; --lavender:#b7a6dc; --sky:#cfe6f3;
+  --paper:#fdf6f4; --card:#ffffff; --ink:#3a2b38; --muted:#705f6c; --line:#ecdadd;
+  --blush:#f8dde1; --pink:#c23f5e; --sage:#517158; --sage-soft:#e8efe8; --gold:#8e6a1f; --lavender:#b7a6dc; --sky:#cfe6f3;
   --f-display:"Baloo 2","Zen Maru Gothic",system-ui,sans-serif;
   --f-body:"Zen Maru Gothic","Hiragino Maru Gothic ProN","Noto Sans JP",system-ui,sans-serif;
   --r:22px;
@@ -110,7 +110,7 @@ body.no-ro .ro, body.no-ro .tile small, body.no-ro .slot small, body.no-ro .chip
 .lead{margin:0;font-size:15.5px}
 .goals{margin:0;padding:0;list-style:none;display:grid;gap:6px}
 .goals li{background:var(--paper);border-left:4px solid var(--sage);border-radius:10px;padding:8px 12px;display:flex;gap:10px;align-items:baseline}
-.goals .gn{font-family:var(--f-display);font-weight:700;font-size:13px;color:#a08c7a;min-width:1.6em}
+.goals .gn{font-family:var(--f-display);font-weight:700;font-size:13px;color:#7f6c5b;min-width:1.6em}
 .goals-t{margin:0 0 6px;font-size:14px;font-weight:600;color:var(--ink)}
 .rk{font-weight:600}
 .row{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
@@ -214,7 +214,16 @@ body.no-ro .rk rt{display:none}
 .gnota{margin:0;background:#fff8e6;border-radius:10px;padding:8px 10px}
 .gaveta.nao ul{margin:0;padding-left:18px;display:grid;gap:4px}
 
-.credito-voz{text-align:center;font-size:12px;color:#888;margin:18px 16px 28px}
+.credito-voz{text-align:center;font-size:12px;color:#707070;margin:18px 16px 28px}
+/* celular: XP, Romaji e Ar · socorro numa linha só, com área de toque confortável */
+@media (max-width:640px){
+  .top{align-items:stretch}
+  .top .tools{width:100%;display:flex;flex-wrap:nowrap;gap:6px}
+  .top .tools>*{flex:1 1 auto;display:inline-flex;align-items:center;justify-content:center;text-align:center;white-space:nowrap;min-height:44px;padding:6px 8px;font-size:12.5px}
+  .btn{min-height:44px}
+  /* 🔊 pequeno no texto: área de toque de 44px sem empurrar o texto */
+  .say{display:inline-flex;align-items:center;justify-content:center;min-width:44px;min-height:44px;margin:-12px -10px;vertical-align:middle}
+}
 
 /* navegação do site */
 .sitebar{display:flex;align-items:center;justify-content:space-between;gap:10px 14px;flex-wrap:wrap}

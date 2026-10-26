@@ -10,8 +10,8 @@
     var st=document.createElement('style'); st.id='ub-css';
     st.textContent='.ub{display:inline-flex;align-items:center;gap:10px;max-width:100%;background:#fff;border:1.5px solid #ecdadd;border-radius:999px;padding:5px 14px 5px 5px;font:500 13px/1.3 "Zen Maru Gothic","Noto Sans JP",system-ui,sans-serif;color:#3a2b38;text-decoration:none}'+
       '.ub-av{width:40px;height:40px;border-radius:50%;overflow:hidden;background:#f8dde1;flex:none;display:grid;place-items:center;font-size:20px}.ub-av svg{width:100%;height:100%;display:block}'+
-      '.ub-t{display:grid;min-width:0}.ub-t b{font-size:14px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.ub-t small{color:#7c6a78;font-size:12px}.ub-t rt{font-size:.55em;color:#7c6a78}'+
-      '.ub-go{color:#d9506f;font-weight:700;font-size:12.5px;white-space:nowrap;text-decoration:none;margin-left:4px}.ub-go:hover{text-decoration:underline}'+
+      '.ub-t{display:grid;min-width:0}.ub-t b{font-size:14px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.ub-t small{color:#705f6c;font-size:12px}.ub-t rt{font-size:.55em;color:#705f6c}'+
+      '.ub-go{color:#c23f5e;font-weight:700;font-size:12.5px;white-space:nowrap;text-decoration:none;margin-left:4px}.ub-go:hover{text-decoration:underline}'+
       '.ub-new{border-style:dashed}';
     document.head.appendChild(st);
   }

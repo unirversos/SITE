@@ -9,7 +9,7 @@
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@500;600;700&family=Zen+Maru+Gothic:wght@400;500;700&display=swap">
 <style>
 *{margin:0;padding:0;box-sizing:border-box}
-:root{--dark:#333;--rose:#c99699;--rose-deep:#a8767a;--rose-soft:#f8eeee;--gray:#777;--line:#e8e2e2;--bg:#fff;--cream:#fbf8f6;--sage:#7fa893;--sage-soft:#eaf3ee;--gold:#c0913f;--gold-soft:#fbf2df;--red:#c4685f;--red-soft:#fbeae6}
+:root{--dark:#333;--rose:#a8565b;--rose-deep:#9d6569;--rose-soft:#f8eeee;--gray:#6f6f6f;--line:#e8e2e2;--bg:#fff;--cream:#fbf8f6;--sage:#4f7461;--sage-soft:#eaf3ee;--gold:#c0913f;--gold-soft:#fbf2df;--red:#c4685f;--red-soft:#fbeae6}
 body{font-family:'Zen Maru Gothic','Segoe UI',system-ui,sans-serif;line-height:1.7;color:var(--dark);background:var(--bg);font-size:16px}
 header{display:flex;justify-content:space-between;align-items:center;gap:16px;flex-wrap:wrap;padding:1.6rem 4rem;border-bottom:1px solid #e0e0e0}
 .logo{font-size:13px;font-weight:700;letter-spacing:2px;text-decoration:none;color:var(--dark)}
@@ -86,7 +86,7 @@ footer a{color:var(--rose)}
 .legenda i{display:inline-block;width:12px;height:12px;border-radius:4px;vertical-align:-1px;margin-right:4px}
 .semana{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:6px}
 .dcol{border:1.5px solid var(--line);border-radius:14px;min-height:230px;background:#fff;display:flex;flex-direction:column;overflow:hidden}
-.dcol.fora{background:#fafafa;color:#aaa}
+.dcol.fora{background:#fafafa;color:#747474}
 .dcol.hoje{border-color:var(--rose)}
 .dh{padding:6px 8px;font-weight:700;font-size:13px;border-bottom:1px solid var(--line)}
 .cidade{font-size:12px;font-weight:700;padding:3px 8px;color:#fff}
@@ -101,7 +101,7 @@ footer a{color:var(--rose)}
 .md{font:inherit;text-align:left;border:1px solid var(--line);border-radius:10px;min-height:96px;padding:4px 5px;font-size:12px;cursor:pointer;background:#fff;display:flex;flex-direction:column;gap:2px;overflow:hidden;color:var(--dark)}
 .md:hover{border-color:var(--rose)}
 .md.vazia{visibility:hidden}
-.md.fora{background:#fafafa;color:#aaa}
+.md.fora{background:#fafafa;color:#747474}
 .md.hoje{border-color:var(--rose);border-width:2px}
 .md .num{font-weight:700;font-size:13px}
 .md .cb{font-size:10.5px;font-weight:700;color:#fff;border-radius:4px;padding:0 4px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;min-height:7px;line-height:1.5}
@@ -120,6 +120,8 @@ footer a{color:var(--rose)}
   .hero{padding:0 0 6mm}.hero p,.hero .par{display:none}
 }
 </style>
+<link rel="stylesheet" href="/estilo-celular.css?v=2">
+<script defer src="/menu-ativo.js?v=1"></script>
 </head>
 <body>
 <header>
@@ -645,6 +647,38 @@ document.getElementById('limpar').onclick=function(){ if(!this.dataset.confirm){
 let abaSalva='linha'; try{ abaSalva=localStorage.getItem('travessiaViagemAba')||'linha'; }catch(e){}
 aba(V.hoteis.length?abaSalva:'mesa');
 tudo();
+</script>
+<script>
+/* Rascunho: o que a pessoa começou a preencher em "Adicionar hospedagem" ou "Adicionar atividade"
+   fica guardado neste navegador até ela salvar ou cancelar. Assim, ir às aulas e voltar não apaga nada. */
+(function(){
+  var K='travessiaRascunho1';
+  function ler(){ try{ return JSON.parse(localStorage.getItem(K)||'{}'); }catch(e){ return {}; } }
+  function grava(o){ try{ localStorage.setItem(K,JSON.stringify(o)); }catch(e){} }
+  function chave(f){ var b=f.querySelector('button[type=submit]'); return (b&&/^Adicionar/.test(b.textContent.trim()))?f.id:null; }
+  function prepara(f){
+    if(f.dataset.rasc) return; f.dataset.rasc='1';
+    var k=chave(f); if(!k) return;
+    var R=ler(), d=R[k];
+    if(d){
+      Object.keys(d).forEach(function(n){ var el=f.elements[n]; if(el&&el.type!=='checkbox'&&el.type!=='radio') el.value=d[n]; });
+      if(f.cidadeSel&&f.cidadeSel.onchange) f.cidadeSel.onchange();
+      var aviso=document.createElement('p'); aviso.style.cssText='margin:0 0 8px;font-size:14px;color:#4f7a58;font-weight:700';
+      aviso.textContent='Recuperei o que você estava preenchendo.'; f.insertBefore(aviso,f.firstChild);
+    }
+    f.addEventListener('input',function(){ var o={}; new FormData(f).forEach(function(v,n){ o[n]=v; }); var R=ler(); R[k]=o; grava(R); });
+    f.addEventListener('change',function(){ f.dispatchEvent(new Event('input')); });
+    var apaga=function(){ var R=ler(); delete R[k]; grava(R); };
+    f.addEventListener('submit',apaga,true);
+    var c=f.querySelector('#fhCancel,#feCancel'); if(c) c.addEventListener('click',apaga,true);
+  }
+  new MutationObserver(function(){ document.querySelectorAll('form#fh,form#fe').forEach(prepara); }).observe(document.body,{childList:true,subtree:true});
+  /* voltou com algo começado: reabre o formulário na aba Reservas */
+  var R0=ler();
+  if(R0.fh||R0.fe){ try{ aba('mesa'); }catch(e){}
+    if(R0.fh){ var bh=document.getElementById('addHotel'); if(bh) bh.click(); }
+    if(R0.fe){ var be=document.getElementById('addExtra'); if(be) be.click(); } }
+})();
 </script>
 </body>
 </html>
