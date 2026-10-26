@@ -1,0 +1,408 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>Carrinho do Japão · Unirversos Tesouros</title>
+<meta name="description" content="Monte seu carrinho de encomendas do Japão: cabelo, solar, skincare, otaku e papelaria. Veja o total no Pix e no cartão.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@500;700;800&family=Zen+Maru+Gothic:wght@400;500;700&display=swap">
+<style>
+:root{
+  --paper:#fdf6f4; --card:#ffffff; --ink:#3a2b38; --muted:#6b5a67; --line:#ecdadd;
+  --blush:#f8dde1; --pink:#c23f5e; --sage:#517158; --sage-soft:#e8efe8; --gold:#8e6a1f; --lavender:#b7a6dc; --sky:#5b8fc7;
+  --f-display:"Baloo 2","Zen Maru Gothic",system-ui,sans-serif;
+  --f-body:"Zen Maru Gothic","Hiragino Maru Gothic ProN","Noto Sans JP",system-ui,sans-serif;
+  --r:20px;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;background:var(--paper);color:var(--ink);font-family:var(--f-body);font-size:16px;line-height:1.7;
+  background-image:radial-gradient(var(--line) 1.2px,transparent 1.3px);background-size:22px 22px;
+  padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));padding-block:18px 40px}
+a{color:inherit}
+a:focus-visible,button:focus-visible,input:focus-visible,select:focus-visible{outline:3px solid var(--lavender);outline-offset:3px;border-radius:8px}
+.wrap{max-width:1060px;margin:0 auto;display:grid;gap:36px}
+.sitebar{display:flex;flex-wrap:wrap;justify-content:space-between;align-items:center;gap:10px 18px}
+.logo{font-family:var(--f-display);font-weight:800;font-size:19px;letter-spacing:.14em;text-decoration:none}
+.logo span{color:var(--pink)}
+.navlinks{display:flex;flex-wrap:wrap;gap:6px 20px;font-size:14px}
+.navlinks a{text-decoration:none;color:var(--muted)}
+.navlinks a:hover{color:var(--pink)}
+.abas{display:flex;gap:6px;background:var(--card);border:1.5px solid var(--line);border-radius:999px;padding:5px;width:max-content;max-width:100%;overflow-x:auto}
+.abas a{flex:0 0 auto;text-decoration:none;font-family:var(--f-display);font-weight:700;font-size:15px;padding:8px 16px;border-radius:999px;color:var(--muted);white-space:nowrap}
+.abas a[aria-current="page"]{background:var(--ink);color:#fff}
+.abas a:not([aria-current]):hover{color:var(--pink)}
+@media (max-width:520px){.abas{width:100%}.abas a{flex:1 1 0;text-align:center;padding:8px 10px;font-size:14px;white-space:normal;line-height:1.25}}
+
+.hero{display:grid;gap:12px;max-width:720px;padding-top:8px}
+.eyebrow{font-size:12px;letter-spacing:.2em;text-transform:uppercase;color:var(--pink);font-weight:700;margin:0}
+h1{font-family:var(--f-display);font-weight:800;font-size:clamp(32px,5vw,50px);line-height:1.05;margin:0;text-wrap:balance}
+.lede{font-size:clamp(16px,2vw,18px);font-weight:500;margin:0;max-width:60ch}
+.sec-t{font-family:var(--f-display);font-size:clamp(22px,3vw,28px);line-height:1.15;margin:0}
+.box{background:var(--card);border:1.5px solid var(--line);border-radius:var(--r);padding:20px;display:grid;gap:14px}
+.box.sky{border-left:6px solid var(--sky)}
+.box.sage{border-left:6px solid var(--sage)}
+.box.pink{border-left:6px solid var(--pink)}
+.box.lav{border-left:6px solid var(--lavender)}
+.box p{margin:0}
+.hint{font-size:13.5px;color:var(--muted)}
+
+/* catálogo */
+.filtros{display:flex;flex-wrap:wrap;gap:8px}
+.filtros button{font:inherit;font-weight:700;font-size:14.5px;border:1.5px solid var(--line);background:var(--card);color:var(--ink);padding:6px 14px;border-radius:999px;cursor:pointer}
+.filtros button[aria-pressed="true"]{background:var(--ink);color:#fff;border-color:var(--ink)}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:14px}
+.prod{position:relative;border:1.5px solid var(--line);border-radius:16px;overflow:hidden;display:grid;grid-template-rows:auto 1fr;background:#fff}
+.prod .foto{aspect-ratio:16/9;background:var(--blush);display:grid;place-items:center;font-size:40px}
+.prod .foto img{width:100%;height:100%;object-fit:cover}
+.prod[data-cat="solar"] .foto{background:#fff1d6}.prod[data-cat="skincare"] .foto{background:var(--sage-soft)}
+.prod[data-cat="otaku"] .foto{background:#ece6f8}.prod[data-cat="papelaria"] .foto{background:#e3eef9}
+.prod .corpo{padding:12px 14px 14px;display:grid;gap:6px;align-content:start}
+.prod .tag{font-size:11px;letter-spacing:.14em;text-transform:uppercase;font-weight:700;color:var(--muted);margin:0}
+.prod h3{font-family:var(--f-display);font-size:17px;line-height:1.2;margin:0}
+.prod .d{margin:0;font-size:13.5px}
+.prod .preco{margin:0;font-family:var(--f-display);font-weight:700;font-size:16px}
+.prod .preco small{font-family:var(--f-body);font-weight:500;font-size:12px;color:var(--muted)}
+.prod .fonte{margin:0;font-size:11.5px;color:var(--muted)}
+.selo{position:absolute;top:8px;left:8px;background:#fff;border:1.5px dashed var(--pink);color:var(--pink);font-size:10.5px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;padding:1px 8px;border-radius:999px}
+.selo.exc{left:auto;right:8px;border-style:solid;border-color:var(--lavender);color:#5b4a8a}
+.pega{font:inherit;font-weight:700;font-size:14px;padding:8px 12px;border-radius:999px;border:none;background:var(--pink);color:#fff;cursor:pointer;margin-top:2px}
+.pega.tem{background:var(--sage)}
+@media (max-width:520px){.grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}.prod .d{display:none}.prod .foto{font-size:30px}.prod .corpo{padding:10px}.prod h3{font-size:15px}.pega{font-size:13px;padding:7px 8px}}
+
+/* carrinho */
+.itens{display:grid;gap:10px}
+.vazio{margin:0;color:var(--muted);font-size:14.5px;background:var(--paper);border:1.5px dashed var(--line);border-radius:14px;padding:14px 16px}
+.item{display:grid;grid-template-columns:minmax(0,3fr) minmax(0,1.2fr) 76px minmax(0,1.6fr) 40px;gap:8px;align-items:end;padding-bottom:10px;border-bottom:1.5px dashed var(--line)}
+.item label{display:grid;gap:3px;font-weight:700;font-size:13px;color:var(--muted)}
+.item .fixo{font-weight:700;font-size:15px;color:var(--ink);padding:9px 0;line-height:1.3}
+.item .fixo small{display:block;font-weight:500;font-size:12px;color:var(--muted)}
+input,select{font:inherit;font-weight:500;font-size:15px;padding:9px 11px;border:1.5px solid var(--line);border-radius:12px;background:#fff;color:var(--ink);width:100%;min-width:0}
+.rm{font:inherit;border:1.5px solid var(--line);background:var(--paper);color:var(--muted);border-radius:12px;height:44px;cursor:pointer;font-size:18px}
+.rm:hover{color:var(--pink);border-color:var(--pink)}
+.add{font:inherit;font-weight:700;font-size:15px;justify-self:start;border:1.5px dashed var(--pink);background:#fff;color:var(--pink);border-radius:999px;padding:8px 18px;cursor:pointer}
+@media (max-width:720px){
+  .item{grid-template-columns:1fr 1fr 44px}
+  .item .f-nome{grid-column:1 / -1}
+  .item .f-tipo{grid-column:1 / 3}
+  .item .f-qtd{grid-column:2 / 4}
+  .rm{grid-column:3 / 4}
+}
+
+.pacotes{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:10px}
+.pac{position:relative;display:grid;gap:2px;border:1.5px solid var(--line);border-radius:14px;padding:12px 14px;cursor:pointer;background:#fff}
+.pac input{position:absolute;opacity:0;pointer-events:none}
+.pac b{font-family:var(--f-display);font-size:17px}
+.pac span{font-size:13.5px;color:var(--muted)}
+.pac:has(input:checked){border-color:var(--sky);box-shadow:0 0 0 2px var(--sky) inset;background:color-mix(in srgb,var(--sky) 8%,#fff)}
+.pac:has(input:focus-visible){outline:3px solid var(--lavender);outline-offset:3px}
+
+table.cats{width:100%;border-collapse:collapse;font-size:14.5px}
+.cats th{text-align:left;background:#3a2b38;color:#fff;font-weight:700;padding:8px 10px}
+.cats td{padding:8px 10px;border-bottom:1px solid var(--line)}
+.cats tr:nth-child(even) td{background:var(--paper)}
+.cats .n{text-align:right;white-space:nowrap}
+.res{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:10px}
+.res div{background:var(--paper);border-radius:14px;padding:10px 12px}
+.res small{display:block;color:var(--muted);font-size:12.5px;line-height:1.4}
+.res b{font-family:var(--f-display);font-size:20px}
+.res .tot{background:color-mix(in srgb,var(--pink) 12%,var(--card))}
+.pagto{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:14px}
+.pg{border:1.5px solid var(--line);border-left:6px solid var(--sage);border-radius:16px;padding:16px;display:grid;gap:6px;background:#fff}
+.pg.card{border-left-color:var(--gold)}
+.pg h3{font-family:var(--f-display);font-size:19px;margin:0}
+.pg .v{font-family:var(--f-display);font-weight:800;font-size:28px;line-height:1.1;margin:0}
+.pg ul{margin:0;padding-left:18px;font-size:14.5px}
+.alerta{margin:0;font-size:14px;background:#fff4e5;border:1.5px solid #f0d3a6;border-radius:12px;padding:10px 14px}
+.aviso{margin:0;font-size:13.5px;color:var(--muted);background:var(--sage-soft);border-radius:14px;padding:10px 14px}
+.regras{margin:0;padding-left:20px;display:grid;gap:4px;font-size:14.5px}
+.enviar{display:flex;justify-content:center;align-items:center;gap:8px;text-decoration:none;font-family:var(--f-display);font-weight:700;font-size:17px;padding:12px 22px;border-radius:999px;background:#25863f;color:#fff;border:none}
+.enviar[aria-disabled="true"]{background:var(--paper);color:var(--muted);border:1.5px dashed var(--line);pointer-events:none}
+.flutua{position:sticky;bottom:12px;z-index:5;justify-self:center;display:none;text-decoration:none;font-family:var(--f-display);font-weight:700;font-size:15px;padding:9px 18px;border-radius:999px;background:var(--ink);color:#fff;box-shadow:0 8px 20px -8px rgba(58,43,56,.6)}
+.flutua.on{display:inline-flex}
+footer{border-top:1.5px dashed var(--line);padding-top:22px;display:flex;flex-wrap:wrap;justify-content:space-between;gap:12px 24px;font-size:14px;color:var(--muted)}
+footer a{text-decoration:none;color:var(--ink)}
+footer a:hover{color:var(--pink)}
+@media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}}
+</style>
+<link rel="stylesheet" href="/estilo-celular.css?v=2">
+<script defer src="/menu-ativo.js?v=1"></script>
+</head>
+<body>
+<div class="wrap">
+  <nav class="sitebar" aria-label="Site">
+    <a class="logo" href="/">UNI<span>R</span>VERSOS</a>
+    <span class="navlinks"><a href="/idiomas/">idiomas</a><a href="/travessia/">travessia</a><a href="/paralelos/">paralelos</a><a href="/loja/">loja</a><a href="/sobre/">sobre</a></span>
+  </nav>
+
+  <nav class="abas" aria-label="Unirversos Tesouros">
+    <a href="/loja/">🛒 Vitrine</a>
+    <a href="/loja/encomendas/" aria-current="page">🛍️ Encomendas</a>
+    <a href="/loja/brecho/">🧥 Brechó</a>
+  </nav>
+
+  <header class="hero">
+    <p class="eyebrow" id="viagem">encomendas com a Aline</p>
+    <h1>Monte seu carrinho do Japão</h1>
+    <p class="lede">Cabelo, solar, skincare, otaku e papelaria no mesmo pedido. A calculadora soma tudo e mostra quanto fica no Pix e no cartão, com uma taxa de serviço só para o carrinho inteiro.</p>
+  </header>
+
+  <section class="box lav" aria-labelledby="t-cat">
+    <h2 class="sec-t" id="t-cat">1. Escolha no catálogo</h2>
+    <div class="filtros" id="filtros" role="group" aria-label="Filtrar por categoria"></div>
+    <div class="grid" id="catalogo"></div>
+  </section>
+
+  <section class="box sky" id="carrinho" aria-labelledby="t-car" style="scroll-margin-top:16px">
+    <h2 class="sec-t" id="t-car">2. Seu carrinho</h2>
+    <div class="itens" id="itens"></div>
+    <button class="add" type="button" id="add">+ produto fora do catálogo</button>
+    <p class="hint">Fora do catálogo: cole o link ou o nome. Sem preço em ienes, eu confirmo pelo WhatsApp.</p>
+  </section>
+
+  <section class="box sky" aria-labelledby="t-pac">
+    <h2 class="sec-t" id="t-pac">3. Pacote</h2>
+    <p class="hint" id="peso"></p>
+    <div class="pacotes" id="pacotes" role="radiogroup" aria-labelledby="t-pac"></div>
+  </section>
+
+  <section class="box pink" id="resumo" aria-labelledby="t-res" aria-live="polite">
+    <h2 class="sec-t" id="t-res">4. Total do carrinho</h2>
+    <div id="porcat"></div>
+    <div class="res" id="res"></div>
+    <p class="alerta" id="minimo" hidden></p>
+    <div class="pagto" id="pagto"></div>
+    <p class="hint" id="cambio"></p>
+    <p class="aviso" id="imposto"></p>
+  </section>
+
+  <section class="box sage" aria-labelledby="t-regras">
+    <h2 class="sec-t" id="t-regras">Como funciona</h2>
+    <ul class="regras">
+      <li>Você envia o carrinho pelo WhatsApp e eu confirmo preços e disponibilidade.</li>
+      <li>A taxa de serviço é uma só por carrinho: R$ <span class="cfg-fixa"></span> + uma % de cada produto.</li>
+      <li>O câmbio é o do dia da compra no Japão, com 5% de margem para IOF e banco.</li>
+      <li>Produto esgotado: devolvo o valor dele ou troco, só com o seu ok.</li>
+      <li>Depois que o produto é comprado, o sinal não é reembolsável.</li>
+      <li>O frete é estimado; se o real for menor, devolvo a diferença no Pix.</li>
+      <li>O imposto de importação é cobrado na chegada ao Brasil. Veja o <a href="/loja/guia/">guia de compra &amp; alfândega</a>.</li>
+    </ul>
+  </section>
+
+  <a class="enviar" id="enviar" href="#" target="_blank" rel="noopener" aria-disabled="true">💬 Enviar meu carrinho pelo WhatsApp</a>
+  <a class="flutua" id="flutua" href="#resumo">🛒 ver total</a>
+
+  <footer>
+    <span>unirversos — tudo conectado · Aline Kikuti</span>
+    <span><a href="/loja/encomendas/">encomendas</a> · <a href="/loja/">unirversos tesouros</a> · <a href="/">início</a></span>
+  </footer>
+</div>
+
+<script src="/loja/encomenda-config.js?v=2"></script>
+<script src="/loja/encomenda-catalogo.js?v=1"></script>
+<script>
+(function(){
+  const C = window.ENCOMENDA || {};
+  const CATS = window.CATEGORIAS || [];
+  const PRODS = window.CATALOGO || [];
+  const KEY = 'unir-carrinho-v2';
+  const brl = v => v.toLocaleString('pt-BR',{style:'currency',currency:'BRL'});
+  const yen = v => '¥ ' + Math.round(v).toLocaleString('pt-BR');
+  const esc = s => String(s==null?'':s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+  const num = v => { const n = parseFloat(String(v==null?'':v).replace(/\./g,'').replace(',','.')); return isFinite(n) && n > 0 ? n : 0; };
+  const qtdDe = it => Math.max(1, Math.round(num(it.qtd)) || 1);
+  const catDe = id => CATS.find(c=>c.id===id) || {id:'outro', nome:'Outros', emoji:'📦'};
+  const pctDe = tipo => (tipo==='exclusivo' ? C.pctExclusivo : C.pctFacil) || 0;
+  document.querySelectorAll('.cfg-fixa').forEach(e=>e.textContent = C.taxaFixa);
+
+  let estado = { itens:[], pacote:'', manual:false };
+  try { const s = JSON.parse(localStorage.getItem(KEY)); if (s && Array.isArray(s.itens)) estado = Object.assign(estado, s); } catch(e){}
+  const salvar = () => { try { localStorage.setItem(KEY, JSON.stringify(estado)); } catch(e){} };
+
+  let cambio = C.cambioReserva || 0, cambioTxt = 'câmbio de referência de ' + (C.cambioReservaData||'');
+  const taxaCambio = () => cambio * (1 + (C.margemCambio||0)/100);
+
+  if (C.viagem) document.getElementById('viagem').textContent = 'encomendas com a Aline · ' + C.viagem + (C.vagas ? ' · ' + C.vagas + ' vagas' : '');
+
+  // ---------- catálogo ----------
+  let filtro = 'todos';
+  const elFil = document.getElementById('filtros'), elCat = document.getElementById('catalogo');
+  elFil.innerHTML = [{id:'todos',nome:'Todos',emoji:'✨'}].concat(CATS).map(c=>`<button type="button" data-f="${c.id}" aria-pressed="${c.id===filtro}">${c.emoji} ${esc(c.nome)}</button>`).join('');
+  elFil.addEventListener('click', e=>{
+    const b = e.target.closest('button'); if(!b) return;
+    filtro = b.dataset.f; elFil.querySelectorAll('button').forEach(x=>x.setAttribute('aria-pressed', x===b)); desenharCatalogo();
+  });
+  function desenharCatalogo(){
+    const lista = PRODS.filter(p=>filtro==='todos'||p.cat===filtro);
+    elCat.innerHTML = lista.map(p=>{
+      const c = catDe(p.cat), noCar = estado.itens.find(it=>it.id===p.id);
+      const preco = p.yen ? `${yen(p.yen)} <small>≈ ${brl(p.yen*taxaCambio())}</small>` : 'preço sob consulta';
+      return `<article class="prod" data-cat="${esc(p.cat)}">
+        <div class="foto">${p.foto?`<img src="${esc(p.foto)}" alt="${esc(p.nome)}" loading="lazy">`:c.emoji}</div>
+        ${p.exemplo?'<span class="selo">exemplo</span>':''}${p.tipo==='exclusivo'?'<span class="selo exc">exclusivo</span>':''}
+        <div class="corpo"><p class="tag">${esc(c.nome)}</p><h3>${esc(p.nome)}</h3>
+          ${p.desc?`<p class="d">${esc(p.desc)}</p>`:''}
+          <p class="preco">${preco}</p>${p.fonte?`<p class="fonte">preço: ${esc(p.fonte)}</p>`:''}
+          <button type="button" class="pega${noCar?' tem':''}" data-id="${esc(p.id)}">${noCar?'✓ no carrinho ('+qtdDe(noCar)+') · +1':'+ carrinho'}</button>
+        </div></article>`;
+    }).join('') || '<p class="vazio">Nenhum produto nesta categoria ainda.</p>';
+  }
+  elCat.addEventListener('click', e=>{
+    const b = e.target.closest('.pega'); if(!b) return;
+    const p = PRODS.find(x=>x.id===b.dataset.id); if(!p) return;
+    const ja = estado.itens.find(it=>it.id===p.id);
+    if (ja) ja.qtd = qtdDe(ja) + 1;
+    else estado.itens.push({ id:p.id, cat:p.cat, nome:p.nome, yen:p.yen||'', qtd:1, tipo:p.tipo, peso:p.peso||0, fixo:true });
+    salvar(); desenharItens(); desenharCatalogo(); calcular();
+  });
+
+  // ---------- carrinho ----------
+  const elItens = document.getElementById('itens');
+  function desenharItens(){
+    if(!estado.itens.length){ elItens.innerHTML = '<p class="vazio">Seu carrinho está vazio. Escolha no catálogo acima ou adicione um produto fora dele.</p>'; return; }
+    elItens.innerHTML = estado.itens.map((it,i)=>{
+      const c = catDe(it.cat);
+      const nome = it.fixo
+        ? `<div class="f-nome"><p class="fixo">${c.emoji} ${esc(it.nome)}<small>${esc(c.nome)}${it.tipo==='exclusivo'?' · exclusivo':''}</small></p></div>`
+        : `<label class="f-nome">Produto (nome ou link)<input data-k="nome" value="${esc(it.nome)}" placeholder="ex.: cole o link do produto"></label>`;
+      const preco = it.fixo
+        ? `<div><p class="fixo">${it.yen?yen(it.yen):'sob consulta'}<small>preço</small></p></div>`
+        : `<label>Preço (¥)<input data-k="yen" inputmode="numeric" value="${esc(it.yen)}" placeholder="1500"></label>`;
+      const tipo = it.fixo
+        ? `<div class="f-tipo"><p class="fixo">${pctDe(it.tipo)}%<small>taxa deste item</small></p></div>`
+        : `<label class="f-tipo">Tipo<select data-k="tipo">
+            <option value="facil"${it.tipo!=='exclusivo'?' selected':''}>Fácil: farmácia, papelaria (${C.pctFacil}%)</option>
+            <option value="exclusivo"${it.tipo==='exclusivo'?' selected':''}>Exclusivo, garimpo (${C.pctExclusivo}%)</option></select></label>`;
+      return `<div class="item" data-i="${i}">${nome}${preco}
+        <label class="f-qtd">Qtd<input data-k="qtd" type="number" min="1" value="${esc(qtdDe(it))}"></label>
+        ${tipo}<button class="rm" type="button" aria-label="Remover ${esc(it.nome||'produto')}">×</button></div>`;
+    }).join('');
+  }
+  elItens.addEventListener('input', e=>{
+    const k = e.target.dataset.k; if(!k) return;
+    const i = +e.target.closest('.item').dataset.i;
+    estado.itens[i][k] = e.target.value; salvar(); calcular();
+    if(k==='qtd') desenharCatalogo();
+  });
+  elItens.addEventListener('click', e=>{
+    if(!e.target.classList.contains('rm')) return;
+    estado.itens.splice(+e.target.closest('.item').dataset.i, 1);
+    salvar(); desenharItens(); desenharCatalogo(); calcular();
+  });
+  document.getElementById('add').addEventListener('click', ()=>{
+    estado.itens.push({ cat:'outro', nome:'', yen:'', qtd:1, tipo:'facil', peso:0, fixo:false });
+    salvar(); desenharItens(); calcular();
+    const ins = elItens.querySelectorAll('.item:last-child input'); if(ins[0]) ins[0].focus();
+  });
+
+  // ---------- pacote ----------
+  const FRETE = (C.frete||[]).slice().sort((a,b)=>(a.ateKg||0)-(b.ateKg||0));
+  const elPac = document.getElementById('pacotes');
+  elPac.innerHTML = FRETE.map(p=>`
+    <label class="pac"><input type="radio" name="pac" value="${esc(p.id)}">
+      <b>${esc(p.nome)}</b><span>${esc(p.dica||'')}</span>
+      <span>${p.valor==null ? 'frete a cotar' : 'frete estimado ' + brl(p.valor)}</span></label>`).join('');
+  elPac.addEventListener('change', e=>{ estado.pacote = e.target.value; estado.manual = true; salvar(); calcular(); });
+
+  // ---------- cálculo ----------
+  let ultimo = null;
+  function calcular(){
+    const tc = taxaCambio();
+    const grupos = {};
+    let ienes = 0, prod = 0, pct = 0, semPreco = 0, pesoG = 0;
+    estado.itens.forEach(it=>{
+      const q = qtdDe(it), y = num(it.yen);
+      pesoG += (num(it.peso) || C.pesoPadrao || 300) * q;
+      if(!y){ if(String(it.nome).trim()) semPreco++; return; }
+      const v = y * q * tc, t = v * pctDe(it.tipo)/100;
+      ienes += y*q; prod += v; pct += t;
+      const g = grupos[it.cat||'outro'] || (grupos[it.cat||'outro'] = {n:0, v:0, t:0});
+      g.n += q; g.v += v; g.t += t;
+    });
+    const temItens = ienes > 0;
+    const taxa = temItens ? (C.taxaFixa||0) + pct : 0;
+
+    // pacote: automático pelo peso, a não ser que o cliente tenha escolhido
+    const kg = pesoG/1000;
+    const sugerido = FRETE.find(p=>kg <= (p.ateKg||Infinity)) || FRETE[FRETE.length-1];
+    if(!estado.manual && sugerido) estado.pacote = sugerido.id;
+    const pac = FRETE.find(p=>p.id===estado.pacote) || sugerido;
+    elPac.querySelectorAll('input').forEach(r=>r.checked = pac && r.value===pac.id);
+    const acima = FRETE.length && kg > (FRETE[FRETE.length-1].ateKg||Infinity);
+    document.getElementById('peso').textContent = estado.itens.length
+      ? 'Peso estimado do carrinho: ' + kg.toLocaleString('pt-BR',{maximumFractionDigits:1}) + ' kg' + (sugerido ? ' → sugerimos o pacote ' + sugerido.nome.split('·')[0].trim().toLowerCase() : '') + (acima ? '. Acima do maior pacote: o frete vai por cotação.' : '.') + (estado.manual ? ' (você escolheu manualmente)' : '')
+      : 'O pacote é escolhido sozinho pelo peso dos produtos do carrinho.';
+
+    const frete = pac && pac.valor!=null && !acima ? pac.valor : null;
+    const total = prod + taxa + (frete||0);
+    const sinal = total * (C.sinalPix||50)/100;
+    const cartao = C.cartaoPct!=null ? total / (1 - C.cartaoPct/100) : null;
+    const imposto = (prod + (frete||0)) * (C.impostoPct||0)/100;
+    ultimo = {ienes,prod,taxa,frete,total,sinal,cartao,imposto,semPreco,pac,grupos,kg};
+
+    const linhas = Object.keys(grupos).map(id=>{ const c = catDe(id), g = grupos[id];
+      return `<tr><td>${c.emoji} ${esc(c.nome)}</td><td class="n">${g.n}</td><td class="n">${brl(g.v)}</td><td class="n">${brl(g.t)}</td></tr>`; }).join('');
+    document.getElementById('porcat').innerHTML = linhas ? `<table class="cats"><tr><th>Categoria</th><th class="n">Itens</th><th class="n">Produtos</th><th class="n">Taxa %</th></tr>${linhas}</table>` : '';
+
+    document.getElementById('res').innerHTML = `
+      <div><small>Produtos (${yen(ienes)})</small><b>${brl(prod)}</b></div>
+      <div><small>Taxa de serviço: R$ ${C.taxaFixa} (uma vez) + ${brl(pct)}</small><b>${brl(taxa)}</b></div>
+      <div><small>Frete${pac?' · '+esc(pac.nome.split('·')[0].trim()):''}</small><b>${frete==null?'a cotar':brl(frete)}</b></div>
+      <div class="tot"><small>Total do carrinho${frete==null?' (sem frete)':''}</small><b>${brl(total)}</b></div>`;
+
+    document.getElementById('pagto').innerHTML = `
+      <div class="pg"><h3>No Pix</h3><p class="v">${brl(total)}</p>
+        <ul><li>${C.sinalPix||50}% de sinal agora: <b>${brl(sinal)}</b></li><li>Saldo antes do envio: <b>${brl(total-sinal)}</b></li><li>Sem acréscimo</li></ul></div>
+      <div class="pg card"><h3>No cartão</h3><p class="v">${cartao==null?'a definir':brl(cartao)}</p>
+        <ul><li>100% no pedido, por link de pagamento</li><li>Inclui a taxa do cartão${C.cartaoPct!=null?' ('+C.cartaoPct+'%)':''}</li><li>Parcelado: juros por conta do comprador</li></ul></div>`;
+
+    const min = document.getElementById('minimo'), faltam = (C.minimoIenes||0) - ienes;
+    if(temItens && faltam > 0){ min.hidden = false; min.textContent = '⚠️ O pedido mínimo é de ' + yen(C.minimoIenes) + ' em produtos. Faltam ' + yen(faltam) + '. Junte com uma amiga!'; }
+    else min.hidden = true;
+
+    document.getElementById('cambio').textContent = 'Câmbio usado: R$ ' + tc.toFixed(4).replace('.',',') + ' por iene (' + cambioTxt + ', + ' + (C.margemCambio||0) + '%). O valor final usa o câmbio do dia da compra.';
+    document.getElementById('imposto').textContent = '🧾 Imposto de importação estimado, pago por você na chegada: cerca de ' + brl(imposto) + ' (' + (C.impostoPct||0) + '% sobre produtos + frete). É só uma estimativa: veja o guia de alfândega.';
+
+    const n = estado.itens.reduce((s,it)=>s+qtdDe(it),0), fl = document.getElementById('flutua');
+    fl.textContent = '🛒 ' + n + (n===1?' item':' itens') + ' · ' + brl(total); fl.classList.toggle('on', n>0);
+    salvar(); atualizarEnvio();
+  }
+
+  // ---------- WhatsApp ----------
+  function atualizarEnvio(){
+    const a = document.getElementById('enviar');
+    const wa = String(C.whatsapp||'').replace(/\D/g,'');
+    const itens = estado.itens.filter(it=>String(it.nome).trim() || num(it.yen));
+    if(!wa || !itens.length){ a.setAttribute('aria-disabled','true'); a.href='#'; return; }
+    const u = ultimo, L = ['Olá, Aline! Quero encomendar este carrinho do Japão:',''];
+    itens.forEach((it,i)=>L.push((i+1)+'. '+catDe(it.cat).emoji+' '+(String(it.nome).trim()||'(sem nome)')+' · '+(num(it.yen)?yen(num(it.yen)):'preço a confirmar')+' × '+qtdDe(it)+(it.tipo==='exclusivo'?' · exclusivo':'')));
+    L.push('', 'Peso estimado: '+u.kg.toLocaleString('pt-BR',{maximumFractionDigits:1})+' kg · pacote '+(u.pac?u.pac.nome:'-'));
+    L.push('Produtos: '+brl(u.prod)+' · taxa: '+brl(u.taxa)+' · frete: '+(u.frete==null?'a cotar':brl(u.frete)));
+    L.push('Total estimado: '+brl(u.total));
+    if(u.semPreco) L.push(u.semPreco+' produto(s) sem preço: pode confirmar?');
+    L.push('', 'Prefiro pagar no: ( ) Pix  ( ) cartão');
+    a.href = 'https://wa.me/'+wa+'?text='+encodeURIComponent(L.join('\n'));
+    a.removeAttribute('aria-disabled');
+  }
+
+  // ---------- câmbio do dia ----------
+  function buscarCambio(){
+    const ctrl = ('AbortController' in window) ? new AbortController() : null;
+    const t = setTimeout(()=>ctrl && ctrl.abort(), 5000);
+    fetch('https://economia.awesomeapi.com.br/json/last/JPY-BRL', ctrl?{signal:ctrl.signal}:{})
+      .then(r=>r.ok?r.json():Promise.reject())
+      .then(d=>{
+        const v = d && d.JPYBRL && parseFloat(d.JPYBRL.bid);
+        if(v > 0){ cambio = v; const dt = (d.JPYBRL.create_date||'').split(' ')[0].split('-').reverse().join('/'); cambioTxt = 'câmbio de mercado' + (dt ? ' de ' + dt : ' de hoje'); desenharCatalogo(); calcular(); }
+      })
+      .catch(()=>{})
+      .finally(()=>clearTimeout(t));
+  }
+
+  desenharCatalogo(); desenharItens(); calcular(); buscarCambio();
+})();
+</script>
+</body>
+</html>
