@@ -169,34 +169,30 @@ footer a:hover{color:var(--pink)}
 
   <nav class="abas" aria-label="Unirversos Tesouros">
     <a href="/loja/">🛒 Vitrine</a>
-    <a href="/loja/encomendas/" aria-current="page">🛍️ Encomendas</a>
+    <a href="/loja/encomendas/">🛍️ Encomendas</a>
     <a href="/loja/brecho/">🧥 Brechó</a>
+    <a href="/loja/checkout/" aria-current="page">🧺 Carrinho</a>
   </nav>
 
   <header class="hero">
     <p class="eyebrow" id="viagem">encomendas com a Aline</p>
-    <h1>Monte seu carrinho do Japão</h1>
-    <p class="lede">Cabelo, solar, skincare, otaku e papelaria no mesmo pedido. A calculadora soma tudo e mostra quanto fica no Pix e no cartão, com uma taxa de serviço só para o carrinho inteiro.</p>
+    <h1>Seu carrinho do Japão</h1>
+    <p class="lede">Confira os produtos, veja o total no Pix e no cartão e envie o pedido pelo WhatsApp. A taxa de serviço é uma só para o carrinho inteiro.</p>
   </header>
 
   <div class="loja">
   <div class="col-main">
-  <section class="box lav" aria-labelledby="t-cat">
-    <h2 class="sec-t" id="t-cat">1. Escolha no catálogo</h2>
-    <div class="filtros" id="filtros" role="group" aria-label="Filtrar por categoria"></div>
-    <div class="grid" id="catalogo"></div>
-    <p class="hint" id="afi-aviso" hidden>💡 Prefere comprar você mesma? Alguns produtos têm o botão azul, que leva a um serviço de compra no Japão (link de afiliado: a Unirversos pode receber uma comissão, sem custo extra para você). Nesse caso, a compra, o envio e o suporte são com o serviço, não comigo.</p>
-  </section>
 
   <section class="box sky" id="carrinho" aria-labelledby="t-car" style="scroll-margin-top:16px">
-    <h2 class="sec-t" id="t-car">2. Seu carrinho</h2>
+    <h2 class="sec-t" id="t-car">1. Seu carrinho</h2>
+    <p class="hint"><a href="/loja/">← continuar escolhendo na Vitrine</a></p>
     <div class="itens" id="itens"></div>
     <button class="add" type="button" id="add">+ produto fora do catálogo</button>
     <p class="hint">Fora do catálogo: cole o link ou o nome. Sem preço em ienes, eu confirmo pelo WhatsApp.</p>
   </section>
 
   <section class="box sky" aria-labelledby="t-pac">
-    <h2 class="sec-t" id="t-pac">3. Pacote</h2>
+    <h2 class="sec-t" id="t-pac">2. Pacote</h2>
     <p class="hint" id="peso"></p>
     <div class="pacotes" id="pacotes" role="radiogroup" aria-labelledby="t-pac"></div>
   </section>
@@ -204,7 +200,7 @@ footer a:hover{color:var(--pink)}
 
   <div class="col-resumo">
   <section class="box pink" id="resumo" aria-labelledby="t-res" aria-live="polite" style="scroll-margin-top:16px">
-    <h2 class="sec-t" id="t-res">4. Total do carrinho</h2>
+    <h2 class="sec-t" id="t-res">3. Total do carrinho</h2>
     <div id="porcat"></div>
     <div class="res" id="res"></div>
     <p class="alerta" id="minimo" hidden></p>
@@ -273,7 +269,7 @@ footer a:hover{color:var(--pink)}
   const qtdDe = it => Math.max(1, Math.round(num(it.qtd)) || 1);
   const catDe = id => CATS.find(c=>c.id===id) || {id:'outro', nome:'Outros', emoji:'📦'};
   const afiOk = p => p && p.afiliado && /^https?:\/\//i.test(String(p.afiliado.link||''));
-  if (PRODS.some(afiOk)) document.getElementById('afi-aviso').hidden = false;
+  const avisoAfi = document.getElementById('afi-aviso'); if (avisoAfi && PRODS.some(afiOk)) avisoAfi.hidden = false;
   const pctDe = tipo => (tipo==='exclusivo' ? C.pctExclusivo : C.pctFacil) || 0;
   document.querySelectorAll('.cfg-fixa').forEach(e=>e.textContent = C.taxaFixa);
 
@@ -289,12 +285,13 @@ footer a:hover{color:var(--pink)}
   // ---------- catálogo ----------
   let filtro = 'todos';
   const elFil = document.getElementById('filtros'), elCat = document.getElementById('catalogo');
-  elFil.innerHTML = [{id:'todos',nome:'Todos',emoji:'✨'}].concat(CATS).map(c=>`<button type="button" data-f="${c.id}" aria-pressed="${c.id===filtro}">${c.emoji} ${esc(c.nome)}</button>`).join('');
-  elFil.addEventListener('click', e=>{
+  if (elFil) elFil.innerHTML = [{id:'todos',nome:'Todos',emoji:'✨'}].concat(CATS).map(c=>`<button type="button" data-f="${c.id}" aria-pressed="${c.id===filtro}">${c.emoji} ${esc(c.nome)}</button>`).join('');
+  if (elFil) elFil.addEventListener('click', e=>{
     const b = e.target.closest('button'); if(!b) return;
     filtro = b.dataset.f; elFil.querySelectorAll('button').forEach(x=>x.setAttribute('aria-pressed', x===b)); desenharCatalogo();
   });
   function desenharCatalogo(){
+    if(!elCat) return;
     const lista = PRODS.filter(p=>filtro==='todos'||p.cat===filtro);
     elCat.innerHTML = lista.map(p=>{
       const c = catDe(p.cat), noCar = estado.itens.find(it=>it.id===p.id);
@@ -310,7 +307,7 @@ footer a:hover{color:var(--pink)}
         </div></article>`;
     }).join('') || '<p class="vazio">Nenhum produto nesta categoria ainda.</p>';
   }
-  elCat.addEventListener('click', e=>{
+  if (elCat) elCat.addEventListener('click', e=>{
     const b = e.target.closest('.pega'); if(!b) return;
     const p = PRODS.find(x=>x.id===b.dataset.id); if(!p) return;
     const ja = estado.itens.find(it=>it.id===p.id);
@@ -322,7 +319,7 @@ footer a:hover{color:var(--pink)}
   // ---------- carrinho ----------
   const elItens = document.getElementById('itens');
   function desenharItens(){
-    if(!estado.itens.length){ elItens.innerHTML = '<p class="vazio">Seu carrinho está vazio. Escolha no catálogo acima ou adicione um produto fora dele.</p>'; return; }
+    if(!estado.itens.length){ elItens.innerHTML = '<p class="vazio">Seu carrinho está vazio. <a href="/loja/">Escolha os achados na Vitrine</a> ou adicione um produto fora do catálogo.</p>'; return; }
     elItens.innerHTML = estado.itens.map((it,i)=>{
       const c = catDe(it.cat);
       const nome = it.fixo
