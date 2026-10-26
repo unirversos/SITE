@@ -39,14 +39,14 @@ st.textContent = `
 #uni-gate .tabs button[aria-pressed="true"]{background:#3a2b38;color:#fff}
 #uni-gate form{display:grid;gap:8px}
 #uni-gate input{font:inherit;padding:10px 12px;border:1.5px solid #ecdadd;border-radius:12px;width:100%;box-sizing:border-box}
-#uni-gate .pri{font:inherit;font-weight:700;border:0;background:#d9506f;color:#fff;padding:11px;border-radius:999px;cursor:pointer}
+#uni-gate .pri{font:inherit;font-weight:700;border:0;background:#c23f5e;color:#fff;padding:11px;border-radius:999px;cursor:pointer}
 #uni-gate .gg{font:inherit;font-weight:700;border:1.5px solid #ecdadd;background:#fff;color:#3a2b38;padding:10px;border-radius:999px;cursor:pointer}
 #uni-gate .ou{display:flex;align-items:center;gap:10px;font-size:12.5px;color:#6b5a67}
 #uni-gate .ou::before,#uni-gate .ou::after{content:"";flex:1;height:1px;background:#ecdadd}
 #uni-gate .err{color:#b3261e;font-size:13px;min-height:1.2em}
 #uni-gate .peq{font-size:12.5px}
-#uni-gate a{color:#d9506f}
-#uni-gate .lk{border:0;background:none;color:#d9506f;font:inherit;font-size:13px;cursor:pointer;padding:0;justify-self:start;text-decoration:underline}
+#uni-gate a{color:#c23f5e}
+#uni-gate .lk{border:0;background:none;color:#c23f5e;font:inherit;font-size:13px;cursor:pointer;padding:0;justify-self:start;text-decoration:underline}
 .uni-chip{display:inline-flex;align-items:center;gap:6px;font-size:13px;color:#6b5a67;white-space:nowrap}
 .uni-chip button{border:1px solid #ecdadd;background:#fff;border-radius:999px;padding:3px 10px;font:inherit;font-size:12.5px;cursor:pointer;color:#6b5a67}
 .uni-chip.solta{position:fixed;right:12px;bottom:12px;z-index:50;background:#fff;border:1px solid #ecdadd;border-radius:999px;padding:4px 6px 4px 12px;box-shadow:0 6px 16px -10px rgba(58,43,56,.4)}
