@@ -13,14 +13,14 @@ const MOD = 'unirversos.idiomas@gmail.com';
 const T = EN ? {
   entrar: 'Sign in to post', sair: 'sign out',
   login: { titulo: 'Create your free account to post', texto: 'Anyone can read the diary. To publish, you need an account, so you can delete your own posts later.', peq: 'We keep only your e-mail and what you publish.' },
-  vazio: 'No posts yet. Be the first to share! 🌱', carregando: 'Loading posts…',
+  vazio: 'The notebook is open. Leave your first sentence in English here today. 🌱', resta: 'characters left', carregando: 'Loading posts…',
   erro: 'Could not load the posts right now. Check your connection and reload the page.',
   falhou: 'Your post was not published. Try again.', apagar: 'delete', denunciar: 'report',
   confirma: 'Delete this post? This cannot be undone.', anon: 'Learner', data: 'en-US'
 } : {
   entrar: 'Entrar para publicar', sair: 'sair',
   login: { titulo: 'Crie sua conta grátis para publicar', texto: 'Qualquer pessoa pode ler o diário. Para publicar, você precisa de uma conta, e assim pode apagar os seus posts depois.', peq: 'Guardamos só o seu e-mail e o que você publicar.' },
-  vazio: 'Nenhum post ainda. Seja a primeira pessoa a compartilhar! 🌱', carregando: 'Carregando os posts…',
+  vazio: LANG === 'ja' ? 'O caderno está aberto. Deixe aqui a sua primeira frase em japonês hoje. 🌱' : 'O caderno está aberto. Deixe aqui a sua primeira frase em português hoje. 🌱', resta: 'caracteres restantes', carregando: 'Carregando os posts…',
   erro: 'Não consegui carregar os posts agora. Confira a internet e recarregue a página.',
   falhou: 'O seu post não foi publicado. Tente de novo.', apagar: 'apagar', denunciar: 'denunciar',
   confirma: 'Apagar este post? Não dá para desfazer.', anon: 'Aprendiz', data: LANG === 'ja' ? 'ja-JP' : 'pt-BR'
@@ -30,6 +30,18 @@ const $ = id => document.getElementById(id);
 const esc = s => String(s == null ? '' : s).replace(/[&<>"']/g, c => ({ '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;' }[c]));
 const lista = $('postsContainer'), form = $('formPost'), porta = $('diarioEntrar'), nomeEl = $('author'), textoEl = $('text'), aviso = $('diarioAviso');
 let user = null, posts = [];
+
+/* contador decrescente: quanto espaço ainda sobra */
+const MAX = 280, conta = document.createElement('p');
+conta.className = 'conta'; conta.setAttribute('aria-live', 'polite');
+conta.style.cssText = 'margin:6px 0 0;font-size:13px;text-align:right;color:#6e6370';
+textoEl.insertAdjacentElement('afterend', conta);
+function atualizaConta(){
+  const r = MAX - textoEl.value.length;
+  conta.textContent = `${r}/${MAX} · ${T.resta}`;
+  conta.style.color = r <= 20 ? '#b3261e' : '#6e6370'; conta.style.fontWeight = r <= 20 ? '700' : '400';
+}
+textoEl.addEventListener('input', atualizaConta); atualizaConta();
 
 const NOME_KEY = 'uniDiarioNome';
 try { const n = localStorage.getItem(NOME_KEY); if (n) nomeEl.value = n; } catch (e) {}
@@ -81,7 +93,7 @@ form.addEventListener('submit', async e => {
   try {
     await addDoc(collection(db, 'diario', LANG, 'posts'), { texto, nome, uid: user.uid, criadoEm: serverTimestamp() });
     try { localStorage.setItem(NOME_KEY, nome); } catch (x) {}
-    textoEl.value = ''; textoEl.focus();
+    textoEl.value = ''; atualizaConta(); textoEl.focus();
   } catch (x) { console.warn(x); aviso.textContent = T.falhou; }
   btn.disabled = false;
 });
