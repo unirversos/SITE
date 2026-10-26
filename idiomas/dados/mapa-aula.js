@@ -411,7 +411,7 @@ function loadAula(slug){
   const L=$('links'); if(L&&A.linkList){ L.innerHTML=A.linkList.map(([t,h])=>`<a href="${h}">${t}</a>`).join(''); }
   else if(L&&A.links!==false){
     const order=ORDEM; const k=order.indexOf(slug), nx=order[k+1];
-    L.innerHTML=`<a href="/idiomas/mapas/">🗺️ Todos os mapas</a>${nx?`<a href="/idiomas/mapas/${nx}/aula/">Próxima aula: ${TITULOS[nx]||nx} →</a>`:''}`; }
+    L.innerHTML=`<a href="/idiomas/japones/">🗺️ Todos os mapas</a>${nx?`<a href="/idiomas/mapas/${nx}/aula/">Próxima aula: ${TITULOS[nx]||nx} →</a>`:''}`; }
   showXP(); go(0);
 }
 
