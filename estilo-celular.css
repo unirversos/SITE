@@ -1,0 +1,16 @@
+/* Unirversos · ajustes para celular, iguais no site todo.
+   Só mexe em tamanho: área de toque do menu, furigana legível e campos sem zoom automático. */
+@media (max-width: 640px) {
+  .navlinks, .nav .links { flex-wrap: wrap; row-gap: 0; }
+  .navlinks a, .nav .links a, header nav a {
+    display: inline-flex; align-items: center; min-height: 44px;
+  }
+  .uni-chip { min-height: 44px; }
+  .uni-chip button { min-height: 36px; padding: 0 16px; }
+  /* Ateliê: bolinhas de cor da pele maiores para o dedo */
+  .skins { flex-wrap: wrap; }
+  .skins .skin { width: 34px; height: 34px; }
+  rt { font-size: max(0.5em, 9px) !important; }
+  input:not([type=range]):not([type=checkbox]):not([type=radio]):not([type=color]),
+  select, textarea { font-size: 16px !important; }
+}
