@@ -1,7 +1,10 @@
 <!DOCTYPE html>
-<html lang="pt-BR">
+<html lang="pt-BR" data-login="obrigatorio">
 <head>
 <meta charset="UTF-8">
+<style>html[data-login="obrigatorio"]:not(.uni-ok) body>*:not(#uni-gate){visibility:hidden}</style>
+<script type="module" src="/idiomas/dados/conta.js?v=1"></script>
+<script>setTimeout(function(){var h=document.documentElement;if(!h.classList.contains('uni-ok')&&!document.getElementById('uni-gate'))h.classList.add('uni-ok')},10000)</script>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Planeta Utopia — simulador de situações | Unirversos Idiomas</title>
 <style>
@@ -587,7 +590,8 @@ let cameFromMaps=false;
 (function(){
   const q=new URLSearchParams(location.search);
   const l=q.get('lang'), t=q.get('terr');
-  cameFromMaps = q.get('from')==='mapas';
+  cameFromMaps = q.get('from')==='mapas' || q.get('from')==='trilha';
+  if(q.get('from')==='trilha'){ const bl=document.querySelector('#stamp-backmap a'); if(bl){ bl.href='/idiomas/japones/'; bl.textContent='↩ voltar para a minha trilha'; } }
   const hasSave = loadGame();
   const valid = l && t && PACKS[l] && PACKS[l].territories.some(x=>x.id===t) && SCENES[l] && SCENES[l].scenes[t];
   if(!hasSave && !valid) return; // primeira visita sem link: fica no setup
