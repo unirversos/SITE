@@ -237,6 +237,8 @@ body{font-family:'Zen Maru Gothic',sans-serif;color:var(--ink);background:var(--
 
 </div>
 
+<script src="/idiomas/dados/audio-mapa.js?v=0b6639ea"></script>
+<script>document.addEventListener('DOMContentLoaded',function(){if(window.AUDIO_CREDITO){var c=document.createElement('p');c.style.cssText='margin:24px 16px;text-align:center;font-size:12px;color:#6b5a67';c.textContent='Vozes sintéticas em japonês: '+window.AUDIO_CREDITO+'.';document.body.appendChild(c);}});</script>
 <script>
 // Dados de expressões por contexto e idioma
 const phrases = {
@@ -621,6 +623,25 @@ function playAudio() {
   // Use a pronunciação (romaji para EN/PT, texto original pra JA)
   const textToSpeak = currentLang === 'ja' ? data.text : data.trans;
   
+  /* japonês: toca a もち子 quando existe (as partes de "A / B" tocam em sequência); senão, voz do aparelho */
+  if (currentLang === 'ja' && window.AUDIO_MAP) {
+    const chave = t => String(t || '').replace(/[\s、。，．,.!！?？…・「」『』（）()]/g, '');
+    const ids = String(textToSpeak).split(' / ').map(x => window.AUDIO_MAP[chave(x)]);
+    if (ids.length && ids.every(Boolean)) {
+      try { if (window.__amuAud) window.__amuAud.pause(); } catch (e) {}
+      window.speechSynthesis.cancel();
+      let k = 0, caiu = false;
+      const cair = () => { if (caiu) return; caiu = true; window.__amuAud = null; falaAparelho(textToSpeak, langCode); };
+      const toca = () => { try { const a = new Audio((window.AUDIO_BASE || '/idiomas/audio/') + ids[k] + '.mp3'); window.__amuAud = a;
+        a.onerror = cair; a.onended = () => { k++; if (k < ids.length && window.__amuAud === a) toca(); };
+        const pr = a.play(); if (pr && pr.catch) pr.catch(cair); } catch (e) { cair(); } };
+      toca(); return;
+    }
+  }
+  falaAparelho(textToSpeak, langCode);
+}
+
+function falaAparelho(textToSpeak, langCode) {
   const utterance = new SpeechSynthesisUtterance(textToSpeak);
   utterance.lang = langCode;
   utterance.rate = 0.85; // Um pouco mais lento pra clareza
