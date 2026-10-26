@@ -33,9 +33,14 @@ window.ENCOMENDA = {
   ],
   pesoPadrao: 300,           // gramas usados para produto fora do catálogo (peso desconhecido)
 
-  // Imposto de importação: estimativa SÓ INFORMATIVA (o cliente paga na chegada).
-  // Confirme a regra do seu envio com a agência antes de divulgar este número.
-  impostoPct: 60,            // % sobre produtos + frete, estimativa conservadora
+  // Alfândega: estimativa SÓ INFORMATIVA. Quem paga é o cliente, na chegada,
+  // pelo app dos Correios / Minhas Importações. NÃO entra no valor pago a você.
+  // Regra do guia dos Correios para remessa fora do Remessa Conforme:
+  // 60% de imposto de importação sobre (produtos + frete) + ICMS do estado.
+  impostoImportacaoPct: 60,
+  icmsPct: 17,               // ICMS do estado de destino (guia dos Correios 2024: 17%). Confirme o do seu estado.
+  icmsPorDentro: true,       // true = conta conservadora (ICMS calculado "por dentro"); confirme com a agência
+  despachoPostal: null,      // R$ da taxa de despacho postal dos Correios. null = "a confirmar"
 
   // Cartão: taxa da plataforma de link de pagamento + antecipação, somadas.
   // null = ainda não definida (a opção de cartão mostra "a definir").

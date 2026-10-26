@@ -122,6 +122,32 @@ table.cats{width:100%;border-collapse:collapse;font-size:14.5px}
 .enviar[aria-disabled="true"]{background:var(--paper);color:var(--muted);border:1.5px dashed var(--line);pointer-events:none}
 .flutua{position:sticky;bottom:12px;z-index:5;justify-self:center;display:none;text-decoration:none;font-family:var(--f-display);font-weight:700;font-size:15px;padding:9px 18px;border-radius:999px;background:var(--ink);color:#fff;box-shadow:0 8px 20px -8px rgba(58,43,56,.6)}
 .flutua.on{display:inline-flex}
+
+/* computador: resumo fixo à direita */
+.loja{display:grid;gap:36px}
+.col-main{display:grid;gap:36px;min-width:0}
+@media (min-width:1000px){
+  .loja{grid-template-columns:minmax(0,1fr) 380px;align-items:start}
+  .col-resumo{position:sticky;top:16px;max-height:calc(100vh - 32px);overflow:auto;border-radius:var(--r)}
+  .col-resumo .res,.col-resumo .pagto{grid-template-columns:1fr}
+  .col-resumo .pg .v{font-size:24px}
+  .grid{grid-template-columns:repeat(auto-fill,minmax(200px,1fr))}
+  .flutua.on{display:none}
+}
+
+/* alfândega */
+.alf{border:1.5px solid #f0d3a6;background:#fffaf2;border-radius:16px;padding:14px 16px;display:grid;gap:8px}
+.alf h3{font-family:var(--f-display);font-size:18px;margin:0}
+.alf p{margin:0;font-size:14px}
+.alf table{width:100%;border-collapse:collapse;font-size:14px}
+.alf td{padding:4px 0;border-bottom:1px dashed #f0d3a6}
+.alf td.n{text-align:right;white-space:nowrap;font-weight:700}
+.ciente{display:flex;gap:10px;align-items:flex-start;font-size:14px;font-weight:700;background:#fff;border:1.5px solid var(--pink);border-radius:12px;padding:10px 12px;cursor:pointer}
+.ciente input{width:20px;height:20px;flex:0 0 auto;margin-top:2px;accent-color:var(--pink)}
+.faq{display:grid;gap:8px}
+.faq details{border:1.5px solid var(--line);border-radius:14px;background:#fff;padding:10px 14px}
+.faq summary{cursor:pointer;font-weight:700;font-size:15.5px}
+.faq details p{margin:8px 0 2px;font-size:14.5px}
 footer{border-top:1.5px dashed var(--line);padding-top:22px;display:flex;flex-wrap:wrap;justify-content:space-between;gap:12px 24px;font-size:14px;color:var(--muted)}
 footer a{text-decoration:none;color:var(--ink)}
 footer a:hover{color:var(--pink)}
@@ -149,6 +175,8 @@ footer a:hover{color:var(--pink)}
     <p class="lede">Cabelo, solar, skincare, otaku e papelaria no mesmo pedido. A calculadora soma tudo e mostra quanto fica no Pix e no cartão, com uma taxa de serviço só para o carrinho inteiro.</p>
   </header>
 
+  <div class="loja">
+  <div class="col-main">
   <section class="box lav" aria-labelledby="t-cat">
     <h2 class="sec-t" id="t-cat">1. Escolha no catálogo</h2>
     <div class="filtros" id="filtros" role="group" aria-label="Filtrar por categoria"></div>
@@ -167,16 +195,23 @@ footer a:hover{color:var(--pink)}
     <p class="hint" id="peso"></p>
     <div class="pacotes" id="pacotes" role="radiogroup" aria-labelledby="t-pac"></div>
   </section>
+  </div>
 
-  <section class="box pink" id="resumo" aria-labelledby="t-res" aria-live="polite">
+  <div class="col-resumo">
+  <section class="box pink" id="resumo" aria-labelledby="t-res" aria-live="polite" style="scroll-margin-top:16px">
     <h2 class="sec-t" id="t-res">4. Total do carrinho</h2>
     <div id="porcat"></div>
     <div class="res" id="res"></div>
     <p class="alerta" id="minimo" hidden></p>
     <div class="pagto" id="pagto"></div>
+    <div class="alf" id="alf"></div>
+    <label class="ciente"><input type="checkbox" id="ciente"> <span>Estou ciente de que as taxas da alfândega (imposto de importação, ICMS e despacho postal) <u>não</u> estão no valor pago à Aline: eu pago na chegada, pelos Correios.</span></label>
+    <a class="enviar" id="enviar" href="#" target="_blank" rel="noopener" aria-disabled="true">💬 Enviar meu carrinho pelo WhatsApp</a>
+    <p class="hint" id="envio-dica"></p>
     <p class="hint" id="cambio"></p>
-    <p class="aviso" id="imposto"></p>
   </section>
+  </div>
+  </div>
 
   <section class="box sage" aria-labelledby="t-regras">
     <h2 class="sec-t" id="t-regras">Como funciona</h2>
@@ -187,11 +222,29 @@ footer a:hover{color:var(--pink)}
       <li>Produto esgotado: devolvo o valor dele ou troco, só com o seu ok.</li>
       <li>Depois que o produto é comprado, o sinal não é reembolsável.</li>
       <li>O frete é estimado; se o real for menor, devolvo a diferença no Pix.</li>
-      <li>O imposto de importação é cobrado na chegada ao Brasil. Veja o <a href="/loja/guia/">guia de compra &amp; alfândega</a>.</li>
+      <li>No cartão, você paga tudo de uma vez (à vista ou parcelado). As taxas da alfândega ficam à parte e são pagas por você na chegada.</li>
     </ul>
   </section>
 
-  <a class="enviar" id="enviar" href="#" target="_blank" rel="noopener" aria-disabled="true">💬 Enviar meu carrinho pelo WhatsApp</a>
+  <section class="box sky" aria-labelledby="t-faq">
+    <h2 class="sec-t" id="t-faq">Chegada do pacote: perguntas frequentes</h2>
+    <div class="faq">
+      <details><summary>Quem paga o imposto de importação?</summary>
+        <p>Você, quando o pacote chega ao Brasil. Ele vai no seu nome e CPF, e os Correios cobram o imposto de importação (60% sobre produtos + frete), o ICMS do seu estado e a taxa de despacho postal. Esse valor não passa por mim: é pago direto aos Correios, que repassam à Receita e ao estado.</p></details>
+      <details><summary>Posso pagar tudo no cartão?</summary>
+        <p>Sim: produtos, taxa de serviço e frete de uma vez, à vista ou parcelado (juros do parcelamento por sua conta). Só as taxas da alfândega ficam de fora, porque são cobradas pelos Correios na chegada.</p></details>
+      <details><summary>Como pago as taxas da alfândega?</summary>
+        <p>Pelo app dos Correios ou pela plataforma Minhas Importações, no site dos Correios, com boleto ou Pix. Quando houver valor a pagar, o rastreio mostra "Aguardando pagamento". Depois do pagamento, o pacote segue para o seu endereço.</p></details>
+      <details><summary>Como acompanho meu pacote?</summary>
+        <p>Assim que eu despachar do Japão, te mando o código de rastreio. Você acompanha pelo app dos Correios, pelo site de rastreamento ou pelo Minhas Importações, entrando com o seu cadastro dos Correios.</p></details>
+      <details><summary>Preciso informar meu CPF?</summary>
+        <p>Sim, é obrigatório. O nome e o CPF precisam estar iguais ao cadastro na Receita Federal; dados errados podem atrasar ou devolver a encomenda.</p></details>
+      <details><summary>O que não dá para encomendar?</summary>
+        <p>Remédios, produtos que precisam de refrigeração e itens proibidos pelos Correios ou pela Anvisa. Também evito muitas unidades do mesmo produto: a encomenda é para o seu uso, não para revenda.</p></details>
+    </div>
+    <p class="hint">Fonte: guia “Importando pelos Correios”. As alíquotas podem mudar; confira em <a href="https://www.correios.com.br/receber/encomenda/internacional" target="_blank" rel="noopener">correios.com.br</a>.</p>
+  </section>
+
   <a class="flutua" id="flutua" href="#resumo">🛒 ver total</a>
 
   <footer>
@@ -200,7 +253,7 @@ footer a:hover{color:var(--pink)}
   </footer>
 </div>
 
-<script src="/loja/encomenda-config.js?v=2"></script>
+<script src="/loja/encomenda-config.js?v=3"></script>
 <script src="/loja/encomenda-catalogo.js?v=1"></script>
 <script>
 (function(){
@@ -339,7 +392,13 @@ footer a:hover{color:var(--pink)}
     const total = prod + taxa + (frete||0);
     const sinal = total * (C.sinalPix||50)/100;
     const cartao = C.cartaoPct!=null ? total / (1 - C.cartaoPct/100) : null;
-    const imposto = (prod + (frete||0)) * (C.impostoPct||0)/100;
+    // alfândega (paga pelo cliente na chegada; só estimativa)
+    const baseAd = prod + (frete||0);
+    const ii = baseAd * (C.impostoImportacaoPct||0)/100;
+    const ic = (C.icmsPct||0)/100;
+    const icms = C.icmsPorDentro ? (baseAd + ii) * ic / (1 - ic) : (baseAd + ii) * ic;
+    const desp = C.despachoPostal != null ? C.despachoPostal : null;
+    const imposto = ii + icms + (desp||0);
     ultimo = {ienes,prod,taxa,frete,total,sinal,cartao,imposto,semPreco,pac,grupos,kg};
 
     const linhas = Object.keys(grupos).map(id=>{ const c = catDe(id), g = grupos[id];
@@ -356,14 +415,24 @@ footer a:hover{color:var(--pink)}
       <div class="pg"><h3>No Pix</h3><p class="v">${brl(total)}</p>
         <ul><li>${C.sinalPix||50}% de sinal agora: <b>${brl(sinal)}</b></li><li>Saldo antes do envio: <b>${brl(total-sinal)}</b></li><li>Sem acréscimo</li></ul></div>
       <div class="pg card"><h3>No cartão</h3><p class="v">${cartao==null?'a definir':brl(cartao)}</p>
-        <ul><li>100% no pedido, por link de pagamento</li><li>Inclui a taxa do cartão${C.cartaoPct!=null?' ('+C.cartaoPct+'%)':''}</li><li>Parcelado: juros por conta do comprador</li></ul></div>`;
+        <ul><li>Tudo de uma vez no pedido, por link de pagamento</li><li>À vista ou parcelado (juros por conta do comprador)</li><li>Inclui a taxa do cartão${C.cartaoPct!=null?' ('+C.cartaoPct+'%)':''}</li></ul></div>`;
+
+    document.getElementById('alf').innerHTML = `
+      <h3>🧾 Alfândega: você paga na chegada</h3>
+      <p>Não está no valor acima. É cobrado pelos Correios, no seu nome e CPF, quando o pacote chega.</p>
+      <table>
+        <tr><td>Imposto de importação (${C.impostoImportacaoPct}% sobre produtos + frete)</td><td class="n">${brl(ii)}</td></tr>
+        <tr><td>ICMS do estado (${C.icmsPct}%)</td><td class="n">${brl(icms)}</td></tr>
+        <tr><td>Taxa de despacho postal</td><td class="n">${desp==null?'a confirmar':brl(desp)}</td></tr>
+        <tr><td><b>Estimativa a pagar na chegada</b></td><td class="n">${brl(imposto)}${desp==null?' + despacho':''}</td></tr>
+      </table>
+      <p class="hint">Estimativa${frete==null?' sem o frete (ainda a cotar)':''}. O valor exato é calculado pela Receita. Pagamento por boleto ou Pix no app dos Correios ou em Minhas Importações.</p>`;
 
     const min = document.getElementById('minimo'), faltam = (C.minimoIenes||0) - ienes;
     if(temItens && faltam > 0){ min.hidden = false; min.textContent = '⚠️ O pedido mínimo é de ' + yen(C.minimoIenes) + ' em produtos. Faltam ' + yen(faltam) + '. Junte com uma amiga!'; }
     else min.hidden = true;
 
     document.getElementById('cambio').textContent = 'Câmbio usado: R$ ' + tc.toFixed(4).replace('.',',') + ' por iene (' + cambioTxt + ', + ' + (C.margemCambio||0) + '%). O valor final usa o câmbio do dia da compra.';
-    document.getElementById('imposto').textContent = '🧾 Imposto de importação estimado, pago por você na chegada: cerca de ' + brl(imposto) + ' (' + (C.impostoPct||0) + '% sobre produtos + frete). É só uma estimativa: veja o guia de alfândega.';
 
     const n = estado.itens.reduce((s,it)=>s+qtdDe(it),0), fl = document.getElementById('flutua');
     fl.textContent = '🛒 ' + n + (n===1?' item':' itens') + ' · ' + brl(total); fl.classList.toggle('on', n>0);
@@ -375,13 +444,19 @@ footer a:hover{color:var(--pink)}
     const a = document.getElementById('enviar');
     const wa = String(C.whatsapp||'').replace(/\D/g,'');
     const itens = estado.itens.filter(it=>String(it.nome).trim() || num(it.yen));
-    if(!wa || !itens.length){ a.setAttribute('aria-disabled','true'); a.href='#'; return; }
+    const ciente = document.getElementById('ciente').checked;
+    const dica = document.getElementById('envio-dica');
+    dica.textContent = !itens.length ? 'Adicione produtos ao carrinho para enviar.'
+      : !ciente ? 'Marque a ciência das taxas da alfândega para enviar.'
+      : !wa ? 'O envio pelo WhatsApp abre em breve.' : '';
+    if(!wa || !itens.length || !ciente){ a.setAttribute('aria-disabled','true'); a.href='#'; return; }
     const u = ultimo, L = ['Olá, Aline! Quero encomendar este carrinho do Japão:',''];
     itens.forEach((it,i)=>L.push((i+1)+'. '+catDe(it.cat).emoji+' '+(String(it.nome).trim()||'(sem nome)')+' · '+(num(it.yen)?yen(num(it.yen)):'preço a confirmar')+' × '+qtdDe(it)+(it.tipo==='exclusivo'?' · exclusivo':'')));
     L.push('', 'Peso estimado: '+u.kg.toLocaleString('pt-BR',{maximumFractionDigits:1})+' kg · pacote '+(u.pac?u.pac.nome:'-'));
     L.push('Produtos: '+brl(u.prod)+' · taxa: '+brl(u.taxa)+' · frete: '+(u.frete==null?'a cotar':brl(u.frete)));
     L.push('Total estimado: '+brl(u.total));
     if(u.semPreco) L.push(u.semPreco+' produto(s) sem preço: pode confirmar?');
+    L.push('', '✔ Estou ciente de que as taxas da alfândega (estimativa: '+brl(u.imposto)+') são pagas por mim na chegada, pelos Correios.');
     L.push('', 'Prefiro pagar no: ( ) Pix  ( ) cartão');
     a.href = 'https://wa.me/'+wa+'?text='+encodeURIComponent(L.join('\n'));
     a.removeAttribute('aria-disabled');
@@ -401,6 +476,7 @@ footer a:hover{color:var(--pink)}
       .finally(()=>clearTimeout(t));
   }
 
+  document.getElementById('ciente').addEventListener('change', atualizarEnvio);
   desenharCatalogo(); desenharItens(); calcular(); buscarCambio();
 })();
 </script>
