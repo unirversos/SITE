@@ -16,7 +16,7 @@ function speak(t,rate){
   try{ if(audioAtual){ audioAtual.pause(); audioAtual=null; } if(window.speechSynthesis) speechSynthesis.cancel(); }catch(e){}
   const id=(window.AUDIO_MAP||{})[chaveAudio(t)];
   if(!id) return speakTTS(t,rate);
-  try{ const a=new Audio((window.AUDIO_BASE||'/idiomas/audio/')+id+'.mp3'); audioAtual=a;
+  try{ const a=new Audio(AUDIO_PRONTO[id]||((window.AUDIO_BASE||'/idiomas/audio/')+id+'.mp3')); audioAtual=a;
     if(rate&&rate<.7){ a.playbackRate=.75; a.preservesPitch=true; }
     let caiu=false; const cair=()=>{ if(caiu||audioAtual!==a) return; caiu=true; audioAtual=null; speakTTS(t,rate); };
     a.onerror=cair; const pr=a.play(); if(pr&&pr.catch) pr.catch(cair);
@@ -169,7 +169,19 @@ function renderSteps(){
   STEPS=C()?['Situação','Palavras','Moldes','Ouvir','Cena','Consulta']:['Situação','Palavras','Moldes','Ouvir','Cena'];
   $('steps').innerHTML=STEPS.map((s,k)=>`<button type="button" class="step ${k===step?'now':P.steps[k]?'done':''}" data-s="${k}"><span class="n">${P.steps[k]&&k!==step?'✓':k+1}</span>${s}</button>`).join('');
 }
-function go(n){ step=n; mood='idle'; renderSteps(); [stSituacao,stPalavras,stMoldes,stOuvir,stCena,stConsulta][n](); try{ $('steps').scrollIntoView({block:'start',behavior:'smooth'}); }catch(e){} }
+/* áudios da aula: baixa em segundo plano (4 por vez) logo na primeira etapa, para o 🔊 tocar sem espera no 4G */
+let preBaixou=false; const AUDIO_PRONTO={};
+function preBaixaAudios(){
+  if(preBaixou||!window.AUDIO_MAP||!window.fetch) return; preBaixou=true;
+  const base=window.AUDIO_BASE||'/idiomas/audio/', ids=new Set();
+  const varre=v=>{ if(typeof v==='string'){ const k=chaveAudio(v.split('|')[0].replace(/<rt>.*?<\/rt>/g,'').replace(/<[^>]+>/g,'')); const id=window.AUDIO_MAP[k]; if(id) ids.add(id); }
+    else if(Array.isArray(v)) v.forEach(varre); else if(v&&typeof v==='object') Object.values(v).forEach(varre); };
+  try{ varre(A); }catch(e){}
+  const fila=[...ids]; const um=()=>{ const id=fila.shift(); if(!id) return; fetch(base+id+'.mp3').then(r=>r.ok?r.blob():null).then(b=>{ if(b) AUDIO_PRONTO[id]=URL.createObjectURL(b); }).catch(()=>{}).then(um); };
+  const vai=()=>{ for(let i=0;i<4;i++) um(); };
+  if(window.requestIdleCallback) requestIdleCallback(vai,{timeout:2000}); else setTimeout(vai,800);
+}
+function go(n){ preBaixaAudios(); step=n; mood='idle'; renderSteps(); [stSituacao,stPalavras,stMoldes,stOuvir,stCena,stConsulta][n](); try{ $('steps').scrollIntoView({block:'start',behavior:'smooth'}); }catch(e){} }
 function finish(n){ P.steps[n]=1; persist(); }
 const wordH=w=>w.h||w.k;
 
