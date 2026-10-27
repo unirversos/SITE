@@ -538,6 +538,8 @@ function wireCena(){
     hint(`${A.emoji} <b>${A.insignia||('Insígnia '+A.titulo+' conquistada!')}</b> ${A.fim}${first?' <span class="newxp">+20 XP</span>':''}${A.fimLink?` <a href="${A.fimLink[1]}">${A.fimLink[0]}</a>`:''}`); $('btnNext').hidden=true;
     if(typeof A.onFinish==='function'){ try{ A.onFinish(); }catch(e){} }
     if(C()){ const b=document.createElement('button'); b.className='btn primary'; b.type='button'; b.textContent='📚 Abrir a consulta deste mapa →'; b.onclick=()=>go(5); $('btnNext').after(b); }
+    { const TERR={aeroporto:'aeroporto',hotel:'hotel',restaurante:'restaurante',kombini:'conbini',trens:'trens',compras:'compras',roupas:'roupas',emergencia:'sos',apresentacao:'base',horas:'numeros',planos:'planos',sinalizacao:'placas'};
+      if(TERR[A.slug]){ const pv=document.createElement('a'); pv.className='btn primary prova'; pv.href='/idiomas/planeta-utopia/?lang=ja&terr='+TERR[A.slug]+'&from=trilha'; pv.textContent='🏅 FAZER A PROVA →'; $('btnNext').after(pv); } }
   };
 }
 
