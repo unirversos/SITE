@@ -10,14 +10,14 @@ const tok=s=>{ if(typeof s!=='string') return s; const [k,r]=s.split('|'); retur
 /* voz: toca a gravação da professora quando existe; senão, a voz do aparelho */
 const chaveAudio=t=>String(t||'').replace(/[\s、。，．,.!！?？…・「」『』（）()]/g,'');
 let audioAtual=null;
-function speakTTS(t,rate){ try{ if(!window.speechSynthesis) return; speechSynthesis.cancel(); const u=new SpeechSynthesisUtterance(t); u.lang='ja-JP'; u.rate=rate||.85;
+function speakTTS(t,rate){ try{ if(!window.speechSynthesis) return; speechSynthesis.cancel(); const u=new SpeechSynthesisUtterance(t); u.lang='ja-JP'; u.rate=(rate||.85)*(window.UniVel?UniVel.get():1);
   const v=speechSynthesis.getVoices().find(x=>/^ja/i.test(x.lang)); if(v) u.voice=v; speechSynthesis.speak(u);}catch(e){} }
 function speak(t,rate){
   try{ if(audioAtual){ audioAtual.pause(); audioAtual=null; } if(window.speechSynthesis) speechSynthesis.cancel(); }catch(e){}
   const id=(window.AUDIO_MAP||{})[chaveAudio(t)];
   if(!id) return speakTTS(t,rate);
   try{ const a=new Audio(AUDIO_PRONTO[id]||((window.AUDIO_BASE||'/idiomas/audio/')+id+'.mp3')); audioAtual=a;
-    if(rate&&rate<.7){ a.playbackRate=.75; a.preservesPitch=true; }
+    if(window.UniVel) UniVel.aplica(a,(rate&&rate<.7)?.75:1); else if(rate&&rate<.7){ a.playbackRate=.75; a.preservesPitch=true; }
     let caiu=false; const cair=()=>{ if(caiu||audioAtual!==a) return; caiu=true; audioAtual=null; speakTTS(t,rate); };
     a.onerror=cair; const pr=a.play(); if(pr&&pr.catch) pr.catch(cair);
   }catch(e){ speakTTS(t,rate); }
