@@ -198,7 +198,7 @@ function stSituacao(){
     ${it.txt.map(t=>`<p class="lead">${t}</p>`).join('')}
     <div><p class="goals-t">${it.metasTit||'No fim desta aula você vai conseguir:'}</p>
     <ul class="goals">${it.metas.map((m,i)=>`<li><span class="gn">${String(i+1).padStart(2,'0')}</span><span>${m}</span></li>`).join('')}</ul></div>
-    <p class="pt" style="margin:0">Travou em qualquer momento? Toque em <b>🌬️ Ar · socorro</b>, no canto da tela.</p>
+    <p class="pt" style="margin:0">Travou em qualquer momento? Toque em <b>🌬️ Ar</b>, no canto da tela.</p>
     <div class="row"><span class="spacer"></span><button class="btn primary" type="button" id="goWords">Conhecer as palavras →</button></div>`;
   $('goWords').onclick=()=>{ finish(0); go(1); };
 }
@@ -551,7 +551,15 @@ function wireCena(){
     if(typeof A.onFinish==='function'){ try{ A.onFinish(); }catch(e){} }
     if(C()){ const b=document.createElement('button'); b.className='btn primary'; b.type='button'; b.textContent='📚 Abrir a consulta deste mapa →'; b.onclick=()=>go(5); $('btnNext').after(b); }
     { const TERR={aeroporto:'aeroporto',hotel:'hotel',restaurante:'restaurante',kombini:'conbini',trens:'trens',compras:'compras',roupas:'roupas',emergencia:'sos',apresentacao:'base',horas:'numeros',planos:'planos',sinalizacao:'placas'};
-      if(TERR[A.slug]){ const pv=document.createElement('a'); pv.className='btn primary prova'; pv.href='/idiomas/planeta-utopia/?lang=ja&terr='+TERR[A.slug]+'&from=trilha'; pv.textContent='🏅 FAZER A PROVA →'; $('btnNext').after(pv); } }
+      /* hall do fim da aula: prova, próximo mapa, Salão ou voltar */
+      const k=ORDEM.indexOf(A.slug), nx=k>=0?ORDEM[k+1]:null;
+      const h=document.createElement('div'); h.className='hall'; h.setAttribute('role','group'); h.setAttribute('aria-label','E agora?');
+      h.innerHTML='<p class="hall-t">E agora?</p><div class="hall-b">'+
+        (TERR[A.slug]?`<a class="btn primary prova" href="/idiomas/planeta-utopia/?lang=ja&terr=${TERR[A.slug]}&from=trilha">🏅 FAZER A PROVA →</a>`:'')+
+        (nx?`<a class="btn" href="/idiomas/mapas/${nx}/aula/">➡️ Próximo mapa: ${TITULOS[nx]||nx}</a>`:'')+
+        `<a class="btn" href="/idiomas/planeta-utopia/salao/">🪐 Ir ao Salão</a>`+
+        `<a class="btn" href="/idiomas/japones/">← Voltar à trilha</a></div>`;
+      $('btnNext').after(h); }
   };
 }
 

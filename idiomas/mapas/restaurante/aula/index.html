@@ -9,14 +9,15 @@
 <title>Aula 03 · 🥗 Restrições alimentares | Mapas de contexto · Unirversos</title>
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@500;700;800&family=Zen+Maru+Gothic:wght@400;500;700&display=swap">
-<link rel="stylesheet" href="/idiomas/dados/mapa-aula.css?v=20261027k">
+<link rel="stylesheet" href="/idiomas/dados/mapa-aula.css?v=20261027m">
 <link rel="stylesheet" href="/estilo-celular.css?v=2">
 <script defer src="/menu-ativo.js?v=1"></script>
 </head>
 <body data-mapa="restaurante">
 <div class="wrap">
   <nav class="sitebar" aria-label="Site"><a class="brand" href="/">unirversos <span>/ idiomas</span></a><span class="navlinks"><a href="/idiomas/">idiomas</a><a href="/travessia/">travessia</a><a href="/paralelos/">paralelos</a><a href="/loja/">loja</a><a href="/sobre/">sobre</a></span></nav>
-  <nav class="trail" aria-label="Trilha"><a href="/idiomas/planeta-utopia/">🪐 Planeta Utopia</a><a href="/idiomas/planeta-utopia/atelie/">🎨 Ateliê de Avatar</a><a href="/idiomas/planeta-utopia/caderno/">📒 Caderno</a><a href="/idiomas/hiragana/">あ Hiragana</a><a href="/idiomas/katakana/">ア Katakana</a><a href="/idiomas/aula-zero/">🎓 Aula Zero</a><a href="/idiomas/japones/" aria-current="page">🗺️ Mapas de contexto</a></nav>
+  <nav class="trail" aria-label="Trilha"><a href="/idiomas/japones/">← Minha trilha</a><details class="caixa"><summary>🧰 Ferramentas</summary><span class="caixa-l"><a href="/idiomas/planeta-utopia/atelie/">🎨 Meu avatar</a><a href="/idiomas/hiragana/">あ Hiragana</a><a href="/idiomas/katakana/">ア Katakana</a><a href="/idiomas/numeros/">🔢 Números</a><a href="/idiomas/planeta-utopia/caderno/">📒 Caderno</a><a href="/idiomas/amuleto/">💎 Amuleto</a><a href="/idiomas/planeta-utopia/salao/">🪐 Planeta Utopia</a></span></details></nav>
+  <style>.trail{flex-wrap:wrap;overflow:visible;align-items:center}.trail .caixa{flex:0 0 auto}.trail .caixa[open]{flex:1 1 100%;display:flex;flex-direction:column;gap:8px}.trail .caixa>summary{list-style:none;cursor:pointer;display:inline-flex;align-items:center;gap:6px;width:max-content;border:1.5px solid var(--line,#e7e1da);background:var(--card,#fff);border-radius:99px;padding:6px 14px;font-size:13.5px;font-weight:700}.trail .caixa>summary::-webkit-details-marker{display:none}.trail .caixa[open]>summary{border-color:var(--pink,#d9506f)}.trail .caixa-l{display:flex;flex-wrap:wrap;gap:8px}</style>
 
   <header class="top">
     <div>
@@ -26,7 +27,7 @@
     <div class="tools">
       <span class="xp" id="xp">XP 0</span>
       <button class="btn small" type="button" id="btnRo" aria-pressed="true">Romaji: sim</button>
-      <button class="btn small ar" type="button" id="btnAr">🌬️ Ar · socorro</button>
+      <button class="btn small ar" type="button" id="btnAr" aria-label="Ar: às vezes precisamos de um ar">🌬️ Ar<small class="ar-sub">às vezes precisamos de um ar</small></button>
     </div>
   </header>
 
@@ -44,7 +45,7 @@
 
   <div class="drawer" id="drawer" hidden>
     <div class="drawer-card" role="dialog" aria-label="Ar: frases de socorro">
-      <div class="drawer-head"><b>🌬️ Ar · frases para manter a conversa viva</b><button class="btn small" type="button" id="btnArClose">Fechar</button></div>
+      <div class="drawer-head"><b>🌬️ Ar <small class="ar-sub2">· às vezes precisamos de um ar</small></b><button class="btn small" type="button" id="btnArClose">Fechar</button></div>
       <p class="pt">Travou? Tudo bem. Toque no que você quer fazer agora:</p>
       <div id="arList" class="ar-list"></div>
     </div>
@@ -54,10 +55,10 @@
 </div>
 
 <script src="/idiomas/dados/avatar.js?v=20261016g"></script>
-<script src="/idiomas/dados/aulas/restaurante.js?v=20261027k"></script>
-<script src="/idiomas/dados/aulas/consulta/restaurante.js?v=20261027k"></script>
+<script src="/idiomas/dados/aulas/restaurante.js?v=20261027m"></script>
+<script src="/idiomas/dados/aulas/consulta/restaurante.js?v=20261027m"></script>
 <script src="/idiomas/dados/velocidade-voz.js?v=1"></script>
-<script src="/idiomas/dados/audio-mapa.js?v=a2c446d0"></script>
-<script src="/idiomas/dados/mapa-aula.js?v=20261027k"></script>
+<script src="/idiomas/dados/audio-mapa.js?v=14dac67e"></script>
+<script src="/idiomas/dados/mapa-aula.js?v=20261027m"></script>
 </body>
 </html>
