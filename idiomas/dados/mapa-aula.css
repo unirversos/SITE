@@ -272,6 +272,9 @@ body.no-ro .rk rt{display:none}
 .hall-b{display:flex;flex-wrap:wrap;gap:8px}
 .hall-b .btn{text-decoration:none;color:var(--ink)}
 .hall-b .btn.primary{color:#fff}
+.hall-n{margin:0;font-size:13.5px;color:var(--muted)}
+.hall-s{margin:0;display:flex;flex-wrap:wrap;gap:6px 18px;font-size:14px}
+.hall-s a{color:var(--muted);font-weight:700}
 @media print{.btn.ar{display:none}}
 
 /* navegação do site */
