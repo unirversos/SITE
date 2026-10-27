@@ -247,6 +247,9 @@ body.no-ro .rk rt{display:none}
 /* cena: o que responder quando a conversa muda de assunto */
 .tarefa{font-size:14px;font-weight:700;color:#7d2b3a;background:#fff;border:1.5px dashed #e3b6c0;border-radius:12px;padding:6px 10px;margin:4px 0 8px}
 
+/* fim da aula: ir para a prova no Planeta */
+.btn.prova{text-decoration:none;display:inline-flex;align-items:center;min-height:44px}
+
 /* navegação do site */
 .sitebar{display:flex;align-items:center;justify-content:space-between;gap:10px 14px;flex-wrap:wrap}
 .sitebar .brand{font-family:var(--f-display);font-size:18px;font-weight:700;text-decoration:none;color:var(--ink)}

@@ -23,7 +23,10 @@ const R=(k,f)=>`<ruby>${k}<rt>${f}</rt></ruby>`;
     {id:'kinshi',h:R('禁止','きんし'),k:'きんし',r:'kinshi',pt:'proibido',en:'prohibited',ic:'🚫',tip:'さつえい きんし = proibido fotografar.'},
     {id:'abunai',h:R('危','あぶ')+'ない',k:'あぶない',r:'abunai',pt:'perigoso!',en:'dangerous!',ic:'⚠️',tip:'Sozinho, あぶない！ é o nosso "cuidado!".'},
     {id:'chuui',h:R('注意','ちゅうい'),k:'ちゅうい',r:'chūi',pt:'atenção',en:'caution',ic:'❗',tip:'Aparece em placas amarelas: あしもと ちゅうい = cuidado com o degrau.'},
-    {id:'yomimasu',h:R('読','よ')+'みます',k:'よみます',r:'yomimasu',pt:'ler',en:'to read',ic:'📖',tip:'なんと よみますか = como se lê?'}
+    {id:'yomimasu',h:R('読','よ')+'みます',k:'よみます',r:'yomimasu',pt:'ler',en:'to read',ic:'📖',tip:'なんと よみますか = como se lê?'},
+    {id:'imi',h:R('意味','いみ'),k:'いみ',r:'imi',pt:'significado',en:'meaning',ic:'💡',tip:'でぐちの いみです = quer dizer saída.'},
+    {id:'achira',k:'あちら',r:'achira',pt:'lá (educado)',en:'over there',ic:'👉',tip:'トイレは あちらです = o banheiro é lá.'},
+    {id:'koko',k:'ここ',r:'koko',pt:'aqui',en:'here',ic:'📍',tip:'ここは きんえんです = aqui é proibido fumar.'}
   ],
   moldes:[
     {titulo:'"Como se lê ___?"', tpl:'<i>これ / それ / あれ</i> は なんと よみますか', tplRo:'[kore/sore/are] wa nan to yomimasu ka', parts:[0,'は|wa','なんと|nan to',{k:'よみますか',r:'yomimasu ka',h:R('読','よ')+'みますか'}],

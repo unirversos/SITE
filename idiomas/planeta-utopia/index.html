@@ -163,6 +163,15 @@ details.pieces .plist{display:flex;gap:8px;flex-wrap:wrap;padding:0 16px 14px;}
 /* japonês em kana; romaji só com o botão */
 .ro{display:none;font-size:12.5px;color:var(--ink-soft);margin-top:3px;font-family:'Zen Maru Gothic',sans-serif}
 body.ro-on .ro{display:block}
+.wd{font:inherit;color:inherit;background:none;border:0;border-bottom:1.5px dotted #c9a3ad;padding:0 1px;margin:0;cursor:pointer;border-radius:4px}
+.wd:hover,.wd.on{background:var(--rose-soft)}
+.wdinfo{margin-top:8px;border:1.5px solid var(--line);border-radius:14px;padding:8px 12px;background:#fff;font-size:13.5px;line-height:1.45}
+.wdinfo b{font-size:17px}
+.wdinfo .wpt{font-weight:700}
+.wdinfo small{display:block;color:var(--ink-soft)}
+.wdinfo button{min-height:36px}
+.wro{color:var(--ink-soft)} body:not(.ro-on) .wro{display:none}
+.wdtip{font-size:11.5px;color:var(--ink-soft);margin-top:4px}
 .robtn{font-size:12.5px;padding:0 14px;min-height:44px}
 /* os 12 mapas da trilha (os mesmos de /idiomas/japones/) */
 .t12-top{display:flex;justify-content:space-between;align-items:baseline;gap:10px;flex-wrap:wrap;margin-bottom:4px}
@@ -262,6 +271,7 @@ body.ro-on .ro{display:block}
 
 <script src="/idiomas/dados/avatar.js?v=20261016b"></script>
 <script src="/idiomas/dados/trilha-mapas.js?v=1"></script>
+<script src="/idiomas/dados/glossario.js?v=1"></script>
 <script src="/idiomas/dados/velocidade-voz.js?v=1"></script>
 <script src="/idiomas/dados/audio-mapa.js?v=a4d250f1"></script>
 <script>
@@ -314,7 +324,7 @@ function sayGravado(txt,code){
   if(!window.AUDIO_MAP||String(code).split('-')[0]!=='ja') return false;
   const falado=String(txt).replace(/[（(].*$/,'').trim(), id=window.AUDIO_MAP[chaveAud(falado)];
   if(!id) return false;
-  try{ if(audPl){audPl.pause();} speechSynthesis.cancel(); const a=new Audio((window.AUDIO_BASE||'/idiomas/audio/')+id+'.mp3'); audPl=a; if(window.UniVel) UniVel.aplica(a);
+  try{ if(audPl){audPl.pause();} speechSynthesis.cancel(); const a=new Audio((window.AUDIO_BASE||'/idiomas/audio/')+id+'.mp3'); audPl=a; if(window.UniVel) UniVel.aplica(a,.8); else a.playbackRate=.8;
     a.onerror=()=>{ if(audPl===a){ audPl=null; sayTTS(txt,code); } }; const pr=a.play(); if(pr&&pr.catch) pr.catch(()=>{ if(audPl===a){ audPl=null; sayTTS(txt,code); } }); return true; }catch(e){ return false; }
 }
 function say(txt,code){ if(!sayGravado(txt,code)) sayTTS(txt,code); }
@@ -323,7 +333,7 @@ function sayTTS(txt,code){
   const u=new SpeechSynthesisUtterance(txt);
   const b=code.split('-')[0];
   const v=VOICES.find(x=>(x.lang||'').toLowerCase().startsWith(b)); if(v)u.voice=v;
-  u.lang=code;u.rate=0.88*(window.UniVel?UniVel.get():1);speechSynthesis.speak(u);
+  u.lang=code;u.rate=0.7*(window.UniVel?UniVel.get():1);speechSynthesis.speak(u);
 }
 if(window.AUDIO_CREDITO){ const cr=document.createElement('p'); cr.style.cssText='margin:24px 16px;text-align:center;font-size:12px;color:#6b5a67'; cr.textContent='Vozes sintéticas em japonês: '+window.AUDIO_CREDITO+'.'; document.body.appendChild(cr); }
 document.addEventListener('click',e=>{const b=e.target.closest('[data-say]');if(b)say(b.getAttribute('data-say'),b.getAttribute('data-tts'));});
@@ -416,12 +426,25 @@ let ROM=false; try{ ROM=localStorage.getItem('utopiaRomaji')==='1'; }catch(e){}
 function aplicaRo(){ document.body.classList.toggle('ro-on',ROM); const b=document.getElementById('ro-btn'); if(b){ b.textContent='Romaji: '+(ROM?'sim':'não'); b.setAttribute('aria-pressed',ROM?'true':'false'); b.hidden=(curLang!=='ja'); } }
 function toggleRo(){ ROM=!ROM; try{ localStorage.setItem('utopiaRomaji',ROM?'1':'0'); }catch(e){} aplicaRo(); }
 const roSpan=r=>r?`<span class="ro">${r}</span>`:'';
+/* japonês: cada palavra pode ser tocada para ver o significado */
+function kanaClicavel(txt){
+  if(!window.UniGloss) return txt;
+  return UniGloss.quebra(txt).map(t=>t.sep!=null?t.sep:(t.pt?`<button type="button" class="wd" data-w="${encodeURIComponent(JSON.stringify(t))}">${t.k}</button>`:t.k)).join('');
+}
+document.addEventListener('click',e=>{
+  const b=e.target.closest('.wd'); if(!b) return;
+  const t=JSON.parse(decodeURIComponent(b.dataset.w)), bub=b.closest('.bubble'); if(!bub) return;
+  bub.querySelectorAll('.wd.on').forEach(x=>x.classList.remove('on')); b.classList.add('on');
+  let box=bub.querySelector('.wdinfo'); if(!box){ box=document.createElement('div'); box.className='wdinfo'; bub.querySelector('.line-txt').after(box); }
+  box.innerHTML=`<button type="button" class="btn ghost" data-say="${t.k}" data-tts="ja-JP" style="font-size:11.5px;padding:3px 10px">🔊</button> <b lang="ja">${t.k}</b> <span class="wro">${t.ro} · </span><span class="wpt">${t.pt}</span>${t.nota?`<small>${t.nota}</small>`:''}`;
+  say(t.k,'ja-JP');
+});
 function npcBubble(npc){
   const t=terr();
   const div=document.createElement('div');
   div.className='bubble npc';
   const trHtml = npc.tr ? `<button class="trbtn" onclick="this.nextElementSibling.classList.add('revealed');this.remove();">🫣 ${(ui().showTr||'ver tradução')}</button><div class="tr">${npc.tr}</div>` : '';
-  div.innerHTML=`<div class="who">✦</div><div class="line-txt">${npc.kana?npc.kana+roSpan(npc.show):npc.show}</div>
+  div.innerHTML=`<div class="who">✦</div><div class="line-txt">${npc.kana?kanaClicavel(npc.kana)+roSpan(npc.show):npc.show}</div>${npc.kana?'<div class="wdtip">Toque numa palavra para ver o que significa.</div>':''}
     <div class="replay"><button class="btn ghost" data-say="${npc.say.replace(/"/g,'&quot;')}" data-tts="${t.tts}" style="font-size:11.5px;padding:5px 12px;">${ui().playNpc}</button></div>${trHtml}`;
   document.getElementById('chat').appendChild(div);
   say(npc.say,t.tts);

@@ -21,7 +21,9 @@ const R=(k,f)=>`<ruby>${k}<rt>${f}</rt></ruby>`;
     {id:'chiisai',h:R('小','ちい')+'さい',k:'ちいさい',r:'chiisai',pt:'pequeno',en:'small',ic:'🐭',tip:'O i comprido: chii-sai.'},
     {id:'iro',h:R('色','いろ'),k:'いろ',r:'iro',pt:'cor',en:'color',ic:'🎨',tip:'Você aprendeu várias cores no Ateliê do avatar!'},
     {id:'kuro',h:R('黒','くろ'),k:'くろ',r:'kuro',pt:'preto',en:'black',ic:'⚫',tip:'しろ = branco, あか = vermelho, あお = azul.'},
-    {id:'pittari',k:'ぴったり',r:'pittari',pt:'perfeito, sob medida',en:'perfect fit',ic:'👌',tip:'Também serve para horário: ぴったり = na hora exata.'}
+    {id:'pittari',k:'ぴったり',r:'pittari',pt:'perfeito, sob medida',en:'perfect fit',ic:'👌',tip:'Também serve para horário: ぴったり = na hora exata.'},
+    {id:'goran',k:'ごらんください',r:'go-ran kudasai',pt:'olhe à vontade',en:'please look around',ic:'👀',tip:'Convite de quem atende. Pode só sorrir e olhar.'},
+    {id:'shiro',h:R('白','しろ'),k:'しろ',r:'shiro',pt:'branco',en:'white',ic:'⚪',tip:'Par da くろ (preto). いろは しろで よろしいですか？ = pode ser branco?'}
   ],
   moldes:[
     {titulo:'"Posso provar ___?"', tpl:'<i>peça</i> を しちゃく しても いいですか', tplRo:'[peça] o shichaku shite mo ii desu ka', parts:[0,'を|o',{k:'しちゃく',r:'shichaku',h:R('試着','しちゃく')},'しても|shite mo','いいですか|ii desu ka'], pt:'Posso provar {0}?', en:'Can I try on {0}?',

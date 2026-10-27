@@ -21,7 +21,10 @@ const R=(k,f)=>`<ruby>${k}<rt>${f}</rt></ruby>`;
     {id:'ikura',k:'いくら',r:'ikura',pt:'quanto custa',en:'how much',ic:'💴',tip:'Você já viu nos trens!'},
     {id:'waribiki',h:R('割引','わりびき'),k:'わりびき',r:'waribiki',pt:'desconto',en:'discount',ic:'🏷️',tip:'にわりびき = 20% de desconto (わり = 10%).'},
     {id:'kaado',k:'カード',r:'kādo',pt:'cartão',en:'card',ic:'💳',tip:'Cartão de crédito ou débito.'},
-    {id:'genkin',h:R('現金','げんきん'),k:'げんきん',r:'genkin',pt:'dinheiro vivo',en:'cash',ic:'💵',tip:'Algumas lojas pequenas só aceitam げんきん.'}
+    {id:'genkin',h:R('現金','げんきん'),k:'げんきん',r:'genkin',pt:'dinheiro vivo',en:'cash',ic:'💵',tip:'Algumas lojas pequenas só aceitam げんきん.'},
+    {id:'osagashi',k:'おさがしですか',r:'o-sagashi desu ka',pt:'está procurando? (educado)',en:'are you looking for?',ic:'🔎',tip:'なにか おさがしですか？ = procura alguma coisa?'},
+    {id:'dore',k:'どれ',r:'dore',pt:'qual (entre vários)',en:'which',ic:'👉',tip:'どれに なさいますか？ = qual vai levar?'},
+    {id:'shiharai',h:R('支払い','しはらい'),k:'しはらい',r:'shiharai',pt:'pagamento',en:'payment',ic:'💴',tip:'おしはらいは どう なさいますか？ = como vai pagar?'}
   ],
   moldes:[
     {titulo:'"Tem ___?"', tpl:'<i>coisa</i> は ありますか', tplRo:'[coisa] wa arimasu ka', parts:[0,'は|wa','ありますか|arimasu ka'],

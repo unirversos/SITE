@@ -21,7 +21,8 @@ const R=(k,f)=>`<ruby>${k}<rt>${f}</rt></ruby>`;
     {id:'shigoto',h:R('仕事','しごと'),k:'しごと',r:'shigoto',pt:'trabalho',en:'work, job',ic:'💼',tip:'Ouvir お仕事は？ é bem comum.'},
     {id:'sensei',h:R('先生','せんせい'),k:'せんせい',r:'sensei',pt:'professor(a)',en:'teacher',ic:'🧑‍🏫',tip:'Também usado para médicos.'},
     {id:'shumi',h:R('趣味','しゅみ'),k:'しゅみ',r:'shumi',pt:'hobby',en:'hobby',ic:'🎨',tip:'Uma ótima forma de puxar assunto.'},
-    {id:'yoroshiku',h:'よろしく お'+R('願','ねが')+'いします',k:'よろしく おねがいします',r:'yoroshiku onegaishimasu',pt:'conto com você / prazer',en:'nice to meet you (I look forward to…)',ic:'🙇',tip:'Fecha a apresentação. Não tem tradução exata: é um "vamos nos dar bem".'}
+    {id:'yoroshiku',h:'よろしく お'+R('願','ねが')+'いします',k:'よろしく おねがいします',r:'yoroshiku onegaishimasu',pt:'conto com você / prazer',en:'nice to meet you (I look forward to…)',ic:'🙇',tip:'Fecha a apresentação. Não tem tradução exata: é um "vamos nos dar bem".'},
+    {id:'kuni',h:R('国','くに'),k:'くに',r:'kuni',pt:'país',en:'country',ic:'🌎',tip:'おくには どちらですか？ = de que país você é?'}
   ],
   moldes:[
     {titulo:'"Eu sou ___."', tpl:'わたし は <i>nome</i> です', tplRo:'watashi wa [nome] desu', parts:[{k:'わたし',r:'watashi',h:R('私','わたし')},'は|wa',0,'です|desu'],

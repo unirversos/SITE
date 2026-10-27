@@ -22,7 +22,8 @@ const R=(k,f)=>`<ruby>${k}<rt>${f}</rt></ruby>`;
     {id:'ikura',k:'いくら',r:'ikura',pt:'quanto custa',en:'how much',ic:'💴',tip:'Vale para tudo: passagem, comida, lembrancinha.'},
     {id:'nanbansen',h:R('何番線','なんばんせん'),k:'なんばんせん',r:'nanbansen',pt:'qual plataforma',en:'which platform',ic:'🔢',tip:'ばんせん = plataforma número… 3ばんせん = plataforma 3.'},
     {id:'norikae',h:R('乗','の')+'り'+R('換','か')+'え',k:'のりかえ',r:'norikae',pt:'baldeação',en:'transfer',ic:'🔀',tip:'Trocar de trem ou de linha.'},
-    {id:'deguchi',h:R('出口','でぐち'),k:'でぐち',r:'deguchi',pt:'saída',en:'exit',ic:'🚪',tip:'Estações grandes têm muitas saídas, com nomes como "saída leste".'}
+    {id:'deguchi',h:R('出口','でぐち'),k:'でぐち',r:'deguchi',pt:'saída',en:'exit',ic:'🚪',tip:'Estações grandes têm muitas saídas, com nomes como "saída leste".'},
+    {id:'dochira',k:'どちら',r:'dochira',pt:'onde / qual (educado)',en:'where (polite)',ic:'🧭',tip:'どちらまでですか？ = até onde você vai? É o どこ educado.'}
   ],
   moldes:[
     {titulo:'"Quero ir a ___."', tpl:'<i>lugar</i> に いきたいです', tplRo:'[lugar] ni ikitai desu', parts:[0,'に|ni',{k:'いきたいです',r:'ikitai desu',h:R('行','い')+'きたいです'}],

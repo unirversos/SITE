@@ -22,7 +22,10 @@ const R=(k,f)=>`<ruby>${k}<rt>${f}</rt></ruby>`;
     {id:'ohashi',h:'お'+R('箸','はし'),k:'おはし',r:'ohashi',pt:'hashi (palitinhos)',en:'chopsticks',ic:'🥢',tip:'O お na frente é só educação.'},
     {id:'reshiito',k:'レシート',r:'reshīto',pt:'recibo',en:'receipt',ic:'🧾',tip:'Do inglês "receipt".'},
     {id:'iranai',k:'いらないです',r:'iranai desu',pt:'não preciso',en:"I don't need it",ic:'🙅',tip:'Uma forma simples e educada de recusar.'},
-    {id:'pointokaado',k:'ポイントカード',r:'pointo kādo',pt:'cartão de pontos',en:'point card',ic:'💳',tip:'Turista quase nunca tem. Responder いいえ basta.'}
+    {id:'pointokaado',k:'ポイントカード',r:'pointo kādo',pt:'cartão de pontos',en:'point card',ic:'💳',tip:'Turista quase nunca tem. Responder いいえ basta.'},
+    {id:'goriyou',k:'ごりようですか',r:'go-riyō desu ka',pt:'vai usar? (educado)',en:'will you use it?',ic:'🛍️',tip:'ふくろは ごりようですか？ = vai usar sacola?'},
+    {id:'omochi',k:'おもちですか',r:'o-mochi desu ka',pt:'tem? (educado)',en:'do you have?',ic:'👛',tip:'ポイントカードは おもちですか？ = tem cartão de pontos?'},
+    {id:'ijou',h:R('以上','いじょう'),k:'いじょう',r:'ijō',pt:'só isso / isso é tudo',en:"that's all",ic:'✅',tip:'いじょうで よろしいですか？ = é só isso?'}
   ],
   moldes:[
     {titulo:'"Onde fica ___?"', tpl:'<i>coisa</i> は どこ ですか', tplRo:'[coisa] wa doko desu ka', parts:[0,'は|wa','どこ|doko','ですか|desu ka'],

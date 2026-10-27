@@ -31,7 +31,11 @@ const R=(k,f)=>`<ruby>${k}<rt>${f}</rt></ruby>`;
     {id:'arimasu',k:'あります',r:'arimasu',pt:'tem / há (coisas)',en:'there is / I have',ic:'✅',tip:'Para dizer que você tem algo: よやくが あります (tenho reserva). Com mais cerimônia, vira ございます.'},
     {id:'gozaimasu',k:'ございます',r:'gozaimasu',pt:'tem / há (bem educado)',en:'there is (very polite)',ic:'🙇',tip:'É o あります com mais cerimônia, e quem atende costuma usar. Quer dizer a mesma coisa: あります = ございます.'},
     {id:'arimasuka',k:'ありますか',r:'arimasu ka',pt:'tem...?',en:'is there...? / do you have...?',ic:'❓',tip:'Para perguntar se tem: パスポートが ありますか? Com mais cerimônia, vira ございますか.'},
-    {id:'gozaimasuka',k:'ございますか',r:'gozaimasu ka',pt:'tem...? (bem educado)',en:'is there...? (very polite)',ic:'🙇',tip:'É o ありますか de quem atende: ごよやくは ございますか？ (Tem reserva?). Responda com あります.'}
+    {id:'gozaimasuka',k:'ございますか',r:'gozaimasu ka',pt:'tem...? (bem educado)',en:'is there...? (very polite)',ic:'🙇',tip:'É o ありますか de quem atende: ごよやくは ございますか？ (Tem reserva?). Responda com あります.'},
+    {id:'mokuteki',h:R('目的','もくてき'),k:'もくてき',r:'mokuteki',pt:'motivo (da viagem)',en:'purpose',ic:'🎯',tip:'もくてきは なんですか？ = qual é o motivo? Não confunda com もくてきち (destino).'},
+    {id:'nan',h:R('何','なん'),k:'なん',r:'nan',pt:'o quê',en:'what',ic:'❓',tip:'なんですか？ = o que é? Antes de です, なに vira なん.'},
+    {id:'doko',k:'どこ',r:'doko',pt:'onde',en:'where',ic:'📍',tip:'もくてきちは どこですか？ = qual é o seu destino?'},
+    {id:'ikutsu',k:'いくつ',r:'ikutsu',pt:'quantos (coisas)',en:'how many',ic:'🔢',tip:'にもつは いくつですか？ = quantas bagagens?'}
   ],
   moldes:[
     {titulo:'"É ___."', tpl:'<i>coisa</i> です', tplRo:'[coisa] desu', parts:[0,'です|desu'],

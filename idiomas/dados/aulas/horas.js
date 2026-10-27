@@ -22,7 +22,9 @@ const R=(k,f)=>`<ruby>${k}<rt>${f}</rt></ruby>`;
     {id:'han',h:R('半','はん'),k:'はん',r:'han',pt:'e meia',en:'half past',ic:'🕧',tip:'さんじ はん = três e meia.'},
     {id:'kyou',h:R('今日','きょう'),k:'きょう',r:'kyō',pt:'hoje',en:'today',ic:'☀️',tip:'Leitura especial: não se lê pelos kanjis separados.'},
     {id:'ashita',h:R('明日','あした'),k:'あした',r:'ashita',pt:'amanhã',en:'tomorrow',ic:'📅',tip:'Outra leitura especial.'},
-    {id:'made',k:'まで',r:'made',pt:'até',en:'until',ic:'🏁',tip:'から = desde; まで = até. くじ から ごじ まで = das 9 às 5.'}
+    {id:'made',k:'まで',r:'made',pt:'até',en:'until',ic:'🏁',tip:'から = desde; まで = até. くじ から ごじ まで = das 9 às 5.'},
+    {id:'mou',k:'もう',r:'mō',pt:'já',en:'already',ic:'⏱️',tip:'もう おわりました = já acabou.'},
+    {id:'kimasu',h:R('来','き')+'ます',k:'きます',r:'kimasu',pt:'vir',en:'to come',ic:'🚶',tip:'なんじに きますか？ = que horas você vem?'}
   ],
   moldes:[
     {titulo:'"Agora são ___."', tpl:'いま <i>hora</i> です', tplRo:'ima [hora] desu', parts:[{k:'いま',r:'ima',h:R('今','いま')},0,'です|desu'],

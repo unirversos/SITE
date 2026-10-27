@@ -23,7 +23,11 @@ const R=(k,f)=>`<ruby>${k}<rt>${f}</rt></ruby>`;
     {id:'mizu',h:R('水','みず'),k:'みず',r:'mizu',pt:'água',en:'water',ic:'💧',tip:'Em muitos restaurantes a água é de graça e você mesmo se serve.'},
     {id:'fooku',k:'フォーク',r:'fōku',pt:'garfo',en:'fork',ic:'🍴',tip:'Do inglês "fork". Os hashi são おはし.'},
     {id:'okaikei',h:'お'+R('会計','かいけい'),k:'おかいけい',r:'okaikei',pt:'a conta',en:'the bill',ic:'🧾',tip:'No Japão normalmente se paga no caixa, na saída.'},
-    {id:'itadakimasu',k:'いただきます',r:'itadakimasu',pt:'(dito antes de comer)',en:'(said before eating)',ic:'🙏',tip:'Agradece pela comida. Depois de comer se diz ごちそうさまでした.'}
+    {id:'itadakimasu',k:'いただきます',r:'itadakimasu',pt:'(dito antes de comer)',en:'(said before eating)',ic:'🙏',tip:'Agradece pela comida. Depois de comer se diz ごちそうさまでした.'},
+    {id:'irasshaimase',k:'いらっしゃいませ',r:'irasshaimase',pt:'bem-vindo(a)!',en:'welcome!',ic:'🙇',tip:'Saudação de quem atende. Não precisa responder.'},
+    {id:'nanmeisama',k:'なんめいさま',r:'nanmei-sama',pt:'quantas pessoas (educado)',en:'how many people',ic:'👥',tip:'なんめいさまですか？ = mesa para quantos? Responda com ふたりです.'},
+    {id:'chuumon',h:R('注文','ちゅうもん'),k:'ちゅうもん',r:'chūmon',pt:'pedido',en:'order',ic:'📝',tip:'ごちゅうもんは？ = e o pedido? O ご na frente é educação.'},
+    {id:'nomimono',h:R('飲み物','のみもの'),k:'のみもの',r:'nomimono',pt:'bebida',en:'drink',ic:'🥤',tip:'おのみものは いかがですか？ = e para beber?'}
   ],
   moldes:[
     {titulo:'"Somos ___."', tpl:'<i>pessoas</i> です', tplRo:'[pessoas] desu', parts:[0,'です|desu'],

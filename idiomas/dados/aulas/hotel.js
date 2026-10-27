@@ -23,7 +23,11 @@ const R=(k,f)=>`<ruby>${k}<rt>${f}</rt></ruby>`;
     {id:'nanji',h:R('何時','なんじ'),k:'なんじ',r:'nanji',pt:'que horas',en:'what time',ic:'🕙',tip:'なん (o quê) + じ (hora) = que horas.'},
     {id:'taoru',k:'タオル',r:'taoru',pt:'toalha',en:'towel',ic:'svg:taoru',tip:'Vem do inglês "towel".'},
     {id:'eakon',k:'エアコン',r:'eakon',pt:'ar-condicionado',en:'air conditioner',ic:'❄️',tip:'Abreviação japonesa de "air conditioner".'},
-    {id:'kowaremashita',h:R('壊','こわ')+'れました',k:'こわれました',r:'kowaremashita',pt:'quebrou',en:'broke',ic:'🔧',tip:'O final -ました indica passado educado.'}
+    {id:'kowaremashita',h:R('壊','こわ')+'れました',k:'こわれました',r:'kowaremashita',pt:'quebrou',en:'broke',ic:'🔧',tip:'O final -ました indica passado educado.'},
+    {id:'namae',h:R('名前','なまえ'),k:'なまえ',r:'namae',pt:'nome',en:'name',ic:'🪪',tip:'おなまえは？ = o seu nome? O お na frente é educação.'},
+    {id:'heya',h:R('部屋','へや'),k:'へや',r:'heya',pt:'quarto',en:'room',ic:'🛏️',tip:'Quem atende diz おへや, com お de educação.'},
+    {id:'ikaga',k:'いかが',r:'ikaga',pt:'que tal / como está (educado)',en:'how is it',ic:'💭',tip:'おへやは いかがですか？ = como está o quarto?'},
+    {id:'hokani',k:'ほかに',r:'hoka ni',pt:'mais alguma coisa',en:'anything else',ic:'➕',tip:'ほかに なにか ございますか？ = precisa de mais alguma coisa?'}
   ],
   moldes:[
     {titulo:'"São ___ noites."', tpl:'<i>noites</i> です', tplRo:'[noites] desu', parts:[0,'です|desu'],
