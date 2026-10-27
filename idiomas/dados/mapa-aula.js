@@ -25,6 +25,8 @@ function speak(t,rate){
 const WORD_XP=5;
 const TITULOS={aeroporto:'Aeroporto',hotel:'Hotel',restaurante:'Restaurante',kombini:'Konbini',trens:'Trens',compras:'Compras',roupas:'Roupas',emergencia:'Emergência',apresentacao:'Apresentação',horas:'Horas',planos:'Planos',sinalizacao:'Sinalização'};
 const ORDEM=Object.keys(TITULOS);
+const TIT_EN={aeroporto:'Airport',hotel:'Hotel',restaurante:'Restaurant',kombini:'Konbini',trens:'Trains',compras:'Shopping',roupas:'Clothes',emergencia:'Emergency',apresentacao:'Introductions',horas:'Time',planos:'Plans',sinalizacao:'Signs'};
+const TIT_JA={aeroporto:'くうこう',hotel:'ホテル',restaurante:'しょくどう',kombini:'コンビニ',trens:'でんしゃ',compras:'かいもの',roupas:'ふく',emergencia:'きんきゅう',apresentacao:'じこしょうかい',horas:'じかん',planos:'やくそく',sinalizacao:'かんばん'};
 
 /* ---------- desenhos próprios (Aeroporto) ---------- */
 const SVGI={
@@ -194,7 +196,7 @@ function stSituacao(){
     ${it.txt.map(t=>`<p class="lead">${t}</p>`).join('')}
     <div><p class="goals-t">${it.metasTit||'No fim desta aula você vai conseguir:'}</p>
     <ul class="goals">${it.metas.map((m,i)=>`<li><span class="gn">${String(i+1).padStart(2,'0')}</span><span>${m}</span></li>`).join('')}</ul></div>
-    <p class="pt" style="margin:0">Travou em qualquer momento? Toque em <b>🌬️ Ar · socorro</b>, lá em cima.</p>
+    <p class="pt" style="margin:0">Travou em qualquer momento? Toque em <b>🌬️ Ar · socorro</b>, no canto da tela.</p>
     <div class="row"><span class="spacer"></span><button class="btn primary" type="button" id="goWords">Conhecer as palavras →</button></div>`;
   $('goWords').onclick=()=>{ finish(0); go(1); };
 }
@@ -423,7 +425,7 @@ function loadAula(slug){
   const L=$('links'); if(L&&A.linkList){ L.innerHTML=A.linkList.map(([t,h])=>`<a href="${h}">${t}</a>`).join(''); }
   else if(L&&A.links!==false){
     const order=ORDEM; const k=order.indexOf(slug), nx=order[k+1];
-    L.innerHTML=`<a href="/idiomas/japones/">🗺️ Todos os mapas</a>${nx?`<a href="/idiomas/mapas/${nx}/aula/">Próxima aula: ${TITULOS[nx]||nx} →</a>`:''}`; }
+    L.innerHTML=`<a href="/idiomas/japones/">🗺️ Todos os mapas</a>${nx?`<a class="nx3" href="/idiomas/mapas/${nx}/aula/"><span class="l1">Próxima aula: ${TITULOS[nx]||nx} →</span><span class="l2" lang="en">Next lesson: ${TIT_EN[nx]||nx}</span><span class="l3" lang="ja">つぎ：${TIT_JA[nx]||''}</span></a>`:''}`; }
   showXP(); go(0);
 }
 
