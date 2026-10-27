@@ -1,0 +1,334 @@
+<!DOCTYPE html>
+<html lang="pt-BR" data-login="obrigatorio">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>Planeta Utopia · Unirversos Idiomas</title>
+<meta name="description" content="Planeta Utopia: pratique japonês em dupla: sente numa mesa, receba uma carta de missão e converse com outra pessoa. Se ninguém estiver online, o atendente virtual conversa com você.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@500;700;800&family=Zen+Maru+Gothic:wght@400;500;700&display=swap">
+<style>html[data-login="obrigatorio"]:not(.uni-ok) body>*:not(#uni-gate){visibility:hidden}</style>
+<script type="module" src="/idiomas/dados/conta.js?v=2"></script>
+<script>setTimeout(function(){var h=document.documentElement;if(!h.classList.contains('uni-ok')&&!document.getElementById('uni-gate'))h.classList.add('uni-ok')},10000)</script>
+<style>
+:root{
+  --paper:#fdf6f4; --card:#ffffff; --ink:#3a2b38; --muted:#6b5a67; --line:#ecdadd;
+  --blush:#f8dde1; --pink:#c23f5e; --pink-d:#b23a57; --sage:#4f7a58; --sage-soft:#e8efe8; --taupe:#816c5b; --gold:#8f6b1d; --gold-soft:#fbf1d9;
+  --f-display:"Baloo 2","Zen Maru Gothic",system-ui,sans-serif;
+  --f-body:"Zen Maru Gothic","Hiragino Maru Gothic ProN","Noto Sans JP",system-ui,sans-serif;
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--paper);color:var(--ink);font-family:var(--f-body);font-size:16px;line-height:1.6;
+  background-image:radial-gradient(var(--line) 1.2px,transparent 1.3px);background-size:22px 22px;
+  padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));padding-block:18px 90px}
+a{color:inherit}
+a:focus-visible,button:focus-visible,input:focus-visible,textarea:focus-visible{outline:3px solid #b7a6dc;outline-offset:3px;border-radius:8px}
+.wrap{max-width:900px;margin:0 auto;display:grid;gap:22px}
+.sitebar{display:flex;flex-wrap:wrap;justify-content:space-between;align-items:center;gap:10px 18px}
+.logo{font-family:var(--f-display);font-weight:800;font-size:19px;letter-spacing:.14em;text-decoration:none}
+.logo span{color:var(--pink)}
+.navlinks{display:flex;flex-wrap:wrap;gap:6px 20px;font-size:14px}
+.navlinks a{text-decoration:none;color:var(--muted)}
+.navlinks a[aria-current]{color:var(--pink)}
+.eyebrow{font-size:12px;letter-spacing:.2em;text-transform:uppercase;color:var(--pink-d);font-weight:700;margin:0}
+h1{font-family:var(--f-display);font-weight:800;font-size:clamp(30px,5.2vw,46px);line-height:1.05;margin:6px 0 8px}
+h2{font-family:var(--f-display);font-size:22px;line-height:1.2;margin:0}
+.lede{margin:0;font-size:16.5px;max-width:62ch}
+.card{background:var(--card);border:1.5px solid var(--line);border-radius:20px;padding:18px;display:grid;gap:14px}
+.sub{margin:0;color:var(--muted);font-size:14.5px}
+.btn{font:inherit;font-weight:700;font-size:14px;min-height:44px;padding:0 16px;border-radius:999px;border:1.5px solid var(--line);background:#fff;color:var(--ink);cursor:pointer;display:inline-flex;align-items:center;justify-content:center;gap:6px;text-decoration:none}
+.btn.pri{background:var(--pink);border-color:var(--pink);color:#fff}
+.btn.sage{background:var(--sage-soft);border-color:#bcd2bf;color:#3e6347}
+.btn:disabled{opacity:.5;cursor:default}
+.row{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+.aviso{border-left:6px solid var(--gold);background:var(--gold-soft);border-radius:16px;padding:14px 16px;display:grid;gap:8px}
+.aviso b{font-family:var(--f-display);font-size:18px}
+.nota{border-left:5px solid var(--sage);background:var(--sage-soft);border-radius:12px;padding:10px 12px;font-size:14px}
+/* saguão */
+.placas{display:flex;flex-wrap:wrap;gap:8px}
+.placas button{font:inherit;font-weight:700;font-size:14.5px;min-height:48px;padding:0 16px;border-radius:14px;border:1.5px solid var(--line);background:#fff;color:var(--ink);cursor:pointer}
+.placas button[aria-pressed="true"]{background:var(--ink);border-color:var(--ink);color:#fff}
+.placas .dest{font-size:11px;font-weight:700;color:var(--gold);display:block}
+.placas button[aria-pressed="true"] .dest{color:#f3d89a}
+.gente{display:grid;grid-template-columns:repeat(auto-fill,minmax(110px,1fr));gap:10px}
+.pess{border:1.5px solid var(--line);border-radius:16px;background:#fff;padding:8px;text-align:center;display:grid;gap:2px;justify-items:center}
+.pess .av{width:64px;height:64px;border-radius:50%;overflow:hidden;background:#fdf0f3;display:grid;place-items:center;font-size:30px}
+.pess b{font-size:13.5px;line-height:1.2;word-break:break-word}
+.pess small{font-size:11.5px;color:var(--muted)}
+.pess.eu{border-color:var(--pink)}
+.vazio{color:var(--muted);font-size:14px}
+/* mesa */
+.mesa{display:grid;gap:12px}
+.missao{border:1.5px dashed #e3b6c0;border-radius:16px;background:#fff7f9;padding:12px 14px;display:grid;gap:6px}
+.missao b{color:#7d2b3a}
+.missao .chaves{display:flex;flex-wrap:wrap;gap:6px}
+.missao .chaves button{font:inherit;font-size:14px;border:1.5px solid var(--line);background:#fff;border-radius:999px;padding:4px 10px;cursor:pointer;min-height:36px}
+.chat{border:1.5px solid var(--line);border-radius:18px;background:#fff;padding:12px;display:grid;gap:8px;max-height:52vh;overflow:auto;min-height:180px}
+.msg{max-width:85%;border-radius:16px;padding:8px 12px;line-height:1.5;font-size:16px}
+.msg .quem{display:block;font-size:11.5px;font-weight:700;color:var(--muted)}
+.msg.dele{background:#eef4fb;border:1.5px solid #cfe0f0;justify-self:start}
+.msg.meu{background:var(--blush);border:1.5px solid #efc3cd;justify-self:end}
+.msg.sis{justify-self:center;background:none;color:var(--muted);font-size:13px;text-align:center;max-width:100%}
+.msg .acoes{display:flex;gap:6px;margin-top:4px}
+.msg .acoes button{font:inherit;font-size:12px;border:1px solid var(--line);background:#fff;border-radius:999px;padding:2px 10px;cursor:pointer;min-height:30px}
+.wd{font:inherit;color:inherit;background:none;border:0;border-bottom:1.5px dotted #c9a3ad;padding:0 1px;margin:0;cursor:pointer}
+.wdinfo{margin-top:6px;border:1.5px solid var(--line);border-radius:12px;padding:6px 10px;background:#fff;font-size:13.5px}
+.wdinfo small{display:block;color:var(--muted)}
+.pecas{display:flex;flex-wrap:wrap;gap:6px}
+.pecas button{font:inherit;font-size:15px;font-weight:700;min-height:40px;padding:0 12px;border-radius:12px;border:1.5px solid var(--line);background:#fff;cursor:pointer;color:var(--ink)}
+.escrever{display:flex;gap:8px;align-items:flex-end}
+.escrever textarea{flex:1;font:inherit;font-size:16px;min-height:48px;max-height:120px;padding:10px 12px;border:1.5px solid var(--line);border-radius:14px;resize:vertical}
+.topo-mesa{display:flex;flex-wrap:wrap;justify-content:space-between;gap:8px;align-items:center}
+.lk{font:inherit;font-size:13px;border:0;background:none;color:var(--muted);text-decoration:underline;cursor:pointer;min-height:44px}
+dialog{border:1.5px solid var(--line);border-radius:18px;padding:18px;max-width:420px;width:calc(100% - 32px)}
+dialog textarea{width:100%;font:inherit;min-height:90px;border:1.5px solid var(--line);border-radius:12px;padding:8px}
+.regras{font-size:13.5px;color:var(--muted);margin:0;padding-left:18px}
+footer{border-top:1.5px dashed var(--line);padding-top:18px;display:flex;flex-wrap:wrap;justify-content:space-between;gap:12px;font-size:14px;color:var(--muted)}
+[hidden]{display:none!important}
+</style>
+<link rel="stylesheet" href="/estilo-celular.css?v=2">
+<script defer src="/menu-ativo.js?v=1"></script>
+</head>
+<body>
+<div class="wrap">
+  <nav class="sitebar" aria-label="Site">
+    <a class="logo" href="/">UNI<span>R</span>VERSOS</a>
+    <span class="navlinks"><a href="/idiomas/" aria-current="page">idiomas</a><a href="/travessia/">travessia</a><a href="/paralelos/">paralelos</a><a href="/loja/">loja</a><a href="/sobre/">sobre</a></span>
+  </nav>
+
+  <p class="crumb" style="margin:0;font-size:14px"><a href="/idiomas/japones/" style="color:var(--muted);text-decoration:none">← Trilha do japonês</a></p>
+
+  <div class="aviso" id="avisoPlaneta" hidden role="status">
+    <b>✨ O Planeta Utopia evoluiu!</b>
+    <span>Agora ele é o planeta dos encontros. Em vez de treinar sozinha(o) com a tela, você senta numa mesa com outra pessoa para praticar as cenas ao vivo. Se a mesa estiver vazia, o atendente virtual continua aqui. As provas e os carimbos do passaporte seguem na sua <a href="/idiomas/japones/">trilha do japonês</a>.</span>
+    <div><button class="btn pri" type="button" id="fechaAviso">Entendido, vamos lá!</button></div>
+  </div>
+
+  <header>
+    <p class="eyebrow">✦ espírito · encontros ao vivo</p>
+    <h1>🪐 Planeta Utopia</h1>
+    <p class="lede">Escolha o que quer treinar, sente numa mesa e receba uma carta de missão. Você conversa em dupla com quem estiver online. Se ninguém aparecer, o atendente virtual puxa a conversa.</p>
+  </header>
+
+  <!-- SAGUÃO -->
+  <section class="card" id="saguao" aria-labelledby="h-sag">
+    <div><h2 id="h-sag">🏮 O que você quer treinar?</h2>
+    <p class="sub">Sua plaquinha aparece para quem está no salão.</p></div>
+    <div class="placas" id="placas"></div>
+    <div class="row"><button class="btn pri" type="button" id="sentar">🪑 Sentar numa mesa</button><span class="sub" id="espera" aria-live="polite"></span><button class="lk" type="button" id="cancelar" hidden>cancelar</button></div>
+    <div><h2 style="font-size:18px">👥 No salão agora</h2></div>
+    <div class="gente" id="gente"><p class="vazio">Carregando…</p></div>
+    <p class="nota" id="semBanco" hidden>As mesas com outras pessoas estão sendo ligadas. Enquanto isso, sente numa mesa e treine com o atendente virtual.</p>
+    <details><summary style="cursor:pointer;font-weight:700">Regras do salão</summary>
+      <ul class="regras"><li>Fale com gentileza: aqui todo mundo está aprendendo.</li><li>Errar faz parte. Corrija com carinho, nunca com deboche.</li><li>Nada de dados pessoais (telefone, endereço, redes).</li><li>Algo errado? Use ⚑ Denunciar na mesa: a professora recebe.</li></ul>
+    </details>
+  </section>
+
+  <!-- MESA -->
+  <section class="card mesa" id="mesa" hidden aria-labelledby="h-mesa">
+    <div class="topo-mesa"><h2 id="h-mesa">🪑 Mesa</h2><div class="row"><button class="btn" type="button" id="btnRo" aria-pressed="false">Romaji: não</button><button class="btn" type="button" id="encerrar">Encerrar a conversa</button></div></div>
+    <div class="missao" id="missao"></div>
+    <div class="chat" id="chat" aria-live="polite"></div>
+    <div><p class="sub" style="margin-bottom:6px">Toque numa peça para colocar na mensagem:</p><div class="pecas" id="pecas"></div></div>
+    <div class="escrever"><textarea id="txt" maxlength="300" placeholder="Escreva em japonês (kana, kanji ou romaji)…" aria-label="Mensagem"></textarea><button class="btn pri" type="button" id="enviar">Enviar</button></div>
+    <div class="row"><button class="lk" type="button" id="denunciar">⚑ Denunciar</button></div>
+  </section>
+
+  <footer>
+    <span>unirversos — tudo conectado · Aline Kikuti</span>
+    <span><a href="/idiomas/japones/">trilha do japonês</a> · <a href="/idiomas/">idiomas</a></span>
+  </footer>
+</div>
+
+<dialog id="dlgDen">
+  <form method="dialog" style="display:grid;gap:10px">
+    <b>⚑ Denunciar esta conversa</b>
+    <span class="sub">Conte o que aconteceu. A professora vai ler.</span>
+    <textarea id="denTxt" maxlength="500"></textarea>
+    <div class="row"><button class="btn pri" value="ok" type="submit">Enviar denúncia</button><button class="btn" value="cancel" type="submit">Cancelar</button></div>
+  </form>
+</dialog>
+
+<script src="/idiomas/dados/avatar.js?v=20261016b"></script>
+<script src="/idiomas/dados/velocidade-voz.js?v=1"></script>
+<script src="/idiomas/dados/audio-mapa.js?v=3ec25834"></script>
+<script src="/idiomas/dados/glossario.js?v=1"></script>
+<script src="/idiomas/dados/aulas/restaurante.js?v=20261027k"></script>
+<script src="/idiomas/dados/aulas/hotel.js?v=20261027k"></script>
+<script type="module">
+import { getApps, initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
+import { getDatabase, ref, set, push, onValue, onDisconnect, remove, runTransaction, serverTimestamp, off, update, get } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-database.js";
+
+/* endereço do Realtime Database (região Estados Unidos, us-central1) */
+const DB_URL = 'https://unirversos-site-default-rtdb.firebaseio.com';
+const DESTAQUE = 'restaurante';           /* contexto da semana */
+const ESPERA_GARCOM = 20000;              /* ms até o atendente virtual assumir */
+const $ = id => document.getElementById(id);
+const esc = s => String(s).replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+
+/* ---------- aviso de quem veio do Planeta ---------- */
+try{ const q=new URLSearchParams(location.search); if(q.get('de')==='planeta' && localStorage.getItem('salaoAvisoVisto')!=='1') $('avisoPlaneta').hidden=false; }catch(e){}
+$('fechaAviso').onclick=()=>{ $('avisoPlaneta').hidden=true; try{ localStorage.setItem('salaoAvisoVisto','1'); }catch(e){} };
+
+/* ---------- áudio ---------- */
+const chave = t => String(t).replace(/[\s、。，．,.!！?？…・「」『』（）()＿]/g,'');
+let tocando=null;
+function speakTTS(t){ try{ if(!window.speechSynthesis) return; speechSynthesis.cancel(); const u=new SpeechSynthesisUtterance(t); u.lang='ja-JP'; u.rate=.8*(window.UniVel?UniVel.get():1); const v=speechSynthesis.getVoices().find(x=>/^ja/i.test(x.lang)); if(v) u.voice=v; speechSynthesis.speak(u); }catch(e){} }
+function speak(t){ const id=window.AUDIO_MAP&&AUDIO_MAP[chave(t)]; if(!id){ speakTTS(t); return; }
+  try{ if(tocando) tocando.pause(); const a=new Audio('/idiomas/audio/'+id+'.mp3'); tocando=a; if(window.UniVel) UniVel.aplica(a,.85); a.onerror=()=>speakTTS(t); const p=a.play(); if(p&&p.catch) p.catch(()=>speakTTS(t)); }catch(e){ speakTTS(t); } }
+
+/* ---------- romaji (só pelo botão) ---------- */
+let ROM=false; try{ ROM=localStorage.getItem('utopiaRomaji')==='1'; }catch(e){}
+function aplicaRo(){ $('btnRo').textContent='Romaji: '+(ROM?'sim':'não'); $('btnRo').setAttribute('aria-pressed',String(ROM)); document.querySelectorAll('.wro').forEach(e=>e.hidden=!ROM); }
+$('btnRo').onclick=()=>{ ROM=!ROM; try{ localStorage.setItem('utopiaRomaji',ROM?'1':'0'); }catch(e){} aplicaRo(); };
+
+/* ---------- contextos: cartas de missão, peças e o atendente virtual ---------- */
+const A = window.AULAS||{};
+const pecasDe = slug => { const a=A[slug]; if(!a) return []; const s=new Set(); a.words.forEach(w=>s.add(String(w.k).replace(/<[^>]+>/g,''))); a.cenas.forEach(c=>c.ans.forEach(x=>[].concat(x).forEach(y=>{ const k=String(y).split('|')[0]; if(!/[{}]/.test(k)) s.add(k); }))); return [...s]; };
+const CTX = {
+  restaurante:{ nome:'Restaurante', ic:'🍜',
+    papeis:{
+      viajante:{ nome:'Cliente', missao:'Peça mesa para duas pessoas, peça água e, no fim, peça a conta.', chaves:['ふたりです。','みずを おねがいします。','おかいけいを おねがいします。'] },
+      atendente:{ nome:'Atendente', missao:'Receba com いらっしゃいませ, pergunte quantas pessoas são, ofereça bebida e pergunte se querem mais alguma coisa.', chaves:['いらっしゃいませ！','なんめいさまですか？','おのみものは いかがですか？','ほかに ごちゅうもんは？'] } },
+    bot:['いらっしゃいませ！なんめいさまですか？','ごちゅうもんは おきまりですか？','おのみものは いかがですか？','おまたせしました。ラーメンです。','ほかに ごちゅうもんは？','ありがとう ございました！'] },
+  hotel:{ nome:'Hotel', ic:'🏨',
+    papeis:{
+      viajante:{ nome:'Hóspede', missao:'Diga seu nome para a reserva, diga que são duas noites e pergunte o horário do café da manhã.', chaves:['よやくが あります。','にはくです。','ちょうしょくは なんじですか？'] },
+      atendente:{ nome:'Recepção', missao:'Pergunte o nome da reserva e quantas noites, entregue a chave e diga o horário do café da manhã.', chaves:['ごよやくの おなまえは？','なんぱくの ごよていですか？','こちらが おへやの かぎです。','ちょうしょくは しちじからです。'] } },
+    bot:['いらっしゃいませ。ごよやくの おなまえは？','なんぱくの ごよていですか？','こちらが おへやの かぎです。','ちょうしょくは しちじからです。ほかに なにか ございますか？','おへやは いかがですか？','ごゆっくり どうぞ。'] }
+};
+let placa = DESTAQUE;
+function renderPlacas(){ $('placas').innerHTML=Object.entries(CTX).map(([k,c])=>`<button type="button" data-k="${k}" aria-pressed="${k===placa}">${c.ic} ${c.nome}${k===DESTAQUE?'<span class="dest">★ contexto da semana</span>':''}</button>`).join(''); }
+$('placas').onclick=e=>{ const b=e.target.closest('button'); if(!b) return; placa=b.dataset.k; renderPlacas(); atualizaPresenca(); };
+renderPlacas();
+
+/* ---------- eu ---------- */
+const AV = window.UtopiaAvatar && UtopiaAvatar.load();
+const SEL = AV && AV.sel ? AV.sel : null;
+const P = (AV && AV.profile) || {};
+let me = { uid:null, nome:(P.kata||P.name||'').trim() };
+const avatarHTML = sel => (sel && window.UtopiaAvatar) ? UtopiaAvatar.svg(sel,{viewBox:'40 46 160 160',still:true,label:'Avatar'}) : '🧳';
+
+/* ---------- banco (Realtime Database) ---------- */
+let db=null, bancoOk=false;
+const app = getApps()[0] || null;
+function iniciaBanco(user){
+  try{ db = getDatabase(getApps()[0], DB_URL); }catch(e){ semBanco(); return; }
+  me.uid=user.uid; if(!me.nome) me.nome=(user.displayName||'').split(' ')[0]||'Viajante';
+  const pres = ref(db,'salao/presenca/'+me.uid);
+  onDisconnect(pres).remove().then(()=>{ bancoOk=true; atualizaPresenca(); }).catch(semBanco);
+  onValue(ref(db,'salao/presenca'), snap=>{ renderGente(snap.val()||{}); }, semBanco);
+  onValue(ref(db,'salao/convites/'+me.uid), snap=>{ const id=snap.val(); if(id && !mesa){ remove(ref(db,'salao/convites/'+me.uid)).catch(()=>{}); entraMesaHumana(id); } }, ()=>{});
+}
+function semBanco(){ bancoOk=false; $('semBanco').hidden=false; renderGente(null); }
+function atualizaPresenca(){ if(!bancoOk||!db) return; set(ref(db,'salao/presenca/'+me.uid),{nome:me.nome.slice(0,30),sel:SEL||null,placa,estado:mesa?'mesa':'saguao',t:serverTimestamp()}).catch(()=>{}); }
+function renderGente(all){
+  const lista = all ? Object.entries(all) : [];
+  if(!all && !bancoOk){ $('gente').innerHTML=`<div class="pess eu"><div class="av">${avatarHTML(SEL)}</div><b>${esc(me.nome||'Você')}</b><small>${CTX[placa].ic} ${CTX[placa].nome}</small></div>`; return; }
+  if(!lista.length){ $('gente').innerHTML='<p class="vazio">Ninguém por aqui ainda.</p>'; return; }
+  $('gente').innerHTML=lista.map(([uid,p])=>`<div class="pess${uid===me.uid?' eu':''}"><div class="av">${avatarHTML(p.sel)}</div><b>${esc(p.nome||'Viajante')}${uid===me.uid?' (você)':''}</b><small>${CTX[p.placa]?CTX[p.placa].ic+' '+CTX[p.placa].nome:''}${p.estado==='mesa'?' · numa mesa':''}</small></div>`).join('');
+}
+
+/* ---------- sentar: forma a dupla ou chama o atendente virtual ---------- */
+let esperando=null, timerGarcom=null, mesa=null;
+$('sentar').onclick=async()=>{
+  $('sentar').disabled=true; $('cancelar').hidden=false; $('espera').textContent='Procurando alguém para a sua mesa…';
+  timerGarcom=setTimeout(()=>{ if(!mesa){ saiDaFila(); entraMesaBot(); } }, bancoOk?ESPERA_GARCOM:1500);
+  if(!bancoOk) return;
+  const filaRef = ref(db,'salao/fila/'+placa); let par=null;
+  try{
+    await runTransaction(filaRef, fila=>{ fila=fila||{}; par=null; const outro=Object.keys(fila).find(u=>u!==me.uid);
+      if(outro){ par=outro; delete fila[outro]; } else { fila[me.uid]={t:Date.now()}; } return fila; });
+    if(par){
+      const id = push(ref(db,'salao/mesas')).key;
+      const souViajante = Math.random()<.5;
+      await set(ref(db,'salao/mesas/'+id),{ctx:placa,a:me.uid,b:par,pa:souViajante?'viajante':'atendente',pb:souViajante?'atendente':'viajante',criada:serverTimestamp()});
+      await set(ref(db,'salao/convites/'+par), id);
+      entraMesaHumana(id);
+    } else { esperando=placa; onDisconnect(ref(db,'salao/fila/'+placa+'/'+me.uid)).remove().catch(()=>{}); }
+  }catch(e){ /* sem permissão ou banco desligado: segue com o atendente virtual */ }
+};
+$('cancelar').onclick=()=>{ clearTimeout(timerGarcom); saiDaFila(); resetSaguao(); };
+function saiDaFila(){ if(esperando&&db){ remove(ref(db,'salao/fila/'+esperando+'/'+me.uid)).catch(()=>{}); } esperando=null; }
+function resetSaguao(){ $('sentar').disabled=false; $('cancelar').hidden=true; $('espera').textContent=''; }
+
+/* ---------- mesa ---------- */
+let papel='viajante', ctx='restaurante', msgsRef=null, botI=0, mesaInfo=null, enviados=0;
+function abreMesa(titulo){
+  clearTimeout(timerGarcom); resetSaguao();
+  $('saguao').hidden=true; $('mesa').hidden=false; $('chat').innerHTML=''; $('h-mesa').textContent=titulo;
+  const c=CTX[ctx], pp=c.papeis[papel];
+  $('missao').innerHTML=`<span>🎴 <b>Sua carta de missão · ${esc(pp.nome)}</b></span><span>${esc(pp.missao)}</span><span class="sub">Frases que ajudam (toque para ouvir e usar):</span><div class="chaves">${pp.chaves.map(k=>`<button type="button" data-k="${esc(k)}" lang="ja">${esc(k)}</button>`).join('')}</div>`;
+  $('pecas').innerHTML=pecasDe(ctx).map(k=>`<button type="button" lang="ja">${esc(k)}</button>`).join('');
+  atualizaPresenca(); aplicaRo(); window.scrollTo({top:$('mesa').offsetTop-10,behavior:'smooth'});
+}
+$('missao').onclick=e=>{ const b=e.target.closest('button[data-k]'); if(!b) return; speak(b.dataset.k); $('txt').value=b.dataset.k; $('txt').focus(); };
+$('pecas').onclick=e=>{ const b=e.target.closest('button'); if(!b) return; const t=$('txt'); t.value=(t.value&&!/\s$/.test(t.value)?t.value+' ':t.value)+b.textContent; t.focus(); };
+
+function entraMesaBot(){
+  mesa='bot'; ctx=placa; papel='viajante'; botI=0; enviados=0;
+  abreMesa(`${CTX[ctx].ic} Mesa · ${CTX[ctx].nome} · com o atendente virtual`);
+  sis('Ninguém chegou ainda, então o atendente virtual vai conversar com você. Se alguém sentar, você pode encerrar e procurar de novo.');
+  setTimeout(botFala,700);
+}
+function botFala(){ const L=CTX[ctx].bot; if(botI<L.length){ msg({quem:CTX[ctx].papeis.atendente.nome+' (virtual)',txt:L[botI],meu:false}); speak(L[botI]); botI++; } }
+
+async function entraMesaHumana(id){
+  try{
+    const s=await get(ref(db,'salao/mesas/'+id)); const m=s.val(); if(!m) return;
+    mesa=id; mesaInfo=m; ctx=m.ctx; papel = m.a===me.uid ? m.pa : m.pb;
+    const outro = m.a===me.uid ? m.b : m.a;
+    abreMesa(`${CTX[ctx].ic} Mesa · ${CTX[ctx].nome} · em dupla`);
+    sis('Vocês estão na mesma mesa! Cada pessoa recebeu uma carta de missão diferente. Comece pela sua.');
+    msgsRef = ref(db,'salao/mesas/'+id+'/msgs');
+    const vistos=new Set();
+    onValue(msgsRef, snap=>{ const v=snap.val()||{}; Object.entries(v).sort((x,y)=>(x[1].t||0)-(y[1].t||0)).forEach(([k,mm])=>{ if(vistos.has(k)) return; vistos.add(k); msg({quem:mm.uid===me.uid?'Você':mm.nome,txt:mm.txt,meu:mm.uid===me.uid}); if(mm.uid!==me.uid) speak(mm.txt); }); });
+    onValue(ref(db,'salao/mesas/'+id+'/fim'), snap=>{ const f=snap.val(); if(f && f!==me.uid) sis('A outra pessoa saiu da mesa. Você pode encerrar e sentar de novo.'); });
+  }catch(e){ entraMesaBot(); }
+}
+
+function enviar(){
+  const t=$('txt').value.trim(); if(!t) return; $('txt').value='';
+  if(mesa==='bot'){ msg({quem:'Você',txt:t,meu:true}); enviados++; setTimeout(botFala,900); return; }
+  if(mesa && db){ push(msgsRef,{uid:me.uid,nome:me.nome.slice(0,30),txt:t.slice(0,300),t:serverTimestamp()}).catch(()=>sis('Não consegui enviar. Tente de novo.')); }
+}
+$('enviar').onclick=enviar;
+$('txt').addEventListener('keydown',e=>{ if(e.key==='Enter'&&!e.shiftKey){ e.preventDefault(); enviar(); } });
+
+$('encerrar').onclick=()=>{
+  if(mesa && mesa!=='bot' && db){ set(ref(db,'salao/mesas/'+mesa+'/fim'),me.uid).catch(()=>{}); if(msgsRef) off(msgsRef); }
+  mesa=null; msgsRef=null; $('mesa').hidden=true; $('saguao').hidden=false; atualizaPresenca();
+};
+
+/* ---------- mensagens com 🔍 palavra por palavra ---------- */
+function clicavel(txt){ if(!window.UniGloss) return esc(txt); return UniGloss.quebra(txt).map(t=>t.sep!=null?esc(t.sep):(t.pt?`<button type="button" class="wd" data-w="${encodeURIComponent(JSON.stringify(t))}">${esc(t.k)}</button>`:esc(t.k))).join(''); }
+function msg({quem,txt,meu}){
+  const d=document.createElement('div'); d.className='msg '+(meu?'meu':'dele');
+  d.innerHTML=`<span class="quem">${esc(quem)}</span><span lang="ja">${clicavel(txt)}</span><div class="acoes"><button type="button" data-ouvir>🔊</button></div>`;
+  d.querySelector('[data-ouvir]').onclick=()=>speak(txt);
+  $('chat').appendChild(d); $('chat').scrollTop=$('chat').scrollHeight;
+}
+function sis(t){ const d=document.createElement('div'); d.className='msg sis'; d.textContent=t; $('chat').appendChild(d); $('chat').scrollTop=$('chat').scrollHeight; }
+$('chat').addEventListener('click',e=>{ const b=e.target.closest('.wd'); if(!b) return; const t=JSON.parse(decodeURIComponent(b.dataset.w)), m=b.closest('.msg');
+  let box=m.querySelector('.wdinfo'); if(!box){ box=document.createElement('div'); box.className='wdinfo'; m.appendChild(box); }
+  box.innerHTML=`<b lang="ja">${esc(t.k)}</b> <span class="wro"${ROM?'':' hidden'}>${esc(t.ro)} · </span>${esc(t.pt)}${t.nota?`<small>${esc(t.nota)}</small>`:''}`; speak(t.k); });
+
+/* ---------- denúncia ---------- */
+$('denunciar').onclick=()=>{ $('denTxt').value=''; $('dlgDen').showModal(); };
+$('dlgDen').addEventListener('close',()=>{ if($('dlgDen').returnValue!=='ok') return; const txt=$('denTxt').value.trim().slice(0,500);
+  if(db&&bancoOk){ push(ref(db,'salao/denuncias'),{de:me.uid,mesa:mesa||null,txt,t:serverTimestamp()}).then(()=>sis('Denúncia enviada. Obrigada por avisar.')).catch(()=>sis('Não consegui enviar a denúncia agora.')); }
+  else sis('Denúncia anotada. Se for urgente, encerre a conversa.'); });
+
+/* ---------- começo ---------- */
+renderGente(null);
+const auth = getApps()[0] ? getAuth(getApps()[0]) : null;
+function quandoLogar(){ const a=getApps()[0]; if(!a){ setTimeout(quandoLogar,300); return; } onAuthStateChanged(getAuth(a), u=>{ if(u && !me.uid) iniciaBanco(u); }); }
+quandoLogar();
+setTimeout(()=>{ if(!bancoOk) semBanco(); }, 6000);
+aplicaRo();
+window.addEventListener('beforeunload',()=>{ saiDaFila(); });
+</script>
+</body>
+</html>

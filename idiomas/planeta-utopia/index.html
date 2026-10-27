@@ -679,7 +679,7 @@ let cameFromMaps=false;
   if(q.get('from')==='trilha'){ const bl=document.querySelector('#stamp-backmap a'); if(bl){ bl.href='/idiomas/japones/'; bl.textContent='↩ voltar para a minha trilha'; } }
   const hasSave = loadGame();
   const valid = l && t && PACKS[l] && PACKS[l].territories.some(x=>x.id===t) && SCENES[l] && SCENES[l].scenes[t];
-  if(!valid){ location.replace('/idiomas/japones/'); return; } // porta única: a trilha
+  if(!valid){ location.replace('/idiomas/planeta-utopia/salao/?de=planeta'); return; } // sem cena no endereço: o planeta dos encontros
   if(!G.name){ const a=window.UtopiaAvatar&&UtopiaAvatar.load(), p=a&&a.profile; G.name=(p&&(p.kata||p.name)||'').trim()||'Viajante'; }
   curLang=l;
   document.getElementById('setup').classList.add('hidden');
