@@ -277,6 +277,11 @@ body.no-ro .rk rt{display:none}
 .hall-s a{color:var(--muted);font-weight:700}
 @media print{.btn.ar{display:none}}
 
+/* voltar / refazer exercício */
+.exnav{display:flex;flex-wrap:wrap;gap:8px;justify-content:space-between;margin-top:12px;padding-top:10px;border-top:1px dashed var(--line)}
+.exnav .btn[disabled]{opacity:.45;cursor:default}
+.exnav .btn{min-height:48px}
+
 /* navegação do site */
 .sitebar{display:flex;align-items:center;justify-content:space-between;gap:10px 14px;flex-wrap:wrap}
 .sitebar .brand{font-family:var(--f-display);font-size:18px;font-weight:700;text-decoration:none;color:var(--ink)}
