@@ -555,13 +555,15 @@ function wireCena(){
       const k=ORDEM.indexOf(A.slug), nx=k>=0?ORDEM[k+1]:null, terr=TERR[A.slug];
       let provaOk=false; try{ const sv=JSON.parse(localStorage.getItem('utopiaSave1')||'{}'); provaOk=!!(sv&&sv.done&&terr&&sv.done['ja:'+terr]); }catch(_){}
       const provaHref=terr?`/idiomas/planeta-utopia/?lang=ja&terr=${terr}&from=trilha`:'';
-      let pri='';
-      if(terr&&!provaOk) pri=`<a class="btn primary prova" href="${provaHref}">🏅 Fazer a prova →</a>`;
-      else if(nx) pri=`<a class="btn primary" href="/idiomas/mapas/${nx}/aula/">➡️ Próximo mapa: ${TITULOS[nx]||nx} →</a>`;
-      const h=document.createElement('div'); h.className='hall'; h.setAttribute('role','group'); h.setAttribute('aria-label','E agora?');
-      h.innerHTML='<p class="hall-t">E agora?</p>'+(pri?`<div class="hall-b">${pri}</div>`:'')+
-        (terr&&!provaOk?'<p class="hall-n">A prova é a mesma cena, sem ajuda. Passou, ganha o carimbo e o próximo mapa aparece aqui.</p>':'')+
-        `<p class="hall-s"><a href="/idiomas/japones/">← Voltar à trilha</a><a href="/idiomas/planeta-utopia/salao/">🪐 Ir ao Salão</a>${provaOk&&terr?`<a href="${provaHref}">🏅 Refazer a prova</a>`:''}</p>`;
+      const h=document.createElement('div'); h.className='hall'; h.setAttribute('role','group');
+      if(terr&&!provaOk){
+        /* a prova é obrigatória para concluir o mapa: aqui só ela */
+        h.setAttribute('aria-label','Próximo passo');
+        h.innerHTML=`<p class="hall-t">Próximo passo: a prova</p><div class="hall-b"><a class="btn primary prova" href="${provaHref}">🏅 Fazer a prova →</a></div><p class="hall-n">A prova conclui o mapa: é a mesma cena, sem ajuda. Passou, ganha o carimbo.</p>`;
+      } else {
+        h.setAttribute('aria-label','Mapa concluído');
+        h.innerHTML=`<p class="hall-t">✓ Mapa concluído</p><div class="hall-b"><a class="btn" href="/idiomas/japones/">← Voltar à trilha</a><a class="btn" href="/idiomas/planeta-utopia/salao/">🪐 Ir ao Salão</a></div>`+(terr?`<p class="hall-s"><a href="${provaHref}">🏅 Refazer a prova</a></p>`:'');
+      }
       $('btnNext').after(h); }
   };
 }
