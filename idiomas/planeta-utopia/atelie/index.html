@@ -405,7 +405,7 @@ body.show-ro .opt .ro,body.show-ro .tab .ro,body.show-ro .line .ro,body.show-ro 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
 <script src="/idiomas/dados/avatar.js?v=20261016d"></script>
 <script src="/idiomas/dados/audio-mapa.js?v=0b6639ea"></script>
-<script src="/idiomas/dados/atelie-dados.js?v=20261027a"></script>
+<script src="/idiomas/dados/atelie-dados.js?v=20261027b"></script>
 <script>
 /* ---------- estado: avatar (utopiaAvatar1) + progresso do jogo (utopiaSave1) ---------- */
 const AV=UtopiaAvatar, GKEY='utopiaSave1'; AV.injectCSS();
@@ -566,7 +566,16 @@ $('pKata').addEventListener('input',e=>{state.profile.kata=e.target.value; rende
 $('prons').addEventListener('click',e=>{const b=e.target.closest('.pron'); if(!b) return; const id=b.dataset.id; state.profile.pron=id;
   const isNew=!state.learned[id]; if(isNew){state.learned[id]=true; gain(WORD_XP);} state.focus=id; speak(WORDS[id].kana); renderAll(null,false);
   if(isNew){const nb=$('prons').querySelector(`[data-id="${id}"]`); nb&&floatXP(nb,WORD_XP);} });
-$('sayIntro').onclick=()=>speak(introText());
+/* 自己紹介 com a voz da もち子: partes gravadas + o nome na voz do aparelho (se a pessoa já escreveu o nome) */
+function speakIntro(){
+  const M=window.AUDIO_MAP||{}, K=t=>M[chaveAudio(t)], pr=find(PRONS,state.profile.pron), nm=displayName(), age=ageInfo(state.sel.age).kana;
+  const fixas=['こんにちは！',pr.kana+'は',age+'です。','ユートピアで にほんごを べんきょうしています。','よろしく おねがいします！'].concat(nm?['です。']:[]);
+  if(!window.AUDIO_MAP||!fixas.every(K)) return speak(introText());
+  const it=[{id:K(fixas[0])},{id:K(fixas[1])}]; if(nm) it.push({tts:nm},{id:K('です。')});
+  it.push({id:K(fixas[2])},{id:K(fixas[3])},{id:K(fixas[4])});
+  falaFila(it,introText());
+}
+$('sayIntro').onclick=speakIntro;
 $('sayall').onclick=()=>speak(sentences().map(l=>l.jp).join(' '));
 $('skins').addEventListener('click',e=>{const b=e.target.closest('.skin'); if(!b) return; state.sel.skin=+b.dataset.skin;
   const w=skinWord(state.sel.skin), isNew=!state.learned[w.id]; if(isNew){state.learned[w.id]=true; gain(WORD_XP);}

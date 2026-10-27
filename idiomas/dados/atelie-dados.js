@@ -154,6 +154,17 @@ function speak(text,opc){
   toca();
 }
 
+/* fila mista: {id} toca a gravação; {tts} fala com a voz do aparelho (para o que muda de pessoa para pessoa, como o nome) */
+function falaFila(itens,fallback){
+  try{ if(audioAtual){ audioAtual.pause(); audioAtual=null; } if(window.speechSynthesis) speechSynthesis.cancel(); }catch(e){}
+  let i=0, parou=false; const base=window.AUDIO_BASE||'/idiomas/audio/';
+  const cair=()=>{ if(parou) return; parou=true; audioAtual=null; speakTTS(fallback); };
+  const prox=()=>{ if(parou) return; if(i>=itens.length){ audioAtual=null; return; } const it=itens[i++];
+    if(it.tts){ if(!window.speechSynthesis) return prox(); const u=new SpeechSynthesisUtterance(it.tts); u.lang='ja-JP'; u.rate=.85; if(jaVoice) u.voice=jaVoice; u.onend=prox; u.onerror=prox; speechSynthesis.speak(u); return; }
+    try{ const a=new Audio(base+it.id+'.mp3'); audioAtual=a; a.onerror=cair; a.onended=()=>{ if(audioAtual===a) prox(); }; const pr=a.play(); if(pr&&pr.catch) pr.catch(cair); }catch(e){ cair(); } };
+  prox();
+}
+
 const MONTH_K=['','いちがつ','にがつ','さんがつ','しがつ','ごがつ','ろくがつ','しちがつ','はちがつ','くがつ','じゅうがつ','じゅういちがつ','じゅうにがつ'];
 const DAY_K={1:'ついたち',2:'ふつか',3:'みっか',4:'よっか',5:'いつか',6:'むいか',7:'なのか',8:'ようか',9:'ここのか',10:'とおか',14:'じゅうよっか',20:'はつか',24:'にじゅうよっか'};
 function dayKana(n){ if(DAY_K[n]) return DAY_K[n]; return numKana(n).replace(/なな$/,'しち').replace(/きゅう$/,'く')+'にち'; }
