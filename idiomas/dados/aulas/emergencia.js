@@ -23,7 +23,10 @@ const R=(k,f)=>`<ruby>${k}<rt>${f}</rt></ruby>`;
     {id:'itai',h:R('痛','いた')+'い',k:'いたい',r:'itai',pt:'dói, dolorido',en:'it hurts',ic:'🤕',tip:'Sozinho, いたい！ já é o nosso "ai!".'},
     {id:'atama',h:R('頭','あたま'),k:'あたま',r:'atama',pt:'cabeça',en:'head',ic:'🧠',tip:'おなか = barriga, あし = pé ou perna.'},
     {id:'saifu',h:R('財布','さいふ'),k:'さいふ',r:'saifu',pt:'carteira',en:'wallet',ic:'👛',tip:'Coisas perdidas no Japão muitas vezes voltam pelo こうばん!'},
-    {id:'nakushimashita',k:'なくしました',r:'nakushimashita',pt:'perdi',en:'I lost (it)',ic:'🔍',tip:'Passado educado de なくす (perder).'}
+    {id:'nakushimashita',k:'なくしました',r:'nakushimashita',pt:'perdi',en:'I lost (it)',ic:'🔍',tip:'Passado educado de なくす (perder).'},
+    {id:'doushimashita',k:'どうしましたか',r:'dō shimashita ka',pt:'o que aconteceu?',en:'what happened?',ic:'❓',tip:'Pergunta de quem quer ajudar. Responda com o que aconteceu.'},
+    {id:'daijoubu',k:'だいじょうぶ',r:'daijōbu',pt:'tudo bem',en:'okay',ic:'🩹',tip:'だいじょうぶですか？ = você está bem?'},
+    {id:'hito',h:R('人','ひと'),k:'ひと',r:'hito',pt:'pessoa',en:'person',ic:'🧍',tip:'あの ひと = aquela pessoa.'}
   ],
   moldes:[
     {titulo:'"Perdi ___."', tpl:'<i>coisa</i> を なくしました', tplRo:'[coisa] o nakushimashita', parts:[0,'を|o','なくしました|nakushimashita'],

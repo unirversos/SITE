@@ -21,7 +21,10 @@ const R=(k,f)=>`<ruby>${k}<rt>${f}</rt></ruby>`;
     {id:'gohan',h:'ご'+R('飯','はん'),k:'ごはん',r:'gohan',pt:'refeição, arroz',en:'meal, rice',ic:'🍚',tip:'ごはんを たべます = comer.'},
     {id:'ocha',h:'お'+R('茶','ちゃ'),k:'おちゃ',r:'ocha',pt:'chá',en:'tea',ic:'🍵',tip:'おちゃを のみます = tomar chá. Também é "um cafezinho" para conversar.'},
     {id:'iidesune',k:'いいですね',r:'ii desu ne',pt:'que bom! boa ideia!',en:'sounds good!',ic:'😊',tip:'O jeito animado de aceitar.'},
-    {id:'chotto',k:'ちょっと…',r:'chotto…',pt:'é que… (recusa)',en:'well… (polite no)',ic:'😅',tip:'Dizer ちょっと… com a voz sumindo já é um "não" educado. Ninguém vai insistir.'}
+    {id:'chotto',k:'ちょっと…',r:'chotto…',pt:'é que… (recusa)',en:'well… (polite no)',ic:'😅',tip:'Dizer ちょっと… com a voz sumindo já é um "não" educado. Ninguém vai insistir.'},
+    {id:'itsu',k:'いつ',r:'itsu',pt:'quando',en:'when',ic:'📅',tip:'いつが いいですか？ = quando é melhor?'},
+    {id:'doyoubi',h:R('土曜日','どようび'),k:'どようび',r:'doyōbi',pt:'sábado',en:'Saturday',ic:'🗓️',tip:'ようび = dia da semana. ど (土) é o sábado.'},
+    {id:'zannen',h:R('残念','ざんねん'),k:'ざんねん',r:'zannen',pt:'que pena',en:'what a pity',ic:'😢',tip:'Quando o convite não dá certo: ざんねん！'}
   ],
   moldes:[
     {titulo:'"Vamos ___ juntos?"', tpl:'いっしょに <i>atividade</i> ませんか', tplRo:'issho ni [atividade]-masen ka', parts:[{k:'いっしょに',r:'issho ni',h:R('一緒','いっしょ')+'に'},0],
