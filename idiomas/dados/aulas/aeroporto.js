@@ -27,7 +27,11 @@ const R=(k,f)=>`<ruby>${k}<rt>${f}</rt></ruby>`;
     {id:'kankou',h:R('観光','かんこう'),k:'かんこう',r:'kankō',pt:'turismo',en:'sightseeing',ic:'svg:kankou',tip:'A resposta mais comum para "qual o motivo da viagem?".'},
     {id:'mokutekichi',h:R('目的地','もくてきち'),k:'もくてきち',r:'mokutekichi',pt:'destino',en:'destination',ic:'svg:mokutekichi',tip:'Cuidado: もくてき (sem ち) é "motivo". Com ち no fim vira "lugar de destino".'},
     {id:'tookyoo',h:R('東京','とうきょう'),k:'とうきょう',r:'Tōkyō',pt:'Tóquio',en:'Tokyo',ic:'svg:tookyoo',tip:'O "ō" com tracinho é um o comprido: tooo-kyooo.'},
-    {id:'futatsu',k:'ふたつ',r:'futatsu',pt:'dois (objetos)',en:'two (things)',ic:'svg:futatsu',tip:'Para contar coisas: ひとつ 1, ふたつ 2, みっつ 3.'}
+    {id:'futatsu',k:'ふたつ',r:'futatsu',pt:'dois (objetos)',en:'two (things)',ic:'svg:futatsu',tip:'Para contar coisas: ひとつ 1, ふたつ 2, みっつ 3.'},
+    {id:'arimasu',k:'あります',r:'arimasu',pt:'tem / há (coisas)',en:'there is / I have',ic:'✅',tip:'Para dizer que você tem algo: よやくが あります (tenho reserva). Com mais cerimônia, vira ございます.'},
+    {id:'gozaimasu',k:'ございます',r:'gozaimasu',pt:'tem / há (bem educado)',en:'there is (very polite)',ic:'🙇',tip:'É o あります com mais cerimônia, e quem atende costuma usar. Quer dizer a mesma coisa: あります = ございます.'},
+    {id:'arimasuka',k:'ありますか',r:'arimasu ka',pt:'tem...?',en:'is there...? / do you have...?',ic:'❓',tip:'Para perguntar se tem: パスポートが ありますか? Com mais cerimônia, vira ございますか.'},
+    {id:'gozaimasuka',k:'ございますか',r:'gozaimasu ka',pt:'tem...? (bem educado)',en:'is there...? (very polite)',ic:'🙇',tip:'É o ありますか de quem atende: ごよやくは ございますか？ (Tem reserva?). Responda com あります.'}
   ],
   moldes:[
     {titulo:'"É ___."', tpl:'<i>coisa</i> です', tplRo:'[coisa] desu', parts:[0,'です|desu'],
