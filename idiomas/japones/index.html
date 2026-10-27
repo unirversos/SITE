@@ -71,6 +71,29 @@ h1{font-family:var(--f-display);font-weight:800;font-size:clamp(34px,5.6vw,52px)
 .ac .lk{border:0;background:none;color:var(--muted);text-decoration:underline;padding:7px 4px;font-weight:500}
 .sec{font-family:var(--f-display);font-size:24px;margin:10px 0 0}
 .carimbo{font-size:12.5px;font-weight:700;color:var(--gold)}
+/* mapinha: o avatar percorre os 12 mapas */
+.mapa-wrap{background:#fbf3ea;border:1.5px solid var(--line);border-radius:22px;padding:14px 10px 10px;background-image:radial-gradient(rgba(129,108,91,.16) 1px,transparent 1.4px);background-size:16px 16px}
+.mapa-t{display:flex;flex-wrap:wrap;justify-content:space-between;align-items:baseline;gap:2px 12px;padding:0 8px 6px}
+.mapa-t b{font-family:var(--f-display);font-size:18px}
+.mapa-t small{color:var(--muted);font-size:13px}
+.mapa{position:relative;width:100%;max-width:440px;margin:0 auto;aspect-ratio:360/580}
+.mapa svg.rota{position:absolute;inset:0;width:100%;height:100%;overflow:visible}
+.mapa .deco{position:absolute;font-size:20px;opacity:.35;pointer-events:none;transform:translate(-50%,-50%)}
+.est{position:absolute;transform:translate(-50%,-50%);display:grid;justify-items:center;gap:2px;text-decoration:none;color:var(--ink);width:86px;text-align:center}
+.est .bola{width:50px;height:50px;border-radius:50%;display:grid;place-items:center;font-size:23px;background:#fff;border:2.5px dashed #cdbcae;box-shadow:0 4px 10px -6px rgba(58,43,56,.35)}
+.est .nm{font-size:11.5px;font-weight:700;line-height:1.15;background:rgba(253,246,244,.85);border-radius:8px;padding:1px 5px}
+.est.aula .bola{border-style:solid;border-color:#d9c48f}
+.est.feito .bola{border:3px solid var(--sage);background:var(--sage-soft)}
+.est.feito .bola::after{content:'🏅';position:absolute;transform:translate(17px,-17px);font-size:15px}
+.est.aqui .bola{border:3px solid var(--pink);background:#fff;box-shadow:0 0 0 6px rgba(194,63,94,.14)}
+.est.salao .bola{width:58px;height:58px;font-size:27px;border:3px solid #8a7cc0;background:#f0edf9}
+.est:focus-visible .bola{outline:3px solid var(--pink);outline-offset:3px}
+.viajante{position:absolute;width:62px;height:62px;transform:translate(-50%,calc(-50% - 8px));pointer-events:none;transition:left .6s,top .6s}
+.viajante .av{width:62px;height:62px;border-radius:50%;overflow:hidden;background:var(--blush);border:3px solid var(--pink);box-shadow:0 0 0 6px rgba(194,63,94,.14),0 6px 14px -6px rgba(58,43,56,.5);display:grid;place-items:center;font-size:28px;animation:pula 2.4s ease-in-out infinite}
+.viajante .sel{position:absolute;right:-10px;top:-6px;width:28px;height:28px;border-radius:50%;background:#fff;border:2px solid var(--pink);display:grid;place-items:center;font-size:15px}
+.viajante .av svg{width:100%;height:100%;display:block}
+@keyframes pula{0%,100%{transform:translateY(0)}50%{transform:translateY(-5px)}}
+@media (prefers-reduced-motion:reduce){.viajante .av{animation:none}.viajante{transition:none}}
 .ac .lk{display:inline-flex;align-items:center;min-height:44px}
 /* passaporte: os 12 espaços de carimbo, mesmo vazios */
 .selos{grid-column:1/-1;list-style:none;margin:8px 0 4px;padding:0;display:grid;grid-template-columns:repeat(4,1fr);gap:10px 8px}
@@ -106,6 +129,11 @@ footer a{color:var(--ink);text-decoration:none}
     <a class="cont" id="cont" href="#">Continuar →</a>
   </header>
 
+  <section class="mapa-wrap" aria-labelledby="t-mapinha">
+    <div class="mapa-t"><b id="t-mapinha">Seu caminho</b><small id="mapa-sub"></small></div>
+    <div class="mapa" id="mapinha"></div>
+  </section>
+
   <nav class="ferr" aria-label="Ferramentas">
     <b>Ferramentas</b>
     <a href="/idiomas/avatar/">🎨 Meu avatar</a>
@@ -140,6 +168,7 @@ footer a{color:var(--ink);text-decoration:none}
     <span><a href="/idiomas/">idiomas</a> · <a href="/privacidade/">privacidade</a></span>
   </footer>
 </div>
+<script src="/idiomas/dados/avatar.js?v=20261016b"></script>
 <script>
 (function(){
   const MAPAS=[
@@ -182,8 +211,45 @@ footer a{color:var(--ink);text-decoration:none}
       <div class="ac">${o.ac||''}</div></li>`;
   }
 
+  /* mapinha: 12 estações em zigue-zague (3 por linha) + o Salão no fim; o avatar fica na estação atual */
+  const POS=[[60,60],[180,60],[300,60],[300,190],[180,190],[60,190],[60,320],[180,320],[300,320],[300,450],[180,450],[60,450]], SALAO=[180,530];
+  let avSVG=null;
+  function avatarHTML(){
+    if(avSVG!==null) return avSVG;
+    try{ const A=window.UtopiaAvatar, a=A&&A.load(); avSVG=(a&&a.sel)?A.svg(a.sel,{viewBox:'40 46 160 160',still:true,label:'Seu avatar'}):'🧳'; }catch(e){ avSVG='🧳'; }
+    return avSVG;
+  }
+  function renderMapa(E){
+    const el=document.getElementById('mapinha'); if(!el) return;
+    const pct=(x,y)=>`left:${(x/360*100).toFixed(2)}%;top:${(y/580*100).toFixed(2)}%`;
+    const fim=E.mapa.map(s=>s.aula&&s.prova);
+    let aqui=fim.indexOf(false); if(aqui<0) aqui=12;
+    const pts=POS.concat([SALAO]);
+    let d='M'+pts[0].join(' ');
+    for(let i=1;i<pts.length;i++){ const [x0,y0]=pts[i-1],[x1,y1]=pts[i];
+      d+= (y0===y1)?` L${x1} ${y1}`:` C${x0+(x0>180?55:-55)} ${y0}, ${x1+(x1>180?55:-55)} ${y1}, ${x1} ${y1}`; }
+    let feitoD='M'+pts[0].join(' ');
+    for(let i=1;i<=Math.min(aqui,12);i++){ const [x0,y0]=pts[i-1],[x1,y1]=pts[i];
+      feitoD+= (y0===y1)?` L${x1} ${y1}`:` C${x0+(x0>180?55:-55)} ${y0}, ${x1+(x1>180?55:-55)} ${y1}, ${x1} ${y1}`; }
+    const deco=[['🌸',120,125],['⛩️',245,255],['🗻',120,385],['🎋',245,505],['☁️',330,125],['🍡',30,385]];
+    let h=`<svg class="rota" viewBox="0 0 360 580" aria-hidden="true"><path d="${d}" fill="none" stroke="#cdbcae" stroke-width="5" stroke-dasharray="2 11" stroke-linecap="round"/>`+
+      (aqui>0?`<path d="${feitoD}" fill="none" stroke="#4f7a58" stroke-width="5" stroke-linecap="round" opacity=".55"/>`:'')+`</svg>`;
+    h+=deco.map(([e,x,y])=>`<span class="deco" style="${pct(x,y)}">${e}</span>`).join('');
+    h+=MAPAS.map((m,i)=>{ const s=E.mapa[i], cls=fim[i]?'feito':(i===aqui?'aqui':(s.aula?'aula':''));
+      const href=fim[i]||!s.aula?`/idiomas/mapas/${m[0]}/aula/`:`/idiomas/planeta-utopia/?lang=ja&terr=${m[4]}&from=trilha`;
+      const est=fim[i]?'concluído':(i===aqui?(s.aula?'você está aqui · falta a prova':'você está aqui'):(s.aula?'falta a prova':'a fazer'));
+      return `<a class="est ${cls}" href="${href}" style="${pct(POS[i][0],POS[i][1])}" aria-label="Mapa ${i+1}, ${esc(m[2])}: ${est}"><span class="bola">${m[1]}</span><span class="nm">${i+1} · ${esc(m[2])}</span></a>`; }).join('');
+    h+=`<a class="est salao${aqui===12?' aqui':''}" href="/idiomas/planeta-utopia/salao/" style="${pct(SALAO[0],SALAO[1])}" aria-label="Planeta Utopia, o Salão: sempre aberto"><span class="bola">🪐</span><span class="nm">Salão</span></a>`;
+    const [vx,vy]=aqui<12?POS[aqui]:SALAO;
+    h+=`<div class="viajante" style="${pct(vx,vy)}" aria-hidden="true"><div class="av">${avatarHTML()}</div><span class="sel">${aqui<12?MAPAS[aqui][1]:'🪐'}</span></div>`;
+    el.innerHTML=h;
+    const n=fim.filter(Boolean).length;
+    document.getElementById('mapa-sub').textContent=aqui<12?`você está no mapa ${aqui+1} · ${n} de 12 concluídos`:'os 12 mapas concluídos!';
+  }
+
   function render(){
     const E=estado();
+    renderMapa(E);
     /* status de cada etapa */
     const letrasOk=(E.hira.fim&&E.kata.fim), letrasFeito=letrasOk||E.letrasPulo;
     const azFeito=E.az||E.azPulo;

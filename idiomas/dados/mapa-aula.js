@@ -230,6 +230,8 @@ function showWord(){
   if($('wNext')) $('wNext').onclick=()=>{ wi++; showWord(); };
   if($('wQuiz')) $('wQuiz').onclick=startQuiz;
 }
+/* voltar ao exercício anterior / refazer este exercício (todos os exercícios das aulas) */
+function exNav(first){ return `<div class="exnav"><button class="btn small" type="button" id="exPrev" ${first?'disabled':''}>← Exercício anterior</button><button class="btn small" type="button" id="exRedo">↺ Refazer este exercício</button></div>`; }
 function startQuiz(){ quiz={order:shuffle(A.words.map(w=>w.id)).slice(0,5), n:0}; showQuiz(); }
 function showQuiz(){
   const W=Object.fromEntries(A.words.map(w=>[w.id,w])), id=quiz.order[quiz.n], w=W[id];
@@ -239,7 +241,9 @@ function showQuiz(){
     <div class="row"><h2>Ouça e toque na figura</h2><span class="spacer"></span><span class="pt">${quiz.n+1} de ${quiz.order.length}</span></div>
     <div class="row"><button class="btn bigplay" type="button" id="qPlay">🔊 Ouvir a palavra</button></div>
     <div class="pick" id="pick">${opts.map(o=>`<button type="button" class="pickb" data-id="${o}">${iconHTML(W[o].ic)}<span>${W[o].pt}</span></button>`).join('')}</div>
-    <p class="hint" id="qHint"></p>`;
+    <p class="hint" id="qHint"></p>${exNav(quiz.n===0)}`;
+  $('exPrev').onclick=()=>{ if(quiz.n>0){ quiz.n--; showQuiz(); } };
+  $('exRedo').onclick=()=>showQuiz();
   setTimeout(()=>speak(w.k),250);
   $('qPlay').onclick=()=>speak(w.k);
   let locked=false;
@@ -462,7 +466,9 @@ function showOuvir(){
     <p class="pt" style="margin:0">Ouça sem ler. Pode repetir quantas vezes quiser.</p>
     <div class="row"><button class="btn bigplay" type="button" id="oPlay">🔊 Ouvir</button><button class="btn" type="button" id="oSlow">🐢 Mais devagar</button></div>
     <div class="opts" id="opts">${o.opts.map((t,k)=>`<button type="button" class="opt" data-k="${k}">${t}</button>`).join('')}</div>
-    <div id="oRev"></div>`;
+    <div id="oRev"></div>${exNav(oi===0)}`;
+  $('exPrev').onclick=()=>{ if(oi>0){ oi--; OUVIR[oi].opts=shuffle(OUVIR[oi].opts); showOuvir(); } };
+  $('exRedo').onclick=()=>{ o.opts=shuffle(o.opts); showOuvir(); };
   setTimeout(()=>speak(o.say),250);
   $('oPlay').onclick=()=>speak(o.say);
   $('oSlow').onclick=()=>speak(o.say,.55);
@@ -501,7 +507,9 @@ function loadCena(n){
       <button class="btn" type="button" id="btnClear">↺ Recomeçar a frase</button>
       <button class="btn primary" type="button" id="btnCheck" disabled>Responder</button>
       <button class="btn primary" type="button" id="btnNext" hidden>Próxima →</button>
-    </div>`;
+    </div>${exNav(ci===0)}`;
+  $('exPrev').onclick=()=>{ if(ci>0) loadCena(ci-1); };
+  $('exRedo').onclick=()=>{ delete done[ci]; loadCena(ci); };
   wireCena(); renderCena();
   hint(done[ci]?'Você já resolveu esta parte.':(c.dica?`🎯 ${c.dica} · `:'')+'Toque nas peças <b>na ordem da frase</b>. Para tirar uma peça, toque nela no balão.');
   speak(c.say);
@@ -562,9 +570,10 @@ function wireCena(){
         h.innerHTML=`<p class="hall-t">Próximo passo: a prova</p><div class="hall-b"><a class="btn primary prova" href="${provaHref}">🏅 Fazer a prova →</a></div><p class="hall-n">A prova conclui o mapa: é a mesma cena, sem ajuda. Passou, ganha o carimbo.</p>`;
       } else {
         h.setAttribute('aria-label','Mapa concluído');
-        h.innerHTML=`<p class="hall-t">✓ Mapa concluído</p><div class="hall-b"><a class="btn" href="/idiomas/japones/">← Voltar à trilha</a><a class="btn" href="/idiomas/planeta-utopia/salao/">🪐 Ir ao Salão</a></div>`+(terr?`<p class="hall-s"><a href="${provaHref}">🏅 Refazer a prova</a></p>`:'');
+        h.innerHTML=`<p class="hall-t">✓ Mapa concluído</p><div class="hall-b"><a class="btn" href="/idiomas/japones/">← Voltar à trilha</a><a class="btn" href="/idiomas/planeta-utopia/salao/">🪐 Ir ao Salão</a></div>`+`<p class="hall-s">${terr?`<a href="${provaHref}">🏅 Refazer a prova</a>`:''}<a href="#" data-refaz-cena>↺ Refazer os exercícios da cena</a></p>`;
       }
-      $('btnNext').after(h); }
+      $('btnNext').after(h);
+      const rz=h.querySelector('[data-refaz-cena]'); if(rz) rz.onclick=ev=>{ ev.preventDefault(); done={}; loadCena(0); }; }
   };
 }
 
