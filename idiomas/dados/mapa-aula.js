@@ -551,14 +551,17 @@ function wireCena(){
     if(typeof A.onFinish==='function'){ try{ A.onFinish(); }catch(e){} }
     if(C()){ const b=document.createElement('button'); b.className='btn primary'; b.type='button'; b.textContent='📚 Abrir a consulta deste mapa →'; b.onclick=()=>go(5); $('btnNext').after(b); }
     { const TERR={aeroporto:'aeroporto',hotel:'hotel',restaurante:'restaurante',kombini:'conbini',trens:'trens',compras:'compras',roupas:'roupas',emergencia:'sos',apresentacao:'base',horas:'numeros',planos:'planos',sinalizacao:'placas'};
-      /* hall do fim da aula: prova, próximo mapa, Salão ou voltar */
-      const k=ORDEM.indexOf(A.slug), nx=k>=0?ORDEM[k+1]:null;
+      /* hall do fim da aula: um destaque só. Sem carimbo → Prova; com carimbo → Próximo mapa. Voltar e Salão ficam discretos */
+      const k=ORDEM.indexOf(A.slug), nx=k>=0?ORDEM[k+1]:null, terr=TERR[A.slug];
+      let provaOk=false; try{ const sv=JSON.parse(localStorage.getItem('utopiaSave1')||'{}'); provaOk=!!(sv&&sv.done&&terr&&sv.done['ja:'+terr]); }catch(_){}
+      const provaHref=terr?`/idiomas/planeta-utopia/?lang=ja&terr=${terr}&from=trilha`:'';
+      let pri='';
+      if(terr&&!provaOk) pri=`<a class="btn primary prova" href="${provaHref}">🏅 Fazer a prova →</a>`;
+      else if(nx) pri=`<a class="btn primary" href="/idiomas/mapas/${nx}/aula/">➡️ Próximo mapa: ${TITULOS[nx]||nx} →</a>`;
       const h=document.createElement('div'); h.className='hall'; h.setAttribute('role','group'); h.setAttribute('aria-label','E agora?');
-      h.innerHTML='<p class="hall-t">E agora?</p><div class="hall-b">'+
-        (TERR[A.slug]?`<a class="btn primary prova" href="/idiomas/planeta-utopia/?lang=ja&terr=${TERR[A.slug]}&from=trilha">🏅 FAZER A PROVA →</a>`:'')+
-        (nx?`<a class="btn" href="/idiomas/mapas/${nx}/aula/">➡️ Próximo mapa: ${TITULOS[nx]||nx}</a>`:'')+
-        `<a class="btn" href="/idiomas/planeta-utopia/salao/">🪐 Ir ao Salão</a>`+
-        `<a class="btn" href="/idiomas/japones/">← Voltar à trilha</a></div>`;
+      h.innerHTML='<p class="hall-t">E agora?</p>'+(pri?`<div class="hall-b">${pri}</div>`:'')+
+        (terr&&!provaOk?'<p class="hall-n">A prova é a mesma cena, sem ajuda. Passou, ganha o carimbo e o próximo mapa aparece aqui.</p>':'')+
+        `<p class="hall-s"><a href="/idiomas/japones/">← Voltar à trilha</a><a href="/idiomas/planeta-utopia/salao/">🪐 Ir ao Salão</a>${provaOk&&terr?`<a href="${provaHref}">🏅 Refazer a prova</a>`:''}</p>`;
       $('btnNext').after(h); }
   };
 }

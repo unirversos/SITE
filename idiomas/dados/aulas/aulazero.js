@@ -15,7 +15,7 @@ const NOUN={'パスポート':[['É o passaporte.','Não é o passaporte.','É o
   fim:'Você já tem as chaves que abrem todas as conversas dos mapas.', fimLink:['🗺️ Ir para os mapas de contexto →','/idiomas/japones/'],
   cenaAudio:{src:'audio/4-teste.mp3',titulo:'A professora explica o teste'},
   onFinish:()=>{ try{ localStorage.setItem('aulaZeroCompleted','true'); }catch(e){} },
-  linkList:[['← Idiomas','/idiomas/'],['🎨 Ateliê de Avatar','/idiomas/planeta-utopia/atelie/'],['🗺️ Mapas de contexto →','/idiomas/japones/']],
+  linkList:[['← Idiomas','/idiomas/'],['🎨 Ateliê de Avatar','/idiomas/avatar/'],['🗺️ Mapas de contexto →','/idiomas/japones/']],
   intro:{titulo:'🎒 Antes de embarcar, uma aula com a せんせい',
     txt:['Cada mapa é uma situação da viagem: aeroporto, hotel, restaurante… Mas todos eles usam as mesmas <b>chaves</b>: dizer que algo <b>é</b> ou <b>não é</b>, fazer uma <b>pergunta</b>, falar de <b>ações</b> (ir, comer, beber, entender) e <b>pedir</b> algo.',
          'A professora vai te guiar passo a passo por essas chaves. No fim, tem um pequeno desafio prático: responda tudo e os 12 mapas se abrem.'],
