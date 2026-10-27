@@ -49,9 +49,9 @@ h1 .jp{font-family:var(--f-body);font-weight:700;font-size:.5em;color:var(--pink
 .stage{position:relative;background:var(--card);border:1.5px solid var(--line);border-radius:var(--r);padding:20px 18px 18px;display:grid;gap:14px}
 @media (min-width:861px){.stage{position:sticky;top:calc(env(safe-area-inset-top,0px) + 12px)}}
 .tape{position:absolute;width:92px;height:24px;top:-11px;opacity:.85;border-radius:2px;
-  background:repeating-linear-gradient(45deg,var(--blush) 0 8px,color-mix(in srgb,var(--lavender) 55%,transparent) 8px 16px)}
+  background:repeating-linear-gradient(45deg,var(--blush) 0 8px,rgba(183,166,220,.55) 8px 16px)}
 .tape.l{left:18px;transform:rotate(-6deg)} .tape.r{right:18px;transform:rotate(5deg);
-  background:repeating-linear-gradient(-45deg,var(--sage-soft) 0 8px,color-mix(in srgb,var(--sage) 45%,transparent) 8px 16px)}
+  background:repeating-linear-gradient(-45deg,var(--sage-soft) 0 8px,rgba(81,113,88,.45) 8px 16px)}
 .avatar-box{border-radius:14px;overflow:hidden;aspect-ratio:240/300;max-width:100%;width:100%;margin:0 auto;box-shadow:0 1px 0 var(--line)}
 .avatar-box svg{display:block;width:100%;height:100%}
 .stage-tools{display:flex;flex-wrap:wrap;gap:10px;align-items:center;justify-content:space-between}
@@ -139,8 +139,8 @@ h1 .jp{font-family:var(--f-body);font-weight:700;font-size:.5em;color:var(--pink
 .pron{position:relative;border:1.5px solid var(--line);background:var(--card);border-radius:12px;padding:6px 12px 7px;display:grid;justify-items:center;line-height:1.25}
 .pron b{font-size:17px}.pron small{font-size:11px;color:var(--muted)}
 .pron[aria-pressed="true"]{border-color:var(--pink);box-shadow:0 0 0 2px var(--pink) inset}
-.card{--cb:color-mix(in srgb,var(--gold) 14%,var(--card));position:relative;border-radius:16px;overflow:hidden;border:1.5px solid color-mix(in srgb,var(--gold) 55%,var(--line));
-  background:repeating-radial-gradient(circle at 85% 20%,transparent 0 9px,color-mix(in srgb,var(--gold) 9%,transparent) 9px 10px),var(--card);display:grid}
+.card{--cb:#efeae0;position:relative;border-radius:16px;overflow:hidden;border:1.5px solid #b89c75;
+  background:repeating-radial-gradient(circle at 85% 20%,transparent 0 9px,rgba(142,106,31,.09) 9px 10px),var(--card);display:grid}
 .c-top{display:flex;justify-content:space-between;align-items:center;gap:10px;background:var(--ink);color:var(--paper);padding:9px 16px;font-size:12px;letter-spacing:.14em}
 .c-top b{font-family:var(--f-body);letter-spacing:.06em;font-size:15px;color:var(--gold)}
 .c-top .lv{font-family:var(--f-display);font-weight:800;letter-spacing:0;font-size:15px}
@@ -279,7 +279,7 @@ body.show-ro .opt .ro,body.show-ro .tab .ro,body.show-ro .line .ro,body.show-ro 
       <div class="xp-row"><span class="lvl" id="lvl">Nv. 1 <small>たまご</small></span><span id="xpn">0 XP</span></div>
       <div class="bar"><i id="xpbar"></i></div>
       <div class="xp-row meta"><span id="wcount">0 palavras aprendidas</span><span id="nextlvl"></span></div>
-      <a class="btn primary go" href="/idiomas/planeta-utopia/"><span data-ro="yūtopia e tabidatsu">ユートピアへ<ruby>旅立<rt>たびだ</rt></ruby>つ</span> →</a>
+      <a class="btn primary go" href="/idiomas/japones/"><span data-ro="yūtopia e tabidatsu">ユートピアへ<ruby>旅立<rt>たびだ</rt></ruby>つ</span> →</a>
     </div>
   </header>
 
@@ -361,7 +361,7 @@ body.show-ro .opt .ro,body.show-ro .tab .ro,body.show-ro .line .ro,body.show-ro 
             Ouvir o <ruby>自己紹介<rt>じこしょうかい</rt></ruby></button>
           <button class="btn" type="button" id="btnPrint">Imprimir para recortar</button>
           <button class="btn" type="button" id="btnPng">Baixar imagem (PNG)</button>
-          <a class="btn primary" href="/idiomas/planeta-utopia/"><span data-ro="yūtopia e tabidatsu">ユートピアへ<ruby>旅立<rt>たびだ</rt></ruby>つ</span> →</a></div>
+          <a class="btn primary" href="/idiomas/japones/"><span data-ro="yūtopia e tabidatsu">ユートピアへ<ruby>旅立<rt>たびだ</rt></ruby>つ</span> →</a></div>
         </div>
       </div>
     </section>
@@ -375,7 +375,7 @@ body.show-ro .opt .ro,body.show-ro .tab .ro,body.show-ro .line .ro,body.show-ro 
           <div><b id="pXp">0</b><small>XP</small></div>
           <div><b id="pStamps">0</b><small>carimbos</small></div>
         </div>
-        <a class="btn primary go" href="/idiomas/planeta-utopia/"><span data-ro="yūtopia e tabidatsu">ユートピアへ<ruby>旅立<rt>たびだ</rt></ruby>つ</span> →</a>
+        <a class="btn primary go" href="/idiomas/japones/"><span data-ro="yūtopia e tabidatsu">ユートピアへ<ruby>旅立<rt>たびだ</rt></ruby>つ</span> →</a>
       </section>
       <section class="next" aria-label="Próximos passos">
         <h2>Avatar pronto! E agora?</h2>
@@ -404,8 +404,9 @@ body.show-ro .opt .ro,body.show-ro .tab .ro,body.show-ro .line .ro,body.show-ro 
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
 <script src="/idiomas/dados/avatar.js?v=20261016d"></script>
-<script src="/idiomas/dados/audio-mapa.js?v=0b6639ea"></script>
-<script src="/idiomas/dados/atelie-dados.js?v=20261027a"></script>
+<script src="/idiomas/dados/velocidade-voz.js?v=1"></script>
+<script src="/idiomas/dados/audio-mapa.js?v=a4d250f1"></script>
+<script src="/idiomas/dados/atelie-dados.js?v=20261027c"></script>
 <script>
 /* ---------- estado: avatar (utopiaAvatar1) + progresso do jogo (utopiaSave1) ---------- */
 const AV=UtopiaAvatar, GKEY='utopiaSave1'; AV.injectCSS();
@@ -566,7 +567,16 @@ $('pKata').addEventListener('input',e=>{state.profile.kata=e.target.value; rende
 $('prons').addEventListener('click',e=>{const b=e.target.closest('.pron'); if(!b) return; const id=b.dataset.id; state.profile.pron=id;
   const isNew=!state.learned[id]; if(isNew){state.learned[id]=true; gain(WORD_XP);} state.focus=id; speak(WORDS[id].kana); renderAll(null,false);
   if(isNew){const nb=$('prons').querySelector(`[data-id="${id}"]`); nb&&floatXP(nb,WORD_XP);} });
-$('sayIntro').onclick=()=>speak(introText());
+/* 自己紹介 com a voz da もち子: partes gravadas + o nome na voz do aparelho (se a pessoa já escreveu o nome) */
+function speakIntro(){
+  const M=window.AUDIO_MAP||{}, K=t=>M[chaveAudio(t)], pr=find(PRONS,state.profile.pron), nm=displayName(), age=ageInfo(state.sel.age).kana;
+  const fixas=['こんにちは！',pr.kana+'は',age+'です。','ユートピアで にほんごを べんきょうしています。','よろしく おねがいします！'].concat(nm?['です。']:[]);
+  if(!window.AUDIO_MAP||!fixas.every(K)) return speak(introText());
+  const it=[{id:K(fixas[0])},{id:K(fixas[1])}]; if(nm) it.push({tts:nm},{id:K('です。')});
+  it.push({id:K(fixas[2])},{id:K(fixas[3])},{id:K(fixas[4])});
+  falaFila(it,introText());
+}
+$('sayIntro').onclick=speakIntro;
 $('sayall').onclick=()=>speak(sentences().map(l=>l.jp).join(' '));
 $('skins').addEventListener('click',e=>{const b=e.target.closest('.skin'); if(!b) return; state.sel.skin=+b.dataset.skin;
   const w=skinWord(state.sel.skin), isNew=!state.learned[w.id]; if(isNew){state.learned[w.id]=true; gain(WORD_XP);}

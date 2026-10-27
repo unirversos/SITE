@@ -225,6 +225,14 @@ body.no-ro .rk rt{display:none}
   .say{display:inline-flex;align-items:center;justify-content:center;min-width:44px;min-height:44px;margin:-12px -10px;vertical-align:middle}
 }
 
+/* 🌬️ Ar · socorro: fixo no canto da tela, sempre à mão (fica abaixo do painel aberto) */
+.top .tools>.btn.ar,.btn.ar{position:fixed;right:12px;bottom:12px;z-index:9;flex:none;min-height:44px;padding:0 16px;border-radius:999px;font-size:13.5px;font-weight:700;box-shadow:0 4px 14px -6px rgba(58,43,56,.35)}
+@media print{.btn.ar{display:none}}
+/* próxima aula em 3 idiomas */
+.links a.nx3{display:inline-flex;flex-direction:column;align-items:flex-start;gap:1px;border-radius:16px;padding:8px 16px;line-height:1.25}
+.links a.nx3 .l2,.links a.nx3 .l3{font-size:12px;font-weight:600;color:#6b5a66}
+.links a.nx3 .l3{font-family:"Zen Maru Gothic",system-ui,sans-serif}
+
 /* navegação do site */
 .sitebar{display:flex;align-items:center;justify-content:space-between;gap:10px 14px;flex-wrap:wrap}
 .sitebar .brand{font-family:var(--f-display);font-size:18px;font-weight:700;text-decoration:none;color:var(--ink)}

@@ -130,7 +130,7 @@ let audioAtual=null;
 function speakTTS(text){
   if(!window.speechSynthesis){ if(document.getElementById('voiceNote')) $('voiceNote').textContent='Este navegador não tem voz sintetizada.'; return; }
   speechSynthesis.cancel();
-  const u=new SpeechSynthesisUtterance(text); u.lang='ja-JP'; u.rate=.85; if(jaVoice) u.voice=jaVoice;
+  const u=new SpeechSynthesisUtterance(text); u.lang='ja-JP'; u.rate=.85*(window.UniVel?UniVel.get():1); if(jaVoice) u.voice=jaVoice;
   speechSynthesis.speak(u);
 }
 /* ids dos áudios para um texto: a frase inteira, ou todas as frases soltas (se todas existirem) */
@@ -148,10 +148,21 @@ function speak(text,opc){
   if(!ids) return speakTTS(text);
   let i=0, caiu=false; const base=window.AUDIO_BASE||'/idiomas/audio/';
   const cair=()=>{ if(caiu) return; caiu=true; audioAtual=null; speakTTS(text); };
-  const toca=()=>{ try{ const a=new Audio(base+ids[i]+'.mp3'); audioAtual=a;
+  const toca=()=>{ try{ const a=new Audio(base+ids[i]+'.mp3'); audioAtual=a; if(window.UniVel) UniVel.aplica(a);
     a.onerror=cair; a.onended=()=>{ if(audioAtual!==a) return; i++; if(i<ids.length) toca(); else audioAtual=null; };
     const pr=a.play(); if(pr&&pr.catch) pr.catch(cair); }catch(e){ cair(); } };
   toca();
+}
+
+/* fila mista: {id} toca a gravação; {tts} fala com a voz do aparelho (para o que muda de pessoa para pessoa, como o nome) */
+function falaFila(itens,fallback){
+  try{ if(audioAtual){ audioAtual.pause(); audioAtual=null; } if(window.speechSynthesis) speechSynthesis.cancel(); }catch(e){}
+  let i=0, parou=false; const base=window.AUDIO_BASE||'/idiomas/audio/';
+  const cair=()=>{ if(parou) return; parou=true; audioAtual=null; speakTTS(fallback); };
+  const prox=()=>{ if(parou) return; if(i>=itens.length){ audioAtual=null; return; } const it=itens[i++];
+    if(it.tts){ if(!window.speechSynthesis) return prox(); const u=new SpeechSynthesisUtterance(it.tts); u.lang='ja-JP'; u.rate=.85*(window.UniVel?UniVel.get():1); if(jaVoice) u.voice=jaVoice; u.onend=prox; u.onerror=prox; speechSynthesis.speak(u); return; }
+    try{ const a=new Audio(base+it.id+'.mp3'); audioAtual=a; if(window.UniVel) UniVel.aplica(a); a.onerror=cair; a.onended=()=>{ if(audioAtual===a) prox(); }; const pr=a.play(); if(pr&&pr.catch) pr.catch(cair); }catch(e){ cair(); } };
+  prox();
 }
 
 const MONTH_K=['','いちがつ','にがつ','さんがつ','しがつ','ごがつ','ろくがつ','しちがつ','はちがつ','くがつ','じゅうがつ','じゅういちがつ','じゅうにがつ'];

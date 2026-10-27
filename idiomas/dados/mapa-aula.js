@@ -10,14 +10,14 @@ const tok=s=>{ if(typeof s!=='string') return s; const [k,r]=s.split('|'); retur
 /* voz: toca a gravação da professora quando existe; senão, a voz do aparelho */
 const chaveAudio=t=>String(t||'').replace(/[\s、。，．,.!！?？…・「」『』（）()]/g,'');
 let audioAtual=null;
-function speakTTS(t,rate){ try{ if(!window.speechSynthesis) return; speechSynthesis.cancel(); const u=new SpeechSynthesisUtterance(t); u.lang='ja-JP'; u.rate=rate||.85;
+function speakTTS(t,rate){ try{ if(!window.speechSynthesis) return; speechSynthesis.cancel(); const u=new SpeechSynthesisUtterance(t); u.lang='ja-JP'; u.rate=(rate||.85)*(window.UniVel?UniVel.get():1);
   const v=speechSynthesis.getVoices().find(x=>/^ja/i.test(x.lang)); if(v) u.voice=v; speechSynthesis.speak(u);}catch(e){} }
 function speak(t,rate){
   try{ if(audioAtual){ audioAtual.pause(); audioAtual=null; } if(window.speechSynthesis) speechSynthesis.cancel(); }catch(e){}
   const id=(window.AUDIO_MAP||{})[chaveAudio(t)];
   if(!id) return speakTTS(t,rate);
   try{ const a=new Audio(AUDIO_PRONTO[id]||((window.AUDIO_BASE||'/idiomas/audio/')+id+'.mp3')); audioAtual=a;
-    if(rate&&rate<.7){ a.playbackRate=.75; a.preservesPitch=true; }
+    if(window.UniVel) UniVel.aplica(a,(rate&&rate<.7)?.75:1); else if(rate&&rate<.7){ a.playbackRate=.75; a.preservesPitch=true; }
     let caiu=false; const cair=()=>{ if(caiu||audioAtual!==a) return; caiu=true; audioAtual=null; speakTTS(t,rate); };
     a.onerror=cair; const pr=a.play(); if(pr&&pr.catch) pr.catch(cair);
   }catch(e){ speakTTS(t,rate); }
@@ -25,6 +25,8 @@ function speak(t,rate){
 const WORD_XP=5;
 const TITULOS={aeroporto:'Aeroporto',hotel:'Hotel',restaurante:'Restaurante',kombini:'Konbini',trens:'Trens',compras:'Compras',roupas:'Roupas',emergencia:'Emergência',apresentacao:'Apresentação',horas:'Horas',planos:'Planos',sinalizacao:'Sinalização'};
 const ORDEM=Object.keys(TITULOS);
+const TIT_EN={aeroporto:'Airport',hotel:'Hotel',restaurante:'Restaurant',kombini:'Konbini',trens:'Trains',compras:'Shopping',roupas:'Clothes',emergencia:'Emergency',apresentacao:'Introductions',horas:'Time',planos:'Plans',sinalizacao:'Signs'};
+const TIT_JA={aeroporto:'くうこう',hotel:'ホテル',restaurante:'しょくどう',kombini:'コンビニ',trens:'でんしゃ',compras:'かいもの',roupas:'ふく',emergencia:'きんきゅう',apresentacao:'じこしょうかい',horas:'じかん',planos:'やくそく',sinalizacao:'かんばん'};
 
 /* ---------- desenhos próprios (Aeroporto) ---------- */
 const SVGI={
@@ -192,9 +194,9 @@ function stSituacao(){
   $('panel').innerHTML=`
     <h2>${it.titulo}</h2>
     ${it.txt.map(t=>`<p class="lead">${t}</p>`).join('')}
-    <div><p class="goals-t">No fim desta aula você vai conseguir:</p>
+    <div><p class="goals-t">${it.metasTit||'No fim desta aula você vai conseguir:'}</p>
     <ul class="goals">${it.metas.map((m,i)=>`<li><span class="gn">${String(i+1).padStart(2,'0')}</span><span>${m}</span></li>`).join('')}</ul></div>
-    <p class="pt" style="margin:0">Travou em qualquer momento? Toque em <b>🌬️ Ar · socorro</b>, lá em cima.</p>
+    <p class="pt" style="margin:0">Travou em qualquer momento? Toque em <b>🌬️ Ar · socorro</b>, no canto da tela.</p>
     <div class="row"><span class="spacer"></span><button class="btn primary" type="button" id="goWords">Conhecer as palavras →</button></div>`;
   $('goWords').onclick=()=>{ finish(0); go(1); };
 }
@@ -411,7 +413,7 @@ function prepMolde(m){ return Object.assign({},m,{slots:m.slots.map(opts=>opts.m
 function loadAula(slug){
   const raw=window.AULAS[slug]; if(!raw) return;
   A=Object.assign({},raw,{moldes:raw.moldes.map(prepMolde).map(m=>Object.assign(m,{titulo:rk(m.titulo),gram:rk(m.gram),use:rk(m.use)})),
-    intro:{titulo:rk(raw.intro.titulo),txt:raw.intro.txt.map(rk),metas:raw.intro.metas.map(rk)},
+    intro:{titulo:rk(raw.intro.titulo),txt:raw.intro.txt.map(rk),metas:raw.intro.metas.map(rk),metasTit:raw.intro.metasTit},
     words:raw.words.map(w=>Object.assign({},w,{tip:rk(w.tip)})), fim:rk(raw.fim||''), insignia:raw.insignia?rk(raw.insignia):raw.insignia});
   CENAS=raw.cenas.map(prep).map(c=>Object.assign(c,{pt:rk(c.pt),ansPt:rk(c.ansPt),dica:c.dica?rk(c.dica):c.dica,distr:(c.distr||[]).map(rk)}));
   P=M[slug]=Object.assign({words:{},steps:{}},M[slug]||{});
@@ -423,7 +425,7 @@ function loadAula(slug){
   const L=$('links'); if(L&&A.linkList){ L.innerHTML=A.linkList.map(([t,h])=>`<a href="${h}">${t}</a>`).join(''); }
   else if(L&&A.links!==false){
     const order=ORDEM; const k=order.indexOf(slug), nx=order[k+1];
-    L.innerHTML=`<a href="/idiomas/japones/">🗺️ Todos os mapas</a>${nx?`<a href="/idiomas/mapas/${nx}/aula/">Próxima aula: ${TITULOS[nx]||nx} →</a>`:''}`; }
+    L.innerHTML=`<a href="/idiomas/japones/">🗺️ Todos os mapas</a>${nx?`<a class="nx3" href="/idiomas/mapas/${nx}/aula/"><span class="l1">Próxima aula: ${TITULOS[nx]||nx} →</span><span class="l2" lang="en">Next lesson: ${TIT_EN[nx]||nx}</span><span class="l3" lang="ja">つぎ：${TIT_JA[nx]||''}</span></a>`:''}`; }
   showXP(); go(0);
 }
 

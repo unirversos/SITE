@@ -4,8 +4,8 @@ const R=(k,f)=>`<ruby>${k}<rt>${f}</rt></ruby>`;
   slug:'aeroporto', num:'00', titulo:'Aeroporto', emoji:'🛂', jp:R('空港','くうこう'), h1:'Chegando em Tóquio',
   fim:'Você passou pela imigração inteira falando japonês.',
   intro:{titulo:'✈️ Você acabou de pousar em Tóquio!',
-    txt:['Antes de sair do aeroporto, você passa pela imigração e pelo balcão da companhia aérea. Lá vão te fazer <b>5 perguntas</b> curtas, em japonês.',
-         'Calma: ninguém vai te jogar na conversa sem preparo. Primeiro você conhece as <b>palavras</b>, depois aprende os <b>moldes</b> das frases, treina o <b>ouvido</b>, e só então conversa.'],
+    txt:[],
+    metasTit:'Nesse mapa você vai aprender a:',
     metas:['dizer que veio fazer turismo','dizer para onde você vai','dizer se tem reserva e se tem visto','dizer quantas malas está levando']},
   npc:{nome:'Oficial da imigração', sel:{hair:'mijikai',hairColor:'kuro',face:'egao',clothes:'suutsu',clothColor:'ao',acc:['nekutai'],traits:[],skin:1},
     extra:'<path d="M66 90 Q120 34 174 90 Z" fill="#2e3f6e"/><rect x="60" y="84" width="120" height="13" rx="6" fill="#22305a"/><path d="M60 95 Q120 112 180 95 L176 100 Q120 116 64 100 Z" fill="#1b2546"/><circle cx="120" cy="68" r="7" fill="#e3b341"/><path d="M116 68 h8 M120 64 v8" stroke="#b98a2a" stroke-width="2"/>'},
@@ -27,7 +27,11 @@ const R=(k,f)=>`<ruby>${k}<rt>${f}</rt></ruby>`;
     {id:'kankou',h:R('観光','かんこう'),k:'かんこう',r:'kankō',pt:'turismo',en:'sightseeing',ic:'svg:kankou',tip:'A resposta mais comum para "qual o motivo da viagem?".'},
     {id:'mokutekichi',h:R('目的地','もくてきち'),k:'もくてきち',r:'mokutekichi',pt:'destino',en:'destination',ic:'svg:mokutekichi',tip:'Cuidado: もくてき (sem ち) é "motivo". Com ち no fim vira "lugar de destino".'},
     {id:'tookyoo',h:R('東京','とうきょう'),k:'とうきょう',r:'Tōkyō',pt:'Tóquio',en:'Tokyo',ic:'svg:tookyoo',tip:'O "ō" com tracinho é um o comprido: tooo-kyooo.'},
-    {id:'futatsu',k:'ふたつ',r:'futatsu',pt:'dois (objetos)',en:'two (things)',ic:'svg:futatsu',tip:'Para contar coisas: ひとつ 1, ふたつ 2, みっつ 3.'}
+    {id:'futatsu',k:'ふたつ',r:'futatsu',pt:'dois (objetos)',en:'two (things)',ic:'svg:futatsu',tip:'Para contar coisas: ひとつ 1, ふたつ 2, みっつ 3.'},
+    {id:'arimasu',k:'あります',r:'arimasu',pt:'tem / há (coisas)',en:'there is / I have',ic:'✅',tip:'Para dizer que você tem algo: よやくが あります (tenho reserva). Com mais cerimônia, vira ございます.'},
+    {id:'gozaimasu',k:'ございます',r:'gozaimasu',pt:'tem / há (bem educado)',en:'there is (very polite)',ic:'🙇',tip:'É o あります com mais cerimônia, e quem atende costuma usar. Quer dizer a mesma coisa: あります = ございます.'},
+    {id:'arimasuka',k:'ありますか',r:'arimasu ka',pt:'tem...?',en:'is there...? / do you have...?',ic:'❓',tip:'Para perguntar se tem: パスポートが ありますか? Com mais cerimônia, vira ございますか.'},
+    {id:'gozaimasuka',k:'ございますか',r:'gozaimasu ka',pt:'tem...? (bem educado)',en:'is there...? (very polite)',ic:'🙇',tip:'É o ありますか de quem atende: ごよやくは ございますか？ (Tem reserva?). Responda com あります.'}
   ],
   moldes:[
     {titulo:'"É ___."', tpl:'<i>coisa</i> です', tplRo:'[coisa] desu', parts:[0,'です|desu'],
