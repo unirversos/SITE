@@ -204,12 +204,6 @@ body.ro-on .ro{display:block}
     </div>
   </section>
 
-  <section id="trilha12" class="card" aria-labelledby="t12-h">
-    <div class="t12-top"><h2 id="t12-h">🗾 Os 12 mapas do japonês</h2><a href="/idiomas/japones/">ver a trilha completa →</a></div>
-    <p class="t12-sub" id="t12-sub">Faça a aula de cada mapa e depois teste no Planeta: cada teste vencido vira um carimbo no passaporte.</p>
-    <ol class="t12" id="t12"></ol>
-  </section>
-
   <section id="hub" class="hidden">
     <div class="card">
       <div class="sheet-top">
@@ -366,7 +360,6 @@ function renderTrilha12(){
       <p>${m.desc}${m.prova?' · 🏅':''}</p>
       <div class="ac"><a class="btn ${m.aula?'ok':''}" href="${m.aulaHref}">${m.aula?'Aula ✓':'Aula'}</a><a class="btn ${m.prova?'ok':'ghost'}" href="${m.testeHref}">${m.prova?'Testar no Planeta ✓':'Testar no Planeta'}</a></div></li>`; }).join('');
 }
-renderTrilha12();
 function checkStart(){document.getElementById('start-btn').disabled=!document.getElementById('c-name').value.trim();}
 (function(){ const svg=avatarSVG(); if(svg) document.getElementById('setup-av').innerHTML=svg;
   const a=window.UtopiaAvatar&&UtopiaAvatar.load(), p=a&&a.profile, nm=p?(p.kata||p.name||'').trim():'';
@@ -397,10 +390,9 @@ function renderTerritories(){
 function openScene(id){
   curTerr=id; stepIdx=0; mistakes=0;
   document.getElementById('hub').classList.add('hidden');
-  document.getElementById('trilha12').classList.add('hidden');
   document.getElementById('scene').classList.remove('hidden');
   const t=terr(), sc=scene(), U=ui();
-  document.getElementById('back-btn').textContent=U.back;
+  document.getElementById('back-btn').textContent= curLang==='ja' ? '← voltar para a trilha' : U.back;
   document.getElementById('scene-title').textContent=t.chip+' · '+pack().code;
   document.getElementById('scene-intro').textContent=sc.intro;
   document.getElementById('pieces-sum').textContent=U.reviewPieces;
@@ -414,10 +406,10 @@ function openScene(id){
 }
 function backToHub(){
   try{speechSynthesis.cancel();}catch(e){}
+  location.href = curLang==='ja' ? '/idiomas/japones/#t-mapas' : '/idiomas/'; return;
   document.getElementById('scene').classList.add('hidden');
   document.getElementById('hub').classList.remove('hidden');
-  document.getElementById('trilha12').classList.remove('hidden');
-  renderTerritories();renderPassport();refreshSheet();renderTrilha12();
+  renderTerritories();renderPassport();refreshSheet();
 }
 
 let ROM=false; try{ ROM=localStorage.getItem('utopiaRomaji')==='1'; }catch(e){}
@@ -664,11 +656,11 @@ let cameFromMaps=false;
   if(q.get('from')==='trilha'){ const bl=document.querySelector('#stamp-backmap a'); if(bl){ bl.href='/idiomas/japones/'; bl.textContent='↩ voltar para a minha trilha'; } }
   const hasSave = loadGame();
   const valid = l && t && PACKS[l] && PACKS[l].territories.some(x=>x.id===t) && SCENES[l] && SCENES[l].scenes[t];
-  if(!hasSave && !valid) return; // primeira visita sem link: fica no setup
-  if(!hasSave){ G.name=G.name||'Viajante'; }
-  if(valid) curLang=l;
-  enterHub();
-  if(valid) openScene(t);
+  if(!valid){ location.replace('/idiomas/japones/'); return; } // porta única: a trilha
+  if(!G.name){ const a=window.UtopiaAvatar&&UtopiaAvatar.load(), p=a&&a.profile; G.name=(p&&(p.kata||p.name)||'').trim()||'Viajante'; }
+  curLang=l;
+  document.getElementById('setup').classList.add('hidden');
+  openScene(t);
 })();
 </script>
 </body>

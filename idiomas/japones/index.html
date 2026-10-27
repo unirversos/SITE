@@ -219,8 +219,7 @@ footer a{color:var(--ink);text-decoration:none}
     document.getElementById('pass').innerHTML=card({n:'★',t:'🛂 Seu passaporte',st:`${carimbos} de 12 carimbos`,cls:carimbos===12?'feito':'',
       d:'Cada prova que você passa vira um carimbo. Aqui ficam todos juntos.',
       x:`<ol class="selos" aria-label="Carimbos">${MAPAS.map((m,i)=>{const ok=E.mapa[i].prova;
-          return `<li><a class="${ok?'ok':''}" href="/idiomas/planeta-utopia/?lang=ja&terr=${m[4]}&from=trilha" aria-label="${esc(m[2])}: ${ok?'carimbo ganho':'carimbo ainda vazio'}"><span class="selo"><span>${m[1]}</span></span>${esc(m[2])}</a></li>`;}).join('')}</ol>`,
-      ac:`<a href="/idiomas/planeta-utopia/">Ver o passaporte</a>`});
+          return `<li><a class="${ok?'ok':''}" href="/idiomas/planeta-utopia/?lang=ja&terr=${m[4]}&from=trilha" aria-label="${esc(m[2])}: ${ok?'carimbo ganho':'carimbo ainda vazio'}"><span class="selo"><span>${m[1]}</span></span>${esc(m[2])}</a></li>`;}).join('')}</ol>`});
 
     /* barra e continuar */
     const total=3+12, feitos=(E.avatar?1:0)+(letrasFeito?1:0)+(azFeito?1:0)+E.mapa.filter(s=>s.aula&&s.prova).length;
@@ -228,7 +227,7 @@ footer a{color:var(--ink);text-decoration:none}
     document.getElementById('pbar').style.width=Math.round(feitos/total*100)+'%';
     const c=document.getElementById('cont');
     if(prox){ c.href=prox.href; c.textContent=`Continuar: ${prox.t} →`; c.hidden=false; }
-    else { c.href='/idiomas/planeta-utopia/'; c.textContent='Trilha completa! Ver o passaporte →'; }
+    else { c.href='#t-pass'; c.textContent='Trilha completa! Ver o passaporte →'; }
   }
 
   document.addEventListener('click',e=>{
