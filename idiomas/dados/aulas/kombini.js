@@ -40,7 +40,7 @@ const R=(k,f)=>`<ruby>${k}<rt>${f}</rt></ruby>`;
   ],
   cenas:[
     {q:'いらっしゃいませー！', say:'いらっしゃいませー！', ro:'Irasshaimasē!', pt:'Bem-vindo! (cumprimento da loja)',
-     ans:['おにぎり|onigiri','は|wa','どこ|doko','ですか|desu ka'], extra:['を|o','ください|kudasai','ふくろ|fukuro'], ansPt:'Onde ficam os onigiris?', molde:0, dica:'Pergunte onde ficam os onigiris.', distr:['Obrigado, volte sempre!','Com licença, um momento.']},
+     ans:['おにぎり|onigiri','は|wa','どこ|doko','ですか|desu ka'], extra:['を|o','ください|kudasai','ふくろ|fukuro'], tarefa:1, ansPt:'Onde ficam os onigiris?', molde:0, dica:'Pergunte onde ficam os onigiris.', distr:['Obrigado, volte sempre!','Com licença, um momento.']},
     {q:'お'+R('弁当','べんとう')+'は '+R('温','あたた')+'めますか？', say:'おべんとうは あたためますか？', ro:'O-bentō wa atatamemasu ka?', pt:'Quer que esquente o bentô?',
      ans:['はい、おねがいします|hai, onegaishimasu'], extra:['いいえ、だいじょうぶです|iie, daijōbu desu','いらないです|iranai desu'], ansPt:'Sim, por favor.', molde:1, dica:'Você quer o bentô quentinho.', distr:['Quer uma sacola?','O bentô custa 500 ienes.']},
     {q:R('袋','ふくろ')+'は ご'+R('利用','りよう')+'ですか？', say:'ふくろは ごりようですか？', ro:'Fukuro wa go-riyō desu ka?', pt:'Vai usar sacola?',
@@ -48,7 +48,7 @@ const R=(k,f)=>`<ruby>${k}<rt>${f}</rt></ruby>`;
     {q:'ポイントカードは お'+R('持','も')+'ちですか？', say:'ポイントカードは おもちですか？', ro:'Pointo kādo wa o-mochi desu ka?', pt:'Tem cartão de pontos?',
      ans:['いいえ、だいじょうぶです|iie, daijōbu desu'], extra:['はい、おねがいします|hai, onegaishimasu','レシート|reshīto'], ansPt:'Não, obrigada.', molde:1, distr:['Vai pagar com cartão?','Quer o recibo?']},
     {q:R('以上','いじょう')+'で よろしいですか？', say:'いじょうで よろしいですか？', ro:'Ijō de yoroshii desu ka?', pt:'É só isso?',
-     ans:['レシート|reshīto','を|o','ください|kudasai'], extra:['は|wa','いらないです|iranai desu','どこ|doko'], ansPt:'O recibo, por favor.', molde:3, dica:'Peça o recibo.', distr:['Quer hashi?','Onde fica o caixa eletrônico?']}
+     ans:['レシート|reshīto','を|o','ください|kudasai'], extra:['は|wa','いらないです|iranai desu','どこ|doko'], tarefa:1, ansPt:'O recibo, por favor.', molde:3, dica:'Peça o recibo.', distr:['Quer hashi?','Onde fica o caixa eletrônico?']}
   ]
 };
 })();

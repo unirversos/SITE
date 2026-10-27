@@ -45,11 +45,11 @@ const R=(k,f)=>`<ruby>${k}<rt>${f}</rt></ruby>`;
     {q:R('何泊','なんぱく')+'の ご'+R('予定','よてい')+'ですか？', say:'なんぱくの ごよていですか？', ro:'Nanpaku no go-yotei desu ka?', pt:'Quantas noites pretende ficar?',
      ans:['にはく|nihaku','です|desu'], extra:['いっぱく|ippaku','タオル|taoru','を|o'], ansPt:'São duas noites.', molde:0, distr:['A que horas é o check-out?','Tem reserva?']},
     {q:'こちらが お'+R('部屋','へや')+'の '+R('鍵','かぎ')+'です。', say:'こちらが おへやの かぎです。', ro:'Kochira ga o-heya no kagi desu.', pt:'Aqui está a chave do seu quarto.',
-     ans:['ちょうしょく|chōshoku','は|wa','なんじ|nanji','ですか|desu ka'], extra:['が|ga','エアコン|eakon','です|desu'], ansPt:'A que horas é o café da manhã?', molde:2, distr:['O quarto fica no terceiro andar.','Onde está a sua mala?']},
+     ans:['ちょうしょく|chōshoku','は|wa','なんじ|nanji','ですか|desu ka'], extra:['が|ga','エアコン|eakon','です|desu'], tarefa:1, ansPt:'A que horas é o café da manhã?', molde:2, distr:['O quarto fica no terceiro andar.','Onde está a sua mala?']},
     {q:R('朝食','ちょうしょく')+'は '+R('七時','しちじ')+'からです。ほかに '+R('何','なに')+'か ございますか？', say:'ちょうしょくは しちじからです。ほかに なにか ございますか？', ro:'Chōshoku wa shichi-ji kara desu. Hoka ni nani ka gozaimasu ka?', pt:'O café é a partir das 7h. Precisa de mais alguma coisa?',
-     ans:['タオル|taoru','を|o','おねがいします|onegaishimasu'], extra:['は|wa','かぎ|kagi','こわれました|kowaremashita'], ansPt:'Uma toalha, por favor.', molde:1, distr:['O café é às 9h. Pode pagar agora?','O check-out é às 7h.']},
+     ans:['タオル|taoru','を|o','おねがいします|onegaishimasu'], extra:['は|wa','かぎ|kagi','こわれました|kowaremashita'], tarefa:1, ansPt:'Uma toalha, por favor.', molde:1, distr:['O café é às 9h. Pode pagar agora?','O check-out é às 7h.']},
     {quem:'Recepcionista (no dia seguinte)', q:'お'+R('部屋','へや')+'は いかがですか？', say:'おへやは いかがですか？', ro:'O-heya wa ikaga desu ka?', pt:'Como está o quarto?',
-     ans:['エアコン|eakon','が|ga','こわれました|kowaremashita'], extra:['を|o','タオル|taoru','です|desu'], ansPt:'O ar-condicionado quebrou.', molde:3, distr:['Onde fica o seu quarto?','Quer trocar de quarto?']}
+     ans:['エアコン|eakon','が|ga','こわれました|kowaremashita'], extra:['を|o','タオル|taoru','です|desu'], tarefa:1, ansPt:'O ar-condicionado quebrou.', molde:3, distr:['Onde fica o seu quarto?','Quer trocar de quarto?']}
   ]
 };
 })();

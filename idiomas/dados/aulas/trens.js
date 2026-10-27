@@ -40,13 +40,13 @@ const R=(k,f)=>`<ruby>${k}<rt>${f}</rt></ruby>`;
   ],
   cenas:[
     {q:'どちらまで ですか？', say:'どちらまで ですか？', ro:'Dochira made desu ka?', pt:'Até onde você vai?',
-     ans:['しんじゅく|Shinjuku','に|ni','いきたいです|ikitai desu'], extra:['まで|made','は|wa','でぐち|deguchi'], ansPt:'Quero ir a Shinjuku.', molde:0, distr:['Quanto custa?','Onde fica a saída?']},
+     ans:['しんじゅく|Shinjuku','に|ni','いきたいです|ikitai desu'], extra:['まで|made','は|wa','でぐち|deguchi'], tarefa:1, ansPt:'Quero ir a Shinjuku.', molde:0, distr:['Quanto custa?','Onde fica a saída?']},
     {q:R('切符','きっぷ')+'ですね。', say:'きっぷですね。', ro:'Kippu desu ne.', pt:'Um bilhete, certo?',
-     ans:['しんじゅく|Shinjuku','まで|made','いくら|ikura','ですか|desu ka'], extra:['に|ni','どこ|doko','でんしゃ|densha'], ansPt:'Quanto custa até Shinjuku?', molde:1, distr:['Uma baldeação, certo?','Uma saída, certo?']},
+     ans:['しんじゅく|Shinjuku','まで|made','いくら|ikura','ですか|desu ka'], extra:['に|ni','どこ|doko','でんしゃ|densha'], tarefa:1, ansPt:'Quanto custa até Shinjuku?', molde:1, distr:['Uma baldeação, certo?','Uma saída, certo?']},
     {q:R('二百円','にひゃくえん')+'です。', say:'にひゃくえんです。', ro:'Nihyaku-en desu.', pt:'São 200 ienes.',
-     ans:['でんしゃ|densha','は|wa','なんばんせん|nanbansen','ですか|desu ka'], extra:['いくら|ikura','に|ni','えき|eki'], ansPt:'Em que plataforma sai o trem?', molde:2, distr:['São 2.000 ienes.','É a plataforma 2.']},
+     ans:['でんしゃ|densha','は|wa','なんばんせん|nanbansen','ですか|desu ka'], extra:['いくら|ikura','に|ni','えき|eki'], tarefa:1, ansPt:'Em que plataforma sai o trem?', molde:2, distr:['São 2.000 ienes.','É a plataforma 2.']},
     {q:R('三番線','さんばんせん')+'です。ほかに '+R('何','なに')+'か？', say:'さんばんせんです。ほかに なにか？', ro:'Sanbansen desu. Hoka ni nani ka?', pt:'É a plataforma 3. Mais alguma coisa?',
-     ans:['でぐち|deguchi','は|wa','どこ|doko','ですか|desu ka'], extra:['まで|made','いきたいです|ikitai desu','を|o'], ansPt:'Onde fica a saída?', molde:3, distr:['É a plataforma 1. Boa viagem!','O trem sai às 3h.']}
+     ans:['でぐち|deguchi','は|wa','どこ|doko','ですか|desu ka'], extra:['まで|made','いきたいです|ikitai desu','を|o'], tarefa:1, ansPt:'Onde fica a saída?', molde:3, distr:['É a plataforma 1. Boa viagem!','O trem sai às 3h.']}
   ]
 };
 })();

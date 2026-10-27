@@ -289,6 +289,164 @@ function showMolde(speakIt){
   if($('mDone')) $('mDone').onclick=()=>{ finish(2); go(3); };
 }
 
+/* ---------- "o que ela disse?": palavra por palavra ---------- */
+/* g:1 = gramática (partícula, final de frase, prefixo de educação): nunca conta como palavra nova */
+const GLOSS={
+'は':['wa','(assunto)','Partícula: lê-se "wa". Marca de quem ou do que se está falando.',1],
+'が':['ga','(quem / o quê)','Partícula: aponta quem faz a ação ou o que existe.',1],
+'を':['o','(o que recebe a ação)','Partícula: lê-se "o". Marca o objeto da ação.',1],
+'に':['ni','em / para / a','Partícula: marca destino, lugar ou horário.',1],
+'で':['de','com / em / assim','Partícula: marca o meio (com o quê) ou o jeito.',1],
+'の':['no','de','Partícula: liga duas palavras. A の B = B de A.',1],
+'と':['to','(citação)','Partícula: aqui marca o que foi lido ou dito, como aspas.',1],
+'も':['mo','também','Partícula: "também".',1],
+'から':['kara','a partir de / desde','Partícula: marca o começo (de horário ou de lugar).',1],
+'まで':['made','até','Partícula: marca o fim (de horário ou de lugar).',1],
+'です':['desu','é / são','Fecha a frase com educação.',1],
+'か':['ka','(pergunta)','No fim da frase, transforma tudo em pergunta, como o "?".',1],
+'ね':['ne','né?','No fim da frase, pede concordância, como "né?".',1],
+'よ':['yo','viu? / tá?','No fim da frase, dá uma informação nova com ênfase.',1],
+'ご':['go','(educação)','Prefixo de educação antes de palavras de origem chinesa. Quem atende usa muito.',1],
+'お':['o','(educação)','Prefixo de educação: deixa a palavra mais gentil. Quem atende usa muito.',1],
+'もくてき':['mokuteki','motivo, objetivo','O motivo da viagem. Não confunda com もくてきち (destino).'],
+'なん':['nan','o quê','Pergunta "o quê". Antes de です vira なん.'],
+'どこ':['doko','onde','Pergunta "onde".'],
+'いくつ':['ikutsu','quantos (coisas)','Pergunta quantidade de objetos.'],
+'なまえ':['namae','nome','Com お na frente (おなまえ) é o nome da outra pessoa, com educação.'],
+'なんぱく':['nanpaku','quantas noites','なん (quantos) + はく (noite de hospedagem).'],
+'よてい':['yotei','plano, programação','ごよてい = o plano de quem é atendido, com educação.'],
+'こちら':['kochira','este aqui / aqui','Jeito educado de dizer "isto" ou "aqui".'],
+'へや':['heya','quarto','おへや = o quarto (com educação).'],
+'しちじ':['shichi-ji','sete horas','しち (7) + じ (hora).'],
+'ほかに':['hoka ni','além disso / mais','ほかに なにか？ = mais alguma coisa?'],
+'なにか':['nani ka','alguma coisa','なに (o quê) + か: "algo".'],
+'いかが':['ikaga','como / que tal (educado)','いかがですか = que tal? / como está? É a forma educada de どう.'],
+'いらっしゃいませ':['irasshaimase','bem-vindo(a)!','Saudação de quem atende. Não precisa responder.'],
+'いらっしゃいませー':['irasshaimasē','bem-vindo(a)!','Saudação de quem atende, cantada no konbini. Não precisa responder.'],
+'なんめいさま':['nanmei-sama','quantas pessoas','Forma bem educada de perguntar quantas pessoas: なん + めい (pessoas) + さま.'],
+'ちゅうもん':['chūmon','pedido','ごちゅうもん = o seu pedido (com educação).'],
+'きまり':['kimari','decidido','おきまりですか = já decidiu?'],
+'のみもの':['nomimono','bebida','おのみもの = a bebida (com educação).'],
+'おまたせしました':['o-matase shimashita','desculpe a demora / aqui está','Dito ao entregar o pedido: "obrigado por esperar".'],
+'ラーメン':['rāmen','lámen',''],
+'りよう':['riyō','uso','ごりようですか = vai usar?'],
+'もち':['mochi','ter consigo','おもちですか = você tem? (com educação).'],
+'いじょう':['ijō','isso (tudo)','いじょうで よろしいですか = é só isso?'],
+'よろしい':['yoroshii','está bem (educado)','よろしいですか = tudo bem? / pode ser?'],
+'どちら':['dochira','onde / qual (educado)','Forma educada de どこ (onde).'],
+'にひゃくえん':['nihyaku-en','200 ienes','にひゃく (200) + えん (iene).'],
+'さんばんせん':['sanbansen','linha / plataforma 3','さん (3) + ばん (número) + せん (linha).'],
+'さがし':['sagashi','procurar','おさがしですか = está procurando algo?'],
+'せんごひゃくえん':['sen-gohyaku-en','1.500 ienes','せん (1.000) + ごひゃく (500) + えん (iene).'],
+'にわりびき':['niwaribiki','20% de desconto','に (2) + わり (10%) + びき (desconto).'],
+'どれ':['dore','qual (entre vários)',''],
+'なさいます':['nasaimasu','vai fazer / escolher (educado)','どれに なさいますか = qual vai querer?'],
+'しはらい':['shiharai','pagamento','おしはらい = o pagamento (com educação).'],
+'どう':['dō','como / que tal','どう なさいますか = como vai fazer?'],
+'どうぞ':['dōzo','fique à vontade / por favor',''],
+'ごらんください':['go-ran kudasai','olhe à vontade','Convite educado para olhar os produtos.'],
+'そう':['sō','assim','そうですか = ah, é? / entendi.'],
+'はい':['hai','sim / aqui está',''],
+'この':['kono','este (+ coisa)','この + palavra: "este ___".'],
+'しろ':['shiro','branco',''],
+'どうしましたか':['dō shimashita ka','o que aconteceu?','Pergunta de quem quer ajudar.'],
+'かおいろ':['kaoiro','cor do rosto','かお (rosto) + いろ (cor).'],
+'わるい':['warui','ruim',''],
+'だいじょうぶ':['daijōbu','tudo bem','だいじょうぶですか = você está bem?'],
+'いきます':['ikimasu','ir','いきますか = vai?'],
+'あっ':['a!','ah!','Susto ou surpresa.'],
+'あの':['ano','aquele / aquela (+ coisa)',''],
+'ひと':['hito','pessoa',''],
+'たおれました':['taoremashita','caiu / desmaiou',''],
+'ファティマ':['Fatima','Fátima (o nome dela)',''],
+'くに':['kuni','país','おくに = o seu país (com educação).'],
+'ごじ':['go-ji','cinco horas','ご (5) + じ (hora).'],
+'ツアー':['tsuā','passeio, tour',''],
+'もう':['mō','já',''],
+'おわりました':['owarimashita','acabou',''],
+'さんじ':['san-ji','três horas','さん (3) + じ (hora).'],
+'きます':['kimasu','vir','なんじに きますか = que horas você vem?'],
+'ひま':['hima','livre, à toa',''],
+'いい':['ii','bom',''],
+'いつ':['itsu','quando',''],
+'どようび':['doyōbi','sábado',''],
+'あいません':['aimasen','(não) se encontrar','~ませんか é um convite: あいませんか = vamos nos encontrar?'],
+'ざんねん':['zannen','que pena',''],
+'じゃあ':['jā','então',''],
+'あと':['ato','depois','えいがの あと = depois do filme.'],
+'のみません':['nomimasen','(não) beber','~ませんか é um convite: のみませんか = vamos tomar?'],
+'こまり':['komari','problema, apuro','おこまりですか = precisa de ajuda?'],
+'いみ':['imi','significado',''],
+'あちら':['achira','lá (educado)',''],
+'こ':['ko','criança',''],
+'せん':['sen','linha, faixa',''],
+'そと':['soto','fora',''],
+'よかった':['yokatta','ufa, que bom',''],
+'たばこ':['tabako','cigarro',''],
+'すっています':['sutte imasu','está fumando',''],
+'ここ':['koko','aqui',''],
+'しごと':['shigoto','trabalho','おしごと = o seu trabalho (com educação).'],
+'きょう':['kyō','hoje',''],
+'あした':['ashita','amanhã',''],
+'いま':['ima','agora',''],
+'なんじ':['nan-ji','que horas',''],
+'ちょっと':['chotto','um pouco… (recusa gentil)','Dito com reticências, é um "não" educado.'],
+'こんばん':['konban','hoje à noite',''],
+'えいが':['eiga','filme',''],
+'おちゃ':['o-cha','chá',''],
+'でぐち':['deguchi','saída',''],
+'よみます':['yomimasu','ler',''],
+'トイレ':['toire','banheiro',''],
+'きんえん':['kin\'en','proibido fumar',''],
+'しゅみ':['shumi','hobby',''],
+'はじめまして':['hajimemashite','prazer em conhecer',''],
+'よろしく':['yoroshiku','conto com você',''],
+'おねがいします':['onegaishimasu','por favor',''],
+'きっぷ':['kippu','bilhete',''],
+'びょういん':['byōin','hospital',''],
+'ふくろ':['fukuro','sacola',''],
+'おべんとう':['o-bentō','marmita (bentô)',''],
+'あたためます':['atatamemasu','esquentar',''],
+'ポイントカード':['pointo kādo','cartão de pontos',''],
+'いろ':['iro','cor',''],
+'サイズ':['saizu','tamanho',''],
+'ちょうしょく':['chōshoku','café da manhã',''],
+'かぎ':['kagi','chave',''],
+'よやく':['yoyaku','reserva',''],
+'にもつ':['nimotsu','bagagem',''],
+'ビザ':['biza','visto',''],
+'ございます':['gozaimasu','tem / há (educado)','É o あります de quem atende.'],
+'ありますか':['arimasu ka','tem?',''],
+'もくてきち':['mokutekichi','destino',''],
+'えき':['eki','estação','']
+};
+/* palavras já ensinadas até cada mapa (na ordem da trilha) */
+const ENSINADO={"aeroporto": ["あります", "ありますか", "かんこう", "ございます", "ございますか", "とうきょう", "にもつ", "ふたつ", "もくてきち", "よやく", "パスポート", "ビザ"], "hotel": ["あります", "ありますか", "かぎ", "かんこう", "こわれました", "ございます", "ございますか", "ちょうしょく", "とうきょう", "なんじ", "にはく", "にもつ", "ふたつ", "もくてきち", "よやく", "エアコン", "タオル", "パスポート", "ビザ"], "restaurante": ["あります", "ありますか", "いただきます", "おかいけい", "おすすめ", "かぎ", "かんこう", "これ", "こわれました", "ございます", "ございますか", "ちょうしょく", "とうきょう", "なんじ", "にはく", "にもつ", "ふたつ", "ふたり", "みず", "もくてきち", "よやく", "エアコン", "タオル", "パスポート", "ビザ", "フォーク", "メニュー"], "kombini": ["あたためます", "あります", "ありますか", "いただきます", "いらないです", "おかいけい", "おすすめ", "おにぎり", "おはし", "おべんとう", "かぎ", "かんこう", "これ", "こわれました", "ございます", "ございますか", "ちょうしょく", "とうきょう", "なんじ", "にはく", "にもつ", "ふくろ", "ふたつ", "ふたり", "みず", "もくてきち", "よやく", "エアコン", "タオル", "パスポート", "ビザ", "フォーク", "ポイントカード", "メニュー", "レシート"], "trens": ["あたためます", "あります", "ありますか", "いきたい", "いくら", "いただきます", "いらないです", "えき", "おかいけい", "おすすめ", "おにぎり", "おはし", "おべんとう", "かぎ", "かんこう", "きっぷ", "これ", "こわれました", "ございます", "ございますか", "ちょうしょく", "でぐち", "でんしゃ", "とうきょう", "なんじ", "なんばんせん", "にはく", "にもつ", "のりかえ", "ふくろ", "ふたつ", "ふたり", "みず", "もくてきち", "よやく", "エアコン", "タオル", "パスポート", "ビザ", "フォーク", "ポイントカード", "メニュー", "レシート"], "compras": ["あたためます", "あります", "ありますか", "あれ", "いきたい", "いくら", "いただきます", "いらないです", "えき", "おかいけい", "おすすめ", "おにぎり", "おはし", "おべんとう", "おみやげ", "かぎ", "かんこう", "きっぷ", "げんきん", "これ", "こわれました", "ございます", "ございますか", "それ", "ちょうしょく", "でぐち", "でんしゃ", "とうきょう", "なんじ", "なんばんせん", "にはく", "にもつ", "のりかえ", "ふくろ", "ふたつ", "ふたり", "みず", "もくてきち", "よやく", "わりびき", "エアコン", "カード", "タオル", "パスポート", "ビザ", "フォーク", "ポイントカード", "メニュー", "レシート"], "roupas": ["あたためます", "あります", "ありますか", "あれ", "いきたい", "いくら", "いただきます", "いらないです", "いろ", "えき", "おおきい", "おかいけい", "おすすめ", "おにぎり", "おはし", "おべんとう", "おみやげ", "かぎ", "かんこう", "きっぷ", "くろ", "げんきん", "これ", "こわれました", "ございます", "ございますか", "しちゃく", "しちゃくしつ", "それ", "ちいさい", "ちょうしょく", "でぐち", "でんしゃ", "とうきょう", "なんじ", "なんばんせん", "にはく", "にもつ", "のりかえ", "ぴったり", "ふくろ", "ふたつ", "ふたり", "みず", "もくてきち", "よやく", "わりびき", "エアコン", "カード", "サイズ", "タオル", "パスポート", "ビザ", "フォーク", "ポイントカード", "メニュー", "レシート"], "emergencia": ["あたためます", "あたま", "あります", "ありますか", "あれ", "いきたい", "いくら", "いたい", "いただきます", "いらないです", "いろ", "えき", "おおきい", "おかいけい", "おすすめ", "おにぎり", "おはし", "おべんとう", "おみやげ", "かぎ", "かんこう", "きっぷ", "きゅうきゅうしゃ", "くろ", "けいさつ", "げんきん", "これ", "こわれました", "ございます", "ございますか", "さいふ", "しちゃく", "しちゃくしつ", "それ", "たすけて", "ちいさい", "ちょうしょく", "でぐち", "でんしゃ", "とうきょう", "なくしました", "なんじ", "なんばんせん", "にはく", "にもつ", "のりかえ", "びょういん", "ぴったり", "ふくろ", "ふたつ", "ふたり", "みず", "もくてきち", "よやく", "わりびき", "エアコン", "カード", "サイズ", "タオル", "パスポート", "ビザ", "フォーク", "ポイントカード", "メニュー", "レシート"], "apresentacao": ["あたためます", "あたま", "あります", "ありますか", "あれ", "いきたい", "いくら", "いたい", "いただきます", "いらないです", "いろ", "えき", "おおきい", "おかいけい", "おすすめ", "おにぎり", "おはし", "おべんとう", "おみやげ", "かぎ", "かんこう", "きっぷ", "きゅうきゅうしゃ", "くろ", "けいさつ", "げんきん", "これ", "こわれました", "ございます", "ございますか", "さいふ", "しごと", "しちゃく", "しちゃくしつ", "しゅみ", "せんせい", "それ", "たすけて", "ちいさい", "ちょうしょく", "でぐち", "でんしゃ", "とうきょう", "なくしました", "なまえ", "なんじ", "なんばんせん", "にはく", "にもつ", "のりかえ", "はじめまして", "びょういん", "ぴったり", "ふくろ", "ふたつ", "ふたり", "みず", "もくてきち", "よやく", "よろしく おねがいします", "わたし", "わりびき", "エアコン", "カード", "サイズ", "タオル", "パスポート", "ビザ", "フォーク", "ブラジル", "ポイントカード", "メニュー", "レシート"], "horas": ["あした", "あたためます", "あたま", "あります", "ありますか", "あれ", "いきたい", "いくら", "いたい", "いただきます", "いま", "いらないです", "いろ", "えき", "おおきい", "おかいけい", "おすすめ", "おにぎり", "おはし", "おべんとう", "おみやげ", "かぎ", "かんこう", "きっぷ", "きゅうきゅうしゃ", "きょう", "くじ", "くろ", "けいさつ", "げんきん", "これ", "こわれました", "ございます", "ございますか", "さいふ", "しごと", "しちゃく", "しちゃくしつ", "しゅみ", "せんせい", "それ", "たすけて", "ちいさい", "ちょうしょく", "でぐち", "でんしゃ", "とうきょう", "なくしました", "なまえ", "なんじ", "なんばんせん", "にはく", "にもつ", "のりかえ", "はじめまして", "はん", "びょういん", "ぴったり", "ふくろ", "ふたつ", "ふたり", "まで", "みず", "もくてきち", "よじ", "よやく", "よろしく おねがいします", "わたし", "わりびき", "エアコン", "カード", "サイズ", "タオル", "パスポート", "ビザ", "フォーク", "ブラジル", "ポイントカード", "メニュー", "レシート"], "planos": ["あした", "あたためます", "あたま", "あります", "ありますか", "あれ", "いいですね", "いきたい", "いくら", "いたい", "いただきます", "いっしょに", "いま", "いらないです", "いろ", "えいが", "えき", "おおきい", "おかいけい", "おすすめ", "おちゃ", "おにぎり", "おはし", "おべんとう", "おみやげ", "かぎ", "かんこう", "きっぷ", "きゅうきゅうしゃ", "きょう", "くじ", "くろ", "けいさつ", "げんきん", "これ", "こわれました", "こんばん", "ございます", "ございますか", "ごはん", "さいふ", "しごと", "しちゃく", "しちゃくしつ", "しゅみ", "せんせい", "それ", "たすけて", "ちいさい", "ちょうしょく", "ちょっと", "でぐち", "でんしゃ", "とうきょう", "なくしました", "なまえ", "なんじ", "なんばんせん", "にはく", "にもつ", "のりかえ", "はじめまして", "はん", "びょういん", "ぴったり", "ふくろ", "ふたつ", "ふたり", "まで", "みず", "もくてきち", "よじ", "よやく", "よろしく おねがいします", "わたし", "わりびき", "エアコン", "カード", "サイズ", "タオル", "パスポート", "ビザ", "フォーク", "ブラジル", "ポイントカード", "メニュー", "レシート"], "sinalizacao": ["あした", "あたためます", "あたま", "あぶない", "あります", "ありますか", "あれ", "いいですね", "いきたい", "いくら", "いたい", "いただきます", "いっしょに", "いま", "いらないです", "いりぐち", "いろ", "えいが", "えき", "おおきい", "おかいけい", "おすすめ", "おちゃ", "おにぎり", "おはし", "おべんとう", "おみやげ", "かぎ", "かんこう", "きっぷ", "きゅうきゅうしゃ", "きょう", "きんえん", "きんし", "くじ", "くろ", "けいさつ", "げんきん", "これ", "こわれました", "こんばん", "ございます", "ございますか", "ごはん", "さいふ", "しごと", "しちゃく", "しちゃくしつ", "しゅみ", "せんせい", "それ", "たすけて", "ちいさい", "ちゅうい", "ちょうしょく", "ちょっと", "でぐち", "でんしゃ", "とうきょう", "なくしました", "なまえ", "なんじ", "なんばんせん", "にはく", "にもつ", "のりかえ", "はじめまして", "はん", "びょういん", "ぴったり", "ふくろ", "ふたつ", "ふたり", "まで", "みず", "もくてきち", "よじ", "よみます", "よやく", "よろしく おねがいします", "わたし", "わりびき", "エアコン", "カード", "サイズ", "タオル", "トイレ", "パスポート", "ビザ", "フォーク", "ブラジル", "ポイントカード", "メニュー", "レシート"]};
+function quebraFrase(say,words){
+  const W={}; (words||[]).forEach(w=>{ const k=String(w.k||'').replace(/<[^>]+>/g,'').replace(/[…。！？]/g,''); if(k) W[k]=w; });
+  const has=k=>W[k]||GLOSS[k];
+  const out=[];
+  String(say).split(/[\s、。！？!?…〜~「」"“”]+/).filter(Boolean).forEach(ch=>{
+    let i=0;
+    while(i<ch.length){
+      let hit=null;
+      for(let L=ch.length-i;L>0;L--){ const s=ch.slice(i,i+L); if(has(s)){ hit=s; break; } }
+      if(!hit){ const last=out[out.length-1]; if(ch[i]==='ー'&&last){ last.k+='ー'; i++; continue; } out.push({k:ch[i],ro:'',pt:'',nota:'',g:1}); i++; continue; }
+      const w=W[hit], g=GLOSS[hit];
+      out.push(w&&!(g&&g[3])?{k:hit,ro:w.r||(g&&g[0])||'',pt:w.pt||(g&&g[1])||'',nota:(g&&g[2])||'',daAula:true}
+                         :{k:hit,ro:g[0],pt:g[1],nota:g[2]||'',g:!!g[3]});
+      i+=hit.length;
+    }
+  });
+  return out;
+}
+function quebraHTML(say){
+  const P=quebraFrase(say,A.words);
+  return `<div class="quebra"><p class="pt" style="margin:0 0 6px">Palavra por palavra:</p>${P.map((p,i)=>`
+    <div class="qb${p.g?' g':''}"><button type="button" class="qbk" data-qb="${i}" aria-label="Ouvir ${p.k}">🔊 <b lang="ja">${p.k}</b></button>
+      <div class="qbt"><span class="ro">${p.ro}</span> <span class="qbpt">${p.pt}</span>${(!p.g&&!p.daAula&&!(ENSINADO[A.slug]||[]).includes(p.k))?' <span class="nova">✨ nova</span>':''}${p.nota?`<small>${p.nota}</small>`:''}</div></div>`).join('')}</div>`;
+}
+
 /* ---------- 4. ouvir ---------- */
 function stOuvir(){ oi=0; OUVIR=CENAS.map(c=>({say:c.say,q:c.q,ro:c.ro,right:c.pt,opts:shuffle([c.pt].concat(c.distr))})); showOuvir(); }
 function showOuvir(){
@@ -307,8 +465,14 @@ function showOuvir(){
     if(o.opts[+b.dataset.k]!==o.right){ b.classList.add('wrong'); mood='wrong'; renderStage(); setTimeout(()=>{mood='idle';renderStage();},1500); return; }
     oAns=true; b.classList.add('right'); mood='ok'; renderStage(); sparkle(['✨','🎧','💖']);
     $('oRev').innerHTML=`<div class="reveal"><div class="jp">${o.q}</div><div class="ro">${o.ro}</div><div class="pt">${o.right}</div></div>
-      <div class="row" style="margin-top:10px"><span class="spacer"></span><button class="btn primary" type="button" id="oNext">${oi<OUVIR.length-1?'Próxima →':'Ir para a cena! →'}</button></div>`;
+      <div class="row" style="margin-top:10px"><button class="btn" type="button" id="oQb" aria-expanded="false">🔍 O que ela disse? Palavra por palavra</button><span class="spacer"></span><button class="btn primary" type="button" id="oNext">${oi<OUVIR.length-1?'Próxima →':'Ir para a cena! →'}</button></div>`;
     $('oNext').onclick=()=>{ if(oi<OUVIR.length-1){ oi++; showOuvir(); } else { finish(3); go(4); } };
+    $('oQb').onclick=()=>{ let bx=$('oQbBox');
+      if(bx){ bx.remove(); $('oQb').setAttribute('aria-expanded','false'); return; }
+      $('oRev').querySelector('.reveal').insertAdjacentHTML('afterend','<div id="oQbBox">'+quebraHTML(o.say)+'</div>');
+      $('oQb').setAttribute('aria-expanded','true');
+      const P=quebraFrase(o.say,A.words);
+      $('oQbBox').onclick=e=>{ const b=e.target.closest('.qbk'); if(b) speak(P[+b.dataset.qb].k); }; };
   };
 }
 
@@ -343,6 +507,7 @@ function renderCena(){
   $('sayQ').onclick=()=>speak(c.say);
   $('meBubble').className='bubble me'+(ok?' ok':'');
   $('meBubble').innerHTML=`<div class="who"><span>${meName}</span>${ok?'<span>✓ resolvido</span>':''}</div>
+    ${(c.tarefa&&!ok)?`<div class="tarefa">🎯 ${typeof c.tarefa==='string'?c.tarefa:'Responda: “'+c.ansPt+'”'}</div>`:''}
     <div class="slots">${c.ans.map((_,k)=>{ const t=placed[k]!==undefined?bank[placed[k]]:null;
       return t?`<button type="button" class="slot filled" data-k="${k}"><span><b>${t.k}</b><small>${t.r}</small></span></button>`:`<span class="slot"></span>`; }).join('')}</div>
     ${ok?`<div class="pt">${c.ansPt}</div>`:''}`;

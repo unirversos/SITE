@@ -41,15 +41,15 @@ const R=(k,f)=>`<ruby>${k}<rt>${f}</rt></ruby>`;
   ],
   cenas:[
     {q:'どうしましたか？', say:'どうしましたか？', ro:'Dō shimashita ka?', pt:'O que aconteceu?',
-     ans:['さいふ|saifu','を|o','なくしました|nakushimashita'], extra:['が|ga','いたいです|itai desu','は|wa'], ansPt:'Perdi a carteira.', molde:0, dica:'Você perdeu a carteira.', distr:['Onde você mora?','Precisa de um táxi?']},
+     ans:['さいふ|saifu','を|o','なくしました|nakushimashita'], extra:['が|ga','いたいです|itai desu','は|wa'], tarefa:1, ansPt:'Perdi a carteira.', molde:0, dica:'Você perdeu a carteira.', distr:['Onde você mora?','Precisa de um táxi?']},
     {q:'お'+R('名前','なまえ')+'は？', say:'おなまえは？', ro:'O-namae wa?', pt:'Qual é o seu nome?',
      ans:['{NOME}|{NOMERO}','です|desu'], extra:['を|o','さいふ|saifu'], ansPt:'Sou {NOMERO}. (seu nome + です)', molde:null, dica:'Diga o seu nome + です.', distr:['Qual é o seu telefone?','De onde você é?']},
     {q:R('顔色','かおいろ')+'が '+R('悪','わる')+'いですね。'+R('大丈夫','だいじょうぶ')+'ですか？', say:'かおいろが わるいですね。だいじょうぶですか？', ro:'Kaoiro ga warui desu ne. Daijōbu desu ka?', pt:'Você está pálida. Está tudo bem?',
      ans:['あたま|atama','が|ga','いたいです|itai desu'], extra:['を|o','なくしました|nakushimashita','おなか|onaka'], ansPt:'Estou com dor de cabeça.', molde:1, dica:'Sua cabeça está doendo.', distr:['Você está com fome?','Você perdeu o passaporte?']},
     {q:R('病院','びょういん')+'に '+R('行','い')+'きますか？', say:'びょういんに いきますか？', ro:'Byōin ni ikimasu ka?', pt:'Vai ao hospital?',
-     ans:['びょういん|byōin','は|wa','どこ|doko','ですか|desu ka'], extra:['が|ga','を|o','けいさつ|keisatsu'], ansPt:'Onde fica o hospital?', molde:2, distr:['Vai à farmácia?','Vai para o hotel?']},
+     ans:['びょういん|byōin','は|wa','どこ|doko','ですか|desu ka'], extra:['が|ga','を|o','けいさつ|keisatsu'], tarefa:1, ansPt:'Onde fica o hospital?', molde:2, distr:['Vai à farmácia?','Vai para o hotel?']},
     {q:'あっ！あの '+R('人','ひと')+'が '+R('倒','たお')+'れました！', say:'あっ！あの ひとが たおれました！', ro:'A! Ano hito ga taoremashita!', pt:'Ah! Aquela pessoa desmaiou!',
-     ans:['きゅうきゅうしゃ|kyūkyūsha','を|o','よんで ください|yonde kudasai'], extra:['けいさつ|keisatsu','は|wa','どこ|doko'], ansPt:'Chame uma ambulância, por favor!', molde:3, distr:['Ah! Aquela pessoa perdeu a carteira!','Ah! O trem chegou!']}
+     ans:['きゅうきゅうしゃ|kyūkyūsha','を|o','よんで ください|yonde kudasai'], extra:['けいさつ|keisatsu','は|wa','どこ|doko'], tarefa:1, ansPt:'Chame uma ambulância, por favor!', molde:3, distr:['Ah! Aquela pessoa perdeu a carteira!','Ah! O trem chegou!']}
   ]
 };
 })();
