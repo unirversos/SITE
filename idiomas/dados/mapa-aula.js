@@ -507,6 +507,7 @@ function renderCena(){
   $('sayQ').onclick=()=>speak(c.say);
   $('meBubble').className='bubble me'+(ok?' ok':'');
   $('meBubble').innerHTML=`<div class="who"><span>${meName}</span>${ok?'<span>✓ resolvido</span>':''}</div>
+    ${(c.tarefa&&!ok)?`<div class="tarefa">🎯 ${typeof c.tarefa==='string'?c.tarefa:'Responda: “'+c.ansPt+'”'}</div>`:''}
     <div class="slots">${c.ans.map((_,k)=>{ const t=placed[k]!==undefined?bank[placed[k]]:null;
       return t?`<button type="button" class="slot filled" data-k="${k}"><span><b>${t.k}</b><small>${t.r}</small></span></button>`:`<span class="slot"></span>`; }).join('')}</div>
     ${ok?`<div class="pt">${c.ansPt}</div>`:''}`;

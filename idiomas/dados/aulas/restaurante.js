@@ -47,9 +47,9 @@ const R=(k,f)=>`<ruby>${k}<rt>${f}</rt></ruby>`;
     {q:'お'+R('飲','の')+'み'+R('物','もの')+'は いかがですか？', say:'おのみものは いかがですか？', ro:'O-nomimono wa ikaga desu ka?', pt:'E para beber?',
      ans:['みず|mizu','を|o','おねがいします|onegaishimasu'], extra:['に|ni','フォーク|fōku','です|desu'], ansPt:'Água, por favor.', molde:2, distr:['E de sobremesa?','Quantas pessoas?']},
     {q:'お'+R('待','ま')+'たせしました。ラーメンです。', say:'おまたせしました。ラーメンです。', ro:'O-matase shimashita. Rāmen desu.', pt:'Desculpe a espera. Aqui está o lámen.',
-     ans:['いただきます|itadakimasu'], extra:['ごちそうさまでした|gochisōsama deshita','おかいけい|okaikei'], ansPt:'(antes de comer) いただきます！', molde:3, distr:['O lámen acabou.','O lámen custa 900 ienes.']},
+     ans:['いただきます|itadakimasu'], extra:['ごちそうさまでした|gochisōsama deshita','おかいけい|okaikei'], tarefa:'Antes de comer, diga a palavra que se fala antes da refeição.', ansPt:'(antes de comer) いただきます！', molde:3, distr:['O lámen acabou.','O lámen custa 900 ienes.']},
     {q:'ほかに ご'+R('注文','ちゅうもん')+'は？', say:'ほかに ごちゅうもんは？', ro:'Hoka ni go-chūmon wa?', pt:'Mais algum pedido?',
-     ans:['おかいけい|okaikei','を|o','おねがいします|onegaishimasu'], extra:['これ|kore','に|ni','みず|mizu'], ansPt:'A conta, por favor.', molde:2, distr:['Mais alguma bebida?','Vai pagar com cartão?']}
+     ans:['おかいけい|okaikei','を|o','おねがいします|onegaishimasu'], extra:['これ|kore','に|ni','みず|mizu'], tarefa:1, ansPt:'A conta, por favor.', molde:2, distr:['Mais alguma bebida?','Vai pagar com cartão?']}
   ]
 };
 })();

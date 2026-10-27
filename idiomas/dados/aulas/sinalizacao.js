@@ -41,15 +41,15 @@ const R=(k,f)=>`<ruby>${k}<rt>${f}</rt></ruby>`;
   ],
   cenas:[
     {q:R('何','なに')+'か お'+R('困','こま')+'りですか？', say:'なにか おこまりですか？', ro:'Nani ka o-komari desu ka?', pt:'Está precisando de ajuda?',
-     ans:['あれ|are','は|wa','なんと|nan to','よみますか|yomimasu ka'], extra:['どこ|doko','ですか|desu ka'], ansPt:'Como se lê aquilo? (apontando para a placa)', molde:0, dica:'A placa está longe, lá no alto.', distr:['Está procurando a saída?','Está com fome?']},
+     ans:['あれ|are','は|wa','なんと|nan to','よみますか|yomimasu ka'], extra:['どこ|doko','ですか|desu ka'], tarefa:1, ansPt:'Como se lê aquilo? (apontando para a placa)', molde:0, dica:'A placa está longe, lá no alto.', distr:['Está procurando a saída?','Está com fome?']},
     {q:'「でぐち」と '+R('読','よ')+'みます。'+R('出口','でぐち')+'の '+R('意味','いみ')+'ですよ。', say:'でぐちと よみます。でぐちの いみですよ。', ro:'"Deguchi" to yomimasu. Deguchi no imi desu yo.', pt:'Lê-se "deguchi". Quer dizer saída.',
-     ans:['トイレ|toire','は|wa','どこ|doko','ですか|desu ka'], extra:['ここ|koko','きんし|kinshi'], ansPt:'Onde fica o banheiro?', molde:1, dica:'Agradeça com os olhos e pergunte pelo banheiro.', distr:['Lê-se "iriguchi". Quer dizer entrada.','Lê-se "kinshi". Quer dizer proibido.']},
+     ans:['トイレ|toire','は|wa','どこ|doko','ですか|desu ka'], extra:['ここ|koko','きんし|kinshi'], tarefa:1, ansPt:'Onde fica o banheiro?', molde:1, dica:'Agradeça com os olhos e pergunte pelo banheiro.', distr:['Lê-se "iriguchi". Quer dizer entrada.','Lê-se "kinshi". Quer dizer proibido.']},
     {q:'トイレは あちらです。あっ、あの '+R('子','こ')+'、'+R('線','せん')+'の '+R('外','そと')+'に…！', say:'トイレは あちらです。あっ、あの こ、せんの そとに…！', ro:'Toire wa achira desu. A, ano ko, sen no soto ni…!', pt:'O banheiro é ali. Ah, aquela criança está fora da faixa…!',
-     ans:['すみません|sumimasen','あぶない|abunai','ですよ|desu yo'], extra:['きんえん|kin\'en','ですか|desu ka'], ansPt:'Com licença, é perigoso!', molde:3, dica:'Avise a criança.', distr:['O banheiro está fechado.','Aquela criança está chorando.']},
+     ans:['すみません|sumimasen','あぶない|abunai','ですよ|desu yo'], extra:['きんえん|kin\'en','ですか|desu ka'], tarefa:1, ansPt:'Com licença, é perigoso!', molde:3, dica:'Avise a criança.', distr:['O banheiro está fechado.','Aquela criança está chorando.']},
     {q:'よかった…。あの '+R('人','ひと')+'、たばこを '+R('吸','す')+'っていますね。', say:'よかった。あの ひと、たばこを すっていますね。', ro:'Yokatta…. Ano hito, tabako o sutte imasu ne.', pt:'Ufa… Aquele homem está fumando, né.',
-     ans:['ここ|koko','は|wa','きんえん|kin\'en','ですか|desu ka'], extra:['あぶない|abunai','ですよ|desu yo'], ansPt:'Aqui é proibido fumar?', molde:2, distr:['Aquele homem está perdido, né.','Aquele homem está atrasado, né.']},
+     ans:['ここ|koko','は|wa','きんえん|kin\'en','ですか|desu ka'], extra:['あぶない|abunai','ですよ|desu yo'], tarefa:1, ansPt:'Aqui é proibido fumar?', molde:2, distr:['Aquele homem está perdido, né.','Aquele homem está atrasado, né.']},
     {q:'はい、ここは '+R('禁煙','きんえん')+'ですよ。', say:'はい、ここは きんえんですよ。', ro:'Hai, koko wa kin\'en desu yo.', pt:'Sim, aqui é proibido fumar.',
-     ans:['すみません|sumimasen','きんえん|kin\'en','ですよ|desu yo'], extra:['ここ|koko','ですか|desu ka'], ansPt:'Com licença, aqui é proibido fumar! (para o moço)', molde:3, dica:'Avise o moço com educação.', distr:['Sim, aqui é a saída.','Não, aqui pode fumar.']}
+     ans:['すみません|sumimasen','きんえん|kin\'en','ですよ|desu yo'], extra:['ここ|koko','ですか|desu ka'], tarefa:1, ansPt:'Com licença, aqui é proibido fumar! (para o moço)', molde:3, dica:'Avise o moço com educação.', distr:['Sim, aqui é a saída.','Não, aqui pode fumar.']}
   ]
 };
 })();

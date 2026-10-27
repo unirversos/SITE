@@ -39,7 +39,7 @@ const R=(k,f)=>`<ruby>${k}<rt>${f}</rt></ruby>`;
   ],
   cenas:[
     {q:'ひまですね〜。', say:'ひまですねー。', ro:'Hima desu ne~.', pt:'Que tédio, né…',
-     ans:['いっしょに|issho ni','えいがを みませんか|eiga o mimasen ka'], extra:['ごはんを たべませんか|gohan o tabemasen ka','どうですか|dō desu ka'], ansPt:'Vamos ver um filme juntas?', molde:0, dica:'Convide para ver um filme.', distr:['Que calor, né…','Que fome, né…']},
+     ans:['いっしょに|issho ni','えいがを みませんか|eiga o mimasen ka'], extra:['ごはんを たべませんか|gohan o tabemasen ka','どうですか|dō desu ka'], tarefa:1, ansPt:'Vamos ver um filme juntas?', molde:0, dica:'Convide para ver um filme.', distr:['Que calor, né…','Que fome, né…']},
     {q:'いいですね！いつが いいですか？', say:'いいですね！いつが いいですか？', ro:'Ii desu ne! Itsu ga ii desu ka?', pt:'Boa! Quando é melhor?',
      ans:['あした|ashita','は|wa','どうですか|dō desu ka'], extra:['ちょっと…|chotto…','みましょう|mimashō'], ansPt:'Que tal amanhã?', molde:1, dica:'Sugira amanhã.', distr:['Boa! Onde vamos?','Boa! Que filme?']},
     {q:R('明日','あした')+'は ちょっと…。'+R('今晩','こんばん')+'は どうですか？', say:'あしたは ちょっと…。こんばんは どうですか？', ro:'Ashita wa chotto…. Konban wa dō desu ka?', pt:'Amanhã não dá muito… Que tal hoje à noite?',

@@ -39,11 +39,11 @@ const R=(k,f)=>`<ruby>${k}<rt>${f}</rt></ruby>`;
   ],
   cenas:[
     {q:'いらっしゃいませ。どうぞ ご'+R('覧','らん')+'ください。', say:'いらっしゃいませ。どうぞ ごらんください。', ro:'Irasshaimase. Dōzo go-ran kudasai.', pt:'Bem-vinda. Fique à vontade para olhar.',
-     ans:['これ|kore','を|o','しちゃく|shichaku','しても|shite mo','いいですか|ii desu ka'], extra:['は|wa','ありますか|arimasu ka'], ansPt:'Posso provar isto?', molde:0, distr:['Bem-vinda. O provador está ocupado.','Bem-vinda. Hoje fechamos cedo.']},
+     ans:['これ|kore','を|o','しちゃく|shichaku','しても|shite mo','いいですか|ii desu ka'], extra:['は|wa','ありますか|arimasu ka'], tarefa:1, ansPt:'Posso provar isto?', molde:0, distr:['Bem-vinda. O provador está ocupado.','Bem-vinda. Hoje fechamos cedo.']},
     {q:'サイズは いかがですか？', say:'サイズは いかがですか？', ro:'Saizu wa ikaga desu ka?', pt:'Como ficou o tamanho?',
      ans:['ちょっと ちいさい|chotto chiisai','です|desu'], extra:['ぴったり|pittari','もっと|motto','は|wa'], ansPt:'Está um pouco pequeno.', molde:1, dica:'Ficou apertado.', distr:['Qual é o seu tamanho?','Quer outra cor?']},
     {q:'そうですか…。', say:'そうですか。', ro:'Sō desu ka…', pt:'Ah, é mesmo?…',
-     ans:['もっと|motto','おおきい|ōkii','サイズ|saizu','は|wa','ありますか|arimasu ka'], extra:['ちいさい|chiisai','を|o'], ansPt:'Tem um tamanho maior?', molde:2, distr:['Que pena, acabou.','Pode pagar no caixa.']},
+     ans:['もっと|motto','おおきい|ōkii','サイズ|saizu','は|wa','ありますか|arimasu ka'], extra:['ちいさい|chiisai','を|o'], tarefa:1, ansPt:'Tem um tamanho maior?', molde:2, distr:['Que pena, acabou.','Pode pagar no caixa.']},
     {q:'はい、こちらです。いかがですか？', say:'はい、こちらです。いかがですか？', ro:'Hai, kochira desu. Ikaga desu ka?', pt:'Sim, aqui está. Que tal?',
      ans:['ぴったり|pittari','です|desu'], extra:['ちょっと おおきい|chotto ōkii','ありますか|arimasu ka'], ansPt:'Ficou perfeito!', molde:1, dica:'Agora serviu certinho.', distr:['Não temos esse tamanho.','O provador é ali.']},
     {q:R('色','いろ')+'は この '+R('白','しろ')+'で よろしいですか？', say:'いろは この しろで よろしいですか？', ro:'Iro wa kono shiro de yoroshii desu ka?', pt:'A cor, pode ser este branco?',

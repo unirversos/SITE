@@ -40,15 +40,15 @@ const R=(k,f)=>`<ruby>${k}<rt>${f}</rt></ruby>`;
   ],
   cenas:[
     {q:'いらっしゃいませ。', say:'いらっしゃいませ。', ro:'Irasshaimase.', pt:'Bem-vinda.',
-     ans:['びじゅつかん|bijutsukan','は|wa','なんじ|nanji','まで|made','ですか|desu ka'], extra:['の|no','に|ni'], ansPt:'Até que horas o museu fica aberto?', molde:3, dica:'Pergunte até que horas o museu fica aberto.', distr:['Obrigada pela visita.','Com licença.']},
+     ans:['びじゅつかん|bijutsukan','は|wa','なんじ|nanji','まで|made','ですか|desu ka'], extra:['の|no','に|ni'], tarefa:1, ansPt:'Até que horas o museu fica aberto?', molde:3, dica:'Pergunte até que horas o museu fica aberto.', distr:['Obrigada pela visita.','Com licença.']},
     {q:R('五時','ごじ')+'までです。'+R('今','いま')+'、'+R('何時','なんじ')+'ですか？', say:'ごじまでです。いま、なんじですか？', ro:'Go-ji made desu. Ima, nan-ji desu ka?', pt:'Até as 5. Que horas são agora?',
      ans:['いま|ima','よじ|yoji','です|desu'], extra:['くじ|kuji','はん|han','まで|made'], ansPt:'Agora são quatro horas.', molde:0, dica:'O relógio da parede marca 4h.', distr:['Até as 9. Vai entrar agora?','Abre às 5. Pode esperar?']},
     {q:R('今日','きょう')+'の ツアーは もう '+R('終','お')+'わりました。', say:'きょうの ツアーは もう おわりました。', ro:'Kyō no tsuā wa mō owarimashita.', pt:'O tour de hoje já acabou.',
-     ans:['あした|ashita','の|no','さんじ|sanji','に|ni','おねがいします|onegaishimasu'], extra:['きょう|kyō','まで|made'], ansPt:'Amanhã, às 3, por favor.', molde:2, dica:'Marque para amanhã às 3h.', distr:['O tour de hoje começa agora.','O museu fecha amanhã.']},
+     ans:['あした|ashita','の|no','さんじ|sanji','に|ni','おねがいします|onegaishimasu'], extra:['きょう|kyō','まで|made'], tarefa:1, ansPt:'Amanhã, às 3, por favor.', molde:2, dica:'Marque para amanhã às 3h.', distr:['O tour de hoje começa agora.','O museu fecha amanhã.']},
     {q:R('明日','あした')+'の '+R('三時','さんじ')+'ですね。'+R('何時','なんじ')+'に '+R('来','き')+'ますか？', say:'あしたの さんじですね。なんじに きますか？', ro:'Ashita no san-ji desu ne. Nan-ji ni kimasu ka?', pt:'Amanhã às 3, certo. A que horas você chega?',
      ans:['にじ|niji','はん|han','です|desu'], extra:['いま|ima','まで|made','よじ|yoji'], ansPt:'Às duas e meia.', molde:1, dica:'Você chega meia hora antes: 2h30.', distr:['Amanhã às 3, certo. Quantas pessoas?','Hoje às 3, certo. Já pagou?']},
     {q:'ほかに '+R('何','なに')+'か？', say:'ほかに なにか？', ro:'Hoka ni nani ka?', pt:'Mais alguma coisa?',
-     ans:['みせ|mise','は|wa','なんじ|nanji','まで|made','ですか|desu ka'], extra:['の|no','いま|ima'], ansPt:'Até que horas a loja fica aberta?', molde:3, dica:'Pergunte sobre a lojinha do museu.', distr:['Mais alguma pessoa?','Mais um bilhete?']}
+     ans:['みせ|mise','は|wa','なんじ|nanji','まで|made','ですか|desu ka'], extra:['の|no','いま|ima'], tarefa:1, ansPt:'Até que horas a loja fica aberta?', molde:3, dica:'Pergunte sobre a lojinha do museu.', distr:['Mais alguma pessoa?','Mais um bilhete?']}
   ]
 };
 })();
