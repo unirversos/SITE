@@ -500,7 +500,7 @@ function checkBoss(){
   const enough=hits>=b.min && words>=3;
   document.getElementById('selfcheck').style.display=enough?'block':'none';
   const checks=[...document.querySelectorAll('.sc')].filter(c=>c.checked).length;
-  document.getElementById('boss-btn').disabled=!(enough&&checks>=2);
+  document.getElementById('boss-btn').disabled=!(enough&&checks>=1);
 }
 function winScene(){
   meBubble(document.getElementById('boss-text').value);
