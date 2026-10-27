@@ -250,6 +250,18 @@ body.no-ro .rk rt{display:none}
 /* fim da aula: ir para a prova no Planeta */
 .btn.prova{text-decoration:none;display:inline-flex;align-items:center;min-height:44px}
 
+.qbbtn{margin-top:8px;min-height:40px;font-size:13px}
+
+.step.prova-step{text-decoration:none;border-color:#e3c98b;background:#fbf1d9;color:#8e6a1f}
+.step.prova-step .n{background:transparent;width:auto}
+
+.xnota{display:block;color:#8e6a1f;font-size:12px;margin-top:2px}
+#drawerExtra .arp small{display:block}
+@media (max-width:640px){.top .tools{flex-wrap:wrap}}
+
+.vegbtn{background:#e8efe8;border-color:#bcd2bf;color:#3e6347}
+.vegbtn[aria-pressed="true"]{background:#4f7a58;border-color:#4f7a58;color:#fff}
+
 /* navegação do site */
 .sitebar{display:flex;align-items:center;justify-content:space-between;gap:10px 14px;flex-wrap:wrap}
 .sitebar .brand{font-family:var(--f-display);font-size:18px;font-weight:700;text-decoration:none;color:var(--ink)}

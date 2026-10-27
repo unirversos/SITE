@@ -169,8 +169,10 @@ function sparkle(list){ const fx=$('fx');
     fx.appendChild(s); setTimeout(()=>s.remove(),1800); } }
 function renderSteps(){
   STEPS=C()?['Situação','Palavras','Moldes','Ouvir','Cena','Consulta']:['Situação','Palavras','Moldes','Ouvir','Cena'];
-  $('steps').innerHTML=STEPS.map((s,k)=>`<button type="button" class="step ${k===step?'now':P.steps[k]?'done':''}" data-s="${k}"><span class="n">${P.steps[k]&&k!==step?'✓':k+1}</span>${s}</button>`).join('');
+  $('steps').innerHTML=STEPS.map((s,k)=>`<button type="button" class="step ${k===step?'now':P.steps[k]?'done':''}" data-s="${k}"><span class="n">${P.steps[k]&&k!==step?'✓':k+1}</span>${s}</button>`).join('')
+    +(PROVA_TERR[A.slug]?`<a class="step prova-step" href="/idiomas/planeta-utopia/?lang=ja&terr=${PROVA_TERR[A.slug]}&from=trilha"><span class="n">🏅</span>Prova</a>`:'');
 }
+const PROVA_TERR={aeroporto:'aeroporto',hotel:'hotel',restaurante:'restaurante',kombini:'conbini',trens:'trens',compras:'compras',roupas:'roupas',emergencia:'sos',apresentacao:'base',horas:'numeros',planos:'planos',sinalizacao:'placas'};
 /* áudios da aula: baixa em segundo plano (4 por vez) logo na primeira etapa, para o 🔊 tocar sem espera no 4G */
 let preBaixou=false; const AUDIO_PRONTO={};
 function preBaixaAudios(){
@@ -418,7 +420,10 @@ const GLOSS={
 'ございます':['gozaimasu','tem / há (educado)','É o あります de quem atende.'],
 'ありますか':['arimasu ka','tem?',''],
 'もくてきち':['mokutekichi','destino',''],
-'えき':['eki','estação','']
+'えき':['eki','estação',''],
+'やさい':['yasai','legumes, verduras',''],'たべられない':['taberarenai','não pode comer','たべられない もの = coisas que não pode comer.'],'もの':['mono','coisa',''],
+'だし':['dashi','caldo','⚠️ Muitas vezes feito de peixe (かつおぶし).'],'かつおぶし':['katsuobushi','lascas de peixe seco (bonito)','Base de muito caldo japonês.'],'すみません':['sumimasen','com licença / desculpe',''],
+'ベジタリアン':['bejitarian','vegetariano(a)',''],'にく':['niku','carne',''],'さかな':['sakana','peixe',''],'サラダ':['sarada','salada',''],'とうにゅう':['tōnyū','leite de soja','']
 };
 /* palavras já ensinadas até cada mapa (na ordem da trilha) */
 const ENSINADO={"aeroporto": ["あります", "ありますか", "いくつ", "かんこう", "ございます", "ございますか", "とうきょう", "どこ", "なん", "にもつ", "ふたつ", "もくてき", "もくてきち", "よやく", "パスポート", "ビザ"], "hotel": ["あります", "ありますか", "いかが", "いくつ", "かぎ", "かんこう", "こわれました", "ございます", "ございますか", "ちょうしょく", "とうきょう", "どこ", "なまえ", "なん", "なんじ", "にはく", "にもつ", "ふたつ", "へや", "ほかに", "もくてき", "もくてきち", "よやく", "エアコン", "タオル", "パスポート", "ビザ"], "restaurante": ["あります", "ありますか", "いかが", "いくつ", "いただきます", "いらっしゃいませ", "おかいけい", "おすすめ", "かぎ", "かんこう", "これ", "こわれました", "ございます", "ございますか", "ちゅうもん", "ちょうしょく", "とうきょう", "どこ", "なまえ", "なん", "なんじ", "なんめいさま", "にはく", "にもつ", "のみもの", "ふたつ", "ふたり", "へや", "ほかに", "みず", "もくてき", "もくてきち", "よやく", "エアコン", "タオル", "パスポート", "ビザ", "フォーク", "メニュー"], "kombini": ["あたためます", "あります", "ありますか", "いかが", "いくつ", "いじょう", "いただきます", "いらっしゃいませ", "いらないです", "おかいけい", "おすすめ", "おにぎり", "おはし", "おべんとう", "おもちですか", "かぎ", "かんこう", "これ", "こわれました", "ございます", "ございますか", "ごりようですか", "ちゅうもん", "ちょうしょく", "とうきょう", "どこ", "なまえ", "なん", "なんじ", "なんめいさま", "にはく", "にもつ", "のみもの", "ふくろ", "ふたつ", "ふたり", "へや", "ほかに", "みず", "もくてき", "もくてきち", "よやく", "エアコン", "タオル", "パスポート", "ビザ", "フォーク", "ポイントカード", "メニュー", "レシート"], "trens": ["あたためます", "あります", "ありますか", "いかが", "いきたい", "いくつ", "いくら", "いじょう", "いただきます", "いらっしゃいませ", "いらないです", "えき", "おかいけい", "おすすめ", "おにぎり", "おはし", "おべんとう", "おもちですか", "かぎ", "かんこう", "きっぷ", "これ", "こわれました", "ございます", "ございますか", "ごりようですか", "ちゅうもん", "ちょうしょく", "でぐち", "でんしゃ", "とうきょう", "どこ", "どちら", "なまえ", "なん", "なんじ", "なんばんせん", "なんめいさま", "にはく", "にもつ", "のみもの", "のりかえ", "ふくろ", "ふたつ", "ふたり", "へや", "ほかに", "みず", "もくてき", "もくてきち", "よやく", "エアコン", "タオル", "パスポート", "ビザ", "フォーク", "ポイントカード", "メニュー", "レシート"], "compras": ["あたためます", "あります", "ありますか", "あれ", "いかが", "いきたい", "いくつ", "いくら", "いじょう", "いただきます", "いらっしゃいませ", "いらないです", "えき", "おかいけい", "おさがしですか", "おすすめ", "おにぎり", "おはし", "おべんとう", "おみやげ", "おもちですか", "かぎ", "かんこう", "きっぷ", "げんきん", "これ", "こわれました", "ございます", "ございますか", "ごりようですか", "しはらい", "それ", "ちゅうもん", "ちょうしょく", "でぐち", "でんしゃ", "とうきょう", "どこ", "どちら", "どれ", "なまえ", "なん", "なんじ", "なんばんせん", "なんめいさま", "にはく", "にもつ", "のみもの", "のりかえ", "ふくろ", "ふたつ", "ふたり", "へや", "ほかに", "みず", "もくてき", "もくてきち", "よやく", "わりびき", "エアコン", "カード", "タオル", "パスポート", "ビザ", "フォーク", "ポイントカード", "メニュー", "レシート"], "roupas": ["あたためます", "あります", "ありますか", "あれ", "いかが", "いきたい", "いくつ", "いくら", "いじょう", "いただきます", "いらっしゃいませ", "いらないです", "いろ", "えき", "おおきい", "おかいけい", "おさがしですか", "おすすめ", "おにぎり", "おはし", "おべんとう", "おみやげ", "おもちですか", "かぎ", "かんこう", "きっぷ", "くろ", "げんきん", "これ", "こわれました", "ございます", "ございますか", "ごらんください", "ごりようですか", "しちゃく", "しちゃくしつ", "しはらい", "しろ", "それ", "ちいさい", "ちゅうもん", "ちょうしょく", "でぐち", "でんしゃ", "とうきょう", "どこ", "どちら", "どれ", "なまえ", "なん", "なんじ", "なんばんせん", "なんめいさま", "にはく", "にもつ", "のみもの", "のりかえ", "ぴったり", "ふくろ", "ふたつ", "ふたり", "へや", "ほかに", "みず", "もくてき", "もくてきち", "よやく", "わりびき", "エアコン", "カード", "サイズ", "タオル", "パスポート", "ビザ", "フォーク", "ポイントカード", "メニュー", "レシート"], "emergencia": ["あたためます", "あたま", "あります", "ありますか", "あれ", "いかが", "いきたい", "いくつ", "いくら", "いじょう", "いたい", "いただきます", "いらっしゃいませ", "いらないです", "いろ", "えき", "おおきい", "おかいけい", "おさがしですか", "おすすめ", "おにぎり", "おはし", "おべんとう", "おみやげ", "おもちですか", "かぎ", "かんこう", "きっぷ", "きゅうきゅうしゃ", "くろ", "けいさつ", "げんきん", "これ", "こわれました", "ございます", "ございますか", "ごらんください", "ごりようですか", "さいふ", "しちゃく", "しちゃくしつ", "しはらい", "しろ", "それ", "たすけて", "だいじょうぶ", "ちいさい", "ちゅうもん", "ちょうしょく", "でぐち", "でんしゃ", "とうきょう", "どうしましたか", "どこ", "どちら", "どれ", "なくしました", "なまえ", "なん", "なんじ", "なんばんせん", "なんめいさま", "にはく", "にもつ", "のみもの", "のりかえ", "ひと", "びょういん", "ぴったり", "ふくろ", "ふたつ", "ふたり", "へや", "ほかに", "みず", "もくてき", "もくてきち", "よやく", "わりびき", "エアコン", "カード", "サイズ", "タオル", "パスポート", "ビザ", "フォーク", "ポイントカード", "メニュー", "レシート"], "apresentacao": ["あたためます", "あたま", "あります", "ありますか", "あれ", "いかが", "いきたい", "いくつ", "いくら", "いじょう", "いたい", "いただきます", "いらっしゃいませ", "いらないです", "いろ", "えき", "おおきい", "おかいけい", "おさがしですか", "おすすめ", "おにぎり", "おはし", "おべんとう", "おみやげ", "おもちですか", "かぎ", "かんこう", "きっぷ", "きゅうきゅうしゃ", "くに", "くろ", "けいさつ", "げんきん", "これ", "こわれました", "ございます", "ございますか", "ごらんください", "ごりようですか", "さいふ", "しごと", "しちゃく", "しちゃくしつ", "しはらい", "しゅみ", "しろ", "せんせい", "それ", "たすけて", "だいじょうぶ", "ちいさい", "ちゅうもん", "ちょうしょく", "でぐち", "でんしゃ", "とうきょう", "どうしましたか", "どこ", "どちら", "どれ", "なくしました", "なまえ", "なん", "なんじ", "なんばんせん", "なんめいさま", "にはく", "にもつ", "のみもの", "のりかえ", "はじめまして", "ひと", "びょういん", "ぴったり", "ふくろ", "ふたつ", "ふたり", "へや", "ほかに", "みず", "もくてき", "もくてきち", "よやく", "よろしく おねがいします", "わたし", "わりびき", "エアコン", "カード", "サイズ", "タオル", "パスポート", "ビザ", "フォーク", "ブラジル", "ポイントカード", "メニュー", "レシート"], "horas": ["あした", "あたためます", "あたま", "あります", "ありますか", "あれ", "いかが", "いきたい", "いくつ", "いくら", "いじょう", "いたい", "いただきます", "いま", "いらっしゃいませ", "いらないです", "いろ", "えき", "おおきい", "おかいけい", "おさがしですか", "おすすめ", "おにぎり", "おはし", "おべんとう", "おみやげ", "おもちですか", "かぎ", "かんこう", "きっぷ", "きます", "きゅうきゅうしゃ", "きょう", "くじ", "くに", "くろ", "けいさつ", "げんきん", "これ", "こわれました", "ございます", "ございますか", "ごらんください", "ごりようですか", "さいふ", "しごと", "しちゃく", "しちゃくしつ", "しはらい", "しゅみ", "しろ", "せんせい", "それ", "たすけて", "だいじょうぶ", "ちいさい", "ちゅうもん", "ちょうしょく", "でぐち", "でんしゃ", "とうきょう", "どうしましたか", "どこ", "どちら", "どれ", "なくしました", "なまえ", "なん", "なんじ", "なんばんせん", "なんめいさま", "にはく", "にもつ", "のみもの", "のりかえ", "はじめまして", "はん", "ひと", "びょういん", "ぴったり", "ふくろ", "ふたつ", "ふたり", "へや", "ほかに", "まで", "みず", "もう", "もくてき", "もくてきち", "よじ", "よやく", "よろしく おねがいします", "わたし", "わりびき", "エアコン", "カード", "サイズ", "タオル", "パスポート", "ビザ", "フォーク", "ブラジル", "ポイントカード", "メニュー", "レシート"], "planos": ["あした", "あたためます", "あたま", "あります", "ありますか", "あれ", "いいですね", "いかが", "いきたい", "いくつ", "いくら", "いじょう", "いたい", "いただきます", "いっしょに", "いつ", "いま", "いらっしゃいませ", "いらないです", "いろ", "えいが", "えき", "おおきい", "おかいけい", "おさがしですか", "おすすめ", "おちゃ", "おにぎり", "おはし", "おべんとう", "おみやげ", "おもちですか", "かぎ", "かんこう", "きっぷ", "きます", "きゅうきゅうしゃ", "きょう", "くじ", "くに", "くろ", "けいさつ", "げんきん", "これ", "こわれました", "こんばん", "ございます", "ございますか", "ごはん", "ごらんください", "ごりようですか", "さいふ", "ざんねん", "しごと", "しちゃく", "しちゃくしつ", "しはらい", "しゅみ", "しろ", "せんせい", "それ", "たすけて", "だいじょうぶ", "ちいさい", "ちゅうもん", "ちょうしょく", "ちょっと", "でぐち", "でんしゃ", "とうきょう", "どうしましたか", "どこ", "どちら", "どようび", "どれ", "なくしました", "なまえ", "なん", "なんじ", "なんばんせん", "なんめいさま", "にはく", "にもつ", "のみもの", "のりかえ", "はじめまして", "はん", "ひと", "びょういん", "ぴったり", "ふくろ", "ふたつ", "ふたり", "へや", "ほかに", "まで", "みず", "もう", "もくてき", "もくてきち", "よじ", "よやく", "よろしく おねがいします", "わたし", "わりびき", "エアコン", "カード", "サイズ", "タオル", "パスポート", "ビザ", "フォーク", "ブラジル", "ポイントカード", "メニュー", "レシート"], "sinalizacao": ["あした", "あたためます", "あたま", "あちら", "あぶない", "あります", "ありますか", "あれ", "いいですね", "いかが", "いきたい", "いくつ", "いくら", "いじょう", "いたい", "いただきます", "いっしょに", "いつ", "いま", "いみ", "いらっしゃいませ", "いらないです", "いりぐち", "いろ", "えいが", "えき", "おおきい", "おかいけい", "おさがしですか", "おすすめ", "おちゃ", "おにぎり", "おはし", "おべんとう", "おみやげ", "おもちですか", "かぎ", "かんこう", "きっぷ", "きます", "きゅうきゅうしゃ", "きょう", "きんえん", "きんし", "くじ", "くに", "くろ", "けいさつ", "げんきん", "ここ", "これ", "こわれました", "こんばん", "ございます", "ございますか", "ごはん", "ごらんください", "ごりようですか", "さいふ", "ざんねん", "しごと", "しちゃく", "しちゃくしつ", "しはらい", "しゅみ", "しろ", "せんせい", "それ", "たすけて", "だいじょうぶ", "ちいさい", "ちゅうい", "ちゅうもん", "ちょうしょく", "ちょっと", "でぐち", "でんしゃ", "とうきょう", "どうしましたか", "どこ", "どちら", "どようび", "どれ", "なくしました", "なまえ", "なん", "なんじ", "なんばんせん", "なんめいさま", "にはく", "にもつ", "のみもの", "のりかえ", "はじめまして", "はん", "ひと", "びょういん", "ぴったり", "ふくろ", "ふたつ", "ふたり", "へや", "ほかに", "まで", "みず", "もう", "もくてき", "もくてきち", "よじ", "よみます", "よやく", "よろしく おねがいします", "わたし", "わりびき", "エアコン", "カード", "サイズ", "タオル", "トイレ", "パスポート", "ビザ", "フォーク", "ブラジル", "ポイントカード", "メニュー", "レシート"]};
@@ -448,7 +453,7 @@ function quebraHTML(say){
 }
 
 /* ---------- 4. ouvir ---------- */
-function stOuvir(){ oi=0; OUVIR=CENAS.map(c=>({say:c.say,q:c.q,ro:c.ro,right:c.pt,opts:shuffle([c.pt].concat(c.distr))})); showOuvir(); }
+function stOuvir(){ oi=0; OUVIR=(CENAS_N.length?CENAS_N:CENAS).map(c=>({say:c.say,q:c.q,ro:c.ro,right:c.pt,opts:shuffle([c.pt].concat(c.distr))})); showOuvir(); }
 function showOuvir(){
   const o=OUVIR[oi]; oAns=null;
   mood='idle'; setStage({});
@@ -478,10 +483,14 @@ function showOuvir(){
 
 /* ---------- 5. cena ---------- */
 function stCena(){ loadCena(ci); }
+let CENAS_N=[], CENAS_V=null, VEG=false;
+function trocaVeg(on){ VEG=on; CENAS=(VEG&&CENAS_V)?CENAS_V:CENAS_N; done={}; ci=0; }
 function loadCena(n){
+  setTimeout(()=>{ const bv=document.getElementById('btnVeg'); if(bv) bv.onclick=()=>{ trocaVeg(!VEG); loadCena(0); }; },0);
   ci=n; const c=CENAS[ci]; bank=shuffle([].concat(...c.ans).concat(c.extra)); placed=[]; mood='idle';
   $('panel').innerHTML=`
     <div class="row"><h2>Responda na cena</h2><span class="spacer"></span><div class="stamps" id="stamps"></div></div>
+    ${CENAS_V?`<div class="row"><button class="btn small vegbtn" type="button" id="btnVeg" aria-pressed="${VEG}">🥗 ${VEG?'Cena adaptada (vegetariana) · voltar à cena normal':'Fazer a cena adaptada (vegetariana)'}</button></div>`:''}
     ${ci===0&&A.cenaAudio?audioBox(A.cenaAudio):''}
     <div class="talk" style="padding:0"><div class="bubble npc" id="npcBubble"></div><div class="bubble me" id="meBubble"></div></div>
     <p class="hint" id="hint"></p>
@@ -503,8 +512,11 @@ function renderCena(){
   setStage({stamp:!!done[ci]});
   const c=CENAS[ci], ok=!!done[ci];
   $('npcBubble').innerHTML=`<div class="who"><span>${c.quem||A.npc.nome}</span><button class="say" type="button" id="sayQ" aria-label="Ouvir">🔊</button></div>
-    <div class="jp">${c.q}</div><div class="ro">${c.ro}</div><div class="pt">${c.pt}</div>`;
+    <div class="jp">${c.q}</div><div class="ro">${c.ro}</div><div class="pt">${c.pt}</div>
+    <button class="btn qbbtn" type="button" id="qbCena" aria-expanded="false">🔍 Palavra por palavra</button><div id="qbCenaBox"></div>`;
   $('sayQ').onclick=()=>speak(c.say);
+  $('qbCena').onclick=()=>{ const bx=$('qbCenaBox'), ab=!bx.innerHTML; bx.innerHTML=ab?quebraHTML(c.say):''; $('qbCena').setAttribute('aria-expanded',String(ab));
+    if(ab){ const P=quebraFrase(c.say,A.words); bx.onclick=e=>{ const b=e.target.closest('.qbk'); if(b) speak(P[+b.dataset.qb].k); }; } };
   $('meBubble').className='bubble me'+(ok?' ok':'');
   $('meBubble').innerHTML=`<div class="who"><span>${meName}</span>${ok?'<span>✓ resolvido</span>':''}</div>
     ${(c.tarefa&&!ok)?`<div class="tarefa">🎯 ${typeof c.tarefa==='string'?c.tarefa:'Responda: “'+c.ansPt+'”'}</div>`:''}
@@ -562,9 +574,9 @@ function stConsulta(){
     <h3 class="ch">📐 Moldes</h3>
     <div class="clist">${c.moldes.map(m=>`<div class="cmolde"><div class="who">${m.label}</div><div class="jp">${m.h} ${m.s?sayBtn(m.s):''}</div><div class="ro">${m.r}</div><div><b>${rk(m.pt)}</b></div>${m.troca&&m.troca.length>1?`<div class="pt">Troque por: ${m.troca.map(t=>`${t.h} <span class="ro">(${t.r})</span>`).join(' · ')}</div>`:''}${m.hint?`<div class="pt">💡 ${rk(m.hint)}</div>`:''}</div>`).join('')}</div>
     <h3 class="ch">📡 Radar: o que prestar atenção ao ouvir</h3>
-    <div class="clist">${c.radar.map(r=>`<div class="cradar"><div class="kw">${r.kw}</div><div><b>${rk(r.mean)}</b></div><div class="pt">${rk(r.resp)}</div></div>`).join('')}</div>
+    <div class="clist">${c.radar.map(r=>`<div class="cradar"><div class="kw">${rk(r.kw)}</div><div><b>${rk(r.mean)}</b></div><div class="pt">${rk(r.resp)}</div></div>`).join('')}</div>
     ${c.frases.length?`<h3 class="ch">💬 Frases de exemplo</h3><div class="clist">${c.frases.map(f=>`<div class="cfrase"><span class="tagw">${f.who==='ouvido'?'👂 você ouve':'👄 você fala'}</span><div class="jp">${f.h} ${sayBtn(f.s)}</div><div class="ro">${f.r}</div><div class="pt">${rk(f.pt)}</div></div>`).join('')}</div>`:''}
-    ${c.quiz.length?`<h3 class="ch">✅ Teste rápido</h3><div class="clist">${c.quiz.map((q,qi)=>`<div class="cquiz" data-q="${qi}"><b>${rk(q.q)}</b><div class="opts">${q.opts.map((o,oi)=>`<button type="button" class="opt" data-o="${oi}">${o}</button>`).join('')}</div><div class="pt why" hidden>${rk(q.why)}</div></div>`).join('')}</div>`:''}
+    ${c.quiz.length?`<h3 class="ch">✅ Teste rápido</h3><div class="clist">${c.quiz.map((q,qi)=>`<div class="cquiz" data-q="${qi}"><b>${rk(q.q)}</b><div class="opts">${q.opts.map((o,oi)=>`<button type="button" class="opt" data-o="${oi}">${rk(o)}</button>`).join('')}</div><div class="pt why" hidden>${rk(q.why)}</div></div>`).join('')}</div>`:''}
     <div class="row"><button class="btn" type="button" id="cTop">↑ Voltar ao topo</button><span class="spacer"></span><button class="btn primary" type="button" id="cCena">Refazer a cena →</button></div>`;
   $('panel').querySelectorAll('[data-say]').forEach(b=>b.onclick=()=>speak(says[+b.dataset.say]));
   $('panel').querySelectorAll('.cquiz').forEach(box=>box.onclick=e=>{ const b=e.target.closest('.opt'); if(!b) return; const q=c.quiz[+box.dataset.q];
@@ -582,12 +594,21 @@ function loadAula(slug){
   A=Object.assign({},raw,{moldes:raw.moldes.map(prepMolde).map(m=>Object.assign(m,{titulo:rk(m.titulo),gram:rk(m.gram),use:rk(m.use)})),
     intro:{titulo:rk(raw.intro.titulo),txt:raw.intro.txt.map(rk),metas:raw.intro.metas.map(rk),metasTit:raw.intro.metasTit},
     words:raw.words.map(w=>Object.assign({},w,{tip:rk(w.tip)})), fim:rk(raw.fim||''), insignia:raw.insignia?rk(raw.insignia):raw.insignia});
-  CENAS=raw.cenas.map(prep).map(c=>Object.assign(c,{pt:rk(c.pt),ansPt:rk(c.ansPt),dica:c.dica?rk(c.dica):c.dica,distr:(c.distr||[]).map(rk)}));
+  const prepC=c=>Object.assign(c,{pt:rk(c.pt),ansPt:rk(c.ansPt),dica:c.dica?rk(c.dica):c.dica,distr:(c.distr||[]).map(rk)});
+  CENAS=raw.cenas.map(prep).map(prepC); CENAS_N=CENAS; CENAS_V=raw.cenasVeg?raw.cenasVeg.map(prep).map(prepC):null; VEG=false;
   P=M[slug]=Object.assign({words:{},steps:{}},M[slug]||{});
   step=0; wi=0; mi=0; oi=0; ci=0; done={}; $('fx').innerHTML='';
   document.title=A.docTitle||`Aula ${String(ORDEM.indexOf(A.slug)+1).padStart(2,'0')} · ${A.titulo} | Mapas de contexto · Unirversos`;
   $('eyebrow').innerHTML=`${A.eyebrow||('Mapa de contexto '+A.num)} · ${A.titulo} · <span style="text-transform:none;letter-spacing:.05em">${A.jp}</span>`;
   $('h1').textContent=A.h1;
+  { const old=document.getElementById('btnExtra'); if(old) old.remove(); const od=document.getElementById('drawerExtra'); if(od) od.remove();
+    if(A.extra){ const X=A.extra, b=document.createElement('button'); b.className='btn small'; b.type='button'; b.id='btnExtra'; b.textContent=X.btn; $('btnAr').before(b);
+      const d=document.createElement('div'); d.className='drawer'; d.id='drawerExtra'; d.hidden=true;
+      d.innerHTML=`<div class="drawer-card" role="dialog" aria-label="${X.titulo}"><div class="drawer-head"><b>${X.titulo}</b><button class="btn small" type="button" data-fecha>Fechar</button></div>
+        ${X.intro?`<p class="pt">${rk(X.intro)}</p>`:''}<div class="ar-list">${X.cena?`<button type="button" class="btn primary" data-vegcena style="margin:4px 0 8px">🥗 Praticar a cena adaptada →</button>`:''}${X.frases.map((f,i)=>`<button type="button" class="arp" data-x="${i}"><span>🔊</span><span><span class="jp" lang="ja">${rk(f.k)}</span><small>${rk(f.pt)}</small>${f.nota?`<small class="xnota">${rk(f.nota)}</small>`:''}</span></button>`).join('')}</div></div>`;
+      document.body.appendChild(d);
+      b.onclick=()=>{ d.hidden=false; };
+      d.onclick=ev=>{ if(ev.target===d||ev.target.closest('[data-fecha]')){ d.hidden=true; return; } if(ev.target.closest('[data-vegcena]')){ d.hidden=true; trocaVeg(true); go(4); return; } const x=ev.target.closest('.arp'); if(x) speak(X.frases[+x.dataset.x].k.replace(/＿＿/g,'')); }; } }
   $('stage').setAttribute('aria-label','Cena: '+A.titulo);
   const L=$('links'); if(L&&A.linkList){ L.innerHTML=A.linkList.map(([t,h])=>`<a href="${h}">${t}</a>`).join(''); }
   else if(L&&A.links!==false){

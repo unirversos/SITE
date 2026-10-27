@@ -1,6 +1,39 @@
 (function(){
 const R=(k,f)=>`<ruby>${k}<rt>${f}</rt></ruby>`;
 (window.AULAS=window.AULAS||{}).restaurante={
+  extra:{btn:'🥗 Restrições',titulo:'🥗 Restrições alimentares',
+    intro:'Vegetariana, vegana, alergia ou não come peixe? Toque na frase para ouvir e mostre a tela no restaurante.',
+    frases:[
+      {k:'わたしは ベジタリアンです。',pt:'Sou vegetariana(o).'},
+      {k:'わたしは ヴィーガンです。',pt:'Sou vegana(o).',nota:'Também se escreve ビーガン.'},
+      {k:'にくと さかなは たべません。',pt:'Não como carne nem peixe.'},
+      {k:'さかなは たべません。',pt:'Não como peixe.'},
+      {k:'これに にくは はいっていますか？',pt:'Isto tem carne?'},
+      {k:'だしに さかなは はいっていますか？',pt:'O caldo (だし) tem peixe?',nota:'⚠️ Atenção ao ほんだし: muito caldo japonês é feito de peixe (かつおぶし), até em missô, udon e pratos de legumes.'},
+      {k:'かつおぶしは はいっていますか？',pt:'Tem かつおぶし (lascas de peixe seco)?'},
+      {k:'アレルギーが あります。',pt:'Tenho alergia.'},
+      {k:'たべられない ものが あります。',pt:'Tenho restrição alimentar (há coisas que não posso comer).'},
+      {k:'＿＿アレルギーです。',pt:'Tenho alergia a ＿＿. Ex.: たまご (ovo), こむぎ (trigo), えび (camarão), ピーナッツ (amendoim).'},
+      {k:'＿＿ぬきで おねがいします。',pt:'Sem ＿＿, por favor. Ex.: にくぬきで (sem carne).'},
+      {k:'ぎゅうにゅうは はいっていますか？',pt:'Tem leite (de vaca)?'},
+      {k:'とうにゅうに かえられますか？',pt:'Dá para trocar por leite de soja?',nota:'とうにゅう = leite de soja. Muitos cafés têm.'},
+      {k:'とうにゅうラテを おねがいします。',pt:'Um latte com leite de soja, por favor.'},
+      {k:'オーツミルクは ありますか？',pt:'Tem leite de aveia?'},
+      {k:'アーモンドミルクは ありますか？',pt:'Tem leite de amêndoas?'},
+      {k:'しょくぶつせいの ミルクは ありますか？',pt:'Tem leite vegetal (de plantas)?'}
+    ],cena:true},
+  cenasVeg:[
+    {quem:'Garçom',q:'ご'+R('注文','ちゅうもん')+'は お'+R('決','き')+'まりですか？',say:'ごちゅうもんは おきまりですか？',ro:'Go-chūmon wa o-kimari desu ka?',pt:'Já decidiu o pedido?',
+     ans:['わたし|watashi','は|wa','ベジタリアン|bejitarian','です|desu'],extra:['さかな|sakana','を|o','たべません|tabemasen'],ansPt:'Eu sou vegetariana.',tarefa:1,molde:null,distr:[]},
+    {quem:'Garçom',q:'はい。'+R('食','た')+'べられない ものは ありますか？',say:'はい。たべられない ものは ありますか？',ro:'Hai. Taberarenai mono wa arimasu ka?',pt:'Certo. Tem algo que você não pode comer?',
+     ans:['にく|niku','と|to','さかな|sakana','は|wa','たべません|tabemasen'],extra:['です|desu','が|ga','ください|kudasai'],ansPt:'Não como carne nem peixe.',tarefa:1,molde:null,distr:[]},
+    {quem:'Garçom',q:R('野菜','やさい')+'の ラーメンは いかがですか？',say:'やさいの ラーメンは いかがですか？',ro:'Yasai no rāmen wa ikaga desu ka?',pt:'Que tal o lámen de legumes?',
+     ans:['だし|dashi','に|ni','さかな|sakana','は|wa','はいっていますか|haitte imasu ka'],extra:['にく|niku','を|o','おねがいします|onegaishimasu'],ansPt:'O caldo tem peixe?',tarefa:'Atenção ao ほんだし: pergunte se o caldo tem peixe.',molde:null,distr:[]},
+    {quem:'Garçom',q:'すみません、だしは かつおぶしです。',say:'すみません、だしは かつおぶしです。',ro:'Sumimasen, dashi wa katsuobushi desu.',pt:'Desculpe, o caldo é de katsuobushi (peixe).',
+     ans:['じゃ|ja','サラダ|sarada','に|ni','します|shimasu'],extra:['だし|dashi','を|o','です|desu'],ansPt:'Então vou de salada.',tarefa:1,molde:null,distr:[]},
+    {quem:'Garçom',q:'お'+R('飲','の')+'み'+R('物','もの')+'は いかがですか？',say:'おのみものは いかがですか？',ro:'O-nomimono wa ikaga desu ka?',pt:'E para beber?',
+     ans:['とうにゅうラテ|tōnyū rate','を|o','おねがいします|onegaishimasu'],extra:['ぎゅうにゅう|gyūnyū','は|wa','です|desu'],ansPt:'Um latte com leite de soja, por favor.',tarefa:1,molde:null,distr:[]}
+  ],
   slug:'restaurante', num:'02', titulo:'Restaurante', emoji:'🍽️', jp:R('食堂','しょくどう'), h1:'Uma tigela de lámen',
   fim:'Você pediu, comeu e pagou falando japonês.',
   intro:{titulo:'🍜 Hora de comer!',
