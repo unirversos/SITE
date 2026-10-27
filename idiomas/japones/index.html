@@ -108,10 +108,10 @@ footer a{color:var(--ink);text-decoration:none}
 
   <nav class="ferr" aria-label="Ferramentas">
     <b>Ferramentas</b>
-    <a href="/idiomas/planeta-utopia/atelie/">🎨 Meu avatar</a>
+    <a href="/idiomas/avatar/">🎨 Meu avatar</a>
     <a href="/idiomas/numeros/">🔢 Números</a>
     <a href="/idiomas/planeta-utopia/salao/">🪐 Planeta Utopia</a>
-    <a href="/idiomas/planeta-utopia/caderno/">📒 Caderno de palavras</a>
+    <a href="/idiomas/caderno/">📒 Caderno de palavras</a>
     <a href="/idiomas/amuleto/">💎 Amuleto de bolso</a>
   </nav>
 
@@ -190,7 +190,7 @@ footer a{color:var(--ink);text-decoration:none}
     /* próximo passo: primeira etapa não feita */
     let prox=null;
     /* letras e Aula Zero são opcionais: nunca viram “próximo passo” */
-    if(!E.avatar) prox={id:'p-avatar',href:'/idiomas/planeta-utopia/atelie/',t:'Crie seu avatar'};
+    if(!E.avatar) prox={id:'p-avatar',href:'/idiomas/avatar/',t:'Crie seu avatar'};
     else { for(let i=0;i<MAPAS.length;i++){ const m=MAPAS[i], s=E.mapa[i];
       if(!s.aula){ prox={id:'p-'+m[0],href:`/idiomas/mapas/${m[0]}/aula/`,t:`Mapa ${i+1} · ${m[2]}`}; break; }
       if(!s.prova){ prox={id:'p-'+m[0],href:`/idiomas/planeta-utopia/?lang=ja&terr=${m[4]}&from=trilha`,t:`Prova do mapa ${i+1} · ${m[2]}`}; break; } } }
@@ -201,7 +201,7 @@ footer a{color:var(--ink);text-decoration:none}
     const antes=[];
     antes.push(card({id:'p-avatar',n:'01',t:'🎨 Crie seu avatar',st:st(E.avatar,false,'p-avatar'),cls:cl(E.avatar,false,'p-avatar'),
       d:'No Ateliê você monta o seu personagem e já aprende as primeiras palavras. Ele acompanha você em todas as aulas.',
-      ac:`<a class="pri" href="/idiomas/planeta-utopia/atelie/">${E.avatar?'Editar meu avatar':'Abrir o Ateliê'}</a>`}));
+      ac:`<a class="pri" href="/idiomas/avatar/">${E.avatar?'Editar meu avatar':'Abrir o Ateliê'}</a>`}));
     const hiraTx=E.hira.fim?'Hiragana ✓':`Hiragana${E.hira.seen?` · ${E.hira.seen} letras vistas`:''}`;
     const kataTx=E.kata.fim?'Katakana ✓':`Katakana${E.kata.seen?` · ${E.kata.seen} letras vistas`:''}`;
     antes.push(card({id:'p-letras',n:'opc.',t:'あ As letras',st:letrasOk?'✓ feito':'opcional',cls:letrasOk?'feito':'opc',

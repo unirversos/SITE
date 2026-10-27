@@ -208,7 +208,7 @@ body.ro-on .ro{display:block}
     </div>
     <div class="card">
       <div class="crow"><label>Nome</label><input id="c-name" placeholder="seu nome de viajante" oninput="checkStart()"></div>
-      <div class="crow"><label>Avatar</label><div class="setup-av"><div class="avatar" id="setup-av">🧳</div><a class="btn ghost" href="/idiomas/planeta-utopia/atelie/">🎨 criar ou editar meu avatar no Ateliê</a></div></div>
+      <div class="crow"><label>Avatar</label><div class="setup-av"><div class="avatar" id="setup-av">🧳</div><a class="btn ghost" href="/idiomas/avatar/">🎨 criar ou editar meu avatar no Ateliê</a></div></div>
       <div style="text-align:center;margin-top:16px;"><button class="btn big" id="start-btn" disabled onclick="startGame()">⚔ Entrar no planeta</button></div>
     </div>
   </section>
@@ -662,7 +662,7 @@ function renderPassport(){
 }
 function refreshSheet(){
   document.getElementById('s-lvl').textContent=G.level;
-  document.getElementById('s-class').innerHTML=(window.UtopiaAvatar?UtopiaAvatar.titleHTML(G.level):'')+'<a href="/idiomas/planeta-utopia/atelie/">editar avatar</a>';
+  document.getElementById('s-class').innerHTML=(window.UtopiaAvatar?UtopiaAvatar.titleHTML(G.level):'')+'<a href="/idiomas/avatar/">editar avatar</a>';
   document.getElementById('hp-t').textContent=G.hp+'/'+G.maxHp;
   document.getElementById('hp-f').style.width=(G.hp/G.maxHp*100)+'%';
   document.getElementById('xp-t').textContent=G.xp+'/'+G.maxXp;

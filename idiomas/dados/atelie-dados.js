@@ -182,7 +182,7 @@ function encodeSel(S){ return [S.hair,S.hairColor,S.face,S.clothes,S.clothColor,
 function decodeSel(str){ const p=String(str||'').split('.'); if(p.length<10) return null;
   return {hair:p[0],hairColor:p[1],face:p[2],clothes:p[3],clothColor:p[4],bg:p[5],skin:+p[6]||0,age:+p[7]||20,acc:p[8]?p[8].split('-'):[],traits:p[9]?p[9].split('-'):[]}; }
 const SITE='https://unirversos.com';
-function cadernoURL(data){ const q=new URLSearchParams({n:data.name||'',w:encodeWords(data.learned||{}),a:encodeSel(data.sel)}); return SITE+'/idiomas/planeta-utopia/caderno/?'+q.toString(); }
+function cadernoURL(data){ const q=new URLSearchParams({n:data.name||'',w:encodeWords(data.learned||{}),a:encodeSel(data.sel)}); return SITE+'/idiomas/caderno/?'+q.toString(); }
 
 /* ---------- romaji (Hepburn, com mácron) ---------- */
 const RO_DI={きゃ:'kya',きゅ:'kyu',きょ:'kyo',しゃ:'sha',しゅ:'shu',しょ:'sho',ちゃ:'cha',ちゅ:'chu',ちょ:'cho',にゃ:'nya',にゅ:'nyu',にょ:'nyo',ひゃ:'hya',ひゅ:'hyu',ひょ:'hyo',みゃ:'mya',みゅ:'myu',みょ:'myo',りゃ:'rya',りゅ:'ryu',りょ:'ryo',ぎゃ:'gya',ぎゅ:'gyu',ぎょ:'gyo',じゃ:'ja',じゅ:'ju',じょ:'jo',びゃ:'bya',びゅ:'byu',びょ:'byo',ぴゃ:'pya',ぴゅ:'pyu',ぴょ:'pyo',てぃ:'ti',でぃ:'di',ふぁ:'fa',ふぃ:'fi',ふぇ:'fe',ふぉ:'fo',うぃ:'wi',うぇ:'we',うぉ:'wo',しぇ:'she',じぇ:'je',ちぇ:'che',ゔぁ:'va'};

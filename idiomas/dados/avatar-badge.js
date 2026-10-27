@@ -15,7 +15,7 @@
       '.ub-new{border-style:dashed}';
     document.head.appendChild(st);
   }
-  var atelie='/idiomas/planeta-utopia/atelie/';
+  var atelie='/idiomas/avatar/';
   if(!a||!a.sel){
     el.innerHTML='<a class="ub ub-new" href="'+atelie+'"><span class="ub-av">🎨</span><span class="ub-t"><b>Crie o seu avatar</b><small>e leve ele para todas as aulas</small></span><span class="ub-go">Ateliê →</span></a>';
     return;
