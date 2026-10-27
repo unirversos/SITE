@@ -53,6 +53,9 @@ h1{font-family:var(--f-display);font-weight:800;font-size:clamp(34px,5.6vw,52px)
 .ps{position:relative;background:var(--card);border:1.5px solid var(--line);border-left:6px solid var(--line);border-radius:18px;padding:16px 18px;display:grid;grid-template-columns:56px minmax(0,1fr);gap:4px 14px;align-items:start}
 .ps.feito{border-left-color:var(--sage)}
 .ps.pulado{border-left-color:#b9b0a6}
+.ps.opc{border-left-style:dashed}
+.opc .st{background:#fff;border:1px dashed var(--line)}
+.ps .n{white-space:nowrap}
 .ps.prox{border-left-color:var(--pink);box-shadow:0 10px 26px -18px rgba(217,80,111,.65)}
 .ps .n{grid-row:span 3;font-family:var(--f-display);font-weight:800;font-size:22px;color:var(--taupe);line-height:1.2}
 .ps h2{font-family:var(--f-display);font-size:21px;line-height:1.2;margin:0;display:flex;flex-wrap:wrap;align-items:center;gap:6px 10px}
@@ -98,7 +101,7 @@ footer a{color:var(--ink);text-decoration:none}
   <header class="hero">
     <p class="eyebrow">trilha do japonês</p>
     <h1>Sua trilha do japonês</h1>
-    <p class="lede">Um passo de cada vez, nesta ordem. Pode pular o que você já sabe: a trilha guarda o que foi feito e mostra o próximo passo.</p>
+    <p class="lede">Um passo de cada vez, nesta ordem. As letras e a Aula Zero são opcionais: a trilha guarda o que foi feito e mostra o próximo passo.</p>
     <div class="barra"><span class="tx" id="ptx">—</span><span class="tr" aria-hidden="true"><i id="pbar"></i></span></div>
     <a class="cont" id="cont" href="#">Continuar →</a>
   </header>
@@ -123,6 +126,13 @@ footer a{color:var(--ink);text-decoration:none}
   <section aria-labelledby="t-pass">
     <h2 class="sec" id="t-pass">Passaporte</h2>
     <ol class="passos" id="pass"></ol>
+  </section>
+  <section aria-labelledby="t-salao">
+    <h2 class="sec" id="t-salao">Planeta Utopia</h2>
+    <ol class="passos"><li class="ps"><span class="n" aria-hidden="true">🪐</span>
+      <h2>O Salão <span class="st">sempre aberto</span></h2>
+      <p>O lugar onde os aventureiros se encontram. Entre quando quiser: converse com quem está online e pratique junto.</p>
+      <div class="ac"><a class="pri" href="/idiomas/planeta-utopia/salao/">Entrar no Salão</a></div></li></ol>
   </section>
 
   <footer>
@@ -179,9 +189,8 @@ footer a{color:var(--ink);text-decoration:none}
     const azFeito=E.az||E.azPulo;
     /* próximo passo: primeira etapa não feita */
     let prox=null;
+    /* letras e Aula Zero são opcionais: nunca viram “próximo passo” */
     if(!E.avatar) prox={id:'p-avatar',href:'/idiomas/planeta-utopia/atelie/',t:'Crie seu avatar'};
-    else if(!letrasFeito) prox={id:'p-letras',href:E.hira.fim?'/idiomas/katakana/':'/idiomas/hiragana/',t:E.hira.fim?'Katakana':'Hiragana'};
-    else if(!azFeito) prox={id:'p-az',href:'/idiomas/aula-zero/',t:'Aula Zero'};
     else { for(let i=0;i<MAPAS.length;i++){ const m=MAPAS[i], s=E.mapa[i];
       if(!s.aula){ prox={id:'p-'+m[0],href:`/idiomas/mapas/${m[0]}/aula/`,t:`Mapa ${i+1} · ${m[2]}`}; break; }
       if(!s.prova){ prox={id:'p-'+m[0],href:`/idiomas/planeta-utopia/?lang=ja&terr=${m[4]}&from=trilha`,t:`Prova do mapa ${i+1} · ${m[2]}`}; break; } } }
@@ -195,20 +204,18 @@ footer a{color:var(--ink);text-decoration:none}
       ac:`<a class="pri" href="/idiomas/planeta-utopia/atelie/">${E.avatar?'Editar meu avatar':'Abrir o Ateliê'}</a>`}));
     const hiraTx=E.hira.fim?'Hiragana ✓':`Hiragana${E.hira.seen?` · ${E.hira.seen} letras vistas`:''}`;
     const kataTx=E.kata.fim?'Katakana ✓':`Katakana${E.kata.seen?` · ${E.kata.seen} letras vistas`:''}`;
-    antes.push(card({id:'p-letras',n:'02',t:'あ As letras',st:st(letrasOk,E.letrasPulo&&!letrasOk,'p-letras'),cls:cl(letrasOk,E.letrasPulo&&!letrasOk,'p-letras'),
-      d:'Hiragana e Katakana, com a ordem dos traços e folhas para imprimir. Recomendado: dá para fazer junto com as aulas.',
-      ac:`<a class="${E.hira.fim?'ok':'pri'}" href="/idiomas/hiragana/">${esc(hiraTx)}</a><a class="${E.kata.fim?'ok':''}" href="/idiomas/katakana/">${esc(kataTx)}</a>`+
-         (letrasOk?'':E.letrasPulo?`<button type="button" class="lk" data-acao="desfaz-letras">desfazer o pulo</button>`:`<button type="button" class="lk" data-acao="pula-letras">Já sei ler: pular</button>`)}));
-    antes.push(card({id:'p-az',n:'03',t:'🎓 Aula Zero',st:st(E.az,E.azPulo&&!E.az,'p-az'),cls:cl(E.az,E.azPulo&&!E.az,'p-az'),
-      d:'As chaves antes dos mapas: afirmar, negar e perguntar com です, じゃない e ですか, os verbos com ます e como pedir.',
-      ac:`<a class="pri" href="/idiomas/aula-zero/">${E.az?'Rever a Aula Zero':'Fazer a Aula Zero'}</a>`+
-         (E.az?'':E.azPulo?`<button type="button" class="lk" data-acao="desfaz-az">desfazer o pulo</button>`:`<button type="button" class="lk" data-acao="pula-az">Já sei o básico: pular</button>`)}));
+    antes.push(card({id:'p-letras',n:'opc.',t:'あ As letras',st:letrasOk?'✓ feito':'opcional',cls:letrasOk?'feito':'opc',
+      d:'Hiragana e Katakana, com a ordem dos traços e folhas para imprimir. Opcional: dá para fazer antes, junto com as aulas ou depois.',
+      ac:`<a class="${E.hira.fim?'ok':''}" href="/idiomas/hiragana/">${esc(hiraTx)}</a><a class="${E.kata.fim?'ok':''}" href="/idiomas/katakana/">${esc(kataTx)}</a>`}));
+    antes.push(card({id:'p-az',n:'opc.',t:'🎓 Aula Zero',st:E.az?'✓ feito':'opcional',cls:E.az?'feito':'opc',
+      d:'As chaves antes dos mapas: afirmar, negar e perguntar com です, じゃない e ですか, os verbos com ます e como pedir. Opcional: se você já passou do zero, siga direto para o Mapa 1.',
+      ac:`<a href="/idiomas/aula-zero/">${E.az?'Rever a Aula Zero':'Fazer a Aula Zero'}</a>`}));
     document.getElementById('antes').innerHTML=antes.join('');
 
     /* mapas */
     document.getElementById('mapas').innerHTML=MAPAS.map((m,i)=>{
       const s=E.mapa[i], id='p-'+m[0], feito=s.aula&&s.prova;
-      const n=String(i+4).padStart(2,'0');
+      const n=String(i+2).padStart(2,'0');
       const stTx=feito?'✓ feito':(prox&&prox.id===id?'próximo passo':s.aula?'falta a prova':'a fazer');
       return card({id,n,t:`${m[1]} Mapa ${i+1} · ${m[2]}`,st:stTx,cls:feito?'feito':(prox&&prox.id===id?'prox':''),
         d:esc(m[3])+(s.prova?` · <span class="carimbo">🏅 carimbo ganho</span>`:''),
@@ -224,7 +231,7 @@ footer a{color:var(--ink);text-decoration:none}
           return `<li><a class="${ok?'ok':''}" href="/idiomas/planeta-utopia/?lang=ja&terr=${m[4]}&from=trilha" aria-label="${esc(m[2])}: ${ok?'carimbo ganho':'carimbo ainda vazio'}"><span class="selo"><span>${m[1]}</span></span>${esc(m[2])}</a></li>`;}).join('')}</ol>`});
 
     /* barra e continuar */
-    const total=3+12, feitos=(E.avatar?1:0)+(letrasFeito?1:0)+(azFeito?1:0)+E.mapa.filter(s=>s.aula&&s.prova).length;
+    const total=1+12, feitos=(E.avatar?1:0)+E.mapa.filter(s=>s.aula&&s.prova).length;
     document.getElementById('ptx').textContent=`${feitos} de ${total} etapas · ${carimbos} ${carimbos===1?'carimbo':'carimbos'}`;
     document.getElementById('pbar').style.width=Math.round(feitos/total*100)+'%';
     const c=document.getElementById('cont');
