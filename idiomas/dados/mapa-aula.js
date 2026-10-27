@@ -169,8 +169,10 @@ function sparkle(list){ const fx=$('fx');
     fx.appendChild(s); setTimeout(()=>s.remove(),1800); } }
 function renderSteps(){
   STEPS=C()?['Situação','Palavras','Moldes','Ouvir','Cena','Consulta']:['Situação','Palavras','Moldes','Ouvir','Cena'];
-  $('steps').innerHTML=STEPS.map((s,k)=>`<button type="button" class="step ${k===step?'now':P.steps[k]?'done':''}" data-s="${k}"><span class="n">${P.steps[k]&&k!==step?'✓':k+1}</span>${s}</button>`).join('');
+  $('steps').innerHTML=STEPS.map((s,k)=>`<button type="button" class="step ${k===step?'now':P.steps[k]?'done':''}" data-s="${k}"><span class="n">${P.steps[k]&&k!==step?'✓':k+1}</span>${s}</button>`).join('')
+    +(PROVA_TERR[A.slug]?`<a class="step prova-step" href="/idiomas/planeta-utopia/?lang=ja&terr=${PROVA_TERR[A.slug]}&from=trilha"><span class="n">🏅</span>Prova</a>`:'');
 }
+const PROVA_TERR={aeroporto:'aeroporto',hotel:'hotel',restaurante:'restaurante',kombini:'conbini',trens:'trens',compras:'compras',roupas:'roupas',emergencia:'sos',apresentacao:'base',horas:'numeros',planos:'planos',sinalizacao:'placas'};
 /* áudios da aula: baixa em segundo plano (4 por vez) logo na primeira etapa, para o 🔊 tocar sem espera no 4G */
 let preBaixou=false; const AUDIO_PRONTO={};
 function preBaixaAudios(){
@@ -503,8 +505,11 @@ function renderCena(){
   setStage({stamp:!!done[ci]});
   const c=CENAS[ci], ok=!!done[ci];
   $('npcBubble').innerHTML=`<div class="who"><span>${c.quem||A.npc.nome}</span><button class="say" type="button" id="sayQ" aria-label="Ouvir">🔊</button></div>
-    <div class="jp">${c.q}</div><div class="ro">${c.ro}</div><div class="pt">${c.pt}</div>`;
+    <div class="jp">${c.q}</div><div class="ro">${c.ro}</div><div class="pt">${c.pt}</div>
+    <button class="btn qbbtn" type="button" id="qbCena" aria-expanded="false">🔍 Palavra por palavra</button><div id="qbCenaBox"></div>`;
   $('sayQ').onclick=()=>speak(c.say);
+  $('qbCena').onclick=()=>{ const bx=$('qbCenaBox'), ab=!bx.innerHTML; bx.innerHTML=ab?quebraHTML(c.say):''; $('qbCena').setAttribute('aria-expanded',String(ab));
+    if(ab){ const P=quebraFrase(c.say,A.words); bx.onclick=e=>{ const b=e.target.closest('.qbk'); if(b) speak(P[+b.dataset.qb].k); }; } };
   $('meBubble').className='bubble me'+(ok?' ok':'');
   $('meBubble').innerHTML=`<div class="who"><span>${meName}</span>${ok?'<span>✓ resolvido</span>':''}</div>
     ${(c.tarefa&&!ok)?`<div class="tarefa">🎯 ${typeof c.tarefa==='string'?c.tarefa:'Responda: “'+c.ansPt+'”'}</div>`:''}
@@ -562,9 +567,9 @@ function stConsulta(){
     <h3 class="ch">📐 Moldes</h3>
     <div class="clist">${c.moldes.map(m=>`<div class="cmolde"><div class="who">${m.label}</div><div class="jp">${m.h} ${m.s?sayBtn(m.s):''}</div><div class="ro">${m.r}</div><div><b>${rk(m.pt)}</b></div>${m.troca&&m.troca.length>1?`<div class="pt">Troque por: ${m.troca.map(t=>`${t.h} <span class="ro">(${t.r})</span>`).join(' · ')}</div>`:''}${m.hint?`<div class="pt">💡 ${rk(m.hint)}</div>`:''}</div>`).join('')}</div>
     <h3 class="ch">📡 Radar: o que prestar atenção ao ouvir</h3>
-    <div class="clist">${c.radar.map(r=>`<div class="cradar"><div class="kw">${r.kw}</div><div><b>${rk(r.mean)}</b></div><div class="pt">${rk(r.resp)}</div></div>`).join('')}</div>
+    <div class="clist">${c.radar.map(r=>`<div class="cradar"><div class="kw">${rk(r.kw)}</div><div><b>${rk(r.mean)}</b></div><div class="pt">${rk(r.resp)}</div></div>`).join('')}</div>
     ${c.frases.length?`<h3 class="ch">💬 Frases de exemplo</h3><div class="clist">${c.frases.map(f=>`<div class="cfrase"><span class="tagw">${f.who==='ouvido'?'👂 você ouve':'👄 você fala'}</span><div class="jp">${f.h} ${sayBtn(f.s)}</div><div class="ro">${f.r}</div><div class="pt">${rk(f.pt)}</div></div>`).join('')}</div>`:''}
-    ${c.quiz.length?`<h3 class="ch">✅ Teste rápido</h3><div class="clist">${c.quiz.map((q,qi)=>`<div class="cquiz" data-q="${qi}"><b>${rk(q.q)}</b><div class="opts">${q.opts.map((o,oi)=>`<button type="button" class="opt" data-o="${oi}">${o}</button>`).join('')}</div><div class="pt why" hidden>${rk(q.why)}</div></div>`).join('')}</div>`:''}
+    ${c.quiz.length?`<h3 class="ch">✅ Teste rápido</h3><div class="clist">${c.quiz.map((q,qi)=>`<div class="cquiz" data-q="${qi}"><b>${rk(q.q)}</b><div class="opts">${q.opts.map((o,oi)=>`<button type="button" class="opt" data-o="${oi}">${rk(o)}</button>`).join('')}</div><div class="pt why" hidden>${rk(q.why)}</div></div>`).join('')}</div>`:''}
     <div class="row"><button class="btn" type="button" id="cTop">↑ Voltar ao topo</button><span class="spacer"></span><button class="btn primary" type="button" id="cCena">Refazer a cena →</button></div>`;
   $('panel').querySelectorAll('[data-say]').forEach(b=>b.onclick=()=>speak(says[+b.dataset.say]));
   $('panel').querySelectorAll('.cquiz').forEach(box=>box.onclick=e=>{ const b=e.target.closest('.opt'); if(!b) return; const q=c.quiz[+box.dataset.q];
@@ -588,6 +593,14 @@ function loadAula(slug){
   document.title=A.docTitle||`Aula ${String(ORDEM.indexOf(A.slug)+1).padStart(2,'0')} · ${A.titulo} | Mapas de contexto · Unirversos`;
   $('eyebrow').innerHTML=`${A.eyebrow||('Mapa de contexto '+A.num)} · ${A.titulo} · <span style="text-transform:none;letter-spacing:.05em">${A.jp}</span>`;
   $('h1').textContent=A.h1;
+  { const old=document.getElementById('btnExtra'); if(old) old.remove(); const od=document.getElementById('drawerExtra'); if(od) od.remove();
+    if(A.extra){ const X=A.extra, b=document.createElement('button'); b.className='btn small'; b.type='button'; b.id='btnExtra'; b.textContent=X.btn; $('btnAr').before(b);
+      const d=document.createElement('div'); d.className='drawer'; d.id='drawerExtra'; d.hidden=true;
+      d.innerHTML=`<div class="drawer-card" role="dialog" aria-label="${X.titulo}"><div class="drawer-head"><b>${X.titulo}</b><button class="btn small" type="button" data-fecha>Fechar</button></div>
+        ${X.intro?`<p class="pt">${rk(X.intro)}</p>`:''}<div class="ar-list">${X.frases.map((f,i)=>`<button type="button" class="arp" data-x="${i}"><span>🔊</span><span><span class="jp" lang="ja">${rk(f.k)}</span><small>${rk(f.pt)}</small>${f.nota?`<small class="xnota">${rk(f.nota)}</small>`:''}</span></button>`).join('')}</div></div>`;
+      document.body.appendChild(d);
+      b.onclick=()=>{ d.hidden=false; };
+      d.onclick=ev=>{ if(ev.target===d||ev.target.closest('[data-fecha]')){ d.hidden=true; return; } const x=ev.target.closest('.arp'); if(x) speak(X.frases[+x.dataset.x].k.replace(/＿＿/g,'')); }; } }
   $('stage').setAttribute('aria-label','Cena: '+A.titulo);
   const L=$('links'); if(L&&A.linkList){ L.innerHTML=A.linkList.map(([t,h])=>`<a href="${h}">${t}</a>`).join(''); }
   else if(L&&A.links!==false){

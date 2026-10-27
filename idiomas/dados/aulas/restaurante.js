@@ -1,6 +1,21 @@
 (function(){
 const R=(k,f)=>`<ruby>${k}<rt>${f}</rt></ruby>`;
 (window.AULAS=window.AULAS||{}).restaurante={
+  extra:{btn:'🥗 Restrições alimentares',titulo:'🥗 Restrições alimentares',
+    intro:'Vegetariana, vegana, alergia ou não come peixe? Toque na frase para ouvir e mostre a tela no restaurante.',
+    frases:[
+      {k:'わたしは ベジタリアンです。',pt:'Sou vegetariana(o).'},
+      {k:'わたしは ヴィーガンです。',pt:'Sou vegana(o).',nota:'Também se escreve ビーガン.'},
+      {k:'にくと さかなは たべません。',pt:'Não como carne nem peixe.'},
+      {k:'さかなは たべません。',pt:'Não como peixe.'},
+      {k:'これに にくは はいっていますか？',pt:'Isto tem carne?'},
+      {k:'だしに さかなは はいっていますか？',pt:'O caldo (だし) tem peixe?',nota:'⚠️ Atenção ao ほんだし: muito caldo japonês é feito de peixe (かつおぶし), até em missô, udon e pratos de legumes.'},
+      {k:'かつおぶしは はいっていますか？',pt:'Tem かつおぶし (lascas de peixe seco)?'},
+      {k:'アレルギーが あります。',pt:'Tenho alergia.'},
+      {k:'たべられない ものが あります。',pt:'Tenho restrição alimentar (há coisas que não posso comer).'},
+      {k:'＿＿アレルギーです。',pt:'Tenho alergia a ＿＿. Ex.: たまご (ovo), こむぎ (trigo), えび (camarão), ピーナッツ (amendoim).'},
+      {k:'＿＿ぬきで おねがいします。',pt:'Sem ＿＿, por favor. Ex.: にくぬきで (sem carne).'}
+    ]},
   slug:'restaurante', num:'02', titulo:'Restaurante', emoji:'🍽️', jp:R('食堂','しょくどう'), h1:'Uma tigela de lámen',
   fim:'Você pediu, comeu e pagou falando japonês.',
   intro:{titulo:'🍜 Hora de comer!',
