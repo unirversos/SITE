@@ -1,7 +1,7 @@
 (function(){
 const R=(k,f)=>`<ruby>${k}<rt>${f}</rt></ruby>`;
 (window.AULAS=window.AULAS||{}).restaurante={
-  extra:{btn:'🥗 Restrições alimentares',titulo:'🥗 Restrições alimentares',
+  extra:{btn:'🥗 Restrições',titulo:'🥗 Restrições alimentares',
     intro:'Vegetariana, vegana, alergia ou não come peixe? Toque na frase para ouvir e mostre a tela no restaurante.',
     frases:[
       {k:'わたしは ベジタリアンです。',pt:'Sou vegetariana(o).'},

@@ -257,6 +257,7 @@ body.no-ro .rk rt{display:none}
 
 .xnota{display:block;color:#8e6a1f;font-size:12px;margin-top:2px}
 #drawerExtra .arp small{display:block}
+@media (max-width:640px){.top .tools{flex-wrap:wrap}}
 
 /* navegação do site */
 .sitebar{display:flex;align-items:center;justify-content:space-between;gap:10px 14px;flex-wrap:wrap}
