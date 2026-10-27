@@ -6,7 +6,7 @@
 <script type="module" src="/idiomas/dados/conta.js?v=2"></script>
 <script>setTimeout(function(){var h=document.documentElement;if(!h.classList.contains('uni-ok')&&!document.getElementById('uni-gate'))h.classList.add('uni-ok')},10000)</script>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Planeta Utopia — simulador de situações | Unirversos Idiomas</title>
+<title>Prova prática | Unirversos Idiomas</title>
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Baloo+2:wght@500;600;700&family=Zen+Maru+Gothic:wght@400;500;700&family=JetBrains+Mono:wght@400;600&display=swap');
 :root{
@@ -253,9 +253,8 @@ body.ro-on .ro{display:block}
 
   <footer class="foot">
     <span class="b">unirversos — tudo conectado</span>
-    <span>planeta utopia · simulador de situações</span>
+    <span>Prova prática · Unirversos Idiomas</span>
   </footer>
-  <p class="note">🔊 usa a voz do navegador no idioma do território. Seu progresso fica salvo na sua conta.</p>
 </main>
 <div class="toast" id="toast"></div>
 <div class="stamp-pop" id="stamp-pop">
@@ -263,7 +262,11 @@ body.ro-on .ro{display:block}
     <div class="stamp-circle"><span class="big">🏅</span><span class="small" id="stamp-label"></span></div>
     <h3 id="stamp-title"></h3>
     <p id="stamp-sub"></p>
-    <button class="btn" onclick="closeStamp()">continuar a jornada →</button>
+    <button class="btn" id="stamp-cont" onclick="closeStamp()">continuar a jornada →</button>
+    <div id="stamp-hall" hidden style="display:grid;gap:10px;margin-top:4px">
+      <a class="btn" href="/idiomas/japones/" style="text-decoration:none">← Voltar à trilha</a>
+      <a class="btn ghost" href="/idiomas/planeta-utopia/salao/" style="text-decoration:none">🪐 Ir ao Salão</a>
+    </div>
     <p id="stamp-next" style="margin-top:10px;"></p>
     <p id="stamp-backmap" style="margin-top:6px;display:none;"><a href="/idiomas/japones/" style="font-size:13px;color:var(--rose-deep);">↩ voltar aos mapas de contexto</a></p>
   </div>
@@ -620,7 +623,14 @@ function grantStamp(){
     if(!G.done[curLang+':'+cand.id] && SCENES[curLang].scenes[cand.id]){ next=cand; break; }
   }
   const slot=document.getElementById('stamp-next');
-  if(curLang==='ja' && window.UniTrilha){
+  const hall=document.getElementById('stamp-hall'), cont=document.getElementById('stamp-cont');
+  hall.hidden=true; hall.style.display='none'; cont.style.display='';
+  if(curLang==='ja'){
+    /* japonês: a prova conclui o mapa → hall com Voltar à trilha ou Ir ao Salão */
+    document.getElementById('stamp-title').textContent='Mapa concluído! · +'+gained+' XP';
+    hall.hidden=false; hall.style.display='grid'; cont.style.display='none';
+    document.getElementById('stamp-backmap').style.display='none'; slot.innerHTML='';
+  } else if(false){
     const E=UniTrilha.estado(), k=E.findIndex(m=>m.terr===curTerr);
     let nx=null; for(let j=1;j<=E.length;j++){ const m=E[(k+j)%E.length]; if(!(m.aula&&m.prova)){ nx=m; break; } }
     slot.innerHTML = nx ? `<a class="btn ghost" href="${nx.aula?nx.testeHref:nx.aulaHref}">${nx.emoji} ${nx.aula?'Testar no Planeta':'Próxima aula'}: ${nx.titulo} →</a>`
