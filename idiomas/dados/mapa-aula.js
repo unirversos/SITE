@@ -192,7 +192,7 @@ function stSituacao(){
   $('panel').innerHTML=`
     <h2>${it.titulo}</h2>
     ${it.txt.map(t=>`<p class="lead">${t}</p>`).join('')}
-    <div><p class="goals-t">No fim desta aula você vai conseguir:</p>
+    <div><p class="goals-t">${it.metasTit||'No fim desta aula você vai conseguir:'}</p>
     <ul class="goals">${it.metas.map((m,i)=>`<li><span class="gn">${String(i+1).padStart(2,'0')}</span><span>${m}</span></li>`).join('')}</ul></div>
     <p class="pt" style="margin:0">Travou em qualquer momento? Toque em <b>🌬️ Ar · socorro</b>, lá em cima.</p>
     <div class="row"><span class="spacer"></span><button class="btn primary" type="button" id="goWords">Conhecer as palavras →</button></div>`;
@@ -411,7 +411,7 @@ function prepMolde(m){ return Object.assign({},m,{slots:m.slots.map(opts=>opts.m
 function loadAula(slug){
   const raw=window.AULAS[slug]; if(!raw) return;
   A=Object.assign({},raw,{moldes:raw.moldes.map(prepMolde).map(m=>Object.assign(m,{titulo:rk(m.titulo),gram:rk(m.gram),use:rk(m.use)})),
-    intro:{titulo:rk(raw.intro.titulo),txt:raw.intro.txt.map(rk),metas:raw.intro.metas.map(rk)},
+    intro:{titulo:rk(raw.intro.titulo),txt:raw.intro.txt.map(rk),metas:raw.intro.metas.map(rk),metasTit:raw.intro.metasTit},
     words:raw.words.map(w=>Object.assign({},w,{tip:rk(w.tip)})), fim:rk(raw.fim||''), insignia:raw.insignia?rk(raw.insignia):raw.insignia});
   CENAS=raw.cenas.map(prep).map(c=>Object.assign(c,{pt:rk(c.pt),ansPt:rk(c.ansPt),dica:c.dica?rk(c.dica):c.dica,distr:(c.distr||[]).map(rk)}));
   P=M[slug]=Object.assign({words:{},steps:{}},M[slug]||{});
