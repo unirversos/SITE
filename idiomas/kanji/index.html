@@ -48,6 +48,8 @@ h2{font-family:var(--f-display);font-size:24px;line-height:1.2;margin:0 0 4px}
 .seg button{font:inherit;font-size:14px;font-weight:700;min-height:44px;padding:0 14px;border-radius:999px;border:1.5px solid var(--line);background:#fff;color:var(--ink);cursor:pointer}
 .seg button[aria-pressed="true"]{background:var(--ink);border-color:var(--ink);color:#fff}
 .rev-box{display:grid;gap:12px}
+.previa{display:grid;gap:8px}.previa .pt-t{font-size:14px;color:var(--muted)}.previa .pt-t b{color:var(--ink)}
+.previa .fila{display:grid;grid-template-columns:repeat(auto-fill,minmax(78px,1fr));gap:8px}
 .cont{display:flex;flex-wrap:wrap;gap:8px 20px;font-size:15px}
 .cont b{font-family:var(--f-display);font-size:26px;display:block;line-height:1}
 .cont span{color:var(--muted)}
@@ -124,7 +126,7 @@ footer{border-top:1.5px dashed var(--line);padding-top:18px;display:flex;flex-wr
   </header>
 
   <section class="card rev-box" aria-labelledby="h-rev">
-    <div><h2 id="h-rev">Revisão de hoje</h2><p class="sub">Escolha o baralho. Os novos entram 5 por vez.</p></div>
+    <div><h2 id="h-rev">Revisão de hoje</h2><p class="sub">Escolha o baralho e veja logo abaixo os kanji dele. Os novos entram 5 por vez.</p></div>
     <div class="seg" role="group" aria-label="Baralho" id="baralho">
       <button type="button" data-b="mapas" aria-pressed="true">Dos mapas</button>
       <button type="button" data-b="n5" aria-pressed="false">N5</button>
@@ -134,6 +136,7 @@ footer{border-top:1.5px dashed var(--line);padding-top:18px;display:flex;flex-wr
       <button type="button" data-b="adjetivos" aria-pressed="false">🌈 Adjetivos</button>
       <button type="button" data-b="todos" aria-pressed="false">Todos</button>
     </div>
+    <div class="previa" id="previa" aria-live="polite"></div>
     <div class="cont" id="cont" aria-live="polite"></div>
     <div class="tools"><button class="btn pri" type="button" id="btnRev">Revisar agora →</button><button class="btn" type="button" id="btnNovos">Aprender 5 novos</button></div>
   </section>
@@ -174,8 +177,8 @@ footer{border-top:1.5px dashed var(--line);padding-top:18px;display:flex;flex-wr
 
 <script src="/idiomas/dados/velocidade-voz.js?v=1"></script>
 <script src="/idiomas/dados/audio-mapa.js?v=4a8ffd4b"></script>
-<script src="/idiomas/dados/kanji-dados.js?v=601a9639"></script>
-<script src="/idiomas/dados/kanji-tracos.js?v=601a9639"></script>
+<script src="/idiomas/dados/kanji-dados.js?v=ae6afb01"></script>
+<script src="/idiomas/dados/kanji-tracos.js?v=ae6afb01"></script>
 <script>
 (function(){
 const $=id=>document.getElementById(id);
@@ -235,7 +238,11 @@ let bar='mapas';
 function contas(){ const L=BAR[bar], now=Date.now();
   const venc=L.filter(k=>S[k]&&S[k].d<=now).length, novos=L.filter(k=>!S[k]).length, sab=L.filter(k=>estado(k)==='sb').length;
   return {venc,novos,sab,total:L.length}; }
-function renderCont(){ const c=contas();
+function renderPrevia(){ const L=BAR[bar]; const nome=($('baralho').querySelector('[aria-pressed="true"]')||{}).textContent||'';
+  const grande=L.length>24; const lista=grande?L.filter(k=>!S[k]).concat(L.filter(k=>S[k])).slice(0,12):L;
+  $('previa').innerHTML=`<div class="pt-t"><b>${esc(nome.trim())}</b> · ${L.length} kanji${grande?' · mostrando os próximos 12. Veja todos na estante, mais abaixo':''}. Toque num kanji para ver a ficha.</div><div class="fila">${lista.map(k=>{ const st=estado(k); return `<button type="button" class="kt" data-k="${k}" aria-label="${k}: ${esc(F[k].sig)}"><span class="st ${st==='novo'?'':st}" aria-hidden="true"></span><span class="c" lang="ja">${k}</span><small>${esc(F[k].sig)}</small></button>`; }).join('')}</div>`; }
+$('previa').onclick=e=>{ const b=e.target.closest('.kt'); if(b) abreFicha(b.dataset.k); };
+function renderCont(){ renderPrevia(); const c=contas();
   $('cont').innerHTML=`<div class="hoje"><b>${c.venc}</b><span>para revisar</span></div><div><b>${c.novos}</b><span>novos</span></div><div><b>${c.sab}</b><span>de ${c.total} já sabe</span></div>`;
   $('btnRev').disabled=!c.venc; $('btnRev').style.opacity=c.venc?1:.5; $('btnNovos').disabled=!c.novos; }
 $('baralho').onclick=e=>{ const b=e.target.closest('button'); if(!b) return; bar=b.dataset.b;
