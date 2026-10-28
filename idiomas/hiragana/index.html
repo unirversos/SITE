@@ -128,6 +128,9 @@ h1 small{font-family:var(--f-display);font-size:.42em;color:var(--pink);letter-s
 .pad-wrap{position:relative;width:100%;max-width:340px;aspect-ratio:1/1;border:1.5px solid var(--line);border-radius:16px;background:
   linear-gradient(var(--line),var(--line)) center/1px 100% no-repeat,linear-gradient(90deg,var(--line),var(--line)) center/100% 1px no-repeat,var(--paper);overflow:hidden;touch-action:none}
 .guide{position:absolute;inset:0;display:grid;place-items:center;font-size:min(230px,62vw);line-height:1;color:color-mix(in srgb,var(--ink) 13%,transparent);pointer-events:none;user-select:none;font-family:var(--f-body)}
+.pad-wrap.peq{max-width:210px}
+.terra:has(.pad-wrap.peq){grid-template-columns:minmax(0,210px) minmax(0,1fr)}
+.pad-wrap.peq .guide{font-size:min(140px,38vw)}
 #pad{position:absolute;inset:0;width:100%;height:100%;cursor:crosshair}
 .terra-side{display:grid;gap:12px;align-content:start}
 .t-now{display:flex;align-items:baseline;gap:10px}
@@ -333,6 +336,7 @@ h1 small{font-family:var(--f-display);font-size:.42em;color:var(--pink);letter-s
           <button class="btn" type="button" id="tClear">Limpar</button>
           <button class="btn" type="button" id="tUndo">Desfazer traço</button>
           <button class="btn" type="button" id="tGuideBtn" aria-pressed="true">Letra-guia</button>
+          <button class="btn" type="button" id="tSize" aria-pressed="false">🔍 Diminuir a área</button>
           <button class="btn" type="button" id="tShow">Ver a ordem dos traços</button>
         </div>
         <button class="btn primary" type="button" id="tOk">Conferir ✓</button>
@@ -744,6 +748,14 @@ function setKind(k){
 $('swHira').onclick=()=>setKind('hira'); $('swKata').onclick=()=>setKind('kata');
 function renderAll(){ renderPdfLinks(); renderHead(); renderMe(); renderGrid(); if(!focusK) focusK=D().all[0].k; renderCard(); renderExtras(); showStage(stage); }
 focusK=D().all[0].k; renderAll();
+
+/* tamanho da área de escrita (lembra a escolha) */
+(function(){ const w=document.querySelector('.pad-wrap'), b=document.getElementById('tSize'); if(!w||!b) return;
+  function aplica(p){ w.classList.toggle('peq',p); b.textContent=p?'🔍 Aumentar a área':'🔍 Diminuir a área'; b.setAttribute('aria-pressed',String(p)); }
+  let p=false; try{ p=localStorage.getItem('padPequeno')==='1'; }catch(e){}
+  aplica(p);
+  b.addEventListener('click',()=>{ p=!p; aplica(p); try{ localStorage.setItem('padPequeno',p?'1':'0'); }catch(e){} });
+})();
 </script>
 </body>
 </html>
