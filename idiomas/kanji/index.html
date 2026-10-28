@@ -119,7 +119,7 @@ footer{border-top:1.5px dashed var(--line);padding-top:18px;display:flex;flex-wr
   <header>
     <p class="eyebrow">ferramenta · japonês</p>
     <h1><ruby>漢字<rt>かんじ</rt></ruby> Kanji</h1>
-    <p class="lede">Os 181 kanji que aparecem nos 12 mapas e na Aula Zero, e mais 34 do nível N5. Toque num kanji para ver a ordem dos traços, as leituras e uma palavra da aula. Para fixar, revise todo dia: cada kanji volta no dia certo, como no Anki.</p>
+    <p class="lede">Os 181 kanji que aparecem nos 12 mapas e na Aula Zero, mais 34 do nível N5 e 20 de adjetivos do dia a dia. Também em baralhos de dias da semana, números e adjetivos. Toque num kanji para ver a ordem dos traços, as leituras e uma palavra da aula. Para fixar, revise todo dia: cada kanji volta no dia certo, como no Anki.</p>
     <div class="tools" style="margin-top:12px"><button class="btn" type="button" id="btnRo" aria-pressed="true">Romaji: sim</button></div>
   </header>
 
@@ -128,6 +128,9 @@ footer{border-top:1.5px dashed var(--line);padding-top:18px;display:flex;flex-wr
     <div class="seg" role="group" aria-label="Baralho" id="baralho">
       <button type="button" data-b="mapas" aria-pressed="true">Dos mapas</button>
       <button type="button" data-b="n5" aria-pressed="false">N5</button>
+      <button type="button" data-b="semana" aria-pressed="false">📅 Dias da semana</button>
+      <button type="button" data-b="numeros" aria-pressed="false">🔢 Números</button>
+      <button type="button" data-b="adjetivos" aria-pressed="false">🌈 Adjetivos</button>
       <button type="button" data-b="todos" aria-pressed="false">Todos</button>
     </div>
     <div class="cont" id="cont" aria-live="polite"></div>
@@ -146,6 +149,9 @@ footer{border-top:1.5px dashed var(--line);padding-top:18px;display:flex;flex-wr
     <div class="dl">
       <a class="btn pri" href="/idiomas/kanji/anki/unirversos-kanji-mapas.apkg" download>⬇ Baralho dos mapas (181)</a>
       <a class="btn" href="/idiomas/kanji/anki/unirversos-kanji-n5.apkg" download>⬇ Baralho N5 (79)</a>
+      <a class="btn" href="/idiomas/kanji/anki/unirversos-kanji-semana.apkg" download>⬇ 📅 Dias da semana (8)</a>
+      <a class="btn" href="/idiomas/kanji/anki/unirversos-kanji-numeros.apkg" download>⬇ 🔢 Números (14)</a>
+      <a class="btn" href="/idiomas/kanji/anki/unirversos-kanji-adjetivos.apkg" download>⬇ 🌈 Adjetivos (35)</a>
     </div>
     <ol class="passos">
       <li>Instale o Anki: AnkiDroid no Android, AnkiMobile no iPhone ou o Anki no computador (apps.ankiweb.net).</li>
@@ -166,8 +172,8 @@ footer{border-top:1.5px dashed var(--line);padding-top:18px;display:flex;flex-wr
 
 <script src="/idiomas/dados/velocidade-voz.js?v=1"></script>
 <script src="/idiomas/dados/audio-mapa.js?v=a2c446d0"></script>
-<script src="/idiomas/dados/kanji-dados.js?v=f13f4b57"></script>
-<script src="/idiomas/dados/kanji-tracos.js?v=f13f4b57"></script>
+<script src="/idiomas/dados/kanji-dados.js?v=2c514e20"></script>
+<script src="/idiomas/dados/kanji-tracos.js?v=2c514e20"></script>
 <script>
 (function(){
 const $=id=>document.getElementById(id);
@@ -195,8 +201,9 @@ applyRo();
 
 /* ---------- dados ---------- */
 const KD=window.UNI_KANJI, G=KD.grupos, F=KD.k;
-const MAPAS_K=G.filter(g=>g.id!=='n5').flatMap(g=>g.k), N5_K=Object.keys(F).filter(k=>F[k].n===5), TODOS=Object.keys(F);
-const BAR={mapas:MAPAS_K,n5:N5_K,todos:TODOS};
+const MAPAS_K=G.filter(g=>g.id!=='n5'&&g.id!=='mais').flatMap(g=>g.k), N5_K=Object.keys(F).filter(k=>F[k].n===5), TODOS=Object.keys(F);
+const BAR={mapas:MAPAS_K,n5:N5_K,todos:TODOS}; (KD.temas||[]).forEach(t=>{ BAR[t.id]=t.k; });
+const TIPO={semana:'Dia da semana',numeros:'Número',adjetivos:'Como adjetivo'};
 const AULA={aeroporto:1,hotel:1,restaurante:1,kombini:1,trens:1,compras:1,roupas:1,emergencia:1,apresentacao:1,horas:1,planos:1,sinalizacao:1};
 const TIT=Object.fromEntries(G.map(g=>[g.id,g.emoji+' '+g.titulo]));
 
@@ -249,13 +256,17 @@ function tracos(ch,anim){ const d=(window.KanjiStrokes||{})[ch]; if(!d) return `
   return `<svg class="so" viewBox="0 0 109 109" role="img" aria-label="Ordem dos traços de ${ch}: ${d.p.length} traços"><g class="bg">${bg}</g><g class="fg">${fg}</g><g class="nums">${nn}</g></svg>`; }
 function verso(k){ const f=F[k];
   const le=(t,arr)=>arr.length?`<div><b>${t}</b>${arr.map(esc).join('、')}<span class="ro">${arr.map(roLe).join(', ')}</span></div>`:'';
-  const ex=f.ex;
+  const tipo=sess?TIPO[sess.bar]:null, x2=f.x2||[];
+  const ex=(tipo&&x2.find(e=>e.t===tipo))||f.ex, outros=[f.ex].concat(x2).filter((e,i,a)=>e.k!==ex.k&&a.findIndex(o=>o.k===e.k)===i);
+  const exBtn=(e,i,t)=>`<button type="button" class="exb" data-ex="${i}"><span aria-hidden="true">🔊</span><span>${t?`<span class="meta" style="display:block">${esc(t)}</span>`:''}<span class="jp" lang="ja">${e.h}</span><span class="ro">${romaji(e.k)}</span><span class="pt">${esc(e.pt)}</span></span></button>`;
+  EXS=[ex].concat(outros);
   return `<div class="big"><div class="so-box" id="soBox">${tracos(k,true)}</div>
     <div style="display:grid;gap:8px"><div class="sig">${esc(f.sig)}</div><div class="lei">${le('ON',f.on)}${le('KUN',f.kun)}</div>
     <div class="meta">${f.tr} traços${f.n?' · JLPT N'+f.n:''} · <button type="button" class="linkb" id="soRe" style="font:inherit;border:0;background:none;color:var(--pink-d);font-weight:700;cursor:pointer;padding:0">↺ ver os traços de novo</button></div></div></div>
-    <button type="button" class="exb" id="exPlay"><span aria-hidden="true">🔊</span><span><span class="jp" lang="ja">${ex.h}</span><span class="ro">${romaji(ex.k)}</span><span class="pt">${esc(ex.pt)}</span></span></button>
-    <p class="meta" style="margin:0">Aparece em: ${AULA[f.mapa]?`<a href="/idiomas/mapas/${f.mapa}/aula/">${esc(TIT[f.mapa])}</a>`:f.mapa==='aulazero'?`<a href="/idiomas/aula-zero/">${esc(TIT[f.mapa])}</a>`:'lista N5 (ainda não está num mapa)'}</p>`; }
-function ligaVerso(k){ $('exPlay').onclick=()=>speak(F[k].ex.k); $('soRe').onclick=()=>{ $('soBox').innerHTML=tracos(k,true); }; }
+    ${exBtn(ex,0,'')}${outros.map((e,i)=>exBtn(e,i+1,e.t||'Na aula')).join('')}
+    <p class="meta" style="margin:0">Aparece em: ${AULA[f.mapa]?`<a href="/idiomas/mapas/${f.mapa}/aula/">${esc(TIT[f.mapa])}</a>`:f.mapa==='aulazero'?`<a href="/idiomas/aula-zero/">${esc(TIT[f.mapa])}</a>`:f.mapa==='mais'?'lista de adjetivos (ainda não está num mapa)':'lista N5 (ainda não está num mapa)'}</p>`; }
+let EXS=[];
+function ligaVerso(k){ $('fcard').querySelectorAll('[data-ex]').forEach(b=>{ b.onclick=()=>speak(EXS[+b.dataset.ex].k); }); $('soRe').onclick=()=>{ $('soBox').innerHTML=tracos(k,true); }; }
 let ultimoFoco=null;
 function abreOv(html){ ultimoFoco=document.activeElement; $('fcard').innerHTML=html; $('ov').hidden=false; const f=$('fcard').querySelector('button'); if(f) f.focus(); }
 function fechaOv(){ $('ov').hidden=true; $('fcard').innerHTML=''; sess=null; render(); if(ultimoFoco) try{ ultimoFoco.focus(); }catch(e){} }
@@ -269,7 +280,7 @@ function abreFicha(k){ const st=estado(k);
 let sess=null;
 function inicia(novos){ const L=BAR[bar], now=Date.now();
   const fila=novos?L.filter(k=>!S[k]).slice(0,5):L.filter(k=>S[k]&&S[k].d<=now).sort((a,b)=>S[a].d-S[b].d);
-  if(!fila.length) return; sess={fila,total:fila.length,feitos:0}; mostraFrente(); }
+  if(!fila.length) return; sess={fila,total:fila.length,feitos:0,bar}; mostraFrente(); }
 function topo(){ const p=sess?Math.round(sess.feitos/Math.max(1,sess.total)*100):0;
   return `<div class="fhead"><b id="ovT">Revisão · ${sess.feitos} de ${sess.total}</b><button class="btn" type="button" data-fecha>Parar</button></div><div class="barra" aria-hidden="true"><i style="width:${p}%"></i></div>`; }
 function mostraFrente(){ if(!sess.fila.length) return fim(); const k=sess.fila[0];
@@ -279,7 +290,7 @@ function mostraVerso(k){ const novo=!S[k];
   abreOv(topo()+verso(k)+`<div class="notas" role="group" aria-label="Como foi?">
     <button type="button" class="n1" data-n="1">Errei<small>${previa(k,1)}</small></button><button type="button" class="n2" data-n="2">Difícil<small>${previa(k,2)}</small></button>
     <button type="button" class="n3" data-n="3">Bom<small>${previa(k,3)}</small></button><button type="button" class="n4" data-n="4">Fácil<small>${previa(k,4)}</small></button></div>`);
-  ligaVerso(k); speak(F[k].ex.k);
+  ligaVerso(k); speak(EXS[0].k);
   $('fcard').querySelector('.notas').onclick=e=>{ const b=e.target.closest('button'); if(!b) return; const n=+b.dataset.n;
     S[k]=proximo(S[k],n); grava(); sess.fila.shift();
     if(S[k].i<1){ sess.fila.splice(Math.min(sess.fila.length,n===1?2:4),0,k); } else sess.feitos++;
