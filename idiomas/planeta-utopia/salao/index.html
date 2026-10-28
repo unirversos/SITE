@@ -64,6 +64,19 @@ h2{font-family:var(--f-display);font-size:22px;line-height:1.2;margin:0}
 .missao b{color:#7d2b3a}
 .missao .chaves{display:flex;flex-wrap:wrap;gap:6px}
 .missao .chaves button{font:inherit;font-size:14px;border:1.5px solid var(--line);background:#fff;border-radius:999px;padding:4px 10px;cursor:pointer;min-height:36px}
+.quebra{border:1.5px solid #cfe0f0;border-radius:16px;background:#f3f8fd;padding:10px 14px}
+.quebra summary{cursor:pointer;font-weight:700;color:#2f5f8f;min-height:32px;display:flex;align-items:center}
+.quebra .q-sub{margin:6px 0 10px;color:var(--muted);font-size:14px}
+.quebra .q-l{display:grid;gap:8px}
+.q-b{max-width:88%;border-radius:16px;padding:8px 12px;background:#fff;border:1.5px solid #cfe0f0;display:grid;gap:4px}
+.q-b.b{justify-self:end;background:var(--blush);border-color:#efc3cd}
+.q-b .q-quem{font-size:11.5px;font-weight:700;color:var(--muted)}
+.q-b .q-f{display:flex;flex-wrap:wrap;gap:6px;align-items:center}
+.q-b .q-f button{font:inherit;font-size:16px;border:1.5px solid var(--line);background:#fff;border-radius:999px;padding:4px 12px;cursor:pointer;min-height:38px}
+.q-b .q-f button.ou{font-size:13px;padding:2px 10px;min-height:32px}
+.q-b .q-pt{font-size:13.5px;color:var(--muted)}
+.q-b .wro{font-size:13px;color:var(--pink)}
+.q-fim{margin:8px 0 0;font-size:14px;color:var(--muted)}
 .chat{border:1.5px solid var(--line);border-radius:18px;background:#fff;padding:12px;display:grid;gap:8px;max-height:52vh;overflow:auto;min-height:180px}
 .msg{max-width:85%;border-radius:16px;padding:8px 12px;line-height:1.5;font-size:16px}
 .msg .quem{display:block;font-size:11.5px;font-weight:700;color:var(--muted)}
@@ -134,6 +147,12 @@ footer{border-top:1.5px dashed var(--line);padding-top:18px;display:flex;flex-wr
   <!-- MESA -->
   <section class="card mesa" id="mesa" hidden aria-labelledby="h-mesa">
     <div class="topo-mesa"><h2 id="h-mesa">🪑 Mesa</h2><div class="row"><button class="btn" type="button" id="btnRo" aria-pressed="false">Romaji: não</button><button class="btn" type="button" id="encerrar">Encerrar a conversa</button></div></div>
+    <details class="quebra" id="quebra" hidden open>
+      <summary>🧊 Quebra-gelo · cumprimentem-se antes da missão</summary>
+      <p class="q-sub">Uma conversa de 4 falas para começar. Toque numa frase para colocá-la na mensagem e 🔊 para ouvir.</p>
+      <div class="q-l" id="quebraL"></div>
+      <p class="q-fim">Depois do cumprimento, sigam para a carta de missão logo abaixo.</p>
+    </details>
     <div class="missao" id="missao"></div>
     <div class="chat" id="chat" aria-live="polite"></div>
     <div><p class="sub" style="margin-bottom:6px">Toque numa peça para colocar na mensagem:</p><div class="pecas" id="pecas"></div></div>
@@ -263,7 +282,7 @@ function resetSaguao(){ $('sentar').disabled=false; $('cancelar').hidden=true; $
 /* ---------- mesa ---------- */
 let papel='viajante', ctx='restaurante', msgsRef=null, botI=0, mesaInfo=null, enviados=0;
 function abreMesa(titulo){
-  clearTimeout(timerGarcom); resetSaguao();
+  clearTimeout(timerGarcom); resetSaguao(); $('quebra').hidden=true;
   $('saguao').hidden=true; $('mesa').hidden=false; $('chat').innerHTML=''; $('h-mesa').textContent=titulo;
   const c=CTX[ctx], pp=c.papeis[papel];
   $('missao').innerHTML=`<span>🎴 <b>Sua carta de missão · ${esc(pp.nome)}</b></span><span>${esc(pp.missao)}</span><span class="sub">Frases que ajudam (toque para ouvir e usar):</span><div class="chaves">${pp.chaves.map(k=>`<button type="button" data-k="${esc(k)}" lang="ja">${esc(k)}</button>`).join('')}</div>`;
@@ -272,6 +291,21 @@ function abreMesa(titulo){
 }
 $('missao').onclick=e=>{ const b=e.target.closest('button[data-k]'); if(!b) return; speak(b.dataset.k); $('txt').value=b.dataset.k; $('txt').focus(); };
 $('pecas').onclick=e=>{ const b=e.target.closest('button'); if(!b) return; const t=$('txt'); t.value=(t.value&&!/\s$/.test(t.value)?t.value+' ':t.value)+b.textContent; t.focus(); };
+
+/* ---------- quebra-gelo (mesa em dupla) ---------- */
+function renderQuebra(){
+  const nome=(me&&me.nome?me.nome:'').slice(0,30)||'___';
+  const B=[
+    {l:'a',quem:'Pessoa A',fr:[{t:'こんにちは！',ro:'konnichiwa',pt:'Olá!'}]},
+    {l:'b',quem:'Pessoa B',fr:[{t:'こんにちは！',ro:'konnichiwa',pt:'Olá!'},{t:'おなまえは？',ro:'onamae wa?',pt:'Qual é o seu nome?'}]},
+    {l:'a',quem:'Pessoa A',fr:[{t:'はじめまして。',ro:'hajimemashite',pt:'Muito prazer (primeiro encontro).'},{t:'わたしは '+nome+' です。',ro:'watashi wa '+nome+' desu',pt:'Eu sou '+nome+'.'}]},
+    {l:'b',quem:'Pessoa B',fr:[{t:'こちらこそ よろしく おねがいします。',ro:'kochira koso yoroshiku onegaishimasu',pt:'O prazer é meu. Conto com você.'}]}
+  ];
+  $('quebraL').innerHTML=B.map(b=>`<div class="q-b ${b.l}"><span class="q-quem">${b.quem}</span>${b.fr.map(f=>`<div><div class="q-f"><button type="button" lang="ja" data-u="${esc(f.t)}">${esc(f.t)}</button><button type="button" class="ou" data-o="${esc(f.t)}" aria-label="Ouvir">🔊</button></div><span class="q-pt">${esc(f.pt)}</span> <span class="wro"${ROM?'':' hidden'}>· ${esc(f.ro)}</span></div>`).join('')}</div>`).join('');
+}
+$('quebraL').onclick=e=>{ const o=e.target.closest('[data-o]'), u=e.target.closest('[data-u]');
+  if(o){ speak(o.dataset.o); return; }
+  if(u){ const t=$('txt'); t.value=(t.value&&!/\s$/.test(t.value)?t.value+' ':t.value)+u.dataset.u; speak(u.dataset.u); t.focus(); } };
 
 function entraMesaBot(){
   mesa='bot'; ctx=placa; papel='viajante'; botI=0; enviados=0;
@@ -287,7 +321,8 @@ async function entraMesaHumana(id){
     mesa=id; mesaInfo=m; ctx=m.ctx; papel = m.a===me.uid ? m.pa : m.pb;
     const outro = m.a===me.uid ? m.b : m.a;
     abreMesa(`${CTX[ctx].ic} Mesa · ${CTX[ctx].nome} · em dupla`);
-    sis('Vocês estão na mesma mesa! Cada pessoa recebeu uma carta de missão diferente. Comece pela sua.');
+    renderQuebra(); $('quebra').hidden=false; $('quebra').open=true;
+    sis('Vocês estão na mesma mesa! Comecem pelo quebra-gelo e depois sigam para a carta de missão: cada pessoa recebeu uma diferente.');
     msgsRef = ref(db,'salao/mesas/'+id+'/msgs');
     const vistos=new Set();
     onValue(msgsRef, snap=>{ const v=snap.val()||{}; Object.entries(v).sort((x,y)=>(x[1].t||0)-(y[1].t||0)).forEach(([k,mm])=>{ if(vistos.has(k)) return; vistos.add(k); msg({quem:mm.uid===me.uid?'Você':mm.nome,txt:mm.txt,meu:mm.uid===me.uid}); if(mm.uid!==me.uid) speak(mm.txt); }); });
