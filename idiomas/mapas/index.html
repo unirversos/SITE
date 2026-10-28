@@ -1,22 +1,18 @@
 <!DOCTYPE html>
-<html lang="pt-BR" data-login="obrigatorio">
+<html lang="pt-BR">
 <head>
 <meta charset="UTF-8">
-<script>/* o japonês agora mora na trilha; aqui fica só o Explorar de inglês e português */(function(){try{if(!new URLSearchParams(location.search).get('explorar'))location.replace('/idiomas/japones/');}catch(e){}})();</script>
-<style>html[data-login="obrigatorio"]:not(.uni-ok) body>*:not(#uni-gate){visibility:hidden}</style>
-<script type="module" src="/idiomas/dados/conta.js?v=4"></script>
-<script>setTimeout(function(){var h=document.documentElement;if(!h.classList.contains('uni-ok')&&!document.getElementById('uni-gate'))h.classList.add('uni-ok')},10000)</script>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Eu crio mapas — trilhas de idiomas para viagem | Unirversos Idiomas</title>
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Baloo+2:wght@500;600;700&family=Zen+Maru+Gothic:wght@400;500;700&family=JetBrains+Mono:wght@400;600&display=swap');
 :root{
   --paper:#FDF8F6; --white:#FFFFFF;
-  --ink:#4A4149; --ink-soft:#71676e;
+  --ink:#4A4149; --ink-soft:#8A7F86;
   --line:#F0E6E2; --line-2:#E7DCE4;
-  --rose:#b5514d; --rose-deep:#b5514d; --rose-soft:#FBEBE7;
-  --lav:#686eb2; --lav-soft:#EEEFF9;
-  --sage:#4f7461; --sage-soft:#EAF3EE;
+  --rose:#E08C86; --rose-deep:#C26F6C; --rose-soft:#FBEBE7;
+  --lav:#8B90C4; --lav-soft:#EEEFF9;
+  --sage:#7FA893; --sage-soft:#EAF3EE;
   --c-obj:#C0913F; --c-obj-bg:#FBF2DF;
   --c-act:#5E9179; --c-act-bg:#EAF3EE;
   --c-dir:#6E77BE; --c-dir-bg:#EEEFF9;
@@ -228,22 +224,18 @@ body::before{
 .langs .txt{display:block;}
 @media (max-width:560px){ .wp-line{padding-left:20px;} .langs button{flex:1 1 100%;} }
 
-ruby rt{font-size:.5em;font-weight:500;letter-spacing:0;opacity:.85}
 </style>
-<link rel="stylesheet" href="/estilo-celular.css?v=2">
-<script defer src="/menu-ativo.js?v=1"></script>
 </head>
 <body>
 <main class="page">
 
   <header class="top">
-    <a href="/" class="brand" style="text-decoration:none;color:inherit;">unirversos <span>/ idiomas</span></a>
+    <a href="/idiomas/" class="brand" style="text-decoration:none;color:inherit;">unirversos <span>/ idiomas</span></a>
     <span style="display:flex;gap:14px;align-items:center;font-size:12.5px;flex-wrap:wrap;">
       <span class="crumb"></span>
+      <a href="/" style="color:var(--ink-soft);text-decoration:none;">início</a>
       <a href="/idiomas/" style="color:var(--ink-soft);text-decoration:none;">idiomas</a>
       <a href="/travessia/" style="color:var(--ink-soft);text-decoration:none;">travessia</a>
-      <a href="/paralelos/" style="color:var(--ink-soft);text-decoration:none;">paralelos</a>
-      <a href="/loja/" style="color:var(--ink-soft);text-decoration:none;">tesouros</a>
       <a href="/sobre/" style="color:var(--ink-soft);text-decoration:none;">sobre</a>
     </span>
   </header>
@@ -251,41 +243,42 @@ ruby rt{font-size:.5em;font-weight:500;letter-spacing:0;opacity:.85}
   <div id="utopia-badge" style="margin:0 0 14px"></div>
 
   <!-- ABAS DO HUB -->
-  <p class="ir-trilha" style="text-align:center;margin:0 0 10px;font-size:15px"><a href="/idiomas/japones/" style="color:var(--pink-deep,#C26F6C);font-weight:700;text-decoration:none;border-bottom:1px solid currentColor">Japonês: ver a minha trilha →</a></p>
+  <div class="hub-tabs">
+    <button class="active" onclick="switchHubTab('trilhas')">🧭 Trilhas</button>
+    <button onclick="switchHubTab('mapas')">🗺️ Explorar</button>
+  </div>
 
   <!-- ABA 1: HUB DE TRILHAS -->
-  <div class="hub-content" id="tab-trilhas" hidden>
+  <div class="hub-content active" id="tab-trilhas">
     <div class="hub-section aula-zero">
       <div class="aula-zero-card" id="aulaZeroCard" onclick="location.href='../aula-zero/';">
         <span class="emoji">🧩</span>
         <h2>Aula Zero</h2>
-        <div class="status">Comece por aqui</div>
-        <p>As chaves antes dos mapas: afirmar, negar e perguntar (desu, ja nai, desu ka), os verbos com -masu e como pedir, com o seu avatar.</p>
+        <div class="status">Pré-requisito</div>
+        <p>Estrutura básica de japonês em 4 abas. Aprenda o essencial para sobreviver em qualquer situação.</p>
         <a href="../aula-zero/" class="btn-start">Começar</a>
         <div class="progress" id="aulaZeroProgress"></div>
-        <p style="margin-top:12px;font-size:13px"><button type="button" id="pularAZ" onclick="event.stopPropagation();pularAulaZero()" style="background:none;border:0;color:var(--ink-soft);text-decoration:underline;cursor:pointer;font:inherit">Já sei o básico: pular a Aula Zero e abrir os mapas</button></p>
       </div>
     </div>
 
     <div class="hub-section hub-mapas-section">
       <h2>12 Mapas de Contexto</h2>
-      <p class="intro">Abrem depois da Aula Zero (ou se você já sabe o básico). Cada mapa é uma aula com o seu avatar: história, palavras, moldes, ouvido, cena e uma consulta para revisar.</p>
+      <p class="intro">Desbloqueados após completar a Aula Zero. Cada mapa é uma trilha de aprendizado em um contexto real.</p>
       <div class="mapas-hub-grid" id="mapasGrid"></div>
     </div>
   </div>
 
   <!-- ABA 2: EXPLORAR MAPAS (conteúdo original) -->
-  <div class="hub-content active" id="tab-mapas">
+  <div class="hub-content" id="tab-mapas">
   <section class="hero">
     <p class="jp">地図をつくる</p>
     <h1>Eu crio <em>mapas.</em><br>Você constrói as pontes.</h1>
-    <p>Cada mapa percorre o <strong>Quadrado Elemental</strong>: 🔥 Fogo para descobrir as peças, 💧 Água para escutar e guardar as palavras, 🌱 Terra para registrar no caderno, 🌬️ Ar para manter a conversa viva (as 5 gavetas) — e ✦ o Espírito, que nasce na troca real com alguém. Escolha o idioma da sua travessia:</p>
+    <p>Cada mapa percorre o <strong>Quadrado Elemental</strong>: fogo para descobrir as peças, ar para montar a fala, água para escutar o outro, terra para materializar — e o espírito, que nasce quando você usa tudo isso com alguém de verdade. Escolha o idioma da sua travessia:</p>
   </section>
 
   <p style="text-align:center;font-family:'JetBrains Mono',monospace;font-size:10.5px;letter-spacing:1.6px;text-transform:uppercase;color:var(--ink-soft);margin-top:18px;">escolha sua trilha</p>
   <div class="langs" id="langs"></div>
-  <nav class="trail" aria-label="Trilha"><a href="/idiomas/japones/">← Minha trilha</a><details class="caixa"><summary>🧰 Ferramentas</summary><span class="caixa-l"><a href="/idiomas/avatar/">🎨 Meu avatar</a><a href="/idiomas/hiragana/">あ Hiragana</a><a href="/idiomas/katakana/">ア Katakana</a><a href="/idiomas/kanji/">漢 Kanji</a><a href="/idiomas/numeros/">🔢 Números</a><a href="/idiomas/calendario/">📅 Calendário</a><a href="/idiomas/caderno/">📒 Caderno</a><a href="/idiomas/amuleto/">💎 Amuleto</a><a href="/idiomas/planeta-utopia/salao/">🪐 Planeta Utopia</a></span></details></nav>
-  <style>.trail{flex-wrap:wrap;overflow:visible;align-items:center}.trail .caixa{flex:0 0 auto}.trail .caixa[open]{flex:1 1 100%;display:flex;flex-direction:column;gap:8px}.trail .caixa>summary{list-style:none;cursor:pointer;display:inline-flex;align-items:center;gap:6px;width:max-content;border:1.5px solid var(--line,#e7e1da);background:var(--card,#fff);border-radius:99px;padding:6px 14px;font-size:13.5px;font-weight:700}.trail .caixa>summary::-webkit-details-marker{display:none}.trail .caixa[open]>summary{border-color:var(--pink,#d9506f)}.trail .caixa-l{display:flex;flex-wrap:wrap;gap:8px}</style>
+  <nav class="trail" id="trail" aria-label="Escolha o mapa"></nav>
   <div class="missao" id="missao"></div>
 
   <div class="wp">
@@ -329,7 +322,6 @@ ruby rt{font-size:.5em;font-weight:500;letter-spacing:0;opacity:.85}
 
 </main>
 
-<script src="/idiomas/dados/audio-mapa.js?v=4a8ffd4b"></script>
 <script>
 /* =========================================================
    PACOTE JAPONÊS — trilha completa (interface em português)
@@ -338,13 +330,13 @@ const MAPS_JA = [
  { id:'aeroporto', num:'00', chip:'🛂 Aeroporto e imigração',
   missao:'<strong>Missão:</strong> declarar objetivo, localizar documentos e chegar ao seu destino final.',
   vocab:[
-   {jp:'パスポート', ro:'pasupooto', pt:'passaporte', cat:'obj'},
+   {jp:'パスポート', ro:'pasupōto', pt:'passaporte', cat:'obj'},
    {jp:'ビザ', ro:'biza', pt:'visto', cat:'obj'},
    {jp:'観光', ro:'kankou', pt:'turismo', cat:'obj'},
    {jp:'旅行', ro:'ryokou', pt:'viagem', cat:'obj'},
    {jp:'仕事', ro:'shigoto', pt:'trabalho', cat:'obj'},
    {jp:'目的地', ro:'mokutekichi', pt:'destino final', cat:'dir'},
-   {jp:'搭乗', ro:'toujou', pt:'embarque', cat:'dir'},
+   {jp:'搭乗', ro:'toujouu', pt:'embarque', cat:'dir'},
    {jp:'到着', ro:'touchaku', pt:'desembarque', cat:'dir'},
    {jp:'ゲート', ro:'geeto', pt:'gate', cat:'obj'},
    {jp:'遅延', ro:'chien', pt:'atraso', cat:'dir'},
@@ -359,15 +351,15 @@ const MAPS_JA = [
     fits:['kankou','ryokou','shigoto'],
     hint:'Estrutura: [Motivo] + です. Responda o propósito da sua viagem: turismo (観光) ou trabalho (仕事).'},
    {label:'Molde 1.2.A · Apresentar Passaporte', 
-    slot:null, ro:'Pasupooto desu.', jp:'パスポートです。', pt:'É o passaporte.'},
+    slot:null, ro:'Pasupōto desu.', jp:'パスポートです。', pt:'É o passaporte.'},
    {label:'Molde 1.2.B · Localizar Passaporte', 
-    slot:null, ro:'Pasupooto wa doko desu ka?', jp:'パスポートはどこですか？', pt:'Onde está o passaporte?'},
+    slot:null, ro:'Pasupōto wa doko desu ka?', jp:'パスポートはどこですか？', pt:'Onde está o passaporte?'},
    {label:'Molde 1.3 · Declarar Destino Final', 
     tplRo:'Mokutekichi wa {v} desu', tplJp:'目的地は{v}です', tplPt:'O destino final é {pt}', slot:'input', inputPh:'sua cidade-alvo',
     hint:'Estrutura: 目的地は [Local] です. Declare para qual cidade você está indo.'},
    {label:'Molde 1.4 · Comunicar Problema', 
     tplRo:'{ro} ga arimasen', tplJp:'{jp}がありません', tplPt:'{pt} não está aqui / não tenho', slot:'vocab',
-    fits:['biza','nimotsu','pasupooto'],
+    fits:['biza','nimotsu','pasupōto'],
     hint:'Estrutura: [Coisa] がありません. Use quando algo está faltando: visto perdido, bagagem extraviada, passaporte não tem.'},
    {label:'Molde 1.5 · Informar Atraso', 
     slot:null, ro:'Chien desu.', jp:'遅延です。', pt:'Há atraso no voo.'}
@@ -401,7 +393,7 @@ const MAPS_JA = [
     fits:['heya','toire','choushoku','erebeetaa'],
     hint:'Aqui entram lugares: heya, toire, choushoku, erebeetaa. Chave e bagagem se PEDEM (molde A), e nikai é a resposta que você vai ouvir.'},
    {label:'Molde D · pedir mais um tempo', slot:null,
-    ro:'Chotto matte kudasai.', jp:'ちょっと待ってください。', pt:'Um segundinho, por favor!'},
+    ro:'Chotto matte kudasai.', jp:'ちょっと待って下さい。', pt:'Um segundinho, por favor!'},
    {label:'Molde E · pedir socorro em inglês', slot:null,
     ro:'Eigo de ii desu ka.', jp:'英語でいいですか。', pt:'Pode ser em inglês?'}
   ],
@@ -688,10 +680,10 @@ const DEEP_JA = {
   phrases:[
    {who:'boca', ro:'Yoyaku ga arimasu.', jpk:'予約があります。', pt:'Tenho uma reserva.'},
    {who:'boca', ro:'San nin desu.', jpk:'三人です。', pt:'Somos três.'},
-   {who:'boca', ro:'Kagi ga mou hitotsu arimasu ka.', jpk:'鍵がもう一つありますか。', pt:'Tem mais uma chave?'},
+   {who:'boca', ro:'Kagi mou hitotsu arimasu ka.', jpk:'鍵もう一つありますか。', pt:'Tem mais uma chave?'},
    {who:'ouvido', ro:'Kashikomarimashita. Heya wa nikai desu.', jpk:'かしこまりました。部屋は二階です。', pt:'Entendido. O quarto é no 2º andar.'},
    {who:'ouvido', ro:'Shichi ji kara juu ji made desu.', jpk:'七時から十時までです。', pt:'É das 7h às 10h. (x ji kara x ji made)'},
-   {who:'boca', ro:'Douyatte ikimasu ka.', jpk:'どうやって行きますか。', pt:'Como eu chego lá?'}
+   {who:'boca', ro:'Doyatte ikimasu ka.', jpk:'どうやって行きますか。', pt:'Como eu chego lá?'}
   ],
   quiz:[
    {q:"Qual palavra significa café da manhã?", opts:['choushoku (朝食)','chuushoku (昼食)','yuushoku (夕食)'], a:0, why:'Pegadinha clássica: 朝食 choushoku = café da manhã · 昼食 chuushoku = almoço · 夕食 yuushoku = jantar. O 朝 (manhã) é a pista.'},
@@ -711,7 +703,7 @@ const DEEP_JA = {
   ]},
  restaurante:{
   phrases:[
-   {who:'ouvido', ro:'Nanmei-sama desu ka.', jpk:'何名様ですか。', pt:'Mesa para quantos?'},
+   {who:'ouvido', ro:'Nan mei sama desu ka.', jpk:'何名様ですか。', pt:'Mesa para quantos?'},
    {who:'boca', ro:'San mei desu.', jpk:'三名です。', pt:'Somos três.'},
    {who:'boca', ro:'Menyuu o misete moraemasu ka.', jpk:'メニューを見せてもらえますか。', pt:'Posso ver o cardápio?'},
    {who:'boca', ro:'Chokoreeto arimasu ka.', jpk:'チョコレートありますか。', pt:'Tem chocolate? (troque a palavra e pergunte qualquer coisa)'},
@@ -1166,9 +1158,9 @@ const DEEP_PT = {
 const UI_PT = {
   crumb:'Trilhas de viagem · 3 idiomas',
   wp1t:'Fogo · caixa de peças', wp1h:'A exposição: toque numa peça pra ouvir — e ela se encaixa nos moldes lá embaixo.',
-  wp2t:'Bancada de moldes', wp2h:'A transmissão: a peça escolhida entra no encaixe e vira frase inteira, pronta pra falar.',
+  wp2t:'Ar · bancada de moldes', wp2h:'A transmissão: a peça escolhida entra no encaixe e vira frase inteira, pronta pra falar.',
   wp3t:'Água · radar de escuta', wp3h:'O mergulho: você não precisa entender a frase toda — só capturar a palavra-chave.',
-  dots:['🔥','🧩','💧'],
+  dots:['🔥','🌬','💧'],
   fifthT:'✦ Espírito — o quinto elemento',
   fifthP:'Os quatro se completam quando você usa isto com uma pessoa de verdade. O quinto não vem pronto no mapa: ele é cocriado no encontro — na hora em que você atravessa a ponte e fala.',
   legend:[['obj','objetos e lugares'],['act','ações'],['dir','direções e tempo'],['urg','urgência']],
@@ -1187,9 +1179,9 @@ const UI_PT = {
 const UI_EN = {
   crumb:'Travel trails · 3 languages',
   wp1t:'Fire · piece box', wp1h:'Exposure: tap a piece to hear it — it snaps into the molds below.',
-  wp2t:'Mold bench', wp2h:'Transmission: your chosen piece fills the slot and becomes a full sentence, ready to speak.',
+  wp2t:'Air · mold bench', wp2h:'Transmission: your chosen piece fills the slot and becomes a full sentence, ready to speak.',
   wp3t:'Water · listening radar', wp3h:'The dive: you do not need the whole sentence — just catch the key word.',
-  dots:['🔥','🧩','💧'],
+  dots:['🔥','🌬','💧'],
   fifthT:'✦ Spirit — the fifth element',
   fifthP:'The four are only complete when you use this with a real person. The fifth never comes ready-made in the map: it is co-created in the encounter — the moment you cross the bridge and speak.',
   legend:[['obj','objects and places'],['act','actions'],['dir','directions and time'],['urg','urgency']],
@@ -1259,26 +1251,7 @@ function updateVoiceNote(){
   }
 }
 
-let AUDIO_ATUAL=null;
 function speak(txt){
-  if(!txt) return;
-  // japonês: toca a gravação (voz da professora ou VOICEVOX) quando existe; senão, voz do aparelho
-  if(pack().key==='ja' && window.AUDIO_MAP){
-    const ALIAS = {'お会計をお願いします':'おかいけいをおねがいします','ワイファイ':'Wi-Fi'};
-    let ch = String(txt).replace(/[\s、。，．,.!！?？…・「」『』（）()]/g,'');
-    const id = window.AUDIO_MAP[ALIAS[ch]||ch] || window.AUDIO_MAP[String(txt).replace(/[\s、。，．,.!！?？…・「」『』（）()]/g,'')];
-    if(id){
-      try{ if(AUDIO_ATUAL) AUDIO_ATUAL.pause(); speechSynthesis.cancel(); }catch(e){}
-      const a = new Audio((window.AUDIO_BASE||'/idiomas/audio/')+id+'.mp3');
-      AUDIO_ATUAL = a;
-      a.onerror = function(){ speakTTS(txt); };
-      a.play().catch(function(){ speakTTS(txt); });
-      return;
-    }
-  }
-  speakTTS(txt);
-}
-function speakTTS(txt){
   if(!txt || !('speechSynthesis' in window)) return;
   if(!VOICES.length) loadVoices();
   try{ speechSynthesis.cancel(); }catch(e){}
@@ -1298,44 +1271,6 @@ document.addEventListener('click', function(ev){
   if(!b || b.disabled) return;
   speak(b.getAttribute('data-say'));
 });
-
-/* ---------- furigana em todo kanji do japonês (fase sem kanji solto) ---------- */
-const FURI_SRC = "観光(かんこう) 旅行(りょこう) 仕事(しごと) 目的地(もくてきち) 目的(もくてき) 搭乗口(とうじょうぐち) 搭乗(とうじょう) 到着(とうちゃく) 遅延(ちえん) 荷物(にもつ) 預(あず)け 紛失(ふんしつ) 鍵(かぎ) 部屋(へや) 朝食(ちょうしょく) 昼食(ちゅうしょく) 夕食(ゆうしょく) 朝(あさ) 二階(にかい) 願(ねが)い 予約(よやく) 待(ま)って 下(くだ)さい 英語(えいご) 水(みず) 弁当(べんとう) 袋(ふくろ) 箸(はし) 会計(かいけい) 温(あたた)め 大丈夫(だいじょうぶ) 勘定(かんじょう) 単品(たんぴん) 店内(てんない) 持(も)ち帰(かえ)り 私(わたし) 見(み) 駅(えき) 出口(でぐち) 入口(いりぐち) 非常口(ひじょうぐち) 乗(の)り換(か)え 乗(の)り場(ば) 右(みぎ) 左(ひだり) 電車(でんしゃ) 行(い) 土産(みやげ) 免税(めんぜい) 現金(げんきん) 領収書(りょうしゅうしょ) 一緒(いっしょ) 一(ひと)つ 二(ふた)つ 試着室(しちゃくしつ) 靴(くつ) 上着(うわぎ) 大(おお)きい 小(ちい)さい 色(いろ) 着替(きが)え 病院(びょういん) 交番(こうばん) 薬(くすり) 頭(あたま) 腹(なか) 救急車(きゅうきゅうしゃ) 警察(けいさつ) 助(たす)け 痛(いた)い 道(みち) 迷(まよ)い 呼(よ)んで 来(き) 今日(きょう) 明日(あした) 今(いま) 何時(なんじ) 午前(ごぜん) 午後(ごご) 会(あ)い 何曜日(なんようび) 日曜日(にちようび) 月曜日(げつようび) 食(た)べ 何(なに)を 何日間(なんにちかん) 何名様(なんめいさま) 何(なん) 京都(きょうと) 新宿(しんじゅく) 手洗(てあら)い 改札(かいさつ) 禁煙(きんえん) 営業中(えいぎょうちゅう) 準備中(じゅんびちゅう) 危険(きけん) 三人(さんにん) 三名(さんめい) 七時(しちじ) 十時(じゅうじ) 三時(さんじ) 九時(くじ) 時(じ) 料理(りょうり) 使(つか)え 切符(きっぷ) 買(か)い 分(わ)かり 三千円(さんぜんえん) 五千円(ごせんえん) 高(たか)い 安(やす)い 隣(となり) 空室(くうしつ) 口(ぐち) 中(ちゅう) 禁(きん) 地図(ちず) 立入禁止(たちいりきんし) 煙(えん)";
-const FURI = FURI_SRC.split(' ').map(function(e){
-  const segs=[]; let plain='';
-  e.replace(/([\u4e00-\u9fff々]+)\(([^)]+)\)|([^\u4e00-\u9fff々()]+)/g,function(m,k,r,kana){ if(k){ segs.push([k,r]); plain+=k; } else { segs.push([kana,'']); plain+=kana; } return m; });
-  return [plain, segs];
-}).sort(function(a,b){ return b[0].length-a[0].length; });
-const FURI_SOZINHO = {'何':'なに'};
-function furiHTML(t){
-  const tt=t.trim();
-  if(FURI_SOZINHO[tt]) return esc(t).replace(tt, '<ruby>'+tt+'<rt>'+FURI_SOZINHO[tt]+'</rt></ruby>');
-  let out='', i=0;
-  while(i<t.length){
-    if(/[\u4e00-\u9fff々]/.test(t[i])){
-      const hit = FURI.find(function(f){ return t.startsWith(f[0], i); });
-      if(hit){ hit[1].forEach(function(sg){ out += sg[1] ? '<ruby>'+sg[0]+'<rt>'+sg[1]+'</rt></ruby>' : esc(sg[0]); }); i += hit[0].length; continue; }
-    }
-    out += esc(t[i]); i++;
-  }
-  return out;
-}
-function aplicarFurigana(raiz){
-  const w = document.createTreeWalker(raiz, NodeFilter.SHOW_TEXT, null);
-  const nos=[]; let n;
-  while((n=w.nextNode())){
-    if(!/[\u4e00-\u9fff]/.test(n.nodeValue)) continue;
-    const pai = n.parentNode; if(!pai || !pai.closest || pai.closest('ruby,script,style,textarea,title')) continue;
-    nos.push(n);
-  }
-  nos.forEach(function(no){ const sp=document.createElement('span'); sp.innerHTML=furiHTML(no.nodeValue); no.replaceWith.apply(no, Array.from(sp.childNodes)); });
-}
-(function(){
-  const alvo = document.getElementById('tab-mapas'); if(!alvo) return;
-  let agendado=false;
-  new MutationObserver(function(){ if(agendado) return; agendado=true; requestAnimationFrame(function(){ agendado=false; aplicarFurigana(alvo); }); }).observe(alvo,{childList:true,subtree:true});
-  aplicarFurigana(alvo);
-})();
 
 function esc(s){
   return String(s == null ? '' : s)
@@ -1533,12 +1468,10 @@ function renderProva(){
   const m=MAPS()[cur], lang=LANGS[curLang].key;
   const txt = PROVA_TXT[UI()===undefined?'pt':(LANGS[curLang].key==='pt'?'en':'pt')];
   const el=document.getElementById('prova-cta');
-  const AULA_SLUG={aeroporto:'aeroporto',hotel:'hotel',conbini:'kombini',restaurante:'restaurante',trens:'trens',compras:'compras',roupas:'roupas',sos:'emergencia',base:'apresentacao',numeros:'horas',planos:'planos',placas:'sinalizacao'};
-  const aulaLink = (lang==='ja' && AULA_SLUG[m.id]) ? '<p style="margin:0 0 14px"><a href="/idiomas/mapas/'+AULA_SLUG[m.id]+'/aula/">🎒 Fazer a aula deste mapa com o seu avatar →</a></p>' : '';
   if(PROVAS[lang] && PROVAS[lang].includes(m.id)){
-    el.innerHTML=aulaLink+'<h3>'+txt.t+'</h3><p>'+txt.p+'</p><a href="/idiomas/planeta-utopia/?lang='+lang+'&terr='+m.id+'&from=mapas">'+txt.b+'</a>';
+    el.innerHTML='<h3>'+txt.t+'</h3><p>'+txt.p+'</p><a href="/idiomas/planeta-utopia/?lang='+lang+'&terr='+m.id+'&from=mapas">'+txt.b+'</a>';
   } else {
-    el.innerHTML=aulaLink+'<p class="soon">'+txt.soon+'</p>';
+    el.innerHTML='<p class="soon">'+txt.soon+'</p>';
   }
 }
 
@@ -1568,27 +1501,22 @@ function switchHubTab(tabName) {
 }
 
 const mapasHub = [
-  { id: 1, slug:'aeroporto', emoji: '✈️', titulo: 'Aeroporto', descricao: 'Imigração, reserva, bagagem' },
-  { id: 2, slug:'hotel', emoji: '🏨', titulo: 'Hotel', descricao: 'Check-in, café da manhã, problemas no quarto' },
-  { id: 3, slug:'restaurante', emoji: '🍜', titulo: 'Restaurante', descricao: 'Quantas pessoas, pedido, conta' },
-  { id: 4, slug:'kombini', emoji: '🏪', titulo: 'Konbini', descricao: 'Esquentar, sacola, recibo' },
-  { id: 5, slug:'trens', emoji: '🚆', titulo: 'Trens', descricao: 'Destino, preço, plataforma' },
-  { id: 6, slug:'compras', emoji: '🎁', titulo: 'Compras', descricao: 'Preço, desconto, これ・それ・あれ' },
-  { id: 7, slug:'roupas', emoji: '👚', titulo: 'Roupas', descricao: 'Provar, tamanho, cor' },
-  { id: 8, slug:'emergencia', emoji: '🆘', titulo: 'Emergência', descricao: 'Perdi, dói aqui, chame ajuda' },
-  { id: 9, slug:'apresentacao', emoji: '🤝', titulo: 'Apresentação', descricao: 'Nome, país, trabalho, hobby' },
-  { id: 10, slug:'horas', emoji: '🕒', titulo: 'Horas', descricao: 'Que horas são, marcar horário' },
-  { id: 11, slug:'planos', emoji: '🎬', titulo: 'Planos', descricao: 'Convidar, aceitar, recusar' },
-  { id: 12, slug:'sinalizacao', emoji: '🪧', titulo: 'Sinalização', descricao: 'Placas, saída, proibido, perigo' }
+  { id: 1, emoji: '✈️', titulo: 'Chegada', descricao: 'Aeroporto, documentação, primeiras palavras' },
+  { id: 2, emoji: '🏨', titulo: 'Hotel', descricao: 'Check-in, quarto, serviços' },
+  { id: 3, emoji: '🍱', titulo: 'Restaurante', descricao: 'Cardápio, pedidos, preferências' },
+  { id: 4, emoji: '🛍️', titulo: 'Compras', descricao: 'Preços, tamanhos, devoluções' },
+  { id: 5, emoji: '🚕', titulo: 'Transporte', descricao: 'Táxi, metrô, direções' },
+  { id: 6, emoji: '🏥', titulo: 'Saúde', descricao: 'Farmácia, médico, emergências' },
+  { id: 7, emoji: '🏦', titulo: 'Banco', descricao: 'Câmbio, caixa, dúvidas financeiras' },
+  { id: 8, emoji: '📞', titulo: 'Comunicação', descricao: 'Telefone, internet, postal' },
+  { id: 9, emoji: '🎭', titulo: 'Lazer', descricao: 'Museu, cinema, eventos' },
+  { id: 10, emoji: '🏠', titulo: 'Moradia', descricao: 'Aluguel, condomínio, vizinhos' },
+  { id: 11, emoji: '👔', titulo: 'Trabalho', descricao: 'Escritório, reuniões, carreira' },
+  { id: 12, emoji: '💍', titulo: 'Relacionamentos', descricao: 'Família, amigos, encontros' }
 ];
 
 function checkAulaZeroStatus() {
-  try { return localStorage.getItem('aulaZeroCompleted') === 'true' || localStorage.getItem('aulaZeroPulada') === 'true'; } catch(e) { return false; }
-}
-function pularAulaZero() {
-  try { localStorage.setItem('aulaZeroPulada', 'true'); } catch(e) {}
-  const g = document.getElementById('mapasGrid'); if (g) { g.innerHTML = ''; renderMapasHub(); }
-  updateAulaZeroStatus();
+  return localStorage.getItem('aulaZeroCompleted') === 'true';
 }
 
 function renderMapasHub() {
@@ -1599,8 +1527,7 @@ function renderMapasHub() {
   
   mapasHub.forEach(mapa => {
     const card = document.createElement('a');
-    card.href = aulaZeroCompleted ? '/idiomas/mapas/' + mapa.slug + '/aula/' : '#';
-    let feito = false; try { const pm = JSON.parse(localStorage.getItem('utopiaMapas1') || '{}'); feito = !!(pm[mapa.slug] && pm[mapa.slug].steps && pm[mapa.slug].steps[4]); } catch(e) {}
+    card.href = aulaZeroCompleted ? '#' : '#';
     card.className = `mapa-card ${!aulaZeroCompleted ? 'locked' : ''}`;
     
     let html = '';
@@ -1611,7 +1538,7 @@ function renderMapasHub() {
       <div class="number">Mapa ${mapa.id}</div>
       <div class="emoji">${mapa.emoji}</div>
       <h3>${mapa.titulo}</h3>
-      <p>${mapa.descricao}</p>${feito ? '<p style="color:var(--rose);font-weight:700;margin-top:6px;">🏅 aula concluída</p>' : ''}
+      <p>${mapa.descricao}</p>
     `;
     
     card.innerHTML = html;
@@ -1627,11 +1554,7 @@ function updateAulaZeroStatus() {
   
   const completed = checkAulaZeroStatus();
   
-  const pulou = (function(){ try { return localStorage.getItem('aulaZeroCompleted') !== 'true' && localStorage.getItem('aulaZeroPulada') === 'true'; } catch(e) { return false; } })();
-  const pb = document.getElementById('pularAZ'); if (pb) pb.parentElement.hidden = completed;
-  if (pulou) {
-    progress.innerHTML = '✓ Mapas abertos. A Aula Zero continua aqui quando você quiser.';
-  } else if (completed) {
+  if (completed) {
     card.classList.add('completed');
     progress.innerHTML = '✓ Aula Zero concluída! Todos os Mapas desbloqueados.';
   } else {
@@ -1649,16 +1572,7 @@ window.addEventListener('storage', () => {
   location.reload();
 });
 </script>
-<script>
-if(window.AUDIO_CREDITO){ const cr=document.createElement('p'); cr.style.cssText='text-align:center;font-size:12px;color:#707070;margin:18px 16px 28px'; cr.textContent='Vozes sintéticas em japonês: '+window.AUDIO_CREDITO+'. Aos poucos, as gravações da professora vão substituindo.'; document.body.appendChild(cr); }
-</script>
 <script src="/idiomas/dados/avatar.js?v=20261016g"></script>
-<script src="/idiomas/dados/avatar-badge.js?v=20261026a"></script>
-<script>
-(function(){ try{ const q=new URLSearchParams(location.search).get('explorar'); if(!q) return;
-  const i=LANGS.findIndex(l=>l.key===q); if(i<0) return;
-  const b=document.querySelector('.hub-tabs button:nth-child(2)'); if(b) b.click();
-  setLang(i); }catch(e){} })();
-</script>
+<script src="/idiomas/dados/avatar-badge.js?v=20261016g"></script>
 </body>
 </html>

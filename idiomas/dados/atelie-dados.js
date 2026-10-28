@@ -124,45 +124,11 @@ const TOTAL=Object.keys(WORDS).length;
 let jaVoice=null;
 function pickVoice(){ if(!window.speechSynthesis) return; const v=speechSynthesis.getVoices(); jaVoice=v.find(x=>/^ja/i.test(x.lang))||null; }
 if(window.speechSynthesis){ pickVoice(); speechSynthesis.onvoiceschanged=pickVoice; }
-/* voz: toca a gravação da もち子 quando existe (window.AUDIO_MAP); senão, a voz do aparelho */
-const chaveAudio=t=>String(t||'').replace(/[\s、。，．,.!！?？…・「」『』（）()]/g,'');
-let audioAtual=null;
-function speakTTS(text){
-  if(!window.speechSynthesis){ if(document.getElementById('voiceNote')) $('voiceNote').textContent='Este navegador não tem voz sintetizada.'; return; }
+function speak(text){
+  if(!window.speechSynthesis){ if(document.getElementById('voiceNote')) $('voiceNote').textContent='Este navegador não tem voz sintetizada. Na versão final, o áudio vem de gravações.'; return; }
   speechSynthesis.cancel();
-  const u=new SpeechSynthesisUtterance(text); u.lang='ja-JP'; u.rate=.85*(window.UniVel?UniVel.get():1); if(jaVoice) u.voice=jaVoice;
+  const u=new SpeechSynthesisUtterance(text); u.lang='ja-JP'; u.rate=.85; if(jaVoice) u.voice=jaVoice;
   speechSynthesis.speak(u);
-}
-/* ids dos áudios para um texto: a frase inteira, ou todas as frases soltas (se todas existirem) */
-function idsDoTexto(text,opc){
-  const M=window.AUDIO_MAP||{}; if(!window.AUDIO_MAP) return null;
-  if(opc&&opc.letra&&[...String(text)].length===1&&M['letra_'+text]) return [M['letra_'+text]];
-  const um=M[chaveAudio(text)]; if(um) return [um];
-  const partes=String(text).split(/(?<=[。！？!?])\s*/).filter(x=>chaveAudio(x));
-  if(partes.length<2) return null;
-  const ids=partes.map(x=>M[chaveAudio(x)]); return ids.every(Boolean)?ids:null;
-}
-function speak(text,opc){
-  try{ if(audioAtual){ audioAtual.pause(); audioAtual=null; } if(window.speechSynthesis) speechSynthesis.cancel(); }catch(e){}
-  const ids=idsDoTexto(text,opc);
-  if(!ids) return speakTTS(text);
-  let i=0, caiu=false; const base=window.AUDIO_BASE||'/idiomas/audio/';
-  const cair=()=>{ if(caiu) return; caiu=true; audioAtual=null; speakTTS(text); };
-  const toca=()=>{ try{ const a=new Audio(base+ids[i]+'.mp3'); audioAtual=a; if(window.UniVel) UniVel.aplica(a);
-    a.onerror=cair; a.onended=()=>{ if(audioAtual!==a) return; i++; if(i<ids.length) toca(); else audioAtual=null; };
-    const pr=a.play(); if(pr&&pr.catch) pr.catch(cair); }catch(e){ cair(); } };
-  toca();
-}
-
-/* fila mista: {id} toca a gravação; {tts} fala com a voz do aparelho (para o que muda de pessoa para pessoa, como o nome) */
-function falaFila(itens,fallback){
-  try{ if(audioAtual){ audioAtual.pause(); audioAtual=null; } if(window.speechSynthesis) speechSynthesis.cancel(); }catch(e){}
-  let i=0, parou=false; const base=window.AUDIO_BASE||'/idiomas/audio/';
-  const cair=()=>{ if(parou) return; parou=true; audioAtual=null; speakTTS(fallback); };
-  const prox=()=>{ if(parou) return; if(i>=itens.length){ audioAtual=null; return; } const it=itens[i++];
-    if(it.tts){ if(!window.speechSynthesis) return prox(); const u=new SpeechSynthesisUtterance(it.tts); u.lang='ja-JP'; u.rate=.85*(window.UniVel?UniVel.get():1); if(jaVoice) u.voice=jaVoice; u.onend=prox; u.onerror=prox; speechSynthesis.speak(u); return; }
-    try{ const a=new Audio(base+it.id+'.mp3'); audioAtual=a; if(window.UniVel) UniVel.aplica(a); a.onerror=cair; a.onended=()=>{ if(audioAtual===a) prox(); }; const pr=a.play(); if(pr&&pr.catch) pr.catch(cair); }catch(e){ cair(); } };
-  prox();
 }
 
 const MONTH_K=['','いちがつ','にがつ','さんがつ','しがつ','ごがつ','ろくがつ','しちがつ','はちがつ','くがつ','じゅうがつ','じゅういちがつ','じゅうにがつ'];
@@ -182,7 +148,7 @@ function encodeSel(S){ return [S.hair,S.hairColor,S.face,S.clothes,S.clothColor,
 function decodeSel(str){ const p=String(str||'').split('.'); if(p.length<10) return null;
   return {hair:p[0],hairColor:p[1],face:p[2],clothes:p[3],clothColor:p[4],bg:p[5],skin:+p[6]||0,age:+p[7]||20,acc:p[8]?p[8].split('-'):[],traits:p[9]?p[9].split('-'):[]}; }
 const SITE='https://unirversos.com';
-function cadernoURL(data){ const q=new URLSearchParams({n:data.name||'',w:encodeWords(data.learned||{}),a:encodeSel(data.sel)}); return SITE+'/idiomas/caderno/?'+q.toString(); }
+function cadernoURL(data){ const q=new URLSearchParams({n:data.name||'',w:encodeWords(data.learned||{}),a:encodeSel(data.sel)}); return SITE+'/idiomas/planeta-utopia/caderno/?'+q.toString(); }
 
 /* ---------- romaji (Hepburn, com mácron) ---------- */
 const RO_DI={きゃ:'kya',きゅ:'kyu',きょ:'kyo',しゃ:'sha',しゅ:'shu',しょ:'sho',ちゃ:'cha',ちゅ:'chu',ちょ:'cho',にゃ:'nya',にゅ:'nyu',にょ:'nyo',ひゃ:'hya',ひゅ:'hyu',ひょ:'hyo',みゃ:'mya',みゅ:'myu',みょ:'myo',りゃ:'rya',りゅ:'ryu',りょ:'ryo',ぎゃ:'gya',ぎゅ:'gyu',ぎょ:'gyo',じゃ:'ja',じゅ:'ju',じょ:'jo',びゃ:'bya',びゅ:'byu',びょ:'byo',ぴゃ:'pya',ぴゅ:'pyu',ぴょ:'pyo',てぃ:'ti',でぃ:'di',ふぁ:'fa',ふぃ:'fi',ふぇ:'fe',ふぉ:'fo',うぃ:'wi',うぇ:'we',うぉ:'wo',しぇ:'she',じぇ:'je',ちぇ:'che',ゔぁ:'va'};
@@ -217,5 +183,3 @@ function kana2ro(str){
   const h=String(str).replace(/[ァ-ヶ]/g,c=>String.fromCharCode(c.charCodeAt(0)-0x60));
   return h.split(/\s+/).filter(Boolean).flatMap(t=>t.split(/(?<=[！!。？?])/)).flatMap(roSplit).map(roTok).join(' ').replace(/ ([.,!?])/g,'$1');
 }
-/* crédito da voz (exigido pela licença do VOICEVOX) */
-if(window.AUDIO_CREDITO&&document.body&&!document.querySelector('.credito-voz')){ const cr=document.createElement('p'); cr.className='credito-voz'; cr.style.cssText='margin:24px 16px;text-align:center;font-size:12px;color:#6b5a67'; cr.textContent='Vozes sintéticas: '+window.AUDIO_CREDITO+'.'; document.body.appendChild(cr); }
