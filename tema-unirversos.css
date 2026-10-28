@@ -1,0 +1,42 @@
+/* Tema Unirversos para páginas antigas (Travessia, Revista): mesmo visual da home e do Tesouros.
+   Vai DEPOIS do <style> da página, para sobrescrever cores, fontes, fundo e botões. */
+:root{
+  --paper:#fdf6f4; --ink:#3a2b38; --muted:#6b5a67; --line:#ecdadd; --blush:#f8dde1; --pink:#c23f5e; --pink-deep:#a8344f;
+  --sage:#517158; --sage-soft:#e8efe8; --gold:#8e6a1f; --gold-soft:#fbf2df;
+  --f-display:"Baloo 2","Zen Maru Gothic",system-ui,sans-serif;
+  --f-body:"Zen Maru Gothic","Hiragino Maru Gothic ProN","Noto Sans JP",system-ui,sans-serif;
+  /* variáveis das páginas antigas */
+  --color-dark:var(--ink); --dark:var(--ink); --color-rose:var(--pink); --rose:var(--pink); --rose-deep:var(--pink-deep);
+  --color-gray:var(--muted); --gray:var(--muted); --color-light-gray:#fbeef0; --rose-soft:#fbeef0;
+  --color-white:#ffffff; --bg:#ffffff; --cream:#fdf6f4;
+}
+html{scroll-behavior:smooth}
+body{background-color:var(--paper)!important;color:var(--ink)!important;font-family:var(--f-body)!important;line-height:1.7;
+  background-image:radial-gradient(var(--line) 1.2px,transparent 1.3px)!important;background-size:22px 22px!important}
+h1,h2,h3,h4{font-family:var(--f-display)!important;font-weight:800!important;color:var(--ink);letter-spacing:-.005em;text-wrap:balance}
+h1 em,h1 span,h1 .destaque,.hero h1 span{color:var(--pink)!important;font-style:normal}
+a:focus-visible,button:focus-visible{outline:3px solid #b7a6dc;outline-offset:3px;border-radius:8px}
+/* barra do site, igual à do Tesouros */
+.sitebar{max-width:1060px;margin:0 auto;padding:18px 16px 6px;display:flex;flex-wrap:wrap;justify-content:space-between;align-items:center;gap:10px 18px}
+.sitebar .logo{font-family:var(--f-display);font-weight:800;font-size:19px;letter-spacing:.14em;text-decoration:none;color:var(--ink);text-transform:uppercase}
+.sitebar .logo span{color:var(--pink)}
+.sitebar .navlinks{display:flex;flex-wrap:wrap;gap:6px 20px;font-size:14px}
+.sitebar .navlinks a{text-decoration:none;color:var(--muted);font-size:14px;letter-spacing:0}
+.sitebar .navlinks a:hover{color:var(--pink)}
+.sitebar .navlinks a[aria-current="page"]{color:var(--ink);border-bottom:2px solid var(--pink)}
+/* botões */
+.cta-button,.btn,button.primary,.btn-primary,a.cta{font-family:var(--f-display)!important;font-weight:700!important;border-radius:999px!important}
+.cta-button,.btn-primary,.btn.pri,.primary{background:var(--pink)!important;color:#fff!important;border-color:var(--pink)!important;box-shadow:0 6px 16px -8px rgba(194,63,94,.7)}
+/* cards e caixas */
+.card,.step,.etapa,.bloco{border-radius:20px}
+footer{background:transparent!important;border-top:1.5px solid var(--line)!important;color:var(--muted)!important}
+footer a{color:var(--pink)!important}
+@media (max-width:640px){.sitebar{padding:14px 16px 4px}}
+
+/* abas do Tesouros */
+.abas{max-width:1060px;margin:10px auto 0;padding:5px;display:flex;gap:6px;background:#fff;border:1.5px solid var(--line);border-radius:999px;width:max-content;overflow-x:auto}
+.abas a{flex:0 0 auto;text-decoration:none;font-family:var(--f-display);font-weight:700;font-size:15px;padding:8px 16px;border-radius:999px;color:var(--muted);white-space:nowrap}
+.abas a[aria-current="page"]{background:var(--ink);color:#fff}
+.abas a:not([aria-current]):hover{color:var(--pink)}
+@media (max-width:640px){.abas{width:calc(100% - 32px);margin-left:16px;margin-right:16px}.abas a{flex:1 1 0;text-align:center;padding:8px 8px;font-size:13.5px;white-space:normal;line-height:1.25}}
+h1 span,h1 em,h2 span{font-weight:800!important}
