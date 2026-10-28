@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 <title>Kanji · Unirversos Idiomas</title>
-<meta name="description" content="Os kanji dos 12 mapas e do N5, com ordem dos traços, leituras, exemplos com áudio e revisão espaçada como no Anki. Baralhos para baixar no app Anki.">
+<meta name="description" content="Os kanji do dia a dia no Japão e do N5, com ordem dos traços, leituras, exemplos com áudio e revisão espaçada como no Anki. Baralhos para baixar no app Anki.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@500;700;800&family=Zen+Maru+Gothic:wght@400;500;700&display=swap">
@@ -49,7 +49,7 @@ h2{font-family:var(--f-display);font-size:24px;line-height:1.2;margin:0 0 4px}
 .seg button[aria-pressed="true"]{background:var(--ink);border-color:var(--ink);color:#fff}
 .rev-box{display:grid;gap:12px}
 .previa{display:grid;gap:8px}.previa .pt-t{font-size:14px;color:var(--muted)}.previa .pt-t b{color:var(--ink)}
-.previa .fila{display:grid;grid-template-columns:repeat(auto-fill,minmax(78px,1fr));gap:8px}
+.previa .fila{display:grid;grid-template-columns:repeat(auto-fill,minmax(92px,1fr));gap:8px}.kt .exw{color:var(--pink-d);font-size:11.5px;margin-top:2px}
 .cont{display:flex;flex-wrap:wrap;gap:8px 20px;font-size:15px}
 .cont b{font-family:var(--f-display);font-size:26px;display:block;line-height:1}
 .cont span{color:var(--muted)}
@@ -121,28 +121,20 @@ footer{border-top:1.5px dashed var(--line);padding-top:18px;display:flex;flex-wr
   <header>
     <p class="eyebrow">ferramenta · japonês</p>
     <h1><ruby>漢字<rt>かんじ</rt></ruby> Kanji</h1>
-    <p class="lede">Os 181 kanji que aparecem nos 12 mapas e na Aula Zero, mais 34 do nível N5 e 22 de adjetivos e cores do dia a dia. Também em baralhos de dias da semana, números, cores e adjetivos. Toque num kanji para ver a ordem dos traços, as leituras e uma palavra da aula. Para fixar, revise todo dia: cada kanji volta no dia certo, como no Anki.</p>
+    <p class="lede">237 kanji do dia a dia no Japão, organizados por tema: dias da semana, números, cores, comida, trem, compras, saúde e mais. Toque num kanji para ver a ordem dos traços, as leituras e uma palavra de exemplo com áudio. Para fixar, revise todo dia: cada kanji volta no dia certo, como no Anki.</p>
     <div class="tools" style="margin-top:12px"><button class="btn" type="button" id="btnRo" aria-pressed="true">Romaji: sim</button></div>
   </header>
 
   <section class="card rev-box" aria-labelledby="h-rev">
     <div><h2 id="h-rev">Revisão de hoje</h2><p class="sub">Escolha o baralho e veja logo abaixo os kanji dele. Os novos entram 5 por vez.</p></div>
-    <div class="seg" role="group" aria-label="Baralho" id="baralho">
-      <button type="button" data-b="mapas" aria-pressed="true">Dos mapas</button>
-      <button type="button" data-b="n5" aria-pressed="false">N5</button>
-      <button type="button" data-b="semana" aria-pressed="false">📅 Dias da semana</button>
-      <button type="button" data-b="numeros" aria-pressed="false">🔢 Números</button>
-      <button type="button" data-b="cores" aria-pressed="false">🎨 Cores</button>
-      <button type="button" data-b="adjetivos" aria-pressed="false">🌈 Adjetivos</button>
-      <button type="button" data-b="todos" aria-pressed="false">Todos</button>
-    </div>
+    <div class="seg" role="group" aria-label="Baralho" id="baralho"></div>
     <div class="previa" id="previa" aria-live="polite"></div>
     <div class="cont" id="cont" aria-live="polite"></div>
     <div class="tools"><button class="btn pri" type="button" id="btnRev">Revisar agora →</button><button class="btn" type="button" id="btnNovos">Aprender 5 novos</button></div>
   </section>
 
   <section class="card" aria-labelledby="h-est">
-    <div><h2 id="h-est">A estante</h2><p class="sub">Organizada pelo mapa onde cada kanji aparece primeiro.</p></div>
+    <div><h2 id="h-est">A estante</h2><p class="sub">Organizada por tema. Cada kanji aparece em um só grupo.</p></div>
     <div class="estante-tabs" role="tablist" aria-label="Grupos" id="tabs"></div>
     <div class="grade" id="grade"></div>
     <p class="leg"><span><i style="background:#e9dfe1"></i>novo</span><span><i style="background:#e3c98b"></i>aprendendo</span><span><i style="background:var(--sage)"></i>já sabe (revisão com 3 semanas ou mais)</span></p>
@@ -151,12 +143,22 @@ footer{border-top:1.5px dashed var(--line);padding-top:18px;display:flex;flex-wr
   <section class="card anki" aria-labelledby="h-anki">
     <div><h2 id="h-anki">Levar para o app Anki</h2><p class="sub">Os mesmos cartões, para estudar no aplicativo Anki. Os exemplos que já têm voz gravada vão com o áudio.</p></div>
     <div class="dl">
-      <a class="btn pri" href="/idiomas/kanji/anki/unirversos-kanji-mapas.apkg" download>⬇ Baralho dos mapas (181)</a>
-      <a class="btn" href="/idiomas/kanji/anki/unirversos-kanji-n5.apkg" download>⬇ Baralho N5 (79)</a>
-      <a class="btn" href="/idiomas/kanji/anki/unirversos-kanji-semana.apkg" download>⬇ 📅 Dias da semana (8)</a>
+      <a class="btn pri" href="/idiomas/kanji/anki/unirversos-kanji-semana.apkg" download>⬇ 📅 Dias da semana (8)</a>
       <a class="btn" href="/idiomas/kanji/anki/unirversos-kanji-numeros.apkg" download>⬇ 🔢 Números (14)</a>
       <a class="btn" href="/idiomas/kanji/anki/unirversos-kanji-cores.apkg" download>⬇ 🎨 Cores (8)</a>
       <a class="btn" href="/idiomas/kanji/anki/unirversos-kanji-adjetivos.apkg" download>⬇ 🌈 Adjetivos (31)</a>
+      <a class="btn" href="/idiomas/kanji/anki/unirversos-kanji-pessoas.apkg" download>⬇ 🧍 Pessoas e família (13)</a>
+      <a class="btn" href="/idiomas/kanji/anki/unirversos-kanji-tempo.apkg" download>⬇ 🕒 Tempo (12)</a>
+      <a class="btn" href="/idiomas/kanji/anki/unirversos-kanji-escola.apkg" download>⬇ 📚 Escola e língua (5)</a>
+      <a class="btn" href="/idiomas/kanji/anki/unirversos-kanji-comida.apkg" download>⬇ 🍜 Comida e restaurante (14)</a>
+      <a class="btn" href="/idiomas/kanji/anki/unirversos-kanji-dinheiro.apkg" download>⬇ 💴 Dinheiro e compras (18)</a>
+      <a class="btn" href="/idiomas/kanji/anki/unirversos-kanji-viagem.apkg" download>⬇ ✈️ Viagem e hotel (18)</a>
+      <a class="btn" href="/idiomas/kanji/anki/unirversos-kanji-cidade.apkg" download>⬇ 🚆 Trem e cidade (25)</a>
+      <a class="btn" href="/idiomas/kanji/anki/unirversos-kanji-saude.apkg" download>⬇ 🆘 Saúde e emergência (16)</a>
+      <a class="btn" href="/idiomas/kanji/anki/unirversos-kanji-sinais.apkg" download>⬇ 🪧 Sinais e avisos (9)</a>
+      <a class="btn" href="/idiomas/kanji/anki/unirversos-kanji-natureza.apkg" download>⬇ 🌦️ Natureza e direções (14)</a>
+      <a class="btn" href="/idiomas/kanji/anki/unirversos-kanji-verbos.apkg" download>⬇ 🗣️ Verbos e expressões (32)</a>
+      <a class="btn" href="/idiomas/kanji/anki/unirversos-kanji-n5.apkg" download>⬇ 📗 N5 (79)</a>
     </div>
     <ol class="passos">
       <li>Instale o Anki: AnkiDroid no Android, AnkiMobile no iPhone ou o Anki no computador (apps.ankiweb.net).</li>
@@ -177,8 +179,8 @@ footer{border-top:1.5px dashed var(--line);padding-top:18px;display:flex;flex-wr
 
 <script src="/idiomas/dados/velocidade-voz.js?v=1"></script>
 <script src="/idiomas/dados/audio-mapa.js?v=4a8ffd4b"></script>
-<script src="/idiomas/dados/kanji-dados.js?v=ae6afb01"></script>
-<script src="/idiomas/dados/kanji-tracos.js?v=ae6afb01"></script>
+<script src="/idiomas/dados/kanji-dados.js?v=671eb6dd"></script>
+<script src="/idiomas/dados/kanji-tracos.js?v=671eb6dd"></script>
 <script>
 (function(){
 const $=id=>document.getElementById(id);
@@ -206,10 +208,9 @@ applyRo();
 
 /* ---------- dados ---------- */
 const KD=window.UNI_KANJI, G=KD.grupos, F=KD.k;
-const MAPAS_K=G.filter(g=>g.id!=='n5'&&g.id!=='mais').flatMap(g=>g.k), N5_K=Object.keys(F).filter(k=>F[k].n===5), TODOS=Object.keys(F);
-const BAR={mapas:MAPAS_K,n5:N5_K,todos:TODOS}; (KD.temas||[]).forEach(t=>{ BAR[t.id]=t.k; });
+const N5_K=Object.keys(F).filter(k=>F[k].n===5), TODOS=Object.keys(F);
+const BAR={todos:TODOS,n5:N5_K}; G.forEach(t=>{ BAR[t.id]=t.k; });
 const TIPO={semana:'Dia da semana',numeros:'Número',cores:'Cor',adjetivos:'Como adjetivo'};
-const AULA={aeroporto:1,hotel:1,restaurante:1,kombini:1,trens:1,compras:1,roupas:1,emergencia:1,apresentacao:1,horas:1,planos:1,sinalizacao:1};
 const TIT=Object.fromEntries(G.map(g=>[g.id,g.emoji+' '+g.titulo]));
 
 /* ---------- repetição espaçada (estilo Anki, simplificado) ---------- */
@@ -234,13 +235,14 @@ function proximo(c,nota){ /* c={e,i,r,d}: e=facilidade, i=intervalo em dias, r=r
 const rotulo=ms=>ms<3600e3?Math.round(ms/MIN)+' min':ms<DIA*1.5?'1 dia':Math.round(ms/DIA)+' dias';
 const previa=(k,n)=>rotulo(proximo(S[k],n).d-Date.now());
 
-let bar='mapas';
+let bar='todos';
+$('baralho').innerHTML=[['todos','Todos'],['n5','N5']].concat(G.map(g=>[g.id,g.emoji+' '+g.titulo])).map(([id,t])=>`<button type="button" data-b="${id}" aria-pressed="${id===bar}">${esc(t)}</button>`).join('');
 function contas(){ const L=BAR[bar], now=Date.now();
   const venc=L.filter(k=>S[k]&&S[k].d<=now).length, novos=L.filter(k=>!S[k]).length, sab=L.filter(k=>estado(k)==='sb').length;
   return {venc,novos,sab,total:L.length}; }
 function renderPrevia(){ const L=BAR[bar]; const nome=($('baralho').querySelector('[aria-pressed="true"]')||{}).textContent||'';
   const grande=L.length>24; const lista=grande?L.filter(k=>!S[k]).concat(L.filter(k=>S[k])).slice(0,12):L;
-  $('previa').innerHTML=`<div class="pt-t"><b>${esc(nome.trim())}</b> · ${L.length} kanji${grande?' · mostrando os próximos 12. Veja todos na estante, mais abaixo':''}. Toque num kanji para ver a ficha.</div><div class="fila">${lista.map(k=>{ const st=estado(k); return `<button type="button" class="kt" data-k="${k}" aria-label="${k}: ${esc(F[k].sig)}"><span class="st ${st==='novo'?'':st}" aria-hidden="true"></span><span class="c" lang="ja">${k}</span><small>${esc(F[k].sig)}</small></button>`; }).join('')}</div>`; }
+  $('previa').innerHTML=`<div class="pt-t"><b>${esc(nome.trim())}</b> · ${L.length} kanji${grande?' · mostrando os próximos 12. Veja todos na estante, mais abaixo':''}. Toque num kanji para ver a ficha.</div><div class="fila">${lista.map(k=>{ const st=estado(k); return `<button type="button" class="kt" data-k="${k}" aria-label="${k}: ${esc(F[k].sig)}"><span class="st ${st==='novo'?'':st}" aria-hidden="true"></span><span class="c" lang="ja">${k}</span><small>${esc(F[k].sig.split(/[;,]/)[0])}</small><small class="exw" lang="ja">${esc(F[k].ex.k)}</small></button>`; }).join('')}</div>`; }
 $('previa').onclick=e=>{ const b=e.target.closest('.kt'); if(b) abreFicha(b.dataset.k); };
 function renderCont(){ renderPrevia(); const c=contas();
   $('cont').innerHTML=`<div class="hoje"><b>${c.venc}</b><span>para revisar</span></div><div><b>${c.novos}</b><span>novos</span></div><div><b>${c.sab}</b><span>de ${c.total} já sabe</span></div>`;
@@ -272,8 +274,7 @@ function verso(k){ const f=F[k];
   return `<div class="big"><div class="so-box" id="soBox">${tracos(k,true)}</div>
     <div style="display:grid;gap:8px"><div class="sig">${esc(f.sig)}</div><div class="lei">${le('ON',f.on)}${le('KUN',f.kun)}</div>
     <div class="meta">${f.tr} traços${f.n?' · JLPT N'+f.n:''} · <button type="button" class="linkb" id="soRe" style="font:inherit;border:0;background:none;color:var(--pink-d);font-weight:700;cursor:pointer;padding:0">↺ ver os traços de novo</button></div></div></div>
-    ${exBtn(ex,0,'')}${outros.map((e,i)=>exBtn(e,i+1,e.t||'Na aula')).join('')}
-    <p class="meta" style="margin:0">Aparece em: ${AULA[f.mapa]?`<a href="/idiomas/mapas/${f.mapa}/aula/">${esc(TIT[f.mapa])}</a>`:f.mapa==='aulazero'?`<a href="/idiomas/aula-zero/">${esc(TIT[f.mapa])}</a>`:f.mapa==='mais'?'lista de adjetivos e cores (ainda não está num mapa)':'lista N5 (ainda não está num mapa)'}</p>`; }
+    ${exBtn(ex,0,'')}${outros.map((e,i)=>exBtn(e,i+1,e.t||'Na aula')).join('')}`; }
 let EXS=[];
 function ligaVerso(k){ $('fcard').querySelectorAll('[data-ex]').forEach(b=>{ b.onclick=()=>speak(EXS[+b.dataset.ex].k); }); $('soRe').onclick=()=>{ $('soBox').innerHTML=tracos(k,true); }; }
 let ultimoFoco=null;
