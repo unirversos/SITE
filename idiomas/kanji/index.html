@@ -119,7 +119,7 @@ footer{border-top:1.5px dashed var(--line);padding-top:18px;display:flex;flex-wr
   <header>
     <p class="eyebrow">ferramenta · japonês</p>
     <h1><ruby>漢字<rt>かんじ</rt></ruby> Kanji</h1>
-    <p class="lede">Os 181 kanji que aparecem nos 12 mapas e na Aula Zero, mais 34 do nível N5 e 20 de adjetivos do dia a dia. Também em baralhos de dias da semana, números e adjetivos. Toque num kanji para ver a ordem dos traços, as leituras e uma palavra da aula. Para fixar, revise todo dia: cada kanji volta no dia certo, como no Anki.</p>
+    <p class="lede">Os 181 kanji que aparecem nos 12 mapas e na Aula Zero, mais 34 do nível N5 e 22 de adjetivos e cores do dia a dia. Também em baralhos de dias da semana, números, cores e adjetivos. Toque num kanji para ver a ordem dos traços, as leituras e uma palavra da aula. Para fixar, revise todo dia: cada kanji volta no dia certo, como no Anki.</p>
     <div class="tools" style="margin-top:12px"><button class="btn" type="button" id="btnRo" aria-pressed="true">Romaji: sim</button></div>
   </header>
 
@@ -130,6 +130,7 @@ footer{border-top:1.5px dashed var(--line);padding-top:18px;display:flex;flex-wr
       <button type="button" data-b="n5" aria-pressed="false">N5</button>
       <button type="button" data-b="semana" aria-pressed="false">📅 Dias da semana</button>
       <button type="button" data-b="numeros" aria-pressed="false">🔢 Números</button>
+      <button type="button" data-b="cores" aria-pressed="false">🎨 Cores</button>
       <button type="button" data-b="adjetivos" aria-pressed="false">🌈 Adjetivos</button>
       <button type="button" data-b="todos" aria-pressed="false">Todos</button>
     </div>
@@ -151,7 +152,8 @@ footer{border-top:1.5px dashed var(--line);padding-top:18px;display:flex;flex-wr
       <a class="btn" href="/idiomas/kanji/anki/unirversos-kanji-n5.apkg" download>⬇ Baralho N5 (79)</a>
       <a class="btn" href="/idiomas/kanji/anki/unirversos-kanji-semana.apkg" download>⬇ 📅 Dias da semana (8)</a>
       <a class="btn" href="/idiomas/kanji/anki/unirversos-kanji-numeros.apkg" download>⬇ 🔢 Números (14)</a>
-      <a class="btn" href="/idiomas/kanji/anki/unirversos-kanji-adjetivos.apkg" download>⬇ 🌈 Adjetivos (35)</a>
+      <a class="btn" href="/idiomas/kanji/anki/unirversos-kanji-cores.apkg" download>⬇ 🎨 Cores (8)</a>
+      <a class="btn" href="/idiomas/kanji/anki/unirversos-kanji-adjetivos.apkg" download>⬇ 🌈 Adjetivos (31)</a>
     </div>
     <ol class="passos">
       <li>Instale o Anki: AnkiDroid no Android, AnkiMobile no iPhone ou o Anki no computador (apps.ankiweb.net).</li>
@@ -172,8 +174,8 @@ footer{border-top:1.5px dashed var(--line);padding-top:18px;display:flex;flex-wr
 
 <script src="/idiomas/dados/velocidade-voz.js?v=1"></script>
 <script src="/idiomas/dados/audio-mapa.js?v=a2c446d0"></script>
-<script src="/idiomas/dados/kanji-dados.js?v=2c514e20"></script>
-<script src="/idiomas/dados/kanji-tracos.js?v=2c514e20"></script>
+<script src="/idiomas/dados/kanji-dados.js?v=601a9639"></script>
+<script src="/idiomas/dados/kanji-tracos.js?v=601a9639"></script>
 <script>
 (function(){
 const $=id=>document.getElementById(id);
@@ -203,7 +205,7 @@ applyRo();
 const KD=window.UNI_KANJI, G=KD.grupos, F=KD.k;
 const MAPAS_K=G.filter(g=>g.id!=='n5'&&g.id!=='mais').flatMap(g=>g.k), N5_K=Object.keys(F).filter(k=>F[k].n===5), TODOS=Object.keys(F);
 const BAR={mapas:MAPAS_K,n5:N5_K,todos:TODOS}; (KD.temas||[]).forEach(t=>{ BAR[t.id]=t.k; });
-const TIPO={semana:'Dia da semana',numeros:'Número',adjetivos:'Como adjetivo'};
+const TIPO={semana:'Dia da semana',numeros:'Número',cores:'Cor',adjetivos:'Como adjetivo'};
 const AULA={aeroporto:1,hotel:1,restaurante:1,kombini:1,trens:1,compras:1,roupas:1,emergencia:1,apresentacao:1,horas:1,planos:1,sinalizacao:1};
 const TIT=Object.fromEntries(G.map(g=>[g.id,g.emoji+' '+g.titulo]));
 
@@ -264,7 +266,7 @@ function verso(k){ const f=F[k];
     <div style="display:grid;gap:8px"><div class="sig">${esc(f.sig)}</div><div class="lei">${le('ON',f.on)}${le('KUN',f.kun)}</div>
     <div class="meta">${f.tr} traços${f.n?' · JLPT N'+f.n:''} · <button type="button" class="linkb" id="soRe" style="font:inherit;border:0;background:none;color:var(--pink-d);font-weight:700;cursor:pointer;padding:0">↺ ver os traços de novo</button></div></div></div>
     ${exBtn(ex,0,'')}${outros.map((e,i)=>exBtn(e,i+1,e.t||'Na aula')).join('')}
-    <p class="meta" style="margin:0">Aparece em: ${AULA[f.mapa]?`<a href="/idiomas/mapas/${f.mapa}/aula/">${esc(TIT[f.mapa])}</a>`:f.mapa==='aulazero'?`<a href="/idiomas/aula-zero/">${esc(TIT[f.mapa])}</a>`:f.mapa==='mais'?'lista de adjetivos (ainda não está num mapa)':'lista N5 (ainda não está num mapa)'}</p>`; }
+    <p class="meta" style="margin:0">Aparece em: ${AULA[f.mapa]?`<a href="/idiomas/mapas/${f.mapa}/aula/">${esc(TIT[f.mapa])}</a>`:f.mapa==='aulazero'?`<a href="/idiomas/aula-zero/">${esc(TIT[f.mapa])}</a>`:f.mapa==='mais'?'lista de adjetivos e cores (ainda não está num mapa)':'lista N5 (ainda não está num mapa)'}</p>`; }
 let EXS=[];
 function ligaVerso(k){ $('fcard').querySelectorAll('[data-ex]').forEach(b=>{ b.onclick=()=>speak(EXS[+b.dataset.ex].k); }); $('soRe').onclick=()=>{ $('soBox').innerHTML=tracos(k,true); }; }
 let ultimoFoco=null;
