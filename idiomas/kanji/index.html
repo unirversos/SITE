@@ -91,6 +91,9 @@ h2{font-family:var(--f-display);font-size:24px;line-height:1.2;margin:0 0 4px}
 .exb .jp rt{font-size:.5em;color:var(--muted)}
 .exb .ro{display:block;color:var(--pink-d);font-weight:700;font-size:13.5px}
 .exb .pt{display:block;color:var(--muted);font-size:14px}
+.exb .pt.en,.sig-en,.kt .en{font-style:italic}
+.sig-en{font-size:17px;color:var(--muted);margin-top:-4px}
+.kt .en{color:var(--muted)}
 .frente{display:grid;justify-items:center;gap:6px;padding:10px 0}
 .frente .c{font-size:clamp(96px,30vw,140px);line-height:1;font-weight:500}
 .notas{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:6px}
@@ -179,8 +182,8 @@ footer{border-top:1.5px dashed var(--line);padding-top:18px;display:flex;flex-wr
 
 <script src="/idiomas/dados/velocidade-voz.js?v=1"></script>
 <script src="/idiomas/dados/audio-mapa.js?v=4a8ffd4b"></script>
-<script src="/idiomas/dados/kanji-dados.js?v=671eb6dd"></script>
-<script src="/idiomas/dados/kanji-tracos.js?v=671eb6dd"></script>
+<script src="/idiomas/dados/kanji-dados.js?v=6d06d103"></script>
+<script src="/idiomas/dados/kanji-tracos.js?v=6d06d103"></script>
 <script>
 (function(){
 const $=id=>document.getElementById(id);
@@ -242,7 +245,7 @@ function contas(){ const L=BAR[bar], now=Date.now();
   return {venc,novos,sab,total:L.length}; }
 function renderPrevia(){ const L=BAR[bar]; const nome=($('baralho').querySelector('[aria-pressed="true"]')||{}).textContent||'';
   const grande=L.length>24; const lista=grande?L.filter(k=>!S[k]).concat(L.filter(k=>S[k])).slice(0,12):L;
-  $('previa').innerHTML=`<div class="pt-t"><b>${esc(nome.trim())}</b> · ${L.length} kanji${grande?' · mostrando os próximos 12. Veja todos na estante, mais abaixo':''}. Toque num kanji para ver a ficha.</div><div class="fila">${lista.map(k=>{ const st=estado(k); return `<button type="button" class="kt" data-k="${k}" aria-label="${k}: ${esc(F[k].sig)}"><span class="st ${st==='novo'?'':st}" aria-hidden="true"></span><span class="c" lang="ja">${k}</span><small>${esc(F[k].sig.split(/[;,]/)[0])}</small><small class="exw" lang="ja">${esc(F[k].ex.k)}</small></button>`; }).join('')}</div>`; }
+  $('previa').innerHTML=`<div class="pt-t"><b>${esc(nome.trim())}</b> · ${L.length} kanji${grande?' · mostrando os próximos 12. Veja todos na estante, mais abaixo':''}. Toque num kanji para ver a ficha.</div><div class="fila">${lista.map(k=>{ const st=estado(k); return `<button type="button" class="kt" data-k="${k}" aria-label="${k}: ${esc(F[k].sig)}"><span class="st ${st==='novo'?'':st}" aria-hidden="true"></span><span class="c" lang="ja">${k}</span><small>${esc(F[k].sig.split(/[;,]/)[0])}</small><small class="en" lang="en">${esc(F[k].sigE.split(/[;,]/)[0])}</small><small class="exw" lang="ja">${esc(F[k].ex.k)}</small></button>`; }).join('')}</div>`; }
 $('previa').onclick=e=>{ const b=e.target.closest('.kt'); if(b) abreFicha(b.dataset.k); };
 function renderCont(){ renderPrevia(); const c=contas();
   $('cont').innerHTML=`<div class="hoje"><b>${c.venc}</b><span>para revisar</span></div><div><b>${c.novos}</b><span>novos</span></div><div><b>${c.sab}</b><span>de ${c.total} já sabe</span></div>`;
@@ -254,7 +257,7 @@ $('baralho').onclick=e=>{ const b=e.target.closest('button'); if(!b) return; bar
 let aba=G[0].id;
 function renderTabs(){ $('tabs').innerHTML=G.map(g=>`<button type="button" role="tab" data-g="${g.id}" aria-selected="${g.id===aba}">${g.emoji} ${esc(g.titulo)} · ${g.k.length}</button>`).join(''); }
 function renderGrade(){ const g=G.find(x=>x.id===aba);
-  $('grade').innerHTML=g.k.map(k=>{ const st=estado(k); return `<button type="button" class="kt" data-k="${k}" aria-label="${k}: ${esc(F[k].sig)}"><span class="st ${st==='novo'?'':st}" aria-hidden="true"></span><span class="c" lang="ja">${k}</span><small>${esc(F[k].sig.split(/[;,]/)[0])}</small></button>`; }).join(''); }
+  $('grade').innerHTML=g.k.map(k=>{ const st=estado(k); return `<button type="button" class="kt" data-k="${k}" aria-label="${k}: ${esc(F[k].sig)}"><span class="st ${st==='novo'?'':st}" aria-hidden="true"></span><span class="c" lang="ja">${k}</span><small>${esc(F[k].sig.split(/[;,]/)[0])}</small><small class="en" lang="en">${esc(F[k].sigE.split(/[;,]/)[0])}</small></button>`; }).join(''); }
 $('tabs').onclick=e=>{ const b=e.target.closest('button'); if(!b) return; aba=b.dataset.g; renderTabs(); renderGrade(); };
 $('grade').onclick=e=>{ const b=e.target.closest('.kt'); if(b) abreFicha(b.dataset.k); };
 function render(){ renderCont(); renderTabs(); renderGrade(); }
@@ -269,10 +272,10 @@ function verso(k){ const f=F[k];
   const le=(t,arr)=>arr.length?`<div><b>${t}</b>${arr.map(esc).join('、')}<span class="ro">${arr.map(roLe).join(', ')}</span></div>`:'';
   const tipo=sess?TIPO[sess.bar]:null, x2=f.x2||[];
   const ex=(tipo&&x2.find(e=>e.t===tipo))||f.ex, outros=[f.ex].concat(x2).filter((e,i,a)=>e.k!==ex.k&&a.findIndex(o=>o.k===e.k)===i);
-  const exBtn=(e,i,t)=>`<button type="button" class="exb" data-ex="${i}"><span aria-hidden="true">🔊</span><span>${t?`<span class="meta" style="display:block">${esc(t)}</span>`:''}<span class="jp" lang="ja">${e.h}</span><span class="ro">${romaji(e.k)}</span><span class="pt">${esc(e.pt)}</span></span></button>`;
+  const exBtn=(e,i,t)=>`<button type="button" class="exb" data-ex="${i}"><span aria-hidden="true">🔊</span><span>${t?`<span class="meta" style="display:block">${esc(t)}</span>`:''}<span class="jp" lang="ja">${e.h}</span><span class="ro">${romaji(e.k)}</span><span class="pt">${esc(e.pt)}</span><span class="pt en" lang="en">${esc(e.en)}</span></span></button>`;
   EXS=[ex].concat(outros);
   return `<div class="big"><div class="so-box" id="soBox">${tracos(k,true)}</div>
-    <div style="display:grid;gap:8px"><div class="sig">${esc(f.sig)}</div><div class="lei">${le('ON',f.on)}${le('KUN',f.kun)}</div>
+    <div style="display:grid;gap:8px"><div class="sig">${esc(f.sig)}</div><div class="sig-en" lang="en">${esc(f.sigE)}</div><div class="lei">${le('ON',f.on)}${le('KUN',f.kun)}</div>
     <div class="meta">${f.tr} traços${f.n?' · JLPT N'+f.n:''} · <button type="button" class="linkb" id="soRe" style="font:inherit;border:0;background:none;color:var(--pink-d);font-weight:700;cursor:pointer;padding:0">↺ ver os traços de novo</button></div></div></div>
     ${exBtn(ex,0,'')}${outros.map((e,i)=>exBtn(e,i+1,e.t||'Na aula')).join('')}`; }
 let EXS=[];
