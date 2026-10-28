@@ -91,19 +91,6 @@ h1 .jp rt{font-size:.5em;letter-spacing:.05em}
 .guia-card{position:relative;background:var(--card);border:1.5px solid var(--line);border-left:6px solid var(--sage);border-radius:var(--r);padding:22px 22px 20px;display:grid;gap:10px}
 .guia-card h2{font-family:var(--f-display);font-size:clamp(22px,3vw,28px);margin:0;line-height:1.15}
 .guia-card p{margin:0}
-.card[data-cat="cabelo"]{--c:var(--pink)} .card[data-cat="solar"]{--c:var(--gold)} .card[data-cat="skincare"]{--c:var(--sage)}
-.card[data-cat="otaku"]{--c:var(--lavender)} .card[data-cat="papelaria"]{--c:var(--sky)}
-.exc{position:absolute;top:10px;right:10px;background:#fff;border:1.5px solid var(--lavender);color:#5b4a8a;font-size:11px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;padding:2px 8px;border-radius:999px}
-.fonte{margin:0;font-size:11.5px;color:var(--muted)}
-.pega{font:inherit;font-weight:700;font-size:14.5px;padding:9px 14px;border-radius:999px;border:none;background:var(--pink);color:#fff;cursor:pointer;margin-top:4px}
-.pega:hover{filter:brightness(.95)}
-.pega.tem{background:var(--sage)}
-.ou{margin:0;text-align:center;font-size:11.5px;color:var(--muted);letter-spacing:.08em;text-transform:uppercase}
-.afi{display:block;text-align:center;text-decoration:none;font-weight:700;font-size:13.5px;padding:7px 10px;border-radius:999px;border:1.5px solid var(--sky);color:#2f5f93;background:#fff}
-.afi small{display:block;font-weight:500;font-size:11px;color:var(--muted)}
-.flutua{position:sticky;bottom:14px;z-index:5;justify-self:center;display:none;text-decoration:none;font-family:var(--f-display);font-weight:700;font-size:16px;padding:10px 20px;border-radius:999px;background:var(--ink);color:#fff;box-shadow:0 8px 20px -8px rgba(58,43,56,.6)}
-.flutua.on{display:inline-flex}
-@media (max-width:520px){.grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}.card p.d{display:none}.foto{font-size:34px}.corpo{padding:10px}.card h3{font-size:15.5px}.pega{font-size:13px;padding:8px}.ex,.exc{font-size:9.5px;letter-spacing:.05em;padding:1px 6px}.exc{top:34px;right:auto;left:10px}}
 footer{border-top:1.5px dashed var(--line);padding-top:22px;display:flex;flex-wrap:wrap;justify-content:space-between;gap:12px 24px;font-size:14px;color:var(--muted)}
 footer a{text-decoration:none;color:var(--ink)}
 footer a:hover{color:var(--pink)}
@@ -116,14 +103,13 @@ footer a:hover{color:var(--pink)}
 <div class="wrap">
   <nav class="sitebar" aria-label="Site">
     <a class="logo" href="/">UNI<span>R</span>VERSOS</a>
-    <span class="navlinks"><a href="/idiomas/">idiomas</a><a href="/travessia/">travessia</a><a href="/paralelos/">paralelos</a><a href="/loja/" aria-current="page">loja</a><a href="/sobre/">sobre</a></span>
+    <span class="navlinks"><a href="/idiomas/">idiomas</a><a href="/travessia/">travessia</a><a href="/paralelos/">paralelos</a><a href="/loja/" aria-current="page">tesouros</a><a href="/sobre/">sobre</a></span>
   </nav>
 
   <nav class="abas" aria-label="Unirversos Tesouros">
     <a href="/loja/" aria-current="page">🛒 Vitrine</a>
     <a href="/loja/encomendas/">🛍️ Encomendas</a>
     <a href="/loja/brecho/">🧥 Brechó</a>
-    <a href="/loja/checkout/">🧺 Carrinho</a>
   </nav>
 
   <header class="hero">
@@ -131,10 +117,10 @@ footer a:hover{color:var(--pink)}
     <h1><span class="jp"><ruby>日本<rt>にほん</rt></ruby>で<ruby>見<rt>み</rt></ruby>つけた</span>Unirversos Tesouros</h1>
     <p class="tag-t">Eu encontro o rastro. Você guarda a história.</p>
     <p class="lede">Pequenos universos que atravessaram oceanos para encontrar o seu lugar. Curadorias e peças únicas que trazem o tempo, o toque e a alma de outro mundo para o seu dia a dia.</p>
-    <p class="lede2">Escolha os achados, coloque no carrinho e eu compro pessoalmente no Japão durante a viagem. Cada card mostra o preço em ienes, o valor aproximado em reais e de onde veio o preço.</p>
+    <p class="lede2">Na vitrine, uma curadoria do que vale a pena trazer do Japão: do protetor solar de farmácia ao item raro do Pokémon Center. Cada achado vem com o porquê de ser especial e a faixa de preço em ienes.</p>
     <div class="acts">
       <a class="btn pri" href="#vitrine">Ver os achados ↓</a>
-      <a class="btn sec" href="/loja/checkout/">🧺 Ver meu carrinho</a>
+      <a class="btn sec" href="/loja/guia/">Como comprar e a alfândega →</a>
     </div>
     <p class="aviso">💡 Transparência: alguns botões levam a links de afiliado ou a serviços de redirecionamento. Se você comprar por eles, a Unirversos pode receber uma comissão, sem custo extra para você. Os preços são referências em ienes e podem mudar na loja.</p>
   </header>
@@ -143,7 +129,6 @@ footer a:hover{color:var(--pink)}
     <div class="filtros" role="group" aria-label="Filtrar por categoria" id="filtros"></div>
     <div class="cats" id="cats"></div>
   </section>
-  <a class="flutua" id="flutua" href="/loja/checkout/">🧺 ver carrinho</a>
 
   <section class="calcbox" aria-labelledby="t-calc">
     <h2 id="t-calc">🧮 Estimativa de impostos</h2>
@@ -175,97 +160,57 @@ footer a:hover{color:var(--pink)}
   </footer>
 </div>
 
-<script src="/loja/encomenda-config.js?v=3"></script>
-<script src="/loja/encomenda-catalogo.js?v=3"></script>
+<script src="/loja/produtos.js?v=1"></script>
 <script>
 (function(){
-  /* Vitrine = catálogo das encomendas. O carrinho fica salvo no navegador
-     (mesma chave da página /loja/checkout/), então o cliente escolhe aqui e fecha lá. */
-  const C = window.ENCOMENDA || {};
-  const SUB = {
-    cabelo:'Máscaras, óleos e tratamentos de drogaria japonesa.',
-    solar:'Protetores leves, feitos para o calor e a umidade.',
-    skincare:'Loções, séruns e best-sellers da @cosme.',
-    otaku:'Pokémon Center, Ichiban Kuji e garimpo em Akihabara e Nakano.',
-    papelaria:'Canetas, lapiseiras e edições que só saem no Japão.'
-  };
-  const CATS = (window.CATEGORIAS||[]).map(c=>Object.assign({sub:SUB[c.id]||''},c));
-  const ITENS = (window.CATALOGO||[]).filter(x=>x&&x.nome);
-  const KEY = 'unir-carrinho-v2';
+  const CATS=[
+    {id:'beleza', ic:'✨', nome:'Skincare & Beleza', sub:'Do baratinho de farmácia, como máscaras e protetores solares, até os itens de desejo high-end.'},
+    {id:'nerd',   ic:'🎮', nome:'Garimpo Nerd & Otaku', sub:'Itens do Pokémon Center, figures de anime e colecionáveis raros.'},
+    {id:'tech',   ic:'⚡', nome:'Tech & Inovações', sub:'Eletrônicos e gadgets que só existem no mercado japonês.'},
+    {id:'moda',   ic:'👟', nome:'Moda & Coleções Limitadas', sub:'Tênis e roupas de tiragem restrita.'}
+  ];
+  const ITENS=(window.ACHADOS||[]).filter(x=>x&&x.nome);
   const esc=s=>String(s==null?'':s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
-  const brl=v=>v.toLocaleString('pt-BR',{style:'currency',currency:'BRL'});
-  const yen=v=>'¥ '+Math.round(v).toLocaleString('pt-BR');
-  const afiOk=p=>p&&p.afiliado&&/^https?:\/\//i.test(String(p.afiliado.link||''));
-  let cambio=C.cambioReserva||0;
-  const tc=()=>cambio*(1+(C.margemCambio||0)/100);
-
-  let estado={itens:[],pacote:'',manual:false};
-  try{ const s=JSON.parse(localStorage.getItem(KEY)); if(s&&Array.isArray(s.itens)) estado=Object.assign(estado,s); }catch(e){}
-  const salvar=()=>{ try{ localStorage.setItem(KEY,JSON.stringify(estado)); }catch(e){} };
-  const qtd=it=>Math.max(1,Math.round(+it.qtd||1));
-
+  const iene=n=>'¥ '+Number(n||0).toLocaleString('pt-BR');
+  const faixa=x=>{ const de=+x.de||0, ate=+x.ate||de; if(!de&&!ate) return ''; return (de===ate? iene(de) : iene(de)+' – '+iene(ate).replace('¥ ','')); };
+  const linkOk=u=>/^https?:\/\//i.test(String(u||''));
   let atual='todos';
   try{ const q=new URLSearchParams(location.search).get('cat'); if(CATS.some(c=>c.id===q)) atual=q; }catch(e){}
 
   function card(x,c){
-    const noCar=estado.itens.find(it=>it.id===x.id);
-    const foto=x.foto?`<img src="${esc(x.foto)}" alt="${esc(x.nome)}" loading="lazy">`:`<span aria-hidden="true">${c.emoji}</span>`;
-    const preco=x.yen?`${yen(x.yen)} <small>≈ ${brl(x.yen*tc())}</small>`:'preço sob consulta';
-    return `<article class="card" data-cat="${esc(c.id)}">
-      ${x.exemplo?'<span class="ex">exemplo</span>':''}${x.tipo==='exclusivo'?'<span class="exc">exclusivo</span>':''}
+    const foto = x.foto ? `<img src="${esc(x.foto)}" alt="${esc(x.nome)}" loading="lazy">` : `<span aria-hidden="true">${c.ic}</span>`;
+    const btn = linkOk(x.link)
+      ? `<a class="quero" href="${esc(x.link)}" target="_blank" rel="noopener sponsored">Quero este achado →</a>`
+      : `<span class="quero off" aria-disabled="true">Link em breve</span>`;
+    const p=faixa(x);
+    return `<article class="card" data-cat="${c.id}">
+      ${x.exemplo?'<span class="ex">exemplo</span>':''}
       <div class="foto">${foto}</div>
       <div class="corpo">
-        <p class="tag">${c.emoji} ${esc(c.nome)}</p>
+        <p class="tag">${c.ic} ${esc(c.nome)}</p>
         <h3>${esc(x.nome)}</h3>
-        ${x.desc?`<p class="d">${esc(x.desc)}</p>`:''}
-        <p class="preco">${preco}</p>
-        ${x.fonte?`<p class="fonte">preço: ${esc(x.fonte)}</p>`:''}
-        <button type="button" class="pega${noCar?' tem':''}" data-id="${esc(x.id)}">${noCar?'✓ no carrinho ('+qtd(noCar)+') · +1':'+ carrinho'}</button>
-        ${afiOk(x)?`<p class="ou">ou</p><a class="afi" href="${esc(x.afiliado.link)}" target="_blank" rel="noopener sponsored">Comprar sozinha via ${esc(x.afiliado.loja||'loja parceira')} ↗<small>você cuida da compra e do envio</small></a>`:''}
+        <p class="d">${esc(x.desc)}</p>
+        ${p?`<p class="preco">${p} <small>referência</small></p>`:''}
+        ${btn}
       </div></article>`;
   }
   function render(){
     document.getElementById('filtros').innerHTML =
-      [{id:'todos',emoji:'🗾',nome:'Todos',n:ITENS.length}].concat(CATS.map(c=>Object.assign({},c,{n:ITENS.filter(x=>x.cat===c.id).length})))
-      .map(c=>`<button type="button" data-f="${c.id}" aria-pressed="${c.id===atual}">${c.emoji} ${esc(c.nome)} <span class="n">${c.n}</span></button>`).join('');
+      [{id:'todos',ic:'🗾',nome:'Todos',n:ITENS.length}].concat(CATS.map(c=>({...c,n:ITENS.filter(x=>x.cat===c.id).length})))
+      .map(c=>`<button type="button" data-f="${c.id}" aria-pressed="${c.id===atual}">${c.ic} ${esc(c.nome)} <span class="n">${c.n}</span></button>`).join('');
     document.getElementById('cats').innerHTML = CATS.filter(c=>atual==='todos'||c.id===atual).map(c=>{
       const lista=ITENS.filter(x=>x.cat===c.id);
       return `<section aria-labelledby="c-${c.id}">
-        <div class="cat-h"><h2 id="c-${c.id}">${c.emoji} ${esc(c.nome)}</h2><p>${esc(c.sub)}</p></div>
-        ${lista.length?`<div class="grid">${lista.map(x=>card(x,c)).join('')}</div>`:'<p class="vazio">Os achados desta categoria chegam em breve.</p>'}
+        <div class="cat-h"><h2 id="c-${c.id}">${c.ic} ${esc(c.nome)}</h2><p>${esc(c.sub)}</p></div>
+        ${lista.length? `<div class="grid">${lista.map(x=>card(x,c)).join('')}</div>` : `<p class="vazio">Os achados desta categoria chegam em breve.</p>`}
       </section>`;
     }).join('');
-    flutua();
-  }
-  function flutua(){
-    const n=estado.itens.reduce((s,it)=>s+qtd(it),0);
-    let prod=0,pct=0;
-    estado.itens.forEach(it=>{ const y=+it.yen||0; if(!y) return; const v=y*qtd(it)*tc(); prod+=v; pct+=v*((it.tipo==='exclusivo'?C.pctExclusivo:C.pctFacil)||0)/100; });
-    const total=prod?prod+(C.taxaFixa||0)+pct:0;
-    const f=document.getElementById('flutua');
-    f.textContent='🧺 '+n+(n===1?' item':' itens')+(total?' · '+brl(total):'')+' · ver carrinho';
-    f.classList.toggle('on',n>0);
   }
   document.getElementById('filtros').addEventListener('click',e=>{
     const b=e.target.closest('button[data-f]'); if(!b) return;
     atual=b.dataset.f; render();
     try{ const u=new URL(location.href); if(atual==='todos') u.searchParams.delete('cat'); else u.searchParams.set('cat',atual); history.replaceState(null,'',u); }catch(e){}
   });
-  document.getElementById('cats').addEventListener('click',e=>{
-    const b=e.target.closest('.pega'); if(!b) return;
-    const p=ITENS.find(x=>x.id===b.dataset.id); if(!p) return;
-    const ja=estado.itens.find(it=>it.id===p.id);
-    if(ja) ja.qtd=qtd(ja)+1;
-    else estado.itens.push({id:p.id,cat:p.cat,nome:p.nome,yen:p.yen||'',qtd:1,tipo:p.tipo,peso:p.peso||0,fixo:true});
-    salvar(); render();
-  });
-  // carrinho alterado em outra aba do navegador
-  window.addEventListener('storage',e=>{ if(e.key!==KEY) return; try{ const s=JSON.parse(e.newValue); if(s&&Array.isArray(s.itens)){ estado=Object.assign(estado,s); render(); } }catch(err){} });
-  // câmbio do dia (se não der, fica o de referência)
-  try{
-    fetch('https://economia.awesomeapi.com.br/json/last/JPY-BRL').then(r=>r.ok?r.json():Promise.reject())
-      .then(d=>{ const v=d&&d.JPYBRL&&parseFloat(d.JPYBRL.bid); if(v>0){ cambio=v; render(); } }).catch(()=>{});
-  }catch(e){}
   render();
 })();
 </script>

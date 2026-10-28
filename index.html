@@ -35,12 +35,12 @@ a:focus-visible{outline:3px solid var(--lavender);outline-offset:3px;border-radi
 .navlinks a:hover{color:var(--pink)}
 
 /* capa */
-.hero{display:grid;grid-template-columns:minmax(0,1.25fr) minmax(0,1fr);gap:32px;align-items:center;padding-top:12px}
+.hero{display:grid;grid-template-columns:minmax(0,1fr);gap:32px;align-items:center;padding-top:12px;max-width:760px}
 @media (max-width:820px){.hero{grid-template-columns:minmax(0,1fr)}}
 .eyebrow{font-size:12px;letter-spacing:.2em;text-transform:uppercase;color:var(--pink);font-weight:700;margin:0}
 h1{font-family:var(--f-display);font-weight:800;font-size:clamp(38px,6.4vw,66px);line-height:1.02;margin:8px 0 18px;text-wrap:balance;letter-spacing:-.01em}
 h1 .split{color:var(--pink)}
-.lede{font-size:clamp(17px,2vw,19px);font-weight:500;max-width:34ch;margin:0 0 22px}
+.lede{font-size:clamp(17px,2vw,19px);font-weight:500;max-width:52ch;margin:0 0 22px}
 .cta{display:inline-flex;align-items:center;gap:8px;background:var(--pink);color:#fff;text-decoration:none;font-family:var(--f-display);font-weight:700;font-size:16px;padding:11px 22px;border-radius:999px;margin:0;box-shadow:0 6px 16px -8px color-mix(in srgb,var(--pink) 70%,transparent)}
 .cta:hover{filter:brightness(.95)}
 .sign{font-size:15px;color:var(--muted);margin:0 0 18px}
@@ -75,6 +75,10 @@ h1 .split{color:var(--pink)}
 .links a{display:flex;justify-content:space-between;align-items:baseline;gap:10px;padding:6px 2px;text-decoration:none;font-size:15px;font-weight:700;border-radius:8px}
 .links a span{font-weight:500;font-size:12.5px;color:var(--muted);text-align:right}
 .links a:hover{color:var(--c)}
+.dest{list-style:none;margin:0;padding:10px 0 0;align-content:start;border-top:1.5px dashed var(--line);display:grid;gap:8px;font-size:15px}
+.dest li{display:flex;gap:10px;align-items:baseline}
+.dest li::before{content:'';flex:none;width:8px;height:8px;border-radius:50%;background:var(--c);transform:translateY(-1px)}
+.u-card{grid-template-rows:auto auto 1fr auto}
 .u-go{justify-self:start;display:inline-flex;align-items:center;gap:6px;background:var(--c);color:#fff;text-decoration:none;font-weight:700;font-size:14.5px;padding:9px 18px;border-radius:999px;margin-top:4px}
 .u-go:hover{filter:brightness(.95)}
 #utopia-badge:empty{display:none}
@@ -109,27 +113,17 @@ footer a:hover{color:var(--pink)}
 <div class="wrap">
   <nav class="sitebar" aria-label="Site">
     <a class="logo" href="/">UNI<span>R</span>VERSOS</a>
-    <span class="navlinks"><a href="/idiomas/">idiomas</a><a href="/travessia/">travessia</a><a href="/paralelos/">paralelos</a><a href="/loja/">loja</a><a href="/sobre/">sobre</a></span>
+    <span class="navlinks"><a href="/idiomas/">idiomas</a><a href="/travessia/">travessia</a><a href="/paralelos/">paralelos</a><a href="/loja/">tesouros</a><a href="/sobre/">sobre</a></span>
   </nav>
 
   <header class="hero">
     <div>
       <p class="eyebrow">unirversos · tudo conectado</p>
-      <h1>Onde se unem <span class="split">versos</span>, memórias e propósito.</h1>
-      <p class="lede">Idiomas e viagens com o mesmo ponto de partida: você. Primeiro, falar de si na primeira pessoa; depois, sair para explorar novos lugares e pessoas.</p>
+      <h1>Onde se unem <span class="split">versos</span>, memórias e a sua própria voz.</h1>
+      <p class="lede">Aprenda japonês para viajar e viver situações reais, registre as suas histórias e explore caminhos com autonomia.</p>
       <p class="sign">Unir tempo, espaço e versos. — <b>Aline Kikuti</b></p>
       <a class="cta" href="#t-uni">Conhecer os caminhos ↓</a>
     </div>
-    <aside class="word" aria-label="O que quer dizer Unirversos">
-      <span class="tape l"></span><span class="tape r"></span>
-      <div class="dict"><span class="u">unir</span><span class="syl">·</span>versos</div>
-      <div class="pron">substantivo · u-nir-ver-sos</div>
-      <ol class="defs">
-        <li><span><b>unir</b> + <b>versos</b>: juntar as linhas que cada pessoa escreve da própria vida.</span></li>
-        <li><span><b>universos</b>: os mundos que a gente carrega e ainda não mostrou.</span></li>
-        <li><span>três idiomas, um país, um diário: <i>japonês, inglês, português; o Japão; os paralelos.</i></span></li>
-      </ol>
-    </aside>
   </header>
 
   <section aria-labelledby="t-uni" style="margin-top:28px">
@@ -141,45 +135,27 @@ footer a:hover{color:var(--pink)}
     <div class="uni">
       <article class="u-card idiomas">
         <p class="u-tag">unirversos idiomas</p>
-        <h3>Idiomas<small>Eu mapeio o cenário. Você explora.</small></h3>
-        <p>Japonês, inglês e português com situações da vida real: monte seu avatar, aprenda as letras e pratique nos mapas de contexto.</p>
-        <!-- uma entrada só: tudo começa na porta /idiomas/ (27/10) -->
-        <a class="u-go" href="/idiomas/">Comece por aqui →</a>
+        <h3>Idiomas<small>A trilha prática de japonês para a vida real.</small></h3>
+        <ul class="dest"><li>Trilha imersiva de 12 mapas de contexto</li><li>Cenas práticas e diálogos para situações reais</li><li>Planeta Utopia para encontros e prática ao vivo</li></ul>
+        <a class="u-go" href="/idiomas/">Entrar em Idiomas →</a>
       </article>
       <article class="u-card travessia">
         <p class="u-tag">unirversos travessia</p>
-        <h3>Travessia<small>Eu entrego o guia. Você vive as histórias.</small></h3>
-        <p>A viagem ao Japão do preparo à lembrança, num guia de quem viveu dez anos lá: roteiros, ingressos e a Revista Memórias impressa.</p>
-        <ul class="links">
-          <li><a href="/travessia/agendamentos/">Cronograma de ingressos <span>quando comprar cada um</span></a></li>
-          <li><a href="/travessia/status/">Meus ingressos <span>em que pé está cada reserva</span></a></li>
-          <li><a href="/travessia/guia-sobrevivencia/">Mini guia de sobrevivência <span>amostra</span></a></li>
-          <li><a href="/travessia/revista/">Revista Memórias <span>impressa</span></a></li>
-          <li><a href="/travessia/montar.html">Monte a sua edição <span>com as suas fotos</span></a></li>
-        </ul>
+        <h3>Travessia<small>Guia prático e roteiros com a curadoria de quem conhece o Japão de perto.</small></h3>
+        <ul class="dest"><li>Roteiros e planejamento prático de ingressos</li><li>Guia de sobrevivência cultural</li><li>Revista Memórias personalizada</li></ul>
         <a class="u-go" href="/travessia/">Entrar em Travessia →</a>
       </article>
       <article class="u-card paralelos">
         <p class="u-tag">unirversos paralelos</p>
-        <h3>Paralelos<small>Todo mundo carrega mundos que ninguém vê.</small></h3>
-        <p>Um diário trilíngue e um canal de escuta para pensar em voz alta sobre aprender, ensinar e recomeçar.</p>
-        <ul class="links">
-          <li><a href="/paralelos/">Diário trilíngue <span>escreva a sua frase</span></a></li>
-          <li><a href="https://substack.com/@unirversosparalelos" rel="noopener">Reflexões em Voz Alta <span>no Substack</span></a></li>
-        </ul>
-        <a class="u-go" href="/paralelos/">Entrar em Paralelos →</a>
+        <h3>Paralelos<small>O diário reflexivo sobre aprender, ensinar e recomeçar.</small></h3>
+        <ul class="dest"><li>Reflexões sobre aprender e viver culturas</li><li>Diário trilíngue para prática de escrita</li><li>Reflexões em Voz Alta, no Substack</li></ul>
+        <a class="u-go" href="/paralelos/">Ler o Diário →</a>
       </article>
       <article class="u-card tesouros">
         <p class="u-tag">unirversos tesouros</p>
-        <h3>Tesouros<small>Eu encontro o rastro. Você guarda a história.</small></h3>
-        <p>Pequenos universos que atravessaram oceanos para encontrar o seu lugar. Curadorias e peças únicas que trazem o tempo, o toque e a alma de outro mundo para o seu dia a dia.</p>
-        <ul class="links">
-          <li><a href="/loja/">Vitrine <span>achados do Japão</span></a></li>
-          <li><a href="/loja/encomendas/">Encomendas <span>personal shoppers no Japão</span></a></li>
-          <li><a href="/loja/brecho/">Brechó <span>peças únicas de Tóquio</span></a></li>
-          <li><a href="/loja/guia/">Guia de compra & alfândega <span>antes de comprar</span></a></li>
-        </ul>
-        <a class="u-go" href="/loja/">Entrar em Tesouros →</a>
+        <h3>Tesouros<small>Achados selecionados do Japão, encomendas especiais e itens afetivos.</small></h3>
+        <ul class="dest"><li>Vitrine de achados do Japão</li><li>Encomendas com personal shopper no Japão</li><li>Brechó de peças únicas</li></ul>
+        <a class="u-go" href="/loja/">Visitar Tesouros →</a>
       </article>
     </div>
   </section>
