@@ -61,6 +61,7 @@ h1 .jp{font-family:var(--f-body);font-weight:700;font-size:.6em;color:var(--pink
 .fr .trad{display:grid;gap:2px;font-size:14.5px;border-top:1.5px dashed var(--line);padding-top:8px}
 .fr .trad .ro{color:var(--pink);font-weight:700;font-size:13.5px}
 .fr .trad small{color:var(--muted)}
+.fr .conf{font-size:14px;border-radius:12px}.fr .conf:not(:empty){padding:8px 12px;background:#fff;border:1.5px solid var(--line)}.fr .conf.ok{background:var(--sage-soft);border-color:#a9c7b0}.fr .conf.quase{background:#fdf1e0;border-color:#e3c98b}.fr .conf.nao{background:#fbe9ec;border-color:#e3a5b2}.fr .conf small{color:var(--muted)}
 .pend summary{cursor:pointer;font-weight:700;font-size:14px;color:var(--muted)}
 .pend ul{list-style:none;margin:8px 0 0;padding:0;display:grid;gap:6px}
 .pend li{display:flex;justify-content:space-between;align-items:center;gap:10px;border:1.5px dashed var(--line);border-radius:12px;padding:6px 10px;font-size:14px}
@@ -98,6 +99,7 @@ h1 .jp{font-family:var(--f-body);font-weight:700;font-size:.6em;color:var(--pink
   <section class="fr-sec" id="frases" aria-labelledby="h-fr">
     <h2 id="h-fr">🌱 Minhas frases</h2>
     <p class="sub">Uma frase sua por mapa, com a sua voz. Toque em “Ver tradução” para conferir o sentido.</p>
+    <p class="sub" id="avisoSR"></p>
     <div class="frs" id="frs"></div>
   </section>
   <div id="list" style="display:grid;gap:14px"></div>
@@ -109,7 +111,7 @@ h1 .jp{font-family:var(--f-body);font-weight:700;font-size:.6em;color:var(--pink
 </div>
 <script src="/idiomas/dados/avatar.js?v=20261016d"></script>
 <script src="/idiomas/dados/atelie-dados.js?v=20261016d"></script>
-<script src="/idiomas/dados/minha-frase.js?v=20261028a"></script>
+<script src="/idiomas/dados/minha-frase.js?v=20261028b"></script>
 <script>
 const $=id=>document.getElementById(id);
 const AV=UtopiaAvatar; AV.injectCSS();
@@ -138,7 +140,8 @@ async function desenhaFrases(){
   const vozes={}; await Promise.all(feitas.map(async s=>{ vozes[s]=await UF.voz(s); }));
   const card=s=>{ const f=UF.F[s], x=L[s];
     return `<article class="fr" data-s="${s}"><div class="tag">📍 Mapa ${f.n} · ${f.e} ${esc(f.t)}</div><p class="jp" lang="ja">${esc(x.k)}</p>
-      <div class="acts">${vozes[s]?'<button class="btn primary" type="button" data-a="minha">▶ Minha voz</button>':''}<button class="btn" type="button" data-a="ref">🔊 Referência</button><button class="btn" type="button" data-a="trad" aria-expanded="false">👁️ Ver tradução</button><button class="btn" type="button" data-a="refaz">🎙️ ${vozes[s]?'Regravar':'Gravar minha voz'}</button></div>
+      <div class="acts">${vozes[s]?'<button class="btn primary" type="button" data-a="minha">▶ Minha voz</button>':''}<button class="btn" type="button" data-a="ref">🔊 Referência</button><button class="btn" type="button" data-a="trad" aria-expanded="false">👁️ Ver tradução</button><button class="btn" type="button" data-a="conf">✅ Conferir pronúncia</button><button class="btn" type="button" data-a="refaz">🎙️ ${vozes[s]?'Regravar':'Gravar minha voz'}</button></div>
+      <div class="conf" aria-live="polite"></div>
       <div class="trad" hidden><span class="ro">${esc(x.r)}</span><span>🇧🇷 ${esc(x.pt)}</span><small lang="en">🇬🇧 ${esc(x.en)}</small></div></article>`; };
   $('frs').innerHTML=(feitas.length?feitas.map(card).join(''):'<p class="empty" style="margin:0">Ainda não há frases. No fim de cada mapa, antes da prova, toque em 🌱 Minha frase.</p>')+
     (falta.length?`<details class="pend"${feitas.length?'':' open'}><summary>Mapas sem frase (${falta.length})</summary><ul>${falta.map(s=>{ const f=UF.F[s]; return `<li><span>${f.e} Mapa ${f.n} · ${esc(f.t)}</span><button class="btn" type="button" data-cria="${s}">🌱 Criar</button></li>`; }).join('')}</ul></details>`:'');
@@ -148,8 +151,14 @@ async function desenhaFrases(){
     if(b.dataset.a==='minha') UF.tocaBlob(vozes[s]);
     if(b.dataset.a==='ref') UF.fala(L[s].k);
     if(b.dataset.a==='trad'){ const t=art.querySelector('.trad'), ab=t.hidden; t.hidden=!ab; b.setAttribute('aria-expanded',String(ab)); b.textContent=ab?'🙈 Esconder tradução':'👁️ Ver tradução'; }
+    if(b.dataset.a==='conf'){ const out=art.querySelector('.conf');
+      UF.confere(L[s].k,r=>{ if(r.ouvindo){ out.className='conf'; out.textContent='🎧 Ouvindo… fale a frase inteira.'; return; }
+        if(r.erro){ out.className='conf'; out.textContent=r.erro; return; }
+        const ok=r.p>=.8, quase=r.p>=.5; out.className='conf '+(ok?'ok':quase?'quase':'nao');
+        out.innerHTML=`${ok?'✓ Entendi a sua frase!':quase?'≈ Quase: o navegador entendeu parte da frase.':'✗ Não entendi. Ouça a referência e tente de novo.'}<br><small>O navegador ouviu: <b lang="ja">${esc(r.t||'—')}</b></small>`; }); }
     if(b.dataset.a==='refaz') UF.abrir(s,{aoSalvar:()=>setTimeout(desenhaFrases,50)}); };
 }
+if(UF) $('avisoSR').textContent='✅ Conferir pronúncia: '+UF.AVISO_SR;
 desenhaFrases();
 document.addEventListener('uni-progresso',desenhaFrases);
 if(location.hash==='#frases') setTimeout(()=>$('frases').scrollIntoView(),50);

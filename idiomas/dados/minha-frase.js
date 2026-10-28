@@ -35,6 +35,35 @@
   };
   const ORD=Object.keys(F);
 
+  /* ---------- conferir pronúncia (reconhecimento de fala do navegador) ---------- */
+  const KJ={'下さい':'ください','御願い':'おねがい','お願い':'おねがい','願い':'ねがい','目的地':'もくてきち','趣味':'しゅみ','今':'いま','何処':'どこ','如何':'どう','有ります':'あります','在ります':'あります','痛い':'いたい','頭':'あたま','お腹':'おなか','腹':'はら','足':'あし','脚':'あし','手':'て','歯':'は','喉':'のど','目':'め','耳':'みみ','背中':'せなか','腰':'こし','胸':'むね','膝':'ひざ','肩':'かた',
+    '東京':'とうきょう','大阪':'おおさか','京都':'きょうと','奈良':'なら','北海道':'ほっかいどう','沖縄':'おきなわ','広島':'ひろしま','福岡':'ふくおか','横浜':'よこはま','新宿':'しんじゅく','浅草':'あさくさ','渋谷':'しぶや','原宿':'はらじゅく','秋葉原':'あきはばら','銀座':'ぎんざ','上野':'うえの','富士山':'ふじさん',
+    '駅':'えき','出口':'でぐち','入口':'いりぐち','入り口':'いりぐち','病院':'びょういん','薬局':'やっきょく','銀行':'ぎんこう','公園':'こうえん','神社':'じんじゃ','お寺':'おてら','美術館':'びじゅつかん','空港':'くうこう','海':'うみ','山':'やま','お手洗い':'トイレ',
+    '枕':'まくら','地図':'ちず','傘':'かさ','お土産':'おみやげ','土産':'みやげ','お菓子':'おかし','帽子':'ぼうし','靴':'くつ','鞄':'かばん','充電器':'じゅうでんき','切符':'きっぷ','財布':'さいふ','鍵':'かぎ','袋':'ふくろ','お箸':'おはし','箸':'はし','本':'ほん','漫画':'マンガ','薬':'くすり','石鹸':'せっけん','歯ブラシ':'はブラシ','浴衣':'ゆかた','着物':'きもの',
+    '寿司':'すし','鮨':'すし','天ぷら':'てんぷら','天麩羅':'てんぷら','饂飩':'うどん','蕎麦':'そば','お握り':'おにぎり','野菜':'やさい','果物':'くだもの','林檎':'りんご','苺':'いちご','卵':'たまご','玉子':'たまご','豆腐':'とうふ','餃子':'ぎょうざ','焼き鳥':'やきとり','焼鳥':'やきとり','お好み焼き':'おこのみやき','たこ焼き':'たこやき','餅':'もち','お弁当':'おべんとう','弁当':'べんとう','ご飯':'ごはん','御飯':'ごはん',
+    '水':'みず','お茶':'おちゃ','紅茶':'こうちゃ','抹茶':'まっちゃ','豆乳':'とうにゅう','牛乳':'ぎゅうにゅう',
+    '黒':'くろ','白':'しろ','赤':'あか','青':'あお','黄色':'きいろ','緑':'みどり','茶色':'ちゃいろ','紫':'むらさき',
+    '料理':'りょうり','音楽':'おんがく','映画':'えいが','読書':'どくしょ','旅行':'りょこう','写真':'しゃしん','絵':'え','水泳':'すいえい','寝ること':'ねること','日本語':'にほんご','散歩':'さんぽ',
+    '明日':'あした','今日':'きょう','今晩':'こんばん','明後日':'あさって','来週':'らいしゅう','月曜日':'げつようび','火曜日':'かようび','水曜日':'すいようび','木曜日':'もくようび','金曜日':'きんようび','土曜日':'どようび','日曜日':'にちようび','週末':'しゅうまつ',
+    '行きたい':'いきたい','致します':'いたします','私':'わたし'};
+  const HORA=['','いちじ','にじ','さんじ','よじ','ごじ','ろくじ','しちじ','はちじ','くじ','じゅうじ','じゅういちじ','じゅうにじ'];
+  const norm=t=>{ let x=String(t);
+    x=x.replace(/([0-9０-９]+)時/g,(m,n)=>HORA[+n.replace(/[０-９]/g,c=>String.fromCharCode(c.charCodeAt(0)-0xfee0))]||m);
+    Object.keys(KJ).sort((a,b)=>b.length-a.length).forEach(k=>{ x=x.split(k).join(KJ[k]); });
+    return x.replace(/[ァ-ヶ]/g,c=>String.fromCharCode(c.charCodeAt(0)-0x60)).replace(/[\s、。，．,.!！?？…・「」]/g,'').replace(/ー/g,'ー'); };
+  function parecido(a,b){ /* proporção de letras em comum, na ordem (LCS) */ const m=a.length,n=b.length; if(!m||!n) return 0; const d=Array(n+1).fill(0);
+    for(let i=1;i<=m;i++){ let prev=0; for(let j=1;j<=n;j++){ const t=d[j]; d[j]=a[i-1]===b[j-1]?prev+1:Math.max(d[j],d[j-1]); prev=t; } } return d[n]/Math.max(m,n); }
+  const SR=window.SpeechRecognition||window.webkitSpeechRecognition;
+  const AVISO_SR='A conferência usa o reconhecimento de fala do navegador: funciona no Chrome e no Edge (computador e Android). No iPhone, iPad e Firefox pode não funcionar. No Chrome, o áudio é enviado ao serviço de reconhecimento do Google. Ele diz se entendeu a frase, não dá nota de pronúncia.';
+  function confere(alvo,cb){ if(!SR){ cb({erro:'Este navegador não tem reconhecimento de fala. Use o Chrome ou o Edge para conferir.'}); return; }
+    let r; try{ r=new SR(); }catch(e){ cb({erro:'Não consegui ligar o reconhecimento de fala.'}); return; }
+    r.lang='ja-JP'; r.interimResults=false; r.maxAlternatives=5; let fim=false;
+    r.onresult=e=>{ fim=true; const alts=[...e.results[0]].map(a=>a.transcript); const A=norm(alvo);
+      let melhor={t:alts[0]||'',p:0}; alts.forEach(t=>{ const p=parecido(norm(t),A); if(p>melhor.p) melhor={t,p}; }); cb(melhor); };
+    r.onerror=e=>{ fim=true; cb({erro:e.error==='not-allowed'?'O microfone não foi liberado. Confira a permissão do navegador.':e.error==='no-speech'?'Não ouvi nada. Toque e fale a frase inteira.':'O reconhecimento não respondeu ('+e.error+'). Tente de novo.'}); };
+    r.onend=()=>{ if(!fim) cb({erro:'Não ouvi nada. Toque e fale a frase inteira.'}); };
+    try{ r.start(); cb({ouvindo:true}); }catch(e){ cb({erro:'Não consegui começar a ouvir. Tente de novo.'}); } }
+
   /* ---------- guardar ---------- */
   const K='utopiaFrases1';
   const lista=()=>{ try{ return JSON.parse(localStorage.getItem(K)||'{}')||{}; }catch(e){ return {}; } };
@@ -79,6 +108,7 @@
    '.uf-row{display:flex;flex-wrap:wrap;gap:8px;align-items:center}'+
    '.uf-ok{text-align:center;display:grid;gap:8px;justify-items:center;padding:8px 0}.uf-selo{width:96px;height:96px;border-radius:50%;border:3px solid #4f7a58;color:#4f7a58;display:grid;place-items:center;font-size:34px;transform:rotate(-10deg);animation:ufPop .45s cubic-bezier(.3,1.5,.5,1)}'+
    '@keyframes ufPop{from{transform:rotate(-10deg) scale(.4);opacity:0}to{transform:rotate(-10deg) scale(1);opacity:1}}@media (prefers-reduced-motion:reduce){.uf-selo{animation:none}}'+
+   '.uf-conf{font-size:14.5px;border-radius:12px;padding:0}.uf-conf:not(:empty){padding:8px 12px;background:#fff;border:1.5px solid #ecdadd}.uf-conf.ok{background:#e8efe8;border-color:#a9c7b0}.uf-conf.quase{background:#fdf1e0;border-color:#e3c98b}.uf-conf.nao{background:#fbe9ec;border-color:#e3a5b2}.uf-conf small{color:#6b5a67}'+
    'body.no-ro .uf-ro{display:none}';
    document.head.appendChild(st); }
 
@@ -106,6 +136,9 @@
         <p class="uf-sec">2 · Grave a sua voz</p>
         <div class="uf-row"><button class="uf-b ${rec&&rec.state==='recording'?'rec':''}" type="button" id="ufGrava" ${fr?'':'disabled'}>${rec&&rec.state==='recording'?'⏹ Parar a gravação':(voz?'🎙️ Regravar minha voz':'🎙️ Gravar minha voz')}</button>
           ${voz?'<button class="uf-b" type="button" id="ufMinha">▶ Ouvir minha voz</button>':''}</div>
+        <div class="uf-row"><button class="uf-b" type="button" id="ufConf" ${fr?'':'disabled'}>✅ Conferir minha pronúncia</button></div>
+        <div class="uf-conf" id="ufConfR" aria-live="polite"></div>
+        <p class="uf-sub">${esc(AVISO_SR)}</p>
         <p class="uf-sub" id="ufAviso">${fr?'A gravação fica guardada neste aparelho.':'Escolha uma palavra para montar a frase.'}</p>
         <button class="uf-b p" type="button" id="ufCarimba" ${fr?'':'disabled'} style="width:100%">🌱 Carimbar no meu Caderno</button>`;
       c.querySelectorAll('[data-op]').forEach(b=>b.onclick=()=>{ w=opcoes[+b.dataset.op]; desenha(); fala(w.k); });
@@ -115,6 +148,12 @@
       if(c.querySelector('#ufOuve')) c.querySelector('#ufOuve').onclick=()=>fala(monta(f,w).k);
       if(c.querySelector('#ufMinha')) c.querySelector('#ufMinha').onclick=()=>tocaBlob(voz);
       c.querySelector('#ufGrava').onclick=grava2;
+      c.querySelector('#ufConf').onclick=()=>{ const out=c.querySelector('#ufConfR'), alvo=monta(f,w).k;
+        confere(alvo,r=>{ if(r.ouvindo){ out.className='uf-conf'; out.innerHTML='🎧 Ouvindo… fale a frase inteira.'; return; }
+          if(r.erro){ out.className='uf-conf'; out.textContent=r.erro; return; }
+          const ok=r.p>=.8, quase=r.p>=.5;
+          out.className='uf-conf '+(ok?'ok':quase?'quase':'nao');
+          out.innerHTML=`${ok?'✓ Entendi a sua frase!':quase?'≈ Quase: o navegador entendeu parte da frase.':'✗ Não entendi. Ouça o modelo e tente de novo.'}<br><small>O navegador ouviu: <b lang="ja">${esc(r.t||'—')}</b></small>`; }); };
       c.querySelector('#ufCarimba').onclick=carimba;
     }
     async function grava2(){ const av=c.querySelector('#ufAviso');
@@ -133,5 +172,5 @@
       if(typeof opt.aoSalvar==='function') try{ opt.aoSalvar(L[slug]); }catch(e){} }
     desenha(); const b0=c.querySelector('button'); if(b0) b0.focus();
   }
-  window.UniFrase={abrir,lista,voz:pegaVoz,fala,tocaBlob,F,ORD};
+  window.UniFrase={abrir,lista,voz:pegaVoz,fala,tocaBlob,F,ORD,confere,norm,parecido,AVISO_SR};
 })();
