@@ -76,10 +76,12 @@ h2{font-family:var(--f-display);font-size:24px;line-height:1.2;margin:0 0 4px}
 .hojeb .jp{font-size:20px;font-weight:700;line-height:1.5}.hojeb .jp rt{font-size:.5em;color:var(--muted)}
 .hojeb .ro{display:block;color:var(--pink-d);font-weight:700;font-size:13.5px}.hojeb .pt{display:block;color:var(--muted);font-size:14px}
 .lista{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:8px}
-.it{font:inherit;text-align:left;border:1.5px solid var(--line);border-radius:14px;background:#fff;padding:8px 10px;cursor:pointer;color:var(--ink);display:grid;gap:0}
+.it{position:relative;font:inherit;text-align:left;border:1.5px solid var(--line);border-radius:14px;background:#fff;padding:8px 10px;cursor:pointer;color:var(--ink);display:grid;gap:0}
 .it .k{font-size:18px;font-weight:700}.it .k rt{font-size:.5em;color:var(--muted)}
 .it .ro{font-size:12px;color:var(--pink-d);font-weight:700}.it small{color:var(--muted);font-size:12.5px}
 .it.esp{background:#fdf1e0;border-color:#e3c98b}
+.it::after{content:'🔊';position:absolute;top:6px;right:8px;font-size:13px;opacity:.55}.it:hover::after,.it.tocando::after{opacity:1}
+@media print{.it::after{display:none}}
 .dica{border-left:5px solid var(--sage);background:var(--sage-soft);border-radius:12px;padding:10px 14px;font-size:14.5px;margin:0}
 body.no-ro .ro{display:none}
 footer{border-top:1.5px dashed var(--line);padding-top:18px;display:flex;flex-wrap:wrap;justify-content:space-between;gap:12px;font-size:14px;color:var(--muted)}
@@ -213,7 +215,7 @@ $('hojeBtn').onclick=()=>{ Y=agora.getFullYear(); M=agora.getMonth(); mes(); };
 $('semana').innerHTML=SEM.map(s=>`<button type="button" class="it" data-t="${s[1]}"><span class="k" lang="ja">${R(s[0]+'曜日',s[1])}</span><span class="ro">${romaji(s[1])}</span><small>${s[2]}</small></button>`).join('');
 $('meses').innerHTML=MES.map((m,i)=>`<button type="button" class="it${MES_ESP[i]?' esp':''}" data-t="${m}"><span class="k" lang="ja">${R(i+1+'月',m)}</span><span class="ro">${romaji(m)}</span><small>${MES_PT[i]}${MES_ESP[i]?' · '+MES_ESP[i]:''}</small></button>`).join('');
 $('especiais').innerHTML=[...ESP].map(d=>`<button type="button" class="it esp" data-t="${DIA[d]}"><span class="k" lang="ja">${R(d+'日',DIA[d])}</span><span class="ro">${romaji(DIA[d])}</span><small>dia ${d}${ESP_NOTA[d]?' · '+ESP_NOTA[d]:''}</small></button>`).join('');
-['semana','meses','especiais'].forEach(x=>$(x).onclick=e=>{ const b=e.target.closest('.it'); if(b) toca(b.dataset.t); });
+['semana','meses','especiais'].forEach(x=>$(x).onclick=e=>{ const b=e.target.closest('.it'); if(b){ b.classList.add('tocando'); setTimeout(()=>b.classList.remove('tocando'),1200); toca(b.dataset.t); } });
 hoje(); mes();
 window.UniCal={DIA,MES,SEM,ano};
 })();
