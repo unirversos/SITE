@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <style>html[data-login="obrigatorio"]:not(.uni-ok) body>*:not(#uni-gate){visibility:hidden}</style>
-<script type="module" src="/idiomas/dados/conta.js?v=2"></script>
+<script type="module" src="/idiomas/dados/conta.js?v=4"></script>
 <script>setTimeout(function(){var h=document.documentElement;if(!h.classList.contains('uni-ok')&&!document.getElementById('uni-gate'))h.classList.add('uni-ok')},10000)</script>
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 <title>Caderno de palavras | Unirversos Idiomas</title>
@@ -49,6 +49,23 @@ h1 .jp{font-family:var(--f-body);font-weight:700;font-size:.6em;color:var(--pink
 .btn.primary{background:var(--pink);border-color:var(--pink);color:#fff}
 .note{font-size:12px;color:var(--muted)}
 @media (max-width:420px){.head{grid-template-columns:72px minmax(0,1fr)}.av{width:72px}}
+/* minhas frases */
+.fr-sec{background:var(--card);border:1.5px solid var(--line);border-left:5px solid var(--pink);border-radius:var(--r);padding:14px 18px;display:grid;gap:12px;scroll-margin-top:16px}
+.fr-sec h2{font-family:var(--f-display);font-size:20px;margin:0}
+.fr-sec .sub{margin:0;font-size:13.5px;color:var(--muted)}
+.frs{display:grid;gap:10px}
+.fr{border:1.5px solid var(--line);border-radius:16px;background:var(--paper);padding:12px 14px;display:grid;gap:8px}
+.fr .tag{font-size:12px;letter-spacing:.06em;color:var(--muted);font-weight:700}
+.fr .jp{font-size:clamp(20px,5vw,24px);font-weight:700;line-height:1.45;margin:0}
+.fr .acts .btn{min-height:40px;cursor:pointer;font:inherit;font-weight:700;font-size:13.5px}
+.fr .trad{display:grid;gap:2px;font-size:14.5px;border-top:1.5px dashed var(--line);padding-top:8px}
+.fr .trad .ro{color:var(--pink);font-weight:700;font-size:13.5px}
+.fr .trad small{color:var(--muted)}
+.fr .conf{font-size:14px;border-radius:12px}.fr .conf:not(:empty){padding:8px 12px;background:#fff;border:1.5px solid var(--line)}.fr .conf.ok{background:var(--sage-soft);border-color:#a9c7b0}.fr .conf.quase{background:#fdf1e0;border-color:#e3c98b}.fr .conf.nao{background:#fbe9ec;border-color:#e3a5b2}.fr .conf small{color:var(--muted)}
+.pend summary{cursor:pointer;font-weight:700;font-size:14px;color:var(--muted)}
+.pend ul{list-style:none;margin:8px 0 0;padding:0;display:grid;gap:6px}
+.pend li{display:flex;justify-content:space-between;align-items:center;gap:10px;border:1.5px dashed var(--line);border-radius:12px;padding:6px 10px;font-size:14px}
+.pend li .btn{min-height:38px;cursor:pointer;font:inherit;font-weight:700;font-size:13px}
 
 /* navegação do site */
 .sitebar{display:flex;align-items:center;justify-content:space-between;gap:10px 14px;flex-wrap:wrap}
@@ -68,7 +85,7 @@ h1 .jp{font-family:var(--f-body);font-weight:700;font-size:.6em;color:var(--pink
 <body>
 <div class="wrap">
   <nav class="sitebar" aria-label="Site"><a class="brand" href="/">unirversos <span>/ idiomas</span></a><span class="navlinks"><a href="/idiomas/">idiomas</a><a href="/travessia/">travessia</a><a href="/paralelos/">paralelos</a><a href="/loja/">tesouros</a><a href="/sobre/">sobre</a></span></nav>
-  <nav class="trail" aria-label="Trilha"><a href="/idiomas/japones/">← Minha trilha</a><details class="caixa" open><summary>🧰 Ferramentas</summary><span class="caixa-l"><a href="/idiomas/avatar/">🎨 Meu avatar</a><a href="/idiomas/hiragana/">あ Hiragana</a><a href="/idiomas/katakana/">ア Katakana</a><a href="/idiomas/numeros/">🔢 Números</a><a href="/idiomas/caderno/" aria-current="page">📒 Caderno</a><a href="/idiomas/amuleto/">💎 Amuleto</a><a href="/idiomas/planeta-utopia/salao/">🪐 Planeta Utopia</a></span></details></nav>
+  <nav class="trail" aria-label="Trilha"><a href="/idiomas/japones/">← Minha trilha</a><details class="caixa" open><summary>🧰 Ferramentas</summary><span class="caixa-l"><a href="/idiomas/avatar/">🎨 Meu avatar</a><a href="/idiomas/hiragana/">あ Hiragana</a><a href="/idiomas/katakana/">ア Katakana</a><a href="/idiomas/kanji/">漢 Kanji</a><a href="/idiomas/numeros/">🔢 Números</a><a href="/idiomas/calendario/">📅 Calendário</a><a href="/idiomas/caderno/" aria-current="page">📒 Caderno</a><a href="/idiomas/amuleto/">💎 Amuleto</a><a href="/idiomas/ar/">🌬️ Ar</a><a href="/idiomas/planeta-utopia/salao/">🪐 Planeta Utopia</a></span></details></nav>
   <style>.trail{flex-wrap:wrap;overflow:visible;align-items:center}.trail .caixa{flex:0 0 auto}.trail .caixa[open]{flex:1 1 100%;display:flex;flex-direction:column;gap:8px}.trail .caixa>summary{list-style:none;cursor:pointer;display:inline-flex;align-items:center;gap:6px;width:max-content;border:1.5px solid var(--line,#e7e1da);background:var(--card,#fff);border-radius:99px;padding:6px 14px;font-size:13.5px;font-weight:700}.trail .caixa>summary::-webkit-details-marker{display:none}.trail .caixa[open]>summary{border-color:var(--pink,#d9506f)}.trail .caixa-l{display:flex;flex-wrap:wrap;gap:8px}</style>
   <header class="head">
     <div class="av" id="av"></div>
@@ -79,6 +96,12 @@ h1 .jp{font-family:var(--f-body);font-weight:700;font-size:.6em;color:var(--pink
       <div class="bar"><i id="bar"></i></div>
     </div>
   </header>
+  <section class="fr-sec" id="frases" aria-labelledby="h-fr">
+    <h2 id="h-fr">🌱 Minhas frases</h2>
+    <p class="sub">Uma frase sua por mapa, com a sua voz. Toque em “Ver tradução” para conferir o sentido.</p>
+    <p class="sub" id="avisoSR"></p>
+    <div class="frs" id="frs"></div>
+  </section>
   <div id="list" style="display:grid;gap:14px"></div>
   <div class="acts">
     <a class="btn primary" href="/idiomas/avatar/">Abrir o Ateliê de Avatar</a>
@@ -88,6 +111,7 @@ h1 .jp{font-family:var(--f-body);font-weight:700;font-size:.6em;color:var(--pink
 </div>
 <script src="/idiomas/dados/avatar.js?v=20261016d"></script>
 <script src="/idiomas/dados/atelie-dados.js?v=20261016d"></script>
+<script src="/idiomas/dados/minha-frase.js?v=20261028b"></script>
 <script>
 const $=id=>document.getElementById(id);
 const AV=UtopiaAvatar; AV.injectCSS();
@@ -107,6 +131,37 @@ else {
     <div class="chips">${ws.map(w=>`<button class="chip" type="button" data-id="${w.id}"><b>${ruby(w)}</b><small>${w.ro} · ${w.pt} · <i lang="en">${w.en||''}</i></small></button>`).join('')}</div></section>`).join('');
 }
 $('list').addEventListener('click',e=>{ const b=e.target.closest('.chip'); if(b) speak(WORDS[b.dataset.id].kana); });
+
+/* ---------- minhas frases ---------- */
+const UF=window.UniFrase;
+async function desenhaFrases(){
+  if(!UF){ $('frases').hidden=true; return; }
+  const L=UF.lista(), feitas=UF.ORD.filter(s=>L[s]), falta=UF.ORD.filter(s=>!L[s]);
+  const vozes={}; await Promise.all(feitas.map(async s=>{ vozes[s]=await UF.voz(s); }));
+  const card=s=>{ const f=UF.F[s], x=L[s];
+    return `<article class="fr" data-s="${s}"><div class="tag">📍 Mapa ${f.n} · ${f.e} ${esc(f.t)}</div><p class="jp" lang="ja">${esc(x.k)}</p>
+      <div class="acts">${vozes[s]?'<button class="btn primary" type="button" data-a="minha">▶ Minha voz</button>':''}<button class="btn" type="button" data-a="ref">🔊 Referência</button><button class="btn" type="button" data-a="trad" aria-expanded="false">👁️ Ver tradução</button><button class="btn" type="button" data-a="conf">✅ Conferir pronúncia</button><button class="btn" type="button" data-a="refaz">🎙️ ${vozes[s]?'Regravar':'Gravar minha voz'}</button></div>
+      <div class="conf" aria-live="polite"></div>
+      <div class="trad" hidden><span class="ro">${esc(x.r)}</span><span>🇧🇷 ${esc(x.pt)}</span><small lang="en">🇬🇧 ${esc(x.en)}</small></div></article>`; };
+  $('frs').innerHTML=(feitas.length?feitas.map(card).join(''):'<p class="empty" style="margin:0">Ainda não há frases. No fim de cada mapa, antes da prova, toque em 🌱 Minha frase.</p>')+
+    (falta.length?`<details class="pend"${feitas.length?'':' open'}><summary>Mapas sem frase (${falta.length})</summary><ul>${falta.map(s=>{ const f=UF.F[s]; return `<li><span>${f.e} Mapa ${f.n} · ${esc(f.t)}</span><button class="btn" type="button" data-cria="${s}">🌱 Criar</button></li>`; }).join('')}</ul></details>`:'');
+  $('frs').onclick=e=>{ const b=e.target.closest('button'); if(!b) return;
+    if(b.dataset.cria) return UF.abrir(b.dataset.cria,{aoSalvar:()=>setTimeout(desenhaFrases,50)});
+    const art=b.closest('.fr'), s=art&&art.dataset.s; if(!s) return;
+    if(b.dataset.a==='minha') UF.tocaBlob(vozes[s]);
+    if(b.dataset.a==='ref') UF.fala(L[s].k);
+    if(b.dataset.a==='trad'){ const t=art.querySelector('.trad'), ab=t.hidden; t.hidden=!ab; b.setAttribute('aria-expanded',String(ab)); b.textContent=ab?'🙈 Esconder tradução':'👁️ Ver tradução'; }
+    if(b.dataset.a==='conf'){ const out=art.querySelector('.conf');
+      UF.confere(L[s].k,r=>{ if(r.ouvindo){ out.className='conf'; out.textContent='🎧 Ouvindo… fale a frase inteira.'; return; }
+        if(r.erro){ out.className='conf'; out.textContent=r.erro; return; }
+        const ok=r.p>=.8, quase=r.p>=.5; out.className='conf '+(ok?'ok':quase?'quase':'nao');
+        out.innerHTML=`${ok?'✓ Entendi a sua frase!':quase?'≈ Quase: o navegador entendeu parte da frase.':'✗ Não entendi. Ouça a referência e tente de novo.'}<br><small>O navegador ouviu: <b lang="ja">${esc(r.t||'—')}</b></small>`; }); }
+    if(b.dataset.a==='refaz') UF.abrir(s,{aoSalvar:()=>setTimeout(desenhaFrases,50)}); };
+}
+if(UF) $('avisoSR').textContent='✅ Conferir pronúncia: '+UF.AVISO_SR;
+desenhaFrases();
+document.addEventListener('uni-progresso',desenhaFrases);
+if(location.hash==='#frases') setTimeout(()=>$('frases').scrollIntoView(),50);
 </script>
 </body>
 </html>

@@ -1,0 +1,308 @@
+<!DOCTYPE html>
+<html lang="pt-BR" data-login="obrigatorio">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>Kanji · Unirversos Idiomas</title>
+<meta name="description" content="Os kanji dos 12 mapas e do N5, com ordem dos traços, leituras, exemplos com áudio e revisão espaçada como no Anki. Baralhos para baixar no app Anki.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@500;700;800&family=Zen+Maru+Gothic:wght@400;500;700&display=swap">
+<style>html[data-login="obrigatorio"]:not(.uni-ok) body>*:not(#uni-gate){visibility:hidden}</style>
+<script type="module" src="/idiomas/dados/conta.js?v=4"></script>
+<script>setTimeout(function(){var h=document.documentElement;if(!h.classList.contains('uni-ok')&&!document.getElementById('uni-gate'))h.classList.add('uni-ok')},10000)</script>
+<style>
+:root{
+  --paper:#fdf6f4; --card:#ffffff; --ink:#3a2b38; --muted:#6b5a67; --line:#ecdadd;
+  --blush:#f8dde1; --pink:#c23f5e; --pink-d:#b23a57; --sage:#4f7a58; --sage-soft:#e8efe8; --taupe:#816c5b; --gold:#8f6b1d; --gold-soft:#fbf1d9;
+  --f-display:"Baloo 2","Zen Maru Gothic",system-ui,sans-serif;
+  --f-body:"Zen Maru Gothic","Hiragino Maru Gothic ProN","Noto Sans JP",system-ui,sans-serif;
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--paper);color:var(--ink);font-family:var(--f-body);font-size:16px;line-height:1.6;
+  background-image:radial-gradient(var(--line) 1.2px,transparent 1.3px);background-size:22px 22px;
+  padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));padding-block:18px 90px}
+a{color:inherit}
+a:focus-visible,button:focus-visible,input:focus-visible{outline:3px solid #b7a6dc;outline-offset:3px;border-radius:8px}
+.wrap{max-width:900px;margin:0 auto;display:grid;gap:28px}
+.sitebar{display:flex;flex-wrap:wrap;justify-content:space-between;align-items:center;gap:10px 18px}
+.logo{font-family:var(--f-display);font-weight:800;font-size:19px;letter-spacing:.14em;text-decoration:none}
+.logo span{color:var(--pink)}
+.navlinks{display:flex;flex-wrap:wrap;gap:6px 20px;font-size:14px}
+.navlinks a{text-decoration:none;color:var(--muted)}
+.navlinks a[aria-current]{color:var(--pink)}
+.crumb{font-size:14px;margin:0;display:flex;flex-wrap:wrap;gap:6px 16px}
+.crumb a{color:var(--muted);text-decoration:none}
+.eyebrow{font-size:12px;letter-spacing:.2em;text-transform:uppercase;color:var(--pink-d);font-weight:700;margin:0}
+h1{font-family:var(--f-display);font-weight:800;font-size:clamp(32px,5.4vw,48px);line-height:1.05;margin:6px 0 10px}
+h2{font-family:var(--f-display);font-size:24px;line-height:1.2;margin:0 0 4px}
+.lede{margin:0;font-size:17px;max-width:62ch}
+.card{background:var(--card);border:1.5px solid var(--line);border-radius:20px;padding:18px;display:grid;gap:14px}
+.sub{margin:0;color:var(--muted);font-size:14.5px}
+.tools{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+.btn{font:inherit;font-weight:700;font-size:14px;min-height:44px;padding:0 16px;border-radius:999px;border:1.5px solid var(--line);background:#fff;color:var(--ink);cursor:pointer;display:inline-flex;align-items:center;gap:6px;text-decoration:none}
+.btn.pri{background:var(--pink);border-color:var(--pink);color:#fff}
+.btn[aria-pressed="true"]{background:var(--ink);border-color:var(--ink);color:#fff}
+/* kanji */
+.seg{display:flex;flex-wrap:wrap;gap:6px}
+.seg button{font:inherit;font-size:14px;font-weight:700;min-height:44px;padding:0 14px;border-radius:999px;border:1.5px solid var(--line);background:#fff;color:var(--ink);cursor:pointer}
+.seg button[aria-pressed="true"]{background:var(--ink);border-color:var(--ink);color:#fff}
+.rev-box{display:grid;gap:12px}
+.cont{display:flex;flex-wrap:wrap;gap:8px 20px;font-size:15px}
+.cont b{font-family:var(--f-display);font-size:26px;display:block;line-height:1}
+.cont span{color:var(--muted)}
+.cont .hoje b{color:var(--pink)}
+.estante-tabs{display:flex;gap:6px;overflow-x:auto;padding-bottom:4px;scrollbar-width:thin}
+.estante-tabs button{flex:0 0 auto;font:inherit;font-size:13.5px;font-weight:700;min-height:40px;padding:0 12px;border-radius:999px;border:1.5px solid var(--line);background:#fff;color:var(--ink);cursor:pointer;white-space:nowrap}
+.estante-tabs button[aria-selected="true"]{background:var(--ink);border-color:var(--ink);color:#fff}
+.grade{display:grid;grid-template-columns:repeat(auto-fill,minmax(78px,1fr));gap:8px}
+.kt{font:inherit;position:relative;border:1.5px solid var(--line);border-radius:14px;background:#fff;padding:8px 4px 6px;cursor:pointer;color:var(--ink);display:grid;justify-items:center;gap:0;min-height:84px}
+.kt:hover{border-color:var(--pink)}
+.kt .c{font-size:32px;line-height:1.15;font-weight:500}
+.kt small{font-size:11px;color:var(--muted);line-height:1.2;text-align:center}
+.kt .st{position:absolute;top:4px;right:5px;width:9px;height:9px;border-radius:50%;background:#e9dfe1}
+.kt .st.ap{background:#e3c98b}.kt .st.sb{background:var(--sage)}
+.leg{font-size:13px;color:var(--muted);margin:0;display:flex;flex-wrap:wrap;gap:4px 14px;align-items:center}
+.leg i{display:inline-block;width:9px;height:9px;border-radius:50%;margin-right:5px;vertical-align:middle}
+/* ficha e revisão */
+.ov{position:fixed;inset:0;background:rgba(58,43,56,.42);display:grid;place-items:center;padding:14px;z-index:40}
+.ov[hidden]{display:none}
+.fcard{background:var(--paper);border-radius:22px;width:min(520px,100%);max-height:calc(100dvh - 28px);overflow:auto;padding:18px;display:grid;gap:12px;box-shadow:0 20px 50px -20px rgba(58,43,56,.6)}
+.fhead{display:flex;justify-content:space-between;align-items:center;gap:10px}
+.fhead small{color:var(--muted)}
+.big{display:grid;grid-template-columns:150px minmax(0,1fr);gap:14px;align-items:center}
+@media (max-width:420px){.big{grid-template-columns:120px minmax(0,1fr)}}
+.so-box{aspect-ratio:1/1;background:#fff;border:1.5px solid var(--line);border-radius:16px;background-image:linear-gradient(var(--line),var(--line)),linear-gradient(90deg,var(--line),var(--line));background-size:1px 100%,100% 1px;background-position:center;background-repeat:no-repeat}
+.so{display:block;width:100%;height:auto}
+.so .bg path{fill:none;stroke:#eadfe2;stroke-width:3.2;stroke-linecap:round;stroke-linejoin:round}
+.so .fg path{fill:none;stroke:var(--ink);stroke-width:3.2;stroke-linecap:round;stroke-linejoin:round;stroke-dasharray:1;stroke-dashoffset:1;animation:soDraw .55s ease forwards}
+.so .nums text{font-family:var(--f-display);font-size:7px;font-weight:700;fill:var(--pink);opacity:0;animation:soNum .2s ease forwards}
+@keyframes soDraw{to{stroke-dashoffset:0}}@keyframes soNum{to{opacity:1}}
+@media (prefers-reduced-motion:reduce){.so .fg path{animation:none;stroke-dashoffset:0}.so .nums text{animation:none;opacity:1}}
+.sig{font-family:var(--f-display);font-size:24px;font-weight:800;line-height:1.15;color:var(--pink-d)}
+.lei{display:grid;gap:4px;font-size:16px}
+.lei b{font-size:11.5px;letter-spacing:.14em;color:var(--taupe);margin-right:6px}
+.lei .ro{display:block;font-size:12.5px;color:var(--pink-d);font-weight:700;margin-left:38px}
+.meta{font-size:13px;color:var(--muted)}
+.exb{font:inherit;text-align:left;display:grid;grid-template-columns:32px minmax(0,1fr);gap:10px;align-items:start;width:100%;border:1.5px solid var(--line);border-radius:14px;background:#fff;padding:10px 12px;cursor:pointer;color:var(--ink)}
+.exb .jp{font-size:22px;font-weight:700;line-height:1.5}
+.exb .jp rt{font-size:.5em;color:var(--muted)}
+.exb .ro{display:block;color:var(--pink-d);font-weight:700;font-size:13.5px}
+.exb .pt{display:block;color:var(--muted);font-size:14px}
+.frente{display:grid;justify-items:center;gap:6px;padding:10px 0}
+.frente .c{font-size:clamp(96px,30vw,140px);line-height:1;font-weight:500}
+.notas{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:6px}
+.notas button{font:inherit;font-weight:700;font-size:14px;min-height:56px;border-radius:14px;border:1.5px solid var(--line);background:#fff;cursor:pointer;color:var(--ink);display:grid;align-content:center;gap:0;line-height:1.15}
+.notas button small{font-weight:500;font-size:11.5px;color:var(--muted)}
+.notas .n1{border-color:#e3a5b2}.notas .n2{border-color:#e3c98b}.notas .n3{border-color:#a9c7b0}.notas .n4{border-color:#b7a6dc}
+.barra{height:8px;border-radius:999px;background:#fff;border:1.5px solid var(--line);overflow:hidden}
+.barra i{display:block;height:100%;background:var(--sage);width:0;transition:width .3s}
+.anki{display:grid;gap:10px}
+.anki .dl{display:flex;flex-wrap:wrap;gap:8px}
+.anki a.btn{text-decoration:none}
+.passos{margin:0;padding-left:20px;display:grid;gap:4px;font-size:14.5px;color:var(--muted)}
+body.no-ro .ro{display:none}
+footer{border-top:1.5px dashed var(--line);padding-top:18px;display:flex;flex-wrap:wrap;justify-content:space-between;gap:12px;font-size:14px;color:var(--muted)}
+.credito{font-size:12px;color:#6b5a67;text-align:center;margin:0}
+</style>
+<link rel="stylesheet" href="/estilo-celular.css?v=2">
+<script defer src="/menu-ativo.js?v=1"></script>
+</head>
+<body>
+<div class="wrap">
+  <nav class="sitebar" aria-label="Site">
+    <a class="logo" href="/">UNI<span>R</span>VERSOS</a>
+    <span class="navlinks"><a href="/idiomas/" aria-current="page">idiomas</a><a href="/travessia/">travessia</a><a href="/paralelos/">paralelos</a><a href="/loja/">tesouros</a><a href="/sobre/">sobre</a></span>
+  </nav>
+  <p class="crumb"><a href="/idiomas/japones/">← Trilha do japonês</a></p>
+
+  <header>
+    <p class="eyebrow">ferramenta · japonês</p>
+    <h1><ruby>漢字<rt>かんじ</rt></ruby> Kanji</h1>
+    <p class="lede">Os 181 kanji que aparecem nos 12 mapas e na Aula Zero, mais 34 do nível N5 e 22 de adjetivos e cores do dia a dia. Também em baralhos de dias da semana, números, cores e adjetivos. Toque num kanji para ver a ordem dos traços, as leituras e uma palavra da aula. Para fixar, revise todo dia: cada kanji volta no dia certo, como no Anki.</p>
+    <div class="tools" style="margin-top:12px"><button class="btn" type="button" id="btnRo" aria-pressed="true">Romaji: sim</button></div>
+  </header>
+
+  <section class="card rev-box" aria-labelledby="h-rev">
+    <div><h2 id="h-rev">Revisão de hoje</h2><p class="sub">Escolha o baralho. Os novos entram 5 por vez.</p></div>
+    <div class="seg" role="group" aria-label="Baralho" id="baralho">
+      <button type="button" data-b="mapas" aria-pressed="true">Dos mapas</button>
+      <button type="button" data-b="n5" aria-pressed="false">N5</button>
+      <button type="button" data-b="semana" aria-pressed="false">📅 Dias da semana</button>
+      <button type="button" data-b="numeros" aria-pressed="false">🔢 Números</button>
+      <button type="button" data-b="cores" aria-pressed="false">🎨 Cores</button>
+      <button type="button" data-b="adjetivos" aria-pressed="false">🌈 Adjetivos</button>
+      <button type="button" data-b="todos" aria-pressed="false">Todos</button>
+    </div>
+    <div class="cont" id="cont" aria-live="polite"></div>
+    <div class="tools"><button class="btn pri" type="button" id="btnRev">Revisar agora →</button><button class="btn" type="button" id="btnNovos">Aprender 5 novos</button></div>
+  </section>
+
+  <section class="card" aria-labelledby="h-est">
+    <div><h2 id="h-est">A estante</h2><p class="sub">Organizada pelo mapa onde cada kanji aparece primeiro.</p></div>
+    <div class="estante-tabs" role="tablist" aria-label="Grupos" id="tabs"></div>
+    <div class="grade" id="grade"></div>
+    <p class="leg"><span><i style="background:#e9dfe1"></i>novo</span><span><i style="background:#e3c98b"></i>aprendendo</span><span><i style="background:var(--sage)"></i>já sabe (revisão com 3 semanas ou mais)</span></p>
+  </section>
+
+  <section class="card anki" aria-labelledby="h-anki">
+    <div><h2 id="h-anki">Levar para o app Anki</h2><p class="sub">Os mesmos cartões, para estudar no aplicativo Anki. Os exemplos que já têm voz gravada vão com o áudio.</p></div>
+    <div class="dl">
+      <a class="btn pri" href="/idiomas/kanji/anki/unirversos-kanji-mapas.apkg" download>⬇ Baralho dos mapas (181)</a>
+      <a class="btn" href="/idiomas/kanji/anki/unirversos-kanji-n5.apkg" download>⬇ Baralho N5 (79)</a>
+      <a class="btn" href="/idiomas/kanji/anki/unirversos-kanji-semana.apkg" download>⬇ 📅 Dias da semana (8)</a>
+      <a class="btn" href="/idiomas/kanji/anki/unirversos-kanji-numeros.apkg" download>⬇ 🔢 Números (14)</a>
+      <a class="btn" href="/idiomas/kanji/anki/unirversos-kanji-cores.apkg" download>⬇ 🎨 Cores (8)</a>
+      <a class="btn" href="/idiomas/kanji/anki/unirversos-kanji-adjetivos.apkg" download>⬇ 🌈 Adjetivos (31)</a>
+    </div>
+    <ol class="passos">
+      <li>Instale o Anki: AnkiDroid no Android, AnkiMobile no iPhone ou o Anki no computador (apps.ankiweb.net).</li>
+      <li>Baixe o baralho aqui e abra o arquivo. No computador: Arquivo → Importar.</li>
+      <li>O progresso do Anki fica no app. O progresso desta página fica na sua conta Unirversos.</li>
+    </ol>
+  </section>
+
+  <p class="credito" id="credito"></p>
+  <p class="credito">Leituras, traços e nível JLPT: KANJIDIC2 (<a href="https://www.edrdg.org/" rel="noopener">EDRDG</a>, CC BY-SA 4.0), pela lista <a href="https://github.com/davidluzgouveia/kanji-data" rel="noopener">kanji-data</a>. Ordem dos traços: <a href="http://kanjivg.tagaini.net" rel="noopener">KanjiVG</a> (Ulrich Apel), CC BY-SA 3.0. Significados em português e exemplos: Unirversos.</p>
+  <footer>
+    <span>unirversos — tudo conectado · Aline Kikuti</span>
+    <span><a href="/idiomas/japones/">trilha do japonês</a> · <a href="/idiomas/">idiomas</a></span>
+  </footer>
+</div>
+
+<div class="ov" id="ov" hidden><div class="fcard" role="dialog" aria-modal="true" aria-labelledby="ovT" id="fcard"></div></div>
+
+<script src="/idiomas/dados/velocidade-voz.js?v=1"></script>
+<script src="/idiomas/dados/audio-mapa.js?v=4a8ffd4b"></script>
+<script src="/idiomas/dados/kanji-dados.js?v=601a9639"></script>
+<script src="/idiomas/dados/kanji-tracos.js?v=601a9639"></script>
+<script>
+(function(){
+const $=id=>document.getElementById(id);
+const esc=s=>String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+/* ---------- áudio ---------- */
+const chave=t=>String(t).replace(/[\s、。，．,.!！?？…・「」『』（）()]/g,'');
+let tocando=null;
+function speakTTS(t){ try{ if(!window.speechSynthesis) return; speechSynthesis.cancel(); const u=new SpeechSynthesisUtterance(t); u.lang='ja-JP'; u.rate=.85*(window.UniVel?UniVel.get():1); const v=speechSynthesis.getVoices().find(x=>/^ja/i.test(x.lang)); if(v) u.voice=v; speechSynthesis.speak(u); }catch(e){} }
+function speak(t){ const id=window.AUDIO_MAP&&AUDIO_MAP[chave(t)]; if(!id){ speakTTS(t); return; }
+  try{ if(tocando) tocando.pause(); try{speechSynthesis.cancel();}catch(e){} const a=new Audio((window.AUDIO_BASE||'/idiomas/audio/')+id+'.mp3'); tocando=a; if(window.UniVel) UniVel.aplica(a);
+    a.onerror=()=>speakTTS(t); const p=a.play(); if(p&&p.catch) p.catch(()=>speakTTS(t)); }catch(e){ speakTTS(t); } }
+if(window.AUDIO_CREDITO) $('credito').textContent='Vozes sintéticas em japonês: '+AUDIO_CREDITO+'.';
+/* ---------- romaji ---------- */
+const DI={きゃ:'kya',きゅ:'kyu',きょ:'kyo',しゃ:'sha',しゅ:'shu',しょ:'sho',ちゃ:'cha',ちゅ:'chu',ちょ:'cho',にゃ:'nya',にゅ:'nyu',にょ:'nyo',ひゃ:'hya',ひゅ:'hyu',ひょ:'hyo',みゃ:'mya',みゅ:'myu',みょ:'myo',りゃ:'rya',りゅ:'ryu',りょ:'ryo',ぎゃ:'gya',ぎゅ:'gyu',ぎょ:'gyo',じゃ:'ja',じゅ:'ju',じょ:'jo',びゃ:'bya',びゅ:'byu',びょ:'byo',ぴゃ:'pya',ぴゅ:'pyu',ぴょ:'pyo'};
+const R1={あ:'a',い:'i',う:'u',え:'e',お:'o',か:'ka',き:'ki',く:'ku',け:'ke',こ:'ko',さ:'sa',し:'shi',す:'su',せ:'se',そ:'so',た:'ta',ち:'chi',つ:'tsu',て:'te',と:'to',な:'na',に:'ni',ぬ:'nu',ね:'ne',の:'no',は:'ha',ひ:'hi',ふ:'fu',へ:'he',ほ:'ho',ま:'ma',み:'mi',む:'mu',め:'me',も:'mo',や:'ya',ゆ:'yu',よ:'yo',ら:'ra',り:'ri',る:'ru',れ:'re',ろ:'ro',わ:'wa',を:'o',ん:'n',が:'ga',ぎ:'gi',ぐ:'gu',げ:'ge',ご:'go',ざ:'za',じ:'ji',ず:'zu',ぜ:'ze',ぞ:'zo',だ:'da',ぢ:'ji',づ:'zu',で:'de',ど:'do',ば:'ba',び:'bi',ぶ:'bu',べ:'be',ぼ:'bo',ぱ:'pa',ぴ:'pi',ぷ:'pu',ぺ:'pe',ぽ:'po'};
+function romaji(k){ let o='',i=0; while(i<k.length){ const two=k.slice(i,i+2); if(DI[two]){o+=DI[two];i+=2;continue;} const c=k[i];
+  if(c==='っ'){ const nx=DI[k.slice(i+1,i+3)]||R1[k[i+1]]||''; o+=nx?(nx.startsWith('ch')?'t':nx[0]):''; i++; continue; }
+  o+=R1[c]!==undefined?R1[c]:c; i++; } return o; }
+const hira=s=>String(s).replace(/[ァ-ヶ]/g,c=>String.fromCharCode(c.charCodeAt(0)-0x60));
+const roLe=s=>romaji(hira(s).replace(/[()]/g,''));
+let ro=true; try{ ro=localStorage.getItem('kanjiRomaji')!=='0'; }catch(e){}
+function applyRo(){ document.body.classList.toggle('no-ro',!ro); $('btnRo').textContent='Romaji: '+(ro?'sim':'não'); $('btnRo').setAttribute('aria-pressed',String(ro)); }
+$('btnRo').onclick=()=>{ ro=!ro; try{ localStorage.setItem('kanjiRomaji',ro?'1':'0'); }catch(e){} applyRo(); };
+applyRo();
+
+/* ---------- dados ---------- */
+const KD=window.UNI_KANJI, G=KD.grupos, F=KD.k;
+const MAPAS_K=G.filter(g=>g.id!=='n5'&&g.id!=='mais').flatMap(g=>g.k), N5_K=Object.keys(F).filter(k=>F[k].n===5), TODOS=Object.keys(F);
+const BAR={mapas:MAPAS_K,n5:N5_K,todos:TODOS}; (KD.temas||[]).forEach(t=>{ BAR[t.id]=t.k; });
+const TIPO={semana:'Dia da semana',numeros:'Número',cores:'Cor',adjetivos:'Como adjetivo'};
+const AULA={aeroporto:1,hotel:1,restaurante:1,kombini:1,trens:1,compras:1,roupas:1,emergencia:1,apresentacao:1,horas:1,planos:1,sinalizacao:1};
+const TIT=Object.fromEntries(G.map(g=>[g.id,g.emoji+' '+g.titulo]));
+
+/* ---------- repetição espaçada (estilo Anki, simplificado) ---------- */
+const SK='kanjiSRS1', MIN=60e3, DIA=864e5;
+function lerS(){ try{ return JSON.parse(localStorage.getItem(SK)||'{}')||{}; }catch(e){ return {}; } }
+let S=lerS();
+function grava(){ try{ localStorage.setItem(SK,JSON.stringify(S)); }catch(e){} }
+document.addEventListener('uni-progresso',()=>{ S=lerS(); render(); });
+const estado=k=>{ const c=S[k]; if(!c) return 'novo'; return c.i>=21?'sb':'ap'; };
+function proximo(c,nota){ /* c={e,i,r,d}: e=facilidade, i=intervalo em dias, r=repetições */
+  c=Object.assign({e:2.5,i:0,r:0,d:0},c||{}); const now=Date.now(); let i=c.i, e=c.e, dt;
+  if(c.i<1){ /* aprendendo */
+    if(nota===1){ dt=MIN; i=0; } else if(nota===2){ dt=6*MIN; i=0; } else if(nota===3){ i=1; dt=DIA; } else { i=4; dt=4*DIA; }
+  } else {
+    if(nota===1){ e=Math.max(1.3,e-.2); i=0; dt=10*MIN; }
+    else if(nota===2){ e=Math.max(1.3,e-.15); i=Math.max(1,Math.round(c.i*1.2)); dt=i*DIA; }
+    else if(nota===3){ i=Math.max(c.i+1,Math.round(c.i*e)); dt=i*DIA; }
+    else { e=e+.15; i=Math.max(c.i+2,Math.round(c.i*e*1.3)); dt=i*DIA; }
+  }
+  return {e:+e.toFixed(2),i,r:c.r+1,d:now+dt};
+}
+const rotulo=ms=>ms<3600e3?Math.round(ms/MIN)+' min':ms<DIA*1.5?'1 dia':Math.round(ms/DIA)+' dias';
+const previa=(k,n)=>rotulo(proximo(S[k],n).d-Date.now());
+
+let bar='mapas';
+function contas(){ const L=BAR[bar], now=Date.now();
+  const venc=L.filter(k=>S[k]&&S[k].d<=now).length, novos=L.filter(k=>!S[k]).length, sab=L.filter(k=>estado(k)==='sb').length;
+  return {venc,novos,sab,total:L.length}; }
+function renderCont(){ const c=contas();
+  $('cont').innerHTML=`<div class="hoje"><b>${c.venc}</b><span>para revisar</span></div><div><b>${c.novos}</b><span>novos</span></div><div><b>${c.sab}</b><span>de ${c.total} já sabe</span></div>`;
+  $('btnRev').disabled=!c.venc; $('btnRev').style.opacity=c.venc?1:.5; $('btnNovos').disabled=!c.novos; }
+$('baralho').onclick=e=>{ const b=e.target.closest('button'); if(!b) return; bar=b.dataset.b;
+  $('baralho').querySelectorAll('button').forEach(x=>x.setAttribute('aria-pressed',String(x===b))); renderCont(); };
+
+/* ---------- estante ---------- */
+let aba=G[0].id;
+function renderTabs(){ $('tabs').innerHTML=G.map(g=>`<button type="button" role="tab" data-g="${g.id}" aria-selected="${g.id===aba}">${g.emoji} ${esc(g.titulo)} · ${g.k.length}</button>`).join(''); }
+function renderGrade(){ const g=G.find(x=>x.id===aba);
+  $('grade').innerHTML=g.k.map(k=>{ const st=estado(k); return `<button type="button" class="kt" data-k="${k}" aria-label="${k}: ${esc(F[k].sig)}"><span class="st ${st==='novo'?'':st}" aria-hidden="true"></span><span class="c" lang="ja">${k}</span><small>${esc(F[k].sig.split(/[;,]/)[0])}</small></button>`; }).join(''); }
+$('tabs').onclick=e=>{ const b=e.target.closest('button'); if(!b) return; aba=b.dataset.g; renderTabs(); renderGrade(); };
+$('grade').onclick=e=>{ const b=e.target.closest('.kt'); if(b) abreFicha(b.dataset.k); };
+function render(){ renderCont(); renderTabs(); renderGrade(); }
+
+/* ---------- ficha ---------- */
+function tracos(ch,anim){ const d=(window.KanjiStrokes||{})[ch]; if(!d) return `<div class="frente"><span class="c">${ch}</span></div>`;
+  const step=Math.min(.6,6/d.p.length);
+  const bg=d.p.map(p=>`<path d="${p}"/>`).join(''), fg=anim?d.p.map((p,i)=>`<path d="${p}" pathLength="1" style="animation-delay:${(i*step).toFixed(2)}s"/>`).join(''):d.p.map(p=>`<path d="${p}" style="stroke-dashoffset:0;animation:none"/>`).join('');
+  const nn=d.n.map(([x,y],i)=>`<text x="${x}" y="${y}" style="animation-delay:${anim?(i*step).toFixed(2):0}s${anim?'':';opacity:1;animation:none'}">${i+1}</text>`).join('');
+  return `<svg class="so" viewBox="0 0 109 109" role="img" aria-label="Ordem dos traços de ${ch}: ${d.p.length} traços"><g class="bg">${bg}</g><g class="fg">${fg}</g><g class="nums">${nn}</g></svg>`; }
+function verso(k){ const f=F[k];
+  const le=(t,arr)=>arr.length?`<div><b>${t}</b>${arr.map(esc).join('、')}<span class="ro">${arr.map(roLe).join(', ')}</span></div>`:'';
+  const tipo=sess?TIPO[sess.bar]:null, x2=f.x2||[];
+  const ex=(tipo&&x2.find(e=>e.t===tipo))||f.ex, outros=[f.ex].concat(x2).filter((e,i,a)=>e.k!==ex.k&&a.findIndex(o=>o.k===e.k)===i);
+  const exBtn=(e,i,t)=>`<button type="button" class="exb" data-ex="${i}"><span aria-hidden="true">🔊</span><span>${t?`<span class="meta" style="display:block">${esc(t)}</span>`:''}<span class="jp" lang="ja">${e.h}</span><span class="ro">${romaji(e.k)}</span><span class="pt">${esc(e.pt)}</span></span></button>`;
+  EXS=[ex].concat(outros);
+  return `<div class="big"><div class="so-box" id="soBox">${tracos(k,true)}</div>
+    <div style="display:grid;gap:8px"><div class="sig">${esc(f.sig)}</div><div class="lei">${le('ON',f.on)}${le('KUN',f.kun)}</div>
+    <div class="meta">${f.tr} traços${f.n?' · JLPT N'+f.n:''} · <button type="button" class="linkb" id="soRe" style="font:inherit;border:0;background:none;color:var(--pink-d);font-weight:700;cursor:pointer;padding:0">↺ ver os traços de novo</button></div></div></div>
+    ${exBtn(ex,0,'')}${outros.map((e,i)=>exBtn(e,i+1,e.t||'Na aula')).join('')}
+    <p class="meta" style="margin:0">Aparece em: ${AULA[f.mapa]?`<a href="/idiomas/mapas/${f.mapa}/aula/">${esc(TIT[f.mapa])}</a>`:f.mapa==='aulazero'?`<a href="/idiomas/aula-zero/">${esc(TIT[f.mapa])}</a>`:f.mapa==='mais'?'lista de adjetivos e cores (ainda não está num mapa)':'lista N5 (ainda não está num mapa)'}</p>`; }
+let EXS=[];
+function ligaVerso(k){ $('fcard').querySelectorAll('[data-ex]').forEach(b=>{ b.onclick=()=>speak(EXS[+b.dataset.ex].k); }); $('soRe').onclick=()=>{ $('soBox').innerHTML=tracos(k,true); }; }
+let ultimoFoco=null;
+function abreOv(html){ ultimoFoco=document.activeElement; $('fcard').innerHTML=html; $('ov').hidden=false; const f=$('fcard').querySelector('button'); if(f) f.focus(); }
+function fechaOv(){ $('ov').hidden=true; $('fcard').innerHTML=''; sess=null; render(); if(ultimoFoco) try{ ultimoFoco.focus(); }catch(e){} }
+$('ov').addEventListener('click',e=>{ if(e.target===$('ov')||e.target.closest('[data-fecha]')) fechaOv(); });
+document.addEventListener('keydown',e=>{ if(e.key==='Escape'&&!$('ov').hidden) fechaOv(); });
+function abreFicha(k){ const st=estado(k);
+  abreOv(`<div class="fhead"><b id="ovT" lang="ja" style="font-size:20px">${k}</b><small>${st==='novo'?'novo':st==='sb'?'já sabe':'aprendendo'}</small><button class="btn" type="button" data-fecha>Fechar</button></div>${verso(k)}`);
+  ligaVerso(k); }
+
+/* ---------- sessão de revisão ---------- */
+let sess=null;
+function inicia(novos){ const L=BAR[bar], now=Date.now();
+  const fila=novos?L.filter(k=>!S[k]).slice(0,5):L.filter(k=>S[k]&&S[k].d<=now).sort((a,b)=>S[a].d-S[b].d);
+  if(!fila.length) return; sess={fila,total:fila.length,feitos:0,bar}; mostraFrente(); }
+function topo(){ const p=sess?Math.round(sess.feitos/Math.max(1,sess.total)*100):0;
+  return `<div class="fhead"><b id="ovT">Revisão · ${sess.feitos} de ${sess.total}</b><button class="btn" type="button" data-fecha>Parar</button></div><div class="barra" aria-hidden="true"><i style="width:${p}%"></i></div>`; }
+function mostraFrente(){ if(!sess.fila.length) return fim(); const k=sess.fila[0];
+  abreOv(topo()+`<div class="frente"><span class="c" lang="ja">${k}</span><span class="meta">O que quer dizer? Como se lê?</span></div><button class="btn pri" type="button" id="mostra" style="width:100%">Mostrar a resposta</button>`);
+  $('mostra').onclick=()=>mostraVerso(k); }
+function mostraVerso(k){ const novo=!S[k];
+  abreOv(topo()+verso(k)+`<div class="notas" role="group" aria-label="Como foi?">
+    <button type="button" class="n1" data-n="1">Errei<small>${previa(k,1)}</small></button><button type="button" class="n2" data-n="2">Difícil<small>${previa(k,2)}</small></button>
+    <button type="button" class="n3" data-n="3">Bom<small>${previa(k,3)}</small></button><button type="button" class="n4" data-n="4">Fácil<small>${previa(k,4)}</small></button></div>`);
+  ligaVerso(k); speak(EXS[0].k);
+  $('fcard').querySelector('.notas').onclick=e=>{ const b=e.target.closest('button'); if(!b) return; const n=+b.dataset.n;
+    S[k]=proximo(S[k],n); grava(); sess.fila.shift();
+    if(S[k].i<1){ sess.fila.splice(Math.min(sess.fila.length,n===1?2:4),0,k); } else sess.feitos++;
+    mostraFrente(); }; }
+function fim(){ abreOv(`<div class="fhead"><b id="ovT">Revisão feita! 🎉</b><button class="btn" type="button" data-fecha>Fechar</button></div><p style="margin:0">Você revisou ${sess.total} ${sess.total===1?'kanji':'kanji'}. Volte amanhã: o que você acertou aparece de novo no dia certo.</p>`); }
+$('btnRev').onclick=()=>inicia(false);
+$('btnNovos').onclick=()=>inicia(true);
+render();
+window.UniKanji={F,G,proximo};
+})();
+</script>
+</body>
+</html>

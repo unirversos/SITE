@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="pt-BR" data-login="obrigatorio">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>Ar · às vezes precisamos de um ar | Unirversos Idiomas</title>
+<meta name="description" content="As 5 gavetas do Ar: frases em japonês para ganhar tempo, avisar que está aprendendo, pedir para repetir, confirmar e encerrar com educação.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@500;700;800&family=Zen+Maru+Gothic:wght@400;500;700&display=swap">
+<style>html[data-login="obrigatorio"]:not(.uni-ok) body>*:not(#uni-gate){visibility:hidden}</style>
+<script type="module" src="/idiomas/dados/conta.js?v=4"></script>
+<script>setTimeout(function(){var h=document.documentElement;if(!h.classList.contains('uni-ok')&&!document.getElementById('uni-gate'))h.classList.add('uni-ok')},10000)</script>
+<style>
+:root{
+  --paper:#fdf6f4; --card:#ffffff; --ink:#3a2b38; --muted:#6b5a67; --line:#ecdadd;
+  --blush:#f8dde1; --pink:#c23f5e; --pink-d:#b23a57; --sage:#4f7a58; --sage-soft:#e8efe8; --taupe:#816c5b; --gold:#8f6b1d; --gold-soft:#fbf1d9;
+  --f-display:"Baloo 2","Zen Maru Gothic",system-ui,sans-serif;
+  --f-body:"Zen Maru Gothic","Hiragino Maru Gothic ProN","Noto Sans JP",system-ui,sans-serif;
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--paper);color:var(--ink);font-family:var(--f-body);font-size:16px;line-height:1.6;
+  background-image:radial-gradient(var(--line) 1.2px,transparent 1.3px);background-size:22px 22px;
+  padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));padding-block:18px 90px}
+a{color:inherit}
+a:focus-visible,button:focus-visible,input:focus-visible{outline:3px solid #b7a6dc;outline-offset:3px;border-radius:8px}
+.wrap{max-width:900px;margin:0 auto;display:grid;gap:28px}
+.sitebar{display:flex;flex-wrap:wrap;justify-content:space-between;align-items:center;gap:10px 18px}
+.logo{font-family:var(--f-display);font-weight:800;font-size:19px;letter-spacing:.14em;text-decoration:none}
+.logo span{color:var(--pink)}
+.navlinks{display:flex;flex-wrap:wrap;gap:6px 20px;font-size:14px}
+.navlinks a{text-decoration:none;color:var(--muted)}
+.navlinks a[aria-current]{color:var(--pink)}
+.crumb{font-size:14px;margin:0;display:flex;flex-wrap:wrap;gap:6px 16px}
+.crumb a{color:var(--muted);text-decoration:none}
+.eyebrow{font-size:12px;letter-spacing:.2em;text-transform:uppercase;color:var(--pink-d);font-weight:700;margin:0}
+h1{font-family:var(--f-display);font-weight:800;font-size:clamp(32px,5.4vw,48px);line-height:1.05;margin:6px 0 10px}
+h2{font-family:var(--f-display);font-size:24px;line-height:1.2;margin:0 0 4px}
+.lede{margin:0;font-size:17px;max-width:62ch}
+.card{background:var(--card);border:1.5px solid var(--line);border-radius:20px;padding:18px;display:grid;gap:14px}
+.sub{margin:0;color:var(--muted);font-size:14.5px}
+.tools{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+.btn{font:inherit;font-weight:700;font-size:14px;min-height:44px;padding:0 16px;border-radius:999px;border:1.5px solid var(--line);background:#fff;color:var(--ink);cursor:pointer;display:inline-flex;align-items:center;gap:6px;text-decoration:none}
+.btn.pri{background:var(--pink);border-color:var(--pink);color:#fff}
+.btn[aria-pressed="true"]{background:var(--ink);border-color:var(--ink);color:#fff}
+/* gavetas do Ar */
+.gav{background:var(--card);border:1.5px solid var(--line);border-radius:18px;overflow:hidden}
+.gav summary{list-style:none;cursor:pointer;display:grid;grid-template-columns:44px minmax(0,1fr) auto;gap:12px;align-items:center;padding:14px 16px;min-height:64px}
+.gav summary::-webkit-details-marker{display:none}
+.gav summary::after{content:'＋';font-weight:800;color:var(--taupe)}
+.gav[open] summary::after{content:'－'}
+.gav .ic{font-size:26px;text-align:center}
+.gav summary b{display:block;font-family:var(--f-display);font-size:18px;line-height:1.2}
+.gav summary small{display:block;color:var(--muted);font-size:13.5px}
+.gbody{display:grid;gap:8px;padding:0 14px 14px}
+.frase{font:inherit;text-align:left;display:grid;grid-template-columns:32px minmax(0,1fr);gap:10px;align-items:start;width:100%;border:1.5px solid var(--line);border-radius:14px;background:#fff;padding:10px 12px;cursor:pointer;color:var(--ink)}
+.frase:hover{border-color:var(--pink)}
+.frase .jp{font-size:19px;font-weight:700;line-height:1.5}
+.frase .jp rt{font-size:.5em;color:var(--muted)}
+.frase .ro{display:block;color:var(--pink-d);font-weight:700;font-size:13.5px}
+.frase .pt{display:block;color:var(--muted);font-size:14px}
+.nota{margin:2px 0 0;font-size:14px;color:var(--muted)}
+.gav.nao summary b{color:var(--pink-d)}
+.gav.nao ul{margin:0;padding:0 18px 14px 34px;display:grid;gap:6px}
+body.no-ro .ro, body.no-ro .cel small{display:none}
+footer{border-top:1.5px dashed var(--line);padding-top:18px;display:flex;flex-wrap:wrap;justify-content:space-between;gap:12px;font-size:14px;color:var(--muted)}
+.credito{font-size:12px;color:#6b5a67;text-align:center;margin:0}
+@media (max-width:520px){.tabela{grid-template-columns:repeat(3,minmax(0,1fr))}}
+</style>
+<link rel="stylesheet" href="/estilo-celular.css?v=2">
+<script defer src="/menu-ativo.js?v=1"></script>
+</head>
+<body>
+<div class="wrap">
+  <nav class="sitebar" aria-label="Site">
+    <a class="logo" href="/">UNI<span>R</span>VERSOS</a>
+    <span class="navlinks"><a href="/idiomas/" aria-current="page">idiomas</a><a href="/travessia/">travessia</a><a href="/paralelos/">paralelos</a><a href="/loja/">tesouros</a><a href="/sobre/">sobre</a></span>
+  </nav>
+  <p class="crumb"><a href="/idiomas/japones/">← Trilha do japonês</a></p>
+
+  <header>
+    <p class="eyebrow">ferramenta · japonês</p>
+    <h1>🌬️ Ar</h1>
+    <p class="lede"><i>Às vezes precisamos de um ar.</i> Travou numa conversa? Tudo bem. Abra a gaveta do que você quer fazer agora e toque na frase para ouvir.</p>
+    <div class="tools" style="margin-top:12px"><button class="btn" type="button" id="btnRo" aria-pressed="true">Romaji: sim</button></div>
+  </header>
+
+  <section aria-label="As 5 gavetas" style="display:grid;gap:10px" id="gavetas"></section>
+
+  <p class="credito" id="credito"></p>
+  <footer>
+    <span>unirversos — tudo conectado · Aline Kikuti</span>
+    <span><a href="/idiomas/japones/">trilha do japonês</a> · <a href="/idiomas/">idiomas</a></span>
+  </footer>
+</div>
+
+<script src="/idiomas/dados/velocidade-voz.js?v=1"></script>
+<script src="/idiomas/dados/audio-mapa.js?v=4a8ffd4b"></script>
+<script src="/idiomas/dados/ar.js?v=1"></script>
+<script>
+(function(){
+const $=id=>document.getElementById(id);
+const chave=t=>String(t).replace(/[\s、。，．,.!！?？…・「」『』（）()＿〜~]/g,'');
+let tocando=null;
+function speakTTS(t){ try{ if(!window.speechSynthesis) return; speechSynthesis.cancel(); const u=new SpeechSynthesisUtterance(t); u.lang='ja-JP'; u.rate=.85*(window.UniVel?UniVel.get():1); const v=speechSynthesis.getVoices().find(x=>/^ja/i.test(x.lang)); if(v) u.voice=v; speechSynthesis.speak(u); }catch(e){} }
+function speak(t){
+  const id=window.AUDIO_MAP&&(AUDIO_MAP[chave(t)]||AUDIO_MAP[String(t).replace(/[\s、。，．,.!！?？…・「」『』（）()]/g,'')]);
+  if(!id){ speakTTS(t); return; }
+  try{ if(tocando) tocando.pause(); try{speechSynthesis.cancel();}catch(e){} const a=new Audio((window.AUDIO_BASE||'/idiomas/audio/')+id+'.mp3'); tocando=a; if(window.UniVel) UniVel.aplica(a);
+    a.onerror=()=>speakTTS(t); const p=a.play(); if(p&&p.catch) p.catch(()=>speakTTS(t)); }catch(e){ speakTTS(t); }
+}
+if(window.AUDIO_CREDITO) $('credito').textContent='Vozes sintéticas em japonês: '+AUDIO_CREDITO+'.';
+const D=window.UNI_AR||{AR:[],AR_NAO:[]};
+$('gavetas').innerHTML=D.AR.map((g,gi)=>`<details class="gav"><summary><span class="ic" aria-hidden="true">${g.ic}</span><span><b>${g.quero}</b><small>${g.sub}</small></span></summary><div class="gbody">${g.frases.map((f,fi)=>`<button type="button" class="frase" data-g="${gi}" data-f="${fi}"><span aria-hidden="true">🔊</span><span><span class="jp" lang="ja">${f.h}</span><span class="ro">${f.r}</span><span class="pt">${f.pt}</span></span></button>`).join('')}${g.nota?`<p class="nota">💡 ${g.nota}</p>`:''}</div></details>`).join('')+
+  `<details class="gav nao"><summary><span class="ic" aria-hidden="true">🚫</span><span><b>O que não fazer</b><small>armadilhas comuns</small></span></summary><ul>${D.AR_NAO.map(t=>`<li>${t}</li>`).join('')}</ul></details>`;
+$('gavetas').addEventListener('click',e=>{ const b=e.target.closest('.frase'); if(b) speak(D.AR[+b.dataset.g].frases[+b.dataset.f].k); });
+$('gavetas').addEventListener('toggle',e=>{ if(e.target.open) $('gavetas').querySelectorAll('details').forEach(d=>{ if(d!==e.target) d.open=false; }); },true);
+let ro=true; try{ ro=localStorage.getItem('arRomaji')!=='0'; }catch(e){}
+function applyRo(){ document.body.classList.toggle('no-ro',!ro); $('btnRo').textContent='Romaji: '+(ro?'sim':'não'); $('btnRo').setAttribute('aria-pressed',String(ro)); }
+$('btnRo').onclick=()=>{ ro=!ro; try{ localStorage.setItem('arRomaji',ro?'1':'0'); }catch(e){} applyRo(); };
+applyRo();
+})();
+</script>
+</body>
+</html>

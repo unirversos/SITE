@@ -282,6 +282,10 @@ body.no-ro .rk rt{display:none}
 .exnav .btn[disabled]{opacity:.45;cursor:default}
 .exnav .btn{min-height:48px}
 
+/* minha frase no hall */
+.hall-f{display:flex;flex-wrap:wrap;gap:8px 12px;align-items:center;justify-content:space-between;background:#f1f6f1;border:1.5px solid #cfdccf;border-radius:14px;padding:10px 12px;font-size:14px}
+.hall-f.ok{background:var(--sage-soft)}
+
 /* navegação do site */
 .sitebar{display:flex;align-items:center;justify-content:space-between;gap:10px 14px;flex-wrap:wrap}
 .sitebar .brand{font-family:var(--f-display);font-size:18px;font-weight:700;text-decoration:none;color:var(--ink)}
