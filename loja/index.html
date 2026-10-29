@@ -65,6 +65,7 @@ h1 .jp rt{font-size:.5em;letter-spacing:.05em}
 .pag li.ch{background:#fff4e0;border:1.5px solid #e8c98a;color:#5b4210}
 .parc{font-size:13px;color:var(--muted);font-weight:500}
 .selo{position:absolute;top:10px;right:10px;background:var(--pink);color:#fff;font-weight:800;font-size:12.5px;letter-spacing:.02em;padding:6px 11px;border-radius:999px;box-shadow:0 4px 10px -4px rgba(194,63,94,.6);transform:rotate(3deg)}
+.preco.tot{margin:6px 0 0;padding-top:8px;border-top:2px solid var(--ink)}
 .pag s,.preco s{color:var(--muted)}
 .foto{position:relative;aspect-ratio:4/3;background:color-mix(in srgb,var(--c) 14%,var(--card));display:grid;place-items:center;font-size:56px;border-bottom:1.5px solid var(--line)}
 .foto img{width:100%;height:100%;object-fit:cover;display:block}
@@ -194,7 +195,7 @@ footer a:hover{color:var(--pink)}
     const fm=n=>Number(n).toLocaleString('pt-BR',{minimumFractionDigits:2,maximumFractionDigits:2});
     const DESC=20; /* % de desconto da primeira compra, só sobre o produto (sem a taxa de importação) */
     const prod=x.total?x.total-(x.imposto||0):0, com=prod*(1-DESC/100), totCom=com+(x.imposto||0);
-    const rs=x.total?`<p class="preco">Total na 1ª compra: R$ ${fm(totCom)} <span class="parc"><s>R$ ${fm(x.total)}</s></span></p><ul class="pag"><li><b>Produto, 12x sem juros:</b> <s>R$ ${fm(prod)}</s> <b>R$ ${fm(com)}</b> (12x de R$ ${fm(com/12)}) <span class="parc">com ${DESC}% de desconto</span></li>${x.imposto?`<li class="ch"><b>Taxa de importação, paga na chegada:</b> R$ ${fm(x.imposto)} <span class="parc">(estimativa, vai direto para a alfândega, não entra no parcelado e não tem desconto)</span></li>`:''}</ul>${x.chegada?`<p class="parc">📦 Chegada: ${esc(x.chegada)}</p>`:''}`:'';
+    const rs=x.total?`<ul class="pag"><li><b>Produto, 12x sem juros:</b> <s>R$ ${fm(prod)}</s> <b>R$ ${fm(com)}</b> (12x de R$ ${fm(com/12)}) <span class="parc">com ${DESC}% de desconto</span></li>${x.imposto?`<li class="ch"><b>Taxa de importação, paga na chegada:</b> R$ ${fm(x.imposto)} <span class="parc">(estimativa, vai direto para a alfândega, não entra no parcelado e não tem desconto)</span></li>`:''}</ul><p class="preco tot"><span class="parc">= Total (produto + taxa), na 1ª compra</span><br>R$ ${fm(totCom)} <span class="parc"><s>R$ ${fm(x.total)}</s></span></p>${x.chegada?`<p class="parc">📦 Chegada: ${esc(x.chegada)}</p>`:''}`:'';
     const selo=x.total?`<span class="selo">${DESC}% OFF · 1ª compra</span>`:'';
     return `<article class="card" data-cat="${c.id}">
       ${x.exemplo?'<span class="ex">exemplo</span>':''}
