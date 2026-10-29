@@ -60,6 +60,9 @@ h1 .jp rt{font-size:.5em;letter-spacing:.05em}
 .card[data-cat="consoles"]{--c:var(--lavender)} .card[data-cat="colec"]{--c:var(--sky)} .card[data-cat="reliquias"]{--c:var(--gold)} .card[data-cat="gadgets"]{--c:var(--sage)}
 .taxa{margin:6px 0 0;padding:9px 11px;border-radius:12px;background:#fff4e0;border:1.5px solid #e8c98a;color:#5b4210;font-size:13.5px;line-height:1.45}
 .taxa b{font-weight:800}
+.pag{list-style:none;margin:4px 0 0;padding:0;display:grid;gap:6px;font-size:14px;line-height:1.4}
+.pag li{padding:8px 10px;border-radius:12px;background:var(--sage-soft)}
+.pag li.ch{background:#fff4e0;border:1.5px solid #e8c98a;color:#5b4210}
 .parc{font-size:13px;color:var(--muted);font-weight:500}
 .foto{aspect-ratio:4/3;background:color-mix(in srgb,var(--c) 14%,var(--card));display:grid;place-items:center;font-size:56px;border-bottom:1.5px solid var(--line)}
 .foto img{width:100%;height:100%;object-fit:cover;display:block}
@@ -124,7 +127,7 @@ footer a:hover{color:var(--pink)}
       <a class="btn pri" href="#vitrine">Ver os achados ↓</a>
       <a class="btn sec" href="/loja/guia/">Como comprar e a alfândega →</a>
     </div>
-    <p class="taxa" style="max-width:640px"><b>Malote de dezembro:</b> os preços estão em reais e podem ser parcelados em <b>12x sem juros</b>. O <b>imposto de importação (alfândega) não está incluído</b> no parcelado: ele é pago por você na chegada, e cada cartão mostra a estimativa.</p>
+    <p class="taxa" style="max-width:640px"><b>Malote de dezembro:</b> o preço total está em reais. A parte do produto pode ser parcelada em <b>12x sem juros</b>, e a <b>taxa de importação (alfândega)</b> é paga por você na chegada, separada do parcelado. Cada cartão mostra os dois valores.</p>
     <p class="aviso">💡 Transparência: alguns botões levam a links de afiliado ou a serviços de redirecionamento. Se você comprar por eles, a Unirversos pode receber uma comissão, sem custo extra para você.</p>
   </header>
 
@@ -186,7 +189,8 @@ footer a:hover{color:var(--pink)}
       ? `<a class="quero" href="${esc(x.link)}" target="_blank" rel="noopener sponsored">Quero este achado →</a>`
       : `<span class="quero off" aria-disabled="true">Reserva em breve</span>`;
     const p=faixa(x);
-    const rs=x.reais?`<p class="preco">R$ ${Number(x.reais).toLocaleString('pt-BR')} <span class="parc">ou 12x de R$ ${(x.reais/12).toLocaleString('pt-BR',{minimumFractionDigits:2,maximumFractionDigits:2})} sem juros</span></p>${x.chegada?`<p class="parc">📦 Chegada: ${esc(x.chegada)}</p>`:''}${x.imposto?`<p class="taxa"><b>Imposto de importação não incluído:</b> estimativa de R$ ${Number(x.imposto).toLocaleString('pt-BR')}, pago por você na chegada (alfândega). O valor final depende do seu estado.</p>`:''}`:'';
+    const fm=n=>Number(n).toLocaleString('pt-BR',{minimumFractionDigits:2,maximumFractionDigits:2});
+    const rs=x.total?`<p class="preco">Total: R$ ${Number(x.total).toLocaleString('pt-BR')}</p><ul class="pag"><li><b>Parcelado em 12x sem juros:</b> R$ ${fm(x.total-(x.imposto||0))} (12x de R$ ${fm((x.total-(x.imposto||0))/12)})</li>${x.imposto?`<li class="ch"><b>Taxa de importação, paga na chegada:</b> R$ ${fm(x.imposto)} <span class="parc">(estimativa, vai direto para a alfândega e não entra no parcelado)</span></li>`:''}</ul>${x.chegada?`<p class="parc">📦 Chegada: ${esc(x.chegada)}</p>`:''}`:'';
     return `<article class="card" data-cat="${c.id}">
       ${x.exemplo?'<span class="ex">exemplo</span>':''}
       <div class="foto">${foto}</div>

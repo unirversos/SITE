@@ -8,7 +8,7 @@
      de, ate: faixa de preço em ienes (só números). Se for preço único, repita o número.
      foto   : caminho da imagem, ex.: '/loja/fotos/console.jpg' (deixe '' para usar o ícone)
      link   : link de afiliado ou do redirecionador (ZenMarket, Buyee...). Deixe '' para "link em breve".
-     reais  : preço em reais (opcional): mostra o valor e o parcelado em 12x sem juros
+     total  : preço total em reais (opcional). O parcelado em 12x é o total menos o imposto
      imposto: estimativa do imposto de importação em reais, pago na chegada (opcional)
      chegada: texto como 'dezembro' (opcional)
      exemplo: true só nos cards de exemplo. Apague os exemplos quando colocar os seus.
@@ -16,7 +16,7 @@
 window.ACHADOS = [
   { cat:'consoles', nome:'Nintendo 3DS · vermelho metálico',
     desc:'Console portátil da Nintendo em estado de como novo, segundo o vendedor. Acessórios a confirmar.',
-    de:0, ate:0, reais:960, imposto:445, chegada:'dezembro', foto:'', link:'' },
+    de:0, ate:0, total:1500, imposto:445, chegada:'dezembro', foto:'', link:'' },
   { cat:'colec', nome:'Zelda · Master Sword e outros itens',
     desc:'Itens de The Legend of Zelda em seleção para o malote de dezembro.',
     de:0, ate:0, foto:'', link:'' },
