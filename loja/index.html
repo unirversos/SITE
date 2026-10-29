@@ -83,6 +83,7 @@ h1 .jp rt{font-size:.5em;letter-spacing:.05em}
 .card.esg .selo{display:none}
 .gal{position:absolute;inset:0;display:flex;overflow-x:auto;scroll-snap-type:x mandatory;scrollbar-width:none}
 .gal::-webkit-scrollbar{display:none}
+.gal.contem img{object-fit:contain;background:#fff}
 .gal img{flex:0 0 100%;width:100%;height:100%;object-fit:cover;object-position:center 35%;scroll-snap-align:center}
 .seta{position:absolute;top:50%;transform:translateY(-50%);width:34px;height:34px;border-radius:50%;border:0;background:rgba(255,255,255,.88);color:#3a2b38;font-size:22px;line-height:1;font-weight:700;cursor:pointer;box-shadow:0 2px 8px rgba(58,43,56,.25);display:flex;align-items:center;justify-content:center;padding:0 0 3px}
 .seta:hover{background:#fff}.seta.e{left:8px}.seta.d{right:8px}
@@ -193,7 +194,7 @@ footer a:hover{color:var(--pink)}
   </footer>
 </div>
 
-<script src="/loja/produtos.js?v=20261029f"></script>
+<script src="/loja/produtos.js?v=20261029i"></script>
 <script>
 (function(){
   const CATS=[
@@ -212,7 +213,7 @@ footer a:hover{color:var(--pink)}
 
   function card(x,c){
     const fl=(x.fotos&&x.fotos.length)?x.fotos:null;
-    const foto = fl ? `<div class="gal" tabindex="0" aria-label="Fotos de ${esc(x.nome)}">${fl.map((u,i)=>`<img src="${esc(u)}" alt="${esc(x.nome)}, foto ${i+1} de ${fl.length}" loading="lazy">`).join('')}</div><span class="cont">1/${fl.length}</span><button type="button" class="seta e" data-dir="-1" aria-label="Foto anterior">‹</button><button type="button" class="seta d" data-dir="1" aria-label="Próxima foto">›</button>` : x.foto ? `<img src="${esc(x.foto)}" alt="${esc(x.nome)}" loading="lazy">` : `<span aria-hidden="true">${c.ic}</span>`;
+    const foto = fl ? `<div class="gal${x.contem?' contem':''}" tabindex="0" aria-label="Fotos de ${esc(x.nome)}">${fl.map((u,i)=>`<img src="${esc(u)}" alt="${esc(x.nome)}, foto ${i+1} de ${fl.length}" loading="lazy">`).join('')}</div>${fl.length>1?`<span class="cont">1/${fl.length}</span><button type="button" class="seta e" data-dir="-1" aria-label="Foto anterior">‹</button><button type="button" class="seta d" data-dir="1" aria-label="Próxima foto">›</button>`:''}` : x.foto ? `<img src="${esc(x.foto)}" alt="${esc(x.nome)}" loading="lazy">` : `<span aria-hidden="true">${c.ic}</span>`;
     const esg=(window.__STATUS||{})[x.id]==='esgotado';
     const btn = esg ? `<span class="quero off" aria-disabled="true">Esgotado no malote</span>` : linkOk(x.link)
       ? `<a class="quero" href="${esc(x.link)}" target="_blank" rel="noopener sponsored">Quero este achado →</a>`
