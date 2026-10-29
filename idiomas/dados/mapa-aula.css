@@ -245,7 +245,7 @@ body.no-ro .rk rt{display:none}
 .nova{display:inline-block;font-size:11px;font-weight:700;color:#8e6a1f;background:#fbf1d9;border-radius:999px;padding:1px 8px}
 
 /* cena: o que responder quando a conversa muda de assunto */
-.tarefa{font-size:14px;font-weight:700;color:#7d2b3a;background:#fff;border:1.5px dashed #e3b6c0;border-radius:12px;padding:6px 10px;margin:4px 0 8px}
+.tarefa{font-size:17px;font-weight:800;line-height:1.35;color:#5b4210;background:#fff1c9;border:2px solid #e8c98a;border-radius:12px;padding:10px 13px;margin:6px 0 12px;box-shadow:0 3px 10px -6px rgba(143,107,29,.6)}
 
 /* fim da aula: ir para a prova no Planeta */
 .btn.prova{text-decoration:none;display:inline-flex;align-items:center;min-height:44px}

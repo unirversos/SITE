@@ -194,7 +194,7 @@ footer a:hover{color:var(--pink)}
   </footer>
 </div>
 
-<script src="/loja/produtos.js?v=20261029i"></script>
+<script src="/loja/produtos.js?v=20261029k"></script>
 <script>
 (function(){
   const CATS=[
@@ -235,7 +235,7 @@ footer a:hover{color:var(--pink)}
         ${rs||(p?`<p class="preco">${p} <small>referência</small></p>`:'')}
         <details class="mais"><summary>Mais detalhes</summary>
           <p class="d">${esc(x.desc)}</p>
-          ${c.id==='consoles'&&!x.novo?`<div class="antes"><b>Antes de comprar</b><ul><li>Item de garimpo: usado, garimpado no Japão e vendido no estado mostrado nas fotos.</li><li>Console japonês: roda jogos de 3DS japoneses. A trava de região pode ser contornada por modificação, que é por conta do comprador.</li><li>Carregador japonês: confira a tensão antes de ligar.</li></ul></div>`:''}
+          ${c.id==='consoles'&&!x.novo?`<div class="antes"><b>Antes de comprar</b><ul>${(x.antes||['Item de garimpo: usado, garimpado no Japão e vendido no estado mostrado nas fotos.','Console japonês: roda jogos de 3DS japoneses. A trava de região pode ser contornada por modificação, que é por conta do comprador.','Carregador japonês: confira a tensão antes de ligar.']).map(t=>`<li>${esc(t)}</li>`).join('')}</ul></div>`:''}
         </details>
         ${btn}
       </div></article>`;

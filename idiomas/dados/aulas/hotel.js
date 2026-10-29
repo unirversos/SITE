@@ -17,7 +17,7 @@ const R=(k,f)=>`<ruby>${k}<rt>${f}</rt></ruby>`;
     prop:'<g transform="translate(14 18)"><path d="M2 20 a14 14 0 0 1 28 0z" fill="#e3b341"/><rect x="-2" y="19" width="36" height="5" rx="2" fill="#b98a2a"/><circle cx="16" cy="5" r="3" fill="#b98a2a"/></g>'},
   words:[
     {id:'yoyaku',h:R('予約','よやく'),k:'よやく',r:'yoyaku',pt:'reserva',en:'reservation',ic:'svg:yoyaku',tip:'Você já viu no aeroporto. No hotel ela volta!'},
-    {id:'nihaku',h:R('二泊','にはく'),k:'にはく',r:'nihaku',pt:'duas noites',en:'two nights',ic:'🌙',tip:'泊 (haku) conta noites de hospedagem. O som muda: いっぱく, にはく, さんぱく.'},
+    {id:'nihaku',h:R('二泊','にはく'),k:'にはく',r:'nihaku',pt:'duas noites',en:'two nights',ic:'🌙',tip:'泊 (haku) conta noites de hospedagem. O som muda: いっぱく, にはく, さんぱく. Veja de 1 a 10 noites em <a href="/idiomas/numeros/#haku" target="_blank" rel="noopener">contagem de noites →</a>'},
     {id:'kagi',h:R('鍵','かぎ'),k:'かぎ',r:'kagi',pt:'chave',en:'key',ic:'🔑',tip:'Em hotel moderno a "chave" pode ser um cartão, mas a palavra continua かぎ.'},
     {id:'choushoku',h:R('朝食','ちょうしょく'),k:'ちょうしょく',r:'chōshoku',pt:'café da manhã',en:'breakfast',ic:'🍳',tip:'Palavra de hotel e restaurante. Em casa se diz あさごはん.'},
     {id:'nanji',h:R('何時','なんじ'),k:'なんじ',r:'nanji',pt:'que horas',en:'what time',ic:'🕙',tip:'なん (o quê) + じ (hora) = que horas.'},

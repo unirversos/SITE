@@ -83,6 +83,7 @@ body{font-family:'Zen Maru Gothic',sans-serif;color:var(--ink);background:var(--
 
 .flashcard-front{display:flex;flex-direction:column;justify-content:center;gap:16px;}
 .flashcard-text{font-size:clamp(22px,4vw,32px);font-weight:700;color:var(--ink);font-family:'Zen Maru Gothic',sans-serif;}
+.flashcard-kanji rt,.flashcard-text rt{font-size:.42em;font-weight:600;letter-spacing:.04em}
 .flashcard-kanji{font-size:clamp(28px,5vw,48px);font-weight:700;color:var(--pink);font-family:'Shippori Mincho',serif;margin:8px 0;}
 .flashcard-small{font-size:12px;color:var(--ink-soft);letter-spacing:1px;text-transform:uppercase;font-weight:600;}
 .flashcard-label{font-size:14px;color:var(--ink-soft);}
@@ -543,6 +544,17 @@ function loadCard() {
   updateButtons();
 }
 
+// Furigana: leitura de cada grupo de kanji usado nos cartões (só a parte em kanji; o okurigana segue normal)
+const FURIGANA = {
+  '大丈夫':'だいじょうぶ','会計':'かいけい','水':'みず','温':'あたた','冷':'つめ','持':'も','帰':'かえ','駅':'えき','近':'ちか','遠':'とお',
+  '右':'みぎ','左':'ひだり','現金':'げんきん','高':'たか','安':'やす','領収書':'りょうしゅうしょ','千円':'せんえん','予約':'よやく',
+  '部屋':'へや','朝食':'ちょうしょく','布団':'ふとん','店':'みせ','値段':'ねだん','小':'ちい','大':'おお','試着':'しちゃく','割引':'わりびき',
+  '売':'う','切':'き','助':'たす','警察':'けいさつ','病院':'びょういん','迷':'まよ','分':'わ','願':'ねが'
+};
+function comFurigana(s) {
+  return String(s || '').replace(/[一-龯々]+/g, k => FURIGANA[k] ? '<ruby>' + k + '<rt>' + FURIGANA[k] + '</rt></ruby>' : k);
+}
+
 function renderCardFront(data) {
   const card = document.getElementById('flashcard');
   card.classList.remove('flipped');
@@ -552,10 +564,10 @@ function renderCardFront(data) {
   
   // Mostrar kanji se existir (apenas em japonês)
   if (currentLang === 'ja' && data.kanji) {
-    html += `<div class="flashcard-kanji">${data.kanji}</div>`;
+    html += `<div class="flashcard-kanji">${currentLang === 'ja' ? comFurigana(data.kanji) : data.kanji}</div>`;
   }
   
-  html += `<div class="flashcard-text">${data.text}</div>`;
+  html += `<div class="flashcard-text">${currentLang === 'ja' ? comFurigana(data.text) : data.text}</div>`;
   html += '<div class="flashcard-label">Clique para revelar</div>';
   html += '<button class="audio-btn" onclick="playAudio()" style="margin-top:12px;">';
   html += '🔊 Ouvir';

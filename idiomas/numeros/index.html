@@ -311,6 +311,8 @@ $('pOpts').onclick=e=>{ const b=e.target.closest('button'); if(!b||respondido) r
 $('pPlay').onclick=()=>speak(conta(cur,alvo));
 $('pNovo').onclick=novaPergunta;
 
+/* atalho: /idiomas/numeros/#haku abre direto a contagem pedida (id da contagem) */
+(function(){ const id=(location.hash||'').slice(1), i=C.findIndex(c=>c.id===id); if(i<0) return; cur=C[i]; nC=Math.min(nC,cur.max); $('chips').querySelectorAll('button').forEach((x,j)=>x.setAttribute('aria-selected',String(j===i))); setTimeout(()=>{ const s=$('h-cont'); s&&s.scrollIntoView(); },0); })();
 renderC(); novaPergunta();
 window.UniNumeros={partes,num,conta,C};
 })();
