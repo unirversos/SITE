@@ -9,7 +9,7 @@
      de, ate: faixa de preço em ienes (só números). Se for preço único, repita o número.
      foto   : caminho da imagem, ex.: '/loja/fotos/console.jpg' (deixe '' para usar o ícone)
      link   : link de afiliado ou do redirecionador (ZenMarket, Buyee...). Deixe '' para "link em breve".
-     total  : preço total em reais (opcional). O parcelado em 12x é o total menos o imposto
+     total  : preço total em reais (opcional). O produto é o total menos o imposto
      imposto: estimativa do imposto de importação em reais, pago na chegada (opcional)
      chegada: texto como 'dezembro' (opcional)
      exemplo: true só nos cards de exemplo. Apague os exemplos quando colocar os seus.
