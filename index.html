@@ -83,6 +83,7 @@ h1 .split{color:var(--pink)}
 .u-card{grid-template-rows:auto auto 1fr auto}
 .u-go{justify-self:start;display:inline-flex;align-items:center;gap:6px;background:var(--c);color:#fff;text-decoration:none;font-weight:700;font-size:14.5px;padding:9px 18px;border-radius:999px;margin-top:4px}
 .u-go:hover{filter:brightness(.95)}
+.u-go-row{display:flex;flex-wrap:wrap;gap:8px;justify-self:start}.u-go[hidden]{display:none}.u-go-row.tem .u-go#caderno-abrir{background:transparent;color:var(--c);box-shadow:inset 0 0 0 2px var(--c)}
 #utopia-badge:empty{display:none}
 
 /* quadrado */
@@ -139,7 +140,7 @@ footer a:hover{color:var(--pink)}
         <p class="u-tag">unirversos idiomas</p>
         <h3>O Caderno<small>A trilha prática de japonês para a vida real.</small></h3>
         <ul class="dest"><li>Trilha imersiva de 12 mapas de contexto</li><li>Cenas práticas e diálogos para situações reais</li><li>Hiragana, katakana e ferramentas de estudo</li></ul>
-        <a class="u-go" href="/idiomas/japones/">Abrir o Caderno →</a>
+        <div class="u-go-row"><a class="u-go" id="caderno-cont" href="/idiomas/japones/" hidden></a><a class="u-go" id="caderno-abrir" href="/idiomas/japones/">Abrir o Caderno →</a></div>
       </article>
       <article class="u-card travessia">
         <p class="u-tag">unirversos travessia</p>
@@ -186,5 +187,18 @@ footer a:hover{color:var(--pink)}
 </div>
 <script src="/idiomas/dados/avatar.js?v=20261016g"></script>
 <script src="/idiomas/dados/avatar-badge.js?v=20261026a"></script>
+<script src="/idiomas/dados/trilha-mapas.js?v=1"></script>
+<script>
+/* Caderno: botão "Continuar: Mapa x →" (mesmo critério da página do Caderno) */
+(function(){try{
+  var ler=function(k){try{var v=localStorage.getItem(k);return v==null?null:JSON.parse(v)}catch(e){return null}};
+  var av=ler('utopiaAvatar1'),E=window.UniTrilha.estado(),b=document.getElementById('caderno-cont'),row=b.parentNode,t=null,h=null;
+  if(!(av&&av.sel)&&!E.some(function(m){return m.aula||m.prova})){t='Crie seu avatar';h='/idiomas/avatar/';}
+  else for(var i=0;i<E.length;i++){var m=E[i];
+    if(!m.aula){t='Mapa '+(i+1)+' · '+m.titulo;h=m.aulaHref;break}
+    if(!m.prova){t='Prova do mapa '+(i+1)+' · '+m.titulo;h=m.testeHref;break}}
+  if(t){b.href=h;b.textContent='Continuar: '+t+' →';b.hidden=false;row.classList.add('tem')}
+}catch(e){}})();
+</script>
 </body>
 </html>
