@@ -488,13 +488,17 @@ function quebraHTML(say){
 }
 
 /* ---------- 4. ouvir ---------- */
-function stOuvir(){ oi=0; OUVIR=(CENAS_N.length?CENAS_N:CENAS).map(c=>({say:c.say,q:c.q,ro:c.ro,right:c.pt,opts:shuffle([c.pt].concat(c.distr))})); showOuvir(); }
+/* Ouvir: primeiro as frases fáceis (A.ouvirFacil, opcionais), depois as frases da cena */
+function stOuvir(){ oi=0;
+  const fac=(A.ouvirFacil||[]).map(c=>({say:c.say,q:c.q||c.say,ro:c.ro,right:c.pt,opts:shuffle([c.pt].concat(c.distr)),facil:1}));
+  OUVIR=fac.concat((CENAS_N.length?CENAS_N:CENAS).map(c=>({say:c.say,q:c.q,ro:c.ro,right:c.pt,opts:shuffle([c.pt].concat(c.distr)),facil:0})));
+  showOuvir(); }
 function showOuvir(){
   const o=OUVIR[oi]; oAns=null;
   mood='idle'; setStage({});
   $('panel').innerHTML=`
     <div class="row"><h2>O que a pessoa disse?</h2><span class="spacer"></span><span class="pt">${oi+1} de ${OUVIR.length}</span></div>
-    <p class="pt" style="margin:0">Ouça sem ler. Pode repetir quantas vezes quiser.</p>
+    <p class="pt" style="margin:0">${OUVIR.some(x=>x.facil)?(o.facil?'<b>Aquecimento:</b> frases curtas e fáceis. ':'<b>Agora as frases da cena.</b> '):''}Ouça sem ler. Pode repetir quantas vezes quiser.</p>
     <div class="row"><button class="btn bigplay" type="button" id="oPlay">🔊 Ouvir</button><button class="btn" type="button" id="oSlow">🐢 Mais devagar</button></div>
     <div class="opts" id="opts">${o.opts.map((t,k)=>`<button type="button" class="opt" data-k="${k}">${t}</button>`).join('')}</div>
     <div id="oRev"></div>${exNav(oi===0)}`;

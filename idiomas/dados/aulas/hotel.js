@@ -43,6 +43,13 @@ const R=(k,f)=>`<ruby>${k}<rt>${f}</rt></ruby>`;
      slots:[[['エアコン|eakon','O ar-condicionado quebrou.','The air conditioner is broken.'],['テレビ|terebi','A TV quebrou.','The TV is broken.'],['シャワー|shawā','O chuveiro quebrou.','The shower is broken.']]],
      gram:'<b>が</b> aponta quem fez a ação (aqui, quem quebrou). <b>こわれました</b> = quebrou.', use:'Na cena: avisar do problema no quarto.'}
   ],
+  ouvirFacil:[
+    {say:'おなまえは？', q:'お'+R('名前','なまえ')+'は？', ro:'O-namae wa?', pt:'Qual é o seu nome?', distr:['Quantas noites?','Onde fica o quarto?']},
+    {say:'よやくが あります。', q:R('予約','よやく')+'が あります。', ro:'Yoyaku ga arimasu.', pt:'Tenho reserva.', distr:['Quero uma toalha.','O ar-condicionado quebrou.']},
+    {say:'にはくです。', q:R('二泊','にはく')+'です。', ro:'Nihaku desu.', pt:'São duas noites.', distr:['É uma noite.','São três noites.']},
+    {say:'かぎを おねがいします。', q:R('鍵','かぎ')+'を おねがいします。', ro:'Kagi o onegaishimasu.', pt:'A chave, por favor.', distr:['Uma toalha, por favor.','O check-out, por favor.']},
+    {say:'へやは どこですか？', q:R('部屋','へや')+'は どこですか？', ro:'Heya wa doko desu ka?', pt:'Onde fica o quarto?', distr:['Como está o quarto?','A que horas é o café da manhã?']}
+  ],
   cenas:[
     {q:'ご'+R('予約','よやく')+'の お'+R('名前','なまえ')+'は？', say:'ごよやくの おなまえは？', ro:'Go-yoyaku no o-namae wa?', pt:'Qual o nome da reserva?',
      ans:['{NOME}|{NOMERO}','です|desu'], extra:['よやく|yoyaku','を|o','かぎ|kagi'], ansPt:'Sou {NOMERO}. (seu nome + です)', molde:null, dica:'Diga o seu nome + です.', distr:['Qual é o número do quarto?','Quantas pessoas?']},
