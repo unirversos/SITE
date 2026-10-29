@@ -64,7 +64,28 @@ h1 .jp rt{font-size:.5em;letter-spacing:.05em}
 .pag li{padding:8px 10px;border-radius:12px;background:var(--sage-soft)}
 .pag li.ch{background:#fff4e0;border:1.5px solid #e8c98a;color:#5b4210}
 .parc{font-size:13px;color:var(--muted);font-weight:500}
-.foto{aspect-ratio:4/3;background:color-mix(in srgb,var(--c) 14%,var(--card));display:grid;place-items:center;font-size:56px;border-bottom:1.5px solid var(--line)}
+.pedido-bg{position:fixed;inset:0;background:rgba(58,43,56,.5);display:none;align-items:center;justify-content:center;padding:16px;z-index:60}
+.pedido-bg.on{display:flex}
+.pedido{background:#fff;border-radius:20px;max-width:420px;width:100%;padding:20px;display:grid;gap:12px;max-height:92vh;overflow:auto}
+.pedido h2{margin:0;font-size:22px}
+.pedido label{display:grid;gap:4px;font-weight:700;font-size:14.5px}
+.pedido input{font:inherit;font-weight:500;padding:10px 12px;border:1.5px solid var(--line);border-radius:12px;width:100%}
+.pedido .acts{display:flex;gap:8px;flex-wrap:wrap}
+.pedido .ok{color:#3e6347;font-weight:700}
+.pedido .erro{color:#7d2b3a;font-weight:700}
+.pedido small{color:var(--muted)}
+.antes{margin:4px 0 2px;padding:9px 11px;border-radius:12px;background:#f3f8fd;border:1.5px solid #cfe0f0;font-size:13.5px;line-height:1.45;color:#2f4f73}
+.antes ul{margin:4px 0 0;padding-left:18px;display:grid;gap:3px}
+.card.esg{opacity:.62;filter:grayscale(.5)}
+.card.esg .selo{display:none}
+.gal{position:absolute;inset:0;display:flex;overflow-x:auto;scroll-snap-type:x mandatory;scrollbar-width:none}
+.gal::-webkit-scrollbar{display:none}
+.gal img{flex:0 0 100%;width:100%;height:100%;object-fit:cover;object-position:center 35%;scroll-snap-align:center}
+.cont{position:absolute;left:10px;bottom:10px;background:rgba(58,43,56,.72);color:#fff;font-size:12px;font-weight:700;padding:4px 10px;border-radius:999px;pointer-events:none}
+.selo{position:absolute;top:10px;right:10px;background:var(--pink);color:#fff;font-weight:800;font-size:12.5px;letter-spacing:.02em;padding:6px 11px;border-radius:999px;box-shadow:0 4px 10px -4px rgba(194,63,94,.6);transform:rotate(3deg)}
+.preco.tot{margin:6px 0 0;padding-top:8px;border-top:2px solid var(--ink)}
+.pag s,.preco s{color:var(--muted)}
+.foto{position:relative;aspect-ratio:4/3;background:color-mix(in srgb,var(--c) 14%,var(--card));display:grid;place-items:center;font-size:56px;border-bottom:1.5px solid var(--line)}
 .foto img{width:100%;height:100%;object-fit:cover;display:block}
 .corpo{padding:14px 16px 16px;display:grid;gap:8px;align-content:start}
 .tag{font-size:11px;letter-spacing:.16em;text-transform:uppercase;font-weight:700;color:color-mix(in srgb,var(--c) 75%,var(--ink));margin:0}
@@ -127,7 +148,7 @@ footer a:hover{color:var(--pink)}
       <a class="btn pri" href="#vitrine">Ver os achados ↓</a>
       <a class="btn sec" href="/loja/guia/">Como comprar e a alfândega →</a>
     </div>
-    <p class="taxa" style="max-width:640px"><b>Malote de dezembro:</b> o preço total está em reais. A parte do produto pode ser parcelada em <b>12x sem juros</b>, e a <b>taxa de importação (alfândega)</b> é paga por você na chegada, separada do parcelado. Cada cartão mostra os dois valores.</p>
+    <p class="taxa" style="max-width:640px"><b>Malote de dezembro:</b> o preço total está em reais. O produto tem <b>20% de desconto na primeira compra</b> e pode ser <b>parcelado pelo Mercado Pago</b>, com os juros que ele cobrar. A <b>taxa de importação (alfândega)</b> é paga por você na chegada, separada do produto e sem desconto. Cada cartão mostra os valores.</p>
     <p class="aviso">💡 Transparência: alguns botões levam a links de afiliado ou a serviços de redirecionamento. Se você comprar por eles, a Unirversos pode receber uma comissão, sem custo extra para você.</p>
   </header>
 
@@ -184,20 +205,27 @@ footer a:hover{color:var(--pink)}
   try{ const q=new URLSearchParams(location.search).get('cat'); if(CATS.some(c=>c.id===q)) atual=q; }catch(e){}
 
   function card(x,c){
-    const foto = x.foto ? `<img src="${esc(x.foto)}" alt="${esc(x.nome)}" loading="lazy">` : `<span aria-hidden="true">${c.ic}</span>`;
-    const btn = linkOk(x.link)
+    const fl=(x.fotos&&x.fotos.length)?x.fotos:null;
+    const foto = fl ? `<div class="gal" tabindex="0" aria-label="Fotos de ${esc(x.nome)}">${fl.map((u,i)=>`<img src="${esc(u)}" alt="${esc(x.nome)}, foto ${i+1} de ${fl.length}" loading="lazy">`).join('')}</div><span class="cont">1/${fl.length} · deslize →</span>` : x.foto ? `<img src="${esc(x.foto)}" alt="${esc(x.nome)}" loading="lazy">` : `<span aria-hidden="true">${c.ic}</span>`;
+    const esg=(window.__STATUS||{})[x.id]==='esgotado';
+    const btn = esg ? `<span class="quero off" aria-disabled="true">Esgotado no malote</span>` : linkOk(x.link)
       ? `<a class="quero" href="${esc(x.link)}" target="_blank" rel="noopener sponsored">Quero este achado →</a>`
+      : x.total ? `<a class="quero" href="https://wa.me/5519996390950?text=${encodeURIComponent('PEDIDO ITEM: '+x.nome+'\n'+location.origin+'/loja/#'+(x.id||''))}" target="_blank" rel="noopener">Quero este item →</a>`
       : `<span class="quero off" aria-disabled="true">Reserva em breve</span>`;
     const p=faixa(x);
     const fm=n=>Number(n).toLocaleString('pt-BR',{minimumFractionDigits:2,maximumFractionDigits:2});
-    const rs=x.total?`<p class="preco">Total: R$ ${Number(x.total).toLocaleString('pt-BR')}</p><ul class="pag"><li><b>Parcelado em 12x sem juros:</b> R$ ${fm(x.total-(x.imposto||0))} (12x de R$ ${fm((x.total-(x.imposto||0))/12)})</li>${x.imposto?`<li class="ch"><b>Taxa de importação, paga na chegada:</b> R$ ${fm(x.imposto)} <span class="parc">(estimativa, vai direto para a alfândega e não entra no parcelado)</span></li>`:''}</ul>${x.chegada?`<p class="parc">📦 Chegada: ${esc(x.chegada)}</p>`:''}`:'';
-    return `<article class="card" data-cat="${c.id}">
+    const DESC=20; /* % de desconto da primeira compra, só sobre o produto (sem a taxa de importação) */
+    const prod=x.total?x.total-(x.imposto||0):0, com=prod*(1-DESC/100), totCom=com+(x.imposto||0);
+    const rs=x.total?`<ul class="pag"><li><b>Produto:</b> <s>R$ ${fm(prod)}</s> <b>R$ ${fm(com)}</b> <span class="parc">com ${DESC}% de desconto. Parcelamento pelo Mercado Pago, com os juros dele.</span></li>${x.imposto?`<li class="ch"><b>Taxa de importação, paga na chegada:</b> R$ ${fm(x.imposto)} <span class="parc">(estimativa, vai direto para a alfândega, não entra no parcelamento e não tem desconto)</span></li>`:''}</ul><p class="preco tot"><span class="parc">= Total (produto + taxa), na 1ª compra</span><br>R$ ${fm(totCom)} <span class="parc"><s>R$ ${fm(x.total)}</s></span></p>${x.chegada?`<p class="parc">📦 Chegada: ${esc(x.chegada)}</p>`:''}`:'';
+    const selo=x.total?`<span class="selo">${DESC}% OFF · 1ª compra</span>`:'';
+    return `<article class="card${esg?' esg':''}" data-cat="${c.id}" data-id="${esc(x.id||'')}">
       ${x.exemplo?'<span class="ex">exemplo</span>':''}
-      <div class="foto">${foto}</div>
+      <div class="foto">${foto}${selo}</div>
       <div class="corpo">
         <p class="tag">${c.ic} ${esc(c.nome)}</p>
         <h3>${esc(x.nome)}</h3>
         <p class="d">${esc(x.desc)}</p>
+        ${c.id==='consoles'?`<div class="antes"><b>Antes de comprar</b><ul><li>Item de garimpo: usado, garimpado no Japão e vendido no estado mostrado nas fotos.</li><li>Console japonês: roda jogos de 3DS japoneses. A trava de região pode ser contornada por modificação, que é por conta do comprador.</li><li>Carregador japonês: confira a tensão antes de ligar.</li></ul></div>`:''}
         ${rs||(p?`<p class="preco">${p} <small>referência</small></p>`:'')}
         ${btn}
       </div></article>`;
@@ -214,6 +242,8 @@ footer a:hover{color:var(--pink)}
       </section>`;
     }).join('');
   }
+  window.__renderVitrine=render;
+  document.addEventListener('scroll',e=>{ const g=e.target; if(!g||!g.classList||!g.classList.contains('gal')) return; const n=Math.round(g.scrollLeft/g.clientWidth)+1, t=g.children.length, c=g.parentNode.querySelector('.cont'); if(c) c.textContent=n+'/'+t+(n<t?' · deslize →':''); },true);
   document.getElementById('filtros').addEventListener('click',e=>{
     const b=e.target.closest('button[data-f]'); if(!b) return;
     atual=b.dataset.f; render();
@@ -237,6 +267,46 @@ footer a:hover{color:var(--pink)}
   }
   v.addEventListener('input',calc); s.addEventListener('change',calc); calc();
 })();
+</script>
+<div class="pedido-bg" id="pedidoBg" role="dialog" aria-modal="true" aria-labelledby="pedidoT">
+  <form class="pedido" id="pedidoForm">
+    <h2 id="pedidoT">Quero este item</h2>
+    <p id="pedidoItem" style="margin:0;font-weight:700"></p>
+    <label>Seu nome<input id="pNome" required maxlength="80" autocomplete="name"></label>
+    <label>Seu WhatsApp, com DDD<input id="pZap" required maxlength="30" inputmode="tel" autocomplete="tel" placeholder="(19) 99999-9999"></label>
+    <small>Vou conferir se o item ainda está disponível e te chamo no WhatsApp. Usamos seu nome e número só para falar deste pedido.</small>
+    <p id="pMsg" role="status" style="margin:0"></p>
+    <div class="acts"><button class="btn sec" type="button" id="pFecha" style="border:1.5px solid var(--line);background:#fff;font:inherit;font-weight:700;padding:10px 16px;border-radius:999px;cursor:pointer">Fechar</button><button class="btn pri" type="submit" id="pEnvia" style="border:0;font:inherit;font-weight:700;padding:10px 18px;border-radius:999px;cursor:pointer;background:var(--pink);color:#fff">Enviar pedido</button></div>
+  </form>
+</div>
+<script type="module">
+/* status dos itens (disponível/esgotado) vem do Firebase; se falhar, a vitrine continua normal */
+try{
+  const {initializeApp,getApps}=await import("https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js");
+  const {getDatabase,ref,onValue}=await import("https://www.gstatic.com/firebasejs/10.12.0/firebase-database.js");
+  const app=getApps()[0]||initializeApp({apiKey:"AIzaSyCoo0UB5rWjD4ZGE3xKO32zXYPUQFYObmc",authDomain:"unirversos-site.firebaseapp.com",projectId:"unirversos-site",databaseURL:"https://unirversos-site-default-rtdb.firebaseio.com"});
+  onValue(ref(getDatabase(app,"https://unirversos-site-default-rtdb.firebaseio.com"),"loja/status"),s=>{ window.__STATUS=s.val()||{}; if(window.__renderVitrine) window.__renderVitrine(); },()=>{});
+
+  /* pedido de compra: grava no Firebase para a Aline ver no painel */
+  const {push,serverTimestamp}=await import("https://www.gstatic.com/firebasejs/10.12.0/firebase-database.js");
+  const db=getDatabase(app,"https://unirversos-site-default-rtdb.firebaseio.com");
+  const $=id=>document.getElementById(id);
+  let atual=null;
+  document.addEventListener('click',e=>{
+    const b=e.target.closest('[data-pedir]'); if(!b) return;
+    const it=(window.ACHADOS||[]).find(x=>x.id===b.dataset.pedir); if(!it) return;
+    atual=it; $('pedidoItem').textContent=it.nome; $('pMsg').textContent=''; $('pMsg').className=''; $('pEnvia').disabled=false; $('pedidoBg').classList.add('on'); $('pNome').focus();
+  });
+  $('pFecha').onclick=()=>$('pedidoBg').classList.remove('on');
+  $('pedidoBg').addEventListener('click',e=>{ if(e.target.id==='pedidoBg') $('pedidoBg').classList.remove('on'); });
+  $('pedidoForm').addEventListener('submit',async e=>{
+    e.preventDefault(); if(!atual) return; $('pEnvia').disabled=true; $('pMsg').className=''; $('pMsg').textContent='Enviando…';
+    try{
+      await push(ref(db,'loja/pedidos'),{item:atual.id,itemNome:atual.nome,nome:$('pNome').value.trim().slice(0,80),contato:$('pZap').value.trim().slice(0,30),pagina:location.origin+'/loja/#'+atual.id,t:Date.now()});
+      $('pMsg').className='ok'; $('pMsg').textContent='Pedido enviado! Em breve te chamo no WhatsApp.'; $('pedidoForm').reset();
+    }catch(err){ $('pMsg').className='erro'; $('pMsg').textContent='Não consegui enviar agora. Tente de novo em instantes.'; $('pEnvia').disabled=false; }
+  });
+}catch(e){}
 </script>
 </body>
 </html>

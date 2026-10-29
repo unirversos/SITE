@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="robots" content="noindex,nofollow">
+<title>Tesouros · painel da vitrine</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@700;800&family=Zen+Maru+Gothic:wght@400;500;700&display=swap">
+<style>
+:root{--paper:#fdf6f4;--card:#fff;--ink:#3a2b38;--muted:#6b5a67;--line:#ecdadd;--pink:#c23f5e;--sage:#517158;--sage-soft:#e8efe8}
+*{box-sizing:border-box}
+body{margin:0;background:var(--paper);color:var(--ink);font-family:"Zen Maru Gothic",system-ui,sans-serif;line-height:1.6;padding:20px 16px 60px}
+.wrap{max-width:640px;margin:0 auto;display:grid;gap:14px}
+h1{font-family:"Baloo 2",system-ui,sans-serif;font-size:28px;margin:0}
+p{margin:0;color:var(--muted)}
+.btn{font:inherit;font-weight:700;min-height:48px;padding:0 18px;border-radius:999px;border:1.5px solid var(--line);background:#fff;color:var(--ink);cursor:pointer}
+.btn.pri{background:var(--pink);border-color:var(--pink);color:#fff}
+.item{background:var(--card);border:1.5px solid var(--line);border-radius:18px;padding:14px;display:flex;gap:12px;align-items:center;justify-content:space-between;flex-wrap:wrap}
+.item b{display:block}
+.item small{color:var(--muted)}
+.st{min-width:150px}
+.st.d{background:var(--sage-soft);border-color:#bcd2bf;color:#3e6347}
+.st.e{background:#f3e3e6;border-color:#e3b6c0;color:#7d2b3a}
+.ped a{color:var(--pink);font-weight:700}
+.ped small{display:block}
+.aviso{border-left:5px solid #8e6a1f;background:#fbf3df;border-radius:12px;padding:10px 12px;font-size:14px;color:#5b4210}
+[hidden]{display:none!important}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <h1>Painel da vitrine</h1>
+  <p>Toque no botão de um item para alternar entre <b>disponível</b> e <b>esgotado</b>. O site muda na hora.</p>
+  <div id="login"><button class="btn pri" id="entrar" type="button">Entrar com Google</button></div>
+  <p id="msg" class="aviso" hidden></p>
+  <h2 id="hp" hidden style="font-family:'Baloo 2',system-ui,sans-serif;margin:10px 0 0">Pedidos</h2>
+  <div id="pedidos" hidden></div>
+  <h2 id="hs" hidden style="font-family:'Baloo 2',system-ui,sans-serif;margin:10px 0 0">Status dos itens</h2>
+  <div id="lista" hidden></div>
+  <p id="sair-box" hidden><button class="btn" id="sair" type="button">Sair</button></p>
+</div>
+<script src="/loja/produtos.js?v=1"></script>
+<script type="module">
+import {initializeApp,getApps} from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+import {getAuth,onAuthStateChanged,GoogleAuthProvider,signInWithPopup,signOut} from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
+import {getDatabase,ref,onValue,set,remove} from "https://www.gstatic.com/firebasejs/10.12.0/firebase-database.js";
+const URL_DB="https://unirversos-site-default-rtdb.firebaseio.com";
+const app=getApps()[0]||initializeApp({apiKey:"AIzaSyCoo0UB5rWjD4ZGE3xKO32zXYPUQFYObmc",authDomain:"unirversos-site.firebaseapp.com",projectId:"unirversos-site",databaseURL:URL_DB});
+const auth=getAuth(app), db=getDatabase(app,URL_DB);
+const $=id=>document.getElementById(id), esc=s=>String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const msg=t=>{ $('msg').textContent=t; $('msg').hidden=!t; };
+const FONTES={'3ds-vermelho-metalico':'https://jp.mercari.com/item/m86693495836','3ds-rosa-gloss':'https://jp.mercari.com/item/m90354370661','3ds-rosa-claro':'https://jp.mercari.com/item/m34368287557','3ds-rosa-claro-carregador':'https://jp.mercari.com/item/m84144995612','gojo-shibuya-scramble':'https://jp.mercari.com/item/m18796400352'};
+const zapLink=n=>{ let d=String(n||'').replace(/\D/g,''); if(d.length<=11) d='55'+d; return 'https://wa.me/'+d; };
+function desenhaPedidos(P){
+  const ks=Object.keys(P||{}).sort((a,b)=>(P[b].t||0)-(P[a].t||0));
+  $('pedidos').innerHTML=ks.length?ks.map(k=>{ const p=P[k]; const f=FONTES[p.item];
+    return `<div class="item ped"><div><b>${esc(p.itemNome||p.item)}</b><small>${esc(p.nome||'')} · ${esc(p.contato||'')} · ${new Date(p.t||0).toLocaleString('pt-BR')}</small>
+    <small><a href="${esc(zapLink(p.contato))}" target="_blank" rel="noopener">Chamar no WhatsApp</a>${f?` · <a href="${esc(f)}" target="_blank" rel="noopener">Ver anúncio no Mercari</a>`:''} · <a href="${esc(p.pagina||'#')}" target="_blank" rel="noopener">Cartão no site</a></small></div>
+    <button class="btn" type="button" data-del="${esc(k)}">Concluído</button></div>`; }).join(''):'<p>Nenhum pedido ainda.</p>';
+}
+$('pedidos').addEventListener('click',async e=>{ const b=e.target.closest('button[data-del]'); if(!b) return; try{ await remove(ref(db,'loja/pedidos/'+b.dataset.del)); }catch(err){ msg('Não consegui apagar o pedido.'); } });
+let STATUS={};
+function desenha(){
+  $('lista').innerHTML=(window.ACHADOS||[]).filter(x=>x.id).map(x=>{
+    const esg=STATUS[x.id]==='esgotado';
+    return `<div class="item"><div><b>${esc(x.nome)}</b><small>${esg?'Esgotado no site':'Disponível no site'}</small></div>
+      <button class="btn st ${esg?'e':'d'}" type="button" data-id="${esc(x.id)}" data-v="${esg?'disponivel':'esgotado'}">${esg?'Esgotado · tocar para liberar':'Disponível · tocar para esgotar'}</button></div>`;
+  }).join('');
+}
+$('lista').addEventListener('click',async e=>{
+  const b=e.target.closest('button[data-id]'); if(!b) return; b.disabled=true; msg('');
+  try{ await set(ref(db,'loja/status/'+b.dataset.id),b.dataset.v); }
+  catch(err){ msg('Não consegui salvar. Confirme que você entrou com o e-mail autorizado e que as regras do Firebase foram publicadas.'); }
+  b.disabled=false;
+});
+$('entrar').onclick=async()=>{ msg(''); try{ await signInWithPopup(auth,new GoogleAuthProvider()); }catch(e){ msg('Não consegui entrar. Tente de novo.'); } };
+$('sair').onclick=()=>signOut(auth);
+onAuthStateChanged(auth,u=>{
+  const ok=!!u;
+  $('login').hidden=ok; $('lista').hidden=!ok; $('pedidos').hidden=!ok; $('hp').hidden=!ok; $('hs').hidden=!ok; $('sair-box').hidden=!ok;
+  if(ok){ onValue(ref(db,'loja/status'),s=>{ STATUS=s.val()||{}; desenha(); },()=>{}); onValue(ref(db,'loja/pedidos'),s=>desenhaPedidos(s.val()),()=>{ $('pedidos').innerHTML='<p>Sem permissão para ver os pedidos. Entre com o e-mail autorizado.</p>'; }); }
+});
+</script>
+</body>
+</html>
