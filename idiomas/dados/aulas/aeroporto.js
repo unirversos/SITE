@@ -35,7 +35,12 @@ const R=(k,f)=>`<ruby>${k}<rt>${f}</rt></ruby>`;
     {id:'mokuteki',h:R('目的','もくてき'),k:'もくてき',r:'mokuteki',pt:'motivo (da viagem)',en:'purpose',ic:'🎯',tip:'もくてきは なんですか？ = qual é o motivo? Não confunda com もくてきち (destino).'},
     {id:'nan',h:R('何','なん'),k:'なん',r:'nan',pt:'o quê',en:'what',ic:'❓',tip:'なんですか？ = o que é? Antes de です, なに vira なん.'},
     {id:'doko',k:'どこ',r:'doko',pt:'onde',en:'where',ic:'📍',tip:'もくてきちは どこですか？ = qual é o seu destino?'},
-    {id:'ikutsu',k:'いくつ',r:'ikutsu',pt:'quantos (coisas)',en:'how many',ic:'🔢',tip:'にもつは いくつですか？ = quantas bagagens?'}
+    {id:'ikutsu',k:'いくつ',r:'ikutsu',pt:'quantos (coisas)',en:'how many',ic:'🔢',tip:'にもつは いくつですか？ = quantas bagagens?'},
+    {id:'nannichikan',h:R('何日間','なんにちかん'),k:'なんにちかん',r:'nannichikan',pt:'por quantos dias',en:'for how many days',ic:'📆',tip:'Pergunta da imigração: なんにちかんですか？ = por quantos dias? <b>なんにち</b> é "quantos dias" e <b>かん</b> marca a duração.'},
+    {id:'tooka',h:R('十日','とおか'),k:'とおか',r:'tooka',pt:'dez dias / dia 10',en:'ten days / the 10th',ic:'🔟',tip:'Para responder "por dez dias", junte <b>かん</b>: <b>とおかかん です</b>. Os dias do mês têm leitura própria, e você vê todos no <a href="/idiomas/calendario/" target="_blank" rel="noopener">calendário (dias do mês) →</a>'},
+    {id:'burajiru',k:'ブラジル',r:'burajiru',pt:'Brasil',en:'Brazil',ic:'🇧🇷',tip:'Palavra de fora, por isso katakana. ブラジルから きました = vim do Brasil.'},
+    {id:'tomarimasu',h:R('泊','と')+'まります',k:'とまります',r:'tomarimasu',pt:'ficar hospedado(a)',en:'to stay (at a hotel)',ic:'🛏️',tip:'どこに とまりますか？ = onde você vai ficar hospedado(a)? Responda só com o lugar: とうきょうの ホテルです。'},
+    {id:'hoteru',k:'ホテル',r:'hoteru',pt:'hotel',en:'hotel',ic:'🏨',tip:'Vem do inglês "hotel", por isso katakana. とうきょうの ホテルです = é um hotel em Tóquio.'}
   ],
   moldes:[
     {titulo:'"É ___."', tpl:'<i>coisa</i> です', tplRo:'[coisa] desu', parts:[0,'です|desu'],
@@ -46,7 +51,7 @@ const R=(k,f)=>`<ruby>${k}<rt>${f}</rt></ruby>`;
      gram:'<b>は</b> é a letra <ruby class="rk">は<rt>ha</rt></ruby>, mas se lê <b>wa</b> quando marca o assunto da frase: "sobre o destino… é Tóquio".', use:'Na cena: dizer para onde você vai.'},
     {titulo:'"Tenho ___." / "Não tenho ___."', tpl:'<i>coisa</i> が <i>tenho / não tenho</i>', tplRo:'[coisa] ga arimasu / arimasen', parts:[0,'が|ga',1], pt:'{1} {0}.', en:'{1} {0}.',
      slots:[[['よやく|yoyaku','reserva','a reservation',R('予約','よやく')],['ビザ|biza','visto','a visa'],['パスポート|pasupōto','passaporte','a passport']],[['あります|arimasu','Tenho','I have'],['ありません|arimasen','Não tenho',"I don't have"]]],
-     gram:'<b>あります</b> = tenho, existe. <b>ありません</b> = não tenho, não existe. Só muda o final: <b>-masu</b> vira <b>-masen</b>. A partícula <b>が</b> (ga) aponta a coisa que existe.', use:'Na cena: falar da reserva e do visto.'},
+     gram:'<b>あります</b> = tenho, existe. <b>ありません</b> = não tenho, não existe. Só muda o final: <b>-masu</b> vira <b>-masen</b>. A partícula <b>が</b> (ga) aponta a coisa que existe. Ao responder uma pergunta que usa <b>は</b> (ex.: <b>ビザは ありますか？</b>), também dá para repetir o <b>は</b>: <b>ビザは ありません</b>. As duas formas estão certas.', use:'Na cena: falar da reserva e do visto.'},
     {titulo:'"São ___ bagagens."', tpl:'にもつ は <i>quantidade</i> です', tplRo:'nimotsu wa [quantidade] desu', parts:[{k:'にもつ',r:'nimotsu',h:R('荷物','にもつ')},'は|wa',0,'です|desu'],
      slots:[[['ひとつ|hitotsu','É uma bagagem.','One piece of luggage.'],['ふたつ|futatsu','São duas bagagens.','Two pieces of luggage.'],['みっつ|mittsu','São três bagagens.','Three pieces of luggage.']]],
      gram:'Para contar objetos o japonês usa uma série própria: <b>ひとつ</b> 1, <b>ふたつ</b> 2, <b>みっつ</b> 3. Serve para malas, cafés, ingressos…', use:'Na cena: dizer quantas malas você despacha.'}
@@ -57,9 +62,9 @@ const R=(k,f)=>`<ruby>${k}<rt>${f}</rt></ruby>`;
     {quem:'Oficial da imigração', q:R('目的地','もくてきち')+'はどこですか？', say:'もくてきちは どこですか？', ro:'Mokutekichi wa doko desu ka?', pt:'Qual é o seu destino?',
      ans:['もくてきち|mokutekichi','は|wa','とうきょう|Tōkyō','です|desu'], extra:['が|ga','にもつ|nimotsu','ありません|arimasen'], ansPt:'Meu destino é Tóquio.', molde:1, distr:['Qual é o motivo da viagem?','Quanto custa?']},
     {quem:'Balcão da companhia', q:'ご'+R('予約','よやく')+'はございますか？', say:'ごよやくは ございますか？', ro:'Go-yoyaku wa gozaimasu ka?', pt:'Tem reserva?',
-     ans:['よやく|yoyaku','が|ga','あります|arimasu'], extra:['ありません|arimasen','かんこう|kankō','は|wa'], ansPt:'Tenho reserva.', molde:2, distr:['Tem passaporte?','Qual é o seu destino?']},
+     ans:['よやく|yoyaku',['が|ga','は|wa'],'あります|arimasu'], extra:['ありません|arimasen','かんこう|kankō','です|desu'], tarefa:1, ansPt:'Tenho reserva.', molde:2, distr:['Tem passaporte?','Qual é o seu destino?']},
     {quem:'Oficial da imigração', q:'ビザはありますか？', say:'ビザは ありますか？', ro:'Biza wa arimasu ka?', pt:'Tem visto?',
-     ans:['ビザ|biza','が|ga','ありません|arimasen'], extra:['あります|arimasu','です|desu','パスポート|pasupōto'], ansPt:'Não tenho visto.', molde:2, distr:['Tem reserva?','Tem bagagem?']},
+     ans:['ビザ|biza',['は|wa','が|ga'],'ありません|arimasen'], extra:['あります|arimasu','です|desu','パスポート|pasupōto'], tarefa:1, ansPt:'Não tenho visto.', molde:2, distr:['Tem reserva?','Tem bagagem?']},
     {quem:'Balcão da companhia', q:R('荷物','にもつ')+'はいくつですか？', say:'にもつは いくつですか？', ro:'Nimotsu wa ikutsu desu ka?', pt:'Quantas bagagens?',
      ans:['にもつ|nimotsu','は|wa','ふたつ|futatsu','です|desu'], extra:['が|ga','よやく|yoyaku','とうきょう|Tōkyō'], ansPt:'São duas bagagens.', molde:3, distr:['Onde está a bagagem?','Quantas pessoas?']}
   ]
