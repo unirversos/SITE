@@ -43,6 +43,8 @@
 .pilulas{display:flex;gap:6px;overflow-x:auto;padding:2px 0 6px;-webkit-overflow-scrolling:touch;scrollbar-width:thin}
 .pilulas button{flex:0 0 auto;font:inherit;font-size:15px;border:1.5px solid #cfe0f0;background:#f3f8fd;color:var(--ink);border-radius:999px;padding:0 14px;min-height:40px;cursor:pointer;white-space:nowrap}
 .pil-pt{margin:0;font-size:13px}
+.topo-mesa .row .btn{flex-shrink:0}
+#quemMesa{overflow-wrap:anywhere}
 .jogo.sheet{position:fixed;inset:0;z-index:60;border-radius:0;border:0;overflow:auto;padding:0 16px 24px;align-content:start;max-width:none;grid-template-columns:minmax(0,1fr)}
 .jogo.sheet>*{max-width:560px;width:100%;margin-inline:auto}
 .jogo.sheet .j-top{position:sticky;top:0;background:#fff;padding:12px 0;z-index:2;border-bottom:1.5px solid var(--line);font-size:15px;color:var(--ink)}
@@ -324,7 +326,8 @@ function ligaSessao(id,k){
 function atualizaMesaPainel(T){
   if(!ME.mesa||!mesaAtual) return;
   const lista=naMinhaMesa(T), ids=new Set(lista.map(([u])=>u));
-  $('quemMesa').textContent='Na mesa: '+lista.map(([u,p])=>u===minhaChave()?'você':nomeDe(p)).join(', ');
+  const nomes=lista.map(([u,p])=>u===minhaChave()?'você':nomeDe(p)); const q=$('quemMesa');
+  q.textContent='Na mesa: '+(nomes.length>3?nomes.slice(0,2).join(', ')+' +'+(nomes.length-2):nomes.join(', ')); q.title=nomes.join(', ');
   lista.forEach(([u,p])=>{ if(!anterior[u]){ anterior[u]=nomeDe(p); if(u!==minhaChave()) sis(nomeDe(p)+' sentou na mesa.'); } });
   Object.keys(anterior).forEach(u=>{ if(!ids.has(u)){ const n=anterior[u]; delete anterior[u]; if(u!==minhaChave()) sis(n+' saiu da mesa.'); } });
   if(jogoV||jogoAberto) renderJogo();
