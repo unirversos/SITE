@@ -100,6 +100,8 @@
 .jogo .j-grade .g-est{background:var(--gold-soft);border-color:#ecd9a4;color:#5f4713}
 .jogo .j-grade .g-te{background:#efeaf8;border-color:#cfc4e8;color:#43366b}
 @media (prefers-reduced-motion:reduce){.jogo .j-ops button{animation:none!important;transition:none}}
+
+.j-ilu{width:min(38vw,132px);aspect-ratio:1;margin:0 auto}
 </style>
 <script type="module" src="/idiomas/dados/conta.js?v=4"></script>
 <script>setTimeout(function(){var h=document.documentElement;if(!h.classList.contains('uni-ok')&&!document.getElementById('uni-gate'))h.classList.add('uni-ok')},10000)</script>
@@ -261,6 +263,7 @@ footer{border-top:1.5px dashed var(--line);padding-top:18px;display:flex;flex-wr
 <script src="/idiomas/dados/velocidade-voz.js?v=1"></script>
 <script src="/idiomas/dados/audio-mapa.js?v=4a8ffd4b"></script>
 <script src="/idiomas/dados/glossario.js?v=1"></script>
+<script src="/idiomas/planeta-utopia/salao/ilustracoes.js?v=1"></script>
 <script type="module">
 import { getApps, initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
 import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
@@ -449,6 +452,17 @@ const JOGOS={
   wa:{"ic": "🚫", "nome": "Proibição 〜てはいけません", "qs": [{"jp": "ここで タバコを ＿はいけません。", "dica": "Não pode fumar aqui / É proibido fumar aqui.", "ops": ["すりて", "すいて", "すって", "すんで"], "ok": ["すって"], "expl": "ここでタバコをすってはいけません。 No Japão é proibido fumar na rua enquanto caminha. Use as cabines de fumo (きつえんじょ).", "fala": "ここでタバコをすってはいけません"}, {"jp": "しゃしんを ＿はいけません。", "dica": "Não pode tirar fotos / Proibido fotografar.", "ops": ["とりて", "といて", "とんで", "とって"], "ok": ["とって"], "expl": "しゃしんをとってはいけません。 Comum em galerias de arte, altares sagrados e apresentações culturais em Quioto.", "fala": "しゃしんをとってはいけません"}, {"jp": "ここに ＿はいけません。", "dica": "Não pode entrar aqui / Acesso proibido.", "ops": ["はいって", "はいりて", "はいいて", "はいんで"], "ok": ["はいって"], "expl": "ここにはいってはいけません。 Placas com \"たちいりきんし\" indicam que o acesso é restrito.", "fala": "ここにはいってはいけません"}, {"jp": "ここに ごみを ＿はいけません。", "dica": "Não pode jogar lixo aqui.", "ops": ["すてって", "すてて", "すていで", "すてして"], "ok": ["すてて"], "expl": "ここにごみをすててはいけません。 No Japão não há muitas lixeiras públicas. O costume é levar seu lixo para o hotel.", "fala": "ここにごみをすててはいけません"}, {"jp": "でんしゃで おおごえで ＿はいけません。", "dica": "Não pode falar alto no trem.", "ops": ["はなって", "はないて", "はなして", "はなんで"], "ok": ["はなして"], "expl": "でんしゃでおおごえではなしてはいけません。 Os trens no Japão são espaços silenciosos. Evite ligações e fale bem baixinho.", "fala": "でんしゃでおおごえではなしてはいけません"}, {"jp": "ここで くつを ＿はいけません。", "dica": "Não pode usar sapatos aqui / Tire os calçados.", "ops": ["はって", "はいで", "はして", "はいて"], "ok": ["はいて"], "expl": "ここでくつをはいてはいけません。 Ao pisar em tatami ou entrar em templos e lares, retire os sapatos no genkan.", "fala": "ここでくつをはいてはいけません"}, {"jp": "ホームで ＿はいけません。", "dica": "Não pode correr na plataforma do trem.", "ops": ["はしって", "はしりて", "はしいて", "はしんで"], "ok": ["はしって"], "expl": "ホームではしってはいけません。 Aviso de segurança constante nas plataformas movimentadas do Shinkansen e metrô.", "fala": "ホームではしってはいけません"}, {"jp": "あるきながら ＿はいけません。", "dica": "Não pode comer enquanto caminha pela rua.", "ops": ["たべって", "たべて", "たべいで", "たべして"], "ok": ["たべて"], "expl": "あるきながらたべてはいけません。 A etiqueta japonesa pede para saborear o alimento parado perto de onde comprou.", "fala": "あるきながらたべてはいけません"}]}
 };
 
+const IC={
+  dias:['sun','moon','fire','drop','wood','gold','earth'],
+  opos:['big','old','hot','free','expensive','lively'],
+  verb:['wake','eat','drink','go','see','listen','read','write','sleep','talk','buy','work'],
+  te:['go','eat','drink','wait','return','buy','talk','read','write','see','doit','come'],
+  kud:['wait','eat','write','see','enter','listen','drink','teach'],
+  moii:['photo','sit','enter','menu','wear','touch','put','water'],
+  wa:['smoke','photo','noentry','trash','talk','shoes','run','eat'],
+  part:['movie','restaurant','torii','clock7','friends','price','water','hotel']
+};
+Object.entries(IC).forEach(([k,a])=>{ if(JOGOS[k]) JOGOS[k].qs.forEach((q,i)=>{ q.ic=a[i]; }); });
 const GRUPO={dias:'voc',opos:'voc',verb:'voc',part:'est',te:'te',kud:'te',moii:'te',wa:'te'}, GNOME={voc:'Vocabulário',est:'Estrutura',te:'Forma て'};
 let jParaVal='todos'; const dispensados=new Set();
 const aceitou=(j,u)=>!!(j&&j.aceitaram&&j.aceitaram[u]);
@@ -493,7 +507,7 @@ function renderJogoCru(){
   let rodape;
   if(fb){ rodape=`<div class="j-fb ${fb.certo?'':'no'}"><b>${fb.certo?'Acertou!':'Quase!'}</b> ${esc(q.expl)}</div><div class="row"><button class="btn pri" type="button" data-j="prox">${j.i+1>=N?'Ver resultado':'Próxima →'}</button></div>`; }
   else rodape=`<p class="sub" style="text-align:center">${minha?'Sua vez':'Vez de '+esc(nomeUid(v))}</p>`;
-  box.innerHTML=topo(g.ic+' '+g.nome)+`<div class="j-pontos" role="img" aria-label="Pergunta ${j.i+1} de ${N}">${Array.from({length:N},(_,x)=>'<i class="'+(x<j.i?'f':x===j.i?'a':'')+'"></i>').join('')}</div><p class="j-q" lang="ja">${jp}</p><p class="sub j-dica">${esc(q.dica)}</p><div class="j-ops">${ops}</div>${rodape}<div class="row" style="justify-content:center"><button class="lk" type="button" data-j="sai">sair do jogo</button></div>`;
+  box.innerHTML=topo(g.ic+' '+g.nome)+`<div class="j-pontos" role="img" aria-label="Pergunta ${j.i+1} de ${N}">${Array.from({length:N},(_,x)=>'<i class="'+(x<j.i?'f':x===j.i?'a':'')+'"></i>').join('')}</div>${q.ic&&window.ILU&&ILU[q.ic]?'<div class="j-ilu">'+ILU[q.ic]+'</div>':''}<p class="j-q" lang="ja">${jp}</p><p class="sub j-dica">${esc(q.dica)}</p><div class="j-ops">${ops}</div>${rodape}<div class="row" style="justify-content:center"><button class="lk" type="button" data-j="sai">sair do jogo</button></div>`;
   const kf=j.id+j.i; if(falouJ!==kf){ falouJ=kf; speak(q.fala); }
 }
 $('btnJogar').onclick=()=>{ jogoAberto=true; if(aba!=='mesa') jParaVal=aba; renderJogo(); $('jogoBox').scrollIntoView({behavior:'smooth',block:'nearest'}); };
