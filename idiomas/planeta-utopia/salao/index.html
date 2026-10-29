@@ -147,6 +147,15 @@ h2{font-family:var(--f-display);font-size:22px;line-height:1.2;margin:0}
 .pess small{font-size:11.5px;color:var(--muted)}
 .pess.eu{border-color:var(--pink)}
 .vazio{color:var(--muted);font-size:14px}
+/* sentado: a sala continua à vista e a mesa divide a tela */
+.wrap.sentado>header{display:none}
+.wrap.sentado #dica,.wrap.sentado #secSala details{display:none}
+@media (min-width:900px){
+  .wrap.sentado{max-width:1240px;grid-template-columns:minmax(0,1.1fr) minmax(0,1fr);align-items:start}
+  .wrap.sentado>*{grid-column:1/-1}
+  .wrap.sentado>#secSala{grid-column:1;position:sticky;top:12px}
+  .wrap.sentado>#mesa{grid-column:2}
+}
 /* mesa */
 .mesa{display:grid;gap:12px}
 .missao{border:1.5px dashed #e3b6c0;border-radius:16px;background:#fff7f9;padding:12px 14px;display:grid;gap:6px}
@@ -356,9 +365,9 @@ const ramo=id=>'salao/mesas/sala-'+id;
 function soltaMesa(){ document.body.style.overflow=''; limpaAbas(); [sessRef,msgsRef,jogoRef].forEach(r=>{ if(r) try{ off(r); }catch(e){} }); sessRef=msgsRef=jogoRef=null; jogoV=null; jogoAberto=false; falouJ=null; vistos=new Set(); mesaAtual=null; sessAtual=null; }
 async function mudaMesa(){
   soltaMesa(); $('chat').innerHTML=''; anterior={}; renderAbas();
-  if(!ME.mesa){ $('mesa').hidden=true; $('secSala').hidden=false; $('levantar').hidden=true; $('jogoBox').hidden=true; return; }
+  if(!ME.mesa){ document.querySelector('.wrap').classList.remove('sentado'); $('mesa').hidden=true; $('secSala').hidden=false; $('levantar').hidden=true; $('jogoBox').hidden=true; return; }
   mesaAtual=ME.mesa; const mz=MESAS.find(m=>m.id===ME.mesa);
-  $('mesa').hidden=false; $('levantar').hidden=false; $('h-mesa').textContent='🪑 '+mz.nome; renderPilulas(); $('secSala').hidden=true; window.scrollTo({top:0});
+  $('mesa').hidden=false; $('levantar').hidden=false; $('h-mesa').textContent='🪑 '+mz.nome; renderPilulas(); document.querySelector('.wrap').classList.add('sentado'); $('secSala').hidden=false; window.scrollTo({top:0});
   naMinhaMesa().forEach(([u,p])=>{ anterior[u]=nomeDe(p); }); atualizaMesaPainel(todos());
   sis('Você sentou. Cumprimente quem estiver na mesa, ou espere alguém chegar.');
   if(!bancoOk||!db){ sis('Sem conexão com as outras pessoas agora.'); return; }
