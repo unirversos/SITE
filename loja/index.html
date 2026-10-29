@@ -74,6 +74,9 @@ h1 .jp rt{font-size:.5em;letter-spacing:.05em}
 .pedido .ok{color:#3e6347;font-weight:700}
 .pedido .erro{color:#7d2b3a;font-weight:700}
 .pedido small{color:var(--muted)}
+.grid{align-items:start}.mais{margin:2px 0 0}.mais summary{cursor:pointer;font-weight:700;font-size:14px;color:#6b4a63;padding:6px 0;list-style:none}
+.mais summary::-webkit-details-marker{display:none}.mais summary::before{content:'+ ';font-weight:800}.mais[open] summary::before{content:'− '}
+.mais summary:hover{text-decoration:underline}
 .antes{margin:4px 0 2px;padding:9px 11px;border-radius:12px;background:#f3f8fd;border:1.5px solid #cfe0f0;font-size:13.5px;line-height:1.45;color:#2f4f73}
 .antes ul{margin:4px 0 0;padding-left:18px;display:grid;gap:3px}
 .card.esg{opacity:.62;filter:grayscale(.5)}
@@ -226,9 +229,11 @@ footer a:hover{color:var(--pink)}
       <div class="corpo">
         <p class="tag">${c.ic} ${esc(c.nome)}</p>
         <h3>${esc(x.nome)}</h3>
-        <p class="d">${esc(x.desc)}</p>
-        ${c.id==='consoles'?`<div class="antes"><b>Antes de comprar</b><ul><li>Item de garimpo: usado, garimpado no Japão e vendido no estado mostrado nas fotos.</li><li>Console japonês: roda jogos de 3DS japoneses. A trava de região pode ser contornada por modificação, que é por conta do comprador.</li><li>Carregador japonês: confira a tensão antes de ligar.</li></ul></div>`:''}
         ${rs||(p?`<p class="preco">${p} <small>referência</small></p>`:'')}
+        <details class="mais"><summary>Mais detalhes</summary>
+          <p class="d">${esc(x.desc)}</p>
+          ${c.id==='consoles'?`<div class="antes"><b>Antes de comprar</b><ul><li>Item de garimpo: usado, garimpado no Japão e vendido no estado mostrado nas fotos.</li><li>Console japonês: roda jogos de 3DS japoneses. A trava de região pode ser contornada por modificação, que é por conta do comprador.</li><li>Carregador japonês: confira a tensão antes de ligar.</li></ul></div>`:''}
+        </details>
         ${btn}
       </div></article>`;
   }
