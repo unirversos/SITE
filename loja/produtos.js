@@ -16,6 +16,16 @@
      exemplo: true só nos cards de exemplo. Apague os exemplos quando colocar os seus.
    ========================================================= */
 window.ACHADOS = [
+  { id:'game-watch-zelda', cat:'consoles', nome:'Game & Watch · The Legend of Zelda', novo:true,
+    desc:'Console portátil Game & Watch da Nintendo, edição The Legend of Zelda, novo e lacrado (indicado no título do anúncio, “新品未開封”). Na foto aparece na embalagem, com a tela mostrando a abertura do jogo original. Só há uma foto no anúncio, então o conteúdo da caixa e o estado da embalagem devem ser confirmados com o vendedor.',
+    de:0, ate:0, total:648, imposto:192, chegada:'dezembro', foto:'', fotos:['/loja/fotos/game-watch-zelda-1.jpg'], contem:true, link:'' },
+  { id:'joycon-zelda-azul', cat:'consoles', nome:'Nintendo Switch · Joy-Con azuis com tema Zelda',
+    desc:'Par de Joy-Con da Nintendo Switch, azuis com motivos de The Legend of Zelda (emblema vermelho e detalhes dourados), vistos na foto acoplados a um suporte de Joy-Con. O título do anúncio informa “funcionamento verificado” (動作確認済み). Só há uma foto no anúncio, então o desgaste, o que acompanha o par e o estado dos analógicos devem ser confirmados com o vendedor.',
+    antes:['Item usado, garimpado no Japão e vendido no estado mostrado nas fotos.','O anúncio diz que o funcionamento foi verificado, mas não detalha desgaste nem bateria.','Analógico com “drift” é um desgaste comum em Joy-Con usados: vale pedir ao vendedor para testar e confirmar.'],
+    de:0, ate:0, total:725, imposto:215, chegada:'dezembro', foto:'', fotos:['/loja/fotos/joycon-zelda-1.jpg'], contem:true, link:'' },
+  { id:'pro-controller-zelda-40', cat:'colec', nome:'Zelda 40 anos · controle Pro para Nintendo Switch 2', novo:true,
+    desc:'Controle Pro do Nintendo Switch 2, edição de 40 anos de The Legend of Zelda, novo. Na foto aparece na caixa, com o controle dourado e verde e um suporte de exibição incluído (indicado na caixa). Só há uma foto no anúncio, então o estado da embalagem e o conteúdo da caixa devem ser confirmados com o vendedor.',
+    de:0, ate:0, total:2188, imposto:649, chegada:'dezembro', foto:'', fotos:['/loja/fotos/pro-controller-zelda-1.jpg'], contem:true, link:'' },
   { id:'3ds-vermelho-metalico', cat:'consoles', nome:'Nintendo 3DS · vermelho metálico',
     desc:'Console portátil da Nintendo em estado de como novo, segundo o vendedor. Acompanha carregador, base de carregamento, caneta e cartão SD de 4 GB, como mostram as fotos.',
     de:0, ate:0, total:1500, imposto:445, chegada:'dezembro', foto:'', fotos:['/loja/fotos/3ds-vermelho-1.jpg','/loja/fotos/3ds-vermelho-2.jpg','/loja/fotos/3ds-vermelho-3.jpg','/loja/fotos/3ds-vermelho-4.jpg','/loja/fotos/3ds-vermelho-5.jpg','/loja/fotos/3ds-vermelho-6.jpg'], link:'' },
@@ -37,6 +47,9 @@ window.ACHADOS = [
   { id:'miku-conjunto-5b', cat:'colec', nome:'Hatsune Miku · segundo conjunto com 5 figures',
     desc:'Conjunto de 5 figures da Hatsune Miku, todas em caixa. Pelas caixas na foto: Snow Miku All Stars (2012 ver. e 2013 ver., da Taito), uma da Furyu em parceria com Melffy, e duas da linha Figurizm α, da SEGA (uma delas com “Cosmic” na caixa). As caixas aparecem fechadas na foto, sem avarias visíveis. Só há uma foto no anúncio, então o estado das figures e das caixas deve ser confirmado com o vendedor. Vendido como conjunto, não separado.',
     de:0, ate:0, total:1014, imposto:301, chegada:'dezembro', foto:'', fotos:['/loja/fotos/miku-conjunto-5b-1.jpg'], contem:true, link:'' },
+  { id:'zelda-case-switch2-40', cat:'colec', nome:'Zelda 40 anos · estojo para Nintendo Switch 2',
+    desc:'Estojo de transporte para Nintendo Switch 2 da edição de 40 anos de The Legend of Zelda, com a Triforce dourada na frente. Na foto aparece na caixa, com plástico de proteção e a indicação “新品未開封” (novo, lacrado), e a caixa cita uma película protetora de tela inclusa. Só há uma foto no anúncio, então a condição e o que está incluído devem ser confirmados com o vendedor.',
+    de:0, ate:0, total:687, imposto:204, chegada:'dezembro', foto:'', fotos:['/loja/fotos/zelda-case-switch2-1.jpg'], contem:true, link:'' },
   { id:'zelda-master-sword', cat:'colec', nome:'Zelda · Master Sword e outros itens',
     desc:'Itens de The Legend of Zelda em seleção para o malote de dezembro.',
     de:0, ate:0, foto:'', link:'' },
