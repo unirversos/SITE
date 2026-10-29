@@ -64,6 +64,16 @@ h1 .jp rt{font-size:.5em;letter-spacing:.05em}
 .pag li{padding:8px 10px;border-radius:12px;background:var(--sage-soft)}
 .pag li.ch{background:#fff4e0;border:1.5px solid #e8c98a;color:#5b4210}
 .parc{font-size:13px;color:var(--muted);font-weight:500}
+.pedido-bg{position:fixed;inset:0;background:rgba(58,43,56,.5);display:none;align-items:center;justify-content:center;padding:16px;z-index:60}
+.pedido-bg.on{display:flex}
+.pedido{background:#fff;border-radius:20px;max-width:420px;width:100%;padding:20px;display:grid;gap:12px;max-height:92vh;overflow:auto}
+.pedido h2{margin:0;font-size:22px}
+.pedido label{display:grid;gap:4px;font-weight:700;font-size:14.5px}
+.pedido input{font:inherit;font-weight:500;padding:10px 12px;border:1.5px solid var(--line);border-radius:12px;width:100%}
+.pedido .acts{display:flex;gap:8px;flex-wrap:wrap}
+.pedido .ok{color:#3e6347;font-weight:700}
+.pedido .erro{color:#7d2b3a;font-weight:700}
+.pedido small{color:var(--muted)}
 .antes{margin:4px 0 2px;padding:9px 11px;border-radius:12px;background:#f3f8fd;border:1.5px solid #cfe0f0;font-size:13.5px;line-height:1.45;color:#2f4f73}
 .antes ul{margin:4px 0 0;padding-left:18px;display:grid;gap:3px}
 .card.esg{opacity:.62;filter:grayscale(.5)}
@@ -200,6 +210,7 @@ footer a:hover{color:var(--pink)}
     const esg=(window.__STATUS||{})[x.id]==='esgotado';
     const btn = esg ? `<span class="quero off" aria-disabled="true">Esgotado no malote</span>` : linkOk(x.link)
       ? `<a class="quero" href="${esc(x.link)}" target="_blank" rel="noopener sponsored">Quero este achado →</a>`
+      : x.total ? `<button type="button" class="quero" data-pedir="${esc(x.id||'')}" style="border:0;font:inherit;font-weight:700;cursor:pointer">Quero este item →</button>`
       : `<span class="quero off" aria-disabled="true">Reserva em breve</span>`;
     const p=faixa(x);
     const fm=n=>Number(n).toLocaleString('pt-BR',{minimumFractionDigits:2,maximumFractionDigits:2});
@@ -257,6 +268,17 @@ footer a:hover{color:var(--pink)}
   v.addEventListener('input',calc); s.addEventListener('change',calc); calc();
 })();
 </script>
+<div class="pedido-bg" id="pedidoBg" role="dialog" aria-modal="true" aria-labelledby="pedidoT">
+  <form class="pedido" id="pedidoForm">
+    <h2 id="pedidoT">Quero este item</h2>
+    <p id="pedidoItem" style="margin:0;font-weight:700"></p>
+    <label>Seu nome<input id="pNome" required maxlength="80" autocomplete="name"></label>
+    <label>Seu WhatsApp, com DDD<input id="pZap" required maxlength="30" inputmode="tel" autocomplete="tel" placeholder="(19) 99999-9999"></label>
+    <small>Vou conferir se o item ainda está disponível e te chamo no WhatsApp. Usamos seu nome e número só para falar deste pedido.</small>
+    <p id="pMsg" role="status" style="margin:0"></p>
+    <div class="acts"><button class="btn sec" type="button" id="pFecha" style="border:1.5px solid var(--line);background:#fff;font:inherit;font-weight:700;padding:10px 16px;border-radius:999px;cursor:pointer">Fechar</button><button class="btn pri" type="submit" id="pEnvia" style="border:0;font:inherit;font-weight:700;padding:10px 18px;border-radius:999px;cursor:pointer;background:var(--pink);color:#fff">Enviar pedido</button></div>
+  </form>
+</div>
 <script type="module">
 /* status dos itens (disponível/esgotado) vem do Firebase; se falhar, a vitrine continua normal */
 try{
@@ -264,6 +286,26 @@ try{
   const {getDatabase,ref,onValue}=await import("https://www.gstatic.com/firebasejs/10.12.0/firebase-database.js");
   const app=getApps()[0]||initializeApp({apiKey:"AIzaSyCoo0UB5rWjD4ZGE3xKO32zXYPUQFYObmc",authDomain:"unirversos-site.firebaseapp.com",projectId:"unirversos-site",databaseURL:"https://unirversos-site-default-rtdb.firebaseio.com"});
   onValue(ref(getDatabase(app,"https://unirversos-site-default-rtdb.firebaseio.com"),"loja/status"),s=>{ window.__STATUS=s.val()||{}; if(window.__renderVitrine) window.__renderVitrine(); },()=>{});
+
+  /* pedido de compra: grava no Firebase para a Aline ver no painel */
+  const {push,serverTimestamp}=await import("https://www.gstatic.com/firebasejs/10.12.0/firebase-database.js");
+  const db=getDatabase(app,"https://unirversos-site-default-rtdb.firebaseio.com");
+  const $=id=>document.getElementById(id);
+  let atual=null;
+  document.addEventListener('click',e=>{
+    const b=e.target.closest('[data-pedir]'); if(!b) return;
+    const it=(window.ACHADOS||[]).find(x=>x.id===b.dataset.pedir); if(!it) return;
+    atual=it; $('pedidoItem').textContent=it.nome; $('pMsg').textContent=''; $('pMsg').className=''; $('pEnvia').disabled=false; $('pedidoBg').classList.add('on'); $('pNome').focus();
+  });
+  $('pFecha').onclick=()=>$('pedidoBg').classList.remove('on');
+  $('pedidoBg').addEventListener('click',e=>{ if(e.target.id==='pedidoBg') $('pedidoBg').classList.remove('on'); });
+  $('pedidoForm').addEventListener('submit',async e=>{
+    e.preventDefault(); if(!atual) return; $('pEnvia').disabled=true; $('pMsg').className=''; $('pMsg').textContent='Enviando…';
+    try{
+      await push(ref(db,'loja/pedidos'),{item:atual.id,itemNome:atual.nome,nome:$('pNome').value.trim().slice(0,80),contato:$('pZap').value.trim().slice(0,30),pagina:location.origin+'/loja/#'+atual.id,t:Date.now()});
+      $('pMsg').className='ok'; $('pMsg').textContent='Pedido enviado! Em breve te chamo no WhatsApp.'; $('pedidoForm').reset();
+    }catch(err){ $('pMsg').className='erro'; $('pMsg').textContent='Não consegui enviar agora. Tente de novo em instantes.'; $('pEnvia').disabled=false; }
+  });
 }catch(e){}
 </script>
 </body>
