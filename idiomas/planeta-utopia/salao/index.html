@@ -16,7 +16,7 @@
 .jogo .j-q{font-family:var(--f-display);font-size:clamp(22px,4.6vw,30px);line-height:1.3;text-align:center;margin:4px 0}
 .jogo .j-q .vz{display:inline-block;min-width:1.6em;border-bottom:3px solid var(--pink)}
 .jogo .j-dica{text-align:center;margin:0}
-.jogo .j-ops{display:grid;grid-template-columns:repeat(auto-fit,minmax(120px,1fr));gap:8px}
+.jogo .j-ops{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}
 .jogo .j-ops button{font:inherit;font-weight:700;font-size:18px;min-height:52px;border-radius:14px;border:1.5px solid var(--line);background:#fff;color:var(--ink);cursor:pointer}
 .jogo .j-ops button:disabled{opacity:.55;cursor:default}
 .jogo .j-ops button.ok{background:var(--sage-soft);border-color:#bcd2bf}
@@ -37,6 +37,35 @@
 .av-p b{font-size:clamp(10px,1.9cqw,13px);background:rgba(255,255,255,.85);border-radius:999px;padding:0 7px;line-height:1.5;max-width:12ch;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .av-p.sent .face{box-shadow:0 0 0 3px rgba(212,106,132,.35),0 3px 8px rgba(0,0,0,.18)}
 @media (prefers-reduced-motion:reduce){.av-p{transition:none}}
+
+/* mesa no celular: chat em foco, pílulas e janela de jogos */
+.chat{min-height:34vh;max-height:52vh}
+.pilulas{display:flex;gap:6px;overflow-x:auto;padding:2px 0 6px;-webkit-overflow-scrolling:touch;scrollbar-width:thin}
+.pilulas button{flex:0 0 auto;font:inherit;font-size:15px;border:1.5px solid #cfe0f0;background:#f3f8fd;color:var(--ink);border-radius:999px;padding:0 14px;min-height:40px;cursor:pointer;white-space:nowrap}
+.pil-pt{margin:0;font-size:13px}
+.topo-mesa .row .btn{flex-shrink:0}
+#quemMesa{overflow-wrap:anywhere}
+.jogo.sheet{position:fixed;inset:0;z-index:60;border-radius:0;border:0;overflow:auto;padding:0 16px 24px;align-content:start;max-width:none;grid-template-columns:minmax(0,1fr)}
+.jogo.sheet>*{max-width:560px;width:100%;margin-inline:auto}
+.jogo.sheet .j-top{position:sticky;top:0;background:#fff;padding:12px 0;z-index:2;border-bottom:1.5px solid var(--line);font-size:15px;color:var(--ink)}
+.jogo .j-grade{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+.jogo .j-grade button{font:inherit;font-weight:700;font-size:15px;min-height:76px;border-radius:16px;border:1.5px solid var(--line);background:#fff;color:var(--ink);cursor:pointer;display:grid;gap:2px;place-items:center;padding:8px;line-height:1.25}
+.jogo .j-grade button span{font-size:24px}
+
+/* abas de conversa, chips de pessoas, convite */
+.quem-mesa{display:flex;gap:6px;align-items:center;overflow-x:auto;white-space:nowrap;font-size:14px;color:var(--muted);padding:2px 0}
+.quem-mesa button{font:inherit;font-size:14px;border:1.5px solid var(--line);background:#fff;color:var(--ink);border-radius:999px;padding:0 12px;min-height:36px;cursor:pointer;flex:0 0 auto}
+.quem-mesa .dica-chip{font-size:12px;flex:0 0 auto}
+.abas{display:flex;gap:6px;overflow-x:auto;align-items:center}
+.abas .ab{display:inline-flex;align-items:center;border:1.5px solid var(--line);background:#fff;border-radius:999px;flex:0 0 auto;overflow:hidden}
+.abas .ab button{font:inherit;font-size:14px;font-weight:700;border:0;background:none;color:var(--ink);min-height:38px;padding:0 12px;cursor:pointer}
+.abas .ab .x{padding:0 10px 0 0;font-weight:400;color:var(--muted)}
+.abas .ab.on{background:var(--ink);border-color:var(--ink)}
+.abas .ab.on button{color:#fff}
+.abas .ab .pt{display:inline-block;width:9px;height:9px;border-radius:50%;background:var(--pink);margin-left:6px}
+.convbar{border-left:6px solid var(--sage);background:var(--sage-soft);border-radius:14px;padding:10px 12px;display:grid;gap:8px;font-size:15px}
+.j-para{display:flex;gap:8px;align-items:center;font-size:14px;flex-wrap:wrap}
+.j-para select{font:inherit;min-height:40px;border:1.5px solid var(--line);border-radius:12px;padding:0 10px;background:#fff}
 </style>
 <script type="module" src="/idiomas/dados/conta.js?v=4"></script>
 <script>setTimeout(function(){var h=document.documentElement;if(!h.classList.contains('uni-ok')&&!document.getElementById('uni-gate'))h.classList.add('uni-ok')},10000)</script>
@@ -154,7 +183,7 @@ footer{border-top:1.5px dashed var(--line);padding-top:18px;display:flex;flex-wr
     <p class="lede">Ande pela sala com o seu avatar, sente numa mesa e comece a conversar. Quando duas ou mais pessoas estiverem na mesa, vocês abrem os jogos.</p>
   </header>
 
-  <section class="card" aria-labelledby="h-sala">
+  <section class="card" id="secSala" aria-labelledby="h-sala">
     <div class="topo-sala"><div><h2 id="h-sala">🏮 O Salão</h2><p class="sub" id="dica">Toque no chão para andar e numa cadeira para sentar. No computador, use também as setas.</p></div>
       <div class="row"><button class="btn" type="button" id="btnRo" aria-pressed="false">Romaji: não</button><button class="btn" type="button" id="levantar" hidden>Levantar da mesa</button></div></div>
     <div class="sala" id="sala" tabindex="0" role="application" aria-label="Sala do Salão. Toque no chão para andar, toque numa cadeira para sentar, ou use as setas do teclado."></div>
@@ -166,17 +195,17 @@ footer{border-top:1.5px dashed var(--line);padding-top:18px;display:flex;flex-wr
   </section>
 
   <section class="card mesa" id="mesa" hidden aria-labelledby="h-mesa">
-    <div class="topo-mesa"><h2 id="h-mesa">🪑 Mesa</h2><div class="row"><button class="btn" type="button" id="btnJogar">🎲 Jogos</button></div></div>
-    <details class="quebra" id="quebra" open>
-      <summary>🧊 Quebra-gelo · cumprimentem-se</summary>
-      <p class="q-sub">Toque numa frase para colocá-la na mensagem e 🔊 para ouvir.</p>
-      <div class="q-l" id="quebraL"></div>
-    </details>
-    <div class="jogo" id="jogoBox" hidden aria-live="polite"></div>
+    <div class="topo-mesa"><div><h2 id="h-mesa">🪑 Mesa</h2><div class="quem-mesa" id="quemMesa"></div></div>
+      <div class="row"><button class="btn" type="button" id="btnJogar">🎲 Jogos</button><button class="btn" type="button" id="levantar2">Levantar</button></div></div>
+    <div class="convbar" id="convBar" hidden></div>
+    <div class="abas" id="abas" aria-label="Conversas da mesa"></div>
     <div class="chat" id="chat" aria-live="polite"></div>
+    <div class="pilulas" id="pilulas" aria-label="Frases prontas para tocar"></div>
+    <p class="sub pil-pt" id="pilPt" hidden></p>
     <div class="escrever"><textarea id="txt" maxlength="300" placeholder="Escreva em japonês (kana, kanji ou romaji)…" aria-label="Mensagem"></textarea><button class="btn pri" type="button" id="enviar">Enviar</button></div>
-    <div class="row"><button class="lk" type="button" id="denunciar">⚑ Denunciar</button></div>
+    <div class="row"><button class="btn" type="button" id="btnRo2" aria-pressed="false">Romaji: não</button><button class="lk" type="button" id="denunciar">⚑ Denunciar</button></div>
   </section>
+  <div class="jogo sheet" id="jogoBox" hidden role="dialog" aria-modal="true" aria-label="Jogos da mesa"></div>
 
   
 <footer>
@@ -221,8 +250,8 @@ function speak(t){ const id=window.AUDIO_MAP&&AUDIO_MAP[chave(t)]; if(!id){ spea
 
 /* ---------- romaji (só pelo botão) ---------- */
 let ROM=false; try{ ROM=localStorage.getItem('utopiaRomaji')==='1'; }catch(e){}
-function aplicaRo(){ $('btnRo').textContent='Romaji: '+(ROM?'sim':'não'); $('btnRo').setAttribute('aria-pressed',String(ROM)); document.querySelectorAll('.wro').forEach(e=>e.hidden=!ROM); }
-$('btnRo').onclick=()=>{ ROM=!ROM; try{ localStorage.setItem('utopiaRomaji',ROM?'1':'0'); }catch(e){} aplicaRo(); };
+function aplicaRo(){ ['btnRo','btnRo2'].forEach(id=>{ const b=$(id); if(b){ b.textContent='Romaji: '+(ROM?'sim':'não'); b.setAttribute('aria-pressed',String(ROM)); } }); document.querySelectorAll('.wro').forEach(e=>e.hidden=!ROM); }
+$('btnRo').onclick=$('btnRo2').onclick=()=>{ ROM=!ROM; try{ localStorage.setItem('utopiaRomaji',ROM?'1':'0'); }catch(e){} aplicaRo(); };
 
 /* ---------- eu ---------- */
 const AV = window.UtopiaAvatar && UtopiaAvatar.load();
@@ -283,19 +312,18 @@ sala.addEventListener('click',e=>{
   const r=sala.getBoundingClientRect(); vaiPara((e.clientX-r.left)/r.width*100,(e.clientY-r.top)/r.height*100,null,null);
 });
 sala.addEventListener('keydown',e=>{ const d={ArrowLeft:[-4,0],ArrowRight:[4,0],ArrowUp:[0,-5],ArrowDown:[0,5]}[e.key]; if(!d) return; e.preventDefault(); vaiPara(ME.x+d[0],ME.y+d[1],null,null); });
-$('levantar').onclick=levanta;
+$('levantar').onclick=levanta; $('levantar2').onclick=levanta;
 
 /* ---------- mesa: conversa e jogos (sessão em salao/mesas/sala-<id>/s/<sessão>) ---------- */
 const ramo=id=>'salao/mesas/sala-'+id;
-function soltaMesa(){ [sessRef,msgsRef,jogoRef].forEach(r=>{ if(r) try{ off(r); }catch(e){} }); sessRef=msgsRef=jogoRef=null; jogoV=null; jogoAberto=false; falouJ=null; vistos=new Set(); mesaAtual=null; sessAtual=null; }
+function soltaMesa(){ document.body.style.overflow=''; limpaAbas(); [sessRef,msgsRef,jogoRef].forEach(r=>{ if(r) try{ off(r); }catch(e){} }); sessRef=msgsRef=jogoRef=null; jogoV=null; jogoAberto=false; falouJ=null; vistos=new Set(); mesaAtual=null; sessAtual=null; }
 async function mudaMesa(){
-  soltaMesa(); $('chat').innerHTML=''; anterior={};
-  if(!ME.mesa){ $('mesa').hidden=true; $('levantar').hidden=true; $('jogoBox').hidden=true; return; }
+  soltaMesa(); $('chat').innerHTML=''; anterior={}; renderAbas();
+  if(!ME.mesa){ $('mesa').hidden=true; $('secSala').hidden=false; $('levantar').hidden=true; $('jogoBox').hidden=true; return; }
   mesaAtual=ME.mesa; const mz=MESAS.find(m=>m.id===ME.mesa);
-  $('mesa').hidden=false; $('levantar').hidden=false; $('h-mesa').textContent='🪑 '+mz.nome; renderQuebra(); $('quebra').open=true;
-  naMinhaMesa().forEach(([u,p])=>{ anterior[u]=nomeDe(p); });
+  $('mesa').hidden=false; $('levantar').hidden=false; $('h-mesa').textContent='🪑 '+mz.nome; renderPilulas(); $('secSala').hidden=true; window.scrollTo({top:0});
+  naMinhaMesa().forEach(([u,p])=>{ anterior[u]=nomeDe(p); }); atualizaMesaPainel(todos());
   sis('Você sentou. Cumprimente quem estiver na mesa, ou espere alguém chegar.');
-  window.scrollTo({top:$('mesa').offsetTop-10,behavior:'smooth'});
   if(!bancoOk||!db){ sis('Sem conexão com as outras pessoas agora.'); return; }
   try{
     const outros=naMinhaMesa().filter(([u])=>u!==minhaChave()).length;
@@ -311,35 +339,56 @@ function ligaSessao(id,k){
   msgsRef=ref(db,base+'/msgs');
   onValue(query(msgsRef,limitToLast(60)),snap=>{ const v=snap.val()||{}; Object.entries(v).sort((x,y)=>(x[1].t||0)-(y[1].t||0)).forEach(([kk,mm])=>{ if(vistos.has(kk)) return; vistos.add(kk); msg({quem:mm.uid===me.uid?'Você':mm.nome,txt:mm.txt,meu:mm.uid===me.uid}); if(mm.uid!==me.uid) speak(mm.txt); }); });
   jogoRef=ref(db,base+'/jogo'); jogoV=null; onValue(jogoRef,s=>{ jogoV=s.val(); renderJogo(); });
+  naMinhaMesa().forEach(([u])=>{ if(u!==minhaChave()) ligaPrivado(u); });
+}
+
+/* abas: "mesa" (todos) e uma por pessoa (privado, só entre quem está na mesma mesa) */
+let CH={mesa:[]}, aba='mesa', ABAS=[], naoLidas=new Set(), privRefs={}, privVistos={}, NOMES={};
+const parId=u=>sessAtual+'_'+[me.uid,u].sort().join('_');
+function limpaAbas(){ Object.values(privRefs).forEach(r=>{ try{ off(r); }catch(e){} }); privRefs={}; privVistos={}; CH={mesa:[]}; aba='mesa'; ABAS=[]; naoLidas=new Set(); NOMES={}; }
+function renderAbas(){
+  $('abas').hidden=!ABAS.length;
+  $('abas').innerHTML=`<span class="ab${aba==='mesa'?' on':''}"><button type="button" data-t="mesa">Mesa${naoLidas.has('mesa')?'<i class="pt"></i>':''}</button></span>`+ABAS.map(u=>`<span class="ab${aba===u?' on':''}"><button type="button" data-t="${esc(u)}">${esc(NOMES[u]||'Privado')}${naoLidas.has(u)?'<i class="pt"></i>':''}</button><button type="button" class="x" data-x="${esc(u)}" aria-label="Fechar a conversa com ${esc(NOMES[u]||'')}">✕</button></span>`).join('');
+  $('txt').placeholder = aba==='mesa' ? 'Escreva em japonês (kana, kanji ou romaji)…' : 'Mensagem só para '+(NOMES[aba]||'a pessoa')+'…';
+}
+function mudaAba(t){ aba=t; naoLidas.delete(t); $('chat').innerHTML=''; (CH[t]||[]).forEach(pinta); renderAbas(); $('chat').scrollTop=$('chat').scrollHeight; }
+function abreAba(u,foco){ if(!ABAS.includes(u)) ABAS.push(u); CH[u]=CH[u]||[]; ligaPrivado(u); if(foco) mudaAba(u); else renderAbas(); }
+function fechaAba(u){ ABAS=ABAS.filter(x=>x!==u); if(aba===u) mudaAba('mesa'); else renderAbas(); }
+$('abas').onclick=e=>{ const x=e.target.closest('[data-x]'); if(x){ fechaAba(x.dataset.x); return; } const b=e.target.closest('[data-t]'); if(b) mudaAba(b.dataset.t); };
+function ligaPrivado(u){
+  if(privRefs[u]||!sessAtual||!db||u===me.uid) return;
+  const r=ref(db,'salao/privado/'+parId(u)+'/msgs'); privRefs[u]=r; privVistos[u]=new Set();
+  onValue(query(r,limitToLast(60)),snap=>{ const v=snap.val()||{}; Object.entries(v).sort((x,y)=>(x[1].t||0)-(y[1].t||0)).forEach(([kk,mm])=>{ if(privVistos[u].has(kk)) return; privVistos[u].add(kk);
+    const meu=mm.uid===me.uid; if(!ABAS.includes(u)){ ABAS.push(u); CH[u]=CH[u]||[]; }
+    msg({quem:meu?'Você':mm.nome,txt:mm.txt,meu},u); if(!meu&&aba===u) speak(mm.txt); }); });
 }
 function atualizaMesaPainel(T){
   if(!ME.mesa||!mesaAtual) return;
   const lista=naMinhaMesa(T), ids=new Set(lista.map(([u])=>u));
-  lista.forEach(([u,p])=>{ if(!anterior[u]){ anterior[u]=nomeDe(p); if(u!==minhaChave()) sis(nomeDe(p)+' sentou na mesa.'); } });
-  Object.keys(anterior).forEach(u=>{ if(!ids.has(u)){ const n=anterior[u]; delete anterior[u]; if(u!==minhaChave()) sis(n+' saiu da mesa.'); } });
-  if(jogoV||jogoAberto) renderJogo();
+  lista.forEach(([u,p])=>{ NOMES[u]=nomeDe(p); });
+  $('quemMesa').innerHTML='<span class="dica-chip">Na mesa:</span><span>você</span>'+lista.filter(([u])=>u!==minhaChave()).map(([u,p])=>`<button type="button" data-p="${esc(u)}" title="Conversar em particular com ${esc(nomeDe(p))}">💬 ${esc(nomeDe(p))}</button>`).join('');
+  lista.forEach(([u,p])=>{ if(!anterior[u]){ anterior[u]=nomeDe(p); if(u!==minhaChave()){ sis(nomeDe(p)+' sentou na mesa.'); ligaPrivado(u); } } });
+  Object.keys(anterior).forEach(u=>{ if(!ids.has(u)){ const n=anterior[u]; delete anterior[u]; if(u!==minhaChave()){ sis(n+' saiu da mesa.'); if(ABAS.includes(u)) sis(n+' saiu da mesa. Esta conversa fica aqui até você fechar.',u); } } });
+  renderAbas(); renderJogo();
 }
+$('quemMesa').onclick=e=>{ const b=e.target.closest('[data-p]'); if(b) abreAba(b.dataset.p,true); };
 function enviar(){
-  const t=$('txt').value.trim(); if(!t||!msgsRef||!db) return; $('txt').value='';
-  push(msgsRef,{uid:me.uid,nome:me.nome.slice(0,30),txt:t.slice(0,300),t:serverTimestamp()}).catch(()=>sis('Não consegui enviar. Tente de novo.'));
+  const t=$('txt').value.trim(); if(!t||!db) return;
+  const m={uid:me.uid,nome:me.nome.slice(0,30),txt:t.slice(0,300),t:serverTimestamp()};
+  if(aba==='mesa'){ if(!msgsRef) return; $('txt').value=''; push(msgsRef,m).catch(()=>sis('Não consegui enviar. Tente de novo.')); }
+  else { if(!sessAtual) return; $('txt').value=''; push(ref(db,'salao/privado/'+parId(aba)+'/msgs'),m).catch(()=>sis('Não consegui enviar. Tente de novo.',aba)); }
 }
 $('enviar').onclick=enviar;
 $('txt').addEventListener('keydown',e=>{ if(e.key==='Enter'&&!e.shiftKey){ e.preventDefault(); enviar(); } });
-function renderQuebra(){
+function renderPilulas(){
   const nome=(me&&me.nome?me.nome:'').slice(0,30)||'___';
-  const B=[
-    {l:'a',quem:'Pessoa A',fr:[{t:'こんにちは！',ro:'konnichiwa',pt:'Olá!'}]},
-    {l:'b',quem:'Pessoa B',fr:[{t:'こんにちは！',ro:'konnichiwa',pt:'Olá!'},{t:'おなまえは？',ro:'onamae wa?',pt:'Qual é o seu nome?'}]},
-    {l:'a',quem:'Pessoa A',fr:[{t:'はじめまして。',ro:'hajimemashite',pt:'Muito prazer (primeiro encontro).'},{t:'わたしは '+nome+' です。',ro:'watashi wa '+nome+' desu',pt:'Eu sou '+nome+'.'}]},
-    {l:'b',quem:'Pessoa B',fr:[{t:'こちらこそ よろしく おねがいします。',ro:'kochira koso yoroshiku onegaishimasu',pt:'O prazer é meu. Conto com você.'}]}
-  ];
-  $('quebraL').innerHTML=B.map(b=>`<div class="q-b ${b.l}"><span class="q-quem">${b.quem}</span>${b.fr.map(f=>`<div><div class="q-f"><button type="button" lang="ja" data-u="${esc(f.t)}">${esc(f.t)}</button><button type="button" class="ou" data-o="${esc(f.t)}" aria-label="Ouvir">🔊</button></div><span class="q-pt">${esc(f.pt)}</span> <span class="wro"${ROM?'':' hidden'}>· ${esc(f.ro)}</span></div>`).join('')}</div>`).join('');
+  const P=[['こんにちは！','konnichiwa','Olá!'],['おなまえは？','onamae wa?','Qual é o seu nome?'],['はじめまして。','hajimemashite','Muito prazer (primeiro encontro).'],['わたしは '+nome+' です。','watashi wa '+nome+' desu','Eu sou '+nome+'.'],['よろしく おねがいします。','yoroshiku onegaishimasu','Conto com você.'],['こちらこそ。','kochira koso','O prazer é meu.'],['ゲームを しませんか？','geemu o shimasen ka?','Vamos jogar?'],['ありがとう！','arigatou','Obrigada!'],['もういちど おねがいします。','mou ichido onegaishimasu','Pode repetir, por favor?']];
+  $('pilulas').innerHTML=P.map((x,i)=>`<button type="button" lang="ja" data-i="${i}">${esc(x[0])}</button>`).join('');
+  $('pilulas')._P=P; $('pilPt').hidden=true;
 }
-
-
-$('quebraL').onclick=e=>{ const o=e.target.closest('[data-o]'), u=e.target.closest('[data-u]');
-  if(o){ speak(o.dataset.o); return; }
-  if(u){ const t=$('txt'); t.value=(t.value&&!/\s$/.test(t.value)?t.value+' ':t.value)+u.dataset.u; speak(u.dataset.u); t.focus(); } };
+$('pilulas').onclick=e=>{ const b=e.target.closest('button'); if(!b) return; const x=$('pilulas')._P[+b.dataset.i]; if(!x) return;
+  const t=$('txt'); t.value=(t.value&&!/\s$/.test(t.value)?t.value+' ':t.value)+x[0]; speak(x[0]); t.focus();
+  $('pilPt').hidden=false; $('pilPt').innerHTML=esc(x[2])+(ROM?' · <span class="wro">'+esc(x[1])+'</span>':''); };
 
 /* ---------- jogos (2 ou mais pessoas na mesa; turnos em rodízio) ---------- */
 const DIAS=['にちようび','げつようび','かようび','すいようび','もくようび','きんようび','どようび'];
@@ -366,47 +415,79 @@ const JOGOS={
   wa:{"ic": "🚫", "nome": "Proibição 〜てはいけません", "qs": [{"jp": "ここで タバコを ＿はいけません。", "dica": "Não pode fumar aqui / É proibido fumar aqui.", "ops": ["すりて", "すいて", "すって", "すんで"], "ok": ["すって"], "expl": "ここでタバコをすってはいけません。 No Japão é proibido fumar na rua enquanto caminha. Use as cabines de fumo (きつえんじょ).", "fala": "ここでタバコをすってはいけません"}, {"jp": "しゃしんを ＿はいけません。", "dica": "Não pode tirar fotos / Proibido fotografar.", "ops": ["とりて", "といて", "とんで", "とって"], "ok": ["とって"], "expl": "しゃしんをとってはいけません。 Comum em galerias de arte, altares sagrados e apresentações culturais em Quioto.", "fala": "しゃしんをとってはいけません"}, {"jp": "ここに ＿はいけません。", "dica": "Não pode entrar aqui / Acesso proibido.", "ops": ["はいって", "はいりて", "はいいて", "はいんで"], "ok": ["はいって"], "expl": "ここにはいってはいけません。 Placas com \"たちいりきんし\" indicam que o acesso é restrito.", "fala": "ここにはいってはいけません"}, {"jp": "ここに ごみを ＿はいけません。", "dica": "Não pode jogar lixo aqui.", "ops": ["すてって", "すてて", "すていで", "すてして"], "ok": ["すてて"], "expl": "ここにごみをすててはいけません。 No Japão não há muitas lixeiras públicas. O costume é levar seu lixo para o hotel.", "fala": "ここにごみをすててはいけません"}, {"jp": "でんしゃで おおごえで ＿はいけません。", "dica": "Não pode falar alto no trem.", "ops": ["はなって", "はないて", "はなして", "はなんで"], "ok": ["はなして"], "expl": "でんしゃでおおごえではなしてはいけません。 Os trens no Japão são espaços silenciosos. Evite ligações e fale bem baixinho.", "fala": "でんしゃでおおごえではなしてはいけません"}, {"jp": "ここで くつを ＿はいけません。", "dica": "Não pode usar sapatos aqui / Tire os calçados.", "ops": ["はって", "はいで", "はして", "はいて"], "ok": ["はいて"], "expl": "ここでくつをはいてはいけません。 Ao pisar em tatami ou entrar em templos e lares, retire os sapatos no genkan.", "fala": "ここでくつをはいてはいけません"}, {"jp": "ホームで ＿はいけません。", "dica": "Não pode correr na plataforma do trem.", "ops": ["はしって", "はしりて", "はしいて", "はしんで"], "ok": ["はしって"], "expl": "ホームではしってはいけません。 Aviso de segurança constante nas plataformas movimentadas do Shinkansen e metrô.", "fala": "ホームではしってはいけません"}, {"jp": "あるきながら ＿はいけません。", "dica": "Não pode comer enquanto caminha pela rua.", "ops": ["たべって", "たべて", "たべいで", "たべして"], "ok": ["たべて"], "expl": "あるきながらたべてはいけません。 A etiqueta japonesa pede para saborear o alimento parado perto de onde comprou.", "fala": "あるきながらたべてはいけません"}]}
 };
 
-const jogadores=()=>naMinhaMesa().map(([u,p])=>({uid:u,nome:nomeDe(p)}));
+let jParaVal='todos'; const dispensados=new Set();
+const aceitou=(j,u)=>!!(j&&j.aceitaram&&j.aceitaram[u]);
+const jogadores=()=>naMinhaMesa().filter(([u])=>!jogoV||aceitou(jogoV,u)).map(([u,p])=>({uid:u,nome:nomeDe(p)}));
 const vezEf=j=>{ const L=jogadores().map(x=>x.uid); return L.includes(j.vez)?j.vez:(L[0]||j.vez); };
-const nomeUid=u=>{ const x=jogadores().find(y=>y.uid===u); return x?x.nome:'alguém'; };
+const nomeUid=u=>NOMES[u]||(u===me.uid?'você':'alguém');
+const ativo=j=>!!(j&&JOGOS[j.id]&&j.i<JOGOS[j.id].qs.length);
+function renderConvite(){
+  const j=jogoV, bar=$('convBar');
+  const conv = ativo(j) && j.por!==me.uid && !aceitou(j,me.uid) && !(j.recusou&&j.recusou[me.uid]) && (j.conv==='todos'||j.conv===me.uid) && !dispensados.has(j.k);
+  bar.hidden=!conv; if(!conv) return;
+  bar.innerHTML=`<span>🎲 <b>${esc(nomeUid(j.por))}</b> convidou ${j.conv==='todos'?'a mesa':'você'} para <b>${esc(JOGOS[j.id].nome)}</b></span><div class="row"><button class="btn pri" type="button" data-c="sim">Aceitar</button><button class="btn" type="button" data-c="nao">Agora não</button></div>`;
+}
+$('convBar').onclick=e=>{ const b=e.target.closest('[data-c]'); if(!b||!jogoRef||!jogoV) return; const j=jogoV;
+  if(b.dataset.c==='sim'){ update(jogoRef,{['aceitaram/'+me.uid]:true,estado:'jogando'}).catch(()=>{}); jogoAberto=true; renderJogo(); }
+  else{ dispensados.add(j.k); update(jogoRef,{['recusou/'+me.uid]:true}).catch(()=>{}); renderConvite(); } };
 function renderJogo(){
-  const box=$('jogoBox'), j=jogoV, L=jogadores();
-  if(!j){ box.hidden=!jogoAberto; if(!jogoAberto) return;
-    if(L.length<2){ box.innerHTML='<div class="j-top"><b>🎲 Jogos</b><button class="lk" type="button" data-j="fecha">fechar</button></div><p class="sub">Os jogos abrem quando houver pelo menos 2 pessoas na mesa. Convide alguém para sentar!</p>'; return; }
-    box.innerHTML=`<div class="j-top"><b>Escolham um jogo para a mesa</b><button class="lk" type="button" data-j="fecha">fechar</button></div><div class="j-ops">${Object.entries(JOGOS).map(([k,g])=>`<button type="button" data-j="ini" data-k="${k}">${g.ic} ${g.nome}</button>`).join('')}</div>`; return; }
-  box.hidden=false; const g=JOGOS[j.id]; if(!g){ box.hidden=true; return; }
-  const N=g.qs.length;
+  const box=$('jogoBox'), j=jogoV, L=jogadores(), eu=aceitou(j,me.uid);
+  renderConvite();
+  $('btnJogar').textContent = ativo(j)&&eu ? (j.estado==='convite'?'🎲 Convite enviado':'🎲 Jogo em andamento') : '🎲 Jogos';
+  document.body.style.overflow = jogoAberto ? 'hidden' : '';
+  if(!jogoAberto){ box.hidden=true; return; }
+  box.hidden=false; const topo=t=>`<div class="j-top"><b>${t}</b><button class="btn" type="button" data-j="fecha">✕ Fechar</button></div>`;
+  if(!ativo(j)&&j&&JOGOS[j.id]&&eu){ /* jogo terminado: tela de resultado, abaixo */ }
+  else if(!ativo(j)||(!eu&&false)){
+    const outros=naMinhaMesa().filter(([u])=>u!==minhaChave());
+    if(!outros.length){ box.innerHTML=topo('🎲 Jogos')+'<p class="sub">Os jogos abrem quando houver pelo menos 2 pessoas na mesa. Convide alguém para sentar!</p>'; return; }
+    if(jParaVal!=='todos'&&!outros.some(([u])=>u===jParaVal)) jParaVal='todos';
+    box.innerHTML=topo('Escolham um jogo')+`<label class="j-para">Convidar: <select id="jPara"><option value="todos">Toda a mesa</option>${outros.map(([u,p])=>`<option value="${esc(u)}"${jParaVal===u?' selected':''}>${esc(nomeDe(p))}</option>`).join('')}</select></label><div class="j-grade">${Object.entries(JOGOS).map(([k,g])=>`<button type="button" data-j="ini" data-k="${k}"><span>${g.ic}</span>${g.nome}</button>`).join('')}</div>`; return; }
+  if(!eu){ box.innerHTML=topo('🎲 Jogo na mesa')+`<p class="sub">Já tem um jogo rodando na mesa (${esc(L.map(x=>x.nome).join(', '))}). Quando terminar, vocês podem abrir outro.</p>`+(j.conv==='todos'?'<div class="row"><button class="btn pri" type="button" data-j="entra">Entrar no jogo</button></div>':''); return; }
+  const g=JOGOS[j.id]; const N=g.qs.length;
+  if(j.estado==='convite'){
+    const rec=Object.keys(j.recusou||{}).map(nomeUid);
+    box.innerHTML=topo(g.ic+' '+g.nome)+`<p class="sub">Convite enviado${j.conv==='todos'?' para a mesa':' para '+esc(nomeUid(j.conv))}. Esperando alguém aceitar…${rec.length?' ('+esc(rec.join(', '))+' não pode agora.)':''}</p><div class="row"><button class="lk" type="button" data-j="sai">cancelar convite</button></div>`; return; }
   if(j.i>=N){
-    box.innerHTML=`<div class="j-top"><b>${g.ic} ${g.nome}</b></div><p class="j-q">${j.ok||0} de ${N}</p><p class="sub j-dica">A mesa acertou junta. おつかれさま！</p><div class="row" style="justify-content:center"><button class="btn pri" type="button" data-j="sai">Outro jogo</button><button class="lk" type="button" data-j="fecha2">voltar à conversa</button></div>`; return; }
+    box.innerHTML=topo(g.ic+' '+g.nome)+`<p class="j-q">${j.ok||0} de ${N}</p><p class="sub j-dica">Vocês acertaram juntos. おつかれさま！</p><div class="row" style="justify-content:center"><button class="btn pri" type="button" data-j="fim">Outro jogo</button><button class="btn" type="button" data-j="fecha">Voltar à conversa</button></div>`; return; }
   const q=g.qs[j.i], v=vezEf(j), minha=v===me.uid, fb=j.fb;
   const jp=esc(q.jp).replace('＿','<span class="vz">&nbsp;</span>');
   const ops=q.ops.map((o,x)=>{ let c=''; if(fb){ if(q.ok.includes(o)) c='ok'; else if(x===fb.esc) c='no'; } return `<button type="button" lang="ja" data-j="resp" data-x="${x}" class="${c}"${(fb||!minha)?' disabled':''}>${esc(o)}</button>`; }).join('');
   let rodape;
   if(fb){ rodape=`<div class="j-fb ${fb.certo?'':'no'}"><b>${fb.certo?'Acertou!':'Quase!'}</b> ${esc(q.expl)}</div><div class="row"><button class="btn pri" type="button" data-j="prox">${j.i+1>=N?'Ver resultado':'Próxima →'}</button></div>`; }
   else rodape=`<p class="sub" style="text-align:center">${minha?'Sua vez':'Vez de '+esc(nomeUid(v))}</p>`;
-  box.innerHTML=`<div class="j-top"><span>${g.ic} ${g.nome} · ${j.i+1} de ${N}</span><button class="lk" type="button" data-j="sai">sair do jogo</button></div><p class="j-q" lang="ja">${jp}</p><p class="sub j-dica">${esc(q.dica)}</p><div class="j-ops">${ops}</div>${rodape}`;
+  box.innerHTML=topo(g.ic+' '+g.nome+' · '+(j.i+1)+' de '+N)+`<p class="j-q" lang="ja">${jp}</p><p class="sub j-dica">${esc(q.dica)}</p><div class="j-ops">${ops}</div>${rodape}<div class="row" style="justify-content:center"><button class="lk" type="button" data-j="sai">sair do jogo</button></div>`;
   const kf=j.id+j.i; if(falouJ!==kf){ falouJ=kf; speak(q.fala); }
 }
-$('btnJogar').onclick=()=>{ jogoAberto=true; renderJogo(); $('jogoBox').scrollIntoView({behavior:'smooth',block:'nearest'}); };
+$('btnJogar').onclick=()=>{ jogoAberto=true; if(aba!=='mesa') jParaVal=aba; renderJogo(); $('jogoBox').scrollIntoView({behavior:'smooth',block:'nearest'}); };
+$('jogoBox').addEventListener('change',e=>{ if(e.target.id==='jPara') jParaVal=e.target.value; });
 $('jogoBox').onclick=e=>{ const b=e.target.closest('[data-j]'); if(!b) return; const a=b.dataset.j, j=jogoV;
-  if(a==='fecha'||a==='fecha2'){ jogoAberto=false; if(a==='fecha2') $('jogoBox').hidden=true; else renderJogo(); return; }
+  if(a==='fecha'){ jogoAberto=false; renderJogo(); return; }
   if(!jogoRef) return;
-  if(a==='ini'){ set(jogoRef,{id:b.dataset.k,por:me.uid,i:0,ok:0,vez:me.uid,fb:null}).catch(()=>sis('Não consegui abrir o jogo. Tente de novo.')); return; }
-  if(a==='sai'){ jogoAberto=false; set(jogoRef,null).catch(()=>{}); return; }
-  if(!j) return; const g=JOGOS[j.id]; if(!g) return;
+  if(a==='ini'){ const sel=$('jPara'); const conv=sel?sel.value:'todos'; jParaVal=conv; const g=JOGOS[b.dataset.k];
+    set(jogoRef,{id:b.dataset.k,por:me.uid,conv,estado:'convite',aceitaram:{[me.uid]:true},i:0,ok:0,vez:me.uid,fb:null,k:Date.now()}).catch(()=>sis('Não consegui abrir o jogo. Tente de novo.'));
+    sis('Você convidou '+(conv==='todos'?'a mesa':nomeUid(conv))+' para '+g.nome+'.',conv==='todos'?'mesa':conv); return; }
+  if(a==='fim'){ set(jogoRef,null).catch(()=>{}); return; }
+  if(!j) return;
+  if(a==='entra'){ update(jogoRef,{['aceitaram/'+me.uid]:true}).catch(()=>{}); return; }
+  if(a==='sai'){ if(jogadores().length<=1||j.estado==='convite') set(jogoRef,null).catch(()=>{}); else update(jogoRef,{['aceitaram/'+me.uid]:null}).catch(()=>{}); jogoAberto=false; renderJogo(); return; }
+  const g=JOGOS[j.id]; if(!g) return;
   if(a==='resp' && !j.fb && vezEf(j)===me.uid){ const q=g.qs[j.i], x=+b.dataset.x, certo=q.ok.includes(q.ops[x]); update(jogoRef,{fb:{por:me.uid,esc:x,certo},ok:(j.ok||0)+(certo?1:0)}).catch(()=>{}); return; }
   if(a==='prox' && j.fb){ const L=jogadores().map(x=>x.uid); const i=L.indexOf(j.fb.por); const prox=L.length?L[(i+1)%L.length]:me.uid; update(jogoRef,{i:j.i+1,fb:null,vez:prox}).catch(()=>{}); }
 };
 
 /* ---------- mensagens com 🔍 palavra por palavra ---------- */
 function clicavel(txt){ if(!window.UniGloss) return esc(txt); return UniGloss.quebra(txt).map(t=>t.sep!=null?esc(t.sep):(t.pt?`<button type="button" class="wd" data-w="${encodeURIComponent(JSON.stringify(t))}">${esc(t.k)}</button>`:esc(t.k))).join(''); }
-function msg({quem,txt,meu}){
-  const d=document.createElement('div'); d.className='msg '+(meu?'meu':'dele');
-  d.innerHTML=`<span class="quem">${esc(quem)}</span><span lang="ja">${clicavel(txt)}</span><div class="acoes"><button type="button" data-ouvir>🔊</button></div>`;
-  d.querySelector('[data-ouvir]').onclick=()=>speak(txt);
-  $('chat').appendChild(d); $('chat').scrollTop=$('chat').scrollHeight;
+function msg(o,tab){ tab=tab||'mesa'; (CH[tab]=CH[tab]||[]).push(o); if(tab===aba) pinta(o); else{ naoLidas.add(tab); renderAbas(); } }
+function pinta(o){
+  const c=$('chat');
+  if(o.sis){ const d=document.createElement('div'); d.className='msg sis'; d.textContent=o.txt; c.appendChild(d); }
+  else{ const d=document.createElement('div'); d.className='msg '+(o.meu?'meu':'dele');
+    d.innerHTML=`<span class="quem">${esc(o.quem)}</span><span lang="ja">${clicavel(o.txt)}</span><div class="acoes"><button type="button" data-ouvir>🔊</button></div>`;
+    d.querySelector('[data-ouvir]').onclick=()=>speak(o.txt); c.appendChild(d); }
+  c.scrollTop=c.scrollHeight;
 }
-function sis(t){ const d=document.createElement('div'); d.className='msg sis'; d.textContent=t; $('chat').appendChild(d); $('chat').scrollTop=$('chat').scrollHeight; }
+function sis(t,tab){ msg({sis:true,txt:t},tab); }
 $('chat').addEventListener('click',e=>{ const b=e.target.closest('.wd'); if(!b) return; const t=JSON.parse(decodeURIComponent(b.dataset.w)), m=b.closest('.msg');
   let box=m.querySelector('.wdinfo'); if(!box){ box=document.createElement('div'); box.className='wdinfo'; m.appendChild(box); }
   box.innerHTML=`<b lang="ja">${esc(t.k)}</b> <span class="wro"${ROM?'':' hidden'}>${esc(t.ro)} · </span>${esc(t.pt)}${t.nota?`<small>${esc(t.nota)}</small>`:''}`; speak(t.k); });
@@ -414,7 +495,7 @@ $('chat').addEventListener('click',e=>{ const b=e.target.closest('.wd'); if(!b) 
 /* ---------- denúncia ---------- */
 $('denunciar').onclick=()=>{ $('denTxt').value=''; $('dlgDen').showModal(); };
 $('dlgDen').addEventListener('close',()=>{ if($('dlgDen').returnValue!=='ok') return; const txt=$('denTxt').value.trim().slice(0,500);
-  if(db&&bancoOk){ push(ref(db,'salao/denuncias'),{de:me.uid,mesa:ME.mesa?('sala-'+ME.mesa+'/'+(sessAtual||'')):null,txt,t:serverTimestamp()}).then(()=>sis('Denúncia enviada. Obrigada por avisar.')).catch(()=>sis('Não consegui enviar a denúncia agora.')); }
+  if(db&&bancoOk){ push(ref(db,'salao/denuncias'),{de:me.uid,mesa:ME.mesa?(aba==='mesa'?('sala-'+ME.mesa+'/'+(sessAtual||'')):('privado/'+parId(aba))):null,txt,t:serverTimestamp()}).then(()=>sis('Denúncia enviada. Obrigada por avisar.')).catch(()=>sis('Não consegui enviar a denúncia agora.')); }
   else sis('Denúncia anotada. Se for urgente, levante da mesa.'); });
 
 /* ---------- começo ---------- */
