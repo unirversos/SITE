@@ -16,6 +16,9 @@
      exemplo: true só nos cards de exemplo. Apague os exemplos quando colocar os seus.
    ========================================================= */
 window.ACHADOS = [
+  { id:'game-watch-zelda', cat:'consoles', nome:'Game & Watch · The Legend of Zelda', novo:true,
+    desc:'Console portátil Game & Watch da Nintendo, edição The Legend of Zelda, novo e lacrado (indicado no título do anúncio, “新品未開封”). Na foto aparece na embalagem, com a tela mostrando a abertura do jogo original. Só há uma foto no anúncio, então o conteúdo da caixa e o estado da embalagem devem ser confirmados com o vendedor.',
+    de:0, ate:0, total:648, imposto:192, chegada:'dezembro', foto:'', fotos:['/loja/fotos/game-watch-zelda-1.jpg'], contem:true, link:'' },
   { id:'3ds-vermelho-metalico', cat:'consoles', nome:'Nintendo 3DS · vermelho metálico',
     desc:'Console portátil da Nintendo em estado de como novo, segundo o vendedor. Acompanha carregador, base de carregamento, caneta e cartão SD de 4 GB, como mostram as fotos.',
     de:0, ate:0, total:1500, imposto:445, chegada:'dezembro', foto:'', fotos:['/loja/fotos/3ds-vermelho-1.jpg','/loja/fotos/3ds-vermelho-2.jpg','/loja/fotos/3ds-vermelho-3.jpg','/loja/fotos/3ds-vermelho-4.jpg','/loja/fotos/3ds-vermelho-5.jpg','/loja/fotos/3ds-vermelho-6.jpg'], link:'' },
