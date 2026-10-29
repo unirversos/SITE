@@ -29,6 +29,26 @@
 @keyframes conf{to{transform:translateY(110vh) rotate(540deg);opacity:.9}}
 .stamp-pop.show .stamp-circle{animation:stampin .6s cubic-bezier(.2,1.8,.4,1) both}
 @keyframes stampin{0%{transform:scale(2.6) rotate(-25deg);opacity:0}100%{transform:scale(1) rotate(-6deg);opacity:1}}
+
+.stamp-card{max-height:92vh;overflow:auto}
+#stamp-pass{margin:2px 0 16px;text-align:left}
+#stamp-pass .pp-t{font-family:'Baloo 2',cursive;font-size:14px;font-weight:600;margin:0 0 8px;text-align:center;color:var(--ink)}
+#stamp-pass .pp-g{display:grid;grid-template-columns:repeat(4,1fr);gap:7px}
+#stamp-pass .pp-s{aspect-ratio:1;border:2px dashed var(--line-2,#dccfd3);border-radius:50%;display:flex;flex-direction:column;align-items:center;justify-content:center;font-size:9.5px;line-height:1.15;color:#b6a9ae;text-align:center;overflow:hidden}
+#stamp-pass .pp-s .e{font-size:17px;filter:grayscale(1);opacity:.45}
+#stamp-pass .pp-s.got{border-style:solid;border-color:var(--sage);background:var(--sage-soft);color:var(--sage)}
+#stamp-pass .pp-s.got .e{filter:none;opacity:1}
+#stamp-pass .pp-s.novo{border-color:#c94a4a;color:#c94a4a;background:#fff3f1;animation:ppnovo .7s cubic-bezier(.2,1.8,.4,1) .5s both;box-shadow:0 0 0 4px rgba(201,74,74,.15)}
+@keyframes ppnovo{0%{transform:scale(2.4) rotate(-25deg);opacity:0}100%{transform:scale(1) rotate(-8deg);opacity:1}}
+.stamp-pop.show .stamp-circle{animation:none}
+
+#stamp-auto{margin:0 0 16px}
+#stamp-auto .pp-t{font-family:'Baloo 2',cursive;font-size:14px;font-weight:600;margin:0 0 8px;text-align:center}
+#stamp-auto .au-row{display:grid;grid-template-columns:repeat(3,1fr);gap:7px}
+#stamp-auto .au-row button{font:inherit;font-size:13.5px;font-weight:700;min-height:44px;border-radius:14px;border:1.5px solid var(--line);background:#fff;color:var(--ink);cursor:pointer}
+#stamp-auto .au-row button[aria-pressed="true"]{background:var(--sage-soft);border-color:var(--sage);color:var(--sage)}
+#stamp-auto .au-msg{font-size:13px;color:var(--ink-soft);margin:8px 0 0;text-align:center;min-height:1.2em}
+#stamp-auto .au-msg a{color:var(--rose-deep)}
 </style>
 <script type="module" src="/idiomas/dados/conta.js?v=4"></script>
 <script>setTimeout(function(){var h=document.documentElement;if(!h.classList.contains('uni-ok')&&!document.getElementById('uni-gate'))h.classList.add('uni-ok')},10000)</script>
@@ -290,6 +310,8 @@ body.ro-on .ro{display:block}
     <div class="stamp-circle"><span class="big">🏅</span><span class="small" id="stamp-label"></span></div>
     <h3 id="stamp-title"></h3>
     <p id="stamp-sub"></p>
+    <div id="stamp-pass" hidden></div>
+    <div id="stamp-auto" hidden><p class="pp-t">Como foi para você?</p><div class="au-row"><button type="button" data-n="facil">😌 Fácil</button><button type="button" data-n="medio">🙂 Médio</button><button type="button" data-n="dificil">😅 Difícil</button></div><p class="au-msg" id="au-msg" aria-live="polite"></p></div>
     <button class="btn" id="stamp-cont" onclick="closeStamp()">continuar a jornada →</button>
     <div id="stamp-hall" hidden style="display:grid;gap:10px;margin-top:4px">
       <a class="btn" href="/idiomas/japones/" style="text-decoration:none">← Voltar à trilha</a>
@@ -671,6 +693,16 @@ function grantStamp(){
     document.getElementById('stamp-title').textContent='Mapa concluído! · +'+gained+' XP';
     hall.hidden=false; hall.style.display='grid'; cont.style.display='none';
     document.getElementById('stamp-backmap').style.display='none'; slot.innerHTML='';
+    try{ const E=UniTrilha.MAPAS, n=E.filter(m=>G.done['ja:'+m[4]]).length, box=document.getElementById('stamp-pass');
+      box.innerHTML='<p class="pp-t">🛂 Seu passaporte · '+n+' de '+E.length+' carimbos</p><div class="pp-g">'+E.map(m=>'<div class="pp-s'+(G.done['ja:'+m[4]]?' got':'')+(m[4]===curTerr?' novo':'')+'"><span class="e">'+m[1]+'</span>'+m[2]+'</div>').join('')+'</div>';
+      box.hidden=false; document.querySelector('.stamp-circle').style.display='none';
+      const au=document.getElementById('stamp-auto'), msg=document.getElementById('au-msg'), slugM=(E.find(m=>m[4]===curTerr)||[])[0];
+      let AU={}; try{ AU=JSON.parse(localStorage.getItem('utopiaAuto1')||'{}')||{}; }catch(_){}
+      const TXT={facil:'Ótimo! Pode seguir para o próximo mapa com confiança.',medio:'Bom caminho. Se quiser fixar, refaça o <a href="/idiomas/mapas/'+slugM+'/aula/">Ouvir da aula</a> antes de seguir.',dificil:'Tudo bem, isso é normal. Vale <a href="/idiomas/mapas/'+slugM+'/aula/">rever a aula</a> e tentar a prova de novo depois.'};
+      const mostra=n=>{ au.querySelectorAll('button').forEach(b=>b.setAttribute('aria-pressed',String(b.dataset.n===n))); msg.innerHTML=n?TXT[n]:''; };
+      au.onclick=e=>{ const b=e.target.closest('button'); if(!b) return; AU[curTerr]=b.dataset.n; try{ localStorage.setItem('utopiaAuto1',JSON.stringify(AU)); }catch(_){} mostra(b.dataset.n); };
+      mostra(null); au.hidden=false;
+    }catch(e){}
   } else if(false){
     const E=UniTrilha.estado(), k=E.findIndex(m=>m.terr===curTerr);
     let nx=null; for(let j=1;j<=E.length;j++){ const m=E[(k+j)%E.length]; if(!(m.aula&&m.prova)){ nx=m; break; } }
