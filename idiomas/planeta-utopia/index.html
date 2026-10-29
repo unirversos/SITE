@@ -29,6 +29,32 @@
 @keyframes conf{to{transform:translateY(110vh) rotate(540deg);opacity:.9}}
 .stamp-pop.show .stamp-circle{animation:stampin .6s cubic-bezier(.2,1.8,.4,1) both}
 @keyframes stampin{0%{transform:scale(2.6) rotate(-25deg);opacity:0}100%{transform:scale(1) rotate(-6deg);opacity:1}}
+
+.stamp-card{max-height:92vh;overflow:auto}
+#stamp-pass{margin:2px 0 16px;text-align:left}
+#stamp-pass .pp-t{font-family:'Baloo 2',cursive;font-size:14px;font-weight:600;margin:0 0 8px;text-align:center;color:var(--ink)}
+#stamp-pass .pp-g{display:grid;grid-template-columns:repeat(4,1fr);gap:7px}
+#stamp-pass .pp-s{aspect-ratio:1;border:2px dashed var(--line-2,#dccfd3);border-radius:50%;display:flex;flex-direction:column;align-items:center;justify-content:center;font-size:9.5px;line-height:1.15;color:#b6a9ae;text-align:center;overflow:hidden}
+#stamp-pass .pp-s .e{font-size:17px;filter:grayscale(1);opacity:.45}
+#stamp-pass .pp-s.got{border-style:solid;border-color:var(--sage);background:var(--sage-soft);color:var(--sage)}
+#stamp-pass .pp-s.got .e{filter:none;opacity:1}
+#stamp-pass .pp-s.novo{border-color:#c94a4a;color:#c94a4a;background:#fff3f1;animation:ppnovo .7s cubic-bezier(.2,1.8,.4,1) .5s both;box-shadow:0 0 0 4px rgba(201,74,74,.15)}
+@keyframes ppnovo{0%{transform:scale(2.4) rotate(-25deg);opacity:0}100%{transform:scale(1) rotate(-8deg);opacity:1}}
+.stamp-pop.show .stamp-circle{animation:none}
+
+#stamp-auto{margin:0 0 16px}
+#stamp-auto .pp-t{font-family:'Baloo 2',cursive;font-size:14px;font-weight:600;margin:0 0 8px;text-align:center}
+#stamp-auto .au-row{display:grid;grid-template-columns:repeat(3,1fr);gap:7px}
+#stamp-auto .au-row button{font:inherit;font-size:13.5px;font-weight:700;min-height:44px;border-radius:14px;border:1.5px solid var(--line);background:#fff;color:var(--ink);cursor:pointer}
+#stamp-auto .au-row button[aria-pressed="true"]{background:var(--sage-soft);border-color:var(--sage);color:var(--sage)}
+#stamp-auto .au-msg{font-size:13px;color:var(--ink-soft);margin:8px 0 0;text-align:center;min-height:1.2em}
+#stamp-auto .au-msg a{color:var(--rose-deep)}
+
+.corrige{font-size:13px;line-height:1.5;border-radius:14px;padding:0}
+.corrige.warn{margin:10px 0 0;padding:11px 13px;background:#fff6e6;border:1.5px solid #f0d49a;color:#6b4e12}
+.corrige.ok{margin:10px 0 0;padding:9px 13px;background:var(--sage-soft);border:1.5px solid var(--sage);color:var(--sage)}
+.corrige .cfix{margin:8px 0;font-size:15px;color:var(--ink)}
+.corrige .cfix span{font-size:12px;color:var(--ink-soft);margin-right:4px}
 </style>
 <script type="module" src="/idiomas/dados/conta.js?v=4"></script>
 <script>setTimeout(function(){var h=document.documentElement;if(!h.classList.contains('uni-ok')&&!document.getElementById('uni-gate'))h.classList.add('uni-ok')},10000)</script>
@@ -149,6 +175,8 @@ body::before{content:'';position:fixed;inset:0;pointer-events:none;z-index:0;
 .boss-zone .ctx{font-size:14px;color:var(--ink-soft);margin-bottom:12px;}
 .kwrow{display:flex;gap:8px;flex-wrap:wrap;margin:8px 0 12px;}
 .kw{font-family:'JetBrains Mono',monospace;font-size:12px;border:1.5px solid var(--line);border-radius:14px;padding:4px 11px;color:var(--ink-soft);transition:all .2s ease;}
+#kwrow[data-ins] .kw{cursor:pointer;user-select:none;font-size:13px;padding:7px 13px}
+#kwrow[data-ins] .kw:hover{border-color:var(--rose);color:var(--ink)}
 .kw.hit{border-color:var(--sage);background:var(--sage-soft);color:var(--sage);}
 .boss-zone textarea{width:100%;min-height:96px;border:1.5px solid var(--line);border-radius:16px;padding:13px;font-family:'Zen Maru Gothic',sans-serif;font-size:15px;color:var(--ink);background:var(--paper);outline:none;resize:vertical;}
 .boss-zone textarea:focus{border-color:var(--rose);}
@@ -290,6 +318,8 @@ body.ro-on .ro{display:block}
     <div class="stamp-circle"><span class="big">🏅</span><span class="small" id="stamp-label"></span></div>
     <h3 id="stamp-title"></h3>
     <p id="stamp-sub"></p>
+    <div id="stamp-pass" hidden></div>
+    <div id="stamp-auto" hidden><p class="pp-t">Como foi para você?</p><div class="au-row"><button type="button" data-n="facil">😌 Fácil</button><button type="button" data-n="medio">🙂 Médio</button><button type="button" data-n="dificil">😅 Difícil</button></div><p class="au-msg" id="au-msg" aria-live="polite"></p></div>
     <button class="btn" id="stamp-cont" onclick="closeStamp()">continuar a jornada →</button>
     <div id="stamp-hall" hidden style="display:grid;gap:10px;margin-top:4px">
       <a class="btn" href="/idiomas/japones/" style="text-decoration:none">← Voltar à trilha</a>
@@ -473,6 +503,14 @@ function kanaClicavel(txt){
   if(!window.UniGloss) return txt;
   return UniGloss.quebra(txt).map(t=>t.sep!=null?t.sep:(t.pt?`<button type="button" class="wd" data-w="${encodeURIComponent(JSON.stringify(t))}">${t.k}</button>`:t.k)).join('');
 }
+/* peças da resposta escrita: tocar na peça coloca no quadro de resposta */
+document.addEventListener('click',e=>{
+  const k=e.target.closest('#kwrow[data-ins] .kw'); if(!k) return;
+  const ta=document.getElementById('boss-text'); if(!ta) return;
+  const w=(k.textContent||'').trim(); ta.value=(ta.value&&!/\s$/.test(ta.value)?ta.value+' ':ta.value)+w+' ';
+  ta.focus(); try{ ta.setSelectionRange(ta.value.length,ta.value.length); }catch(_){}
+  checkBoss();
+});
 document.addEventListener('click',e=>{
   const b=e.target.closest('.wd'); if(!b) return;
   const t=JSON.parse(decodeURIComponent(b.dataset.w)), bub=b.closest('.bubble'); if(!bub) return;
@@ -539,8 +577,9 @@ function showBoss(){
      <p class="ctx">🔒 <strong>${U.bossTitle}:</strong> ${b.context}</p>
      <div class="hintbox"><strong>${U.hintLbl}:</strong> ${b.hintK?b.hintK+roSpan(b.hint):b.hint}</div>
      <p style="font-size:12.5px;color:var(--ink-soft);">${U.bossKwNote}</p>
-     <div class="kwrow" id="kwrow">${b.kws.map(kwChip).join('')}</div>
+     <div class="kwrow" id="kwrow" data-ins="1">${b.kws.map(kwChip).join('')}</div>
      <textarea id="boss-text" placeholder="${U.typed}" oninput="checkBoss()"></textarea>
+     <div class="corrige" id="corrige" aria-live="polite"></div>
      <div class="selfcheck" id="selfcheck" style="display:none;">
        <div class="model"><div class="lbl">${U.modelLbl}</div><span>${b.modelK?b.modelK+roSpan(b.model):b.model}</span> <button class="btn ghost" data-say="${(b.modelK||b.model).replace(/"/g,'&quot;')}" data-tts="${t.tts}" style="font-size:11px;padding:4px 10px;">🔊</button></div>
        <h4>${U.selfTitle}</h4>
@@ -556,6 +595,40 @@ function showBoss(){
 /* peças: a 1ª forma aparece (kana); o campo aceita romaji, kana ou kanji */
 function kwChip(k){ const alts=String(k).split('|'); return `<span class="kw" data-kw="${alts.map(x=>x.toLowerCase()).join('|').replace(/"/g,'&quot;')}">${alts[0]}</span>`; }
 function kwHit(txt,el){ const t=txt.replace(/\s+/g,' '), sem=t.replace(/[\s\-]/g,''); return el.getAttribute('data-kw').split('|').some(a=>a&&(t.includes(a)||sem.includes(a.replace(/[\s\-]/g,'')))); }
+/* correção de partículas na resposta escrita (japonês): só regras seguras, por território */
+const PRED_PEDIR='(?:おねがいします|お願いします|ください)';
+const PART_RULES={
+  hotel:[{n:'(?:ワイファイ|わいふぁい|パスワード|ぱすわーど|かぎ|カギ|鍵)',p:'を',pred:PRED_PEDIR,why:'<b>を</b> marca a coisa que você pede: <b>ワイファイを おねがいします</b> = Wi-Fi, por favor.'}],
+  conbini:[{n:'(?:カード|かーど|げんきん|現金)',p:'で',pred:PRED_PEDIR,why:'<b>で</b> mostra o jeito de pagar: <b>カードで おねがいします</b> = no cartão, por favor.'}],
+  restaurante:[
+    {n:'(?:おかいけい|お会計|かいけい)',p:'を',pred:PRED_PEDIR,why:'<b>を</b> marca o que você pede: <b>おかいけいを おねがいします</b> = a conta, por favor.'},
+    {n:'(?:てんない|店内|おもちかえり|お持ち帰り|もちかえり)',p:'で',pred:PRED_PEDIR,why:'<b>で</b> mostra o jeito: <b>てんないで おねがいします</b> = para comer aqui, por favor.'}],
+  compras:[
+    {n:'(?:めんぜい|免税)',p:'を',pred:PRED_PEDIR,why:'<b>を</b> marca o que você pede: <b>めんぜいを おねがいします</b> = isenção de imposto, por favor.'},
+    {n:'(?:パスポート|ぱすぽーと)',p:'は',pred:'(?:あります|有ります)',why:'<b>は</b> marca o assunto: <b>パスポートは あります</b> = quanto ao passaporte, tenho.'}],
+  roupas:[{n:'(?:これ)',p:'に',pred:'(?:します|する)',why:'<b>に</b> marca a escolha: <b>これに します</b> = vou ficar com este.'}],
+  trens:[{n:'(?:のりかえ|乗り換え|乗換)',p:'は',pred:'(?:どこ)',why:'<b>は</b> marca o assunto da pergunta: <b>のりかえは どこですか</b> = onde é a baldeação?'}],
+  planos:[{n:'(?:じ|時)',p:'に',pred:'(?:いきましょう|行きましょう|あいましょう|会いましょう|しゅっぱつ|出発)',why:'<b>に</b> marca o horário: <b>くじに いきましょう</b> = vamos às 9h.'}],
+  aeroporto:[{n:'(?:とうきょう|東京)',p:'の',pred:'(?:ホテル|ほてる)',why:'<b>の</b> liga duas palavras: <b>とうきょうの ホテル</b> = o hotel de Tóquio.'}]
+};
+function corrigePart(txt){
+  const rules=PART_RULES[curTerr]||[]; let fixed=txt; const falhas=[];
+  rules.forEach(r=>{ const re=new RegExp('('+r.n+')([\\s　]*)(?='+r.pred+')','g');
+    if(re.test(fixed)){ fixed=fixed.replace(new RegExp('('+r.n+')([\\s　]*)(?='+r.pred+')','g'),(m,a,sp)=>a+r.p+(sp||' ')); falhas.push(r); } });
+  return {fixed:fixed.replace(/\s{2,}/g,' ').trim(),falhas};
+}
+function mostraCorrecao(txt){
+  const box=document.getElementById('corrige'); if(!box) return;
+  if(curLang!=='ja'||!(PART_RULES[curTerr]||[]).length||!/[぀-ヿ一-鿿]/.test(txt)){ box.innerHTML=''; return; }
+  const r=corrigePart(txt);
+  if(r.falhas.length){
+    box.className='corrige warn';
+    box.innerHTML='<b>⚠️ Falta uma partícula.</b> '+r.falhas.map(f=>f.why).join(' ')+'<div class="cfix"><span>Assim fica certo:</span> <b lang="ja">'+r.fixed+'</b></div><button type="button" class="btn ghost" id="corrige-btn" style="font-size:12.5px;padding:6px 14px">✏️ Corrigir para mim</button>';
+    document.getElementById('corrige-btn').onclick=()=>{ const ta=document.getElementById('boss-text'); ta.value=r.fixed; checkBoss(); };
+  }else{
+    box.className='corrige ok'; box.innerHTML='✔️ <b>Partículas no lugar.</b> Bem montado!';
+  }
+}
 function checkBoss(){
   const b=scene().boss;
   const txt=(document.getElementById('boss-text').value||'').toLowerCase();
@@ -566,6 +639,7 @@ function checkBoss(){
   });
   let words=txt.split(/\s+/).filter(Boolean).length;
   if(/[\u3040-\u30ff\u4e00-\u9fff]/.test(txt)) words=Math.max(words,Math.floor(txt.replace(/[\s、。！？!?]/g,'').length/2));
+  mostraCorrecao(document.getElementById('boss-text').value||'');
   const enough=hits>=b.min && words>=3;
   document.getElementById('selfcheck').style.display=enough?'block':'none';
   const checks=[...document.querySelectorAll('.sc')].filter(c=>c.checked).length;
@@ -671,6 +745,16 @@ function grantStamp(){
     document.getElementById('stamp-title').textContent='Mapa concluído! · +'+gained+' XP';
     hall.hidden=false; hall.style.display='grid'; cont.style.display='none';
     document.getElementById('stamp-backmap').style.display='none'; slot.innerHTML='';
+    try{ const E=UniTrilha.MAPAS, n=E.filter(m=>G.done['ja:'+m[4]]).length, box=document.getElementById('stamp-pass');
+      box.innerHTML='<p class="pp-t">🛂 Seu passaporte · '+n+' de '+E.length+' carimbos</p><div class="pp-g">'+E.map(m=>'<div class="pp-s'+(G.done['ja:'+m[4]]?' got':'')+(m[4]===curTerr?' novo':'')+'"><span class="e">'+m[1]+'</span>'+m[2]+'</div>').join('')+'</div>';
+      box.hidden=false; document.querySelector('.stamp-circle').style.display='none';
+      const au=document.getElementById('stamp-auto'), msg=document.getElementById('au-msg'), slugM=(E.find(m=>m[4]===curTerr)||[])[0];
+      let AU={}; try{ AU=JSON.parse(localStorage.getItem('utopiaAuto1')||'{}')||{}; }catch(_){}
+      const TXT={facil:'Ótimo! Pode seguir para o próximo mapa com confiança.',medio:'Bom caminho. Se quiser fixar, refaça o <a href="/idiomas/mapas/'+slugM+'/aula/">Ouvir da aula</a> antes de seguir.',dificil:'Tudo bem, isso é normal. Vale <a href="/idiomas/mapas/'+slugM+'/aula/">rever a aula</a> e tentar a prova de novo depois.'};
+      const mostra=n=>{ au.querySelectorAll('button').forEach(b=>b.setAttribute('aria-pressed',String(b.dataset.n===n))); msg.innerHTML=n?TXT[n]:''; };
+      au.onclick=e=>{ const b=e.target.closest('button'); if(!b) return; AU[curTerr]=b.dataset.n; try{ localStorage.setItem('utopiaAuto1',JSON.stringify(AU)); }catch(_){} mostra(b.dataset.n); };
+      mostra(null); au.hidden=false;
+    }catch(e){}
   } else if(false){
     const E=UniTrilha.estado(), k=E.findIndex(m=>m.terr===curTerr);
     let nx=null; for(let j=1;j<=E.length;j++){ const m=E[(k+j)%E.length]; if(!(m.aula&&m.prova)){ nx=m; break; } }
