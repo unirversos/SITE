@@ -210,7 +210,7 @@ footer a:hover{color:var(--pink)}
     const esg=(window.__STATUS||{})[x.id]==='esgotado';
     const btn = esg ? `<span class="quero off" aria-disabled="true">Esgotado no malote</span>` : linkOk(x.link)
       ? `<a class="quero" href="${esc(x.link)}" target="_blank" rel="noopener sponsored">Quero este achado →</a>`
-      : x.total ? `<button type="button" class="quero" data-pedir="${esc(x.id||'')}" style="border:0;font:inherit;font-weight:700;cursor:pointer">Quero este item →</button>`
+      : x.total ? `<a class="quero" href="https://wa.me/5519996390950?text=${encodeURIComponent('PEDIDO ITEM: '+x.nome+'\n'+location.origin+'/loja/#'+(x.id||''))}" target="_blank" rel="noopener">Quero este item →</a>`
       : `<span class="quero off" aria-disabled="true">Reserva em breve</span>`;
     const p=faixa(x);
     const fm=n=>Number(n).toLocaleString('pt-BR',{minimumFractionDigits:2,maximumFractionDigits:2});
