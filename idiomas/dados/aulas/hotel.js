@@ -22,6 +22,7 @@ const R=(k,f)=>`<ruby>${k}<rt>${f}</rt></ruby>`;
     {id:'choushoku',h:R('朝食','ちょうしょく'),k:'ちょうしょく',r:'chōshoku',pt:'café da manhã',en:'breakfast',ic:'🍳',tip:'Palavra de hotel e restaurante. Em casa se diz あさごはん.'},
     {id:'nanji',h:R('何時','なんじ'),k:'なんじ',r:'nanji',pt:'que horas',en:'what time',ic:'🕙',tip:'なん (o quê) + じ (hora) = que horas.'},
     {id:'taoru',k:'タオル',r:'taoru',pt:'toalha',en:'towel',ic:'svg:taoru',tip:'Vem do inglês "towel".'},
+    {id:'waifai',k:'ワイファイ',r:'waifai',pt:'wi-fi',en:'Wi-Fi',ic:'📶',tip:'Do inglês "Wi-Fi". Para pedir a senha: ワイファイの パスワードを おねがいします.'},
     {id:'eakon',k:'エアコン',r:'eakon',pt:'ar-condicionado',en:'air conditioner',ic:'❄️',tip:'Abreviação japonesa de "air conditioner".'},
     {id:'kowaremashita',h:R('壊','こわ')+'れました',k:'こわれました',r:'kowaremashita',pt:'quebrou',en:'broke',ic:'🔧',tip:'O final -ました indica passado educado.'},
     {id:'namae',h:R('名前','なまえ'),k:'なまえ',r:'namae',pt:'nome',en:'name',ic:'🪪',tip:'おなまえは？ = o seu nome? O お na frente é educação.'},
@@ -42,6 +43,13 @@ const R=(k,f)=>`<ruby>${k}<rt>${f}</rt></ruby>`;
     {titulo:'"___ quebrou."', tpl:'<i>coisa</i> が こわれました', tplRo:'[coisa] ga kowaremashita', parts:[0,'が|ga',{k:'こわれました',r:'kowaremashita',h:R('壊','こわ')+'れました'}],
      slots:[[['エアコン|eakon','O ar-condicionado quebrou.','The air conditioner is broken.'],['テレビ|terebi','A TV quebrou.','The TV is broken.'],['シャワー|shawā','O chuveiro quebrou.','The shower is broken.']]],
      gram:'<b>が</b> aponta quem fez a ação (aqui, quem quebrou). <b>こわれました</b> = quebrou.', use:'Na cena: avisar do problema no quarto.'}
+  ],
+  ouvirFacil:[
+    {say:'おなまえは？', q:'お'+R('名前','なまえ')+'は？', ro:'O-namae wa?', pt:'Qual é o seu nome?', distr:['Quantas noites?','Onde fica o quarto?']},
+    {say:'よやくが あります。', q:R('予約','よやく')+'が あります。', ro:'Yoyaku ga arimasu.', pt:'Tenho reserva.', distr:['Quero uma toalha.','O ar-condicionado quebrou.']},
+    {say:'にはくです。', q:R('二泊','にはく')+'です。', ro:'Nihaku desu.', pt:'São duas noites.', distr:['É uma noite.','São três noites.']},
+    {say:'かぎを おねがいします。', q:R('鍵','かぎ')+'を おねがいします。', ro:'Kagi o onegaishimasu.', pt:'A chave, por favor.', distr:['Uma toalha, por favor.','O check-out, por favor.']},
+    {say:'ワイファイを おねがいします。', q:'ワイファイを おねがいします。', ro:'Waifai o onegaishimasu.', pt:'Wi-Fi, por favor.', distr:['Uma toalha, por favor.','Check-in, por favor.']}
   ],
   cenas:[
     {q:'ご'+R('予約','よやく')+'の お'+R('名前','なまえ')+'は？', say:'ごよやくの おなまえは？', ro:'Go-yoyaku no o-namae wa?', pt:'Qual o nome da reserva?',
