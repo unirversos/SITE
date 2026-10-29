@@ -74,8 +74,39 @@ function rk(html){ if(typeof html!=='string') return html;
 let me=null, prof={}; try{ const a=AV.load(); if(a&&a.sel) me=Object.assign({},a.sel); prof=(a&&a.profile)||{}; }catch(e){}
 if(!me) me={hair:'pony',hairColor:'chairo',face:'egao',clothes:'parka',clothColor:'pinku',acc:[],traits:[],skin:4};
 const meName=prof.kata||prof.name||'Você';
-const kanaName=/^[぀-ヿ・ー\s]+$/.test(prof.kata||'')?prof.kata.trim():'マリア';
-const roName=kanaName==='マリア'?'Maria':(prof.name||kanaName);
+/* nome em katakana: o que ela digitou no Ateliê; se só tem o nome em letras latinas, aproxima em katakana */
+function latinoParaKana(s){
+  s=String(s||'').normalize('NFD').replace(/[\u0300-\u036f]/g,'').toLowerCase().replace(/[^a-z\s]/g,'').trim().split(/\s+/)[0]||'';
+  if(!s) return '';
+  const V={a:'ア',i:'イ',u:'ウ',e:'エ',o:'オ'};
+  const AIUEO='aiueo', isV=ch=>!!ch&&AIUEO.includes(ch), R={k:'カキクケコ',g:'ガギグゲゴ',s:'サシスセソ',z:'ザジズゼゾ',t:'タチツテト',d:'ダヂヅデド',n:'ナニヌネノ',h:'ハヒフヘホ',b:'バビブベボ',p:'パピプペポ',m:'マミムメモ',r:'ラリルレロ'};
+  const SM={ya:'ヤ',yu:'ユ',yo:'ヨ',wa:'ワ',wo:'ウォ',we:'ウェ',wi:'ウィ'}, DI0={sh:'シャシシュシェショ',ch:'チャチチュチェチョ',j:'ジャジジュジェジョ',ny:'ニャニニュニェニョ',ry:'リャリリュリェリョ',ty:'チャチチュチェチョ'}, DI={}; Object.keys(DI0).forEach(k=>DI[k]=DI0[k].match(/.[ャュェョ]?/g));
+  const ENDV={t:'ト',d:'ド',k:'ク',g:'グ',s:'ス',z:'ズ',r:'ル',l:'ル',m:'ム',p:'プ',b:'ブ',f:'フ',h:'',x:'クス',c:'ク',v:'ブ',w:'',y:'イ'};
+  s=s.replace(/l/g,'r').replace(/rr/g,'r').replace(/ch/g,'sh').replace(/c([ei])/g,'s$1').replace(/c/g,'k').replace(/qu/g,'k').replace(/q/g,'k').replace(/ss/g,'s').replace(/(?<![cspt])h(?=[aeiou])/g,'').replace(/ph/g,'f').replace(/th/g,'t').replace(/x/g,'ks').replace(/v/g,'b').replace(/y$/,'i');
+  let o='', i=0;
+  while(i<s.length){
+    const c=s[i], c2=s.slice(i,i+2), c3=s.slice(i,i+3);
+    if(isV(c)){ o+=V[c]; i++; continue; }
+    if(c==='n' && !isV(s[i+1]) && s[i+1]!=='y'){ o+='ン'; i++; continue; }
+    if(DI[c2]&&isV(s[i+2])){ o+=DI[c2][AIUEO.indexOf(s[i+2])]||''; i+=3; continue; }
+    if(DI[c3]&&isV(s[i+3])){ o+=DI[c3][AIUEO.indexOf(s[i+3])]; i+=4; continue; }
+    if(DI[c]&&isV(s[i+1])){ o+=DI[c][AIUEO.indexOf(s[i+1])]; i+=2; continue; }
+    if(SM[c2]){ o+=SM[c2]; i+=2; continue; }
+    if(c===s[i+1] && !isV(c)){ o+='ッ'; i++; continue; }
+    if(R[c]&&isV(s[i+1])){ o+=R[c][AIUEO.indexOf(s[i+1])]; i+=2; continue; }
+    if(c==='h'&&isV(s[i+1])){ o+=R.h[AIUEO.indexOf(s[i+1])]; i+=2; continue; }
+    if(c==='f'&&isV(s[i+1])){ o+=({a:'ファ',i:'フィ',u:'フ',e:'フェ',o:'フォ'})[s[i+1]]; i+=2; continue; }
+    if(c==='j'&&isV(s[i+1])){ o+=DI.j[AIUEO.indexOf(s[i+1])]; i+=2; continue; }
+    if(c==='w'&&isV(s[i+1])){ o+=SM['w'+s[i+1]]||'ウ'; i+=2; continue; }
+    o+=(ENDV[c]!==undefined?ENDV[c]:''); i++;
+  }
+  return o;
+}
+const kataDigitada=/^[぀-ヿ・ー\s]+$/.test(prof.kata||'')?prof.kata.trim():'';
+const kataAuto=kataDigitada?'':latinoParaKana(prof.name);
+const kanaName=kataDigitada||kataAuto||'マリア';
+const roName=kanaName==='マリア'&&!kataDigitada&&!kataAuto?'Maria':(prof.name||kanaName);
+const nomeAuto=!kataDigitada&&!!kataAuto;
 const meBaseFace=me.face||'egao';
 const fillName=s=>s.replace(/\{NOME\}/g,kanaName).replace(/\{NOMERO\}/g,roName);
 
@@ -511,7 +542,7 @@ function loadCena(n){
   $('exPrev').onclick=()=>{ if(ci>0) loadCena(ci-1); };
   $('exRedo').onclick=()=>{ delete done[ci]; loadCena(ci); };
   wireCena(); renderCena();
-  hint(done[ci]?'Você já resolveu esta parte.':(c.dica?`🎯 ${c.dica} · `:'')+'Toque nas peças <b>na ordem da frase</b>. Para tirar uma peça, toque nela no balão.');
+  hint(done[ci]?'Você já resolveu esta parte.':(c.dica?`🎯 ${c.dica}${(nomeAuto&&JSON.stringify(c.ans).includes(kanaName))?` Seu nome em katakana saiu como <b>${kanaName}</b> (aproximado; ajuste no <a href="/idiomas/avatar/">Ateliê</a>).`:''} · `:'')+'Toque nas peças <b>na ordem da frase</b>. Para tirar uma peça, toque nela no balão.');
   speak(c.say);
 }
 function hint(t){ $('hint').innerHTML=t; }
