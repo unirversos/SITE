@@ -169,6 +169,8 @@ body::before{content:'';position:fixed;inset:0;pointer-events:none;z-index:0;
 .boss-zone .ctx{font-size:14px;color:var(--ink-soft);margin-bottom:12px;}
 .kwrow{display:flex;gap:8px;flex-wrap:wrap;margin:8px 0 12px;}
 .kw{font-family:'JetBrains Mono',monospace;font-size:12px;border:1.5px solid var(--line);border-radius:14px;padding:4px 11px;color:var(--ink-soft);transition:all .2s ease;}
+#kwrow[data-ins] .kw{cursor:pointer;user-select:none;font-size:13px;padding:7px 13px}
+#kwrow[data-ins] .kw:hover{border-color:var(--rose);color:var(--ink)}
 .kw.hit{border-color:var(--sage);background:var(--sage-soft);color:var(--sage);}
 .boss-zone textarea{width:100%;min-height:96px;border:1.5px solid var(--line);border-radius:16px;padding:13px;font-family:'Zen Maru Gothic',sans-serif;font-size:15px;color:var(--ink);background:var(--paper);outline:none;resize:vertical;}
 .boss-zone textarea:focus{border-color:var(--rose);}
@@ -495,6 +497,14 @@ function kanaClicavel(txt){
   if(!window.UniGloss) return txt;
   return UniGloss.quebra(txt).map(t=>t.sep!=null?t.sep:(t.pt?`<button type="button" class="wd" data-w="${encodeURIComponent(JSON.stringify(t))}">${t.k}</button>`:t.k)).join('');
 }
+/* peças da resposta escrita: tocar na peça coloca no quadro de resposta */
+document.addEventListener('click',e=>{
+  const k=e.target.closest('#kwrow[data-ins] .kw'); if(!k) return;
+  const ta=document.getElementById('boss-text'); if(!ta) return;
+  const w=(k.textContent||'').trim(); ta.value=(ta.value&&!/\s$/.test(ta.value)?ta.value+' ':ta.value)+w+' ';
+  ta.focus(); try{ ta.setSelectionRange(ta.value.length,ta.value.length); }catch(_){}
+  checkBoss();
+});
 document.addEventListener('click',e=>{
   const b=e.target.closest('.wd'); if(!b) return;
   const t=JSON.parse(decodeURIComponent(b.dataset.w)), bub=b.closest('.bubble'); if(!bub) return;
@@ -561,7 +571,7 @@ function showBoss(){
      <p class="ctx">🔒 <strong>${U.bossTitle}:</strong> ${b.context}</p>
      <div class="hintbox"><strong>${U.hintLbl}:</strong> ${b.hintK?b.hintK+roSpan(b.hint):b.hint}</div>
      <p style="font-size:12.5px;color:var(--ink-soft);">${U.bossKwNote}</p>
-     <div class="kwrow" id="kwrow">${b.kws.map(kwChip).join('')}</div>
+     <div class="kwrow" id="kwrow" data-ins="1">${b.kws.map(kwChip).join('')}</div>
      <textarea id="boss-text" placeholder="${U.typed}" oninput="checkBoss()"></textarea>
      <div class="selfcheck" id="selfcheck" style="display:none;">
        <div class="model"><div class="lbl">${U.modelLbl}</div><span>${b.modelK?b.modelK+roSpan(b.model):b.model}</span> <button class="btn ghost" data-say="${(b.modelK||b.model).replace(/"/g,'&quot;')}" data-tts="${t.tts}" style="font-size:11px;padding:4px 10px;">🔊</button></div>
