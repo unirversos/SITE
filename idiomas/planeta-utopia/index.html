@@ -2,7 +2,34 @@
 <html lang="pt-BR" data-login="obrigatorio">
 <head>
 <meta charset="UTF-8">
-<style>html[data-login="obrigatorio"]:not(.uni-ok) body>*:not(#uni-gate){visibility:hidden}</style>
+<style>html[data-login="obrigatorio"]:not(.uni-ok) body>*:not(#uni-gate){visibility:hidden}
+/* palco da prova (japonês): cenário da aula com o avatar reagindo */
+.pstage-wrap{position:sticky;top:6px;z-index:4;box-shadow:0 8px 22px -14px rgba(74,65,73,.5);border-radius:20px;overflow:hidden;border:1.5px solid var(--line);background:#fbefe6;margin:0 0 14px}
+.pstage-wrap[hidden]{display:none}
+.pstage{display:block;width:100%;height:auto;max-height:30vh}
+.pfx{position:absolute;inset:0;pointer-events:none;overflow:hidden}
+.pc-spark{position:absolute;font-size:24px;animation:pcrise 1.6s ease-out forwards}
+@keyframes pcrise{0%{transform:translateY(0) scale(.6);opacity:0}15%{opacity:1}100%{transform:translateY(-110px) scale(1.2);opacity:0}}
+.pc-char{transform-box:fill-box;transform-origin:50% 100%}
+.pc-char.idle{animation:pcbreathe 3.2s ease-in-out infinite}
+@keyframes pcbreathe{50%{transform:translateY(-2px) scaleY(1.01)}}
+.pc-char.hop{animation:pchop .7s cubic-bezier(.3,1.6,.5,1) 2}
+@keyframes pchop{0%,100%{transform:translateY(0)}40%{transform:translateY(-14px)}}
+.pc-char.shake{animation:pcshake .5s ease}
+@keyframes pcshake{20%{transform:translateX(-5px) rotate(-2deg)}40%{transform:translateX(5px) rotate(2deg)}60%{transform:translateX(-3px)}80%{transform:translateX(3px)}}
+.pc-char.nod{animation:pcnod .9s ease}
+@keyframes pcnod{30%{transform:rotate(-4deg) translateY(2px)}60%{transform:rotate(2deg)}}
+.pc-char.tilt{animation:pctilt 1.2s ease forwards}
+@keyframes pctilt{40%,100%{transform:rotate(-7deg)}}
+.pc-thump{animation:pcthump .45s cubic-bezier(.2,1.8,.4,1) both;transform-box:fill-box;transform-origin:center}
+@keyframes pcthump{0%{transform:scale(2.4) rotate(-20deg);opacity:0}100%{transform:scale(1) rotate(-12deg);opacity:1}}
+.pc-q{animation:pcpop .4s cubic-bezier(.3,1.6,.5,1) both;transform-box:fill-box;transform-origin:center bottom}
+@keyframes pcpop{from{transform:scale(0);opacity:0}}
+.stamp-pop .conf{position:absolute;top:-10px;font-size:22px;pointer-events:none;animation:conf 2.4s ease-in forwards}
+@keyframes conf{to{transform:translateY(110vh) rotate(540deg);opacity:.9}}
+.stamp-pop.show .stamp-circle{animation:stampin .6s cubic-bezier(.2,1.8,.4,1) both}
+@keyframes stampin{0%{transform:scale(2.6) rotate(-25deg);opacity:0}100%{transform:scale(1) rotate(-6deg);opacity:1}}
+</style>
 <script type="module" src="/idiomas/dados/conta.js?v=4"></script>
 <script>setTimeout(function(){var h=document.documentElement;if(!h.classList.contains('uni-ok')&&!document.getElementById('uni-gate'))h.classList.add('uni-ok')},10000)</script>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -247,6 +274,7 @@ body.ro-on .ro{display:block}
     </div>
     <details class="pieces"><summary id="pieces-sum"></summary><div class="plist" id="pieces-list"></div></details>
     <div class="intro" id="scene-intro"></div>
+    <div class="pstage-wrap" id="pstage-wrap" hidden><svg class="pstage" id="pstage" viewBox="0 0 400 250" role="img" aria-label="Cena"></svg><div class="pfx" id="pfx" aria-hidden="true"></div></div>
     <div class="chat" id="chat"></div>
     <div id="interaction"></div>
   </section>
@@ -275,6 +303,7 @@ body.ro-on .ro{display:block}
 <script src="/idiomas/dados/avatar.js?v=20261016b"></script>
 <script src="/idiomas/dados/trilha-mapas.js?v=1"></script>
 <script src="/idiomas/dados/glossario.js?v=1"></script>
+<script src="/idiomas/dados/palco.js?v=1"></script>
 <script src="/idiomas/dados/velocidade-voz.js?v=1"></script>
 <script src="/idiomas/dados/audio-mapa.js?v=4a8ffd4b"></script>
 <script>
@@ -415,7 +444,17 @@ function openScene(id){
   document.getElementById('chat').innerHTML='';
   document.getElementById('interaction').innerHTML='';
   window.scrollTo(0,0);
+  montaPalco();
   setTimeout(showStep,400);
+}
+/* japonês: mostra o cenário da aula (carrega /idiomas/dados/aulas/<slug>.js) */
+function montaPalco(){
+  const wrap=document.getElementById('pstage-wrap'); wrap.hidden=true;
+  if(curLang!=='ja'||!window.UniPalco||!window.UniTrilha) return;
+  const m=UniTrilha.MAPAS.find(x=>x[4]===curTerr); if(!m) return;
+  const go=()=>{ const a=(window.AULAS||{})[m[0]]; if(a&&a.cen&&a.npc){ UniPalco.mount(document.getElementById('pstage'),document.getElementById('pfx'),a); wrap.hidden=false; } };
+  if((window.AULAS||{})[m[0]]) return go();
+  const s=document.createElement('script'); s.src='/idiomas/dados/aulas/'+m[0]+'.js?v=20261029g'; s.onload=go; document.head.appendChild(s);
 }
 function backToHub(){
   try{speechSynthesis.cancel();}catch(e){}
@@ -476,12 +515,14 @@ function showStep(){
       const c=shuffled[i];
       if(c.ok){
         meBubble(c.k?c.k.replace(/\s\([^()]*\)$/,'').replace(/\[seu nome\]/g,G.name):btn.textContent);
+        if(window.UniPalco&&UniPalco.ready()){ UniPalco.mood('ok',1300); UniPalco.sparkle(['✨','💖'],5); }
         box.innerHTML='';
         stepIdx++; 
         setTimeout(showStep,700);
       }else{
         mistakes++;
         btn.classList.add('wrong'); btn.disabled=true;
+        if(window.UniPalco&&UniPalco.ready()) UniPalco.mood('wrong',1500);
         bub.classList.remove('shake'); void bub.offsetWidth; bub.classList.add('shake');
         document.getElementById('hintslot').innerHTML=`<div class="hintbox">${U.wrong}<br><strong>${U.hintLbl}:</strong> ${c.whyK||c.why||''}</div>`;
       }
@@ -640,7 +681,10 @@ function grantStamp(){
   } else {
     slot.innerHTML='<span style="font-size:12.5px;color:var(--ink-soft);">✦ todos os territórios deste idioma carimbados!</span>';
   }
-  document.getElementById('stamp-pop').classList.add('show');
+  if(window.UniPalco&&UniPalco.ready()){ UniPalco.mood('ok',2600); UniPalco.stamp(); UniPalco.sparkle(['🎉','✨','💖','🏅'],16); }
+  const pop=document.getElementById('stamp-pop');
+  setTimeout(()=>{ pop.classList.add('show'); pop.querySelectorAll('.conf').forEach(x=>x.remove());
+    for(let k=0;k<36;k++){ const s=document.createElement('span'); s.className='conf'; s.textContent=['🌸','✨','🎉','💖','⭐'][k%5]; s.style.left=(Math.random()*96)+'%'; s.style.animationDelay=(Math.random()*0.9)+'s'; s.style.animationDuration=(1.8+Math.random()*1.4)+'s'; pop.appendChild(s); } },(window.UniPalco&&UniPalco.ready())?1100:0);
 }
 function goNext(id){
   document.getElementById('stamp-pop').classList.remove('show');
