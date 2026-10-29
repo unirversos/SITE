@@ -30,7 +30,7 @@ window.ACHADOS = [
     de:0, ate:0, total:1110, imposto:330, chegada:'dezembro', foto:'', fotos:['/loja/fotos/3ds-rosa-claro-carregador-1.jpg','/loja/fotos/3ds-rosa-claro-carregador-2.jpg','/loja/fotos/3ds-rosa-claro-carregador-3.jpg','/loja/fotos/3ds-rosa-claro-carregador-4.jpg','/loja/fotos/3ds-rosa-claro-carregador-5.jpg'], link:'' },
   { id:'switch2-pokemon-legends', cat:'consoles', nome:'Nintendo Switch 2 · edição Pokémon LEGENDS', novo:true,
     desc:'Console Nintendo Switch 2, edição Pokémon LEGENDS, anunciado como novo e sem uso. O anúncio não informa o que acompanha (por exemplo, se o jogo vem junto). Confirmar com o vendedor.',
-    de:0, ate:0, total:7100, imposto:2108, chegada:'dezembro', foto:'', link:'' },
+    de:0, ate:0, total:5744, imposto:2108, chegada:'dezembro', foto:'', link:'' },
   { id:'zelda-master-sword', cat:'colec', nome:'Zelda · Master Sword e outros itens',
     desc:'Itens de The Legend of Zelda em seleção para o malote de dezembro.',
     de:0, ate:0, foto:'', link:'' },
