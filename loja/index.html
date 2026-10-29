@@ -57,7 +57,13 @@ h1 .jp rt{font-size:.5em;letter-spacing:.05em}
 .cat-h p{margin:0;color:var(--muted);font-size:15px;max-width:62ch}
 .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:18px}
 .card{--c:var(--pink);position:relative;background:var(--card);border:1.5px solid var(--line);border-radius:var(--r);overflow:hidden;display:grid;grid-template-rows:auto 1fr;box-shadow:0 10px 24px -18px rgba(58,43,56,.35)}
-.card[data-cat="consoles"]{--c:var(--lavender)} .card[data-cat="colec"]{--c:var(--sky)} .card[data-cat="reliquias"]{--c:var(--gold)}
+.card[data-cat="consoles"]{--c:var(--lavender)} .card[data-cat="colec"]{--c:var(--sky)} .card[data-cat="reliquias"]{--c:var(--gold)} .card[data-cat="gadgets"]{--c:var(--sage)}
+.taxa{margin:6px 0 0;padding:9px 11px;border-radius:12px;background:#fff4e0;border:1.5px solid #e8c98a;color:#5b4210;font-size:13.5px;line-height:1.45}
+.taxa b{font-weight:800}
+.pag{list-style:none;margin:4px 0 0;padding:0;display:grid;gap:6px;font-size:14px;line-height:1.4}
+.pag li{padding:8px 10px;border-radius:12px;background:var(--sage-soft)}
+.pag li.ch{background:#fff4e0;border:1.5px solid #e8c98a;color:#5b4210}
+.parc{font-size:13px;color:var(--muted);font-weight:500}
 .foto{aspect-ratio:4/3;background:color-mix(in srgb,var(--c) 14%,var(--card));display:grid;place-items:center;font-size:56px;border-bottom:1.5px solid var(--line)}
 .foto img{width:100%;height:100%;object-fit:cover;display:block}
 .corpo{padding:14px 16px 16px;display:grid;gap:8px;align-content:start}
@@ -121,7 +127,8 @@ footer a:hover{color:var(--pink)}
       <a class="btn pri" href="#vitrine">Ver os achados ↓</a>
       <a class="btn sec" href="/loja/guia/">Como comprar e a alfândega →</a>
     </div>
-    <p class="aviso">💡 Transparência: alguns botões levam a links de afiliado ou a serviços de redirecionamento. Se você comprar por eles, a Unirversos pode receber uma comissão, sem custo extra para você. Os preços são referências em ienes e podem mudar na loja.</p>
+    <p class="taxa" style="max-width:640px"><b>Malote de dezembro:</b> o preço total está em reais. A parte do produto pode ser parcelada em <b>12x sem juros</b>, e a <b>taxa de importação (alfândega)</b> é paga por você na chegada, separada do parcelado. Cada cartão mostra os dois valores.</p>
+    <p class="aviso">💡 Transparência: alguns botões levam a links de afiliado ou a serviços de redirecionamento. Se você comprar por eles, a Unirversos pode receber uma comissão, sem custo extra para você.</p>
   </header>
 
   <section id="vitrine" aria-label="Vitrine de achados" style="scroll-margin-top:16px;display:grid;gap:22px">
@@ -165,7 +172,8 @@ footer a:hover{color:var(--pink)}
   const CATS=[
     {id:'consoles', ic:'🎮', nome:'Consoles & Portáteis', sub:'Consoles e portáteis preservados, de edições especiais a clássicos.'},
     {id:'colec',    ic:'🗿', nome:'Colecionáveis & Figures', sub:'Figures, pelúcias e peças colecionáveis garimpadas com cuidado.'},
-    {id:'reliquias',ic:'🏮', nome:'Relíquias Vintage', sub:'Achados antigos e raros, cada um com a sua história.'}
+    {id:'reliquias',ic:'🏮', nome:'Relíquias Vintage', sub:'Achados antigos e raros, cada um com a sua história.'},
+    {id:'gadgets',  ic:'🌸', nome:'Gadgets & Papelaria Japonesa', sub:'Design minimalista, tecnologia portátil e organização para a sua rotina.'}
   ];
   const ITENS=(window.ACHADOS||[]).filter(x=>x&&x.nome);
   const esc=s=>String(s==null?'':s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
@@ -179,8 +187,10 @@ footer a:hover{color:var(--pink)}
     const foto = x.foto ? `<img src="${esc(x.foto)}" alt="${esc(x.nome)}" loading="lazy">` : `<span aria-hidden="true">${c.ic}</span>`;
     const btn = linkOk(x.link)
       ? `<a class="quero" href="${esc(x.link)}" target="_blank" rel="noopener sponsored">Quero este achado →</a>`
-      : `<span class="quero off" aria-disabled="true">Link em breve</span>`;
+      : `<span class="quero off" aria-disabled="true">Reserva em breve</span>`;
     const p=faixa(x);
+    const fm=n=>Number(n).toLocaleString('pt-BR',{minimumFractionDigits:2,maximumFractionDigits:2});
+    const rs=x.total?`<p class="preco">Total: R$ ${Number(x.total).toLocaleString('pt-BR')}</p><ul class="pag"><li><b>Parcelado em 12x sem juros:</b> R$ ${fm(x.total-(x.imposto||0))} (12x de R$ ${fm((x.total-(x.imposto||0))/12)})</li>${x.imposto?`<li class="ch"><b>Taxa de importação, paga na chegada:</b> R$ ${fm(x.imposto)} <span class="parc">(estimativa, vai direto para a alfândega e não entra no parcelado)</span></li>`:''}</ul>${x.chegada?`<p class="parc">📦 Chegada: ${esc(x.chegada)}</p>`:''}`:'';
     return `<article class="card" data-cat="${c.id}">
       ${x.exemplo?'<span class="ex">exemplo</span>':''}
       <div class="foto">${foto}</div>
@@ -188,7 +198,7 @@ footer a:hover{color:var(--pink)}
         <p class="tag">${c.ic} ${esc(c.nome)}</p>
         <h3>${esc(x.nome)}</h3>
         <p class="d">${esc(x.desc)}</p>
-        ${p?`<p class="preco">${p} <small>referência</small></p>`:''}
+        ${rs||(p?`<p class="preco">${p} <small>referência</small></p>`:'')}
         ${btn}
       </div></article>`;
   }
