@@ -28,7 +28,7 @@ const R=(k,f)=>`<ruby>${k}<rt>${f}</rt></ruby>`;
     {quem:'Garçom',q:'はい。'+R('食','た')+'べられない ものは ありますか？',say:'はい。たべられない ものは ありますか？',ro:'Hai. Taberarenai mono wa arimasu ka?',pt:'Certo. Tem algo que você não pode comer?',
      ans:['にく|niku','と|to','さかな|sakana','は|wa','たべません|tabemasen'],extra:['です|desu','が|ga','ください|kudasai'],ansPt:'Não como carne nem peixe.',tarefa:1,molde:null,distr:[]},
     {quem:'Garçom',q:R('野菜','やさい')+'の ラーメンは いかがですか？',say:'やさいの ラーメンは いかがですか？',ro:'Yasai no rāmen wa ikaga desu ka?',pt:'Que tal o lámen de legumes?',
-     ans:['だし|dashi','に|ni','さかな|sakana','は|wa','はいっていますか|haitte imasu ka'],extra:['にく|niku','を|o','おねがいします|onegaishimasu'],ansPt:'O caldo tem peixe?',tarefa:'Atenção ao ほんだし: pergunte se o caldo tem peixe.',molde:null,distr:[]},
+     ans:[['ほんだし|hondashi','だし|dashi'],'は|wa','はいっていますか|haitte imasu ka'],extra:['さかな|sakana','に|ni','を|o'],ansPt:'Tem ほんだし (caldo em pó de peixe)?',tarefa:'Atenção ao ほんだし (caldo em pó de peixe): pergunte se tem.',molde:null,distr:[]},
     {quem:'Garçom',q:'すみません、だしは かつおぶしです。',say:'すみません、だしは かつおぶしです。',ro:'Sumimasen, dashi wa katsuobushi desu.',pt:'Desculpe, o caldo é de katsuobushi (peixe).',
      ans:['じゃ|ja','サラダ|sarada','に|ni','します|shimasu'],extra:['だし|dashi','を|o','です|desu'],ansPt:'Então vou de salada.',tarefa:1,molde:null,distr:[]},
     {quem:'Garçom',q:'お'+R('飲','の')+'み'+R('物','もの')+'は いかがですか？',say:'おのみものは いかがですか？',ro:'O-nomimono wa ikaga desu ka?',pt:'E para beber?',
@@ -60,7 +60,9 @@ const R=(k,f)=>`<ruby>${k}<rt>${f}</rt></ruby>`;
     {id:'irasshaimase',k:'いらっしゃいませ',r:'irasshaimase',pt:'bem-vindo(a)!',en:'welcome!',ic:'🙇',tip:'Saudação de quem atende. Não precisa responder.'},
     {id:'nanmeisama',k:'なんめいさま',r:'nanmei-sama',pt:'quantas pessoas (educado)',en:'how many people',ic:'👥',tip:'なんめいさまですか？ = mesa para quantos? Responda com ふたりです.'},
     {id:'chuumon',h:R('注文','ちゅうもん'),k:'ちゅうもん',r:'chūmon',pt:'pedido',en:'order',ic:'📝',tip:'ごちゅうもんは？ = e o pedido? O ご na frente é educação.'},
-    {id:'nomimono',h:R('飲み物','のみもの'),k:'のみもの',r:'nomimono',pt:'bebida',en:'drink',ic:'🥤',tip:'おのみものは いかがですか？ = e para beber?'}
+    {id:'nomimono',h:R('飲み物','のみもの'),k:'のみもの',r:'nomimono',pt:'bebida',en:'drink',ic:'🥤',tip:'おのみものは いかがですか？ = e para beber?'},
+    {id:'hondashi',k:'ほんだし',r:'hondashi',pt:'caldo em pó de peixe (dashi)',en:'fish-stock powder (dashi)',ic:'🍲',tip:'Marca famosa de caldo em pó feito de peixe (かつおぶし). Muito prato "de legumes" leva ほんだし, até missô e lámen. Quem não come peixe precisa perguntar: <b>ほんだしは はいっていますか？</b>'},
+    {id:'haitteimasu',k:'はいっていますか',r:'haitte imasu ka',pt:'tem dentro? / está incluído?',en:'is it in there?',ic:'🔍',tip:'<b>はいっています</b> = está dentro, contém. Com か vira pergunta: <b>にくは はいっていますか？</b> = tem carne?'}
   ],
   moldes:[
     {titulo:'"Somos ___."', tpl:'<i>pessoas</i> です', tplRo:'[pessoas] desu', parts:[0,'です|desu'],
