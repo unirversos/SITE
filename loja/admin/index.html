@@ -39,7 +39,7 @@ p{margin:0;color:var(--muted)}
   <div id="lista" hidden></div>
   <p id="sair-box" hidden><button class="btn" id="sair" type="button">Sair</button></p>
 </div>
-<script src="/loja/produtos.js?v=20261029b"></script>
+<script src="/loja/produtos.js?v=20261029c"></script>
 <script type="module">
 import {initializeApp,getApps} from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
 import {getAuth,onAuthStateChanged,GoogleAuthProvider,signInWithPopup,signOut} from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
@@ -49,7 +49,7 @@ const app=getApps()[0]||initializeApp({apiKey:"AIzaSyCoo0UB5rWjD4ZGE3xKO32zXYPUQ
 const auth=getAuth(app), db=getDatabase(app,URL_DB);
 const $=id=>document.getElementById(id), esc=s=>String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
 const msg=t=>{ $('msg').textContent=t; $('msg').hidden=!t; };
-const FONTES={'3ds-vermelho-metalico':'https://jp.mercari.com/item/m86693495836','3ds-rosa-gloss':'https://jp.mercari.com/item/m90354370661','3ds-rosa-claro':'https://jp.mercari.com/item/m34368287557','3ds-rosa-claro-carregador':'https://jp.mercari.com/item/m84144995612','gojo-shibuya-scramble':'https://jp.mercari.com/item/m18796400352'};
+const FONTES={'3ds-vermelho-metalico':'https://jp.mercari.com/item/m86693495836','3ds-rosa-gloss':'https://jp.mercari.com/item/m90354370661','3ds-rosa-claro':'https://jp.mercari.com/item/m34368287557','3ds-rosa-claro-carregador':'https://jp.mercari.com/item/m84144995612'};
 const zapLink=n=>{ let d=String(n||'').replace(/\D/g,''); if(d.length<=11) d='55'+d; return 'https://wa.me/'+d; };
 function desenhaPedidos(P){
   const ks=Object.keys(P||{}).sort((a,b)=>(P[b].t||0)-(P[a].t||0));
