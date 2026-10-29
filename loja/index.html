@@ -57,7 +57,7 @@ h1 .jp rt{font-size:.5em;letter-spacing:.05em}
 .cat-h p{margin:0;color:var(--muted);font-size:15px;max-width:62ch}
 .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:18px}
 .card{--c:var(--pink);position:relative;background:var(--card);border:1.5px solid var(--line);border-radius:var(--r);overflow:hidden;display:grid;grid-template-rows:auto 1fr;box-shadow:0 10px 24px -18px rgba(58,43,56,.35)}
-.card[data-cat="consoles"]{--c:var(--lavender)} .card[data-cat="colec"]{--c:var(--sky)} .card[data-cat="reliquias"]{--c:var(--gold)}
+.card[data-cat="consoles"]{--c:var(--lavender)} .card[data-cat="colec"]{--c:var(--sky)} .card[data-cat="reliquias"]{--c:var(--gold)} .card[data-cat="gadgets"]{--c:var(--sage)}
 .foto{aspect-ratio:4/3;background:color-mix(in srgb,var(--c) 14%,var(--card));display:grid;place-items:center;font-size:56px;border-bottom:1.5px solid var(--line)}
 .foto img{width:100%;height:100%;object-fit:cover;display:block}
 .corpo{padding:14px 16px 16px;display:grid;gap:8px;align-content:start}
@@ -165,7 +165,8 @@ footer a:hover{color:var(--pink)}
   const CATS=[
     {id:'consoles', ic:'🎮', nome:'Consoles & Portáteis', sub:'Consoles e portáteis preservados, de edições especiais a clássicos.'},
     {id:'colec',    ic:'🗿', nome:'Colecionáveis & Figures', sub:'Figures, pelúcias e peças colecionáveis garimpadas com cuidado.'},
-    {id:'reliquias',ic:'🏮', nome:'Relíquias Vintage', sub:'Achados antigos e raros, cada um com a sua história.'}
+    {id:'reliquias',ic:'🏮', nome:'Relíquias Vintage', sub:'Achados antigos e raros, cada um com a sua história.'},
+    {id:'gadgets',  ic:'🌸', nome:'Gadgets & Papelaria Japonesa', sub:'Design minimalista, tecnologia portátil e organização para a sua rotina.'}
   ];
   const ITENS=(window.ACHADOS||[]).filter(x=>x&&x.nome);
   const esc=s=>String(s==null?'':s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
