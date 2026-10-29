@@ -87,6 +87,7 @@ h1 .jp rt{font-size:.5em;letter-spacing:.05em}
 .seta{position:absolute;top:50%;transform:translateY(-50%);width:34px;height:34px;border-radius:50%;border:0;background:rgba(255,255,255,.88);color:#3a2b38;font-size:22px;line-height:1;font-weight:700;cursor:pointer;box-shadow:0 2px 8px rgba(58,43,56,.25);display:flex;align-items:center;justify-content:center;padding:0 0 3px}
 .seta:hover{background:#fff}.seta.e{left:8px}.seta.d{right:8px}
 .cont{position:absolute;left:10px;bottom:10px;background:rgba(58,43,56,.72);color:#fff;font-size:12px;font-weight:700;padding:4px 10px;border-radius:999px;pointer-events:none}
+.novo{position:absolute;top:10px;left:10px;background:#2f7d57;color:#fff;font-weight:800;font-size:12.5px;letter-spacing:.04em;padding:6px 11px;border-radius:999px;box-shadow:0 4px 10px -4px rgba(47,125,87,.6);transform:rotate(-3deg);z-index:2}
 .selo{position:absolute;top:10px;right:10px;background:var(--pink);color:#fff;font-weight:800;font-size:12.5px;letter-spacing:.02em;padding:6px 11px;border-radius:999px;box-shadow:0 4px 10px -4px rgba(194,63,94,.6);transform:rotate(3deg)}
 .preco.tot{margin:6px 0 0;padding-top:8px;border-top:2px solid var(--ink)}
 .pag s,.preco s{color:var(--muted)}
@@ -192,7 +193,7 @@ footer a:hover{color:var(--pink)}
   </footer>
 </div>
 
-<script src="/loja/produtos.js?v=20261029c"></script>
+<script src="/loja/produtos.js?v=20261029e"></script>
 <script>
 (function(){
   const CATS=[
@@ -223,16 +224,17 @@ footer a:hover{color:var(--pink)}
     const prod=x.total?x.total-(x.imposto||0):0, com=prod*(1-DESC/100), totCom=com+(x.imposto||0);
     const rs=x.total?`<ul class="pag"><li><b>Produto:</b> <s>R$ ${fm(prod)}</s> <b>R$ ${fm(com)}</b> <span class="parc">com ${DESC}% de desconto. Parcelamento pelo Mercado Pago, com os juros dele.</span></li>${x.imposto?`<li class="ch"><b>Taxa de importação, paga na chegada:</b> R$ ${fm(x.imposto)} <span class="parc">(estimativa, vai direto para a alfândega, não entra no parcelamento e não tem desconto)</span></li>`:''}</ul><p class="preco tot"><span class="parc">= Total (produto + taxa), na 1ª compra</span><br>R$ ${fm(totCom)} <span class="parc"><s>R$ ${fm(x.total)}</s></span></p>${x.chegada?`<p class="parc">📦 Chegada: ${esc(x.chegada)}</p>`:''}`:'';
     const selo=x.total?`<span class="selo">${DESC}% OFF · 1ª compra</span>`:'';
+    const novo=x.novo?`<span class="novo">ITEM NOVO</span>`:'';
     return `<article class="card${esg?' esg':''}" data-cat="${c.id}" data-id="${esc(x.id||'')}">
       ${x.exemplo?'<span class="ex">exemplo</span>':''}
-      <div class="foto">${foto}${selo}</div>
+      <div class="foto">${foto}${selo}${novo}</div>
       <div class="corpo">
         <p class="tag">${c.ic} ${esc(c.nome)}</p>
         <h3>${esc(x.nome)}</h3>
         ${rs||(p?`<p class="preco">${p} <small>referência</small></p>`:'')}
         <details class="mais"><summary>Mais detalhes</summary>
           <p class="d">${esc(x.desc)}</p>
-          ${c.id==='consoles'?`<div class="antes"><b>Antes de comprar</b><ul><li>Item de garimpo: usado, garimpado no Japão e vendido no estado mostrado nas fotos.</li><li>Console japonês: roda jogos de 3DS japoneses. A trava de região pode ser contornada por modificação, que é por conta do comprador.</li><li>Carregador japonês: confira a tensão antes de ligar.</li></ul></div>`:''}
+          ${c.id==='consoles'&&!x.novo?`<div class="antes"><b>Antes de comprar</b><ul><li>Item de garimpo: usado, garimpado no Japão e vendido no estado mostrado nas fotos.</li><li>Console japonês: roda jogos de 3DS japoneses. A trava de região pode ser contornada por modificação, que é por conta do comprador.</li><li>Carregador japonês: confira a tensão antes de ligar.</li></ul></div>`:''}
         </details>
         ${btn}
       </div></article>`;
