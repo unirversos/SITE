@@ -18,7 +18,7 @@
 window.ACHADOS = [
   { id:'3ds-vermelho-metalico', cat:'consoles', nome:'Nintendo 3DS · vermelho metálico',
     desc:'Console portátil da Nintendo em estado de como novo, segundo o vendedor. Acompanha carregador, base de carregamento, caneta e cartão SD de 4 GB, como mostram as fotos.',
-    de:0, ate:0, total:1500, imposto:445, chegada:'dezembro', foto:'', fotos:['/loja/fotos/3ds-vermelho-1.jpg','/loja/fotos/3ds-vermelho-2.jpg','/loja/fotos/3ds-vermelho-3.jpg','/loja/fotos/3ds-vermelho-4.jpg','/loja/fotos/3ds-vermelho-5.jpg'], link:'' },
+    de:0, ate:0, total:1500, imposto:445, chegada:'dezembro', foto:'', fotos:['/loja/fotos/3ds-vermelho-1.jpg','/loja/fotos/3ds-vermelho-2.jpg','/loja/fotos/3ds-vermelho-3.jpg','/loja/fotos/3ds-vermelho-4.jpg','/loja/fotos/3ds-vermelho-5.jpg','/loja/fotos/3ds-vermelho-6.jpg'], link:'' },
   { id:'3ds-rosa-gloss', cat:'consoles', nome:'Nintendo 3DS · rosa gloss',
     desc:'Console portátil da Nintendo na cor rosa gloss. Estado e acessórios a confirmar com o vendedor.',
     de:0, ate:0, total:1875, imposto:557, chegada:'dezembro', foto:'', link:'' },
