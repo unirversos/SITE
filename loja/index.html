@@ -64,6 +64,8 @@ h1 .jp rt{font-size:.5em;letter-spacing:.05em}
 .pag li{padding:8px 10px;border-radius:12px;background:var(--sage-soft)}
 .pag li.ch{background:#fff4e0;border:1.5px solid #e8c98a;color:#5b4210}
 .parc{font-size:13px;color:var(--muted);font-weight:500}
+.antes{margin:4px 0 2px;padding:9px 11px;border-radius:12px;background:#f3f8fd;border:1.5px solid #cfe0f0;font-size:13.5px;line-height:1.45;color:#2f4f73}
+.antes ul{margin:4px 0 0;padding-left:18px;display:grid;gap:3px}
 .card.esg{opacity:.62;filter:grayscale(.5)}
 .card.esg .selo{display:none}
 .gal{position:absolute;inset:0;display:flex;overflow-x:auto;scroll-snap-type:x mandatory;scrollbar-width:none}
@@ -212,6 +214,7 @@ footer a:hover{color:var(--pink)}
         <p class="tag">${c.ic} ${esc(c.nome)}</p>
         <h3>${esc(x.nome)}</h3>
         <p class="d">${esc(x.desc)}</p>
+        ${c.id==='consoles'?`<div class="antes"><b>Antes de comprar</b><ul><li>Item usado, vendido no estado mostrado nas fotos.</li><li>Console japonês: roda jogos de 3DS japoneses. A trava de região pode ser contornada por modificação, que é por conta do comprador.</li><li>Carregador japonês: confira a tensão antes de ligar.</li></ul></div>`:''}
         ${rs||(p?`<p class="preco">${p} <small>referência</small></p>`:'')}
         ${btn}
       </div></article>`;
