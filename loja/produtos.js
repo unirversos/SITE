@@ -49,7 +49,7 @@ window.ACHADOS = [
     de:0, ate:0, total:1014, imposto:301, chegada:'dezembro', foto:'', fotos:['/loja/fotos/miku-conjunto-5b-1.jpg'], contem:true, link:'' },
   { id:'zelda-case-switch2-40', cat:'zelda', nome:'Zelda 40 anos · estojo para Nintendo Switch 2',
     desc:'Estojo de transporte para Nintendo Switch 2 da edição de 40 anos de The Legend of Zelda, com a Triforce dourada na frente. Na foto aparece na caixa, com plástico de proteção e a indicação “新品未開封” (novo, lacrado), e a caixa cita uma película protetora de tela inclusa. Só há uma foto no anúncio, então a condição e o que está incluído devem ser confirmados com o vendedor.',
-    de:0, ate:0, total:1088, imposto:0, custoImposto:204, chegada:'dezembro', foto:'', fotos:['/loja/fotos/zelda-case-switch2-1.jpg'], contem:true, link:'' },
+    de:0, ate:0, total:758, imposto:0, custoImposto:204, chegada:'dezembro', foto:'', fotos:['/loja/fotos/zelda-case-switch2-1.jpg'], contem:true, link:'' },
   { id:'zelda-master-sword', cat:'colec', nome:'Zelda · Master Sword e outros itens',
     desc:'Itens de The Legend of Zelda em seleção para o malote de dezembro.',
     de:0, ate:0, foto:'', link:'' },
