@@ -26,7 +26,7 @@ window.ACHADOS = [
   { id:'pro-controller-zelda-40', cat:'colec', nome:'Zelda 40 anos · controle Pro para Nintendo Switch 2', novo:true,
     desc:'Controle Pro do Nintendo Switch 2, edição de 40 anos de The Legend of Zelda, novo. Na foto aparece na caixa, com o controle dourado e verde e um suporte de exibição incluído (indicado na caixa). Só há uma foto no anúncio, então o estado da embalagem e o conteúdo da caixa devem ser confirmados com o vendedor.',
     de:0, ate:0, total:2188, imposto:649, chegada:'dezembro', foto:'', fotos:['/loja/fotos/pro-controller-zelda-1.jpg'], contem:true, link:'' },
-  { id:'3ds-vermelho-metalico', cat:'consoles', nome:'Nintendo 3DS · vermelho metálico',
+  { id:'3ds-vermelho-metalico', vendido:true, cat:'consoles', nome:'Nintendo 3DS · vermelho metálico',
     desc:'Console portátil da Nintendo em estado de como novo, segundo o vendedor. Acompanha carregador, base de carregamento, caneta e cartão SD de 4 GB, como mostram as fotos.',
     de:0, ate:0, total:1500, imposto:445, chegada:'dezembro', foto:'', fotos:['/loja/fotos/3ds-vermelho-1.jpg','/loja/fotos/3ds-vermelho-2.jpg','/loja/fotos/3ds-vermelho-3.jpg','/loja/fotos/3ds-vermelho-4.jpg','/loja/fotos/3ds-vermelho-5.jpg','/loja/fotos/3ds-vermelho-6.jpg'], link:'' },
   { id:'3ds-rosa-gloss', cat:'consoles', nome:'Nintendo 3DS · rosa gloss',
