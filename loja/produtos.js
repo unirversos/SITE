@@ -21,7 +21,7 @@ window.ACHADOS = [
     de:0, ate:0, total:2176, imposto:0, custoImposto:649, chegada:'dezembro', foto:'', fotos:['/loja/fotos/pro-controller-zelda-3.jpg','/loja/fotos/pro-controller-zelda-1.jpg'], contem:true, link:'' },
   { id:'game-watch-zelda', cat:'zelda', nome:'Game & Watch · The Legend of Zelda', novo:true,
     desc:'Console portátil Game & Watch da Nintendo, edição The Legend of Zelda, novo e lacrado (indicado no título do anúncio, “新品未開封”). Na foto aparece na embalagem, com a tela mostrando a abertura do jogo original. Só há uma foto no anúncio, então o conteúdo da caixa e o estado da embalagem devem ser confirmados com o vendedor.',
-    de:0, ate:0, total:616, imposto:0, custoImposto:192, chegada:'dezembro', foto:'', fotos:['/loja/fotos/game-watch-zelda-1.jpg'], contem:true, link:'' },
+    de:0, ate:0, total:616, imposto:0, custoImposto:192, chegada:'dezembro', foto:'', fotos:['/loja/fotos/game-watch-zelda-1.jpg','/loja/fotos/game-watch-zelda-2.jpg'], contem:true, link:'' },
   { id:'joycon-zelda-azul', cat:'zelda', nome:'Nintendo Switch · Joy-Con azuis com tema Zelda',
     desc:'Par de Joy-Con da Nintendo Switch, azuis com motivos de The Legend of Zelda (emblema vermelho e detalhes dourados), vistos na foto acoplados a um suporte de Joy-Con. O título do anúncio informa “funcionamento verificado” (動作確認済み). Só há uma foto no anúncio, então o desgaste, o que acompanha o par e o estado dos analógicos devem ser confirmados com o vendedor.',
     antes:['Item usado, garimpado no Japão e vendido no estado mostrado nas fotos.','O anúncio diz que o funcionamento foi verificado, mas não detalha desgaste nem bateria.','Analógico com “drift” é um desgaste comum em Joy-Con usados: vale pedir ao vendedor para testar e confirmar.'],
