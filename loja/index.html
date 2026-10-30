@@ -85,12 +85,20 @@ h1 .jp rt{font-size:.5em;letter-spacing:.05em}
 .gal::-webkit-scrollbar{display:none}
 .gal.contem img{object-fit:contain;background:#fff}
 .gal img{flex:0 0 100%;width:100%;height:100%;object-fit:cover;object-position:center 35%;scroll-snap-align:center}
+.gal img,.foto>img{cursor:zoom-in}
+#lb{position:fixed;inset:0;z-index:9999;background:rgba(20,14,22,.92);display:none;align-items:center;justify-content:center;padding:16px}
+#lb.on{display:flex}
+#lb img{max-width:100%;max-height:100%;object-fit:contain;border-radius:8px;background:#fff}
+#lb button{position:absolute;border:0;border-radius:50%;width:46px;height:46px;background:rgba(255,255,255,.92);color:#3a2b38;font-size:28px;font-weight:700;cursor:pointer;line-height:1}
+#lb .fx{top:14px;right:14px}#lb .pv{left:12px;top:50%;transform:translateY(-50%)}#lb .nx{right:12px;top:50%;transform:translateY(-50%)}
+#lb .nn{position:absolute;bottom:16px;left:50%;transform:translateX(-50%);color:#fff;font-weight:700;font-size:14px;background:rgba(0,0,0,.5);padding:4px 12px;border-radius:999px}
 .seta{position:absolute;top:50%;transform:translateY(-50%);width:34px;height:34px;border-radius:50%;border:0;background:rgba(255,255,255,.88);color:#3a2b38;font-size:22px;line-height:1;font-weight:700;cursor:pointer;box-shadow:0 2px 8px rgba(58,43,56,.25);display:flex;align-items:center;justify-content:center;padding:0 0 3px}
 .seta:hover{background:#fff}.seta.e{left:8px}.seta.d{right:8px}
 .cont{position:absolute;left:10px;bottom:10px;background:rgba(58,43,56,.72);color:#fff;font-size:12px;font-weight:700;padding:4px 10px;border-radius:999px;pointer-events:none}
 .novo{position:absolute;top:10px;left:10px;background:#2f7d57;color:#fff;font-weight:800;font-size:12.5px;letter-spacing:.04em;padding:6px 11px;border-radius:999px;box-shadow:0 4px 10px -4px rgba(47,125,87,.6);transform:rotate(-3deg);z-index:2}
 .selo{position:absolute;top:10px;right:10px;background:var(--pink);color:#fff;font-weight:800;font-size:12.5px;letter-spacing:.02em;padding:6px 11px;border-radius:999px;box-shadow:0 4px 10px -4px rgba(194,63,94,.6);transform:rotate(3deg)}
-.preco.br{font-size:22px;margin:0 0 6px}.preco.br s{display:none}.economia{margin:0 0 8px;font-weight:800;color:#2f7d57;font-size:14px}
+.preco.br{font-size:22px;margin:0 0 6px}.preco.br s{display:none}.incl{margin:8px 0 0;padding:8px 10px;background:#e8efe8;border-left:4px solid #2f7d57;border-radius:6px;font-weight:800;font-size:14px;color:#1f5c3e}
+.economia{margin:0 0 8px;font-weight:800;color:#2f7d57;font-size:14px}
 .card.cmp .preco.tot{font-size:22px}
 .preco.tot{margin:6px 0 0;padding-top:8px;border-top:2px solid var(--ink)}
 .pag s,.preco s{color:var(--muted)}
@@ -198,7 +206,8 @@ footer a:hover{color:var(--pink)}
   </footer>
 </div>
 
-<script src="/loja/produtos.js?v=20261030l"></script>
+<div id="lb" role="dialog" aria-label="Foto ampliada" aria-hidden="true"><button class="fx" type="button" aria-label="Fechar">×</button><button class="pv" type="button" aria-label="Foto anterior">‹</button><img alt=""><button class="nx" type="button" aria-label="Próxima foto">›</button><span class="nn"></span></div>
+<script src="/loja/produtos.js?v=20261030q"></script>
 <script>
 (function(){
   const CATS=[
@@ -229,7 +238,7 @@ footer a:hover{color:var(--pink)}
     const fm=n=>Number(n).toLocaleString('pt-BR',{minimumFractionDigits:2,maximumFractionDigits:2});
     const DESC=15; /* % de desconto da primeira compra, só sobre o produto (sem a taxa de importação) */
     const prod=x.total?x.total-(x.imposto||0):0, com=prod*(1-DESC/100), totCom=com+(x.imposto||0);
-    const rs=x.total?`<ul class="pag"><li><b>Produto:</b> <s>R$ ${fm(prod)}</s> <b>R$ ${fm(com)}</b> <span class="parc">com ${DESC}% de desconto. Parcelamento pelo Mercado Pago, com os juros dele.</span></li>${x.imposto?`<li class="ch"><b>Taxa de importação, paga na chegada:</b> R$ ${fm(x.imposto)} <span class="parc">(estimativa, vai direto para a alfândega, não entra no parcelamento e não tem desconto)</span></li>`:''}</ul><p class="preco tot"><span class="parc">${x.imposto?'= Total (produto + taxa), na 1ª compra':'= Total, na 1ª compra · sem taxa de importação na chegada'}</span><br>R$ ${fm(totCom)} <span class="parc"><s>R$ ${fm(x.total)}</s></span></p>${x.chegada?`<p class="parc">📦 Chegada: ${esc(x.chegada)}</p>`:''}`:'';
+    const rs=x.total?`<ul class="pag"><li><b>Produto:</b> <s>R$ ${fm(prod)}</s> <b>R$ ${fm(com)}</b> <span class="parc">com ${DESC}% de desconto. Parcelamento pelo Mercado Pago, com os juros dele.</span></li>${x.imposto?`<li class="ch"><b>Taxa de importação, paga na chegada:</b> R$ ${fm(x.imposto)} <span class="parc">(estimativa, vai direto para a alfândega, não entra no parcelamento e não tem desconto)</span></li>`:''}</ul><p class="preco tot"><span class="parc">${x.imposto?'= Total (produto + taxa), na 1ª compra':'= Total, na 1ª compra'}</span><br>R$ ${fm(totCom)} <span class="parc"><s>R$ ${fm(x.total)}</s></span></p>${x.imposto?'':'<p class="incl">✔ Taxa e impostos inclusos: você não vai pagar nada além.</p>'}${x.chegada?`<p class="parc">📦 Chegada: ${esc(x.chegada)}</p>`:''}`:'';
     const br=x.br?`<p class="preco br"><span class="parc">No Mercado Livre (${esc(x.br.rotulo)}, preço de referência)</span><br>R$ ${fm(x.br.preco)}</p><p class="economia">Aqui sai R$ ${fm(x.br.preco-totCom)} mais barato <span class="parc">(${esc(x.br.rotulo)})</span></p>`:'';
     const selo=x.total?`<span class="selo">${DESC}% OFF · 1ª compra</span>`:'';
     const novo=vend?`<span class="vendido">VENDIDO</span>`:x.novo?`<span class="novo">ITEM NOVO</span>`:'';
@@ -261,6 +270,20 @@ footer a:hover{color:var(--pink)}
     }).join('');
   }
   window.__renderVitrine=render;
+  /* foto grande: clique na foto do card abre ampliada */
+  (function(){
+    const lb=document.getElementById('lb'), im=lb.querySelector('img'), nn=lb.querySelector('.nn'); let L=[],i=0;
+    const show=()=>{ im.src=L[i].src; im.alt=L[i].alt; nn.textContent=L.length>1?(i+1)+'/'+L.length:''; lb.querySelector('.pv').style.display=lb.querySelector('.nx').style.display=L.length>1?'':'none'; };
+    const close=()=>{ lb.classList.remove('on'); lb.setAttribute('aria-hidden','true'); im.removeAttribute('src'); };
+    document.addEventListener('click',e=>{
+      const t=e.target;
+      if(t.closest('#lb')){ if(t.closest('.fx')||t===lb) close(); else if(t.closest('.pv')){ i=(i-1+L.length)%L.length; show(); } else if(t.closest('.nx')){ i=(i+1)%L.length; show(); } return; }
+      const img=t.tagName==='IMG'&&t.closest('.foto')?t:null; if(!img) return;
+      const box=img.closest('.foto'); L=[].slice.call(box.querySelectorAll('img')); i=Math.max(0,L.indexOf(img));
+      show(); lb.classList.add('on'); lb.setAttribute('aria-hidden','false');
+    });
+    document.addEventListener('keydown',e=>{ if(!lb.classList.contains('on')) return; if(e.key==='Escape') close(); else if(e.key==='ArrowRight'&&L.length>1){ i=(i+1)%L.length; show(); } else if(e.key==='ArrowLeft'&&L.length>1){ i=(i-1+L.length)%L.length; show(); } });
+  })();
   document.addEventListener('click',e=>{ const s=e.target.closest('.seta'); if(!s) return; const g=s.parentNode.querySelector('.gal'); if(!g) return; const d=+s.dataset.dir, w=g.clientWidth, n=Math.round(g.scrollLeft/w)+d, t=g.children.length; g.scrollTo({left:((n%t)+t)%t*w,behavior:'smooth'}); });
   document.addEventListener('keydown',e=>{ const g=e.target&&e.target.classList&&e.target.classList.contains('gal')?e.target:null; if(!g||(e.key!=='ArrowRight'&&e.key!=='ArrowLeft')) return; e.preventDefault(); g.scrollBy({left:(e.key==='ArrowRight'?1:-1)*g.clientWidth,behavior:'smooth'}); });
   document.addEventListener('scroll',e=>{ const g=e.target; if(!g||!g.classList||!g.classList.contains('gal')) return; const n=Math.round(g.scrollLeft/g.clientWidth)+1, t=g.children.length, c=g.parentNode.querySelector('.cont'); if(c) c.textContent=n+'/'+t; },true);
