@@ -57,7 +57,7 @@ h1 .jp rt{font-size:.5em;letter-spacing:.05em}
 .cat-h p{margin:0;color:var(--muted);font-size:15px;max-width:62ch}
 .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:18px}
 .card{--c:var(--pink);position:relative;background:var(--card);border:1.5px solid var(--line);border-radius:var(--r);overflow:hidden;display:grid;grid-template-rows:auto 1fr;box-shadow:0 10px 24px -18px rgba(58,43,56,.35)}
-.card[data-cat="consoles"]{--c:var(--lavender)} .card[data-cat="colec"]{--c:var(--sky)} .card[data-cat="reliquias"]{--c:var(--gold)} .card[data-cat="gadgets"]{--c:var(--sage)}
+.card[data-cat="zelda"]{--c:var(--gold)} .card[data-cat="consoles"]{--c:var(--lavender)} .card[data-cat="colec"]{--c:var(--sky)} .card[data-cat="reliquias"]{--c:var(--gold)} .card[data-cat="gadgets"]{--c:var(--sage)}
 .taxa{margin:6px 0 0;padding:9px 11px;border-radius:12px;background:#fff4e0;border:1.5px solid #e8c98a;color:#5b4210;font-size:13.5px;line-height:1.45}
 .taxa b{font-weight:800}
 .pag{list-style:none;margin:4px 0 0;padding:0;display:grid;gap:6px;font-size:14px;line-height:1.4}
@@ -103,6 +103,7 @@ h1 .jp rt{font-size:.5em;letter-spacing:.05em}
 .quero{justify-self:stretch;text-align:center;margin-top:4px;text-decoration:none;font-weight:700;font-size:14.5px;padding:9px 14px;border-radius:999px;background:var(--pink);color:#fff}
 .quero:hover{filter:brightness(.95)}
 .vendido{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%) rotate(-8deg);background:#b3261e;color:#fff;font-weight:900;font-size:26px;letter-spacing:.12em;padding:8px 22px;border-radius:8px;box-shadow:0 6px 16px -4px rgba(0,0,0,.5);z-index:3;pointer-events:none}
+.pre{display:inline-block;margin:0 0 8px;background:#3b2f6b;color:#fff;font-weight:800;font-size:12px;letter-spacing:.06em;padding:5px 11px;border-radius:999px}
 .quero.off{background:var(--paper);color:var(--muted);border:1.5px dashed var(--line);cursor:default}
 .ex{position:absolute;top:10px;left:10px;background:#fff;border:1.5px dashed var(--pink);color:var(--pink);font-size:11px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;padding:2px 8px;border-radius:999px}
 .vazio{margin:0;color:var(--muted);font-size:14.5px;background:var(--card);border:1.5px dashed var(--line);border-radius:14px;padding:14px 16px}
@@ -195,10 +196,11 @@ footer a:hover{color:var(--pink)}
   </footer>
 </div>
 
-<script src="/loja/produtos.js?v=20261030d"></script>
+<script src="/loja/produtos.js?v=20261030e"></script>
 <script>
 (function(){
   const CATS=[
+    {id:'zelda',    ic:'🗡️', nome:'ZELDA · Edição especial', sub:'Itens da série Zelda e da edição de 40 anos. Pré-venda do malote de dezembro: sem taxa de importação na chegada.'},
     {id:'consoles', ic:'🎮', nome:'Consoles & Portáteis', sub:'Consoles e portáteis preservados, de edições especiais a clássicos.'},
     {id:'colec',    ic:'🗿', nome:'Colecionáveis & Figures', sub:'Figures, pelúcias e peças colecionáveis garimpadas com cuidado.'},
     {id:'reliquias',ic:'🏮', nome:'Relíquias Vintage', sub:'Achados antigos e raros, cada um com a sua história.'},
@@ -225,7 +227,7 @@ footer a:hover{color:var(--pink)}
     const fm=n=>Number(n).toLocaleString('pt-BR',{minimumFractionDigits:2,maximumFractionDigits:2});
     const DESC=15; /* % de desconto da primeira compra, só sobre o produto (sem a taxa de importação) */
     const prod=x.total?x.total-(x.imposto||0):0, com=prod*(1-DESC/100), totCom=com+(x.imposto||0);
-    const rs=x.total?`<ul class="pag"><li><b>Produto:</b> <s>R$ ${fm(prod)}</s> <b>R$ ${fm(com)}</b> <span class="parc">com ${DESC}% de desconto. Parcelamento pelo Mercado Pago, com os juros dele.</span></li>${x.imposto?`<li class="ch"><b>Taxa de importação, paga na chegada:</b> R$ ${fm(x.imposto)} <span class="parc">(estimativa, vai direto para a alfândega, não entra no parcelamento e não tem desconto)</span></li>`:''}</ul><p class="preco tot"><span class="parc">= Total (produto + taxa), na 1ª compra</span><br>R$ ${fm(totCom)} <span class="parc"><s>R$ ${fm(x.total)}</s></span></p>${x.chegada?`<p class="parc">📦 Chegada: ${esc(x.chegada)}</p>`:''}`:'';
+    const rs=x.total?`<ul class="pag"><li><b>Produto:</b> <s>R$ ${fm(prod)}</s> <b>R$ ${fm(com)}</b> <span class="parc">com ${DESC}% de desconto. Parcelamento pelo Mercado Pago, com os juros dele.</span></li>${x.imposto?`<li class="ch"><b>Taxa de importação, paga na chegada:</b> R$ ${fm(x.imposto)} <span class="parc">(estimativa, vai direto para a alfândega, não entra no parcelamento e não tem desconto)</span></li>`:''}</ul><p class="preco tot"><span class="parc">${x.imposto?'= Total (produto + taxa), na 1ª compra':'= Total, na 1ª compra · sem taxa de importação na chegada'}</span><br>R$ ${fm(totCom)} <span class="parc"><s>R$ ${fm(x.total)}</s></span></p>${x.chegada?`<p class="parc">📦 Chegada: ${esc(x.chegada)}</p>`:''}`:'';
     const selo=x.total?`<span class="selo">${DESC}% OFF · 1ª compra</span>`:'';
     const novo=vend?`<span class="vendido">VENDIDO</span>`:x.novo?`<span class="novo">ITEM NOVO</span>`:'';
     return `<article class="card${esg?' esg':''}" data-cat="${c.id}" data-id="${esc(x.id||'')}">
@@ -233,11 +235,12 @@ footer a:hover{color:var(--pink)}
       <div class="foto">${foto}${selo}${novo}</div>
       <div class="corpo">
         <p class="tag">${c.ic} ${esc(c.nome)}</p>
+        ${c.id==='zelda'?'<p class="pre">PRÉ-VENDA · MALOTE</p>':''}
         <h3>${esc(x.nome)}</h3>
         ${rs||(p?`<p class="preco">${p} <small>referência</small></p>`:'')}
         <details class="mais"><summary>Mais detalhes</summary>
           <p class="d">${esc(x.desc)}</p>
-          ${c.id==='consoles'&&!x.novo?`<div class="antes"><b>Antes de comprar</b><ul>${(x.antes||['Item de garimpo: usado, garimpado no Japão e vendido no estado mostrado nas fotos.','Console japonês: roda jogos de 3DS japoneses. A trava de região pode ser contornada por modificação, que é por conta do comprador.','Carregador japonês: confira a tensão antes de ligar.']).map(t=>`<li>${esc(t)}</li>`).join('')}</ul></div>`:''}
+          ${(c.id==='consoles'||x.antes)&&!x.novo?`<div class="antes"><b>Antes de comprar</b><ul>${(x.antes||['Item de garimpo: usado, garimpado no Japão e vendido no estado mostrado nas fotos.','Console japonês: roda jogos de 3DS japoneses. A trava de região pode ser contornada por modificação, que é por conta do comprador.','Carregador japonês: confira a tensão antes de ligar.']).map(t=>`<li>${esc(t)}</li>`).join('')}</ul></div>`:''}
         </details>
         ${btn}
       </div></article>`;
