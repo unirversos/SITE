@@ -25,7 +25,7 @@ window.ACHADOS = [
   { id:'joycon-zelda-azul', cat:'zelda', nome:'Nintendo Switch · Joy-Con azuis com tema Zelda',
     desc:'Par de Joy-Con da Nintendo Switch, azuis com motivos de The Legend of Zelda (emblema vermelho e detalhes dourados), vistos na foto acoplados a um suporte de Joy-Con. O título do anúncio informa “funcionamento verificado” (動作確認済み). Só há uma foto no anúncio, então o desgaste, o que acompanha o par e o estado dos analógicos devem ser confirmados com o vendedor.',
     antes:['Item usado, garimpado no Japão e vendido no estado mostrado nas fotos.','O anúncio diz que o funcionamento foi verificado, mas não detalha desgaste nem bateria.','Analógico com “drift” é um desgaste comum em Joy-Con usados: vale pedir ao vendedor para testar e confirmar.'],
-    de:0, ate:0, total:1115, imposto:0, custoImposto:215, chegada:'dezembro', foto:'', fotos:['/loja/fotos/joycon-zelda-1.jpg'], contem:true, link:'' },
+    de:0, ate:0, total:799, imposto:0, custoImposto:215, chegada:'dezembro', foto:'', fotos:['/loja/fotos/joycon-zelda-1.jpg'], contem:true, link:'' },
   { id:'3ds-vermelho-metalico', vendido:true, cat:'consoles', nome:'Nintendo 3DS · vermelho metálico',
     desc:'Console portátil da Nintendo em estado de como novo, segundo o vendedor. Acompanha carregador, base de carregamento, caneta e cartão SD de 4 GB, como mostram as fotos.',
     de:0, ate:0, total:1500, imposto:445, chegada:'dezembro', foto:'', fotos:['/loja/fotos/3ds-vermelho-1.jpg','/loja/fotos/3ds-vermelho-2.jpg','/loja/fotos/3ds-vermelho-3.jpg','/loja/fotos/3ds-vermelho-4.jpg','/loja/fotos/3ds-vermelho-5.jpg','/loja/fotos/3ds-vermelho-6.jpg'], link:'' },
