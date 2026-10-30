@@ -12,7 +12,7 @@
      vaga      : true deixa o card como "espaço reservado". Troque para false (ou apague a linha) quando preencher.
    ========================================================= */
 window.PARCEIRAS = [
-  { nome:'', foto:'', provincia:'', nichos:[], bio:'', whatsapp:'', instagram:'', mensagem:'', vaga:true },
-  { nome:'', foto:'', provincia:'', nichos:[], bio:'', whatsapp:'', instagram:'', mensagem:'', vaga:true },
-  { nome:'', foto:'', provincia:'', nichos:[], bio:'', whatsapp:'', instagram:'', mensagem:'', vaga:true }
+  { nome:'Aline Kikuti', foto:'', provincia:'', nichos:['Consoles e portáteis','Colecionáveis e figures','Gadgets e papelaria'],
+    bio:'Professora de idiomas e criadora da Unirversos. Eu garimpo no Japão o que você procura e cuido do envio para o Brasil.',
+    whatsapp:'5519996390950', instagram:'unirversos.idiomas', mensagem:'Olá, Aline! Vim pelo site da Unirversos e quero fazer uma encomenda do Japão.', vaga:false }
 ];
