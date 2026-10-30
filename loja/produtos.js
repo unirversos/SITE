@@ -16,8 +16,8 @@
      exemplo: true só nos cards de exemplo. Apague os exemplos quando colocar os seus.
    ========================================================= */
 window.ACHADOS = [
-  { id:'pro-controller-zelda-40', cat:'zelda', nome:'Zelda 40 anos · controle Pro para Nintendo Switch 2', novo:true,
-    desc:'Controle Pro do Nintendo Switch 2, edição de 40 anos de The Legend of Zelda, novo. Na foto aparece na caixa, com o controle dourado e verde e um suporte de exibição incluído (indicado na caixa). Só há uma foto no anúncio, então o estado da embalagem e o conteúdo da caixa devem ser confirmados com o vendedor.',
+  { id:'pro-controller-zelda-40', cat:'zelda', nome:'Zelda 40 anos · controle Pro para Nintendo Switch 2 · com base', novo:true, br:{preco:2000,rotulo:'com base'},
+    desc:'Controle Pro do Nintendo Switch 2, edição de 40 anos de The Legend of Zelda, novo. Na foto aparece na caixa, com o controle dourado e verde e a base de exibição incluída (a caixa indica “ディスプレイスタンド付き”, com suporte de exibição). Atenção: existe uma versão parecida do controle SEM a base, mais barata; esta é a versão COM base. Só há uma foto no anúncio, então o estado da embalagem e o conteúdo da caixa devem ser confirmados com o vendedor.',
     de:0, ate:0, total:2176, imposto:0, custoImposto:649, chegada:'dezembro', foto:'', fotos:['/loja/fotos/pro-controller-zelda-1.jpg'], contem:true, link:'' },
   { id:'game-watch-zelda', cat:'zelda', nome:'Game & Watch · The Legend of Zelda', novo:true,
     desc:'Console portátil Game & Watch da Nintendo, edição The Legend of Zelda, novo e lacrado (indicado no título do anúncio, “新品未開封”). Na foto aparece na embalagem, com a tela mostrando a abertura do jogo original. Só há uma foto no anúncio, então o conteúdo da caixa e o estado da embalagem devem ser confirmados com o vendedor.',
