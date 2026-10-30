@@ -90,6 +90,8 @@ h1 .jp rt{font-size:.5em;letter-spacing:.05em}
 .cont{position:absolute;left:10px;bottom:10px;background:rgba(58,43,56,.72);color:#fff;font-size:12px;font-weight:700;padding:4px 10px;border-radius:999px;pointer-events:none}
 .novo{position:absolute;top:10px;left:10px;background:#2f7d57;color:#fff;font-weight:800;font-size:12.5px;letter-spacing:.04em;padding:6px 11px;border-radius:999px;box-shadow:0 4px 10px -4px rgba(47,125,87,.6);transform:rotate(-3deg);z-index:2}
 .selo{position:absolute;top:10px;right:10px;background:var(--pink);color:#fff;font-weight:800;font-size:12.5px;letter-spacing:.02em;padding:6px 11px;border-radius:999px;box-shadow:0 4px 10px -4px rgba(194,63,94,.6);transform:rotate(3deg)}
+.preco.br{font-size:22px;margin:0 0 6px}.preco.br s{display:none}.economia{margin:0 0 8px;font-weight:800;color:#2f7d57;font-size:14px}
+.card.cmp .preco.tot{font-size:22px}
 .preco.tot{margin:6px 0 0;padding-top:8px;border-top:2px solid var(--ink)}
 .pag s,.preco s{color:var(--muted)}
 .foto{position:relative;aspect-ratio:4/3;background:color-mix(in srgb,var(--c) 14%,var(--card));display:grid;place-items:center;font-size:56px;border-bottom:1.5px solid var(--line)}
@@ -196,7 +198,7 @@ footer a:hover{color:var(--pink)}
   </footer>
 </div>
 
-<script src="/loja/produtos.js?v=20261030e"></script>
+<script src="/loja/produtos.js?v=20261030j"></script>
 <script>
 (function(){
   const CATS=[
@@ -228,16 +230,17 @@ footer a:hover{color:var(--pink)}
     const DESC=15; /* % de desconto da primeira compra, só sobre o produto (sem a taxa de importação) */
     const prod=x.total?x.total-(x.imposto||0):0, com=prod*(1-DESC/100), totCom=com+(x.imposto||0);
     const rs=x.total?`<ul class="pag"><li><b>Produto:</b> <s>R$ ${fm(prod)}</s> <b>R$ ${fm(com)}</b> <span class="parc">com ${DESC}% de desconto. Parcelamento pelo Mercado Pago, com os juros dele.</span></li>${x.imposto?`<li class="ch"><b>Taxa de importação, paga na chegada:</b> R$ ${fm(x.imposto)} <span class="parc">(estimativa, vai direto para a alfândega, não entra no parcelamento e não tem desconto)</span></li>`:''}</ul><p class="preco tot"><span class="parc">${x.imposto?'= Total (produto + taxa), na 1ª compra':'= Total, na 1ª compra · sem taxa de importação na chegada'}</span><br>R$ ${fm(totCom)} <span class="parc"><s>R$ ${fm(x.total)}</s></span></p>${x.chegada?`<p class="parc">📦 Chegada: ${esc(x.chegada)}</p>`:''}`:'';
+    const br=x.br?`<p class="preco br"><span class="parc">No Mercado Livre (${esc(x.br.rotulo)}, preço de referência)</span><br>R$ ${fm(x.br.preco)}</p><p class="economia">Aqui sai R$ ${fm(x.br.preco-totCom)} mais barato <span class="parc">(${esc(x.br.rotulo)})</span></p>`:'';
     const selo=x.total?`<span class="selo">${DESC}% OFF · 1ª compra</span>`:'';
     const novo=vend?`<span class="vendido">VENDIDO</span>`:x.novo?`<span class="novo">ITEM NOVO</span>`:'';
-    return `<article class="card${esg?' esg':''}" data-cat="${c.id}" data-id="${esc(x.id||'')}">
+    return `<article class="card${esg?' esg':''}${x.br?' cmp':''}" data-cat="${c.id}" data-id="${esc(x.id||'')}">
       ${x.exemplo?'<span class="ex">exemplo</span>':''}
       <div class="foto">${foto}${selo}${novo}</div>
       <div class="corpo">
         <p class="tag">${c.ic} ${esc(c.nome)}</p>
         ${c.id==='zelda'?'<p class="pre">PRÉ-VENDA · MALOTE</p>':''}
         <h3>${esc(x.nome)}</h3>
-        ${rs||(p?`<p class="preco">${p} <small>referência</small></p>`:'')}
+        ${br}${rs||(p?`<p class="preco">${p} <small>referência</small></p>`:'')}
         <details class="mais"><summary>Mais detalhes</summary>
           <p class="d">${esc(x.desc)}</p>
           ${(c.id==='consoles'||x.antes)&&!x.novo?`<div class="antes"><b>Antes de comprar</b><ul>${(x.antes||['Item de garimpo: usado, garimpado no Japão e vendido no estado mostrado nas fotos.','Console japonês: roda jogos de 3DS japoneses. A trava de região pode ser contornada por modificação, que é por conta do comprador.','Carregador japonês: confira a tensão antes de ligar.']).map(t=>`<li>${esc(t)}</li>`).join('')}</ul></div>`:''}
