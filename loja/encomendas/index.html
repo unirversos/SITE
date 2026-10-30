@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-<title>Garimpo sob medida · Unirversos Tesouros</title>
+<title>Aceito encomendas · Unirversos Tesouros</title>
 <meta name="description" content="Encomendas sob medida no Japão: eu faço o garimpo físico de consoles, colecionáveis, gadgets e o que você procurar.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -122,6 +122,16 @@ footer a:hover{color:var(--pink)}
 .pc.vaga i{color:var(--muted)}
 .pc.vaga .em{margin:0;font-size:14px;color:var(--muted)}
 .ct .off{background:var(--paper);color:var(--muted);border:1.5px dashed var(--line);cursor:default}
+.pedido{background:var(--card);border:1.5px solid var(--line);border-left:6px solid var(--pink);border-radius:var(--r);padding:22px;display:grid;gap:14px;max-width:760px}
+.pedido h2{font-family:var(--f-display);font-size:clamp(22px,3vw,28px);margin:0;line-height:1.15}
+.pedido p{margin:0}
+.pedido label{display:grid;gap:4px;font-weight:700;font-size:14.5px}
+.pedido label small{font-weight:500;color:var(--muted);font-size:13px}
+.pedido input,.pedido textarea{font:inherit;font-weight:500;padding:10px 12px;border:1.5px solid var(--line);border-radius:12px;background:#fff;color:var(--ink);width:100%}
+.pedido textarea{min-height:130px;resize:vertical}
+.campos{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:12px}
+.pedido button.btn{cursor:pointer;justify-self:start;font-size:16px}
+.erro{color:#b3261e;font-weight:700;font-size:14px;min-height:1.2em}
 </style>
 <link rel="stylesheet" href="/estilo-celular.css?v=2">
 <script defer src="/menu-ativo.js?v=1"></script>
@@ -136,26 +146,41 @@ footer a:hover{color:var(--pink)}
   <nav class="abas" aria-label="Unirversos Tesouros">
     <a href="/loja/">🛒 Vitrine</a>
     <a href="/loja/encomendas/" aria-current="page">🛍️ Encomendas</a>
-    <a href="/loja/peca-o-seu/">💌 Peça o seu</a>
     <a href="/loja/brecho/">🧥 Brechó</a>
     <a href="/loja/revista/">📖 Revista Memórias</a>
   </nav>
 
   <header class="hero">
     <p class="eyebrow">unirversos tesouros · encomendas</p>
-    <h1 style="font-size:clamp(32px,5vw,50px);max-width:20ch">Garimpo sob medida: encomendas direto comigo, no Japão</h1>
-    <p class="lede">Procurando uma relíquia específica, uma peça vintage ou um item de colecionador? Eu faço o garimpo nas lojas do Japão e cuido do envio para você, com atendimento pessoal.</p>
+    <h1 style="font-size:clamp(32px,5vw,50px);max-width:20ch">Não encontrou o que gostaria? Aceito encomendas!</h1>
+    <p class="lede">Me mande com detalhes o que você deseja! Eu faço o garimpo nas lojas do Japão e cuido do envio para você, com atendimento pessoal.</p>
     <div class="acts">
-      <a class="btn pri" href="#parceiras">Falar comigo ↓</a>
+      <a class="btn pri" href="#pedido">Fazer minha encomenda ↓</a>
       <a class="btn sec" href="/loja/guia/">Imposto e alfândega →</a>
     </div>
   </header>
+
+  <section class="pedido" id="pedido" style="scroll-margin-top:16px" aria-labelledby="t-ped">
+    <h2 id="t-ped">Conte o que você procura</h2>
+    <p>Quanto mais detalhes, melhor: nome do item, cor, edição, tamanho, estado (novo ou usado) e um link ou foto de referência, se tiver. A mensagem abre no meu WhatsApp, já pronta para enviar.</p>
+    <form id="f" novalidate>
+      <div class="campos">
+        <label>Seu nome<input id="nome" autocomplete="given-name" placeholder="Como posso te chamar?"></label>
+        <label>Quanto você pretende gastar? <small>(opcional, em reais)</small><input id="valor" inputmode="decimal" placeholder="ex.: 500"></label>
+      </div>
+      <label>O que você deseja? <small>Descreva com detalhes</small><textarea id="desc" required placeholder="ex.: figure do Zoro da linha tal, caixa lacrada, até R$ 500"></textarea></label>
+      <label>Link de referência <small>(opcional: Mercari, loja ou foto na internet)</small><input id="link" type="url" inputmode="url" placeholder="https://"></label>
+      <p class="aviso">Se tiver foto, mande pelo WhatsApp depois que a mensagem abrir.</p>
+      <p class="erro" id="erro" role="alert"></p>
+      <button class="btn pri" type="submit">💬 Enviar pelo WhatsApp</button>
+    </form>
+  </section>
 
   <section aria-labelledby="t-como" style="display:grid;gap:16px">
     <h2 class="sec-t" id="t-como">Como funciona</h2>
     <ol class="passos">
       <li><b>Me conte o que você procura</b><span>Descreva o item, com nome, foto ou link, e o quanto pretende gastar.</span></li>
-      <li><b>Fale comigo</b><span>Pelo WhatsApp ou pelo Direct, ou pela página <a href="/loja/peca-o-seu/">Peça o seu</a>.</span></li>
+      <li><b>Envie o pedido</b><span>Pelo formulário acima, pelo WhatsApp ou pelo Direct.</span></li>
       <li><b>Eu garimpo e envio</b><span>Faço a cotação, vou até a loja no Japão, junto o seu pacote e envio para o Brasil.</span></li>
     </ol>
   </section>
@@ -174,6 +199,21 @@ footer a:hover{color:var(--pink)}
 </div>
 
 <script src="/loja/parceiras.js?v=2"></script>
+<script>
+document.getElementById('f').addEventListener('submit',function(e){
+  e.preventDefault();
+  const v=id=>document.getElementById(id).value.trim();
+  const erro=document.getElementById('erro');
+  if(v('desc').length<5){ erro.textContent='Conte um pouco mais sobre o que você deseja.'; document.getElementById('desc').focus(); return; }
+  erro.textContent='';
+  let m='ENCOMENDA (site Unirversos)\n';
+  if(v('nome')) m+='Nome: '+v('nome')+'\n';
+  m+='Desejo: '+v('desc')+'\n';
+  if(v('valor')) m+='Valor pretendido: R$ '+v('valor')+'\n';
+  if(v('link')) m+='Referência: '+v('link')+'\n';
+  window.open('https://wa.me/5519996390950?text='+encodeURIComponent(m),'_blank','noopener');
+});
+</script>
 <script>
 (function(){
   const PADRAO='Olá! Vim pelo site da Unirversos e quero encomendar um produto do Japão.';
