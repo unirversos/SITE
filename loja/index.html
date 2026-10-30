@@ -57,7 +57,7 @@ h1 .jp rt{font-size:.5em;letter-spacing:.05em}
 .cat-h p{margin:0;color:var(--muted);font-size:15px;max-width:62ch}
 .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:18px}
 .card{--c:var(--pink);position:relative;background:var(--card);border:1.5px solid var(--line);border-radius:var(--r);overflow:hidden;display:grid;grid-template-rows:auto 1fr;box-shadow:0 10px 24px -18px rgba(58,43,56,.35)}
-.card[data-cat="zelda"]{--c:var(--gold)} .card[data-cat="consoles"]{--c:var(--lavender)} .card[data-cat="colec"]{--c:var(--sky)} .card[data-cat="reliquias"]{--c:var(--gold)} .card[data-cat="gadgets"]{--c:var(--sage)}
+.card[data-cat="zelda"]{--c:var(--gold)} .card[data-cat="didatico"]{--c:var(--sage)} .card[data-cat="consoles"]{--c:var(--lavender)} .card[data-cat="colec"]{--c:var(--sky)} .card[data-cat="reliquias"]{--c:var(--gold)} .card[data-cat="gadgets"]{--c:var(--sage)}
 .taxa{margin:6px 0 0;padding:9px 11px;border-radius:12px;background:#fff4e0;border:1.5px solid #e8c98a;color:#5b4210;font-size:13.5px;line-height:1.45}
 .taxa b{font-weight:800}
 .pag{list-style:none;margin:4px 0 0;padding:0;display:grid;gap:6px;font-size:14px;line-height:1.4}
@@ -155,7 +155,6 @@ footer a:hover{color:var(--pink)}
   <nav class="abas" aria-label="Unirversos Tesouros">
     <a href="/loja/" aria-current="page">🛒 Vitrine</a>
     <a href="/loja/encomendas/">🛍️ Encomendas</a>
-    <a href="/loja/peca-o-seu/">💌 Peça o seu</a>
     <a href="/loja/brecho/">🧥 Brechó</a>
     <a href="/loja/revista/">📖 Revista Memórias</a>
   </nav>
@@ -208,7 +207,7 @@ footer a:hover{color:var(--pink)}
 </div>
 
 <div id="lb" role="dialog" aria-label="Foto ampliada" aria-hidden="true"><button class="fx" type="button" aria-label="Fechar">×</button><button class="pv" type="button" aria-label="Foto anterior">‹</button><img alt=""><button class="nx" type="button" aria-label="Próxima foto">›</button><span class="nn"></span></div>
-<script src="/loja/produtos.js?v=20261030q"></script>
+<script src="/loja/produtos.js?v=20261030t"></script>
 <script>
 (function(){
   const CATS=[
@@ -216,6 +215,7 @@ footer a:hover{color:var(--pink)}
     {id:'consoles', ic:'🎮', nome:'Consoles & Portáteis', sub:'Consoles e portáteis preservados, de edições especiais a clássicos.'},
     {id:'colec',    ic:'🗿', nome:'Colecionáveis & Figures', sub:'Figures, pelúcias e peças colecionáveis garimpadas com cuidado.'},
     {id:'reliquias',ic:'🏮', nome:'Relíquias Vintage', sub:'Achados antigos e raros, cada um com a sua história.'},
+    {id:'didatico', ic:'📚', nome:'Material didático', sub:'Livros e cadernos para estudar japonês.'},
     {id:'gadgets',  ic:'🌸', nome:'Gadgets & Papelaria Japonesa', sub:'Design minimalista, tecnologia portátil e organização para a sua rotina.'}
   ];
   const ITENS=(window.ACHADOS||[]).filter(x=>x&&x.nome);

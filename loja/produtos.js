@@ -76,5 +76,17 @@ window.ACHADOS = [
     de:0, ate:0, foto:'', link:'' },
   { id:'fones-transparentes', cat:'gadgets', nome:'Fones transparentes',
     desc:'Fones de ouvido de design transparente, em seleção para o malote de dezembro.',
-    de:0, ate:0, foto:'', link:'' }
+    de:0, ate:0, foto:'', link:'' },
+  { id:'genki-1-livro', cat:'didatico', nome:'Genki I · Livro-texto (3ª edição)',
+    desc:'Livro-texto Genki I, 3ª edição: “An Integrated Course in Elementary Japanese” (初級日本語 げんき), da The Japan Times Publishing, de Eri Banno, Yoko Ikeda, Yutaka Ohno, Chikako Shinagawa e Kyoko Tokashiki. Capa laranja, volume I. O estado (novo ou usado) deve ser confirmado antes da compra.',
+    de:3500, ate:3500, total:330, imposto:130, chegada:'dezembro', foto:'', fotos:['/loja/fotos/genki-1-livro-1.jpg'], contem:true, link:'' },
+  { id:'genki-1-workbook', cat:'didatico', nome:'Genki I · Workbook (3ª edição)',
+    desc:'Workbook (ワークブック) do Genki I, 3ª edição, da The Japan Times Publishing: caderno de exercícios que acompanha o livro-texto do volume I. O estado (novo ou usado) deve ser confirmado antes da compra.',
+    de:1500, ate:1500, total:162, imposto:56, chegada:'dezembro', foto:'', fotos:['/loja/fotos/genki-1-workbook-1.jpg'], contem:true, link:'' },
+  { id:'genki-2-workbook', cat:'didatico', nome:'Genki II · Workbook (3ª edição)',
+    desc:'Workbook (ワークブック) do Genki II, 3ª edição, da The Japan Times Publishing: caderno de exercícios que acompanha o livro-texto do volume II. Capa verde. O estado (novo ou usado) deve ser confirmado antes da compra.',
+    de:1500, ate:1500, total:162, imposto:56, chegada:'dezembro', foto:'', fotos:['/loja/fotos/genki-2-workbook-1.jpg'], contem:true, link:'' },
+  { id:'genki-2-livro', cat:'didatico', nome:'Genki II · Livro-texto (3ª edição)',
+    desc:'Livro-texto Genki II, 3ª edição: “An Integrated Course in Elementary Japanese” (初級日本語 げんき), da The Japan Times Publishing, dos mesmos autores do volume I. Capa verde, volume II. O estado (novo ou usado) deve ser confirmado antes da compra.',
+    de:3500, ate:3500, total:330, imposto:130, chegada:'dezembro', foto:'', fotos:['/loja/fotos/genki-2-livro-1.jpg'], contem:true, link:'' },
 ];
