@@ -38,5 +38,5 @@ footer a{color:var(--pink)!important}
 .abas a{flex:0 0 auto;text-decoration:none;font-family:var(--f-display);font-weight:700;font-size:15px;padding:8px 16px;border-radius:999px;color:var(--muted);white-space:nowrap}
 .abas a[aria-current="page"]{background:var(--ink);color:#fff}
 .abas a:not([aria-current]):hover{color:var(--pink)}
-@media (max-width:640px){.abas{width:calc(100% - 32px);margin-left:16px;margin-right:16px}.abas a{flex:1 1 0;text-align:center;padding:8px 8px;font-size:13.5px;white-space:normal;line-height:1.25}}
+@media (max-width:640px){.abas{width:calc(100% - 32px);margin-left:16px;margin-right:16px}.abas a{flex:1 1 0;text-align:center;padding:8px 3px;font-size:12.5px;white-space:normal;line-height:1.2}}
 h1 span,h1 em,h2 span{font-weight:800!important}
