@@ -18,7 +18,7 @@
 window.ACHADOS = [
   { id:'pro-controller-zelda-40', cat:'colec', nome:'Zelda 40 anos · controle Pro para Nintendo Switch 2', novo:true,
     desc:'Controle Pro do Nintendo Switch 2, edição de 40 anos de The Legend of Zelda, novo. Na foto aparece na caixa, com o controle dourado e verde e um suporte de exibição incluído (indicado na caixa). Só há uma foto no anúncio, então o estado da embalagem e o conteúdo da caixa devem ser confirmados com o vendedor.',
-    de:0, ate:0, total:2188, imposto:649, chegada:'dezembro', foto:'', fotos:['/loja/fotos/pro-controller-zelda-1.jpg'], contem:true, link:'' },
+    de:0, ate:0, total:1944, imposto:649, chegada:'dezembro', foto:'', fotos:['/loja/fotos/pro-controller-zelda-1.jpg'], contem:true, link:'' },
   { id:'game-watch-zelda', cat:'consoles', nome:'Game & Watch · The Legend of Zelda', novo:true,
     desc:'Console portátil Game & Watch da Nintendo, edição The Legend of Zelda, novo e lacrado (indicado no título do anúncio, “新品未開封”). Na foto aparece na embalagem, com a tela mostrando a abertura do jogo original. Só há uma foto no anúncio, então o conteúdo da caixa e o estado da embalagem devem ser confirmados com o vendedor.',
     de:0, ate:0, total:648, imposto:192, chegada:'dezembro', foto:'', fotos:['/loja/fotos/game-watch-zelda-1.jpg'], contem:true, link:'' },
