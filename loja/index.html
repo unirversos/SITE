@@ -59,6 +59,10 @@ h1 .jp rt{font-size:.5em;letter-spacing:.05em}
 .card{--c:var(--pink);position:relative;background:var(--card);border:1.5px solid var(--line);border-radius:var(--r);overflow:hidden;display:grid;grid-template-rows:auto 1fr;box-shadow:0 10px 24px -18px rgba(58,43,56,.35)}
 .card[data-cat="zelda"]{--c:var(--gold)} .card[data-cat="didatico"]{--c:var(--sage)}
 .card[data-cat="skincare"]{--c:var(--pink)}
+.comp{margin-top:8px;font:inherit;font-weight:700;font-size:14px;min-height:44px;width:100%;border:1.5px solid var(--line);background:var(--card);color:var(--muted);border-radius:999px;cursor:pointer}
+.comp:hover{color:var(--pink);border-color:var(--pink)}
+.card.alvo{outline:3px solid var(--pink);outline-offset:3px}
+.btn-cx{display:inline-flex;align-items:center;margin-top:8px;width:max-content;max-width:100%;text-decoration:none;font-family:var(--f-display);font-weight:800;font-size:15px;padding:10px 18px;border-radius:999px;background:var(--pink);color:#fff;min-height:44px}
 .restam{margin:6px 0 0;font-weight:800;font-size:14px;color:var(--pink)}
 .kitl{margin:6px 0 4px;padding:0 0 0 18px;font-size:14px;line-height:1.45}.kitl li{margin:2px 0} .card[data-cat="consoles"]{--c:var(--lavender)} .card[data-cat="colec"]{--c:var(--sky)} .card[data-cat="reliquias"]{--c:var(--gold)} .card[data-cat="gadgets"]{--c:var(--sage)}
 .taxa{margin:6px 0 0;padding:9px 11px;border-radius:12px;background:#fff4e0;border:1.5px solid #e8c98a;color:#5b4210;font-size:13.5px;line-height:1.45}
@@ -210,7 +214,7 @@ footer a:hover{color:var(--pink)}
 </div>
 
 <div id="lb" role="dialog" aria-label="Foto ampliada" aria-hidden="true"><button class="fx" type="button" aria-label="Fechar">×</button><button class="pv" type="button" aria-label="Foto anterior">‹</button><img alt=""><button class="nx" type="button" aria-label="Próxima foto">›</button><span class="nn"></span></div>
-<script src="/loja/produtos.js?v=20261030zb"></script>
+<script src="/loja/produtos.js?v=20261030zd"></script>
 <script>
 (function(){
   const CATS=[
@@ -261,6 +265,7 @@ footer a:hover{color:var(--pink)}
           ${(c.id==='consoles'||x.antes)&&!x.novo?`<div class="antes"><b>Antes de comprar</b><ul>${(x.antes||['Item de garimpo: usado, garimpado no Japão e vendido no estado mostrado nas fotos.','Console japonês: roda jogos de 3DS japoneses. A trava de região pode ser contornada por modificação, que é por conta do comprador.','Carregador japonês: confira a tensão antes de ligar.']).map(t=>`<li>${esc(t)}</li>`).join('')}</ul></div>`:''}
         </details>
         ${btn}
+        ${x.id?`<button type="button" class="comp" data-share="${esc(x.id)}" data-cat="${c.id}">🔗 Compartilhar</button>`:''}
       </div></article>`;
   }
   function render(){
@@ -270,7 +275,7 @@ footer a:hover{color:var(--pink)}
     document.getElementById('cats').innerHTML = CATS.filter(c=>atual==='todos'||c.id===atual).map(c=>{
       const lista=ITENS.filter(x=>x.cat===c.id);
       return `<section aria-labelledby="c-${c.id}">
-        <div class="cat-h"><h2 id="c-${c.id}">${c.ic} ${esc(c.nome)}</h2><p>${esc(c.sub)}</p></div>
+        <div class="cat-h"><h2 id="c-${c.id}">${c.ic} ${esc(c.nome)}</h2><p>${esc(c.sub)}</p>${c.id==='skincare'?'<a class="btn-cx" href="/loja/caixinha/">🧺 Monte sua caixinha · pedido mínimo R$ 600 →</a>':''}</div>
         ${lista.length? `<div class="grid">${lista.map(x=>card(x,c)).join('')}</div>` : `<p class="vazio">Os achados desta categoria chegam em breve.</p>`}
       </section>`;
     }).join('');
@@ -299,6 +304,21 @@ footer a:hover{color:var(--pink)}
     try{ const u=new URL(location.href); if(atual==='todos') u.searchParams.delete('cat'); else u.searchParams.set('cat',atual); history.replaceState(null,'',u); }catch(e){}
   });
   render();
+  /* compartilhar: menu do celular (WhatsApp, Instagram...) ou copia o link */
+  document.addEventListener('click',async e=>{ const b=e.target.closest('.comp'); if(!b) return;
+    const it=ITENS.find(x=>x.id===b.dataset.share); if(!it) return;
+    const url=location.origin+'/loja/?cat='+b.dataset.cat+'#'+it.id, titulo=it.nome+' · Unirversos Tesouros';
+    const flash=t=>{ const o=b.textContent; b.textContent=t; setTimeout(()=>{ b.textContent=o; },2200); };
+    try{ if(navigator.share){ await navigator.share({title:titulo,text:titulo,url}); return; } }catch(err){ if(err&&err.name==='AbortError') return; }
+    try{ await navigator.clipboard.writeText(url); flash('✓ Link copiado!'); }
+    catch(err){ window.prompt('Copie o link:',url); }
+  });
+  /* link direto para um item: abre a categoria, rola até o cartão e destaca */
+  (function(){ const id=decodeURIComponent((location.hash||'').slice(1)); if(!id) return;
+    const it=ITENS.find(x=>x.id===id); if(!it) return;
+    if(atual!=='todos'&&atual!==it.cat){ atual='todos'; render(); }
+    setTimeout(()=>{ const el=document.querySelector('.card[data-id="'+id.replace(/"/g,'')+'"]'); if(!el) return; el.scrollIntoView({block:'center'}); el.classList.add('alvo'); },150);
+  })();
 })();
 </script>
 <script>
