@@ -210,7 +210,7 @@ footer a:hover{color:var(--pink)}
 </div>
 
 <div id="lb" role="dialog" aria-label="Foto ampliada" aria-hidden="true"><button class="fx" type="button" aria-label="Fechar">×</button><button class="pv" type="button" aria-label="Foto anterior">‹</button><img alt=""><button class="nx" type="button" aria-label="Próxima foto">›</button><span class="nn"></span></div>
-<script src="/loja/produtos.js?v=20261030za"></script>
+<script src="/loja/produtos.js?v=20261030zb"></script>
 <script>
 (function(){
   const CATS=[
@@ -241,7 +241,7 @@ footer a:hover{color:var(--pink)}
       : `<span class="quero off" aria-disabled="true">Reserva em breve</span>`;
     const p=faixa(x);
     const fm=n=>Number(n).toLocaleString('pt-BR',{minimumFractionDigits:2,maximumFractionDigits:2});
-    const DESC=x.semDesc?0:15; /* % de desconto da primeira compra, só sobre o produto (sem a taxa de importação) */
+    const DESC=(typeof x.descPct==='number')?x.descPct:(x.semDesc?0:15); /* % de desconto da primeira compra, só sobre o produto (sem a taxa de importação) */
     const prod=x.total?x.total-(x.imposto||0):0, com=prod*(1-DESC/100), totCom=com+(x.imposto||0);
     const rs=x.total?`<ul class="pag"><li><b>Produto:</b> ${DESC?`<s>R$ ${fm(prod)}</s> `:''}<b>R$ ${fm(com)}</b> <span class="parc">${DESC?`com ${DESC}% de desconto. `:''}Parcelamento pelo Mercado Pago, com os juros dele.</span></li>${x.imposto?`<li class="ch"><b>Taxa de importação, paga na chegada:</b> R$ ${fm(x.imposto)} <span class="parc">(estimativa, vai direto para a alfândega, não entra no parcelamento e não tem desconto)</span></li>`:''}</ul><p class="preco tot"><span class="parc">${x.imposto?'= Total (produto + taxa), na 1ª compra':(DESC?'= Total, na 1ª compra':'= Total')}</span><br>R$ ${fm(totCom)} ${DESC?`<span class="parc"><s>R$ ${fm(x.total)}</s></span>`:''}</p>${x.imposto?'':'<p class="incl">✔ Taxa e impostos inclusos: você não vai pagar nada além.</p>'}${x.chegada?`<p class="parc">📦 Chegada: ${esc(x.chegada)}</p>`:''}${x.restam?`<p class="restam">🔥 Apenas ${x.restam} kits disponíveis</p>`:''}`:'';
     const br=x.br?`<p class="preco br"><span class="parc">No Mercado Livre (${esc(x.br.rotulo)}, preço de referência)</span><br>R$ ${fm(x.br.preco)}</p><p class="economia">Aqui sai R$ ${fm(x.br.preco-totCom)} mais barato <span class="parc">(${esc(x.br.rotulo)})</span></p>`:'';
