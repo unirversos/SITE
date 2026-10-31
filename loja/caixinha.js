@@ -1,5 +1,5 @@
 /* =========================================================
-   MONTE SUA CAIXINHA · produtos soltos do carrinho (pedido mínimo R$ 600)
+   MONTE SEU KIT · produtos soltos do carrinho (pedido mínimo R$ 600)
    Campos: id, nome, tam (tamanho), preco (R$ final, sem taxa de alfândega no card),
            foto (caminho; '' usa o ícone), desc, ic (ícone se não houver foto)
    Preço = custo no Japão (¥ com imposto × 0,04) × 2 (margem de 100%), arredondado.

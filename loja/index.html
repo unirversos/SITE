@@ -52,6 +52,7 @@ h1 .jp rt{font-size:.5em;letter-spacing:.05em}
 .filtros .n{font-size:12px;font-weight:500;opacity:.75}
 
 .cats{display:grid;gap:40px}
+.cats>section{min-width:0}
 .cat-h{display:grid;gap:2px;margin-bottom:14px}
 .cat-h h2{font-family:var(--f-display);font-size:clamp(24px,3.4vw,30px);line-height:1.15;margin:0}
 .cat-h p{margin:0;color:var(--muted);font-size:15px;max-width:62ch}
@@ -62,6 +63,18 @@ h1 .jp rt{font-size:.5em;letter-spacing:.05em}
 .comp{margin-top:8px;font:inherit;font-weight:700;font-size:14px;min-height:44px;width:100%;border:1.5px solid var(--line);background:var(--card);color:var(--muted);border-radius:999px;cursor:pointer}
 .comp:hover{color:var(--pink);border-color:var(--pink)}
 .card.alvo{outline:3px solid var(--pink);outline-offset:3px}
+.cxb{min-width:0;max-width:100%;margin:4px 0 22px;padding:18px 0 16px 18px;border:2px solid var(--pink);border-radius:var(--r);background:color-mix(in srgb,var(--pink) 7%,var(--card))}
+.cxb-t{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:8px 16px;padding-right:18px}
+.cxb h3{font-family:var(--f-display);font-size:clamp(22px,3.2vw,28px);line-height:1.15;margin:0}
+.cxb p{margin:2px 0 0;font-size:14.5px}
+.cxb-all{font-family:var(--f-display);font-weight:800;font-size:15px;text-decoration:none;color:var(--pink)}
+.cxb-tr{display:flex;gap:12px;overflow-x:auto;scroll-snap-type:x proximity;padding:14px 18px 6px 0;scrollbar-width:thin}
+.cxm{flex:0 0 150px;scroll-snap-align:start;text-decoration:none;color:inherit;background:var(--card);border:1.5px solid var(--line);border-radius:14px;overflow:hidden;display:grid;grid-template-rows:auto 1fr}
+.cxm .f{aspect-ratio:1;background:var(--paper);display:grid;place-items:center;font-size:40px}
+.cxm .f img{width:100%;height:100%;object-fit:cover;display:block}
+.cxm b{display:block;font-size:13px;line-height:1.25;padding:8px 10px 0;font-weight:600}
+.cxm i{font-style:normal;font-family:var(--f-display);font-weight:700;font-size:15px;padding:2px 10px 10px}
+.cxm.mais{place-content:center;text-align:center;font-family:var(--f-display);font-weight:800;color:var(--pink);padding:14px;border-style:dashed;border-color:var(--pink);min-height:150px}
 .btn-cx{display:inline-flex;align-items:center;margin-top:8px;width:max-content;max-width:100%;text-decoration:none;font-family:var(--f-display);font-weight:800;font-size:15px;padding:10px 18px;border-radius:999px;background:var(--pink);color:#fff;min-height:44px}
 .restam{margin:6px 0 0;font-weight:800;font-size:14px;color:var(--pink)}
 .kitl{margin:6px 0 4px;padding:0 0 0 18px;font-size:14px;line-height:1.45}.kitl li{margin:2px 0} .card[data-cat="consoles"]{--c:var(--lavender)} .card[data-cat="colec"]{--c:var(--sky)} .card[data-cat="reliquias"]{--c:var(--gold)} .card[data-cat="gadgets"]{--c:var(--sage)}
@@ -214,7 +227,8 @@ footer a:hover{color:var(--pink)}
 </div>
 
 <div id="lb" role="dialog" aria-label="Foto ampliada" aria-hidden="true"><button class="fx" type="button" aria-label="Fechar">×</button><button class="pv" type="button" aria-label="Foto anterior">‹</button><img alt=""><button class="nx" type="button" aria-label="Próxima foto">›</button><span class="nn"></span></div>
-<script src="/loja/produtos.js?v=20261031a"></script>
+<script src="/loja/produtos.js?v=20261031b"></script>
+<script src="/loja/caixinha.js?v=8"></script>
 <script>
 (function(){
   const CATS=[
@@ -270,6 +284,12 @@ footer a:hover{color:var(--pink)}
         ${x.id?`<button type="button" class="comp" data-share="${esc(x.id)}" data-cat="${c.id}">🔗 Compartilhar</button>`:''}
       </div></article>`;
   }
+  function cxBanner(){
+    const P=window.CAIXINHA||[]; if(!P.length) return '';
+    const fm=n=>Number(n).toLocaleString('pt-BR',{minimumFractionDigits:2,maximumFractionDigits:2});
+    return `<div class="cxb"><div class="cxb-t"><div><h3>🧺 Monte seu kit</h3><p>Escolha produtos soltos, um a um. Pedido mínimo R$ 600.</p></div><a class="cxb-all" href="/loja/caixinha/">Ver todos →</a></div>
+      <div class="cxb-tr">${P.map(p=>`<a class="cxm" href="/loja/caixinha/#${esc(p.id)}"><span class="f">${p.foto?`<img src="${esc(p.foto)}" alt="" loading="lazy">`:esc(p.ic||'🧴')}</span><b>${esc(p.nome)}</b><i>R$ ${fm(p.preco)}</i></a>`).join('')}<a class="cxm mais" href="/loja/caixinha/">Ver mais<br>→</a></div></div>`;
+  }
   function render(){
     document.getElementById('filtros').innerHTML =
       [{id:'todos',ic:'🗾',nome:'Todos',n:ITENS.length}].concat(CATS.map(c=>({...c,n:ITENS.filter(x=>x.cat===c.id).length})))
@@ -277,7 +297,8 @@ footer a:hover{color:var(--pink)}
     document.getElementById('cats').innerHTML = CATS.filter(c=>atual==='todos'||c.id===atual).map(c=>{
       const lista=ITENS.filter(x=>x.cat===c.id);
       return `<section aria-labelledby="c-${c.id}">
-        <div class="cat-h"><h2 id="c-${c.id}">${c.ic} ${esc(c.nome)}</h2><p>${esc(c.sub)}</p>${c.id==='skincare'?'<a class="btn-cx" href="/loja/caixinha/">🧺 Monte sua caixinha · pedido mínimo R$ 600 →</a>':''}</div>
+        <div class="cat-h"><h2 id="c-${c.id}">${c.ic} ${esc(c.nome)}</h2><p>${esc(c.sub)}</p></div>
+        ${c.id==='skincare'?cxBanner():''}
         ${lista.length? `<div class="grid">${lista.map(x=>card(x,c)).join('')}</div>` : `<p class="vazio">Os achados desta categoria chegam em breve.</p>`}
       </section>`;
     }).join('');
