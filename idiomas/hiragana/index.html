@@ -1,10 +1,7 @@
 <!DOCTYPE html>
-<html lang="pt-BR" data-login="obrigatorio">
+<html lang="pt-BR">
 <head>
 <meta charset="UTF-8">
-<style>html[data-login="obrigatorio"]:not(.uni-ok) body>*:not(#uni-gate){visibility:hidden}</style>
-<script type="module" src="/idiomas/dados/conta.js?v=4"></script>
-<script>setTimeout(function(){var h=document.documentElement;if(!h.classList.contains('uni-ok')&&!document.getElementById('uni-gate'))h.classList.add('uni-ok')},10000)</script>
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 <title>Hiragana — Trilha autoguiada | Unirversos Idiomas</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -12,9 +9,9 @@
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@500;700;800&family=Zen+Maru+Gothic:wght@400;500;700&display=swap">
 <style>/* Layout: caderno pontilhado; cabeçalho com avatar, faixa das 5 pedras do Quadrado, e o palco da etapa escolhida */
 :root{
-  --paper:#fdf6f4; --card:#ffffff; --ink:#3a2b38; --muted:#705f6c; --line:#ecdadd;
-  --blush:#f8dde1; --pink:#c23f5e; --sage:#517158; --sage-soft:#e8efe8; --gold:#8e6a1f; --lavender:#b7a6dc;
-  --fire:#bc4e1e; --water:#3a79ad; --earth:#5a7d4b; --air:#5f759c; --spirit:#b18ad6;
+  --paper:#fdf6f4; --card:#ffffff; --ink:#3a2b38; --muted:#7c6a78; --line:#ecdadd;
+  --blush:#f8dde1; --pink:#d9506f; --sage:#7fa487; --sage-soft:#e8efe8; --gold:#c9962c; --lavender:#b7a6dc;
+  --fire:#e0703f; --water:#4f8fc4; --earth:#6f9a5c; --air:#8a9bb8; --spirit:#b18ad6;
   --f-display:"Baloo 2","Zen Maru Gothic",system-ui,sans-serif;
   --f-body:"Zen Maru Gothic","Hiragino Maru Gothic ProN","Noto Sans JP",system-ui,sans-serif;
   --r:18px;
@@ -128,9 +125,6 @@ h1 small{font-family:var(--f-display);font-size:.42em;color:var(--pink);letter-s
 .pad-wrap{position:relative;width:100%;max-width:340px;aspect-ratio:1/1;border:1.5px solid var(--line);border-radius:16px;background:
   linear-gradient(var(--line),var(--line)) center/1px 100% no-repeat,linear-gradient(90deg,var(--line),var(--line)) center/100% 1px no-repeat,var(--paper);overflow:hidden;touch-action:none}
 .guide{position:absolute;inset:0;display:grid;place-items:center;font-size:min(230px,62vw);line-height:1;color:color-mix(in srgb,var(--ink) 13%,transparent);pointer-events:none;user-select:none;font-family:var(--f-body)}
-.pad-wrap.peq{max-width:210px}
-.terra:has(.pad-wrap.peq){grid-template-columns:minmax(0,210px) minmax(0,1fr)}
-.pad-wrap.peq .guide{font-size:min(140px,38vw)}
 #pad{position:absolute;inset:0;width:100%;height:100%;cursor:crosshair}
 .terra-side{display:grid;gap:12px;align-content:start}
 .t-now{display:flex;align-items:baseline;gap:10px}
@@ -243,14 +237,11 @@ h1 small{font-family:var(--f-display);font-size:.42em;color:var(--pink);letter-s
 .trail a:hover{border-color:var(--pink)}
 .trail a[aria-current="page"]{background:var(--ink);border-color:var(--ink);color:var(--paper)}
 </style>
-<link rel="stylesheet" href="/estilo-celular.css?v=2">
-<script defer src="/menu-ativo.js?v=1"></script>
 </head>
 <body data-kind="hira">
 <div class="wrap">
-  <nav class="sitebar" aria-label="Site"><a class="brand" href="/">unirversos <span>/ idiomas</span></a><span class="navlinks"><a href="/idiomas/">idiomas</a><a href="/travessia/">travessia</a><a href="/paralelos/">paralelos</a><a href="/loja/">tesouros</a><a href="/sobre/">sobre</a></span></nav>
-  <nav class="trail" aria-label="Trilha"><a href="/idiomas/japones/">← Minha trilha</a><details class="caixa" open><summary>🧰 Ferramentas</summary><span class="caixa-l"><a href="/idiomas/avatar/">🎨 Meu avatar</a><a href="/idiomas/hiragana/" aria-current="page">あ Hiragana</a><a href="/idiomas/katakana/">ア Katakana</a><a href="/idiomas/kanji/">漢 Kanji</a><a href="/idiomas/numeros/">🔢 Números</a><a href="/idiomas/calendario/">📅 Calendário</a><a href="/idiomas/caderno/">📒 Caderno</a><a href="/idiomas/amuleto/">💎 Amuleto</a><a href="/idiomas/ar/">🌬️ Ar</a><a href="/idiomas/planeta-utopia/salao/">🪐 Planeta Utopia</a></span></details></nav>
-  <style>.trail{flex-wrap:wrap;overflow:visible;align-items:center}.trail .caixa{flex:0 0 auto}.trail .caixa[open]{flex:1 1 100%;display:flex;flex-direction:column;gap:8px}.trail .caixa>summary{list-style:none;cursor:pointer;display:inline-flex;align-items:center;gap:6px;width:max-content;border:1.5px solid var(--line,#e7e1da);background:var(--card,#fff);border-radius:99px;padding:6px 14px;font-size:13.5px;font-weight:700}.trail .caixa>summary::-webkit-details-marker{display:none}.trail .caixa[open]>summary{border-color:var(--pink,#d9506f)}.trail .caixa-l{display:flex;flex-wrap:wrap;gap:8px}</style>
+  <nav class="sitebar" aria-label="Site"><a class="brand" href="/idiomas/">unirversos <span>/ idiomas</span></a><span class="navlinks"><a href="/">início</a><a href="/idiomas/">idiomas</a><a href="/idiomas/mapas/">mapas</a><a href="/sobre/">sobre</a></span></nav>
+  <nav class="trail" aria-label="Trilha"><a href="/idiomas/planeta-utopia/">🪐 Planeta Utopia</a><a href="/idiomas/planeta-utopia/atelie/">🎨 Ateliê de Avatar</a><a href="/idiomas/planeta-utopia/caderno/">📒 Caderno</a><a href="/idiomas/hiragana/" aria-current="page">あ Hiragana</a><a href="/idiomas/katakana/">ア Katakana</a><a href="/idiomas/aula-zero/">🎓 Aula Zero</a><a href="/idiomas/mapas/">🗺️ Mapas de contexto</a></nav>
   <header class="top">
     <div class="who">
       
@@ -336,7 +327,6 @@ h1 small{font-family:var(--f-display);font-size:.42em;color:var(--pink);letter-s
           <button class="btn" type="button" id="tClear">Limpar</button>
           <button class="btn" type="button" id="tUndo">Desfazer traço</button>
           <button class="btn" type="button" id="tGuideBtn" aria-pressed="true">Letra-guia</button>
-          <button class="btn" type="button" id="tSize" aria-pressed="false">🔍 Diminuir a área</button>
           <button class="btn" type="button" id="tShow">Ver a ordem dos traços</button>
         </div>
         <button class="btn primary" type="button" id="tOk">Conferir ✓</button>
@@ -398,17 +388,15 @@ h1 small{font-family:var(--f-display);font-size:.42em;color:var(--pink);letter-s
     </div>
   </section>
 
-  <p class="note foot">Áudio: por enquanto, a voz japonesa do próprio aparelho. Ordem dos traços: <a href="http://kanjivg.tagaini.net" rel="noopener">KanjiVG</a> (Ulrich Apel), CC BY-SA 3.0. O XP desta trilha soma no Planeta Utopia. · <a href="/idiomas/avatar/">Ateliê de Avatar</a> · <a href="/idiomas/planeta-utopia/">Planeta Utopia</a></p>
+  <p class="note foot">Áudio: por enquanto, a voz japonesa do próprio aparelho. Ordem dos traços: <a href="http://kanjivg.tagaini.net" rel="noopener">KanjiVG</a> (Ulrich Apel), CC BY-SA 3.0. O XP desta trilha soma no Planeta Utopia. · <a href="/idiomas/planeta-utopia/atelie/">Ateliê de Avatar</a> · <a href="/idiomas/planeta-utopia/">Planeta Utopia</a></p>
 </div>
 <div class="lv-toast" id="lvToast" role="status" hidden></div>
 
-<script>window.KANA_PATHS={hira:'/idiomas/hiragana/',kata:'/idiomas/katakana/'};window.ATELIE_URL='/idiomas/avatar/';</script>
-<script src="/idiomas/dados/avatar.js?v=20261027c"></script>
-<script src="/idiomas/dados/velocidade-voz.js?v=1"></script>
-<script src="/idiomas/dados/audio-mapa.js?v=4a8ffd4b"></script>
-<script src="/idiomas/dados/atelie-dados.js?v=20261027c"></script>
-<script src="/idiomas/dados/kana-dados.js?v=20261027c"></script>
-<script src="/idiomas/dados/kana-tracos.js?v=20261027c"></script>
+<script>window.KANA_PATHS={hira:'/idiomas/hiragana/',kata:'/idiomas/katakana/'};window.ATELIE_URL='/idiomas/planeta-utopia/atelie/';</script>
+<script src="/idiomas/dados/avatar.js?v=20261016f"></script>
+<script src="/idiomas/dados/atelie-dados.js?v=20261016f"></script>
+<script src="/idiomas/dados/kana-dados.js?v=20261016f"></script>
+<script src="/idiomas/dados/kana-tracos.js?v=20261016f"></script>
 <script>
 /* Trilhas de Hiragana e Katakana — Quadrado Elemental. Usa avatar.js, atelie-dados.js (speak, kana2ro) e kana-dados.js. */
 const $=id=>document.getElementById(id);
@@ -430,7 +418,7 @@ function gain(n,el){
   if(up){ const t=$('lvToast'); t.innerHTML=`Nível ${g.level}! Novo título: ${AV?AV.titleHTML(g.level):''}`; t.hidden=false; clearTimeout(t._h); t._h=setTimeout(()=>t.hidden=true,3200); }
 }
 const D=()=>KD[kind];
-const say=t=>{ try{ speak(t,{letra:true}); }catch(e){} };
+const say=t=>{ try{ speak(t); }catch(e){} };
 const rnd=a=>a[Math.floor(Math.random()*a.length)];
 const shuffle=a=>a.map(x=>[Math.random(),x]).sort((p,q)=>p[0]-q[0]).map(x=>x[1]);
 
@@ -748,14 +736,6 @@ function setKind(k){
 $('swHira').onclick=()=>setKind('hira'); $('swKata').onclick=()=>setKind('kata');
 function renderAll(){ renderPdfLinks(); renderHead(); renderMe(); renderGrid(); if(!focusK) focusK=D().all[0].k; renderCard(); renderExtras(); showStage(stage); }
 focusK=D().all[0].k; renderAll();
-
-/* tamanho da área de escrita (lembra a escolha) */
-(function(){ const w=document.querySelector('.pad-wrap'), b=document.getElementById('tSize'); if(!w||!b) return;
-  function aplica(p){ w.classList.toggle('peq',p); b.textContent=p?'🔍 Aumentar a área':'🔍 Diminuir a área'; b.setAttribute('aria-pressed',String(p)); }
-  let p=false; try{ p=localStorage.getItem('padPequeno')==='1'; }catch(e){}
-  aplica(p);
-  b.addEventListener('click',()=>{ p=!p; aplica(p); try{ localStorage.setItem('padPequeno',p?'1':'0'); }catch(e){} });
-})();
 </script>
 </body>
 </html>
