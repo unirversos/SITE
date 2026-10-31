@@ -3,8 +3,8 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-<title>Monte sua caixinha · Unirversos Tesouros</title>
-<meta name="description" content="Monte sua caixinha de beleza japonesa com produtos soltos. Pedido mínimo de R$ 600.">
+<title>Monte seu kit · Unirversos Tesouros</title>
+<meta name="description" content="Monte seu kit de beleza japonesa com produtos soltos. Pedido mínimo de R$ 600.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@500;700;800&family=Zen+Maru+Gothic:wght@400;500;700&display=swap">
@@ -133,8 +133,18 @@ footer a:hover{color:var(--pink)}
 .pedido button.btn{cursor:pointer;justify-self:start;font-size:16px}
 .erro{color:#b3261e;font-weight:700;font-size:14px;min-height:1.2em}
 
-.cx-g{grid-column:1/-1;font-family:var(--f-display);font-size:24px;margin:10px 0 0}
-.cx-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:18px}
+.cx-sec{margin:0 0 26px;min-width:0;max-width:100%}
+#cxGrid{min-width:0;max-width:100%}
+.wrap>*{min-width:0}
+.cx-gh{display:flex;align-items:center;justify-content:space-between;gap:12px;margin:0 0 10px}
+.cx-g{font-family:var(--f-display);font-size:24px;margin:0}
+.cx-nav{display:flex;gap:8px}
+.cx-nav button{min-height:44px;min-width:44px;border-radius:999px;border:1.5px solid var(--pink);background:var(--card);color:var(--pink);font-size:20px;font-weight:700;cursor:pointer}
+.cx-nav button:hover{background:var(--pink);color:#fff}
+.cx-grid{display:block;min-width:0}
+body,html{overflow-x:clip}
+.cx-tr{display:flex;gap:16px;overflow-x:auto;scroll-snap-type:x proximity;padding:2px 2px 10px;scrollbar-width:thin}
+.cx-tr .cx{flex:0 0 min(250px,72vw);scroll-snap-align:start}
 .cx{background:var(--card);border:1.5px solid var(--line);border-radius:var(--r);overflow:hidden;display:grid;grid-template-rows:auto 1fr;box-shadow:0 10px 24px -18px rgba(58,43,56,.35)}
 .cx .foto{aspect-ratio:1/1;background:#fff;display:grid;place-items:center;font-size:56px;border-bottom:1.5px solid var(--line)}
 .cx .foto img{width:100%;height:100%;object-fit:contain;display:block}
@@ -182,7 +192,7 @@ footer a:hover{color:var(--pink)}
 
   <header class="hero">
     <p class="eyebrow">unirversos tesouros · skincare</p>
-    <h1 style="font-size:clamp(32px,5vw,50px);max-width:20ch">Monte sua caixinha 🧺</h1>
+    <h1 style="font-size:clamp(32px,5vw,50px);max-width:20ch">Monte seu kit 🧺</h1>
     <p class="lede">Escolha os produtos de beleza japonesa que você quiser e junte tudo numa encomenda só. <b>Pedido mínimo: R$ 600.</b></p>
     <p class="aviso">Os preços já incluem taxa e impostos. O pedido sai pelo WhatsApp, e o pagamento, o prazo e o envio são combinados direto comigo. Prefere o kit fechado com 10% de desconto? <a href="/loja/?cat=skincare">Veja o Kit GI</a>.</p>
   </header>
@@ -192,7 +202,7 @@ footer a:hover{color:var(--pink)}
   </section>
 
   <section class="barra" id="barra" aria-live="polite">
-    <div class="lin"><span class="nitens" id="nItens">Sua caixinha está vazia</span><span class="tot" id="tot">R$ 0,00</span></div>
+    <div class="lin"><span class="nitens" id="nItens">Seu kit está vazio</span><span class="tot" id="tot">R$ 0,00</span></div>
     <div class="prog" id="prog"><i></i></div>
     <p class="falta" id="falta">Faltam R$ 600,00 para o pedido mínimo.</p>
     <ul class="lista-r" id="resumo"></ul>
@@ -207,7 +217,7 @@ footer a:hover{color:var(--pink)}
 </div>
 
 <script defer src="/menu-ativo.js?v=1"></script>
-<script src="/loja/caixinha.js?v=7"></script>
+<script src="/loja/caixinha.js?v=8"></script>
 <script>
 (function(){
   const P=(window.CAIXINHA||[]).slice(), MIN=window.CAIXINHA_MIN||600, MAX=window.CAIXINHA_MAX_QTD||5;
@@ -218,19 +228,22 @@ footer a:hover{color:var(--pink)}
   let cart={}; try{ cart=JSON.parse(localStorage.getItem('uniCaixinha1')||'{}')||{}; }catch(e){}
   P.forEach(p=>{ const q=Number(cart[p.id]); cart[p.id]=(q>0&&q<=(p.max||MAX))?Math.floor(q):0; });
   const save=()=>{ try{ localStorage.setItem('uniCaixinha1',JSON.stringify(cart)); }catch(e){} };
-  let ultimoG=null; $('cxGrid').innerHTML=P.map(p=>(p.grupo&&p.grupo!==ultimoG?(ultimoG=p.grupo,`<h2 class="cx-g">${esc(p.grupo)}</h2>`):'')+`<article class="cx" data-id="${esc(p.id)}">
+  const cardH=p=>`<article class="cx" id="${esc(p.id)}" data-id="${esc(p.id)}">
     <div class="foto">${p.foto?`<img src="${esc(p.foto)}" alt="${esc(p.nome)}" loading="lazy">`:esc(p.ic||'🧴')}</div>
     <div class="corpo"><h3>${esc(p.nome)}</h3><p class="tam">${esc(p.tam||'')}</p><p class="d">${esc(p.desc||'')}</p>
       <p class="pr">R$ ${fm(p.preco)}</p><p class="incl">✔ Taxa e impostos inclusos</p>
       <div class="qtd"><button type="button" data-a="-" aria-label="Tirar um, ${esc(p.nome)}">−</button><output aria-live="polite">0</output><button type="button" data-a="+" aria-label="Colocar um, ${esc(p.nome)}">+</button></div>
-    </div></article>`).join('');
+    </div></article>`;
+  { const G=[]; P.forEach(p=>{ const g=p.grupo||'Produtos'; if(!G.includes(g)) G.push(g); });
+    $('cxGrid').innerHTML=G.map(g=>`<section class="cx-sec"><div class="cx-gh"><h2 class="cx-g">${esc(g)}</h2><div class="cx-nav"><button type="button" data-n="-1" aria-label="Voltar, ${esc(g)}">‹</button><button type="button" data-n="1" aria-label="Ver mais, ${esc(g)}">›</button></div></div><div class="cx-tr">${P.filter(p=>(p.grupo||'Produtos')===g).map(cardH).join('')}</div></section>`).join('');
+    $('cxGrid').addEventListener('click',e=>{ const b=e.target.closest('button[data-n]'); if(!b) return; const t=b.closest('.cx-sec').querySelector('.cx-tr'); t.scrollBy({left:Number(b.dataset.n)*Math.max(260,t.clientWidth*.8),behavior:'smooth'}); }); }
   function total(){ return P.reduce((s,p)=>s+p.preco*(cart[p.id]||0),0); }
   function draw(){
     const t=total(), n=P.reduce((s,p)=>s+(cart[p.id]||0),0), ok=t>=MIN;
     P.forEach(p=>{ const el=document.querySelector('.cx[data-id="'+p.id+'"]'); if(!el) return; const q=cart[p.id]||0;
       el.classList.toggle('tem',q>0); el.querySelector('output').textContent=q;
       el.querySelector('[data-a="-"]').disabled=q<=0; el.querySelector('[data-a="+"]').disabled=q>=(p.max||MAX); });
-    $('nItens').textContent=n?(n+(n===1?' item':' itens')+' na caixinha'):'Sua caixinha está vazia';
+    $('nItens').textContent=n?(n+(n===1?' item':' itens')+' no kit'):'Seu kit está vazio';
     $('tot').textContent='R$ '+fm(t);
     $('prog').classList.toggle('ok',ok); $('prog').firstElementChild.style.width=Math.min(100,t/MIN*100)+'%';
     $('falta').classList.toggle('ok',ok);
@@ -245,7 +258,7 @@ footer a:hover{color:var(--pink)}
     if(total()<MIN) return;
     const nome=$('nome').value.trim(); if(!nome){ $('nome').focus(); $('falta').textContent='Escreva seu nome para enviar o pedido.'; return; }
     const linhas=P.filter(p=>cart[p.id]).map(p=>'- '+cart[p.id]+'x '+p.nome+' ('+p.tam+') · R$ '+fm(p.preco*cart[p.id]));
-    const msg='PEDIDO · MONTE SUA CAIXINHA\nNome: '+nome+'\n\n'+linhas.join('\n')+'\n\nTotal: R$ '+fm(total())+'\n(pedido mínimo R$ '+fm(MIN)+')';
+    const msg='PEDIDO · MONTE SEU KIT\nNome: '+nome+'\n\n'+linhas.join('\n')+'\n\nTotal: R$ '+fm(total())+'\n(pedido mínimo R$ '+fm(MIN)+')';
     window.open('https://wa.me/5519996390950?text='+encodeURIComponent(msg),'_blank','noopener');
   });
   draw();
