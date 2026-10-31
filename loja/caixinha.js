@@ -35,5 +35,7 @@ window.CAIXINHA = [
   { id:'cx-honey-melty', grupo:'Cabelo', nome:'&honey Melty Moist Rich · óleo capilar (Step 3.0)', tam:'100 ml', preco:128, foto:'/loja/fotos/cx-honey-melty.jpg', ic:'🍯',
     desc:'Óleo capilar da linha &honey. Segundo a embalagem, feito com óleo de argan e mel. Produto novo.' },
   { id:'cx-honey-rich', grupo:'Cabelo', nome:'&honey Rich Luxe Repair · tratamento', tam:'440 g', preco:132, foto:'/loja/fotos/cx-honey-rich.jpg', ic:'🍯',
-    desc:'Tratamento capilar Luxe Repair da linha &honey Rich. Produto novo.' }
+    desc:'Tratamento capilar Luxe Repair da linha &honey Rich. Produto novo.' },
+  { id:'cx-honey-booster', grupo:'Cabelo', nome:'&honey Professional iPS System Repair · booster (1.5)', tam:'100 ml', preco:150, foto:'/loja/fotos/cx-honey-booster.jpg', ic:'🍯',
+    desc:'Tratamento capilar booster da linha &honey Professional (iPS System Repair Formula, como na embalagem). Produto novo.' }
 ];
