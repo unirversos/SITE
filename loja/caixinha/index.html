@@ -133,6 +133,7 @@ footer a:hover{color:var(--pink)}
 .pedido button.btn{cursor:pointer;justify-self:start;font-size:16px}
 .erro{color:#b3261e;font-weight:700;font-size:14px;min-height:1.2em}
 
+.cx-g{grid-column:1/-1;font-family:var(--f-display);font-size:24px;margin:10px 0 0}
 .cx-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:18px}
 .cx{background:var(--card);border:1.5px solid var(--line);border-radius:var(--r);overflow:hidden;display:grid;grid-template-rows:auto 1fr;box-shadow:0 10px 24px -18px rgba(58,43,56,.35)}
 .cx .foto{aspect-ratio:1/1;background:#fff;display:grid;place-items:center;font-size:56px;border-bottom:1.5px solid var(--line)}
@@ -148,9 +149,9 @@ footer a:hover{color:var(--pink)}
 .qtd button:disabled{opacity:.35;cursor:default}
 .qtd output{min-width:28px;text-align:center;font-family:var(--f-display);font-weight:800;font-size:20px}
 .cx.tem{border-color:var(--pink)}
-.barra{position:sticky;bottom:10px;z-index:5;background:var(--card);border:1.5px solid var(--pink);border-radius:22px;padding:14px 16px;display:grid;gap:10px;box-shadow:0 14px 30px -14px rgba(58,43,56,.5)}
+.barra{position:sticky;bottom:10px;z-index:5;background:var(--card);border:1.5px solid var(--pink);border-radius:22px;padding:10px 14px;display:grid;gap:8px;box-shadow:0 14px 30px -14px rgba(58,43,56,.5)}
 .barra .lin{display:flex;justify-content:space-between;align-items:baseline;gap:10px;flex-wrap:wrap}
-.barra .tot{font-family:var(--f-display);font-weight:800;font-size:26px}
+.barra .tot{font-family:var(--f-display);font-weight:800;font-size:22px}
 .barra .nitens{color:var(--muted);font-size:14px}
 .prog{height:10px;border-radius:999px;background:var(--blush);overflow:hidden}
 .prog i{display:block;height:100%;width:0;background:var(--pink);transition:width .25s}
@@ -160,7 +161,8 @@ footer a:hover{color:var(--pink)}
 .barra input{font:inherit;border:1.5px solid var(--line);border-radius:12px;padding:11px 12px;min-height:44px;width:100%}
 .enviar{font-family:var(--f-display);font-weight:800;font-size:17px;border:0;border-radius:999px;padding:13px 20px;background:var(--pink);color:#fff;cursor:pointer;min-height:48px}
 .enviar:disabled{background:#cdbfc6;cursor:not-allowed}
-.lista-r{margin:0;padding:0 0 0 18px;font-size:14px}
+.lista-r{margin:0;padding:0 0 0 18px;font-size:13px;max-height:84px;overflow:auto}
+.lista-r[hidden],.barra input[hidden]{display:none}
 .vazio-cx{margin:0;color:var(--muted);font-size:14.5px}
 </style>
 </head>
@@ -205,17 +207,18 @@ footer a:hover{color:var(--pink)}
 </div>
 
 <script defer src="/menu-ativo.js?v=1"></script>
-<script src="/loja/caixinha.js?v=1"></script>
+<script src="/loja/caixinha.js?v=6"></script>
 <script>
 (function(){
-  const P=window.CAIXINHA||[], MIN=window.CAIXINHA_MIN||600, MAX=window.CAIXINHA_MAX_QTD||5;
+  const P=(window.CAIXINHA||[]).slice(), MIN=window.CAIXINHA_MIN||600, MAX=window.CAIXINHA_MAX_QTD||5;
+  { const G=[]; P.forEach(p=>{ if(p.grupo&&!G.includes(p.grupo)) G.push(p.grupo); }); P.sort((a,b)=>G.indexOf(a.grupo)-G.indexOf(b.grupo)); }
   const fm=n=>Number(n).toLocaleString('pt-BR',{minimumFractionDigits:2,maximumFractionDigits:2});
   const esc=s=>String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
   const $=id=>document.getElementById(id);
   let cart={}; try{ cart=JSON.parse(localStorage.getItem('uniCaixinha1')||'{}')||{}; }catch(e){}
-  P.forEach(p=>{ const q=Number(cart[p.id]); cart[p.id]=(q>0&&q<=MAX)?Math.floor(q):0; });
+  P.forEach(p=>{ const q=Number(cart[p.id]); cart[p.id]=(q>0&&q<=(p.max||MAX))?Math.floor(q):0; });
   const save=()=>{ try{ localStorage.setItem('uniCaixinha1',JSON.stringify(cart)); }catch(e){} };
-  $('cxGrid').innerHTML=P.map(p=>`<article class="cx" data-id="${esc(p.id)}">
+  let ultimoG=null; $('cxGrid').innerHTML=P.map(p=>(p.grupo&&p.grupo!==ultimoG?(ultimoG=p.grupo,`<h2 class="cx-g">${esc(p.grupo)}</h2>`):'')+`<article class="cx" data-id="${esc(p.id)}">
     <div class="foto">${p.foto?`<img src="${esc(p.foto)}" alt="${esc(p.nome)}" loading="lazy">`:esc(p.ic||'🧴')}</div>
     <div class="corpo"><h3>${esc(p.nome)}</h3><p class="tam">${esc(p.tam||'')}</p><p class="d">${esc(p.desc||'')}</p>
       <p class="pr">R$ ${fm(p.preco)}</p><p class="incl">✔ Taxa e impostos inclusos</p>
@@ -226,18 +229,18 @@ footer a:hover{color:var(--pink)}
     const t=total(), n=P.reduce((s,p)=>s+(cart[p.id]||0),0), ok=t>=MIN;
     P.forEach(p=>{ const el=document.querySelector('.cx[data-id="'+p.id+'"]'); if(!el) return; const q=cart[p.id]||0;
       el.classList.toggle('tem',q>0); el.querySelector('output').textContent=q;
-      el.querySelector('[data-a="-"]').disabled=q<=0; el.querySelector('[data-a="+"]').disabled=q>=MAX; });
+      el.querySelector('[data-a="-"]').disabled=q<=0; el.querySelector('[data-a="+"]').disabled=q>=(p.max||MAX); });
     $('nItens').textContent=n?(n+(n===1?' item':' itens')+' na caixinha'):'Sua caixinha está vazia';
     $('tot').textContent='R$ '+fm(t);
     $('prog').classList.toggle('ok',ok); $('prog').firstElementChild.style.width=Math.min(100,t/MIN*100)+'%';
     $('falta').classList.toggle('ok',ok);
-    $('falta').textContent=ok?'✓ Pedido mínimo atingido!':'Faltam R$ '+fm(MIN-t)+' para o pedido mínimo de R$ '+fm(MIN)+'.';
+    $('falta').textContent=ok?'✓ Pedido mínimo atingido!':'Faltam R$ '+fm(MIN-t)+' para o mínimo de R$ '+fm(MIN);
     $('resumo').innerHTML=P.filter(p=>cart[p.id]).map(p=>`<li>${cart[p.id]}× ${esc(p.nome)} · R$ ${fm(p.preco*cart[p.id])}</li>`).join('');
-    $('enviar').disabled=!ok;
+    $('enviar').disabled=!ok; $('resumo').hidden=!n; $('nome').hidden=!n;
   }
   $('cxGrid').addEventListener('click',e=>{ const b=e.target.closest('button[data-a]'); if(!b) return;
     const id=b.closest('.cx').dataset.id; const q=(cart[id]||0)+(b.dataset.a==='+'?1:-1);
-    cart[id]=Math.max(0,Math.min(MAX,q)); save(); draw(); });
+    const pp=P.find(x=>x.id===id); cart[id]=Math.max(0,Math.min((pp&&pp.max)||MAX,q)); save(); draw(); });
   $('enviar').addEventListener('click',()=>{
     if(total()<MIN) return;
     const nome=$('nome').value.trim(); if(!nome){ $('nome').focus(); $('falta').textContent='Escreva seu nome para enviar o pedido.'; return; }
