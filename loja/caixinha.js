@@ -37,5 +37,7 @@ window.CAIXINHA = [
   { id:'cx-honey-rich', grupo:'Cabelo', nome:'&honey Rich Luxe Repair · tratamento', tam:'440 g', preco:132, foto:'/loja/fotos/cx-honey-rich.jpg', ic:'🍯',
     desc:'Tratamento capilar Luxe Repair da linha &honey Rich. Produto novo.' },
   { id:'cx-honey-booster', grupo:'Cabelo', nome:'&honey Professional iPS System Repair · booster (1.5)', tam:'100 ml', preco:150, foto:'/loja/fotos/cx-honey-booster.jpg', ic:'🍯',
-    desc:'Tratamento capilar booster da linha &honey Professional (iPS System Repair Formula, como na embalagem). Produto novo.' }
+    desc:'Tratamento capilar booster da linha &honey Professional (iPS System Repair Formula, como na embalagem). Produto novo.' },
+  { id:'cx-curel-creme', grupo:'Rosto e proteção solar', nome:'Curél Intensive Moisture Care · creme facial', tam:'40 g', preco:238, max:3, foto:'/loja/fotos/cx-curel.jpg', ic:'🧴',
+    desc:'Creme facial hidratante da Curél (Kao), para pele seca e sensível, conforme a embalagem (乾燥性敏感肌を考えた). Produto novo. No máximo 3 por pedido.' }
 ];
