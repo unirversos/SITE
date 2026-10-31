@@ -701,6 +701,7 @@ if(picker){
   draw(start);
 }
 loadAula(start);
+if(location.hash==='#cena') go(4); // vindo do Caderno: abre direto na Cena
 if(window.AUDIO_CREDITO){ const cr=document.createElement('p'); cr.className='credito-voz'; cr.textContent='Vozes sintéticas: '+window.AUDIO_CREDITO+'. Aos poucos, as gravações da professora vão substituindo.'; document.body.appendChild(cr); }
 window.__aulaFrases=()=>({A,CENAS,moldeParts,AR}); // usado só para levantar as frases a gravar
 })();

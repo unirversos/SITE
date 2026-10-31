@@ -89,4 +89,8 @@ window.ACHADOS = [
   { id:'genki-2-livro', cat:'didatico', nome:'Genki II · Livro-texto (3ª edição)',
     desc:'Livro-texto Genki II, 3ª edição: “An Integrated Course in Elementary Japanese” (初級日本語 げんき), da The Japan Times Publishing, dos mesmos autores do volume I. Capa verde, volume II. O estado (novo ou usado) deve ser confirmado antes da compra.',
     de:3500, ate:3500, total:330, imposto:130, chegada:'dezembro', foto:'', fotos:['/loja/fotos/genki-2-livro-1.jpg'], contem:true, link:'' },
+  { id:'kit-gi', cat:'kits', nome:'Kit GI · 5 produtos de beleza japonesa, numa encomenda só', novo:true, contem:true,
+    kit:['Anessa Perfect UV Skincare Milk NA · protetor solar, 60 ml','Melano CC · essência (sérum) de vitamina C, 20 ml','Nameraka Honpo · creme para os olhos antirrugas, 20 g','Fino Premium Touch · máscara capilar, 230 g','Tsubaki Premium EX · máscara de reparação capilar, 180 g'],
+    desc:'Kit com cinco produtos comprados juntos no Japão, da loja online da rede Matsukiyo Cocokara: protetor solar Anessa (Shiseido), essência Melano CC (Rohto), creme para os olhos Nameraka Honpo (Sana), máscara Fino Premium Touch e máscara Tsubaki Premium EX (as duas da Fine Today). Produtos novos. É uma encomenda só: o kit é vendido e enviado junto, não os itens soltos.',
+    de:0, ate:0, total:611, imposto:0, semDesc:true, chegada:'dezembro', foto:'', fotos:['/loja/fotos/kit-gi-1.jpg','/loja/fotos/kit-gi-2.jpg','/loja/fotos/kit-gi-3.jpg','/loja/fotos/kit-gi-4.jpg','/loja/fotos/kit-gi-5.jpg'], link:'' },
 ];

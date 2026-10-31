@@ -62,6 +62,10 @@ h1 .jp{font-family:var(--f-body);font-weight:700;font-size:.6em;color:var(--pink
 .fr .trad .ro{color:var(--pink);font-weight:700;font-size:13.5px}
 .fr .trad small{color:var(--muted)}
 .fr .conf{font-size:14px;border-radius:12px}.fr .conf:not(:empty){padding:8px 12px;background:#fff;border:1.5px solid var(--line)}.fr .conf.ok{background:var(--sage-soft);border-color:#a9c7b0}.fr .conf.quase{background:#fdf1e0;border-color:#e3c98b}.fr .conf.nao{background:#fbe9ec;border-color:#e3a5b2}.fr .conf small{color:var(--muted)}
+.cns{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:8px}
+.cns a{display:flex;align-items:center;gap:8px;border:1.5px solid var(--line);border-radius:14px;background:var(--paper);padding:10px 12px;text-decoration:none;color:inherit;font-weight:700;font-size:14px;min-height:44px}
+.cns a small{display:block;font-weight:500;font-size:12px;color:var(--muted)}
+.cns a.ok{border-color:var(--sage,#9db89d)}
 .pend summary{cursor:pointer;font-weight:700;font-size:14px;color:var(--muted)}
 .pend ul{list-style:none;margin:8px 0 0;padding:0;display:grid;gap:6px}
 .pend li{display:flex;justify-content:space-between;align-items:center;gap:10px;border:1.5px dashed var(--line);border-radius:12px;padding:6px 10px;font-size:14px}
@@ -101,6 +105,11 @@ h1 .jp{font-family:var(--f-body);font-weight:700;font-size:.6em;color:var(--pink
     <p class="sub">Uma frase sua por mapa, com a sua voz. Toque em “Ver tradução” para conferir o sentido.</p>
     <p class="sub" id="avisoSR"></p>
     <div class="frs" id="frs"></div>
+  </section>
+  <section class="fr-sec cn-sec" id="cenas" aria-labelledby="h-cn">
+    <h2 id="h-cn">🎭 Cenas das aulas</h2>
+    <p class="sub">Quer rever uma conversa? Toque num mapa e a cena abre direto, para jogar de novo a partir do Caderno.</p>
+    <div class="cns" id="cns"></div>
   </section>
   <div id="list" style="display:grid;gap:14px"></div>
   <div class="acts">
@@ -158,6 +167,13 @@ async function desenhaFrases(){
         out.innerHTML=`${ok?'✓ Entendi a sua frase!':quase?'≈ Quase: o navegador entendeu parte da frase.':'✗ Não entendi. Ouça a referência e tente de novo.'}<br><small>O navegador ouviu: <b lang="ja">${esc(r.t||'—')}</b></small>`; }); }
     if(b.dataset.a==='refaz') UF.abrir(s,{aoSalvar:()=>setTimeout(desenhaFrases,50)}); };
 }
+/* ---------- cenas das aulas (abrem direto na etapa Cena) ---------- */
+(function(){
+  let M={}; try{ M=JSON.parse(localStorage.getItem('utopiaMapas1')||'{}')||{}; }catch(e){}
+  const F=UF&&UF.F; if(!F){ $('cenas').hidden=true; return; }
+  $('cns').innerHTML=UF.ORD.map(s=>{ const f=F[s], ok=M[s]&&M[s].steps&&M[s].steps[4];
+    return `<a class="${ok?'ok':''}" href="/idiomas/mapas/${s}/aula/#cena"><span aria-hidden="true">${f.e}</span><span>${esc(f.t)}<small>${ok?'✓ cena feita':'Mapa '+f.n}</small></span></a>`; }).join('');
+})();
 if(UF) $('avisoSR').textContent='✅ Conferir pronúncia: '+UF.AVISO_SR;
 desenhaFrases();
 document.addEventListener('uni-progresso',desenhaFrases);
