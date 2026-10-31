@@ -3,16 +3,16 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Unirversos Idiomas — aprenda a se comunicar a partir da sua essência</title>
+<title>Unirversos Idiomas — japonês, inglês e português a partir de você</title>
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Baloo+2:wght@500;600;700&family=Zen+Maru+Gothic:wght@400;500;700&display=swap');
 :root{
-  --pink:#E08C86; --pink-deep:#C26F6C; --pink-soft:rgba(224,140,134,.14);
+  --pink:#b5514d; --pink-deep:#b5514d; --pink-soft:rgba(224,140,134,.14);
   --blush:#FBEBE7; --blush-2:#F0DFDA; --cream:#FDF8F5;
-  --ink:#4A4149; --ink-soft:#8A7F86;
+  --ink:#4A4149; --ink-soft:#71676e;
   --gold:#C0913F; --gold-soft:#FBF2DF;
-  --sage:#7FA893; --sage-soft:#EAF3EE;
-  --lav:#8B90C4; --lav-soft:#EEEFF9;
+  --sage:#4f7461; --sage-soft:#EAF3EE;
+  --lav:#686eb2; --lav-soft:#EEEFF9;
 }
 *{box-sizing:border-box;margin:0;padding:0;}
 @media (prefers-reduced-motion: reduce){ *{transition:none !important;} }
@@ -22,7 +22,7 @@ body{font-family:'Zen Maru Gothic',sans-serif;color:var(--ink);background:var(--
 .nav{display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap;padding:22px 0;}
 .logo{font-family:'Baloo 2',cursive;font-size:18px;font-weight:700;text-decoration:none;color:inherit;}
 .logo i{font-style:normal;color:var(--pink);}
-.nav .links{display:flex;gap:18px;font-size:13px;}
+.nav .links{display:flex;flex-wrap:wrap;align-items:center;gap:8px 18px;font-size:13px;}
 .nav .links a{color:var(--ink-soft);text-decoration:none;}
 .nav .links a:hover{color:var(--pink-deep);}
 .nav .links a.on{color:var(--pink);}
@@ -45,68 +45,81 @@ body{font-family:'Zen Maru Gothic',sans-serif;color:var(--ink);background:var(--
 .section-intro h2{font-family:'Baloo 2',cursive;font-weight:700;font-size:clamp(23px,3.8vw,31px);margin-bottom:10px;}
 .section-intro p{color:var(--ink-soft);max-width:560px;margin:0 auto;}
 
-/* blocos expansíveis */
-.accordion{padding:20px 0 10px;}
-details{
-  background:#fff;border:1px solid var(--blush-2);border-radius:18px;margin-bottom:12px;overflow:hidden;transition:all .2s ease;
-}
-details[open]{box-shadow:0 8px 26px rgba(36,28,63,.05);}
-summary{
-  list-style:none;cursor:pointer;padding:20px 24px;display:flex;align-items:center;gap:14px;
-  font-family:'Baloo 2',cursive;font-weight:600;font-size:18px;transition:background .18s ease;
-}
-summary::-webkit-details-marker{display:none;}
-summary:hover{background:var(--blush);}
-summary .ic{font-size:22px;line-height:1;}
-summary .txt{flex:1;}
-summary .txt small{display:block;font-family:'Zen Maru Gothic',sans-serif;font-weight:400;font-size:12.5px;color:var(--ink-soft);margin-top:2px;}
-summary .arrow{color:var(--pink);font-size:14px;transition:transform .2s ease;}
-details[open] summary .arrow{transform:rotate(90deg);}
-.detail-body{padding:4px 24px 24px;}
-.detail-body p{color:var(--ink-soft);font-size:14.5px;margin-bottom:12px;}
-.detail-body p:last-child{margin-bottom:0;}
-.detail-body p strong{color:var(--ink);}
 
-/* grid interno dos elementos */
-.quad{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:12px;margin-top:6px;}
-.el{background:var(--cream);border:1px solid var(--blush-2);border-radius:14px;padding:16px;}
-.el .icon{font-size:20px;display:block;margin-bottom:6px;}
-.el h4{font-family:'Baloo 2',cursive;font-weight:600;font-size:14px;}
-.el .tag{font-size:11.5px;color:var(--pink);margin-bottom:8px;}
-.el ul{list-style:none;}
-.el li{font-size:13px;color:var(--ink);padding:2px 0 2px 14px;position:relative;}
-.el li::before{content:'·';position:absolute;left:2px;color:var(--pink);font-weight:700;}
-.fifth-note{margin-top:12px;background:var(--blush);border:1px dashed var(--pink);border-radius:14px;padding:16px;font-size:13.5px;color:var(--ink-soft);}
-.fifth-note b{color:var(--pink-deep);}
+.nav .start{font-size:13px;font-weight:700;background:var(--pink);color:#fff!important;border-radius:30px;padding:6px 14px;}
+.nav .start:hover{background:var(--pink-deep);}
+.hero .ctas{display:flex;gap:12px;justify-content:center;flex-wrap:wrap;align-items:center;}
+.hero .ctas .live{font-size:14px;color:var(--pink-deep);text-decoration:none;border-bottom:1px solid var(--blush-2);}
+.hero .ctas .live b{background:var(--gold-soft);color:#7A5B21;border-radius:20px;padding:2px 8px;font-size:12px;margin-left:4px;}
 
-/* lista de itens dentro dos blocos */
-.ilist{display:flex;flex-direction:column;gap:10px;margin-top:4px;}
-.irow{border:1px solid var(--blush-2);border-radius:14px;padding:14px 16px;background:var(--cream);}
-.irow .st{font-size:11px;letter-spacing:1.5px;text-transform:uppercase;color:var(--pink-deep);}
-.irow h4{font-size:14.5px;font-weight:600;margin:2px 0;}
-.irow p{font-size:13px;color:var(--ink-soft);margin:0;}
-.irow a{color:var(--pink-deep);text-decoration:none;border-bottom:1px solid var(--blush-2);}
-.irow a:hover{border-color:var(--pink);}
+section.block{padding:40px 0 10px;}
+.grid2{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;margin-top:18px;}
+@media (max-width:620px){.grid2{grid-template-columns:minmax(0,1fr);}}
+.card{background:#fff;border:1.5px solid var(--blush-2);border-radius:18px;padding:18px 20px;display:flex;flex-direction:column;gap:6px;}
+.card .ic{font-size:24px;line-height:1;}
+.card h3{font-family:'Baloo 2',cursive;font-weight:700;font-size:18px;line-height:1.25;}
+.card h3 small{display:block;font-family:'Zen Maru Gothic',sans-serif;font-weight:500;font-size:12px;letter-spacing:1px;text-transform:uppercase;color:var(--pink-deep);margin-top:2px;}
+.card p{font-size:14px;color:var(--ink-soft);}
+.card p b{color:var(--ink);font-weight:600;}
+.card .go{margin-top:auto;padding-top:6px;color:var(--pink-deep);font-weight:700;font-size:14px;text-decoration:none;}
+.card .go:hover{color:var(--pink);}
+
+.highlight{background:var(--blush);border-radius:24px;padding:36px 28px;text-align:center;margin:36px 0 10px;}
+.tag{display:inline-block;font-size:11.5px;letter-spacing:1.4px;text-transform:uppercase;font-weight:700;color:var(--pink-deep);background:#fff;border:1px solid var(--blush-2);border-radius:20px;padding:4px 12px;margin-bottom:12px;}
+.highlight h2{font-family:'Baloo 2',cursive;font-weight:700;font-size:clamp(22px,3.8vw,30px);line-height:1.25;margin-bottom:10px;}
+.highlight p{color:var(--ink-soft);max-width:520px;margin:0 auto 20px;}
+
+.manifesto{padding:46px 0 6px;text-align:center;}
+.manifesto p{font-family:'Baloo 2',cursive;font-weight:600;font-size:clamp(19px,3.2vw,26px);line-height:1.5;max-width:600px;margin:0 auto;}
+.manifesto span{color:var(--pink);}
+.elements{display:grid;gap:10px;margin-top:18px;}
+.elrow{display:grid;grid-template-columns:44px minmax(0,1fr);gap:12px;align-items:start;background:#fff;border:1.5px solid var(--blush-2);border-left:5px solid var(--c,var(--pink));border-radius:16px;padding:14px 16px;}
+.elrow .e{font-size:24px;line-height:1.2;text-align:center;}
+.elrow h4{font-family:'Baloo 2',cursive;font-weight:600;font-size:16px;line-height:1.3;}
+.elrow h4 small{font-family:'Zen Maru Gothic',sans-serif;font-weight:500;font-size:13px;color:var(--ink-soft);}
+.elrow p{font-size:14px;color:var(--ink-soft);}
+.elrow.fifth{background:var(--blush);border-style:dashed;}
+.center{text-align:center;margin-top:16px;}
+.textlink{color:var(--pink-deep);font-weight:700;text-decoration:none;border-bottom:1px solid var(--blush-2);}
+
+.live-card{background:#fff;border:1.5px solid var(--blush-2);border-radius:18px;padding:20px;display:flex;flex-direction:column;gap:8px;}
+.live-card .st{font-size:11px;letter-spacing:1.5px;text-transform:uppercase;color:var(--pink-deep);font-weight:700;}
+.live-card h3{font-family:'Baloo 2',cursive;font-weight:700;font-size:19px;line-height:1.25;}
+.live-card p{font-size:14px;color:var(--ink-soft);}
+.live-card p b{color:var(--ink);font-weight:600;}
+.live-card .cta{margin-top:auto;align-self:flex-start;font-size:14px;padding:10px 20px;}
 .bolsa{margin-top:12px;background:var(--gold-soft);border:1px dashed var(--gold);border-radius:14px;padding:14px 16px;font-size:13.5px;color:#7A5B21;}
-.bolsa strong{color:#5E4416;}
 
-.quote{padding:52px 0;text-align:center;}
-.quote p{font-family:'Baloo 2',cursive;font-weight:600;font-size:clamp(19px,3.2vw,26px);line-height:1.5;color:var(--ink);max-width:600px;margin:0 auto;}
-.quote span{color:var(--pink);}
+.zero{background:var(--sage-soft);padding:44px 24px;text-align:center;border-radius:24px;margin:40px 0 20px;}
+.zero .eyebrow{font-size:11px;letter-spacing:4px;text-transform:uppercase;color:#4c755f;margin-bottom:10px;font-weight:600;}
+.zero h2{font-family:'Baloo 2',cursive;font-weight:700;font-size:clamp(24px,4vw,32px);margin-bottom:12px;}
+.zero p{color:var(--ink-soft);max-width:520px;margin:0 auto 14px;}
+.zero .kit{display:flex;gap:10px;justify-content:center;flex-wrap:wrap;margin:16px 0 24px;}
+.zero .kit span{background:#fff;border:1px solid #d6e5dc;border-radius:30px;padding:8px 16px;font-size:13.5px;}
 
-.zero{background:var(--blush);padding:52px 0;text-align:center;border-radius:24px;margin:20px 0;}
-.zero .eyebrow{font-size:11px;letter-spacing:4px;text-transform:uppercase;color:var(--pink-deep);margin-bottom:10px;font-weight:600;}
-.zero h2{font-family:'Baloo 2',cursive;font-weight:700;font-size:clamp(24px,4vw,34px);margin-bottom:14px;}
-.zero p{color:var(--ink-soft);max-width:520px;margin:0 auto 16px;}
-.zero .kit{display:flex;gap:10px;justify-content:center;flex-wrap:wrap;margin:20px 0 26px;}
-.zero .kit span{background:#fff;border:1px solid var(--blush-2);border-radius:30px;padding:8px 16px;font-size:13.5px;}
-
-.foot{border-top:1px solid var(--blush-2);padding:34px 0 50px;text-align:center;}
-.foot .big{font-family:'Baloo 2',cursive;font-size:17px;margin-bottom:14px;}
-.foot .tags{display:flex;gap:16px;justify-content:center;flex-wrap:wrap;font-size:13px;color:var(--pink-deep);}
-.foot .credit{margin-top:16px;font-size:11.5px;color:var(--ink-soft);opacity:.7;}
-
+.foot{border-top:1px solid var(--blush-2);padding:34px 0 50px;}
+.foot .comm{display:grid;gap:12px;}
+.foot .comm div{background:#fff;border:1.5px solid var(--blush-2);border-radius:16px;padding:14px 18px;font-size:14px;color:var(--ink-soft);}
+.foot .comm b{color:var(--ink);}
+.foot .comm a{color:var(--pink-deep);font-weight:700;text-decoration:none;}
+.foot .credit{margin-top:18px;font-size:12px;color:var(--ink-soft);text-align:center;}
+.passo0{font-size:14px!important;margin:18px auto 0!important}
+.passo0 a{color:var(--pink-deep);font-weight:700}
+.trilhas{display:grid;gap:14px;margin-top:22px}
+.tri{display:grid;grid-template-columns:56px minmax(0,1fr) auto;gap:16px;align-items:center;background:#fff;border:1.5px solid var(--blush-2);border-left:6px solid var(--c);border-radius:18px;padding:18px 20px;text-decoration:none;color:inherit;transition:transform .15s ease,box-shadow .15s ease}
+.tri:hover{transform:translateY(-2px);box-shadow:0 12px 26px -18px rgba(74,65,73,.5)}
+.tri.ja{--c:#b5514d}.tri.en{--c:#5176a8}.tri.pt{--c:#537e65}
+.tri .fl{width:56px;height:56px;border-radius:50%;display:grid;place-items:center;font-family:'Baloo 2',cursive;font-weight:800;font-size:18px;color:#fff;background:var(--c)}
+.tri .tx{display:grid;gap:2px}
+.tri b{font-family:'Baloo 2',cursive;font-size:22px;line-height:1.15}
+.tri small{font-size:12px;letter-spacing:1.2px;text-transform:uppercase;color:var(--c);font-weight:700}
+.tri .tx span{font-size:14px;color:var(--ink-soft)}
+.tri .go{font-weight:700;color:var(--c);white-space:nowrap}
+@media (max-width:560px){.tri{grid-template-columns:44px minmax(0,1fr)}.tri .fl{width:44px;height:44px;font-size:15px}.tri .go{grid-column:2}}
+.diario{text-align:center;font-size:14.5px;color:var(--ink-soft);margin-top:16px}
 </style>
+<link rel="stylesheet" href="/estilo-celular.css?v=2">
+<script defer src="/menu-ativo.js?v=1"></script>
 </head>
 <body>
 
@@ -117,92 +130,111 @@ details[open] summary .arrow{transform:rotate(90deg);}
       <a href="/idiomas/" class="on">idiomas</a>
       <a href="/travessia/">travessia</a>
       <a href="/paralelos/">paralelos</a>
+      <a href="/loja/">tesouros</a>
       <a href="/sobre/">sobre</a>
-      <a href="/">início</a>
+      <a href="#trilhas" class="start">Comece por aqui</a>
     </div>
   </nav>
 
   <header class="hero">
     <p class="eyebrow">unirversos idiomas</p>
-    <h1>Aprenda a se comunicar a partir da sua <em>essência</em>.</h1>
-    <p>Trilhas de inglês, português e japonês criadas a partir de uma metodologia autoral, lapidada ao longo de anos. Primeiro, comece por você e descubra a sua voz — depois, escolha a sua jornada e faça seu próprio caminho.</p>
-    <a href="#aula-zero" class="cta">Começar pela aula zero</a>
-  </header>
-</div>
-
-<div class="strip">
-  <div class="wrap">✦ Turmas ao vivo com acompanhamento individual: <strong>vagas até dezembro</strong>. <a href="#ao-vivo">Ver as modalidades</a></div>
-</div>
-
-<div class="wrap">
-
-  <div class="section-intro">
-    <p class="eyebrow">explore no seu tempo</p>
-    <h2>O que você quer conhecer?</h2>
-    <p>Toque em cada tema para abrir. Nada aparece antes de você pedir.</p>
-  </div>
-
-  <div class="accordion">
-
-    <!-- TRILHAS AUTOGUIADAS -->
-    <details>
-      <summary>
-        <span class="ic">🧭</span>
-        <span class="txt">As trilhas autoguiadas<small>Para caminhar no seu ritmo, sem hora marcada</small></span>
-        <span class="arrow">▶</span>
-      </summary>
-      <div class="detail-body">
-        <div class="ilist">
-          <div class="irow"><span class="st">autoguiado · bônus</span><h4><a href="/idiomas/hiragana/">Hiragana →</a></h4><p>As 46 letras do japonês pelo Quadrado Elemental: descobrir, escutar, escrever e usar, começando pelas palavras do seu avatar.</p></div>
-          <div class="irow"><span class="st">autoguiado · bônus</span><h4><a href="/idiomas/katakana/">Katakana →</a></h4><p>As letras das palavras estrangeiras, como パーカー e ヘッドホン. No final, você escreve o seu nome na carteirinha de Utopia.</p></div>
-          <div class="irow"><span class="st">autoguiado · rpg</span><h4><a href="/idiomas/planeta-utopia/">Planeta Utopia →</a></h4><p>O livro-jogo gamificado: crie seu avatar, suba de nível e ganhe XP praticando idiomas.</p></div>
-          <div class="irow"><span class="st">autoguiado</span><h4><a href="/idiomas/mapas/">Mapas de contexto →</a></h4><p>Doze mapas em japonês e trilhas iniciais em inglês e português. Peças, moldes e radar de escuta.</p></div>
-          <div class="irow"><span class="st">flashcard · trilíngue</span><h4><a href="/idiomas/amuleto/">Amuleto de Bolso →</a></h4><p>52 expressões essenciais em 3 idiomas. Flashcards com pronúncia, kanji destacado e variações de gênero.</p></div>
-          <div class="irow"><span class="st">diário · comunidade</span><h4><a href="/paralelos/">Diário →</a></h4><p>Um acontecimento ou pensamento com constância, no idioma alvo. Compartilhe sua frase e acompanhe a jornada de outros aprendizes.</p></div>
-        </div>
-      </div>
-    </details>
-
-    <!-- MODALIDADES AO VIVO -->
-    <details id="ao-vivo">
-      <summary>
-        <span class="ic">🌟</span>
-        <span class="txt">Acompanhamento ao vivo<small>Vagas até dezembro — o formato mais intenso</small></span>
-        <span class="arrow">▶</span>
-      </summary>
-      <div class="detail-body">
-        <p>Turmas com acompanhamento individual ou em grupo, ao vivo, com material feito sob medida. É o formato que exige presença de nós dois.</p>
-        <div class="ilist">
-          <div class="irow"><span class="st">adultos · individual</span><h4>Do Caos ao Cosmos</h4><p>Para quem não abre mão de viver uma vida extraordinária, aprendendo sempre. Aulas individuais, PDF semanal, quest mensal e conteúdo feito para você.</p></div>
-          <div class="irow"><span class="st">a partir de 7 anos · em grupo e individual</span><h4>Trilha em grupo e individual</h4><p>Com a interação como motor, numa dinâmica relacional que reacende o interesse. Aulas em grupo ou individual, material incluso e quest mensal.</p></div>
-        </div>
-        <div class="bolsa"><strong>20% das vagas em grupo são bolsas de até 100%</strong>, destinadas a alunos da rede pública (sujeitas a análise). Essas vagas existem graças às turmas que patrocinam esse sonho.</div>
-      </div>
-    </details>
-
-  </div>
-
-  <div class="quote">
-    <p>Não é sobre sair da zona de conforto.<br>É sobre <span>aumentar</span> a zona de conforto.</p>
-  </div>
-
-  <!-- AULA ZERO -->
-  <section class="zero" id="aula-zero">
-    <p class="eyebrow">a porta de entrada</p>
-    <h2>Aula zero: autoanálise sincerona</h2>
-    <p>Antes de qualquer conteúdo, a gente começa por você. Porque sozinhos não somos nada — mas, antes, é importante saber quem somos.</p>
-    <div class="kit">
-      <span>⏱ 30 minutinhos</span>
-      <span>🥤 um copão de água</span>
-      <span>💗 um coração aberto</span>
+    <h1>Um idioma que começa em <em>você</em>.</h1>
+    <p>Trilhas de japonês, inglês e português com uma metodologia autoral e prática. Escolha o idioma, siga os passos em ordem e pule o que você já sabe.</p>
+    <div class="ctas">
+      <a href="#trilhas" class="cta">Escolher o meu idioma ↓</a>
+      <a href="#ao-vivo" class="live">Ver turmas ao vivo <b>vagas abertas</b></a>
     </div>
-    <p><a href="/idiomas/aula-zero/" class="cta">Fazer a aula zero</a></p>
+    <p class="passo0">Quer se conhecer antes? <a href="/idiomas/autoanalise/">Passo Zero: a autoanálise</a> (opcional, 30 minutos).</p>
+  </header>
+
+  <!-- A PORTA: UMA TRILHA POR IDIOMA -->
+  <section class="block" id="trilhas" style="scroll-margin-top:16px">
+    <div class="section-intro" style="padding-top:0">
+      <p class="eyebrow">comece aqui</p>
+      <h2>Qual idioma você quer?</h2>
+      <p>Cada idioma tem uma trilha só, com os passos em ordem. A conta é grátis e guarda o seu progresso em qualquer aparelho.</p>
+    </div>
+    <div class="trilhas">
+      <a class="tri ja" href="/idiomas/japones/"><span class="fl">JA</span><span class="tx"><b>Japonês</b><small>trilha completa</small><span>Seu avatar, 12 mapas de viagem com prova e carimbo, e o Salão do Planeta Utopia. Letras e Aula Zero são opcionais.</span></span><span class="go">Começar →</span></a>
+      <!-- inglês e português: ocultos por enquanto (27/10); para mostrar, tire hidden e style="display:none" -->
+      <a hidden style="display:none" class="tri en" href="/idiomas/mapas/?explorar=en"><span class="fl">EN</span><span class="tx"><b>Inglês</b><small>trilha inicial · 5 mapas</small><span>As situações essenciais de viagem, com moldes prontos e escuta.</span></span><span class="go">Começar →</span></a>
+      <a hidden style="display:none" class="tri pt" href="/idiomas/mapas/?explorar=pt"><span class="fl">PT</span><span class="tx"><b>Português</b><small>for foreigners · 5 maps</small><span>Portuguese for travelers and newcomers to Brazil.</span></span><span class="go">Start →</span></a>
+    </div>
+  </section>
+
+  <!-- FERRAMENTAS -->
+  <section class="block" id="ferramentas">
+    <div class="section-intro" style="padding-top:0">
+      <h2>Sempre à mão</h2>
+      <p>Ferramentas que ajudam em qualquer trilha. Não são lições: use quando quiser.</p>
+    </div>
+    <div class="grid2">
+      <div class="card"><span class="ic">🎨</span><h3>Meu avatar</h3>
+        <p><b>Seu personagem nas aulas.</b> Monte no Ateliê e aprenda as primeiras palavras enquanto escolhe cabelo, roupa e cores.</p>
+        <a class="go" href="/idiomas/avatar/">Abrir o Ateliê →</a></div>
+      <div class="card"><span class="ic">📒</span><h3>Caderno de palavras</h3>
+        <p><b>Tudo o que você já aprendeu.</b> As palavras das aulas e do Ateliê num lugar só, com áudio.</p>
+        <a class="go" href="/idiomas/caderno/">Abrir o caderno →</a></div>
+      <div class="card"><span class="ic">💎</span><h3>Amuleto de bolso</h3>
+        <p><b>Frases prontas para levar.</b> 52 expressões em 3 idiomas em flashcards, com pronúncia e nuances culturais.</p>
+        <a class="go" href="/idiomas/amuleto/">Abrir o amuleto →</a></div>
+      <div class="card"><span class="ic">🌬️</span><h3>Ar <small style="font-weight:500;color:var(--muted)">· às vezes precisamos de um ar</small></h3>
+        <p><b>Quando a conversa aperta.</b> As 5 gavetas para ganhar tempo, pedir ajuste e sair com elegância. Também fica dentro de cada aula.</p>
+        <a class="go" href="/idiomas/ar/">Abrir o Ar →</a></div>
+    </div>
+    <p class="diario">✍️ Para praticar escrevendo, use o <a class="textlink" href="/paralelos/">Diário trilíngue</a>, em Paralelos.</p>
+  </section>
+  <section class="block" id="metodo">
+    <div class="manifesto"><p>Não é sobre sair da sua zona de conforto.<br>É sobre <span>expandi-la</span>.</p></div>
+    <div class="section-intro">
+      <h2>O Quadrado Elemental: como a teoria vira conversa real</h2>
+      <p>Quatro pilares integrados para transformar estudo passivo em comunicação viva:</p>
+    </div>
+    <div class="elements">
+      <div class="elrow" style="--c:#E0805A"><span class="e">🔥</span><div><h4>Fogo <small>· Caixa de peças</small></h4><p>A exposição: você toca numa peça, ouve, e ela se encaixa nos moldes do dia a dia para virar frase.</p></div></div>
+      <div class="elrow" style="--c:#6E9BC9"><span class="e">💧</span><div><h4>Água <small>· Radar de escuta</small></h4><p>O mergulho: você não precisa entender a frase toda, só capturar a palavra-chave.</p></div></div>
+      <div class="elrow" style="--c:#4f7461"><span class="e">🌱</span><div><h4>Terra <small>· Materializar</small></h4><p>Levar o mapa para fora da tela: registrar no caderno, escrever e usar o que aprendeu.</p></div></div>
+      <div class="elrow" style="--c:#686eb2"><span class="e">🌬️</span><div><h4>Ar <small>· às vezes precisamos de um ar</small></h4><p>As 5 gavetas (respirar, declarar, pedir ajuste, confirmar e sair) para ganhar fôlego e não travar quando o diálogo aperta. Ficam no botão 🌬️ Ar, dentro de cada aula.</p></div></div>
+      <div class="elrow fifth" style="--c:#C0913F"><span class="e">✦</span><div><h4>O Quinto Elemento <small>· Espírito</small></h4><p>A conexão que acontece quando tudo se junta numa troca autêntica em primeira pessoa.</p></div></div>
+    </div>
+    <p class="center"><a class="textlink" href="/sobre/">Entenda o método completo →</a></p>
+  </section>
+
+  <!-- AO VIVO -->
+  <section class="block" id="ao-vivo">
+    <div class="section-intro" style="padding-top:20px">
+      <span class="tag">Vagas abertas</span>
+      <h2>Acompanhamento ao vivo e personalizado</h2>
+      <p>Encontros em tempo real focados em conversa, prática guiada e materiais sob medida para o seu objetivo.</p>
+    </div>
+    <div class="grid2">
+      <div class="live-card"><span class="st">individual</span><h3>Do Caos ao Cosmos</h3>
+        <p><b>Imersão total.</b> Encontros semanais individuais, material personalizado para seus objetivos de carreira ou vida, quests mensais e suporte próximo.</p>
+        <a class="cta" href="mailto:unirversos.idiomas@gmail.com?subject=Quero%20aulas%20individuais%20(Do%20Caos%20ao%20Cosmos)">Quero aulas individuais</a></div>
+      <div class="live-card"><span class="st">em grupo · a partir de 7 anos</span><h3>Trilhas em Grupo</h3>
+        <p><b>Aprendizado relacional.</b> Trocas enriquecedoras em turmas reduzidas, material incluso e dinâmicas colaborativas.</p>
+        <a class="cta" href="mailto:unirversos.idiomas@gmail.com?subject=Quero%20uma%20vaga%20em%20grupo">Garantir vaga em grupo</a></div>
+    </div>
+    <div class="bolsa">20% das vagas são destinadas a bolsas de estudo para alunos da rede pública.</div>
+  </section>
+
+  <!-- PASSO ZERO -->
+  <section class="zero" id="autoanalise">
+    <p class="eyebrow">passo zero · autoanálise</p>
+    <h2>Descubra o seu ponto de partida</h2>
+    <p>Antes do primeiro exercício, olhamos para a sua história e suas necessidades reais.</p>
+    <p style="margin-bottom:0"><b>O que você precisa:</b></p>
+    <div class="kit"><span>⏱ 30 minutos</span><span>🥤 um copo d'água</span><span>💗 mente aberta</span></div>
+    <a href="/idiomas/autoanalise/" class="cta">Fazer a autoanálise →</a>
   </section>
 
   <footer class="foot">
-    <p class="big">unirversos — tudo conectado</p>
-    <div class="tags"><span>@unirversos.idiomas</span><span>unirversos.idiomas@gmail.com</span></div>
-    <p class="credit">Aline Kikuti</p>
+    <div class="comm">
+      <div>📮 <b>Newsletter no Substack: Reflexões em Voz Alta.</b> Ensaios sobre idiomas, memória e identidade direto na sua caixa de entrada. <a href="https://substack.com/@unirversosparalelos">Assinar →</a></div>
+      <div>📸 <b>Instagram:</b> bastidores, rotina de estudos e materiais em construção. <a href="https://instagram.com/unirversos.idiomas">@unirversos.idiomas →</a></div>
+      <div>✉️ <b>Dúvidas ou parcerias:</b> <a href="mailto:unirversos.idiomas@gmail.com">unirversos.idiomas@gmail.com</a></div>
+    </div>
+    <p class="credit">unirversos — tudo conectado · Aline Kikuti</p>
   </footer>
 
 </div>
