@@ -214,7 +214,7 @@ footer a:hover{color:var(--pink)}
 </div>
 
 <div id="lb" role="dialog" aria-label="Foto ampliada" aria-hidden="true"><button class="fx" type="button" aria-label="Fechar">×</button><button class="pv" type="button" aria-label="Foto anterior">‹</button><img alt=""><button class="nx" type="button" aria-label="Próxima foto">›</button><span class="nn"></span></div>
-<script src="/loja/produtos.js?v=20261030zd"></script>
+<script src="/loja/produtos.js?v=20261031a"></script>
 <script>
 (function(){
   const CATS=[
@@ -247,7 +247,9 @@ footer a:hover{color:var(--pink)}
     const fm=n=>Number(n).toLocaleString('pt-BR',{minimumFractionDigits:2,maximumFractionDigits:2});
     const DESC=(typeof x.descPct==='number')?x.descPct:(x.semDesc?0:15); /* % de desconto da primeira compra, só sobre o produto (sem a taxa de importação) */
     const prod=x.total?x.total-(x.imposto||0):0, com=prod*(1-DESC/100), totCom=com+(x.imposto||0);
-    const rs=x.total?`<ul class="pag"><li><b>Produto:</b> ${DESC?`<s>R$ ${fm(prod)}</s> `:''}<b>R$ ${fm(com)}</b> <span class="parc">${DESC?`com ${DESC}% de desconto. `:''}Parcelamento pelo Mercado Pago, com os juros dele.</span></li>${x.imposto?`<li class="ch"><b>Taxa de importação, paga na chegada:</b> R$ ${fm(x.imposto)} <span class="parc">(estimativa, vai direto para a alfândega, não entra no parcelamento e não tem desconto)</span></li>`:''}</ul><p class="preco tot"><span class="parc">${x.imposto?'= Total (produto + taxa), na 1ª compra':(DESC?'= Total, na 1ª compra':'= Total')}</span><br>R$ ${fm(totCom)} ${DESC?`<span class="parc"><s>R$ ${fm(x.total)}</s></span>`:''}</p>${x.imposto?'':'<p class="incl">✔ Taxa e impostos inclusos: você não vai pagar nada além.</p>'}${x.chegada?`<p class="parc">📦 Chegada: ${esc(x.chegada)}</p>`:''}${x.restam?`<p class="restam">🔥 Apenas ${x.restam} kits disponíveis</p>`:''}`:'';
+    const taxaTxt=x.imposto?'= Total (produto + taxa), na 1ª compra':(DESC?'= Total, na 1ª compra':'= Total');
+    const rsDet=x.total?`<ul class="pag"><li><b>Produto:</b> ${DESC?`<s>R$ ${fm(prod)}</s> `:''}<b>R$ ${fm(com)}</b> <span class="parc">${DESC?`com ${DESC}% de desconto. `:''}Parcelamento pelo Mercado Pago, com os juros dele.</span></li>${x.imposto?`<li class="ch"><b>Taxa de importação, paga na chegada:</b> R$ ${fm(x.imposto)} <span class="parc">(estimativa, vai direto para a alfândega, não entra no parcelamento e não tem desconto)</span></li>`:''}</ul><p class="parc">${taxaTxt}: <b>R$ ${fm(totCom)}</b></p>${x.imposto?'':'<p class="incl">✔ Taxa e impostos inclusos: você não vai pagar nada além.</p>'}${x.chegada?`<p class="parc">📦 Chegada: ${esc(x.chegada)}</p>`:''}${x.restam?`<p class="restam">🔥 Apenas ${x.restam} kits disponíveis</p>`:''}`:'';
+    const precoV=x.total?`<p class="preco tot">R$ ${fm(totCom)} ${DESC?`<span class="parc"><s>R$ ${fm(x.total)}</s></span>`:''}${x.imposto?' <span class="parc">+ taxa na chegada</span>':''}</p>`:(p?`<p class="preco">${p} <small>referência</small></p>`:'');
     const br=x.br?`<p class="preco br"><span class="parc">No Mercado Livre (${esc(x.br.rotulo)}, preço de referência)</span><br>R$ ${fm(x.br.preco)}</p><p class="economia">Aqui sai R$ ${fm(x.br.preco-totCom)} mais barato <span class="parc">(${esc(x.br.rotulo)})</span></p>`:'';
     const selo=(x.total&&DESC)?`<span class="selo">${DESC}% OFF · 1ª compra</span>`:'';
     const novo=vend?`<span class="vendido">VENDIDO</span>`:x.novo?`<span class="novo">ITEM NOVO</span>`:'';
@@ -255,11 +257,11 @@ footer a:hover{color:var(--pink)}
       ${x.exemplo?'<span class="ex">exemplo</span>':''}
       <div class="foto">${foto}${selo}${novo}</div>
       <div class="corpo">
-        <p class="tag">${c.ic} ${esc(c.nome)}</p>
-        ${c.id==='zelda'?'<p class="pre">PRÉ-VENDA · MALOTE</p>':''}
         <h3>${esc(x.nome)}</h3>
-        ${br}${rs||(p?`<p class="preco">${p} <small>referência</small></p>`:'')}
+        ${precoV}
         <details class="mais"><summary>Mais detalhes</summary>
+          ${c.id==='zelda'?'<p class="pre">PRÉ-VENDA · MALOTE</p>':''}
+          ${br}${rsDet}
           ${x.kit?`<p class="d"><b>O que vem no kit:</b></p><ul class="kitl">${x.kit.map(t=>`<li>${esc(t)}</li>`).join('')}</ul>`:''}
           <p class="d">${esc(x.desc)}</p>
           ${(c.id==='consoles'||x.antes)&&!x.novo?`<div class="antes"><b>Antes de comprar</b><ul>${(x.antes||['Item de garimpo: usado, garimpado no Japão e vendido no estado mostrado nas fotos.','Console japonês: roda jogos de 3DS japoneses. A trava de região pode ser contornada por modificação, que é por conta do comprador.','Carregador japonês: confira a tensão antes de ligar.']).map(t=>`<li>${esc(t)}</li>`).join('')}</ul></div>`:''}
