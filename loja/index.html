@@ -58,7 +58,7 @@ h1 .jp rt{font-size:.5em;letter-spacing:.05em}
 .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:18px}
 .card{--c:var(--pink);position:relative;background:var(--card);border:1.5px solid var(--line);border-radius:var(--r);overflow:hidden;display:grid;grid-template-rows:auto 1fr;box-shadow:0 10px 24px -18px rgba(58,43,56,.35)}
 .card[data-cat="zelda"]{--c:var(--gold)} .card[data-cat="didatico"]{--c:var(--sage)}
-.card[data-cat="kits"]{--c:var(--pink)}
+.card[data-cat="skincare"]{--c:var(--pink)}
 .kitl{margin:6px 0 4px;padding:0 0 0 18px;font-size:14px;line-height:1.45}.kitl li{margin:2px 0} .card[data-cat="consoles"]{--c:var(--lavender)} .card[data-cat="colec"]{--c:var(--sky)} .card[data-cat="reliquias"]{--c:var(--gold)} .card[data-cat="gadgets"]{--c:var(--sage)}
 .taxa{margin:6px 0 0;padding:9px 11px;border-radius:12px;background:#fff4e0;border:1.5px solid #e8c98a;color:#5b4210;font-size:13.5px;line-height:1.45}
 .taxa b{font-weight:800}
@@ -209,15 +209,15 @@ footer a:hover{color:var(--pink)}
 </div>
 
 <div id="lb" role="dialog" aria-label="Foto ampliada" aria-hidden="true"><button class="fx" type="button" aria-label="Fechar">×</button><button class="pv" type="button" aria-label="Foto anterior">‹</button><img alt=""><button class="nx" type="button" aria-label="Próxima foto">›</button><span class="nn"></span></div>
-<script src="/loja/produtos.js?v=20261030x"></script>
+<script src="/loja/produtos.js?v=20261030z"></script>
 <script>
 (function(){
   const CATS=[
+    {id:'skincare', ic:'🧴', nome:'Skincare', sub:'Beleza japonesa para pele e cabelo, em kits: vários produtos numa encomenda só.'},
     {id:'zelda',    ic:'🗡️', nome:'ZELDA · Edição especial', sub:'Itens da série Zelda e da edição de 40 anos. Pré-venda do malote de dezembro: sem taxa de importação na chegada.'},
     {id:'consoles', ic:'🎮', nome:'Consoles & Portáteis', sub:'Consoles e portáteis preservados, de edições especiais a clássicos.'},
     {id:'colec',    ic:'🗿', nome:'Colecionáveis & Figures', sub:'Figures, pelúcias e peças colecionáveis garimpadas com cuidado.'},
     {id:'reliquias',ic:'🏮', nome:'Relíquias Vintage', sub:'Achados antigos e raros, cada um com a sua história.'},
-    {id:'kits',     ic:'🎁', nome:'Kits', sub:'Vários produtos numa encomenda só, comprados e enviados juntos.'},
     {id:'didatico', ic:'📚', nome:'Material didático', sub:'Livros e cadernos para estudar japonês.'},
     {id:'gadgets',  ic:'🌸', nome:'Gadgets & Papelaria Japonesa', sub:'Design minimalista, tecnologia portátil e organização para a sua rotina.'}
   ];
