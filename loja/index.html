@@ -58,7 +58,7 @@ h1 .jp rt{font-size:.5em;letter-spacing:.05em}
 .cat-h p{margin:0;color:var(--muted);font-size:15px;max-width:62ch}
 .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:18px}
 .card{--c:var(--pink);position:relative;background:var(--card);border:1.5px solid var(--line);border-radius:var(--r);overflow:hidden;display:grid;grid-template-rows:auto 1fr;box-shadow:0 10px 24px -18px rgba(58,43,56,.35)}
-.card[data-cat="zelda"]{--c:var(--gold)} .card[data-cat="didatico"]{--c:var(--sage)}
+.card[data-cat="zelda"]{--c:var(--gold)} .card[data-cat="pokecafe"]{--c:var(--sky)} .card[data-cat="didatico"]{--c:var(--sage)}
 .card[data-cat="skincare"]{--c:var(--pink)}
 .comp{margin-top:8px;font:inherit;font-weight:700;font-size:14px;min-height:44px;width:100%;border:1.5px solid var(--line);background:var(--card);color:var(--muted);border-radius:999px;cursor:pointer}
 .comp:hover{color:var(--pink);border-color:var(--pink)}
@@ -227,12 +227,13 @@ footer a:hover{color:var(--pink)}
 </div>
 
 <div id="lb" role="dialog" aria-label="Foto ampliada" aria-hidden="true"><button class="fx" type="button" aria-label="Fechar">×</button><button class="pv" type="button" aria-label="Foto anterior">‹</button><img alt=""><button class="nx" type="button" aria-label="Próxima foto">›</button><span class="nn"></span></div>
-<script src="/loja/produtos.js?v=20261031d"></script>
+<script src="/loja/produtos.js?v=20261101a"></script>
 <script src="/loja/caixinha.js?v=10"></script>
 <script>
 (function(){
   const CATS=[
     {id:'skincare', ic:'🧴', nome:'Skincare', sub:'Beleza japonesa para pele e cabelo, em kits: vários produtos numa encomenda só.'},
+    {id:'pokecafe', ic:'☕', nome:'Pokémon Café · Exclusivos', sub:'Itens exclusivos do Pokémon Café, trazidos da minha visita. A lista chega depois do passeio.'},
     {id:'zelda',    ic:'🗡️', nome:'ZELDA · Edição especial', sub:'Itens da série Zelda e da edição de 40 anos. Pré-venda do malote de dezembro: sem taxa de importação na chegada.'},
     {id:'consoles', ic:'🎮', nome:'Consoles & Portáteis', sub:'Consoles e portáteis preservados, de edições especiais a clássicos.'},
     {id:'colec',    ic:'🗿', nome:'Colecionáveis & Figures', sub:'Figures, pelúcias e peças colecionáveis garimpadas com cuidado.'},
