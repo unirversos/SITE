@@ -93,4 +93,13 @@ window.ACHADOS = [
     kit:['Anessa Perfect UV Skincare Milk NA · protetor solar, 60 ml','Melano CC · essência (sérum) de vitamina C, 20 ml','Nameraka Honpo · creme para os olhos antirrugas, 20 g','Fino Premium Touch · máscara capilar, 230 g','Tsubaki Premium EX · máscara de reparação capilar, 180 g'],
     desc:'Kit com cinco produtos comprados juntos no Japão, da loja online da rede Matsukiyo Cocokara: protetor solar Anessa (Shiseido), essência Melano CC (Rohto), creme para os olhos Nameraka Honpo (Sana), máscara Fino Premium Touch e máscara Tsubaki Premium EX (as duas da Fine Today). Produtos novos. É uma encomenda só: o kit é vendido e enviado junto, não os itens soltos.',
     de:0, ate:0, total:510, imposto:0, descPct:0, restam:5, chegada:'dezembro', foto:'', fotos:['/loja/fotos/kit-gi-capa.jpg','/loja/fotos/kit-gi-1.jpg','/loja/fotos/kit-gi-2.jpg','/loja/fotos/kit-gi-3.jpg','/loja/fotos/kit-gi-4.jpg','/loja/fotos/kit-gi-5.jpg'], link:'' },
+  { id:'pokecafe-pikachu-chef', cat:'pokecafe', nome:'Pokémon Café · pelúcia Pikachu Chef', novo:true,
+    desc:'Item exclusivo do Pokémon Café: pelúcia do Pikachu vestido de chef de cozinha, com chapéu branco, avental e uma bandeja com um mini Pikachu. Comprado por mim no café, no Japão. O preço em reais já inclui taxa e impostos, sem frete dentro do Brasil. Disponibilidade e prazo combinados direto comigo pelo WhatsApp.',
+    de:0, ate:0, total:158, imposto:0, semDesc:true, foto:'', fotos:['/loja/fotos/pokecafe-chef.jpg'], link:'' },
+  { id:'pokecafe-pikachu-garconete', cat:'pokecafe', nome:'Pokémon Café · pelúcia Pikachu Garçonete', novo:true,
+    desc:'Item exclusivo do Pokémon Café: pelúcia do Pikachu de garçonete, com chapéu e avental vermelhos e uma bandeja de biscoitos. Comprado por mim no café, no Japão. O preço em reais já inclui taxa e impostos, sem frete dentro do Brasil. Disponibilidade e prazo combinados direto comigo pelo WhatsApp.',
+    de:0, ate:0, total:158, imposto:0, semDesc:true, foto:'', fotos:['/loja/fotos/pokecafe-garconete.jpg'], link:'' },
+  { id:'pokecafe-pikachu-patissier', cat:'pokecafe', nome:'Pokémon Café · pelúcia Pikachu Confeiteiro (Patissier)', novo:true,
+    desc:'Item exclusivo do Pokémon Café: pelúcia do Pikachu confeiteiro, de uniforme preto e dourado, com um batedor de claras e um parfait de Eevee. Comprado por mim no café, no Japão. O preço em reais já inclui taxa e impostos, sem frete dentro do Brasil. Disponibilidade e prazo combinados direto comigo pelo WhatsApp.',
+    de:0, ate:0, total:158, imposto:0, semDesc:true, foto:'', fotos:['/loja/fotos/pokecafe-patissier.jpg'], link:'' },
 ];
