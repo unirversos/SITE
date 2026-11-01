@@ -102,4 +102,7 @@ window.ACHADOS = [
   { id:'pokecafe-pikachu-patissier', cat:'pokecafe', nome:'Pokémon Café · pelúcia Pikachu Confeiteiro (Patissier)', novo:true,
     desc:'Item exclusivo do Pokémon Café: pelúcia do Pikachu confeiteiro, de uniforme preto e dourado, com um batedor de claras e um parfait de Eevee. Comprado por mim no café, no Japão. O preço em reais já inclui taxa e impostos, sem frete dentro do Brasil. Disponibilidade e prazo combinados direto comigo pelo WhatsApp.',
     de:0, ate:0, total:158, imposto:0, semDesc:true, foto:'', fotos:['/loja/fotos/pokecafe-patissier.jpg'], link:'' },
+  { id:'pokecafe-mascote-patissier', cat:'pokecafe', nome:'Pokémon Café · mascote Pikachu Patissier (com mosquetão)', novo:true,
+    desc:'Item exclusivo do Pokémon Café: mascote pequeno do Pikachu confeiteiro, de uniforme preto e dourado, com mosquetão para prender em bolsa ou mochila. Comprado por mim no café, no Japão. O preço em reais já inclui taxa e impostos, sem frete dentro do Brasil. Disponibilidade e prazo combinados direto comigo pelo WhatsApp.',
+    de:0, ate:0, total:109, imposto:0, semDesc:true, foto:'', fotos:['/loja/fotos/pokecafe-mascote-patissier.jpg'], link:'' },
 ];
