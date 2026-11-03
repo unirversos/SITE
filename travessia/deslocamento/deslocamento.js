@@ -77,7 +77,8 @@ function mostra(a,b,pa,pb){
   var d=G.km(pa,pb), res=$('#res'), rk=kTar(a,b), o=orc();
   if(!o.m)o.m={};
   var modo=o.m[rk]||G.modoPadrao(d), key=rk+'|'+modo, E=G.estModo(modo,d), t=o.t[key], conf=!!t, v=conf?t.v:E.fare, h='';
-  var chips=Object.keys(G.MODOS).map(function(m){return '<button type="button" class="md'+(m===modo?' on':'')+'" data-m="'+m+'" aria-pressed="'+(m===modo)+'">'+G.MODOS[m]+'</button>';}).join('');
+  var chips=Object.keys(G.MODOS).map(function(m){var em=G.estModo(m,d), tm=o.t[rk+'|'+m], cm=tm?tm.v:em.fare;
+    return '<button type="button" class="md'+(m===modo?' on':'')+'" data-m="'+m+'" aria-pressed="'+(m===modo)+'">'+G.MODOS[m]+'<small>'+G.fmtMin(em.min)+' · '+(cm===0?'grátis':G.yen(cm))+(tm?' ✓':'')+'</small></button>';}).join('');
   h+='<div class="km">'+G.fmtKm(d).replace(' km','')+' <small>km em linha reta</small></div>'+
     '<div class="modos" role="group" aria-label="Meio de transporte">'+chips+'</div>'+
     '<div class="tempos"><div>'+G.MODOS[modo]+'<b>'+G.fmtMin(E.min)+'</b></div></div>'+
