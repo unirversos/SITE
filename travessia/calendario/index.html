@@ -1,0 +1,545 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>Calendário da viagem · Unirversos Travessia</title>
+<meta name="description" content="Escolha as datas da sua viagem, clique no dia e anote eventos, locais e detalhes. Leve tudo para o Google Agenda. Gratuito, sem cadastro; fica salvo no seu navegador.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@500;700;800&family=Zen+Maru+Gothic:wght@400;500;700&display=swap">
+<style>
+:root{
+  --paper:#fdf6f4; --card:#ffffff; --ink:#3a2b38; --muted:#6b5a67; --line:#ecdadd;
+  --pink:#c23f5e; --pink-d:#a8344f; --gold:#8e6a1f; --gold-soft:#fbf2df; --sage:#4f7461; --sage-soft:#e8efe8; --lavender:#b7a6dc; --red:#a8344f;
+  --f-display:"Baloo 2","Zen Maru Gothic",system-ui,sans-serif;
+  --f-body:"Zen Maru Gothic","Hiragino Maru Gothic ProN","Noto Sans JP",system-ui,sans-serif;
+  --r:20px;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;background:var(--paper);color:var(--ink);font-family:var(--f-body);font-size:16px;line-height:1.6;
+  background-image:radial-gradient(var(--line) 1.2px,transparent 1.3px);background-size:22px 22px;
+  padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));padding-block:18px 40px}
+a{color:inherit}
+a:focus-visible,button:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-visible,summary:focus-visible{outline:3px solid var(--lavender);outline-offset:2px;border-radius:8px}
+[hidden]{display:none!important}
+.wrap{max-width:1060px;margin:0 auto;display:grid;gap:26px}
+.wrap>*{min-width:0}
+.sitebar{display:flex;flex-wrap:wrap;justify-content:space-between;align-items:center;gap:10px 18px}
+.logo{font-family:var(--f-display);font-weight:800;font-size:19px;letter-spacing:.14em;text-decoration:none}
+.logo span{color:var(--pink)}
+.navlinks{display:flex;flex-wrap:wrap;gap:6px 20px;font-size:14px}
+.navlinks a{text-decoration:none;color:var(--muted)}
+.navlinks a:hover{color:var(--pink)}
+.navlinks a[aria-current="page"]{color:var(--ink);border-bottom:2px solid var(--pink)}
+.crumb{font-size:14px;color:var(--muted)}
+.crumb a{color:var(--pink);text-decoration:none}
+.hero{display:grid;gap:10px;max-width:760px}
+.eyebrow{font-size:12px;letter-spacing:.2em;text-transform:uppercase;color:var(--gold);font-weight:700;margin:0}
+h1{font-family:var(--f-display);font-weight:800;font-size:clamp(32px,5.4vw,50px);line-height:1.06;margin:0;text-wrap:balance}
+h1 em{font-style:normal;color:var(--pink)}
+.lede{margin:0;max-width:60ch;color:var(--muted)}
+.btn{font:inherit;font-family:var(--f-display);font-weight:700;font-size:15px;cursor:pointer;display:inline-flex;align-items:center;gap:6px;text-decoration:none;padding:8px 16px;border-radius:999px;border:1.5px solid var(--line);background:var(--card);color:var(--ink);line-height:1.3}
+.btn:hover{border-color:var(--pink)}
+.btn.pri{background:var(--pink);border-color:var(--pink);color:#fff}
+.btn.pri:hover{background:var(--pink-d)}
+.btn.sm{padding:4px 12px;font-size:13.5px}
+.btn.perigo{color:var(--red)}
+.btn[aria-pressed="true"]{background:var(--ink);border-color:var(--ink);color:#fff}
+.painel{background:var(--card);border:1.5px solid var(--line);border-radius:var(--r);padding:18px;display:grid;gap:14px;box-shadow:0 10px 24px -20px rgba(58,43,56,.4)}
+.painel h2{font-family:var(--f-display);font-weight:800;font-size:24px;line-height:1.2;margin:0}
+.campos{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:12px}
+.f{display:grid;gap:4px;font-size:13.5px;color:var(--muted);min-width:0}
+.f input,.f select,.f textarea{font:inherit;font-size:16px;color:var(--ink);border:1.5px solid var(--line);border-radius:12px;padding:8px 11px;background:#fff;min-width:0;width:100%}
+.f textarea{min-height:92px;resize:vertical}
+.f small{font-size:12.5px;color:var(--muted)}
+.erro{color:var(--red);font-weight:700;font-size:14px;margin:0;min-height:1.2em}
+.faixa{display:flex;flex-wrap:wrap;gap:8px 16px;justify-content:space-between;align-items:center;background:var(--gold-soft);border:1.5px solid color-mix(in srgb,var(--gold) 28%,var(--line));border-radius:16px;padding:10px 16px}
+.faixa b{font-family:var(--f-display);font-size:18px}
+.barra{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+.barra .esp{flex:1}
+.nav{display:flex;align-items:center;justify-content:space-between;gap:8px}
+.nav h2{font-family:var(--f-display);font-weight:800;font-size:clamp(22px,3.4vw,30px);margin:0;text-align:center;line-height:1.2}
+.nav .btn{flex:none;min-width:44px;justify-content:center}
+.mes{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:4px}
+.mh{text-align:center;font-size:12.5px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.06em;padding-bottom:2px}
+.dia{font:inherit;text-align:left;cursor:pointer;color:var(--ink);background:var(--card);border:1.5px solid var(--line);border-radius:12px;min-height:108px;padding:5px 6px;display:flex;flex-direction:column;gap:3px;overflow:hidden;min-width:0}
+.dia:hover{border-color:var(--pink)}
+.dia.dentro{background:#fbeef0}
+.dia.outro{background:transparent;border-style:dashed;color:var(--muted)}
+.dia.hoje{border-color:var(--pink);border-width:2.5px}
+.dia .n{display:flex;justify-content:space-between;align-items:baseline;gap:4px;font-weight:700;font-size:14px}
+.dia .n small{font-weight:500;font-size:11px;color:var(--muted)}
+.chip{display:block;font-size:12px;line-height:1.35;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;border-left:3px solid var(--c);background:color-mix(in srgb,var(--c) 13%,#fff);border-radius:5px;padding:1px 5px;color:var(--ink)}
+.mais-n{font-size:11.5px;font-weight:700;color:var(--pink-d)}
+.dots{display:none;flex-wrap:wrap;gap:3px}
+.dots i{width:8px;height:8px;border-radius:50%;background:var(--c)}
+.legenda{display:flex;flex-wrap:wrap;gap:4px 14px;font-size:13px;color:var(--muted)}
+.legenda i{display:inline-block;width:11px;height:11px;border-radius:4px;background:var(--c);margin-right:5px;vertical-align:-1px}
+/* lista */
+.lista{display:grid;gap:18px}
+.lista h3{font-family:var(--f-display);font-weight:800;font-size:19px;margin:0 0 6px}
+.lista .grp{display:grid;gap:8px}
+.vazio{border:1.5px dashed var(--line);border-radius:16px;padding:22px;text-align:center;color:var(--muted)}
+.evc{border:1.5px solid var(--line);border-left:6px solid var(--c);border-radius:14px;background:#fff;padding:10px 14px;display:grid;gap:4px}
+.evc h4{font-family:var(--f-display);font-weight:700;font-size:18px;line-height:1.25;margin:0}
+.evc .hora{font-size:13px;font-weight:700;color:var(--muted)}
+.evc p{margin:0;font-size:14.5px;overflow-wrap:anywhere}
+.evc .loc a{color:var(--pink-d)}
+.evc .det{color:var(--muted)}
+.evb{display:flex;flex-wrap:wrap;gap:6px;margin-top:4px}
+/* janela */
+dialog{border:none;border-radius:22px;padding:0;width:min(600px,calc(100% - 20px));max-height:92vh;color:var(--ink);background:var(--paper);box-shadow:0 30px 70px -20px rgba(58,43,56,.55)}
+dialog::backdrop{background:rgba(58,43,56,.45)}
+.dlg-in{padding:18px 18px 20px;display:grid;gap:12px;overflow:auto;max-height:92vh}
+.dlg-in h2{font-family:var(--f-display);font-weight:800;font-size:22px;line-height:1.2;margin:0}
+.nav h2::first-letter,.dlg-in h2::first-letter,.lista h3::first-letter{text-transform:uppercase}
+.dlg-top{display:flex;justify-content:space-between;align-items:start;gap:10px}
+.par2{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+.passos{margin:0;padding-left:1.2em;display:grid;gap:6px;font-size:15px}
+.nota{font-size:13.5px;color:var(--muted);margin:0}
+.toast{position:fixed;left:50%;bottom:14px;transform:translateX(-50%);max-width:calc(100% - 32px);margin:0;padding:8px 18px;border-radius:999px;background:#fff;border:1.5px solid var(--sage);color:var(--sage);font-weight:700;font-size:14.5px;text-align:center;pointer-events:none;box-shadow:0 8px 20px -10px rgba(58,43,56,.5);z-index:10}
+.toast:empty{display:none}
+details.mais{background:var(--card);border:1.5px solid var(--line);border-radius:14px;padding:8px 14px}
+details.mais summary{cursor:pointer;font-family:var(--f-display);font-weight:700}
+details.mais .barra{margin-top:10px}
+footer{display:flex;flex-wrap:wrap;gap:8px 20px;justify-content:space-between;color:var(--muted);font-size:14px;border-top:1.5px solid var(--line);padding-top:16px}
+footer a{color:var(--pink);text-decoration:none;margin-right:12px}
+@media (max-width:640px){
+  .mes{gap:3px}
+  .dia{min-height:62px;padding:4px}
+  .dia .n small{display:none}
+  .chip{display:none}
+  .dots{display:flex}
+  .mh{font-size:11px;letter-spacing:0}
+  .par2{grid-template-columns:minmax(0,1fr)}
+}
+@media print{
+  body{background:#fff;padding:0}
+  .sitebar,.crumb,.hero,#setup,.barra,details.mais,.nav,.legenda,#vMes,footer,dialog,.evb,.no-print,.toast{display:none!important}
+  #vLista{display:grid!important}
+  .evc{break-inside:avoid}
+}
+</style>
+<link rel="icon" href="/favicon.svg" type="image/svg+xml"><link rel="icon" href="/favicon.ico" sizes="48x48"><link rel="apple-touch-icon" href="/apple-touch-icon.png"></head>
+<body>
+<div class="wrap">
+  <div class="sitebar" role="navigation" aria-label="Site">
+    <a href="/" class="logo">UNI<span>R</span>VERSOS</a>
+    <span class="navlinks"><a href="/idiomas/">idiomas</a><a href="/travessia/">travessia</a><a href="/paralelos/">paralelos</a><a href="/loja/">tesouros</a><a href="/sobre/">sobre</a></span>
+  </div>
+  <p class="crumb no-print"><a href="/travessia/">← Travessia</a></p>
+
+  <header class="hero">
+    <p class="eyebrow">Unirversos Travessia · calendário</p>
+    <h1>O calendário da sua viagem, <em>dia a dia</em></h1>
+    <p class="lede">Escolha o primeiro e o último dia, clique em qualquer dia e anote o que vai acontecer: evento, horário, local e detalhes. Depois leve tudo para o Google Agenda. Gratuito e sem cadastro.</p>
+  </header>
+
+  <section class="painel" id="setup" aria-labelledby="t-setup">
+    <h2 id="t-setup">Quando é a sua viagem?</h2>
+    <form id="fSetup" novalidate>
+      <div class="campos">
+        <label class="f">Nome da viagem (opcional)<input id="sTitulo" maxlength="80" placeholder="ex.: Japão com a família" autocomplete="off"></label>
+        <label class="f">Primeiro dia<input type="date" id="sIni" required></label>
+        <label class="f">Último dia<input type="date" id="sFim" required></label>
+        <label class="f">Fuso dos horários<select id="sFuso"></select><small>Vale para os eventos novos. Dá para trocar em cada evento.</small></label>
+      </div>
+      <p class="erro" id="sErr" role="alert"></p>
+      <div class="barra"><button class="btn pri" type="submit" id="sBtn">Criar meu calendário</button><button class="btn" type="button" id="sCancel" hidden>Cancelar</button></div>
+    </form>
+  </section>
+
+  <section id="app" hidden aria-label="Meu calendário">
+    <div class="wrap" style="gap:14px">
+      <div class="faixa no-print"><span><b id="fTitulo"></b> <span id="fDatas"></span></span><button class="btn sm" type="button" id="bAjustar">✏️ Ajustar datas</button></div>
+
+      <div class="barra no-print">
+        <button class="btn" type="button" id="vbMes" aria-pressed="true">🗓️ Mês</button>
+        <button class="btn" type="button" id="vbLista" aria-pressed="false">📋 Lista</button>
+        <span class="esp"></span>
+        <button class="btn pri" type="button" id="bNovo">➕ Novo evento</button>
+        <button class="btn" type="button" id="bGoogle">📤 Levar para o Google Agenda</button>
+      </div>
+
+      <div id="vMes" class="wrap" style="gap:12px">
+        <div class="nav no-print"><button class="btn" type="button" id="mPrev" aria-label="Mês anterior">‹</button><h2 id="mTitulo" aria-live="polite"></h2><button class="btn" type="button" id="mNext" aria-label="Próximo mês">›</button></div>
+        <div class="mes" id="grade" role="group" aria-label="Dias do mês"></div>
+        <div class="legenda" id="legenda"></div>
+        <p class="nota no-print">Clique em um dia para ver e anotar os eventos dele. Dias com fundo rosado estão dentro da sua viagem.</p>
+      </div>
+
+      <div id="vLista" class="lista" hidden></div>
+
+      <details class="mais no-print">
+        <summary>Mais opções</summary>
+        <div class="barra">
+          <button class="btn sm" type="button" id="bImprimir">🖨️ Imprimir a lista</button>
+          <button class="btn sm" type="button" id="bSalvar">💾 Salvar uma cópia (arquivo)</button>
+          <button class="btn sm" type="button" id="bAbrir">📂 Abrir uma cópia</button>
+          <input type="file" id="fAbrir" accept=".json,application/json" hidden>
+          <button class="btn sm" type="button" id="bExemplo">✨ Preencher com exemplo</button>
+          <button class="btn sm perigo" type="button" id="bLimpar">🗑️ Apagar tudo</button>
+        </div>
+        <p class="nota" style="margin-top:8px">O calendário fica salvo só neste navegador, neste aparelho. Para levar para outro aparelho, salve uma cópia ou use o Google Agenda.</p>
+      </details>
+    </div>
+  </section>
+
+  <footer>
+    <span>unirversos — tudo conectado · Aline Kikuti</span>
+    <span><a href="/travessia/minha-viagem/">Minha viagem</a><a href="/travessia/status/">Meus ingressos</a><a href="/travessia/agendamentos/">Cronograma de ingressos</a></span>
+  </footer>
+</div>
+
+<dialog id="dlg" aria-labelledby="dlgT"><div class="dlg-in" id="dlgIn"></div></dialog>
+<p class="toast" id="msg" role="status"></p>
+
+<script>
+(function(){
+'use strict';
+var KEY='uniCalendario1';
+var MESES=['janeiro','fevereiro','março','abril','maio','junho','julho','agosto','setembro','outubro','novembro','dezembro'];
+var DIAS=['domingo','segunda-feira','terça-feira','quarta-feira','quinta-feira','sexta-feira','sábado'];
+var DSEM=['dom','seg','ter','qua','qui','sex','sáb'];
+var TIPOS={
+  passeio:['⛩️','Passeio','#c23f5e'], ingresso:['🎟️','Ingresso ou reserva','#8e6a1f'], hosp:['🏨','Hospedagem','#4f7461'],
+  transp:['🚄','Transporte','#3b6ea5'], voo:['✈️','Voo','#6b5aa8'], comida:['🍜','Refeição','#a85a1c'], outro:['📝','Outro','#6b5a67']
+};
+/* Japão e Brasília não têm horário de verão hoje, então o deslocamento é fixo (minutos em relação ao UTC). */
+var FUSOS={ jp:['Horário do Japão',540], br:['Horário de Brasília',-180], dev:['Fuso do meu aparelho',null] };
+
+function $(s){return document.querySelector(s);}
+function esc(s){return String(s==null?'':s).replace(/[&<>"']/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c];});}
+function pad(n){return String(n).padStart(2,'0');}
+function okData(s){return typeof s==='string'&&/^\d{4}-\d{2}-\d{2}$/.test(s)&&D(U(s))===s;}
+function okHora(s){return typeof s==='string'&&/^([01]\d|2[0-3]):[0-5]\d$/.test(s);}
+function U(s){var p=s.split('-').map(Number);return Date.UTC(p[0],p[1]-1,p[2]);}
+function D(ms){var t=new Date(ms);return t.getUTCFullYear()+'-'+pad(t.getUTCMonth()+1)+'-'+pad(t.getUTCDate());}
+function add(s,n){return D(U(s)+n*864e5);}
+function diff(a,b){return Math.round((U(b)-U(a))/864e5);}
+function wd(s){return new Date(U(s)).getUTCDay();}
+function longo(s){return DIAS[wd(s)]+', '+(+s.slice(8))+' de '+MESES[+s.slice(5,7)-1]+' de '+s.slice(0,4);}
+function curto(s){return (+s.slice(8))+' '+MESES[+s.slice(5,7)-1].slice(0,3)+' '+s.slice(0,4);}
+function hojeStr(){var t=new Date();return t.getFullYear()+'-'+pad(t.getMonth()+1)+'-'+pad(t.getDate());}
+function uid(){return 'e'+Date.now().toString(36)+Math.random().toString(36).slice(2,8);}
+
+var S={titulo:'',ini:'',fim:'',fuso:'jp',ev:[]};
+var mes='', visao='mes', salvouOk=true;
+
+/* ---------- salvar e abrir ---------- */
+function limpar(o){
+  var r={titulo:'',ini:'',fim:'',fuso:'jp',ev:[]};
+  if(!o||typeof o!=='object')return r;
+  r.titulo=typeof o.titulo==='string'?o.titulo.slice(0,80):'';
+  if(okData(o.ini)&&okData(o.fim)&&o.fim>=o.ini){r.ini=o.ini;r.fim=o.fim;}
+  r.fuso=FUSOS[o.fuso]?o.fuso:'jp';
+  (Array.isArray(o.ev)?o.ev:[]).slice(0,2000).forEach(function(e){
+    if(!e||typeof e.titulo!=='string'||!okData(e.data))return;
+    var x={id:typeof e.id==='string'&&e.id?e.id.slice(0,40):uid(),titulo:e.titulo.slice(0,160),tipo:TIPOS[e.tipo]?e.tipo:'outro',data:e.data,
+      dataFim:okData(e.dataFim)&&e.dataFim>e.data?e.dataFim:'',hora:okHora(e.hora)?e.hora:'',horaFim:'',fuso:FUSOS[e.fuso]?e.fuso:r.fuso,
+      local:typeof e.local==='string'?e.local.slice(0,300):'',detalhes:typeof e.detalhes==='string'?e.detalhes.slice(0,4000):''};
+    if(x.hora&&okHora(e.horaFim))x.horaFim=e.horaFim;
+    r.ev.push(x);
+  });
+  return r;
+}
+function carregar(){try{S=limpar(JSON.parse(localStorage.getItem(KEY)||'null'));}catch(e){S=limpar(null);}}
+function gravar(){
+  try{localStorage.setItem(KEY,JSON.stringify(S));salvouOk=true;}
+  catch(e){salvouOk=false;aviso('Seu navegador não deixou salvar. Use "Salvar uma cópia" para não perder nada.');}
+}
+var tMsg;
+function aviso(t){var m=$('#msg');m.textContent=t;clearTimeout(tMsg);tMsg=setTimeout(function(){m.textContent='';},4200);}
+
+/* ---------- eventos ---------- */
+function doDia(d){
+  return S.ev.filter(function(e){return e.data<=d&&d<=(e.dataFim||e.data);})
+    .sort(function(a,b){return (a.hora||'')<(b.hora||'')?-1:(a.hora||'')>(b.hora||'')?1:a.titulo.localeCompare(b.titulo);});
+}
+function horaTxt(e){
+  var t=e.hora?(e.hora+(e.horaFim?' – '+e.horaFim:'')):'Dia todo';
+  if(e.dataFim)t+=' · até '+curto(e.dataFim);
+  return t;
+}
+function mapaUrl(l){return 'https://www.google.com/maps/search/?api=1&query='+encodeURIComponent(l);}
+
+/* ---------- Google Agenda e .ics ---------- */
+function utcMs(d,h,fuso){
+  var a=d.split('-').map(Number),b=h.split(':').map(Number),off=FUSOS[fuso][1];
+  if(off==null)return new Date(a[0],a[1]-1,a[2],b[0],b[1]).getTime();
+  return Date.UTC(a[0],a[1]-1,a[2],b[0],b[1])-off*60000;
+}
+function zulu(ms){return new Date(ms).toISOString().replace(/[-:]/g,'').replace(/\.\d{3}/,'');}
+function intervalo(e){
+  if(!e.hora){return {dia:true,a:e.data.replace(/-/g,''),b:add(e.dataFim||e.data,1).replace(/-/g,'')};}
+  var ini=utcMs(e.data,e.hora,e.fuso),fim=e.horaFim?utcMs(e.dataFim||e.data,e.horaFim,e.fuso):ini+36e5;
+  return {dia:false,a:zulu(ini),b:zulu(fim)};
+}
+function urlGoogle(e){
+  var i=intervalo(e);
+  var u='https://calendar.google.com/calendar/render?action=TEMPLATE&text='+encodeURIComponent(e.titulo)+'&dates='+i.a+'/'+i.b;
+  if(e.local)u+='&location='+encodeURIComponent(e.local);
+  if(e.detalhes)u+='&details='+encodeURIComponent(e.detalhes);
+  return u;
+}
+function icsTxt(s){return String(s).replace(/\\/g,'\\\\').replace(/;/g,'\\;').replace(/,/g,'\\,').replace(/\r?\n/g,'\\n');}
+function dobrar(l){
+  var enc=new TextEncoder(),out='',cur='',n=0;
+  for(var ch of l){var b=enc.encode(ch).length;if(n+b>75){out+=cur+'\r\n';cur=' ';n=1;}cur+=ch;n+=b;}
+  return out+cur;
+}
+function montarIcs(){
+  var agora=zulu(Date.now()),L=['BEGIN:VCALENDAR','VERSION:2.0','PRODID:-//Unirversos//Travessia Calendario//PT','CALSCALE:GREGORIAN','METHOD:PUBLISH','X-WR-CALNAME:'+icsTxt(S.titulo||'Minha viagem')];
+  S.ev.forEach(function(e){
+    var i=intervalo(e);
+    L.push('BEGIN:VEVENT','UID:'+e.id+'@calendario.unirversos.com','DTSTAMP:'+agora);
+    if(i.dia){L.push('DTSTART;VALUE=DATE:'+i.a,'DTEND;VALUE=DATE:'+i.b);}else{L.push('DTSTART:'+i.a,'DTEND:'+i.b);}
+    L.push('SUMMARY:'+icsTxt(e.titulo));
+    if(e.local)L.push('LOCATION:'+icsTxt(e.local));
+    if(e.detalhes)L.push('DESCRIPTION:'+icsTxt(e.detalhes));
+    L.push('CATEGORIES:'+icsTxt(TIPOS[e.tipo][1]),'END:VEVENT');
+  });
+  L.push('END:VCALENDAR');
+  return L.map(dobrar).join('\r\n')+'\r\n';
+}
+function baixar(nome,conteudo,tipo){
+  var b=new Blob([conteudo],{type:tipo}),a=document.createElement('a');
+  a.href=URL.createObjectURL(b);a.download=nome;document.body.appendChild(a);a.click();
+  setTimeout(function(){URL.revokeObjectURL(a.href);a.remove();},800);
+}
+function slug(){return (S.titulo||'viagem').toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'').replace(/[^a-z0-9]+/g,'-').replace(/^-|-$/g,'').slice(0,40)||'viagem';}
+
+/* ---------- tela: datas ---------- */
+function preencherFusos(){
+  $('#sFuso').innerHTML=Object.keys(FUSOS).map(function(k){return '<option value="'+k+'">'+FUSOS[k][0]+'</option>';}).join('');
+}
+function mostrarSetup(edit){
+  $('#setup').hidden=false;
+  $('#t-setup').textContent=edit?'Ajustar as datas':'Quando é a sua viagem?';
+  $('#sBtn').textContent=edit?'Salvar datas':'Criar meu calendário';
+  $('#sCancel').hidden=!edit;
+  $('#sTitulo').value=S.titulo;$('#sIni').value=S.ini;$('#sFim').value=S.fim;$('#sFuso').value=S.fuso;$('#sErr').textContent='';
+  if(edit)$('#sIni').focus();
+}
+$('#fSetup').addEventListener('submit',function(ev){
+  ev.preventDefault();
+  var ini=$('#sIni').value,fim=$('#sFim').value,er=$('#sErr');
+  if(!okData(ini)||!okData(fim)){er.textContent='Escolha o primeiro e o último dia da viagem.';return;}
+  if(fim<ini){er.textContent='O último dia precisa ser igual ou depois do primeiro.';return;}
+  if(diff(ini,fim)>540){er.textContent='Escolha um período de até 18 meses.';return;}
+  S.titulo=$('#sTitulo').value.trim();S.ini=ini;S.fim=fim;S.fuso=$('#sFuso').value;
+  var h=hojeStr();mes=(h>=ini&&h<=fim?h:ini).slice(0,7);
+  gravar();$('#setup').hidden=true;tudo();$('#app').hidden=false;
+  $('#app').scrollIntoView({behavior:'smooth',block:'start'});
+});
+$('#sCancel').onclick=function(){$('#setup').hidden=true;};
+$('#bAjustar').onclick=function(){mostrarSetup(true);$('#setup').scrollIntoView({behavior:'smooth',block:'center'});};
+
+/* ---------- tela: calendário ---------- */
+function tudo(){
+  $('#fTitulo').textContent=S.titulo||'Minha viagem';
+  var n=diff(S.ini,S.fim)+1;
+  $('#fDatas').textContent='· '+curto(S.ini)+' a '+curto(S.fim)+' ('+n+' dias) · '+S.ev.length+' '+(S.ev.length===1?'evento':'eventos');
+  $('#legenda').innerHTML=Object.keys(TIPOS).map(function(k){return '<span><i style="--c:'+TIPOS[k][2]+'"></i>'+TIPOS[k][0]+' '+TIPOS[k][1]+'</span>';}).join('');
+  desenharMes();desenharLista();
+}
+function desenharMes(){
+  var y=+mes.slice(0,4),m=+mes.slice(5,7),primeiro=y+'-'+pad(m)+'-01',off=wd(primeiro),dm=new Date(Date.UTC(y,m,0)).getUTCDate();
+  var linhas=Math.ceil((off+dm)/7),ini=add(primeiro,-off),h=hojeStr();
+  $('#mTitulo').textContent=MESES[m-1]+' de '+y;
+  var html=DSEM.map(function(d){return '<div class="mh" aria-hidden="true">'+d+'</div>';}).join('');
+  for(var i=0;i<linhas*7;i++){
+    var d=add(ini,i),evs=doDia(d),cls='dia';
+    if(d.slice(0,7)!==mes)cls+=' outro';
+    if(d>=S.ini&&d<=S.fim)cls+=' dentro';
+    if(d===h)cls+=' hoje';
+    var num=+d.slice(8),dn=(d>=S.ini&&d<=S.fim)?'<small>dia '+(diff(S.ini,d)+1)+'</small>':'';
+    var chips=evs.slice(0,3).map(function(e){return '<span class="chip" style="--c:'+TIPOS[e.tipo][2]+'">'+(e.hora?esc(e.hora)+' ':'')+esc(e.titulo)+'</span>';}).join('');
+    var mais=evs.length>3?'<span class="mais-n">+'+(evs.length-3)+' mais</span>':'';
+    var dots=evs.length?'<span class="dots">'+evs.slice(0,6).map(function(e){return '<i style="--c:'+TIPOS[e.tipo][2]+'"></i>';}).join('')+'</span>':'';
+    var rotulo=longo(d)+(evs.length?', '+evs.length+(evs.length===1?' evento':' eventos'):', sem eventos');
+    html+='<button type="button" class="'+cls+'" data-d="'+d+'" aria-label="'+esc(rotulo)+'"><span class="n"><span>'+num+'</span>'+dn+'</span>'+chips+mais+dots+'</button>';
+  }
+  $('#grade').innerHTML=html;
+}
+function cartao(e){
+  var t=TIPOS[e.tipo];
+  return '<article class="evc" style="--c:'+t[2]+'"><span class="hora">'+esc(horaTxt(e))+(e.hora&&e.fuso!==S.fuso?' ('+esc(FUSOS[e.fuso][0])+')':'')+'</span>'+
+    '<h4>'+t[0]+' '+esc(e.titulo)+'</h4>'+
+    (e.local?'<p class="loc">📍 '+esc(e.local)+' · <a href="'+mapaUrl(e.local)+'" target="_blank" rel="noopener">ver no mapa</a></p>':'')+
+    (e.detalhes?'<p class="det">'+esc(e.detalhes).replace(/\n/g,'<br>')+'</p>':'')+
+    '<div class="evb"><button type="button" class="btn sm" data-act="edit" data-id="'+esc(e.id)+'">✏️ Editar</button>'+
+    '<a class="btn sm" href="'+esc(urlGoogle(e))+'" target="_blank" rel="noopener">➕ Google Agenda</a>'+
+    '<button type="button" class="btn sm perigo" data-act="del" data-id="'+esc(e.id)+'">Excluir</button></div></article>';
+}
+function desenharLista(){
+  var datas={};
+  S.ev.forEach(function(e){datas[e.data]=1;});
+  var ks=Object.keys(datas).sort();
+  if(!ks.length){$('#vLista').innerHTML='<div class="vazio">Nada anotado ainda. Clique em <b>Novo evento</b> ou em um dia do calendário.</div>';return;}
+  $('#vLista').innerHTML=ks.map(function(d){
+    var evs=S.ev.filter(function(e){return e.data===d;}).sort(function(a,b){return (a.hora||'')<(b.hora||'')?-1:(a.hora||'')>(b.hora||'')?1:0;});
+    return '<section class="grp"><h3>'+esc(longo(d))+'</h3>'+evs.map(cartao).join('')+'</section>';
+  }).join('');
+}
+function trocarVisao(v){
+  visao=v;
+  $('#vMes').hidden=v!=='mes';$('#vLista').hidden=v!=='lista';
+  $('#vbMes').setAttribute('aria-pressed',v==='mes');$('#vbLista').setAttribute('aria-pressed',v==='lista');
+}
+$('#vbMes').onclick=function(){trocarVisao('mes');};
+$('#vbLista').onclick=function(){trocarVisao('lista');};
+function moverMes(n){var y=+mes.slice(0,4),m=+mes.slice(5,7)-1+n;mes=new Date(Date.UTC(y,m,1)).toISOString().slice(0,7);desenharMes();}
+$('#mPrev').onclick=function(){moverMes(-1);};
+$('#mNext').onclick=function(){moverMes(1);};
+$('#grade').addEventListener('click',function(ev){var b=ev.target.closest('[data-d]');if(b)abrirDia(b.dataset.d);});
+$('#vLista').addEventListener('click',acaoEvento);
+
+/* ---------- janela ---------- */
+var dlg=$('#dlg'),dlgIn=$('#dlgIn'),diaAberto='',voltarPara='';
+function abrir(html){dlgIn.innerHTML=html;if(!dlg.open)dlg.showModal();}
+function fechar(){if(dlg.open)dlg.close();}
+dlg.addEventListener('click',function(ev){if(ev.target===dlg)fechar();});
+dlg.addEventListener('close',function(){
+  if(diaAberto){var b=$('#grade [data-d="'+diaAberto+'"]');if(b&&visao==='mes')b.focus();}
+  diaAberto='';
+});
+function abrirDia(d){
+  diaAberto=d;
+  var evs=doDia(d);
+  abrir('<div class="dlg-top"><h2 id="dlgT">'+esc(longo(d))+'</h2><button class="btn sm" type="button" data-act="fechar" aria-label="Fechar">✕</button></div>'+
+    (d>=S.ini&&d<=S.fim?'<p class="nota">Dia '+(diff(S.ini,d)+1)+' da viagem</p>':'<p class="nota">Fora das datas da viagem</p>')+
+    (evs.length?evs.map(cartao).join(''):'<div class="vazio">Nenhum evento neste dia.</div>')+
+    '<div class="barra"><button class="btn pri" type="button" data-act="novo" data-d="'+d+'">➕ Novo evento neste dia</button></div>');
+}
+function formEvento(e,dataPadrao){
+  var novo=!e;
+  e=e||{id:'',titulo:'',tipo:'passeio',data:dataPadrao||S.ini,dataFim:'',hora:'',horaFim:'',fuso:S.fuso,local:'',detalhes:''};
+  var tipos=Object.keys(TIPOS).map(function(k){return '<option value="'+k+'"'+(k===e.tipo?' selected':'')+'>'+TIPOS[k][0]+' '+TIPOS[k][1]+'</option>';}).join('');
+  var fusos=Object.keys(FUSOS).map(function(k){return '<option value="'+k+'"'+(k===e.fuso?' selected':'')+'>'+FUSOS[k][0]+'</option>';}).join('');
+  abrir('<div class="dlg-top"><h2 id="dlgT">'+(novo?'Novo evento':'Editar evento')+'</h2><button class="btn sm" type="button" data-act="fechar" aria-label="Fechar">✕</button></div>'+
+    '<form id="fEv" novalidate class="wrap" style="gap:12px">'+
+    '<label class="f">O que vai acontecer?<input name="titulo" required maxlength="160" value="'+esc(e.titulo)+'" placeholder="ex.: teamLab, jantar, Shinkansen para Quioto" autocomplete="off"></label>'+
+    '<div class="par2"><label class="f">Tipo<select name="tipo">'+tipos+'</select></label>'+
+    '<label class="f">Fuso do horário<select name="fuso">'+fusos+'</select></label></div>'+
+    '<div class="par2"><label class="f">Dia<input type="date" name="data" required value="'+esc(e.data)+'"></label>'+
+    '<label class="f">Termina em outro dia?<input type="date" name="dataFim" value="'+esc(e.dataFim)+'"><small>Para estadias e viagens longas. Deixe vazio se for no mesmo dia.</small></label></div>'+
+    '<div class="par2"><label class="f">Hora de início<input type="time" name="hora" value="'+esc(e.hora)+'"><small>Deixe vazio para o dia todo.</small></label>'+
+    '<label class="f">Hora de término<input type="time" name="horaFim" value="'+esc(e.horaFim)+'"></label></div>'+
+    '<label class="f">Local<input name="local" maxlength="300" value="'+esc(e.local)+'" placeholder="nome do lugar ou endereço" autocomplete="off"></label>'+
+    '<label class="f">Detalhes<textarea name="detalhes" maxlength="4000" placeholder="código de reserva, como chegar, o que levar…">'+esc(e.detalhes)+'</textarea></label>'+
+    '<p class="erro" id="evErr" role="alert"></p>'+
+    '<div class="barra"><button class="btn pri" type="submit">'+(novo?'Adicionar':'Salvar')+'</button><button class="btn" type="button" data-act="voltar">Cancelar</button></div></form>');
+  var f=$('#fEv');
+  f.querySelector('[name=titulo]').focus();
+  f.onsubmit=function(ev){
+    ev.preventDefault();
+    var x=Object.fromEntries(new FormData(f).entries()),er=$('#evErr');
+    x.titulo=x.titulo.trim();
+    if(!x.titulo){er.textContent='Dê um nome ao evento.';return;}
+    if(!okData(x.data)){er.textContent='Escolha o dia do evento.';return;}
+    if(x.dataFim&&(!okData(x.dataFim)||x.dataFim<x.data)){er.textContent='O dia de término precisa ser depois do dia de início.';return;}
+    if(x.dataFim===x.data)x.dataFim='';
+    if(x.horaFim&&!x.hora){er.textContent='Para usar hora de término, preencha também a de início.';return;}
+    if(x.hora&&x.horaFim&&!x.dataFim&&x.horaFim<=x.hora){er.textContent='A hora de término precisa ser depois da de início.';return;}
+    var o={id:e.id||uid(),titulo:x.titulo,tipo:TIPOS[x.tipo]?x.tipo:'outro',data:x.data,dataFim:x.dataFim,hora:x.hora,horaFim:x.hora?x.horaFim:'',
+      fuso:FUSOS[x.fuso]?x.fuso:S.fuso,local:x.local.trim(),detalhes:x.detalhes.trim()};
+    var i=S.ev.findIndex(function(z){return z.id===o.id;});
+    if(i>=0)S.ev[i]=o;else S.ev.push(o);
+    gravar();tudo();
+    if(salvouOk)aviso(novo?'Evento adicionado.':'Evento salvo.');
+    if(o.data.slice(0,7)!==mes&&visao==='mes'){mes=o.data.slice(0,7);desenharMes();}
+    if(voltarPara==='lista'){fechar();}else{abrirDia(o.data);}
+  };
+}
+function acaoEvento(ev){
+  var b=ev.target.closest('[data-act]');if(!b)return;
+  var a=b.dataset.act,id=b.dataset.id;
+  if(a==='fechar'){fechar();return;}
+  if(a==='voltar'){if(voltarPara==='lista'||!diaAberto)fechar();else abrirDia(diaAberto);return;}
+  if(a==='novo'){voltarPara='';formEvento(null,b.dataset.d);return;}
+  if(a==='edit'){
+    var e=S.ev.find(function(z){return z.id===id;});if(!e)return;
+    voltarPara=dlg.open?'':'lista';if(!dlg.open)diaAberto='';
+    formEvento(e);return;
+  }
+  if(a==='del'){
+    if(b.dataset.sure!=='1'){b.dataset.sure='1';b.textContent='Confirmar exclusão?';setTimeout(function(){if(b.isConnected){b.dataset.sure='';b.textContent='Excluir';}},4000);return;}
+    var d=diaAberto;
+    S.ev=S.ev.filter(function(z){return z.id!==id;});
+    gravar();tudo();aviso('Evento excluído.');
+    if(dlg.open&&d)abrirDia(d);
+  }
+}
+dlg.addEventListener('click',acaoEvento);
+$('#bNovo').onclick=function(){
+  voltarPara=visao==='lista'?'lista':'';diaAberto='';
+  var h=hojeStr();formEvento(null,h>=S.ini&&h<=S.fim?h:S.ini);
+};
+
+/* ---------- Google Agenda ---------- */
+$('#bGoogle').onclick=function(){
+  var n=S.ev.length;
+  abrir('<div class="dlg-top"><h2 id="dlgT" style="text-transform:none">Levar para o Google Agenda</h2><button class="btn sm" type="button" data-act="fechar" aria-label="Fechar">✕</button></div>'+
+    (n?'':'<div class="vazio">Você ainda não tem eventos. Adicione alguns e volte aqui.</div>')+
+    '<p><b>Todos de uma vez ('+n+' '+(n===1?'evento':'eventos')+'):</b></p>'+
+    '<ol class="passos"><li>Baixe o arquivo abaixo.</li>'+
+    '<li>No computador, abra <b>calendar.google.com</b> e vá em <b>Configurações → Importar e exportar → Importar</b>.</li>'+
+    '<li>Escolha o arquivo e o calendário de destino. Se quiser testar antes, crie um calendário novo só para a viagem.</li></ol>'+
+    '<div class="barra"><button class="btn pri" type="button" data-act="ics"'+(n?'':' disabled')+'>📥 Baixar arquivo para o Google Agenda (.ics)</button></div>'+
+    '<p><b>Um evento por vez:</b> abra o dia e use o botão <b>➕ Google Agenda</b> do evento. O Google abre com tudo preenchido e você só confirma.</p>'+
+    '<p class="nota">O arquivo também funciona no Apple Calendário e no Outlook. Cada evento leva um código fixo, o que costuma fazer o Google reconhecer o mesmo evento se você importar de novo; se aparecer duplicado, apague os antigos antes. Mudanças feitas depois dentro do Google Agenda não voltam para este calendário.</p>');
+};
+dlg.addEventListener('click',function(ev){
+  var b=ev.target.closest('[data-act="ics"]');if(!b)return;
+  baixar('calendario-'+slug()+'.ics',montarIcs(),'text/calendar;charset=utf-8');
+  aviso('Arquivo baixado.');
+});
+
+/* ---------- cópia, exemplo, apagar, imprimir ---------- */
+$('#bImprimir').onclick=function(){var v=visao;trocarVisao('lista');window.print();trocarVisao(v);};
+$('#bSalvar').onclick=function(){baixar('calendario-'+slug()+'.json',JSON.stringify(S,null,1),'application/json');aviso('Cópia salva no seu aparelho.');};
+$('#bAbrir').onclick=function(){$('#fAbrir').click();};
+$('#fAbrir').onchange=function(){
+  var f=this.files&&this.files[0];this.value='';if(!f)return;
+  var r=new FileReader();
+  r.onload=function(){
+    var novo;try{novo=limpar(JSON.parse(r.result));}catch(e){novo=null;}
+    if(!novo||!novo.ini){aviso('Esse arquivo não parece ser uma cópia do calendário.');return;}
+    abrir('<h2 id="dlgT" style="text-transform:none">Abrir esta cópia?</h2><p>A cópia tem <b>'+novo.ev.length+'</b> '+(novo.ev.length===1?'evento':'eventos')+', de '+esc(curto(novo.ini))+' a '+esc(curto(novo.fim))+'. Ela vai <b>substituir</b> o calendário que está aqui agora ('+S.ev.length+' '+(S.ev.length===1?'evento':'eventos')+').</p>'+
+      '<div class="barra"><button class="btn pri" type="button" id="okAbrir">Substituir</button><button class="btn" type="button" data-act="fechar">Cancelar</button></div>');
+    $('#okAbrir').onclick=function(){S=novo;mes=S.ini.slice(0,7);gravar();fechar();$('#setup').hidden=true;$('#app').hidden=false;tudo();aviso('Cópia aberta.');};
+  };
+  r.readAsText(f);
+};
+$('#bExemplo').onclick=function(){
+  var se=S.ev.length?'<p>Isso <b>acrescenta</b> 6 eventos de exemplo aos que você já tem. Dá para apagar cada um depois.</p>':'<p>Vai colocar 6 eventos de exemplo no seu calendário, só para você ver como fica. Dá para apagar cada um depois.</p>';
+  abrir('<h2 id="dlgT" style="text-transform:none">Preencher com exemplo?</h2>'+se+'<div class="barra"><button class="btn pri" type="button" id="okEx">Preencher</button><button class="btn" type="button" data-act="fechar">Cancelar</button></div>');
+  $('#okEx').onclick=function(){
+    var span=diff(S.ini,S.fim),nota='Evento de exemplo: edite ou apague.';
+    [[0,'Chegada ao Japão','voo','','',''],[0,'Check-in no hotel','hosp','15:00','','Nome do hotel, cidade'],[1,'Passeio pelo bairro de Asakusa','passeio','10:00','13:00','Asakusa, Tóquio'],
+     [1,'Jantar','comida','19:00','20:30','Restaurante a escolher'],[Math.min(3,span),'Shinkansen para Quioto','transp','09:30','12:00','Estação de Tóquio'],[Math.min(5,span),'Check-out do hotel','hosp','11:00','','']]
+    .forEach(function(x){S.ev.push({id:uid(),titulo:x[1],tipo:x[2],data:add(S.ini,x[0]),dataFim:'',hora:x[3],horaFim:x[4],fuso:S.fuso,local:x[5],detalhes:nota});});
+    gravar();fechar();tudo();aviso('Exemplo adicionado.');
+  };
+};
+$('#bLimpar').onclick=function(){
+  abrir('<h2 id="dlgT" style="text-transform:none">Apagar tudo?</h2><p>Vai apagar as datas e os <b>'+S.ev.length+'</b> '+(S.ev.length===1?'evento':'eventos')+' deste navegador. Se quiser guardar, salve uma cópia antes.</p>'+
+    '<div class="barra"><button class="btn perigo" type="button" id="okLimpa">Apagar tudo</button><button class="btn" type="button" data-act="fechar">Cancelar</button></div>');
+  $('#okLimpa').onclick=function(){
+    S=limpar(null);try{localStorage.removeItem(KEY);}catch(e){}
+    fechar();$('#app').hidden=true;mostrarSetup(false);aviso('Tudo apagado.');
+  };
+};
+
+/* ---------- início ---------- */
+preencherFusos();carregar();
+if(S.ini){var h0=hojeStr();mes=(h0>=S.ini&&h0<=S.fim?h0:S.ini).slice(0,7);$('#setup').hidden=true;$('#app').hidden=false;tudo();}
+else{mostrarSetup(false);}
+})();
+</script>
+<script defer src="/menu-ativo.js?v=1"></script>
+</body>
+</html>
