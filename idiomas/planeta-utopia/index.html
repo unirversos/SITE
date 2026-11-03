@@ -640,7 +640,7 @@ function checkBoss(){
   let words=txt.split(/\s+/).filter(Boolean).length;
   if(/[\u3040-\u30ff\u4e00-\u9fff]/.test(txt)) words=Math.max(words,Math.floor(txt.replace(/[\s、。！？!?]/g,'').length/2));
   mostraCorrecao(document.getElementById('boss-text').value||'');
-  const enough=hits>=b.min && words>=3;
+  const enough=hits>=1 && words>=3;  /* libera com uma peça do território usada */
   document.getElementById('selfcheck').style.display=enough?'block':'none';
   const checks=[...document.querySelectorAll('.sc')].filter(c=>c.checked).length;
   document.getElementById('boss-btn').disabled=!(enough&&checks>=1);
