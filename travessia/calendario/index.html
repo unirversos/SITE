@@ -123,6 +123,12 @@ footer a{color:var(--pink);text-decoration:none;margin-right:12px}
 }
 #nuvem button,#nuvemSetup button{font:inherit;font-size:13.5px;font-weight:700;color:var(--pink-d);background:none;border:0;padding:0 2px;cursor:pointer;text-decoration:underline}
 .lk-box{width:100%;font:inherit;font-size:14px;border:1.5px solid var(--line);border-radius:12px;padding:8px 10px;background:#fff;color:var(--ink)}
+.drop{display:grid;gap:4px;text-align:center;border:2px dashed var(--pink);border-radius:16px;padding:20px;cursor:pointer;background:#fff;font-size:15px}
+.drop span{color:var(--muted);font-size:14px}.drop.sobre{background:#fbeef0}
+.ou{text-align:center;color:var(--muted);font-size:13px;letter-spacing:2px;text-transform:uppercase}
+.previa{background:var(--sage-soft);border-radius:14px;padding:12px 14px;display:grid;gap:6px;font-size:14px}
+.previa .tg{display:inline-block;font-size:12px;font-weight:700;border-radius:999px;padding:1px 10px;margin:2px 2px 2px 0;background:#fff;color:#3f6b55}.previa .tg.no{color:var(--muted);background:#eee}
+.previa .lkb{font:inherit;font-size:13.5px;font-weight:700;color:var(--pink-d);background:none;border:0;padding:0;cursor:pointer;text-decoration:underline;justify-self:start}
 .dois{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
 .dois .evc{align-content:start}
 @media (max-width:640px){.dois{grid-template-columns:minmax(0,1fr)}}
@@ -167,6 +173,7 @@ footer a{color:var(--pink);text-decoration:none;margin-right:12px}
         <button class="btn" type="button" id="vbLista" aria-pressed="false">📋 Lista</button>
         <span class="esp"></span>
         <button class="btn pri" type="button" id="bNovo">➕ Novo evento</button>
+        <button class="btn" type="button" id="bImport">📥 Importar reserva</button>
         <button class="btn" type="button" id="bCompart">🔗 Compartilhar</button>
         <button class="btn" type="button" id="bGoogle">📤 Levar para o Google Agenda</button>
       </div>
@@ -204,6 +211,7 @@ footer a{color:var(--pink);text-decoration:none;margin-right:12px}
 <dialog id="dlg" aria-labelledby="dlgT"><div class="dlg-in" id="dlgIn"></div></dialog>
 <p class="toast" id="msg" role="status"></p>
 
+<script src="./leitor.js?v=1"></script>
 <script>
 (function(){
 'use strict';
@@ -432,12 +440,12 @@ function abrirDia(d){
     (evs.length?evs.map(cartao).join(''):'<div class="vazio">Nenhum evento neste dia.</div>')+
     '<div class="barra"><button class="btn pri" type="button" data-act="novo" data-d="'+d+'">➕ Novo evento neste dia</button></div>');
 }
-function formEvento(e,dataPadrao){
-  var novo=!e;
+function formEvento(e,dataPadrao,topo){
+  var novo=!e||!e.id;
   e=e||{id:'',titulo:'',tipo:'passeio',data:dataPadrao||S.ini,dataFim:'',hora:'',horaFim:'',fuso:S.fuso,local:'',detalhes:''};
   var tipos=Object.keys(TIPOS).map(function(k){return '<option value="'+k+'"'+(k===e.tipo?' selected':'')+'>'+TIPOS[k][0]+' '+TIPOS[k][1]+'</option>';}).join('');
   var fusos=Object.keys(FUSOS).map(function(k){return '<option value="'+k+'"'+(k===e.fuso?' selected':'')+'>'+FUSOS[k][0]+'</option>';}).join('');
-  abrir('<div class="dlg-top"><h2 id="dlgT">'+(novo?'Novo evento':'Editar evento')+'</h2><button class="btn sm" type="button" data-act="fechar" aria-label="Fechar">✕</button></div>'+
+  abrir('<div class="dlg-top"><h2 id="dlgT">'+(novo?'Novo evento':'Editar evento')+'</h2><button class="btn sm" type="button" data-act="fechar" aria-label="Fechar">✕</button></div>'+(topo||'')+
     '<form id="fEv" novalidate class="wrap" style="gap:12px">'+
     '<label class="f">O que vai acontecer?<input name="titulo" required maxlength="160" value="'+esc(e.titulo)+'" placeholder="ex.: teamLab, jantar, Shinkansen para Quioto" autocomplete="off"></label>'+
     '<div class="par2"><label class="f">Tipo<select name="tipo">'+tipos+'</select></label>'+
@@ -691,6 +699,81 @@ function receberLink(){
     limpaHash();
   });
 }
+
+/* ---------- importar reserva (Booking, e-mail, PDF, .ics) ---------- */
+var ATRN={pokepark:'PokéPark Kanto','ghibli-park':'Ghibli Park','ghibli-mitaka':'Museu Ghibli',  'pokemon-cafe':'Pokémon Café',kirby:'Kirby Café',disney:'Disney',doraemon:'Museu Fujiko F. Fujio',usj:'Universal Studios Japan',harrypotter:'Warner Bros. Studio Tour',biovortex:'Biovortex','teamlab-tokyo':'teamLab','nintendo-museum':'Nintendo Museum',toyosu:'Toyosu','shibuya-sky':'Shibuya Sky',saihoji:'Saihō-ji',katsura:'Katsura / Shūgakuin',comiket:'Comiket',jumpfesta:'Jump Festa',sumo:'Sumô'};
+function dePedido(r){
+  var hotel=r.tipo==='hotel',det=[];
+  if(r.reserva)det.push('Reserva nº '+r.reserva);
+  if(r.voucher&&r.voucher!==r.reserva)det.push('Código: '+r.voucher);
+  if(r.plataforma)det.push('Reservado em: '+r.plataforma);
+  if(r.telefone)det.push('Telefone: '+r.telefone);
+  if(r.pagarLocal)det.push('Pagamento no local');
+  if(hotel){
+    var end=r.enderecoLat||r.endereco||'';
+    return {id:'',titulo:r.nome||'Hospedagem',tipo:'hosp',data:r.entrada||'',dataFim:(r.saida&&r.entrada&&r.saida>r.entrada)?r.saida:'',hora:r.checkin||'',horaFim:r.checkin?(r.checkout||''):'',fuso:S.fuso,local:[r.nome,end].filter(Boolean).join(', ')||r.cidade||'',detalhes:det.join('\n')};
+  }
+  return {id:'',titulo:r.nome||ATRN[r.atr]||'Ingresso',tipo:'ingresso',data:r.data||'',dataFim:'',hora:r.hora||'',horaFim:'',fuso:S.fuso,local:ATRN[r.atr]||r.cidade||'',detalhes:det.join('\n')};
+}
+function revisar(r,forcado){
+  if(forcado)r.tipo=forcado;
+  var e=dePedido(r),hotel=r.tipo==='hotel';
+  var campos=hotel?[['Nome',e.titulo!=='Hospedagem'],['Entrada',!!e.data],['Saída',!!e.dataFim],['Hora do check-in',!!e.hora],['Hora do check-out',!!e.horaFim],['Nº da reserva',!!r.reserva],['Endereço',!!(r.enderecoLat||r.endereco)]]
+    :[['Nome',!!r.nome||!!r.atr],['Dia',!!e.data],['Hora',!!e.hora],['Código',!!(r.voucher||r.reserva)]];
+  var tem=campos.filter(function(c){return c[1];}),falta=campos.filter(function(c){return !c[1];});
+  var topo='<div class="previa"><p><b>✨ Li como '+(hotel?'hospedagem':'ingresso ou atividade')+'.</b> <button type="button" class="lkb" id="trocaTipo">Na verdade é '+(hotel?'um ingresso ou atividade':'uma hospedagem')+'</button></p>'+
+    '<p>Encontrei: '+(tem.length?tem.map(function(c){return '<span class="tg">'+c[0]+'</span>';}).join(''):'quase nada')+'</p>'+
+    (falta.length?'<p>Não encontrei: '+falta.map(function(c){return '<span class="tg no">'+c[0]+'</span>';}).join('')+'</p>':'')+
+    '<p style="color:var(--muted)">A leitura automática pode errar, principalmente datas e nomes. Confira os campos abaixo antes de salvar.</p></div>';
+  voltarPara='';diaAberto='';
+  formEvento(e,null,topo);
+  $('#trocaTipo').onclick=function(){revisar(r,hotel?'ingresso':'hotel');};
+}
+function listaIcs(evs){
+  abrir('<div class="dlg-top"><h2 id="dlgT" style="text-transform:none">O arquivo tem '+evs.length+' eventos</h2><button class="btn sm" type="button" data-act="fechar" aria-label="Fechar">✕</button></div><p>Qual você quer importar?</p>'+
+    evs.slice(0,30).map(function(e,i){return '<button class="btn" type="button" style="text-align:left;border-radius:14px" data-ics="'+i+'">'+esc(e.titulo)+(e.ini?' · '+esc(curto(e.ini.data)):'')+'</button>';}).join(''));
+  dlgIn.querySelectorAll('[data-ics]').forEach(function(b){b.onclick=function(){revisar(LeitorReserva.icsParaDados(evs[+b.dataset.ics]));};});
+}
+function lerArq(f){
+  var er=$('#impErr'),go=$('#impGo');er.textContent='';
+  function volta(){go.disabled=false;go.textContent='Identificar dados ✨';}
+  if(/\.pdf$/i.test(f.name)||f.type==='application/pdf'){
+    go.disabled=true;go.textContent='Lendo o PDF…';
+    LeitorReserva.textoDoPDF(f).then(function(t){
+      if(t.replace(/\s/g,'').length<30){volta();er.textContent='Não achei texto nesse PDF: parece uma foto. Use "Novo evento" e digite os dados.';return;}
+      revisar(LeitorReserva.lerTexto(t));
+    }).catch(function(e){volta();er.textContent=e&&e.message==='rede'?'Não consegui abrir o leitor de PDF, que precisa de internet. Copie o texto do PDF e cole na caixa.':'Não consegui ler esse PDF. Copie o texto dele e cole na caixa.';});
+    return;
+  }
+  var fr=new FileReader();
+  fr.onload=function(){
+    var evs=LeitorReserva.lerICS(String(fr.result||''));
+    if(!evs.length){er.textContent='Não achei nenhum evento nesse arquivo. Ele é mesmo um .ics de calendário?';return;}
+    if(evs.length===1)revisar(LeitorReserva.icsParaDados(evs[0]));else listaIcs(evs);
+  };
+  fr.readAsText(f);
+}
+$('#bImport').onclick=function(){
+  if(!window.LeitorReserva){aviso('O leitor de reservas não carregou. Recarregue a página.');return;}
+  diaAberto='';
+  abrir('<div class="dlg-top"><h2 id="dlgT" style="text-transform:none">Importar reserva</h2><button class="btn sm" type="button" data-act="fechar" aria-label="Fechar">✕</button></div>'+
+    '<p class="nota">Funciona com a confirmação do Booking, Agoda, Airbnb e similares. A leitura acontece aqui, no seu navegador: o texto e o PDF não são enviados para lugar nenhum. Antes de salvar, você confere tudo.</p>'+
+    '<label class="drop" id="drop"><input type="file" id="impFile" accept=".pdf,.ics,application/pdf,text/calendar" hidden><b>📁 Escolher o PDF da reserva (ou um arquivo .ics)</b><span>ou arraste o arquivo para cá</span></label>'+
+    '<div class="ou">ou</div>'+
+    '<label class="f">Cole o texto do e-mail de confirmação<textarea id="impTxt" rows="6" placeholder="Abra o e-mail, selecione tudo, copie e cole aqui."></textarea></label>'+
+    '<p class="erro" id="impErr" role="alert"></p>'+
+    '<div class="barra"><button class="btn pri" type="button" id="impGo">Identificar dados ✨</button></div>');
+  var d=$('#drop');
+  $('#impFile').onchange=function(){var f=this.files[0];if(f)lerArq(f);};
+  ['dragenter','dragover'].forEach(function(n){d.addEventListener(n,function(e){e.preventDefault();d.classList.add('sobre');});});
+  ['dragleave','drop'].forEach(function(n){d.addEventListener(n,function(e){e.preventDefault();d.classList.remove('sobre');});});
+  d.addEventListener('drop',function(e){var f=e.dataTransfer.files[0];if(f)lerArq(f);});
+  $('#impGo').onclick=function(){
+    var t=$('#impTxt').value.trim();
+    if(t.length<20){$('#impErr').textContent='Cole o texto do e-mail inteiro: quanto mais texto, mais coisa eu acho.';return;}
+    revisar(LeitorReserva.lerTexto(t));
+  };
+};
 
 /* ---------- início ---------- */
 preencherFusos();carregar();
