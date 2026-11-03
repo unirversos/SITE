@@ -164,9 +164,31 @@ function ligaOrc(onMudou){
     if(t.dataset&&t.dataset.leg!==undefined){var v=Math.round(parseFloat(String(t.value).replace(',','.')));
       if(isFinite(v)&&v>=0&&v<=99999999){ if(v===+t.dataset.est&&!o.t[t.dataset.leg]){} else o.t[t.dataset.leg]={v:v,c:1}; } onMudou(true);}
     else if(t.hasAttribute&&t.hasAttribute('data-pax')){var n=parseInt(t.value,10);if(n>=1&&n<=20)o.pax=n;onMudou(true);}
+    else if(t.hasAttribute&&t.hasAttribute('data-passe')){var ps=Math.round(parseFloat(t.value));if(isFinite(ps)&&ps>0)o.passe=ps;else delete o.passe;onMudou(true);}
     else if(t.hasAttribute&&t.hasAttribute('data-cot')){var c=parseFloat(String(t.value).replace(',','.'));o.cot=(isFinite(c)&&c>0&&c<100000)?c/100:'';onMudou(true);}
   });
   el.addEventListener('click',function(ev){var b=ev.target.closest('[data-rev]'); if(!b)return; delete orc().t[b.dataset.rev]; onMudou(true);});
+}
+/* ---------- comparador com o passe de trem para turistas (JR Pass) ----------
+   Preços 'ordinary' adulto a partir de 1/out/2026 (japan.travel, confirmado em nov/2026): 7 d ¥53.000 · 14 d ¥84.000 · 21 d ¥105.000.
+   Conta só os trechos de trem rápido entre cidades (100–700 km). Os preços do passe são editáveis. */
+var PASSES=[{d:7,v:53000},{d:14,v:84000},{d:21,v:105000}];
+function dif(a,b){return Math.round((Date.UTC(+b.slice(0,4),+b.slice(5,7)-1,+b.slice(8))-Date.UTC(+a.slice(0,4),+a.slice(5,7)-1,+a.slice(8)))/864e5);}
+function comparaPasse(legs){
+  var o=orc(), cob=legs.filter(function(g){return g.d>100&&g.d<=700;});
+  var h='<div class="orc"><b>🎫 Vale a pena o passe de trem (JR Pass)?</b>';
+  if(!cob.length)return h+'<p class="orct">Não há trem rápido entre cidades na sua viagem; o passe provavelmente <b>não compensa</b>.</p></div>';
+  var dias=cob.map(function(g){return g.b.dia;}).sort(), span=dif(dias[0],dias[dias.length-1])+1;
+  var pas=PASSES.filter(function(x){return x.d>=span;})[0];
+  var soma=0,conf=0; cob.forEach(function(g){var x=valor(g.it);soma+=x.v;if(x.conf)conf++;});
+  if(!pas)return h+'<p class="orct">Seus trens rápidos vão de '+esc(dias[0].slice(8)+'/'+dias[0].slice(5,7))+' a '+esc(dias[dias.length-1].slice(8)+'/'+dias[dias.length-1].slice(5,7))+' ('+span+' dias): mais que o maior passe (21 dias). Compare por partes, passe a passe.</p></div>';
+  var preco=o.passe||pas.v, dif2=soma-preco;
+  h+='<p class="orct">Seus <b>'+cob.length+' trecho'+(cob.length>1?'s':'')+' de trem rápido</b> acontecem em '+span+' dia'+(span>1?'s':'')+' seguidos → passe de <b>'+pas.d+' dias</b>.</p>'+
+    '<div class="orcl"><label>Passe de '+pas.d+' dias (¥) <input type="number" min="0" step="100" value="'+preco+'" data-passe></label></div>'+
+    '<p class="orct">Passagens avulsas: <b>'+yen(soma)+'</b> · Passe: <b>'+yen(preco)+'</b> por pessoa → '+
+    (dif2>0?'<b style="color:var(--sage)">o passe compensa: economiza ≈ '+yen(dif2)+'</b>':'<b style="color:var(--red)">o passe não compensa: as avulsas saem ≈ '+yen(-dif2)+' mais baratas</b>')+'.</p>'+
+    '<p class="nota">'+conf+' de '+cob.length+' trecho'+(cob.length>1?'s':'')+' com valor confirmado'+(conf<cob.length?' (confirme os outros para a comparação ficar firme)':'')+'. Preço do passe: tabela “ordinary”, adulto, a partir de 1/out/2026 ([ver fonte](https://www.japan.travel/en/ca/news/price-increases-are-coming-to-the-nationwide-japan-rail-pass-2026/)). Não conta trem comum nem metrô, que o passe só cobre nas linhas JR. Até onde sei, trens Nozomi e Mizuho do trem-bala não entram no passe; confirme as regras e o preço em <a href="https://japanrailpass.net" target="_blank" rel="noopener">japanrailpass.net</a> antes de comprar.</p></div>';
+  return h.replace(/\[ver fonte\]\(([^)]+)\)/,'<a href="$1" target="_blank" rel="noopener">ver fonte</a>');
 }
 function salvaOrc(){try{window.CalAPI.gravar();}catch(e){}}
 function digitando(){var a=document.activeElement,el=$('#mapaLista');return !!(a&&el&&el.contains(a)&&a.tagName==='INPUT');}
@@ -231,7 +253,7 @@ function pintaViagem(){
   /* o total conta cada trecho tantas vezes quanto ele é feito */
   var cont={}; legs.concat(locais).forEach(function(g){cont[g.it.key]=(cont[g.it.key]||0)+1;});
   var itensCont=[]; itensU.forEach(function(it){for(var n=0;n<cont[it.key];n++)itensCont.push(it);});
-  if(itensCont.length){ h=painelOrc(itensCont,'Orçamento das passagens da viagem toda')+h;
+  if(itensCont.length){ h=painelOrc(itensCont,'Orçamento das passagens da viagem toda')+comparaPasse(legs)+h;
     if(unicos.length)h+='<details class="mais"><summary>Trechos dentro das cidades ('+unicos.length+')</summary><div style="display:grid;gap:10px;margin-top:8px">'+unicos.map(function(g){return '<div><b>'+esc(g.a.rotulo)+' → '+esc(g.b.rotulo)+'</b> <span class="nota">('+fmtKm(km(g.a.pos,g.b.pos))+(cont[g.it.key]>1?' · '+cont[g.it.key]+'×':'')+')</span>'+campoPreco(g.it)+'</div>';}).join('')+'</div></details>'; }
   if(faltam)h+='<p class="nota"><b>'+faltam+' lugar'+(faltam>1?'es':'')+' não achado'+(faltam>1?'s':'')+' no mapa</b> e ficou'+(faltam>1?'ram':'')+' de fora da conta. Veja o dia a dia para marcar no mapa: '+seq.filter(function(x){return !x.pos&&!x.buscando;}).map(function(x){return esc(x.rotulo)+(soLinkCurto(x.local)?' (link curto do Google Maps: abra o link, copie o endereço ou as coordenadas e cole no campo Local)':'');}).join('; ')+'.</p>';
   el.innerHTML=h;

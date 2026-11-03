@@ -247,7 +247,7 @@ footer a{color:var(--pink);text-decoration:none;margin-right:12px}
 <p class="toast" id="msg" role="status"></p>
 
 <script src="./leitor.js?v=1"></script>
-<script src="./mapa.js?v=7"></script>
+<script src="./mapa.js?v=8"></script>
 <script>
 (function(){
 'use strict';
@@ -291,6 +291,7 @@ function limpaOrc(o,r){
   if(!o||typeof o!=='object')return;
   var c=parseFloat(o.cot); if(isFinite(c)&&c>0&&c<1000)r.cot=c;
   var n=parseInt(o.pax,10); if(n>=1&&n<=20)r.pax=n;
+  var ps=parseFloat(o.passe); if(isFinite(ps)&&ps>0&&ps<=9999999)r.passe=Math.round(ps);
   if(o.t&&typeof o.t==='object')Object.keys(o.t).slice(0,600).forEach(function(k){
     var v=o.t[k]&&+o.t[k].v; if(k.length<=700&&isFinite(v)&&v>=0&&v<=99999999)r.t[k]={v:Math.round(v),c:1};});
 }
