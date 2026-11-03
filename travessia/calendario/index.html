@@ -121,6 +121,11 @@ footer a{color:var(--pink);text-decoration:none;margin-right:12px}
   #vLista{display:grid!important}
   .evc{break-inside:avoid}
 }
+#nuvem button,#nuvemSetup button{font:inherit;font-size:13.5px;font-weight:700;color:var(--pink-d);background:none;border:0;padding:0 2px;cursor:pointer;text-decoration:underline}
+.lk-box{width:100%;font:inherit;font-size:14px;border:1.5px solid var(--line);border-radius:12px;padding:8px 10px;background:#fff;color:var(--ink)}
+.dois{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+.dois .evc{align-content:start}
+@media (max-width:640px){.dois{grid-template-columns:minmax(0,1fr)}}
 </style>
 <link rel="icon" href="/favicon.svg" type="image/svg+xml"><link rel="icon" href="/favicon.ico" sizes="48x48"><link rel="apple-touch-icon" href="/apple-touch-icon.png"></head>
 <body>
@@ -149,17 +154,20 @@ footer a{color:var(--pink);text-decoration:none;margin-right:12px}
       <p class="erro" id="sErr" role="alert"></p>
       <div class="barra"><button class="btn pri" type="submit" id="sBtn">Criar meu calendário</button><button class="btn" type="button" id="sCancel" hidden>Cancelar</button></div>
     </form>
+    <p class="nota no-print" id="nuvemSetup"></p>
   </section>
 
   <section id="app" hidden aria-label="Meu calendário">
     <div class="wrap" style="gap:14px">
       <div class="faixa no-print"><span><b id="fTitulo"></b> <span id="fDatas"></span></span><button class="btn sm" type="button" id="bAjustar">✏️ Ajustar datas</button></div>
+      <p class="nota no-print" id="nuvem" role="status"></p>
 
       <div class="barra no-print">
         <button class="btn" type="button" id="vbMes" aria-pressed="true">🗓️ Mês</button>
         <button class="btn" type="button" id="vbLista" aria-pressed="false">📋 Lista</button>
         <span class="esp"></span>
         <button class="btn pri" type="button" id="bNovo">➕ Novo evento</button>
+        <button class="btn" type="button" id="bCompart">🔗 Compartilhar</button>
         <button class="btn" type="button" id="bGoogle">📤 Levar para o Google Agenda</button>
       </div>
 
@@ -225,7 +233,7 @@ function curto(s){return (+s.slice(8))+' '+MESES[+s.slice(5,7)-1].slice(0,3)+' '
 function hojeStr(){var t=new Date();return t.getFullYear()+'-'+pad(t.getMonth()+1)+'-'+pad(t.getDate());}
 function uid(){return 'e'+Date.now().toString(36)+Math.random().toString(36).slice(2,8);}
 
-var S={titulo:'',ini:'',fim:'',fuso:'auto',chegada:'',ev:[]};
+var S={titulo:'',ini:'',fim:'',fuso:'auto',chegada:'',atualizado:'',ev:[]};
 var CURTO={jp:'horário do Japão',br:'horário de Brasília',dev:'fuso do aparelho'};
 function fusoDe(e){
   if(e.fuso!=='auto')return e.fuso;
@@ -236,11 +244,12 @@ var mes='', visao='mes', salvouOk=true;
 
 /* ---------- salvar e abrir ---------- */
 function limpar(o){
-  var r={titulo:'',ini:'',fim:'',fuso:'auto',chegada:'',ev:[]};
+  var r={titulo:'',ini:'',fim:'',fuso:'auto',chegada:'',atualizado:'',ev:[]};
   if(!o||typeof o!=='object')return r;
   r.titulo=typeof o.titulo==='string'?o.titulo.slice(0,80):'';
   if(okData(o.ini)&&okData(o.fim)&&o.fim>=o.ini){r.ini=o.ini;r.fim=o.fim;}
   r.fuso=FUSOS[o.fuso]?o.fuso:'auto';
+  r.atualizado=typeof o.atualizado==='string'?o.atualizado.slice(0,40):'';
   (Array.isArray(o.ev)?o.ev:[]).slice(0,2000).forEach(function(e){
     if(!e||typeof e.titulo!=='string'||!okData(e.data))return;
     var x={id:typeof e.id==='string'&&e.id?e.id.slice(0,40):uid(),titulo:e.titulo.slice(0,160),tipo:TIPOS[e.tipo]?e.tipo:'outro',data:e.data,
@@ -253,10 +262,11 @@ function limpar(o){
   return r;
 }
 function carregar(){try{S=limpar(JSON.parse(localStorage.getItem(KEY)||'null'));}catch(e){S=limpar(null);}}
-function gravar(){
+function gravarLocal(){
   try{localStorage.setItem(KEY,JSON.stringify(S));salvouOk=true;}
   catch(e){salvouOk=false;aviso('Seu navegador não deixou salvar. Use "Salvar uma cópia" para não perder nada.');}
 }
+function gravar(){S.atualizado=new Date().toISOString();gravarLocal();agendarNuvem();}
 var tMsg;
 function aviso(t){var m=$('#msg');m.textContent=t;clearTimeout(tMsg);tMsg=setTimeout(function(){m.textContent='';},4200);}
 
@@ -538,20 +548,158 @@ $('#bExemplo').onclick=function(){
   };
 };
 $('#bLimpar').onclick=function(){
-  abrir('<h2 id="dlgT" style="text-transform:none">Apagar tudo?</h2><p>Vai apagar as datas e os <b>'+S.ev.length+'</b> '+(S.ev.length===1?'evento':'eventos')+' deste navegador. Se quiser guardar, salve uma cópia antes.</p>'+
+  abrir('<h2 id="dlgT" style="text-transform:none">Apagar tudo?</h2><p>Vai apagar as datas e os <b>'+S.ev.length+'</b> '+(S.ev.length===1?'evento':'eventos')+' deste navegador'+(usuario&&syncPronto?' <b>e da sua conta</b>':'')+'. Se quiser guardar, salve uma cópia antes.</p>'+
     '<div class="barra"><button class="btn perigo" type="button" id="okLimpa">Apagar tudo</button><button class="btn" type="button" data-act="fechar">Cancelar</button></div>');
   $('#okLimpa').onclick=function(){
+    var naConta=usuario&&syncPronto&&window.CalNuvem;
     S=limpar(null);try{localStorage.removeItem(KEY);}catch(e){}
-    fechar();$('#app').hidden=true;mostrarSetup(false);aviso('Tudo apagado.');
+    if(naConta){CalNuvem.apagar().catch(function(){aviso('Apaguei aqui, mas não consegui apagar na conta. Tente de novo mais tarde.');});}
+    fechar();$('#app').hidden=true;mostrarSetup(false);nuvemUI();aviso('Tudo apagado.');
   };
 };
+
+
+/* ---------- conta (guardar online) ---------- */
+var usuario=null, syncPronto=false, estadoNuvem='', ultimoSalvo=null, tNuv=null;
+function igual(a,b){
+  function k(o){return JSON.stringify({t:o.titulo,i:o.ini,f:o.fim,u:o.fuso,c:o.chegada,e:o.ev});}
+  return k(a)===k(b);
+}
+function nome(u){return (u&&(u.email||u.displayName)||'sua conta').split('@')[0];}
+function hhmm(d){return pad(d.getHours())+':'+pad(d.getMinutes());}
+function nuvemUI(){
+  var a=$('#nuvem'),b=$('#nuvemSetup'),t='',ts='';
+  if(!usuario){
+    t='☁️ Seu calendário está salvo só neste aparelho. <button type="button" data-nuv="entrar">Entrar para guardar online</button>';
+    ts='Já criou um calendário e ele está guardado na sua conta? <button type="button" data-nuv="entrar">Entrar para buscar</button>';
+  }else if(estadoNuvem==='erro'){
+    t='⚠️ Não consegui falar com a conta agora. O calendário continua salvo neste aparelho. <button type="button" data-nuv="tentar">Tentar de novo</button>';ts=t;
+  }else if(estadoNuvem==='salvando'||estadoNuvem==='sync'){
+    t='☁️ Sincronizando com a sua conta…';ts=t;
+  }else if(!syncPronto){
+    t='☁️ Falta escolher qual calendário vale. <button type="button" data-nuv="tentar">Escolher agora</button>';ts=t;
+  }else{
+    t='☁️ Guardado na conta de '+esc(nome(usuario))+(ultimoSalvo?' · salvo às '+hhmm(ultimoSalvo):'');ts='☁️ Você entrou como '+esc(nome(usuario))+'. Ainda não há calendário guardado na conta.';
+  }
+  a.innerHTML=t;b.innerHTML=ts;
+}
+function pedirLogin(){
+  if(!window.CalNuvem){aviso('O login não carregou. Confira a internet e recarregue a página.');return;}
+  CalNuvem.entrar({titulo:'Entre para guardar seu calendário online',texto:'Com a conta, o calendário da viagem fica guardado e aparece em qualquer aparelho em que você entrar.',peq:'Guardamos o seu e-mail e os dados do calendário que você criar.'});
+}
+document.addEventListener('click',function(ev){
+  var b=ev.target.closest('[data-nuv]');if(!b)return;
+  if(b.dataset.nuv==='entrar')pedirLogin();else{syncPronto?salvarNuvem():sincronizar();}
+});
+document.addEventListener('uni-conta',function(ev){
+  usuario=(ev.detail&&ev.detail.user)||null;syncPronto=false;estadoNuvem='';
+  nuvemUI();if(usuario)sincronizar();
+});
+function adotar(c){
+  S=c;gravarLocal();var h=hojeStr();mes=(h>=S.ini&&h<=S.fim?h:S.ini).slice(0,7);
+  $('#setup').hidden=true;$('#app').hidden=false;tudo();
+}
+async function sincronizar(){
+  if(!usuario||!window.CalNuvem)return;
+  estadoNuvem='sync';nuvemUI();
+  var nuvem;
+  try{nuvem=await CalNuvem.carregar();}catch(e){estadoNuvem='erro';nuvemUI();return;}
+  var c=nuvem?limpar(nuvem):null;if(c&&!c.ini)c=null;
+  estadoNuvem='';
+  if(!c){if(S.ini){await salvarNuvem();}else{syncPronto=true;nuvemUI();}return;}
+  if(!S.ini){adotar(c);syncPronto=true;nuvemUI();aviso('Calendário buscado da sua conta.');return;}
+  if(igual(c,S)){syncPronto=true;nuvemUI();return;}
+  escolherVersao(c);
+}
+function resumo(o,rot){
+  return '<article class="evc" style="--c:#8e6a1f"><h4>'+rot+'</h4><p>'+(o.titulo?esc(o.titulo)+' · ':'')+esc(curto(o.ini))+' a '+esc(curto(o.fim))+'</p><p class="det">'+o.ev.length+' '+(o.ev.length===1?'evento':'eventos')+(o.atualizado?' · alterado em '+esc(curto(o.atualizado.slice(0,10)))+' às '+esc(hhmm(new Date(o.atualizado))):'')+'</p></article>';
+}
+function escolherVersao(c){
+  abrir('<h2 id="dlgT" style="text-transform:none">Qual calendário vale?</h2><p>Existe um calendário guardado na sua conta e outro diferente neste aparelho. Escolha qual manter; o outro será substituído.</p>'+
+    '<div class="dois">'+resumo(c,'Da sua conta')+resumo(S,'Deste aparelho')+'</div>'+
+    '<div class="barra"><button class="btn pri" type="button" id="usaConta">Usar o da conta</button><button class="btn" type="button" id="usaAparelho">Usar o deste aparelho</button></div>'+
+    '<p class="nota">Dica: se tiver dúvida, feche esta janela, vá em Mais opções e salve uma cópia do deste aparelho antes de escolher.</p>');
+  $('#usaConta').onclick=function(){adotar(c);syncPronto=true;fechar();nuvemUI();aviso('Usando o calendário da conta.');};
+  $('#usaAparelho').onclick=function(){fechar();S.atualizado=new Date().toISOString();gravarLocal();salvarNuvem();};
+}
+async function salvarNuvem(){
+  if(!usuario||!window.CalNuvem||!S.ini)return;
+  clearTimeout(tNuv);tNuv=null;estadoNuvem='salvando';nuvemUI();
+  try{await CalNuvem.salvar(JSON.parse(JSON.stringify(S)));syncPronto=true;ultimoSalvo=new Date();estadoNuvem='';}
+  catch(e){estadoNuvem='erro';}
+  nuvemUI();
+}
+function agendarNuvem(){
+  if(!usuario||!syncPronto||!window.CalNuvem)return;
+  clearTimeout(tNuv);tNuv=setTimeout(salvarNuvem,1200);
+}
+document.addEventListener('visibilitychange',function(){if(document.visibilityState==='hidden'&&tNuv){salvarNuvem();}});
+
+/* ---------- link de compartilhar (uma cópia do calendário vai dentro do próprio link) ---------- */
+function b64u(bytes){var s='';for(var i=0;i<bytes.length;i+=0x8000)s+=String.fromCharCode.apply(null,bytes.subarray(i,i+0x8000));return btoa(s).replace(/\+/g,'-').replace(/\//g,'_').replace(/=+$/,'');}
+function unb64u(t){t=t.replace(/-/g,'+').replace(/_/g,'/');while(t.length%4)t+='=';var s=atob(t),u=new Uint8Array(s.length);for(var i=0;i<s.length;i++)u[i]=s.charCodeAt(i);return u;}
+async function passa(bytes,Stream,modo){
+  var st=new Stream(modo),w=st.writable.getWriter();w.write(bytes);w.close();
+  return new Uint8Array(await new Response(st.readable).arrayBuffer());
+}
+async function empacotar(detalhes){
+  var o={v:1,titulo:S.titulo,ini:S.ini,fim:S.fim,fuso:S.fuso,chegada:S.chegada,ev:S.ev.map(function(e){var x=Object.assign({},e);if(!detalhes)x.detalhes='';return x;})};
+  var bytes=new TextEncoder().encode(JSON.stringify(o));
+  if(window.CompressionStream)return 'g'+b64u(await passa(bytes,CompressionStream,'gzip'));
+  return 'j'+b64u(bytes);
+}
+async function desempacotar(tok){
+  var k=tok.charAt(0),bytes=unb64u(tok.slice(1));
+  if(k==='g')bytes=await passa(bytes,DecompressionStream,'gzip');
+  else if(k!=='j')throw new Error('formato');
+  return limpar(JSON.parse(new TextDecoder().decode(bytes)));
+}
+$('#bCompart').onclick=function(){
+  if(!S.ev.length){abrir('<div class="dlg-top"><h2 id="dlgT" style="text-transform:none">Compartilhar o calendário</h2><button class="btn sm" type="button" data-act="fechar" aria-label="Fechar">✕</button></div><div class="vazio">Adicione alguns eventos primeiro. O link leva uma cópia do que estiver no calendário.</div>');return;}
+  abrir('<div class="dlg-top"><h2 id="dlgT" style="text-transform:none">Compartilhar o calendário</h2><button class="btn sm" type="button" data-act="fechar" aria-label="Fechar">✕</button></div>'+
+    '<p>O link leva uma <b>cópia</b> do calendário de agora. Quem abrir recebe os eventos no navegador dele, prontos para editar e levar ao Google Agenda.</p>'+
+    '<label style="display:flex;gap:10px;align-items:center"><input type="checkbox" id="cDet" checked style="width:auto"> Incluir os detalhes dos eventos (códigos de reserva e anotações)</label>'+
+    '<input class="lk-box" id="lkTxt" readonly aria-label="Link do calendário" value="Gerando o link…">'+
+    '<div class="barra"><button class="btn pri" type="button" id="lkCopia" disabled>📋 Copiar link</button>'+(navigator.share?'<button class="btn" type="button" id="lkEnvia" disabled>📲 Enviar…</button>':'')+'</div>'+
+    '<p class="nota" id="lkNota"></p>'+
+    '<p class="nota">Quem tiver o link vê tudo o que estiver nele. O link é uma foto de hoje: se você mudar algo depois, gere e mande outro. Os eventos viajam dentro do link e não ficam guardados no site.</p>');
+  async function gerar(){
+    var tok=await empacotar($('#cDet').checked),url=location.origin+location.pathname+'#c='+tok;
+    $('#lkTxt').value=url;$('#lkCopia').disabled=false;if($('#lkEnvia'))$('#lkEnvia').disabled=false;
+    $('#lkNota').textContent=url.length>6000?'Este link ficou longo ('+url.length+' caracteres) e alguns aplicativos podem cortá-lo. Se o seu marido não conseguir abrir, use "Salvar uma cópia" em Mais opções e mande o arquivo.':'';
+  }
+  $('#cDet').onchange=gerar;gerar();
+  $('#lkCopia').onclick=async function(){
+    var t=$('#lkTxt');
+    try{await navigator.clipboard.writeText(t.value);aviso('Link copiado.');}
+    catch(e){t.focus();t.select();aviso('Selecione e copie o link manualmente.');}
+  };
+  if($('#lkEnvia'))$('#lkEnvia').onclick=function(){navigator.share({title:S.titulo||'Calendário da viagem',text:'Calendário da viagem',url:$('#lkTxt').value}).catch(function(){});};
+};
+function receberLink(){
+  var m=/^#c=([A-Za-z0-9_-]+)$/.exec(location.hash);if(!m)return;
+  function limpaHash(){try{history.replaceState(null,'',location.pathname+location.search);}catch(e){}}
+  desempacotar(m[1]).then(function(novo){
+    if(!novo.ini)throw new Error('vazio');
+    abrir('<h2 id="dlgT" style="text-transform:none">Abrir este calendário?</h2><p>Alguém compartilhou um calendário com você'+(novo.titulo?': <b>'+esc(novo.titulo)+'</b>':'')+'. Ele tem <b>'+novo.ev.length+'</b> '+(novo.ev.length===1?'evento':'eventos')+', de '+esc(curto(novo.ini))+' a '+esc(curto(novo.fim))+'.</p>'+
+      (S.ev.length?'<p>Ao abrir, ele <b>substitui</b> o calendário que você tem aqui ('+S.ev.length+' '+(S.ev.length===1?'evento':'eventos')+'). Se quiser guardar o seu, feche esta janela, salve uma cópia em Mais opções e abra o link de novo.</p>':'')+
+      '<div class="barra"><button class="btn pri" type="button" id="okLink">Abrir</button><button class="btn" type="button" id="noLink">Agora não</button></div>');
+    $('#okLink').onclick=function(){S=novo;S.atualizado='';gravar();var h=hojeStr();mes=(h>=S.ini&&h<=S.fim?h:S.ini).slice(0,7);$('#setup').hidden=true;$('#app').hidden=false;tudo();fechar();limpaHash();aviso('Calendário aberto.');};
+    $('#noLink').onclick=function(){fechar();limpaHash();};
+  }).catch(function(){
+    abrir('<h2 id="dlgT" style="text-transform:none">Não consegui abrir o link</h2><p>O link parece estar incompleto ou cortado. Peça para a pessoa mandar de novo, ou use o arquivo de cópia (Mais opções → Salvar uma cópia).</p><div class="barra"><button class="btn" type="button" data-act="fechar">Fechar</button></div>');
+    limpaHash();
+  });
+}
 
 /* ---------- início ---------- */
 preencherFusos();carregar();
 if(S.ini){var h0=hojeStr();mes=(h0>=S.ini&&h0<=S.fim?h0:S.ini).slice(0,7);$('#setup').hidden=true;$('#app').hidden=false;tudo();}
 else{mostrarSetup(false);}
+nuvemUI();receberLink();
 })();
 </script>
+<script type="module" src="./nuvem.js?v=1"></script>
 <script defer src="/menu-ativo.js?v=1"></script>
 </body>
 </html>
