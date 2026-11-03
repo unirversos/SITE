@@ -510,15 +510,15 @@ function renderJogoCru(){
     const rec=Object.keys(j.recusou||{}).map(nomeUid);
     box.innerHTML=topo(g.ic+' '+g.nome)+`<p class="sub">Convite enviado${j.conv==='todos'?' para a mesa':' para '+esc(nomeUid(j.conv))}. Esperando alguém aceitar…${rec.length?' ('+esc(rec.join(', '))+' não pode agora.)':''}</p><div class="row"><button class="lk" type="button" data-j="sai">cancelar convite</button></div>`; return; }
   if(j.i>=N){
-    box.innerHTML=topo(g.ic+' '+g.nome)+`<p class="j-q">${(j.ok||0)/N>=.7?'🎉 ':(j.ok||0)/N>=.4?'🌸 ':'💪 '}${j.ok||0} de ${N}</p><p class="sub j-dica">${jogadores().length>1?'Vocês acertaram juntos.':'Você acertou sozinho(a).'} おつかれさま！</p><div class="row" style="justify-content:center"><button class="btn pri" type="button" data-j="fim">Outro jogo</button><button class="btn" type="button" data-j="fecha">Voltar à conversa</button></div>`; return; }
+    box.innerHTML=topo(g.ic+' '+g.nome)+`<p class="j-q">${(j.ok||0)/N>=.7?'🎉 ':(j.ok||0)/N>=.4?'🌸 ':'💪 '}${j.ok||0} de ${N}</p><p class="sub j-dica">${jogadores().length>1?'Vocês acertaram juntos.':'Você acertou sozinho(a).'} おつかれさま！</p><div class="row" style="justify-content:center">${j.id==='moii'&&(j.rodada||1)===1?'<button class="btn pri" type="button" data-j="r2">2ª rodada (sem som)</button>':''}<button class="btn${j.id==='moii'&&(j.rodada||1)===1?'':' pri'}" type="button" data-j="fim">Outro jogo</button><button class="btn" type="button" data-j="fecha">Voltar à conversa</button></div>`; return; }
   const q=g.qs[j.i], v=vezEf(j), minha=v===me.uid, fb=j.fb;
   const jp=esc(q.jp).replace('＿','<span class="vz">&nbsp;</span>');
   const ops=q.ops.map((o,x)=>{ let c=''; if(fb){ if(q.ok.includes(o)) c='ok'; else if(x===fb.esc) c='no'; } return `<button type="button" lang="ja" data-j="resp" data-x="${x}" class="${c}"${(fb||!minha)?' disabled':''}>${esc(o)}</button>`; }).join('');
   let rodape;
   if(fb){ rodape=`<div class="j-fb ${fb.certo?'':'no'}"><b>${fb.certo?'Acertou!':'Quase!'}</b> ${esc(q.expl)}</div><div class="row"><button class="btn pri" type="button" data-j="prox">${j.i+1>=N?'Ver resultado':'Próxima →'}</button></div>`; }
   else rodape=`<p class="sub" style="text-align:center">${minha?'Sua vez':'Vez de '+esc(nomeUid(v))}</p>`;
-  box.innerHTML=topo(g.ic+' '+g.nome)+`<div class="j-pontos" role="img" aria-label="Pergunta ${j.i+1} de ${N}">${Array.from({length:N},(_,x)=>'<i class="'+(x<j.i?'f':x===j.i?'a':'')+'"></i>').join('')}</div>${q.ic&&window.ILU&&ILU[q.ic]?'<div class="j-ilu">'+ILU[q.ic]+'</div>':''}<p class="j-q" lang="ja">${jp}</p><p class="sub j-dica">${esc(q.dica)}</p><div class="j-ops">${ops}</div>${rodape}<div class="row" style="justify-content:center"><button class="lk" type="button" data-j="sai">sair do jogo</button></div>`;
-  const kf=j.id+j.i; if(falouJ!==kf){ falouJ=kf; speak(q.fala); }
+  box.innerHTML=topo(g.ic+' '+g.nome)+`<div class="j-pontos" role="img" aria-label="Pergunta ${j.i+1} de ${N}">${Array.from({length:N},(_,x)=>'<i class="'+(x<j.i?'f':x===j.i?'a':'')+'"></i>').join('')}</div>${q.ic&&window.ILU&&ILU[q.ic]?'<div class="j-ilu">'+ILU[q.ic]+'</div>':''}<p class="j-q" lang="ja">${jp}</p><p class="sub j-dica">${esc(q.dica)}</p>${j.id==='moii'&&(j.rodada||1)===1?'<div class="row" style="justify-content:center"><button class="btn" type="button" data-j="ouvir">🔊 Ouvir mais uma vez</button></div>':''}${j.id==='moii'&&j.rodada===2?'<p class="sub" style="text-align:center">2ª rodada: sem som</p>':''}<div class="j-ops">${ops}</div>${rodape}<div class="row" style="justify-content:center"><button class="lk" type="button" data-j="sai">sair do jogo</button></div>`;
+  const kf=j.id+j.i; if(falouJ!==kf){ falouJ=kf; if(!(j.id==='moii'&&j.rodada===2)) speak(q.fala); }
 }
 $('btnJogar').onclick=()=>{ jogoAberto=true; if(aba!=='mesa') jParaVal=aba; renderJogo(); $('jogoBox').scrollIntoView({behavior:'smooth',block:'nearest'}); };
 $('jogoBox').addEventListener('change',e=>{ if(e.target.id==='jPara') jParaVal=e.target.value; });
@@ -535,6 +535,8 @@ $('jogoBox').onclick=e=>{ const b=e.target.closest('[data-j]'); if(!b) return; c
   if(a==='entra'){ update(jogoRef,{['aceitaram/'+me.uid]:true}).catch(()=>{}); return; }
   if(a==='sai'){ if(jogadores().length<=1||j.estado==='convite') set(jogoRef,null).catch(()=>{}); else update(jogoRef,{['aceitaram/'+me.uid]:null}).catch(()=>{}); jogoAberto=false; renderJogo(); return; }
   const g=JOGOS[j.id]; if(!g) return;
+  if(a==='ouvir'){ const q=g.qs[j.i]; if(q) speak(q.fala); return; }
+  if(a==='r2'){ update(jogoRef,{i:0,ok:0,fb:null,vez:me.uid,rodada:2}).catch(()=>{}); return; }
   if(a==='resp' && !j.fb && vezEf(j)===me.uid){ const q=g.qs[j.i], x=+b.dataset.x, certo=q.ok.includes(q.ops[x]); update(jogoRef,{fb:{por:me.uid,esc:x,certo},ok:(j.ok||0)+(certo?1:0)}).catch(()=>{}); return; }
   if(a==='prox' && j.fb){ const L=jogadores().map(x=>x.uid); const i=L.indexOf(j.fb.por); const prox=L.length?L[(i+1)%L.length]:me.uid; update(jogoRef,{i:j.i+1,fb:null,vez:prox}).catch(()=>{}); }
 };
