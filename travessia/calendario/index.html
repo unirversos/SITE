@@ -78,6 +78,16 @@ h1 em{font-style:normal;color:var(--pink)}
 .legenda{display:flex;flex-wrap:wrap;gap:4px 14px;font-size:13px;color:var(--muted)}
 .legenda i{display:inline-block;width:11px;height:11px;border-radius:4px;background:var(--c);margin-right:5px;vertical-align:-1px}
 /* lista */
+.av{background:var(--gold-soft);border:1.5px solid #ecd9a8;border-radius:16px;padding:10px 14px}
+.av summary{cursor:pointer;font-weight:700;font-family:var(--f-display)}
+.av-lista{display:grid;gap:10px;margin-top:10px}
+.av-i{background:#fff;border:1.5px solid var(--line);border-radius:14px;padding:10px 12px;font-size:14.5px}
+.av-i.urg{border-color:var(--pink)}
+.av-i p{margin:4px 0 8px;color:var(--muted);font-size:13.5px}
+.av-c{display:inline-block;font-size:12px;font-weight:700;border-radius:999px;padding:1px 10px;background:var(--sage-soft);color:var(--sage);margin-left:4px}
+.av-c.agora{background:#fbe3e8;color:var(--red)}
+.av-b{display:flex;gap:8px;flex-wrap:wrap}
+.av .lkb{font:inherit;font-size:13px;font-weight:700;color:var(--pink-d);background:none;border:0;padding:0;cursor:pointer;text-decoration:underline}
 .lista{display:grid;gap:18px}
 .lista h3{font-family:var(--f-display);font-weight:800;font-size:19px;margin:0 0 6px}
 .lista .grp{display:grid;gap:8px}
@@ -167,6 +177,7 @@ footer a{color:var(--pink);text-decoration:none;margin-right:12px}
     <div class="wrap" style="gap:14px">
       <div class="faixa no-print"><span><b id="fTitulo"></b> <span id="fDatas"></span></span><button class="btn sm" type="button" id="bAjustar">✏️ Ajustar datas</button></div>
       <p class="nota no-print" id="nuvem" role="status"></p>
+      <div id="avisos" class="no-print"></div>
 
       <div class="barra no-print">
         <button class="btn" type="button" id="vbMes" aria-pressed="true">🗓️ Mês</button>
@@ -212,7 +223,9 @@ footer a{color:var(--pink);text-decoration:none;margin-right:12px}
 <dialog id="dlg" aria-labelledby="dlgT"><div class="dlg-in" id="dlgIn"></div></dialog>
 <p class="toast" id="msg" role="status"></p>
 
-<script src="./leitor.js?v=1"></script>
+<script src="./leitor.js?v=2"></script>
+<script src="../agendamentos/regras.js?v=1"></script>
+<script src="./avisos.js?v=2"></script>
 <script>
 (function(){
 'use strict';
@@ -242,7 +255,7 @@ function curto(s){return (+s.slice(8))+' '+MESES[+s.slice(5,7)-1].slice(0,3)+' '
 function hojeStr(){var t=new Date();return t.getFullYear()+'-'+pad(t.getMonth()+1)+'-'+pad(t.getDate());}
 function uid(){return 'e'+Date.now().toString(36)+Math.random().toString(36).slice(2,8);}
 
-var S={titulo:'',ini:'',fim:'',fuso:'auto',chegada:'',atualizado:'',ev:[],orc:{cot:'',pax:1,t:{}}};
+var S={titulo:'',ini:'',fim:'',fuso:'auto',chegada:'',atualizado:'',ev:[],orc:{cot:'',pax:1,t:{}},ok:{}};
 var CURTO={jp:'horário do Japão',br:'horário de Brasília',dev:'fuso do aparelho'};
 function fusoDe(e){
   if(e.fuso!=='auto')return e.fuso;
@@ -261,9 +274,10 @@ function limpaOrc(o,r){
     var v=o.t[k]&&+o.t[k].v; if(k.length<=700&&isFinite(v)&&v>=0&&v<=99999999)r.t[k]={v:Math.round(v),c:1};});
 }
 function limpar(o){
-  var r={titulo:'',ini:'',fim:'',fuso:'auto',chegada:'',atualizado:'',ev:[],orc:{cot:'',pax:1,t:{}}};
+  var r={titulo:'',ini:'',fim:'',fuso:'auto',chegada:'',atualizado:'',ev:[],orc:{cot:'',pax:1,t:{}},ok:{}};
   if(!o||typeof o!=='object')return r;
   limpaOrc(o.orc,r.orc);
+  if(o.ok&&typeof o.ok==='object')Object.keys(o.ok).slice(0,600).forEach(function(k){if(k.length<=40&&o.ok[k])r.ok[k]=1;});
   r.titulo=typeof o.titulo==='string'?o.titulo.slice(0,80):'';
   if(okData(o.ini)&&okData(o.fim)&&o.fim>=o.ini){r.ini=o.ini;r.fim=o.fim;}
   r.fuso=FUSOS[o.fuso]?o.fuso:'auto';
@@ -378,8 +392,26 @@ function tudo(){
   var n=diff(S.ini,S.fim)+1;
   $('#fDatas').textContent='· '+curto(S.ini)+' a '+curto(S.fim)+' ('+n+' dias) · '+S.ev.length+' '+(S.ev.length===1?'evento':'eventos');
   $('#legenda').innerHTML=Object.keys(TIPOS).map(function(k){return '<span><i style="--c:'+TIPOS[k][2]+'"></i>'+TIPOS[k][0]+' '+TIPOS[k][1]+'</span>';}).join('');
-  desenharMes();desenharLista();
+  desenharMes();desenharLista();desenharAvisos();
 }
+/* ---------- avisos de antecedência ---------- */
+function desenharAvisos(){
+  var box=$('#avisos'); if(!box||!window.CalAvisos)return;
+  var hoje=new Date().toISOString().slice(0,10);
+  var lista=[],feitos=[];
+  S.ev.forEach(function(e){ if(e.data<hoje)return; var a=CalAvisos.para(e); if(!a)return; var st=CalAvisos.situacao(a); if(st.est==='passou')return;
+    (S.ok&&S.ok[e.id]?feitos:lista).push({e:e,a:a,st:st}); });
+  lista.sort(function(x,y){return x.a.abre-y.a.abre;});
+  if(!lista.length&&!feitos.length){box.innerHTML='';return;}
+  function chip(st){return st.est==='aberto'?'<span class="av-c agora">já abriu: compre agora</span>':st.est==='hoje'?'<span class="av-c agora">abre hoje</span>':st.est==='logo'?'<span class="av-c agora">faltam '+st.dias+(st.dias===1?' dia':' dias')+'</span>':'<span class="av-c">faltam '+st.dias+' dias</span>';}
+  var urg=lista.filter(function(x){return x.st.est!=='futuro';}).length;
+  box.innerHTML='<details class="av"'+(urg?' open':'')+'><summary>⏰ Compre com antecedência'+(lista.length?' · '+lista.length+(lista.length===1?' aviso':' avisos'):'')+(urg?' · <b style="color:var(--red)">'+urg+' pedem atenção</b>':'')+'</summary><div class="av-lista">'+
+    lista.map(function(x){return '<div class="av-i'+(x.st.est==='futuro'?'':' urg')+'"><b>'+esc(x.a.nome)+'</b> <span class="nota">· '+esc(x.e.titulo)+' · '+esc(curto(x.e.data))+'</span> '+chip(x.st)+'<p>'+x.a.texto+'</p><div class="av-b">'+
+      (x.a.url?'<a class="btn sm" href="'+esc(x.a.url)+'" target="_blank" rel="noopener">Abrir o site de venda</a> ':'')+'<button type="button" class="btn sm" data-ok="'+esc(x.e.id)+'">✓ Já comprei</button></div></div>';}).join('')+
+    (feitos.length?'<p class="nota">Já resolvidos: '+feitos.map(function(x){return esc(x.e.titulo)+' <button type="button" class="lkb" data-undo="'+esc(x.e.id)+'">desfazer</button>';}).join(' · ')+'</p>':'')+'</div></details>';
+}
+$('#avisos').addEventListener('click',function(ev){var b=ev.target.closest('[data-ok],[data-undo]'); if(!b)return; if(!S.ok)S.ok={};
+  if(b.dataset.ok)S.ok[b.dataset.ok]=1; else delete S.ok[b.dataset.undo]; gravar(); desenharAvisos();});
 function desenharMes(){
   var y=+mes.slice(0,4),m=+mes.slice(5,7),primeiro=y+'-'+pad(m)+'-01',off=wd(primeiro),dm=new Date(Date.UTC(y,m,0)).getUTCDate();
   var linhas=Math.ceil((off+dm)/7),ini=add(primeiro,-off),h=hojeStr();
@@ -580,7 +612,7 @@ $('#bLimpar').onclick=function(){
 /* ---------- conta (guardar online) ---------- */
 var usuario=null, syncPronto=false, estadoNuvem='', ultimoSalvo=null, tNuv=null;
 function igual(a,b){
-  function k(o){return JSON.stringify({t:o.titulo,i:o.ini,f:o.fim,u:o.fuso,c:o.chegada,e:o.ev,o:o.orc});}
+  function k(o){return JSON.stringify({t:o.titulo,i:o.ini,f:o.fim,u:o.fuso,c:o.chegada,e:o.ev,o:o.orc,k:o.ok});}
   return k(a)===k(b);
 }
 function nome(u){return (u&&(u.email||u.displayName)||'sua conta').split('@')[0];}
@@ -661,7 +693,7 @@ async function passa(bytes,Stream,modo){
   return new Uint8Array(await new Response(st.readable).arrayBuffer());
 }
 async function empacotar(detalhes){
-  var o={v:1,titulo:S.titulo,ini:S.ini,fim:S.fim,fuso:S.fuso,chegada:S.chegada,orc:S.orc,ev:S.ev.map(function(e){var x=Object.assign({},e);if(!detalhes)x.detalhes='';return x;})};
+  var o={v:1,titulo:S.titulo,ini:S.ini,fim:S.fim,fuso:S.fuso,chegada:S.chegada,orc:S.orc,ok:S.ok,ev:S.ev.map(function(e){var x=Object.assign({},e);if(!detalhes)x.detalhes='';return x;})};
   var bytes=new TextEncoder().encode(JSON.stringify(o));
   if(window.CompressionStream)return 'g'+b64u(await passa(bytes,CompressionStream,'gzip'));
   return 'j'+b64u(bytes);

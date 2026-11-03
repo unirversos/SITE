@@ -131,5 +131,5 @@ async function textoDoPDF(f){ // lido aqui no navegador; o arquivo não é envia
     txt+='\n'; }
   return txt.replace(/[ \t]+\n/g,'\n').replace(/\n{3,}/g,'\n\n');
 }
-window.LeitorReserva={lerTexto:lerTexto,lerICS:lerICS,icsParaDados:icsParaDados,textoDoPDF:textoDoPDF};
+window.LeitorReserva={lerTexto:lerTexto,lerICS:lerICS,icsParaDados:icsParaDados,textoDoPDF:textoDoPDF,acharAtracao:acharAtracao};
 })();
