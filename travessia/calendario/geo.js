@@ -108,5 +108,19 @@ function estTarifa(d){
   return Math.round((20000+5*d)/1000)*1000;
 }
 
-window.CalGeo={geocodificar:geocodificar,coordDe:coordDe,soLinkCurto:soLinkCurto,km:km,estima:estima,estimaLonga:estimaLonga,estTarifa:estTarifa,fmtMin:fmtMin,fmtKm:fmtKm,chave:chave,yen:function(n){return '¥ '+Math.round(n).toLocaleString('pt-BR');}};
+/* Estimativas por meio de transporte (valores de partida; a pessoa confirma o real):
+   a pé ¥0 · trem: por distância · ônibus urbano ~¥230 (Quioto) e rodoviário ~¥12/km · táxi ~¥500 + ¥390/km (Tóquio) · avião ~¥20.000 + ¥5/km */
+var MODOS={pe:'🚶 A pé',trem:'🚆 Trem',onibus:'🚌 Ônibus',taxi:'🚕 Táxi',aviao:'✈️ Avião'};
+function modoPadrao(d){ if(d<=1.2)return 'pe'; if(d>700)return 'aviao'; return 'trem'; }
+function estModo(m,d){
+  var real=d*1.3, r;
+  if(m==='pe') return {min:Math.round(real/4.8*60),fare:0,nota:'Estimativa de 4,8 km/h.'};
+  if(m==='trem'){ var t=d<=LIM_CIDADE?estima(d).trans:estimaLonga(d).min; var f=estTarifa(d); if(d<=LIM_CIDADE)f=Math.max(f,170);
+    return {min:t,fare:f,nota:d>100?'Trem rápido (ex.: trem-bala): conta espera e acesso às estações.':'Inclui uns 10 min de espera.'}; }
+  if(m==='onibus'){ if(d<=30){ return {min:Math.round(10+real/18*60),fare:Math.round((230+Math.max(0,real-6)*30)/10)*10,nota:'Ônibus urbano: base de ¥ 230; em algumas cidades o preço sobe com a distância.'}; }
+    return {min:Math.round(20+real/60*60),fare:Math.max(1500,Math.round(real*12/100)*100),nota:'Ônibus rodoviário: valor muito variável conforme a empresa e o horário.'}; }
+  if(m==='taxi'){ var sp=d<=30?25:60; return {min:Math.round((d<=30?0:10)+real/sp*60),fare:Math.round((500+Math.max(0,real-1.1)*390)/10)*10,nota:'Táxi: bandeirada de ~¥ 500 e ~¥ 390 por km (Tóquio); fora de Tóquio costuma ser parecido.'}; }
+  return {min:Math.round(150+d/750*60),fare:Math.round((20000+5*d)/1000)*1000,nota:'Avião: inclui aeroporto; o preço varia muito conforme a data.'};
+}
+window.CalGeo={MODOS:MODOS,modoPadrao:modoPadrao,estModo:estModo,geocodificar:geocodificar,coordDe:coordDe,soLinkCurto:soLinkCurto,km:km,estima:estima,estimaLonga:estimaLonga,estTarifa:estTarifa,fmtMin:fmtMin,fmtKm:fmtKm,chave:chave,yen:function(n){return '¥ '+Math.round(n).toLocaleString('pt-BR');}};
 })();

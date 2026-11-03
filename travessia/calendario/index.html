@@ -269,6 +269,7 @@ function limpaOrc(o,r){
   if(!o||typeof o!=='object')return;
   var c=parseFloat(o.cot); if(isFinite(c)&&c>0&&c<1000)r.cot=c;
   var n=parseInt(o.pax,10); if(n>=1&&n<=20)r.pax=n;
+  if(o.m&&typeof o.m==='object'){r.m={};Object.keys(o.m).slice(0,600).forEach(function(k){if(k.length<=700&&/^(pe|trem|onibus|taxi|aviao)$/.test(o.m[k]))r.m[k]=o.m[k];});}
   var ps=parseFloat(o.passe); if(isFinite(ps)&&ps>0&&ps<=9999999)r.passe=Math.round(ps);
   if(o.t&&typeof o.t==='object')Object.keys(o.t).slice(0,600).forEach(function(k){
     var v=o.t[k]&&+o.t[k].v; if(k.length<=700&&isFinite(v)&&v>=0&&v<=99999999)r.t[k]={v:Math.round(v),c:1};});
@@ -399,13 +400,13 @@ function desenharAvisos(){
   var box=$('#avisos'); if(!box||!window.CalAvisos)return;
   var hoje=new Date().toISOString().slice(0,10);
   var lista=[],feitos=[];
-  S.ev.forEach(function(e){ if(e.data<hoje)return; var a=CalAvisos.para(e); if(!a)return; var st=CalAvisos.situacao(a); if(st.est==='passou')return;
+  S.ev.forEach(function(e){ if(e.data<hoje)return; var a=CalAvisos.para(e); if(!a)return; var st=CalAvisos.situacao(a);
     (S.ok&&S.ok[e.id]?feitos:lista).push({e:e,a:a,st:st}); });
   lista.sort(function(x,y){return x.a.abre-y.a.abre;});
   if(!lista.length&&!feitos.length){box.innerHTML='';return;}
-  function chip(st){return st.est==='aberto'?'<span class="av-c agora">já abriu: compre agora</span>':st.est==='hoje'?'<span class="av-c agora">abre hoje</span>':st.est==='logo'?'<span class="av-c agora">faltam '+st.dias+(st.dias===1?' dia':' dias')+'</span>':'<span class="av-c">faltam '+st.dias+' dias</span>';}
+  function chip(st){return st.est==='passou'?'<span class="av-c agora">inscrição encerrada: procure sobras</span>':st.est==='aberto'?'<span class="av-c agora">já abriu: compre agora</span>':st.est==='hoje'?'<span class="av-c agora">abre hoje</span>':st.est==='logo'?'<span class="av-c agora">faltam '+st.dias+(st.dias===1?' dia':' dias')+'</span>':'<span class="av-c">faltam '+st.dias+' dias</span>';}
   var urg=lista.filter(function(x){return x.st.est!=='futuro';}).length;
-  box.innerHTML='<details class="av"'+(urg?' open':'')+'><summary>⏰ Compre com antecedência'+(lista.length?' · '+lista.length+(lista.length===1?' aviso':' avisos'):'')+(urg?' · <b style="color:var(--red)">'+urg+' pedem atenção</b>':'')+'</summary><div class="av-lista">'+
+  box.innerHTML='<details class="av"'+(urg?' open':'')+'><summary>⏰ Compre com antecedência'+(lista.length?' · '+lista.length+(lista.length===1?' aviso':' avisos'):'')+(urg?' · <b style="color:var(--red)">'+urg+(urg===1?' pede atenção':' pedem atenção')+'</b>':'')+'</summary><div class="av-lista">'+
     lista.map(function(x){return '<div class="av-i'+(x.st.est==='futuro'?'':' urg')+'"><b>'+esc(x.a.nome)+'</b> <span class="nota">· '+esc(x.e.titulo)+' · '+esc(curto(x.e.data))+'</span> '+chip(x.st)+'<p>'+x.a.texto+'</p><div class="av-b">'+
       (x.a.url?'<a class="btn sm" href="'+esc(x.a.url)+'" target="_blank" rel="noopener">Abrir o site de venda</a> ':'')+'<button type="button" class="btn sm" data-ok="'+esc(x.e.id)+'">✓ Já comprei</button></div></div>';}).join('')+
     (feitos.length?'<p class="nota">Já resolvidos: '+feitos.map(function(x){return esc(x.e.titulo)+' <button type="button" class="lkb" data-undo="'+esc(x.e.id)+'">desfazer</button>';}).join(' · ')+'</p>':'')+'</div></details>';

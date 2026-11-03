@@ -33,7 +33,7 @@ var lugares={}, eventos=[];
 
 function localDe(v){v=String(v||'').trim(); return lugares[v]||v;}
 function kTar(a,b){return [G.chave(a),G.chave(b)].sort().join('>');}
-function rotaUrl(pa,pb){return 'https://www.google.com/maps/dir/?api=1&origin='+pa.lat+','+pa.lon+'&destination='+pb.lat+','+pb.lon+'&travelmode=transit';}
+function rotaUrl(pa,pb){return 'https://www.google.com/maps/dir/?api=1&origin='+pontoRota(pa)+'&destination='+pontoRota(pb)+'&travelmode=transit';}
 
 var seq=0;
 function calcula(){
@@ -54,22 +54,59 @@ function calcula(){
   }).catch(function(){ if(meu!==seq)return; vazio.textContent='Sem internet para procurar no mapa. Tente de novo.'; });
 }
 
+/* ---------- estações perto de cada ponto (OpenStreetMap / Overpass) ---------- */
+var EST_KEY='uniEstacoes1', estCache={}; try{estCache=JSON.parse(localStorage.getItem(EST_KEY)||'{}')||{};}catch(e){estCache={};}
+function estacaoPerto(pos){
+  var k=pos.lat.toFixed(3)+','+pos.lon.toFixed(3);
+  if(estCache.hasOwnProperty(k))return Promise.resolve(estCache[k]);
+  var q='[out:json][timeout:20];(node(around:1500,'+pos.lat+','+pos.lon+')[railway=station];node(around:1500,'+pos.lat+','+pos.lon+')[railway=halt];);out body 40;';
+  return fetch('https://overpass-api.de/api/interpreter',{method:'POST',headers:{'Content-Type':'application/x-www-form-urlencoded'},body:'data='+encodeURIComponent(q)})
+    .then(function(r){if(!r.ok)throw new Error('http');return r.json();})
+    .then(function(j){
+      var L=((j&&j.elements)||[]).filter(function(x){return x.tags&&(x.tags['name:pt']||x.tags['name:en']||x.tags.name);}).map(function(x){
+        return {nome:String(x.tags['name:pt']||x.tags['name:en']||x.tags.name).slice(0,80),lat:x.lat,lon:x.lon,m:Math.round(G.km(pos,{lat:x.lat,lon:x.lon})*1000)};});
+      L.sort(function(p,q){return p.m-q.m;});
+      var v=L[0]||null; estCache[k]=v; try{localStorage.setItem(EST_KEY,JSON.stringify(estCache));}catch(e){} return v;});
+}
+function pontoRota(p){return (+p.lat).toFixed(5)+','+(+p.lon).toFixed(5);}
+function rotaEntre(o,d){return 'https://www.google.com/maps/dir/?api=1&origin='+encodeURIComponent(pontoRota(o))+'&destination='+encodeURIComponent(pontoRota(d))+'&travelmode=transit';}
+
+function dataDoEvento(local){var k=G.chave(local),e=eventos.filter(function(x){return G.chave(x.local)===k;});return e.length?e[e.length-1].data:'';}
+
 function mostra(a,b,pa,pb){
-  var d=G.km(pa,pb), res=$('#res'), key=kTar(a,b), est=G.estTarifa(d), o=orc(), t=o.t[key], conf=!!t, v=conf?t.v:est, h='';
-  var tempos;
-  if(d<=30){ var e=G.estima(d); tempos=(e.pe<=120?'<div>🚶 a pé<b>'+G.fmtMin(e.pe)+'</b></div>':'')+'<div>🚆 trem / ônibus<b>'+G.fmtMin(e.trans)+'</b></div>'; }
-  else { var L=G.estimaLonga(d); tempos='<div>'+L.modo+'<b>'+G.fmtMin(L.min)+'</b></div>'; }
-  h+='<div class="km">'+G.fmtKm(d).replace(' km','')+' <small>km em linha reta</small></div><div class="tempos">'+tempos+'</div>'+
-    '<div class="preco"><label>Passagem (¥)<input id="pv" type="number" inputmode="numeric" min="0" step="10" value="'+v+'" class="'+(conf?'ok':'')+'"></label>'+
+  var d=G.km(pa,pb), res=$('#res'), rk=kTar(a,b), o=orc();
+  if(!o.m)o.m={};
+  var modo=o.m[rk]||G.modoPadrao(d), key=rk+'|'+modo, E=G.estModo(modo,d), t=o.t[key], conf=!!t, v=conf?t.v:E.fare, h='';
+  var chips=Object.keys(G.MODOS).map(function(m){return '<button type="button" class="md'+(m===modo?' on':'')+'" data-m="'+m+'" aria-pressed="'+(m===modo)+'">'+G.MODOS[m]+'</button>';}).join('');
+  h+='<div class="km">'+G.fmtKm(d).replace(' km','')+' <small>km em linha reta</small></div>'+
+    '<div class="modos" role="group" aria-label="Meio de transporte">'+chips+'</div>'+
+    '<div class="tempos"><div>'+G.MODOS[modo]+'<b>'+G.fmtMin(E.min)+'</b></div></div>'+
+    '<p class="nt">'+esc(E.nota)+'</p>'+
+    '<div id="av"></div>'+
+    '<div class="preco"><label>Custo (¥ por pessoa)<input id="pv" type="number" inputmode="numeric" min="0" step="10" value="'+v+'" class="'+(conf?'ok':'')+'"></label>'+
     '<label>Pessoas<input id="pp" type="number" min="1" max="20" value="'+o.pax+'" style="width:76px"></label>'+
     '<label>¥ 100 = R$<input id="pc" type="number" inputmode="decimal" min="0" step="0.01" value="'+(o.cot?(o.cot*100).toFixed(2):'')+'" placeholder="3,50" style="width:96px"></label></div>'+
     '<div class="preco"><span class="rs" id="tot"></span><span class="tg'+(conf?' ok':'')+'" id="tg">'+(conf?'✓ valor confirmado':'estimativa')+'</span>'+(conf?'<button type="button" class="btn sm" id="rev">↺ estimativa</button>':'')+'</div>'+
-    '<a class="btn pri" href="'+esc(rotaUrl(pa,pb))+'" target="_blank" rel="noopener" style="justify-self:start">🚆 Ver rota e preço</a>';
-  res.innerHTML=h; res.hidden=false; total(est);
-  $('#pv').onchange=function(){var x=Math.round(parseFloat(String(this.value).replace(',','.'))); if(isFinite(x)&&x>=0&&x<=99999999){ if(!(x===est&&!orc().t[key]))orc().t[key]={v:x,c:1}; grava(); mostra(a,b,pa,pb);} };
-  $('#pp').onchange=function(){var n=parseInt(this.value,10); if(n>=1&&n<=20){orc().pax=n;grava();total(est);} };
-  $('#pc').onchange=function(){var c=parseFloat(String(this.value).replace(',','.')); orc().cot=(isFinite(c)&&c>0&&c<100000)?c/100:''; grava(); total(est);};
+    '<div id="est" class="est">Procurando estações perto…</div>'+
+    '<div class="btns"><a class="btn pri" id="rt" href="'+esc(rotaUrl(pa,pb))+'" target="_blank" rel="noopener">🚆 Ver rota e preço</a></div>';
+  res.innerHTML=h; res.hidden=false; total(E.fare);
+  res.querySelector('.modos').onclick=function(ev){var bt=ev.target.closest('[data-m]'); if(!bt)return; orc().m[rk]=bt.dataset.m; grava(); mostra(a,b,pa,pb);};
+  $('#pv').onchange=function(){var x=Math.round(parseFloat(String(this.value).replace(',','.'))); if(isFinite(x)&&x>=0&&x<=99999999){ if(!(x===E.fare&&!orc().t[key]))orc().t[key]={v:x,c:1}; grava(); mostra(a,b,pa,pb);} };
+  $('#pp').onchange=function(){var n=parseInt(this.value,10); if(n>=1&&n<=20){orc().pax=n;grava();total(E.fare);} };
+  $('#pc').onchange=function(){var c=parseFloat(String(this.value).replace(',','.')); orc().cot=(isFinite(c)&&c>0&&c<100000)?c/100:''; grava(); total(E.fare);};
   if($('#rev'))$('#rev').onclick=function(){delete orc().t[key];grava();mostra(a,b,pa,pb);};
+  /* aviso de antecedência do trem-bala */
+  if(modo==='trem'&&d>100&&d<=700){
+    var dt=dataDoEvento(b)||dataDoEvento(a), av=(window.CalAvisos&&dt)?CalAvisos.para({data:dt,tipo:'transp',titulo:'Shinkansen'}):null;
+    $('#av').innerHTML='<div class="aviso">🚄 <b>Assento reservado no trem-bala:</b> '+(av?av.texto:'no balcão abre 1 mês antes, às 10h do Japão; pelo SmartEX dá para reservar antes.')+'</div>';
+  }
+  /* estações mais perto de cada ponto */
+  Promise.all([estacaoPerto(pa),estacaoPerto(pb)]).then(function(r){
+    if(!$('#est'))return; var ea=r[0], eb=r[1];
+    function lin(rot,e){return e?'🚉 '+rot+': <b>'+esc(e.nome)+'</b> · '+(e.m<1000?e.m+' m':(e.m/1000).toFixed(1).replace('.',',')+' km')+' a pé':'🚉 '+rot+': nenhuma estação em 1,5 km';}
+    $('#est').innerHTML=lin('Saindo de',ea)+'<br>'+lin('Chegando em',eb);
+    if(ea&&eb&&modo==='trem'){ $('#rt').href=rotaEntre(ea,eb); $('#rt').textContent='🚆 Rota de trem: '+ea.nome+' → '+eb.nome; }
+  }).catch(function(){ if($('#est'))$('#est').textContent='Não consegui procurar as estações agora (sem internet ou serviço fora do ar). A rota abre pelos endereços.'; });
   function total(es){
     var oo=orc(), vv=parseFloat($('#pv').value); if(!isFinite(vv))vv=es; var tp=vv*oo.pax;
     $('#tot').textContent=G.yen(tp)+(oo.pax>1?' ('+oo.pax+' pessoas)':'')+(oo.cot?' · ≈ R$ '+(tp*oo.cot).toLocaleString('pt-BR',{minimumFractionDigits:2,maximumFractionDigits:2}):'');
