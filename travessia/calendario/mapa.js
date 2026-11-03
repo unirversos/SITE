@@ -44,15 +44,55 @@ function diasComLocal(S){var o={};S.ev.forEach(function(e){if(!e.local)return;va
 function regiaoDe(a){a=a||{};var r=a.state||a.province||a.city||a.town||a.county||'';
   return String(r).replace(/\s*(Prefecture|prefecture|Prefeitura|Province|Província|-ken|-to)$/,'').trim().slice(0,40);}
 
+/* ---------- coordenadas que já vêm dentro do texto do Local (cópias do Google Maps) ---------- */
+function okLL(la,lo){return isFinite(la)&&isFinite(lo)&&Math.abs(la)<=90&&Math.abs(lo)<=180&&!(la===0&&lo===0);}
+function num(x){return parseFloat(String(x).replace(',','.'));}
+function coordDe(t){
+  t=String(t||''); var m;
+  if((m=t.match(/@(-?\d{1,2}\.\d+),(-?\d{1,3}\.\d+)/))||(m=t.match(/!3d(-?\d{1,2}\.\d+)!4d(-?\d{1,3}\.\d+)/))||(m=t.match(/[?&](?:q|ll|query)=(-?\d{1,2}\.\d+)(?:,|%2C)(-?\d{1,3}\.\d+)/))){
+    if(okLL(+m[1],+m[2]))return {lat:+m[1],lon:+m[2],nome:'coordenadas do link',reg:''}; }
+  /* graus e minutos decimais: N 035° 30.492, E 138° 44.308 */
+  if((m=t.match(/([NS])\s*0*(\d{1,2})\s*°\s*(\d{1,2}(?:[.,]\d+)?)[^EW\d]{0,6}([EW])\s*0*(\d{1,3})\s*°\s*(\d{1,2}(?:[.,]\d+)?)/i))){
+    var la=(+m[2]+num(m[3])/60)*(/s/i.test(m[1])?-1:1), lo=(+m[5]+num(m[6])/60)*(/w/i.test(m[4])?-1:1);
+    if(okLL(la,lo))return {lat:la,lon:lo,nome:'coordenadas do texto',reg:''}; }
+  /* graus, minutos e segundos: 35°30'29.5"N 138°44'18.5"E */
+  if((m=t.match(/(\d{1,3})°\s*(\d{1,2})['′]\s*(\d{1,2}(?:[.,]\d+)?)["″]?\s*([NS])[\s,]*(\d{1,3})°\s*(\d{1,2})['′]\s*(\d{1,2}(?:[.,]\d+)?)["″]?\s*([EW])/i))){
+    var a=(+m[1]+ +m[2]/60+num(m[3])/3600)*(/s/i.test(m[4])?-1:1), b=(+m[5]+ +m[6]/60+num(m[7])/3600)*(/w/i.test(m[8])?-1:1);
+    if(okLL(a,b))return {lat:a,lon:b,nome:'coordenadas do texto',reg:''}; }
+  /* decimais soltos: 35.5082, 138.7385 */
+  if((m=t.match(/(-?\d{1,2}\.\d{3,})\s*,\s*(-?\d{1,3}\.\d{3,})/))&&okLL(+m[1],+m[2]))return {lat:+m[1],lon:+m[2],nome:'coordenadas do texto',reg:''};
+  return null;
+}
+/* texto para procurar: tira links e a parte de telefone/coordenadas/detalhes */
+function limpaQ(q){
+  var t=String(q||'').replace(/https?:\/\/\S+/g,' ').replace(/\s+(Telefone|Coordenadas|Detalhes)\b.*$/i,'').replace(/\s+/g,' ').trim();
+  return t.slice(0,180);
+}
+function soLinkCurto(q){return /^\s*https?:\/\/(maps\.app\.goo\.gl|goo\.gl\/maps|g\.co\/)\S*\s*$/i.test(String(q||''));}
+/* nome da região quando só temos coordenadas (busca reversa, 1 por região) */
+function nomeReverso(pos){
+  var k='rev:'+pos.lat.toFixed(1)+','+pos.lon.toFixed(1);
+  if(cache.hasOwnProperty(k))return Promise.resolve(cache[k]);
+  var p=fila.then(function(){var esp=Math.max(0,1100-(Date.now()-ultimo));
+    return new Promise(function(r){setTimeout(r,esp);}).then(function(){ultimo=Date.now();
+      return fetch('https://nominatim.openstreetmap.org/reverse?format=json&zoom=8&addressdetails=1&accept-language=pt&lat='+pos.lat+'&lon='+pos.lon);})
+    .then(function(r){if(!r.ok)throw new Error('http');return r.json();})
+    .then(function(j){var n=regiaoDe(j&&j.address); cache[k]=n; salvaCache(); return n;});});
+  fila=p.catch(function(){}); return p;
+}
+
 /* ---------- geocodificação (OpenStreetMap Nominatim, 1 pedido por segundo, com cache) ---------- */
 var fila=Promise.resolve(), ultimo=0;
 function geocodificar(q){
   var k=chave(q); if(cache.hasOwnProperty(k))return Promise.resolve(cache[k]);
+  var cd=coordDe(q); if(cd)return Promise.resolve(cd);
+  if(soLinkCurto(q))return Promise.resolve(null);
+  var qq=limpaQ(q); if(!qq)return Promise.resolve(null);
   var p=fila.then(function(){
     var esp=Math.max(0,1100-(Date.now()-ultimo));
     return new Promise(function(r){setTimeout(r,esp);}).then(function(){
       ultimo=Date.now();
-      return fetch('https://nominatim.openstreetmap.org/search?format=json&limit=1&addressdetails=1&accept-language=pt&q='+encodeURIComponent(q),{headers:{'Accept':'application/json'}});
+      return fetch('https://nominatim.openstreetmap.org/search?format=json&limit=1&addressdetails=1&accept-language=pt&q='+encodeURIComponent(qq),{headers:{'Accept':'application/json'}});
     }).then(function(r){if(!r.ok)throw new Error('http '+r.status);return r.json();})
     .then(function(j){var v=(j&&j[0])?{lat:+j[0].lat,lon:+j[0].lon,nome:String(j[0].display_name||'').slice(0,160),reg:regiaoDe(j[0].address)}:null;
       if(v&&(isNaN(v.lat)||isNaN(v.lon)))v=null; cache[k]=v; salvaCache(); return v;});
@@ -150,7 +190,10 @@ function agrupaRegioes(seq){
     var k=-1,i; for(i=0;i<regs.length;i++){ if(km(regs[i].ref,x.pos)<=LIM_CIDADE){k=i;break;} }
     if(k<0){regs.push({ref:x.pos,nomes:{},pts:[]});k=regs.length-1;}
     x.reg=k; regs[k].pts.push(x); if(x.pos.reg)regs[k].nomes[x.pos.reg]=(regs[k].nomes[x.pos.reg]||0)+1; });
-  regs.forEach(function(r,i){var best='',n=0;for(var k in r.nomes){if(r.nomes[k]>n){n=r.nomes[k];best=k;}} r.nome=best||('Região '+(i+1));});
+  regs.forEach(function(r,i){var best='',n=0;for(var k in r.nomes){if(r.nomes[k]>n){n=r.nomes[k];best=k;}}
+    if(!best){var ck='rev:'+r.ref.lat.toFixed(1)+','+r.ref.lon.toFixed(1); if(cache[ck])best=cache[ck];
+      else if(!r.pedido){r.pedido=1; nomeReverso(r.ref).then(function(){ if(dia==='all')pintaViagem(); }).catch(function(){});}}
+    r.nome=best||('Região '+(i+1));});
   return regs;
 }
 function pintaViagem(){
@@ -190,7 +233,7 @@ function pintaViagem(){
   var itensCont=[]; itensU.forEach(function(it){for(var n=0;n<cont[it.key];n++)itensCont.push(it);});
   if(itensCont.length){ h=painelOrc(itensCont,'Orçamento das passagens da viagem toda')+h;
     if(unicos.length)h+='<details class="mais"><summary>Trechos dentro das cidades ('+unicos.length+')</summary><div style="display:grid;gap:10px;margin-top:8px">'+unicos.map(function(g){return '<div><b>'+esc(g.a.rotulo)+' → '+esc(g.b.rotulo)+'</b> <span class="nota">('+fmtKm(km(g.a.pos,g.b.pos))+(cont[g.it.key]>1?' · '+cont[g.it.key]+'×':'')+')</span>'+campoPreco(g.it)+'</div>';}).join('')+'</div></details>'; }
-  if(faltam)h+='<p class="nota"><b>'+faltam+' lugar'+(faltam>1?'es':'')+' não achado'+(faltam>1?'s':'')+' no mapa</b> e ficou'+(faltam>1?'ram':'')+' de fora da conta. Veja o dia a dia para marcar no mapa: '+seq.filter(function(x){return !x.pos&&!x.buscando;}).map(function(x){return esc(x.local);}).join('; ')+'.</p>';
+  if(faltam)h+='<p class="nota"><b>'+faltam+' lugar'+(faltam>1?'es':'')+' não achado'+(faltam>1?'s':'')+' no mapa</b> e ficou'+(faltam>1?'ram':'')+' de fora da conta. Veja o dia a dia para marcar no mapa: '+seq.filter(function(x){return !x.pos&&!x.buscando;}).map(function(x){return esc(x.rotulo)+(soLinkCurto(x.local)?' (link curto do Google Maps: abra o link, copie o endereço ou as coordenadas e cole no campo Local)':'');}).join('; ')+'.</p>';
   el.innerHTML=h;
   ligaOrc(function(){salvaOrc();pintaViagem();});
   desenhaViagem(seq,legs,regs);
@@ -216,6 +259,7 @@ function carregaViagem(){
   var seq=++geoSeq;
   viagem.seq.forEach(function(x){var k=chave(x.local);
     if(cache.hasOwnProperty(k)){x.pos=cache[k];return;}
+    var cd=coordDe(x.local); if(cd){x.pos=cd;return;}
     x.buscando=true;
     geocodificar(x.local).then(function(v){ if(seq!==geoSeq)return; x.pos=v;x.buscando=false;pintaViagem(); }).catch(function(){ if(seq!==geoSeq)return; x.buscando=false;pintaViagem(); });
   });
@@ -253,6 +297,7 @@ function resolve(){
   var seq=++geoSeq;
   paradas.forEach(function(p){var k=chave(p.local);
     if(cache.hasOwnProperty(k)){p.pos=cache[k];return;}
+    var cd=coordDe(p.local); if(cd){p.pos=cd;return;}
     p.buscando=true;
     geocodificar(p.local).then(function(v){ if(seq!==geoSeq)return; p.pos=v; p.buscando=false; pinta(); }).catch(function(){ if(seq!==geoSeq)return; p.buscando=false; pinta(); });
   });
