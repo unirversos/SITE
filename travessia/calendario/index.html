@@ -92,6 +92,11 @@ h1 em{font-style:normal;color:var(--pink)}
 .lista h3{font-family:var(--f-display);font-weight:800;font-size:19px;margin:0 0 6px}
 .lista .grp{display:grid;gap:8px}
 .vazio{border:1.5px dashed var(--line);border-radius:16px;padding:22px;text-align:center;color:var(--muted)}
+.lig{font-size:13px;color:var(--muted);min-height:6px;padding:0 6px 0 18px;line-height:1.4}
+.lig a{color:inherit;text-decoration:underline}
+.otim{border:1.5px solid var(--line);border-left:6px solid #5f7a5e;border-radius:14px;background:#f3f7f1;padding:10px 14px;font-size:14px;line-height:1.5;margin:8px 0}
+.otim b{display:block;margin-bottom:2px}
+.otim ol{margin:6px 0 4px 20px;padding:0}
 .evc{border:1.5px solid var(--line);border-left:6px solid var(--c);border-radius:14px;background:#fff;padding:10px 14px;display:grid;gap:4px}
 .evc h4{font-family:var(--f-display);font-weight:700;font-size:18px;line-height:1.25;margin:0}
 .evc .hora{font-size:13px;font-weight:700;color:var(--muted)}
@@ -225,6 +230,7 @@ footer a{color:var(--pink);text-decoration:none;margin-right:12px}
 
 <script src="./leitor.js?v=2"></script>
 <script src="../agendamentos/regras.js?v=1"></script>
+<script src="./geo.js?v=2"></script>
 <script src="./avisos.js?v=2"></script>
 <script>
 (function(){
@@ -461,8 +467,64 @@ function desenharLista(){
   if(!ks.length){$('#vLista').innerHTML='<div class="vazio">Nada anotado ainda. Clique em <b>Novo evento</b> ou em um dia do calendário.</div>';return;}
   $('#vLista').innerHTML=ks.map(function(d){
     var evs=S.ev.filter(function(e){return e.data===d;}).sort(function(a,b){return (a.hora||'')<(b.hora||'')?-1:(a.hora||'')>(b.hora||'')?1:0;});
-    return '<section class="grp"><h3>'+esc(longo(d))+'</h3>'+evs.map(cartao).join('')+'</section>';
+    return '<section class="grp"><h3>'+esc(longo(d))+'</h3>'+comLig(evs)+'</section>';
   }).join('');
+  preencheLig($('#vLista'),false);
+}
+/* ---------- tempo entre paradas do dia e sugestão de ordem ---------- */
+function comLig(evs){
+  return evs.map(function(e,i){
+    var n=evs[i+1], lig='';
+    if(n&&e.local&&n.local&&window.CalGeo&&CalGeo.chave(e.local)!==CalGeo.chave(n.local))lig='<div class="lig" data-a="'+esc(e.id)+'" data-b="'+esc(n.id)+'"></div>';
+    return cartao(e)+lig;
+  }).join('');
+}
+var cadeia=Promise.resolve(), obsLig=null;
+function localDoEv(id){var e=S.ev.filter(function(x){return x.id===id;})[0];return e?e.local:'';}
+function umaLig(el){
+  var a=localDoEv(el.dataset.a), b=localDoEv(el.dataset.b);
+  return Promise.all([CalGeo.geocodificar(a),CalGeo.geocodificar(b)]).then(function(r){
+    if(!r[0]||!r[1]||!el.isConnected)return;
+    var d=CalGeo.km(r[0],r[1]); if(d<0.05)return;
+    var rk=[CalGeo.chave(a),CalGeo.chave(b)].sort().join('>'), m=(S.orc&&S.orc.m&&S.orc.m[rk])||CalGeo.modoPadrao(d), E=CalGeo.estModo(m,d);
+    var de=(S.ev.filter(function(x){return x.id===el.dataset.a;})[0]||{}).titulo||'', pa=(S.ev.filter(function(x){return x.id===el.dataset.b;})[0]||{}).titulo||'';
+    el.innerHTML='↓ '+CalGeo.MODOS[m]+' · ~'+CalGeo.fmtMin(E.min)+' · '+CalGeo.fmtKm(d)+' · <a href="../deslocamento/?de='+encodeURIComponent(de.slice(0,120))+'&para='+encodeURIComponent(pa.slice(0,120))+'">ajustar no De → Para</a>';
+  }).catch(function(){});
+}
+function preencheLig(root,ja){
+  if(!window.CalGeo||!root)return;
+  var els=[].slice.call(root.querySelectorAll('.lig[data-a]'));
+  if(!ja&&'IntersectionObserver' in window){
+    if(obsLig)obsLig.disconnect();
+    obsLig=new IntersectionObserver(function(es){es.forEach(function(x){if(x.isIntersecting){obsLig.unobserve(x.target);cadeia=cadeia.then(function(){return umaLig(x.target);});}});});
+    els.forEach(function(el){obsLig.observe(el);});
+  }else els.forEach(function(el){cadeia=cadeia.then(function(){return umaLig(el);});});
+}
+function sugereOrdem(evs){
+  var box=$('#otim'); if(!box||!window.CalGeo)return;
+  var it=evs.filter(function(e){return e.local;}); if(it.length<3||it.length>12)return;
+  var dia=diaAberto;
+  Promise.all(it.map(function(e){return CalGeo.geocodificar(e.local);})).then(function(pos){
+    if(diaAberto!==dia||!box.isConnected)return;
+    var P=[]; it.forEach(function(e,i){if(pos[i])P.push({e:e,p:pos[i]});});
+    if(P.length<3)return;
+    function D(a,b){return CalGeo.km(a.p,b.p);}
+    function tot(o){var t=0;for(var i=0;i<o.length-1;i++)t+=D(o[i],o[i+1]);return t;}
+    function minutos(o){var t=0;for(var i=0;i<o.length-1;i++){var d=D(o[i],o[i+1]);if(d>=0.05)t+=CalGeo.estModo(CalGeo.modoPadrao(d),d).min;}return t;}
+    var atual=P.slice(), melhor=atual.slice(), mk=tot(atual);
+    if(P.length<=8){
+      (function perm(pre,resto){ if(!resto.length){var k=tot(pre);if(k<mk-1e-9){mk=k;melhor=pre.slice();}return;}
+        for(var i=0;i<resto.length;i++){var r=resto.slice();var x=r.splice(i,1)[0];perm(pre.concat([x]),r);} })([P[0]],P.slice(1));
+    }else{
+      var rest=P.slice(1), cur=[P[0]];
+      while(rest.length){var bi=0,bd=1e9;rest.forEach(function(x,i){var d=D(cur[cur.length-1],x);if(d<bd){bd=d;bi=i;}});cur.push(rest.splice(bi,1)[0]);}
+      if(tot(cur)<mk){mk=tot(cur);melhor=cur;}
+    }
+    var ka=tot(atual), poupa=ka-mk;
+    if(poupa<1||poupa<ka*0.1){ box.innerHTML='<div class="otim"><b>✓ A ordem dos lugares já está boa</b>Não achei um jeito bem mais curto de visitar esses pontos.</div>'; return; }
+    var dm=minutos(atual)-minutos(melhor);
+    box.innerHTML='<div class="otim"><b>💡 Dá para encurtar o dia</b>Ordem sugerida (começando em “'+esc(melhor[0].e.titulo)+'”):<ol>'+melhor.map(function(x){return '<li>'+esc(x.e.titulo)+'</li>';}).join('')+'</ol>De '+CalGeo.fmtKm(ka)+' para '+CalGeo.fmtKm(mk)+' em linha reta'+(dm>0?' (cerca de '+CalGeo.fmtMin(dm)+' a menos de deslocamento)':'')+'. É só uma sugestão: não mudei seus horários, e se algo tem hora marcada, ele manda na ordem.</div>';
+  }).catch(function(){});
 }
 function trocarVisao(v){
   visao=v;
@@ -491,8 +553,9 @@ function abrirDia(d){
   var evs=doDia(d);
   abrir('<div class="dlg-top"><h2 id="dlgT">'+esc(longo(d))+'</h2><button class="btn sm" type="button" data-act="fechar" aria-label="Fechar">✕</button></div>'+
     (d>=S.ini&&d<=S.fim?'<p class="nota">Dia '+(diff(S.ini,d)+1)+' da viagem</p>':'<p class="nota">Fora das datas da viagem</p>')+
-    (evs.length?evs.map(cartao).join(''):'<div class="vazio">Nenhum evento neste dia.</div>')+
+    (evs.length?comLig(evs):'<div class="vazio">Nenhum evento neste dia.</div>')+'<div id="otim"></div>'+
     '<div class="barra"><button class="btn pri" type="button" data-act="novo" data-d="'+d+'">➕ Novo evento neste dia</button></div>');
+  preencheLig(dlgIn,true); sugereOrdem(evs);
 }
 function formEvento(e,dataPadrao,topo){
   var novo=!e||!e.id;
