@@ -357,11 +357,11 @@ function compactaLocal(t){
 }
 function estadoLocal(t){
   t=String(t||'').trim();
-  if(!t)return '⚠ Sem Local, não calculo deslocamento nem passagens. Cole o link do Google Maps ou escreva o endereço.';
+  if(!t)return '⚠ Sem Local, não calculo deslocamento nem passagens. Escreva o endereço à mão ou cole o link do Google Maps.';
   if(!window.CalGeo)return '';
   if(CalGeo.coordDe(t))return '✓ Localização exata reconhecida. Já dá para calcular o deslocamento.';
   if(CalGeo.soLinkCurto(t))return '⚠ Esse link curto (maps.app.goo.gl) não dá para ler aqui. No computador, abra o lugar no Google Maps e copie o link da barra de endereços (tem @latitude,longitude). No celular, toque e segure o ponto e copie as coordenadas.';
-  return 'ℹ Vou procurar pelo nome ou endereço no mapa (menos exato que o link do Google Maps).';
+  return '⚠ Localização escrita à mão: vou procurar no mapa e calcular com ela, mas confira o ponto achado. Não é tão exata quanto o link do Google Maps.';
 }
 
 /* ---------- Google Agenda e .ics ---------- */
@@ -539,9 +539,13 @@ function umaLig(el){
     var rk=[CalGeo.chave(a),CalGeo.chave(b)].sort().join('>'), m=(S.orc&&S.orc.m&&S.orc.m[rk])||CalGeo.modoPadrao(d), E=CalGeo.estModo(m,d);
     var ea=S.ev.filter(function(x){return x.id===el.dataset.a;})[0]||{}, eb=S.ev.filter(function(x){return x.id===el.dataset.b;})[0]||{};
     var de=ea.titulo||'', pa=eb.titulo||'';
+    var manual=function(x){return !/^coordenadas/.test(x.nome||'');}, aviso='';
+    if(manual(r[0])||manual(r[1])){
+      var q=[]; if(manual(r[0]))q.push('“'+de+'” (achei: '+String(r[0].nome).split(',').slice(0,3).join(',')+')'); if(manual(r[1]))q.push('“'+pa+'” (achei: '+String(r[1].nome).split(',').slice(0,3).join(',')+')');
+      aviso='<br><small>⚠ Confira: '+esc(q.join(' e '))+' foi localizado pelo texto escrito à mão. Não confie 100% neste tempo; para ficar exato, cole o link do Google Maps no Local.</small>'; }
     var longo=d>30&&window.CalPas&&(m==='trem'||m==='aviao'), extra='';
     if(longo)extra=CalPas.jaSalvo(S,ea,eb)?' · ✓ trecho nas Passagens':' <button type="button" class="btn sm" data-act="trecho" data-a="'+esc(ea.id)+'" data-b="'+esc(eb.id)+'">🎫 Salvar este trecho nas Passagens</button>';
-    el.innerHTML='↓ '+CalGeo.MODOS[m]+' · ~'+CalGeo.fmtMin(E.min)+' · '+CalGeo.fmtKm(d)+' · <a href="../deslocamento/?de='+encodeURIComponent(de.slice(0,120))+'&para='+encodeURIComponent(pa.slice(0,120))+'">ajustar no De → Para</a> · <a href="https://www.google.com/maps/dir/?api=1&origin='+r[0].lat+','+r[0].lon+'&destination='+r[1].lat+','+r[1].lon+'&travelmode=transit" target="_blank" rel="noopener">🗺️ rota no Google Maps</a>'+extra;
+    el.innerHTML='↓ '+CalGeo.MODOS[m]+' · ~'+CalGeo.fmtMin(E.min)+' · '+CalGeo.fmtKm(d)+' · <a href="../deslocamento/?de='+encodeURIComponent(de.slice(0,120))+'&para='+encodeURIComponent(pa.slice(0,120))+'">ajustar no De → Para</a> · <a href="https://www.google.com/maps/dir/?api=1&origin='+r[0].lat+','+r[0].lon+'&destination='+r[1].lat+','+r[1].lon+'&travelmode=transit" target="_blank" rel="noopener">🗺️ rota no Google Maps</a>'+extra+aviso;
   }).catch(function(){});
 }
 function preencheLig(root,ja){
@@ -573,10 +577,11 @@ function sugereOrdem(evs){
       while(rest.length){var bi=0,bd=1e9;rest.forEach(function(x,i){var d=D(cur[cur.length-1],x);if(d<bd){bd=d;bi=i;}});cur.push(rest.splice(bi,1)[0]);}
       if(tot(cur)<mk){mk=tot(cur);melhor=cur;}
     }
+    var temManual=P.some(function(x){return !/^coordenadas/.test(x.p.nome||'');}), avM=temManual?' <br>⚠ Alguns lugares foram localizados pelo texto escrito à mão: confira antes de confiar.':'';
     var ka=tot(atual), poupa=ka-mk;
     if(poupa<1||poupa<ka*0.1){ box.innerHTML='<div class="otim"><b>✓ A ordem dos lugares já está boa</b>Não achei um jeito bem mais curto de visitar esses pontos.</div>'; return; }
     var dm=minutos(atual)-minutos(melhor);
-    box.innerHTML='<div class="otim"><b>💡 Dá para encurtar o dia</b>Ordem sugerida (começando em “'+esc(melhor[0].e.titulo)+'”):<ol>'+melhor.map(function(x){return '<li>'+esc(x.e.titulo)+'</li>';}).join('')+'</ol>De '+CalGeo.fmtKm(ka)+' para '+CalGeo.fmtKm(mk)+' em linha reta'+(dm>0?' (cerca de '+CalGeo.fmtMin(dm)+' a menos de deslocamento)':'')+'. É só uma sugestão: não mudei seus horários, e se algo tem hora marcada, ele manda na ordem.</div>';
+    box.innerHTML='<div class="otim"><b>💡 Dá para encurtar o dia</b>Ordem sugerida (começando em “'+esc(melhor[0].e.titulo)+'”):<ol>'+melhor.map(function(x){return '<li>'+esc(x.e.titulo)+'</li>';}).join('')+'</ol>De '+CalGeo.fmtKm(ka)+' para '+CalGeo.fmtKm(mk)+' em linha reta'+(dm>0?' (cerca de '+CalGeo.fmtMin(dm)+' a menos de deslocamento)':'')+'. É só uma sugestão: não mudei seus horários, e se algo tem hora marcada, ele manda na ordem.'+avM+'</div>';
   }).catch(function(){});
 }
 function salvaTrecho(ida,idb){
@@ -646,7 +651,11 @@ function formEvento(e,dataPadrao,topo){
   var f=$('#fEv');
   (function(){var li=f.querySelector('[name=local]'), st=$('#locSt');
     function mostra(){st.textContent=estadoLocal(li.value);}
-    li.addEventListener('input',mostra); li.addEventListener('change',function(){var c=compactaLocal(li.value); if(c!==li.value)li.value=c; mostra();}); mostra();})();
+    li.addEventListener('input',mostra); li.addEventListener('change',function(){var c=compactaLocal(li.value); if(c!==li.value)li.value=c; mostra();
+      var t=li.value.trim(); if(t&&window.CalGeo&&!CalGeo.coordDe(t)&&!CalGeo.soLinkCurto(t)){ var v=t;
+        st.textContent+=' Procurando no mapa…';
+        CalGeo.geocodificar(t).then(function(r){ if(li.value.trim()!==v)return;
+          st.textContent=r?'⚠ Localização escrita à mão. Achei: “'+r.nome+'”. Confira se é o lugar certo; se não for, escreva com a cidade ou cole o link do Google Maps.':'⚠ Não achei esse endereço no mapa. Escreva com a cidade, ou cole o link do Google Maps.'; }).catch(function(){}); } }); mostra();})();
   f.querySelector('[name=titulo]').focus();
   f.onsubmit=function(ev){
     ev.preventDefault();

@@ -84,6 +84,7 @@ function mostra(a,b,pa,pb){
     '<div class="modos" role="group" aria-label="Meio de transporte">'+chips+'</div>'+
     '<div class="tempos"><div>'+G.MODOS[modo]+'<b>'+G.fmtMin(E.min)+'</b></div></div>'+
     '<p class="nt">'+esc(E.nota)+'</p>'+
+    ((/^coordenadas/.test(pa.nome||'')&&/^coordenadas/.test(pb.nome||''))?'':'<p class="nt" style="color:#8a5a00">⚠ Confira as localizações: '+[[$('#de').value.trim(),pa],[$('#para').value.trim(),pb]].filter(function(x){return !/^coordenadas/.test(x[1].nome||'');}).map(function(x){return '“'+esc(x[0])+'” → achei “'+esc(String(x[1].nome).split(',').slice(0,3).join(','))+'”';}).join('; ')+'. Foram localizadas pelo texto escrito à mão; não confie 100%. Para ficar exato, use o link do Google Maps no Local do evento.</p>')+
     '<div id="av"></div>'+
     '<div class="preco"><label>Custo (¥ por pessoa)<input id="pv" type="number" inputmode="numeric" min="0" step="10" value="'+v+'" class="'+(conf?'ok':'')+'"></label>'+
     '<label>Pessoas<input id="pp" type="number" min="1" max="20" value="'+o.pax+'" style="width:76px"></label>'+
