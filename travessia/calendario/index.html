@@ -92,6 +92,21 @@ h1 em{font-style:normal;color:var(--pink)}
 .lista h3{font-family:var(--f-display);font-weight:800;font-size:19px;margin:0 0 6px}
 .lista .grp{display:grid;gap:8px}
 .vazio{border:1.5px dashed var(--line);border-radius:16px;padding:22px;text-align:center;color:var(--muted)}
+.pasp{border:1.5px solid var(--line);border-radius:14px;background:#fff;padding:10px 14px;margin:10px 0}
+.pasp summary{cursor:pointer;font-weight:700}
+.pasp .tots{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin:10px 0}
+.pasp .tots div{background:#f6f1ea;border-radius:10px;padding:8px 10px}
+.pasp .tots small{display:block;color:var(--muted);font-size:12px}
+.pasp .pas{border-top:1px solid var(--line);padding:10px 0;display:grid;gap:6px}
+.pasp .pas.comprado{opacity:.85}.pasp .pas.cancelado{opacity:.55;text-decoration:line-through}
+.pasp .ph{display:flex;justify-content:space-between;gap:8px;flex-wrap:wrap}
+.pasp .md2{font-size:13px;color:var(--muted)}
+.pasp .pr{display:flex;gap:10px;flex-wrap:wrap;align-items:end}
+.pasp .pr label{display:grid;gap:2px;font-size:12px;color:var(--muted)}
+.pasp .pr select,.pasp .pr input{font:inherit;font-size:14px;padding:6px 8px;border:1.5px solid var(--line);border-radius:8px}
+.pasp .aviso{background:#fff7e0;border-radius:8px;padding:6px 10px;font-size:13px}
+.pasp .onde{font-size:13px}.pasp .onde small{display:block;color:var(--muted);margin-top:2px}
+.lig .btn{margin-left:6px}
 .lig{font-size:13px;color:var(--muted);min-height:6px;padding:0 6px 0 18px;line-height:1.4}
 .lig a{color:inherit;text-decoration:underline}
 .otim{border:1.5px solid var(--line);border-left:6px solid #5f7a5e;border-radius:14px;background:#f3f7f1;padding:10px 14px;font-size:14px;line-height:1.5;margin:8px 0}
@@ -182,6 +197,7 @@ footer a{color:var(--pink);text-decoration:none;margin-right:12px}
     <div class="wrap" style="gap:14px">
       <div class="faixa no-print"><span><b id="fTitulo"></b> <span id="fDatas"></span></span><button class="btn sm" type="button" id="bAjustar">✏️ Ajustar datas</button></div>
       <p class="nota no-print" id="nuvem" role="status"></p>
+      <div id="passagensPainel" class="no-print"></div>
       <div id="avisos" class="no-print"></div>
 
       <div class="barra no-print">
@@ -232,6 +248,7 @@ footer a{color:var(--pink);text-decoration:none;margin-right:12px}
 <script src="../agendamentos/regras.js?v=1"></script>
 <script src="./geo.js?v=2"></script>
 <script src="./avisos.js?v=2"></script>
+<script src="./passagens.js?v=1"></script>
 <script>
 (function(){
 'use strict';
@@ -410,8 +427,16 @@ function tudo(){
   var n=diff(S.ini,S.fim)+1;
   $('#fDatas').textContent='· '+curto(S.ini)+' a '+curto(S.fim)+' ('+n+' dias) · '+S.ev.length+' '+(S.ev.length===1?'evento':'eventos');
   $('#legenda').innerHTML=Object.keys(TIPOS).map(function(k){return '<span><i style="--c:'+TIPOS[k][2]+'"></i>'+TIPOS[k][0]+' '+TIPOS[k][1]+'</span>';}).join('');
-  desenharMes();desenharLista();desenharAvisos();
+  desenharMes();desenharLista();desenharAvisos();desenharPassagens();
 }
+/* ---------- painel de passagens ---------- */
+function desenharPassagens(){
+  var box=$('#passagensPainel'); if(!box||!window.CalPas||!window.CalGeo)return;
+  var ab=box.querySelector('details'), aberto=ab?ab.open:null;
+  box.innerHTML=CalPas.html(S,CalGeo);
+  if(aberto!==null&&box.querySelector('details'))box.querySelector('details').open=aberto;
+}
+if(window.CalPas&&window.CalGeo)CalPas.ligar($('#passagensPainel'),function(){return S;},CalGeo,function(){gravar();tudo();});
 /* ---------- avisos de antecedência ---------- */
 function desenharAvisos(){
   var box=$('#avisos'); if(!box||!window.CalAvisos)return;
@@ -467,11 +492,17 @@ function desenharLista(){
   if(!ks.length){$('#vLista').innerHTML='<div class="vazio">Nada anotado ainda. Clique em <b>Novo evento</b> ou em um dia do calendário.</div>';return;}
   $('#vLista').innerHTML=ks.map(function(d){
     var evs=S.ev.filter(function(e){return e.data===d;}).sort(function(a,b){return (a.hora||'')<(b.hora||'')?-1:(a.hora||'')>(b.hora||'')?1:0;});
-    return '<section class="grp"><h3>'+esc(longo(d))+'</h3>'+comLig(evs)+'</section>';
+    var prox=ks[ks.indexOf(d)+1], pe=prox?ordemDia(prox)[0]:null;
+    return '<section class="grp"><h3>'+esc(longo(d))+'</h3>'+comLig(evs)+ligHtml(evs[evs.length-1],pe)+'</section>';
   }).join('');
   preencheLig($('#vLista'),false);
 }
 /* ---------- tempo entre paradas do dia e sugestão de ordem ---------- */
+function ligHtml(a,b){
+  if(a&&b&&a.local&&b.local&&window.CalGeo&&CalGeo.chave(a.local)!==CalGeo.chave(b.local))return '<div class="lig" data-a="'+esc(a.id)+'" data-b="'+esc(b.id)+'"></div>';
+  return '';
+}
+function ordemDia(d){return S.ev.filter(function(e){return e.data===d;}).sort(function(a,b){return (a.hora||'')<(b.hora||'')?-1:(a.hora||'')>(b.hora||'')?1:0;});}
 function comLig(evs){
   return evs.map(function(e,i){
     var n=evs[i+1], lig='';
@@ -491,8 +522,11 @@ function umaLig(el){
       el.innerHTML='↓ sem tempo estimado: não achei '+esc(falta)+' no mapa (no Local, escreva o nome com a cidade, o endereço ou cole as coordenadas)'; return; }
     var d=CalGeo.km(r[0],r[1]); if(d<0.05)return;
     var rk=[CalGeo.chave(a),CalGeo.chave(b)].sort().join('>'), m=(S.orc&&S.orc.m&&S.orc.m[rk])||CalGeo.modoPadrao(d), E=CalGeo.estModo(m,d);
-    var de=(S.ev.filter(function(x){return x.id===el.dataset.a;})[0]||{}).titulo||'', pa=(S.ev.filter(function(x){return x.id===el.dataset.b;})[0]||{}).titulo||'';
-    el.innerHTML='↓ '+CalGeo.MODOS[m]+' · ~'+CalGeo.fmtMin(E.min)+' · '+CalGeo.fmtKm(d)+' · <a href="../deslocamento/?de='+encodeURIComponent(de.slice(0,120))+'&para='+encodeURIComponent(pa.slice(0,120))+'">ajustar no De → Para</a>';
+    var ea=S.ev.filter(function(x){return x.id===el.dataset.a;})[0]||{}, eb=S.ev.filter(function(x){return x.id===el.dataset.b;})[0]||{};
+    var de=ea.titulo||'', pa=eb.titulo||'';
+    var longo=d>30&&window.CalPas&&(m==='trem'||m==='aviao'), extra='';
+    if(longo)extra=CalPas.jaSalvo(S,ea,eb)?' · ✓ trecho nas Passagens':' <button type="button" class="btn sm" data-act="trecho" data-a="'+esc(ea.id)+'" data-b="'+esc(eb.id)+'">🎫 Salvar este trecho nas Passagens</button>';
+    el.innerHTML='↓ '+CalGeo.MODOS[m]+' · ~'+CalGeo.fmtMin(E.min)+' · '+CalGeo.fmtKm(d)+' · <a href="../deslocamento/?de='+encodeURIComponent(de.slice(0,120))+'&para='+encodeURIComponent(pa.slice(0,120))+'">ajustar no De → Para</a>'+extra;
   }).catch(function(){});
 }
 function preencheLig(root,ja){
@@ -530,6 +564,17 @@ function sugereOrdem(evs){
     box.innerHTML='<div class="otim"><b>💡 Dá para encurtar o dia</b>Ordem sugerida (começando em “'+esc(melhor[0].e.titulo)+'”):<ol>'+melhor.map(function(x){return '<li>'+esc(x.e.titulo)+'</li>';}).join('')+'</ol>De '+CalGeo.fmtKm(ka)+' para '+CalGeo.fmtKm(mk)+' em linha reta'+(dm>0?' (cerca de '+CalGeo.fmtMin(dm)+' a menos de deslocamento)':'')+'. É só uma sugestão: não mudei seus horários, e se algo tem hora marcada, ele manda na ordem.</div>';
   }).catch(function(){});
 }
+function salvaTrecho(ida,idb){
+  var ea=S.ev.filter(function(x){return x.id===ida;})[0], eb=S.ev.filter(function(x){return x.id===idb;})[0];
+  if(!ea||!eb||!window.CalPas||CalPas.jaSalvo(S,ea,eb))return;
+  Promise.all([CalGeo.geocodificar(ea.local),CalGeo.geocodificar(eb.local)]).then(function(r){
+    if(!r[0]||!r[1])return;
+    var d=CalGeo.km(r[0],r[1]), rk=[CalGeo.chave(ea.local),CalGeo.chave(eb.local)].sort().join('>'), m=(S.orc&&S.orc.m&&S.orc.m[rk])||CalGeo.modoPadrao(d), E=CalGeo.estModo(m,d);
+    var tv=S.orc&&S.orc.t&&S.orc.t[rk+'|'+m], v=(tv&&isFinite(+tv.v))?+tv.v:E.fare;
+    CalPas.nova(S,CalGeo,{de:ea.titulo.slice(0,120),para:eb.titulo.slice(0,120),deLocal:ea.local.slice(0,300),paraLocal:eb.local.slice(0,300),modo:m,rapido:m==='trem'&&d>100&&d<=700,data:eb.data,hora:'',v:Math.round(v),pax:(S.orc&&S.orc.pax)||1});
+    gravar(); tudo(); if(diaAberto&&dlg.open)abrirDia(diaAberto);
+  });
+}
 function trocarVisao(v){
   visao=v;
   $('#vMes').hidden=v!=='mes';$('#vLista').hidden=v!=='lista';
@@ -557,6 +602,7 @@ function abrirDia(d){
   var evs=doDia(d);
   abrir('<div class="dlg-top"><h2 id="dlgT">'+esc(longo(d))+'</h2><button class="btn sm" type="button" data-act="fechar" aria-label="Fechar">✕</button></div>'+
     (d>=S.ini&&d<=S.fim?'<p class="nota">Dia '+(diff(S.ini,d)+1)+' da viagem</p>':'<p class="nota">Fora das datas da viagem</p>')+
+    (function(){var ant=Object.keys(S.ev.reduce(function(o,e){if(e.data<d)o[e.data]=1;return o;},{})).sort().pop(), ult=ant?ordemDia(ant).pop():null; return (evs.length&&ult&&evs[0].local?'<p class="nota" style="margin:0">Vindo de “'+esc(ult.titulo)+'” ('+esc(curto(ant))+'):</p>'+ligHtml(ult,evs[0]):'');})()+
     (evs.length?comLig(evs):'<div class="vazio">Nenhum evento neste dia.</div>')+'<div id="otim"></div>'+
     '<div class="barra"><button class="btn pri" type="button" data-act="novo" data-d="'+d+'">➕ Novo evento neste dia</button></div>');
   preencheLig(dlgIn,true); sugereOrdem(evs);
@@ -607,6 +653,7 @@ function acaoEvento(ev){
   var b=ev.target.closest('[data-act]');if(!b)return;
   var a=b.dataset.act,id=b.dataset.id;
   if(a==='fechar'){fechar();return;}
+  if(a==='trecho'){ salvaTrecho(b.dataset.a,b.dataset.b); return; }
   if(a==='voltar'){if(voltarPara==='lista'||!diaAberto)fechar();else abrirDia(diaAberto);return;}
   if(a==='novo'){voltarPara='';formEvento(null,b.dataset.d);return;}
   if(a==='edit'){
