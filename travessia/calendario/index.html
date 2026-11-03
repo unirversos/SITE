@@ -107,6 +107,8 @@ h1 em{font-style:normal;color:var(--pink)}
 .pasp .aviso{background:#fff7e0;border-radius:8px;padding:6px 10px;font-size:13px}
 .pasp .onde{font-size:13px}.pasp .onde small{display:block;color:var(--muted);margin-top:2px}
 .lig .btn{margin-left:6px}
+.tgl{display:flex;gap:6px;align-items:center;flex-wrap:wrap;font-size:13px;color:var(--muted);margin:6px 0}
+.tgl .btn[aria-pressed=true]{background:var(--ink,#3a2a33);color:#fff}
 .trj{width:100%;height:72vh;border:0;border-radius:12px;background:#fff}
 .lig{font-size:13px;color:var(--muted);min-height:6px;padding:0 6px 0 18px;line-height:1.4}
 .lig a{color:inherit;text-decoration:underline}
@@ -506,10 +508,10 @@ function desenharLista(){
   S.ev.forEach(function(e){datas[e.data]=1;});
   var ks=Object.keys(datas).sort();
   if(!ks.length){$('#vLista').innerHTML='<div class="vazio">Nada anotado ainda. Clique em <b>Novo evento</b> ou em um dia do calendário.</div>';return;}
-  $('#vLista').innerHTML=ks.map(function(d){
+  $('#vLista').innerHTML=trajToggle()+ks.map(function(d){
     var evs=S.ev.filter(function(e){return e.data===d;}).sort(function(a,b){return (a.hora||'')<(b.hora||'')?-1:(a.hora||'')>(b.hora||'')?1:0;});
     var prox=ks[ks.indexOf(d)+1], pe=prox?ordemDia(prox)[0]:null;
-    return '<section class="grp"><h3>'+esc(longo(d))+'</h3>'+comLig(evs)+ligHtml(evs[evs.length-1],pe)+'</section>';
+    return '<section class="grp"><h3>'+esc(longo(d))+'</h3>'+comLig(evs,d)+ligHtml(evs[evs.length-1],pe)+'</section>';
   }).join('');
   preencheLig($('#vLista'),false);
 }
@@ -519,7 +521,21 @@ function ligHtml(a,b){
   return '';
 }
 function ordemDia(d){return S.ev.filter(function(e){return e.data===d;}).sort(function(a,b){return (a.hora||'')<(b.hora||'')?-1:(a.hora||'')>(b.hora||'')?1:0;});}
-function comLig(evs){
+var modoTraj='hosp'; try{modoTraj=localStorage.getItem('uniCalTraj')==='seq'?'seq':'hosp';}catch(e){}
+function hospDoDia(d){
+  var c=S.ev.filter(function(e){return e.tipo==='hosp'&&e.local&&e.data<=d&&d<=(e.dataFim||e.data);});
+  c.sort(function(a,b){return a.data<b.data?1:a.data>b.data?-1:0;}); return c[0]||null;
+}
+function trajToggle(){
+  function b(m,t){return '<button type="button" class="btn sm" data-act="traj" data-m="'+m+'" aria-pressed="'+(modoTraj===m)+'">'+t+'</button>';}
+  return '<div class="tgl" role="group" aria-label="Como calcular os trajetos do dia"><span>Trajetos:</span>'+b('hosp','🏨 Da hospedagem')+b('seq','↔ Evento a evento')+'</div>';
+}
+function comLig(evs,d){
+  var h=(modoTraj==='hosp'&&d&&window.CalGeo)?hospDoDia(d):null;
+  if(h)return evs.map(function(e){
+    var lig=(e.id!==h.id&&e.tipo!=='hosp'&&e.local&&CalGeo.chave(e.local)!==CalGeo.chave(h.local))?'<div class="lig" data-h="1" data-a="'+esc(h.id)+'" data-b="'+esc(e.id)+'"></div>':'';
+    return lig+cartao(e);
+  }).join('');
   return evs.map(function(e,i){
     var n=evs[i+1], lig='';
     if(n&&e.local&&n.local&&window.CalGeo&&CalGeo.chave(e.local)!==CalGeo.chave(n.local))lig='<div class="lig" data-a="'+esc(e.id)+'" data-b="'+esc(n.id)+'"></div>';
@@ -546,7 +562,7 @@ function umaLig(el){
       aviso='<br><small>⚠ Confira: '+esc(q.join(' e '))+' foi localizado pelo texto escrito à mão. Não confie 100% neste tempo; para ficar exato, cole o link do Google Maps no Local.</small>'; }
     var longo=d>30&&window.CalPas&&(m==='trem'||m==='aviao'), extra=' <button type="button" class="btn sm" data-act="trajeto" data-a="'+esc(ea.id)+'" data-b="'+esc(eb.id)+'">🧭 Definir trajeto</button>';
     if(longo)extra+=CalPas.jaSalvo(S,ea,eb)?' · ✓ trecho nas Passagens':' <button type="button" class="btn sm" data-act="trecho" data-a="'+esc(ea.id)+'" data-b="'+esc(eb.id)+'">🎫 Salvar este trecho nas Passagens</button>';
-    el.innerHTML='↓ '+CalGeo.MODOS[m]+' · ~'+CalGeo.fmtMin(E.min)+' · '+CalGeo.fmtKm(d)+' · <a href="../deslocamento/?de='+encodeURIComponent(de.slice(0,120))+'&para='+encodeURIComponent(pa.slice(0,120))+'">ajustar no De → Para</a> '+(m==='trem'?'':' · '+(function(){var L=CalGeo.linksRota(m,r[0],r[1],{de:de,para:pa,data:eb.data||''}).links[0];return '<a href="'+esc(L.u)+'" target="_blank" rel="noopener">'+esc(L.t)+'</a>';})())+extra+aviso;
+    el.innerHTML=(el.dataset.h?'🏨 da hospedagem “'+esc(de)+'”: ':'')+'↓ '+CalGeo.MODOS[m]+' · ~'+CalGeo.fmtMin(E.min)+' · '+CalGeo.fmtKm(d)+' · <a href="../deslocamento/?de='+encodeURIComponent(de.slice(0,120))+'&para='+encodeURIComponent(pa.slice(0,120))+'">ajustar no De → Para</a> '+(m==='trem'?'':' · '+(function(){var L=CalGeo.linksRota(m,r[0],r[1],{de:de,para:pa,data:eb.data||''}).links[0];return '<a href="'+esc(L.u)+'" target="_blank" rel="noopener">'+esc(L.t)+'</a>';})())+extra+aviso;
   }).catch(function(){});
 }
 function preencheLig(root,ja){
@@ -636,9 +652,9 @@ function abrirDia(d){
   diaAberto=d;
   var evs=doDia(d);
   abrir('<div class="dlg-top"><h2 id="dlgT">'+esc(longo(d))+'</h2><button class="btn sm" type="button" data-act="fechar" aria-label="Fechar">✕</button></div>'+
-    (d>=S.ini&&d<=S.fim?'<p class="nota">Dia '+(diff(S.ini,d)+1)+' da viagem</p>':'<p class="nota">Fora das datas da viagem</p>')+
+    (d>=S.ini&&d<=S.fim?'<p class="nota">Dia '+(diff(S.ini,d)+1)+' da viagem</p>':'<p class="nota">Fora das datas da viagem</p>')+(evs.length>1||(evs.length&&hospDoDia(d))?trajToggle():'')+
     (function(){var ant=Object.keys(S.ev.reduce(function(o,e){if(e.data<d)o[e.data]=1;return o;},{})).sort().pop(), ult=ant?ordemDia(ant).pop():null; return (evs.length&&ult&&evs[0].local?'<p class="nota" style="margin:0">Vindo de “'+esc(ult.titulo)+'” ('+esc(curto(ant))+'):</p>'+ligHtml(ult,evs[0]):'');})()+
-    (evs.length?comLig(evs):'<div class="vazio">Nenhum evento neste dia.</div>')+
+    (evs.length?comLig(evs,d):'<div class="vazio">Nenhum evento neste dia.</div>')+
     (function(){var dep=Object.keys(S.ev.reduce(function(o,e){if(e.data>d)o[e.data]=1;return o;},{})).sort()[0], prim=dep?ordemDia(dep)[0]:null, ult=evs[evs.length-1];
       return (prim&&ult&&ult.local&&prim.local?'<p class="nota" style="margin:8px 0 0">Próximo destino: “'+esc(prim.titulo)+'” ('+esc(curto(dep))+'):</p>'+ligHtml(ult,prim):'');})()+'<div id="otim"></div>'+
     '<div class="barra"><button class="btn pri" type="button" data-act="novo" data-d="'+d+'">➕ Novo evento neste dia</button></div>');
@@ -699,6 +715,7 @@ function acaoEvento(ev){
   if(trajetoAberto&&(a==='fechar'||a==='voltar')){recarregaDoDisco();}
   if(a==='fechar'){fechar();return;}
   if(a==='trajeto'){abrirTrajeto(b.dataset.a,b.dataset.b);return;}
+  if(a==='traj'){ modoTraj=b.dataset.m==='seq'?'seq':'hosp'; try{localStorage.setItem('uniCalTraj',modoTraj);}catch(e){} desenharLista(); if(dlg.open&&diaAberto)abrirDia(diaAberto); return; }
   if(a==='trecho'){ salvaTrecho(b.dataset.a,b.dataset.b); return; }
   if(a==='voltar'){if(voltarPara==='lista'||!diaAberto)fechar();else abrirDia(diaAberto);return;}
   if(a==='novo'){voltarPara='';formEvento(null,b.dataset.d);return;}
