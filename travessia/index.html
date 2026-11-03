@@ -60,6 +60,11 @@ h1 em{font-style:normal;color:var(--pink)}
 .ponte p{margin:0;color:var(--muted);font-size:15px}
 .ponte a{font-family:var(--f-display);font-weight:700;color:var(--pink);text-decoration:none;white-space:nowrap}
 .ponte a:hover{text-decoration:underline}
+.destaque{display:grid;gap:12px;justify-items:start;background:linear-gradient(135deg,#fff 0%,var(--gold-soft) 100%);border:2px solid var(--pink);border-radius:28px;padding:clamp(22px,4vw,38px);box-shadow:0 18px 40px -24px rgba(194,63,94,.55)}
+.destaque .tag{font-size:12px;letter-spacing:.16em;text-transform:uppercase;font-weight:700;color:#fff;background:var(--pink);border-radius:999px;padding:3px 12px}
+.destaque h2{font-family:var(--f-display);font-weight:800;font-size:clamp(28px,4.6vw,44px);line-height:1.1;margin:0;text-wrap:balance}
+.destaque p{margin:0;max-width:60ch;font-size:clamp(16px,2vw,18px)}
+.btn.big{font-size:clamp(19px,3vw,24px);padding:16px 34px;box-shadow:0 12px 26px -12px rgba(194,63,94,.8)}
 .comece{background:var(--gold-soft);border:1.5px solid color-mix(in srgb,var(--gold) 30%,var(--line));border-radius:var(--r);padding:22px;display:grid;gap:10px;justify-items:start}
 .comece p{margin:0;max-width:60ch}
 footer{display:flex;flex-wrap:wrap;gap:8px 20px;justify-content:space-between;color:var(--muted);font-size:14px;border-top:1.5px solid var(--line);padding-top:18px}
@@ -79,10 +84,17 @@ footer a{color:var(--pink);text-decoration:none;margin-right:12px}
     <p class="lede">Tudo para você planejar, reservar e viver o Japão com autonomia.</p>
     <p class="lede2">Vivi dez anos no Japão do lado de dentro. Aqui está o que eu gostaria que alguém tivesse me contado antes de embarcar: aberto, gratuito e sem cadastro.</p>
     <div class="acts">
-      <a class="btn pri" href="/travessia/agendamentos/">🗓️ Calcular meu cronograma</a>
+      <a class="btn pri" href="/travessia/calendario/">📅 Abrir o calendário da viagem</a>
       <a class="btn sec" href="#ferramentas">Ver as ferramentas ↓</a>
     </div>
   </header>
+
+  <section class="destaque" aria-labelledby="t-cal">
+    <span class="tag">O coração da travessia</span>
+    <h2 id="t-cal">Seu calendário da viagem, dia a dia</h2>
+    <p>Escolha o primeiro e o último dia, toque em qualquer dia e anote evento, horário, local e detalhes. Depois leve tudo para o Google Agenda. Os horários mudam sozinhos para o fuso do Japão a partir da sua chegada. Gratuito, sem cadastro.</p>
+    <a class="btn pri big" href="/travessia/calendario/">📅 Montar meu calendário</a>
+  </section>
 
   <section aria-labelledby="t-ferr" id="ferramentas">
     <div class="sec-h"><h2 id="t-ferr">As ferramentas da travessia</h2><p>Antes e durante a viagem. Tudo gratuito, use à vontade.</p></div>
@@ -98,12 +110,6 @@ footer a{color:var(--pink);text-decoration:none;margin-right:12px}
         <h3>Meus ingressos</h3>
         <p>O par do cronograma: marque em que pé está cada ingresso (inscrito na loteria, ganhou, já pagou, desistiu) e anote o prazo de pagamento, que é o que derruba quem ganha e esquece. Fica salvo no seu navegador.</p>
         <a class="go" href="/travessia/status/">Acompanhar meus ingressos →</a>
-      </article>
-      <article class="tool">
-        <span class="ico" aria-hidden="true">📅</span><span class="tag">Novo</span>
-        <h3>Calendário da viagem</h3>
-        <p>Escolha o primeiro e o último dia, clique em qualquer dia e anote eventos, horários, locais e detalhes, como no Google Agenda. Depois leve tudo para o Google Agenda, de uma vez ou um evento por vez. Fica salvo no seu navegador.</p>
-        <a class="go" href="/travessia/calendario/">Montar meu calendário →</a>
       </article>
       <article class="tool">
         <span class="ico" aria-hidden="true">🏨</span><span class="tag">Grátis</span>
@@ -127,8 +133,8 @@ footer a{color:var(--pink);text-decoration:none;margin-right:12px}
 
   <section class="comece" aria-labelledby="t-comece">
     <h2 id="t-comece" style="font-family:var(--f-display);font-weight:800;font-size:24px;margin:0">Começa pelo começo</h2>
-    <p>Se a sua viagem ainda está sendo planejada, o cronograma de agendamentos é a primeira coisa a resolver: tem ingresso que esgota três meses antes.</p>
-    <a class="btn pri" href="/travessia/agendamentos/">Calcular meu cronograma</a>
+    <p>Monte o calendário com as datas da viagem e, em seguida, calcule o cronograma de ingressos: tem ingresso que esgota três meses antes.</p>
+    <a class="btn pri" href="/travessia/calendario/">Abrir o calendário</a> <a class="btn sec" href="/travessia/agendamentos/">Calcular meu cronograma</a>
   </section>
 
   <section class="pontes" aria-label="Outros caminhos">
