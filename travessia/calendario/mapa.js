@@ -349,6 +349,7 @@ function ligar(){
   $('#mapaHotel').onchange=function(){comHotel=this.checked;carrega();};
   $('#mapaLista').addEventListener('click',function(ev){var b=ev.target.closest('[data-marca]');if(!b)return;colocando=+b.dataset.marca;pinta();var bx=$('#mapaBox');if(bx&&bx.scrollIntoView)bx.scrollIntoView({block:'center',behavior:'smooth'});});
 }
+window.CalGeo={geocodificar:geocodificar,coordDe:coordDe,soLinkCurto:soLinkCurto,km:km,estima:estima,estimaLonga:estimaLonga,estTarifa:estTarifa,fmtMin:fmtMin,fmtKm:fmtKm,chave:chave,yen:function(n){return '¥ '+Math.round(n).toLocaleString('pt-BR');}};
 window.CalMapa={abrir:abrir,_agrupa:agrupaRegioes,_longa:estimaLonga,_km:km,_estima:estima,_montaParadas:montaParadas};
 if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',ligar);else ligar();
 })();
