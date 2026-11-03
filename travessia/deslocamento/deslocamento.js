@@ -92,7 +92,7 @@ function mostra(a,b,pa,pb){
     '<div id="est" class="est">Procurando estações perto…</div>'+
     '<div class="salva"><label>Data<input id="sd" type="date" value="'+(dataDoEvento(b)||dataDoEvento(a)||'')+'"></label><label>Hora<input id="sh" type="time"></label><button type="button" class="btn pri" id="sv">➕ Salvar esta passagem</button></div><p class="nt" id="smsg"></p>'+
     '<div class="btns"><a class="btn pri" id="rt" href="'+esc(rotaUrl(pa,pb))+'" target="_blank" rel="noopener">🚆 Ver rota e preço</a></div>'+
-    '<div class="btns" id="jr"><a class="btn" href="https://world.jorudan.co.jp/mln/pt/" target="_blank" rel="noopener">🔎 Abrir no Jorudan</a><a class="btn" href="https://japantravel.navitime.com/" target="_blank" rel="noopener">🧭 Abrir no NAVITIME</a><button type="button" class="btn sm" id="cpDe" disabled>📋 Copiar origem</button><button type="button" class="btn sm" id="cpPara" disabled>📋 Copiar destino</button></div>';
+    '<div class="btns" id="jr"><a class="btn" href="https://world.jorudan.co.jp/mln/pt/" target="_blank" rel="noopener">🔎 Abrir no Jorudan</a><button type="button" class="btn sm" id="cpDe" disabled>📋 Copiar origem</button><button type="button" class="btn sm" id="cpPara" disabled>📋 Copiar destino</button></div>';
   res.innerHTML=h; res.hidden=false; total(E.fare);
   res.querySelector('.modos').onclick=function(ev){var bt=ev.target.closest('[data-m]'); if(!bt)return; orc().m[rk]=bt.dataset.m; grava(); mostra(a,b,pa,pb);};
   $('#pv').onchange=function(){var x=Math.round(parseFloat(String(this.value).replace(',','.'))); if(isFinite(x)&&x>=0&&x<=99999999){ if(!(x===E.fare&&!orc().t[key]))orc().t[key]={v:x,c:1}; grava(); mostra(a,b,pa,pb);} };

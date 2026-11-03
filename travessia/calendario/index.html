@@ -484,7 +484,11 @@ function localDoEv(id){var e=S.ev.filter(function(x){return x.id===id;})[0];retu
 function umaLig(el){
   var a=localDoEv(el.dataset.a), b=localDoEv(el.dataset.b);
   return Promise.all([CalGeo.geocodificar(a),CalGeo.geocodificar(b)]).then(function(r){
-    if(!r[0]||!r[1]||!el.isConnected)return;
+    if(!el.isConnected)return;
+    if(!r[0]||!r[1]){
+      var nm=function(id){return (S.ev.filter(function(x){return x.id===id;})[0]||{}).titulo||'';};
+      var falta=!r[0]&&!r[1]?'“'+nm(el.dataset.a)+'” e “'+nm(el.dataset.b)+'”':'“'+nm(!r[0]?el.dataset.a:el.dataset.b)+'”';
+      el.innerHTML='↓ sem tempo estimado: não achei '+esc(falta)+' no mapa (no Local, escreva o nome com a cidade, o endereço ou cole as coordenadas)'; return; }
     var d=CalGeo.km(r[0],r[1]); if(d<0.05)return;
     var rk=[CalGeo.chave(a),CalGeo.chave(b)].sort().join('>'), m=(S.orc&&S.orc.m&&S.orc.m[rk])||CalGeo.modoPadrao(d), E=CalGeo.estModo(m,d);
     var de=(S.ev.filter(function(x){return x.id===el.dataset.a;})[0]||{}).titulo||'', pa=(S.ev.filter(function(x){return x.id===el.dataset.b;})[0]||{}).titulo||'';
