@@ -687,10 +687,35 @@ function loadAula(slug){
 }
 
 /* ---------- ar, romaji, seletor ---------- */
+if(!$('arDuvida')){ const d=document.createElement('div'); d.id='arDuvida'; $('arList').before(d); }
 $('arList').innerHTML=AR.map((g,gi)=>`<details class="gaveta"><summary><span class="gi">${g.ic}</span><span><b>${g.quero}</b><small>${g.sub}</small></span></summary><div class="gbody">${g.frases.map((f,fi)=>`<button type="button" class="arp" data-g="${gi}" data-f="${fi}"><span>🔊</span><span><span class="jp">${f.h}</span><br><span class="ro">${f.r}</span> <span class="pt">${f.pt}</span></span></button>`).join('')}${g.nota?`<p class="pt gnota">💡 ${rk(g.nota)}</p>`:''}</div></details>`).join('')+`<details class="gaveta nao"><summary><span class="gi">🚫</span><span><b>O que não fazer</b><small>armadilhas comuns</small></span></summary><div class="gbody"><ul>${AR_NAO.map(t=>`<li class="pt">${rk(t)}</li>`).join('')}</ul></div></details>`;
 $('arList').onclick=e=>{ const b=e.target.closest('.arp'); if(b) speak(AR[+b.dataset.g].frases[+b.dataset.f].k); };
 $('arList').addEventListener('toggle',e=>{ if(e.target.open) $('arList').querySelectorAll('details.gaveta').forEach(d=>{ if(d!==e.target) d.open=false; }); },true);
-$('btnAr').onclick=()=>{ $('drawer').hidden=false; };
+/* Ar na hora da dúvida: cada pergunta do Ar vira uma dica diferente dentro da cena */
+function arDuvida(){
+  const box=$('arDuvida'); if(!box) return;
+  const c=(step===4&&CENAS[ci])?CENAS[ci]:null;
+  if(!c||done[ci]){ box.innerHTML=''; return; }
+  const B=[
+    {k:'あの、ちょっと まって ください',h:'あの、ちょっと '+RR('待','ま')+'って ください',pt:'só um instante → mostra a dica da cena',a:'tempo'},
+    {k:'ゆっくり はなして ください',h:'ゆっくり '+RR('話','はな')+'して ください',pt:'mais devagar → a pessoa repete devagar',a:'devagar'},
+    {k:'もういちど おねがいします',h:'もう'+RR('一度','いちど')+' お'+RR('願','ねが')+'いします',pt:'mais uma vez → repete e mostra a tradução',a:'denovo'},
+    {k:'かいて もらえますか',h:RR('書','か')+'いて もらえますか',pt:'pode escrever? → mostra a pergunta escrita',a:'escrever'},
+    {k:'これで あって いますか',h:'これで '+RR('合','あ')+'って いますか',pt:'está certo assim? → confere as peças que você pôs',a:'certo'}];
+  box.innerHTML=`<div class="ar-duvida"><b>💡 Em dúvida nesta cena? Faça a pergunta e ganhe uma dica</b>${B.map((x,i)=>`<button type="button" class="arp" data-d="${i}"><span class="jp">${x.h}</span><small>${x.pt}</small></button>`).join('')}</div>`;
+  box.onclick=e=>{ const b=e.target.closest('[data-d]'); if(!b) return; const x=B[+b.dataset.d]; speak(x.k);
+    const c=CENAS[ci]; let h='';
+    if(x.a==='tempo') h=c.dica?`⏳ Sem pressa. 🎯 ${c.dica}`:'⏳ Sem pressa: respire e leia a pergunta de novo.'+(c.molde!=null?` O molde ajuda: toque em <b>📐 Ver o molde</b>.`:'');
+    else if(x.a==='devagar'){ h=`🐢 A pessoa repete devagar: <span class="jp">${c.q}</span>`; setTimeout(()=>speak(c.say,.55),1600); }
+    else if(x.a==='denovo'){ h=`🔁 Mais uma vez: <span class="jp">${c.q}</span> <span class="pt">(${c.pt})</span>`; setTimeout(()=>speak(c.say),1600); }
+    else if(x.a==='escrever') h=`✍️ A pessoa escreve: <span class="jp">${c.q}</span> <span class="ro">${c.ro}</span>`;
+    else { const Q=SEQS(c), pre=Q.some(q=>placed.length<=q.ans.length&&placed.every((k,j)=>[].concat(q.ans[j]).some(t=>t.k===bank[k].k)));
+      if(!placed.length){ const f=[].concat(Q[0].ans[0])[0]; h=`🔎 Você ainda não pôs nenhuma peça. Tente começar por <b>${f.k}</b> <span class="ro">${f.r}</span>.`; }
+      else if(pre) h=Q.some(q=>CASA(c,q))?'🔎 はい、あっています！ Está certo, toque em <b>Responder</b>.':'🔎 はい、あっています。Até aqui está no caminho certo, continue.';
+      else h='🔎 ううん… Alguma peça está fora do lugar. Toque numa peça do balão para tirá-la, ou use <b>↺ Recomeçar a frase</b>.'; }
+    hint(h); $('drawer').hidden=true; };
+}
+$('btnAr').onclick=()=>{ arDuvida(); $('drawer').hidden=false; };
 $('btnArClose').onclick=()=>{ $('drawer').hidden=true; };
 $('drawer').onclick=e=>{ if(e.target===$('drawer')) $('drawer').hidden=true; };
 let ro=true; try{ ro=localStorage.getItem('utopiaRomaji')!=='0'; }catch(e){}
