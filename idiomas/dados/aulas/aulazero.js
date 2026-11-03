@@ -85,7 +85,7 @@ const NOUN={'パスポート':[['É o passaporte.','Não é o passaporte.','É o
     {q:'きのう、すしを '+R('食','た')+'べましたか？', say:'きのう、すしを たべましたか？', ro:'Kinō, sushi o tabemashita ka?', pt:'Ontem você comeu sushi?',
      ans:['はい|hai','たべ|tabe','ました|mashita'], extra:['ます|masu','ません|masen','のみ|nomi'], ansPt:'Sim, comi.', molde:2, dica:'Sim, você comeu (passado).', distr:['Amanhã você vai comer sushi?','Você bebeu chá ontem?']},
     {q:R('日本語','にほんご')+'、わかりますか？', say:'にほんご、わかりますか？', ro:'Nihongo, wakarimasu ka?', pt:'Você entende japonês?',
-     ans:['すこし|sukoshi','わかり|wakari','ます|masu'], extra:['ました|mashita','ません|masen','いき|iki'], ansPt:'Entendo um pouco.', molde:2, dica:'Você entende um pouco (presente).', distr:['Você fala inglês?','Você vai ao Japão?']},
+     ans:['すこし|sukoshi','わかり|wakari','ます|masu'], extra:['ました|mashita','ません|masen','いき|iki'], alts:[{ans:['わかり|wakari','ません|masen'],ansPt:'Não entendo.'}], ansPt:'Entendo um pouco.', molde:2, dica:'Você entende um pouco (presente).', distr:['Você fala inglês?','Você vai ao Japão?']},
     {q:R('何','なに')+'を '+R('飲','の')+'みますか？', say:'なにを のみますか？', ro:'Nani o nomimasu ka?', pt:'O que você vai beber?',
      ans:['みず|mizu','を|o','おねがいします|onegaishimasu'], extra:['は|wa','です|desu','どこ|doko'], ansPt:'Água, por favor.', molde:5, distr:['O que você vai comer?','Onde você vai beber?']},
     {quem:'せんせい (fingindo ser da estação)', q:'どう しましたか？', say:'どう しましたか？', ro:'Dō shimashita ka?', pt:'Aconteceu alguma coisa? / Posso ajudar?',

@@ -55,7 +55,7 @@ const R=(k,f)=>`<ruby>${k}<rt>${f}</rt></ruby>`;
     {q:'ご'+R('予約','よやく')+'の お'+R('名前','なまえ')+'は？', say:'ごよやくの おなまえは？', ro:'Go-yoyaku no o-namae wa?', pt:'Qual o nome da reserva?',
      ans:['{NOME}|{NOMERO}','です|desu'], extra:['よやく|yoyaku','を|o','かぎ|kagi'], ansPt:'Sou {NOMERO}. (seu nome + です)', molde:null, dica:'Diga o seu nome + です.', distr:['Qual é o número do quarto?','Quantas pessoas?']},
     {q:R('何泊','なんぱく')+'の ご'+R('予定','よてい')+'ですか？', say:'なんぱくの ごよていですか？', ro:'Nanpaku no go-yotei desu ka?', pt:'Quantas noites pretende ficar?',
-     ans:['にはく|nihaku','です|desu'], extra:['いっぱく|ippaku','タオル|taoru','を|o'], ansPt:'São duas noites.', molde:0, distr:['A que horas é o check-out?','Tem reserva?']},
+     ans:['にはく|nihaku','です|desu'], extra:['いっぱく|ippaku','タオル|taoru','を|o'], alts:[{ans:['いっぱく|ippaku','です|desu'],ansPt:'É uma noite.'}], ansPt:'São duas noites.', molde:0, distr:['A que horas é o check-out?','Tem reserva?']},
     {q:'こちらが お'+R('部屋','へや')+'の '+R('鍵','かぎ')+'です。', say:'こちらが おへやの かぎです。', ro:'Kochira ga o-heya no kagi desu.', pt:'Aqui está a chave do seu quarto.',
      ans:['ちょうしょく|chōshoku','は|wa','なんじ|nanji','ですか|desu ka'], extra:['が|ga','エアコン|eakon','です|desu'], tarefa:1, ansPt:'A que horas é o café da manhã?', molde:2, distr:['O quarto fica no terceiro andar.','Onde está a sua mala?']},
     {q:R('朝食','ちょうしょく')+'は '+R('七時','しちじ')+'からです。ほかに '+R('何','なに')+'か ございますか？', say:'ちょうしょくは しちじからです。ほかに なにか ございますか？', ro:'Chōshoku wa shichi-ji kara desu. Hoka ni nani ka gozaimasu ka?', pt:'O café é a partir das 7h. Precisa de mais alguma coisa?',

@@ -49,7 +49,7 @@ const R=(k,f)=>`<ruby>${k}<rt>${f}</rt></ruby>`;
     {q:'はい、こちらです。いかがですか？', say:'はい、こちらです。いかがですか？', ro:'Hai, kochira desu. Ikaga desu ka?', pt:'Sim, aqui está. Que tal?',
      ans:['ぴったり|pittari','です|desu'], extra:['ちょっと おおきい|chotto ōkii','ありますか|arimasu ka'], ansPt:'Ficou perfeito!', molde:1, dica:'Agora serviu certinho.', distr:['Não temos esse tamanho.','O provador é ali.']},
     {q:R('色','いろ')+'は この '+R('白','しろ')+'で よろしいですか？', say:'いろは この しろで よろしいですか？', ro:'Iro wa kono shiro de yoroshii desu ka?', pt:'A cor, pode ser este branco?',
-     ans:['くろ|kuro','は|wa','ありますか|arimasu ka'], extra:['あか|aka','です|desu','を|o'], ansPt:'Tem em preto?', molde:3, dica:'Você prefere preto.', distr:['O tamanho está bom?','Vai levar duas?']}
+     ans:['くろ|kuro','は|wa','ありますか|arimasu ka'], extra:['あか|aka','です|desu','を|o'], alts:[{ans:['あか|aka','は|wa','ありますか|arimasu ka'],ansPt:'Tem em vermelho?'}], ansPt:'Tem em preto?', molde:3, dica:'Você prefere preto.', distr:['O tamanho está bom?','Vai levar duas?']}
   ]
 };
 })();

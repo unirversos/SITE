@@ -526,9 +526,17 @@ function showOuvir(){
 function stCena(){ loadCena(ci); }
 let CENAS_N=[], CENAS_V=null, VEG=false;
 function trocaVeg(on){ VEG=on; CENAS=(VEG&&CENAS_V)?CENAS_V:CENAS_N; done={}; ci=0; }
+/* respostas alternativas: cada cena tem a resposta principal (ans) e, opcionalmente, outras frases também corretas (alts) */
+const SEQS=c=>[{ans:c.ans,ansPt:c.ansPt}].concat(c.alts||[]);
+const NSLOT=c=>Math.max(...SEQS(c).map(q=>q.ans.length));
+const CASA=(c,q)=>q.ans.length===placed.length&&placed.every((k,j)=>[].concat(q.ans[j]).some(t=>t.k===bank[k].k));
+let okPt={};
+function bancoDe(c){ const vis=new Set(), out=[];
+  [].concat(...SEQS(c).map(q=>[].concat(...q.ans))).concat(c.extra).forEach(t=>{ if(!vis.has(t.k)){ vis.add(t.k); out.push(t); } });
+  return shuffle(out); }
 function loadCena(n){
   setTimeout(()=>{ const bv=document.getElementById('btnVeg'); if(bv) bv.onclick=()=>{ trocaVeg(!VEG); loadCena(0); }; },0);
-  ci=n; const c=CENAS[ci]; bank=shuffle([].concat(...c.ans).concat(c.extra)); placed=[]; mood='idle';
+  ci=n; const c=CENAS[ci]; bank=bancoDe(c); placed=[]; mood='idle';
   $('panel').innerHTML=`
     <div class="row"><h2>Responda na cena</h2><span class="spacer"></span><div class="stamps" id="stamps"></div></div>
     ${CENAS_V?`<div class="row"><button class="btn small vegbtn" type="button" id="btnVeg" aria-pressed="${VEG}">🥗 ${VEG?'Cena adaptada (vegetariana) · voltar à cena normal':'Fazer a cena adaptada (vegetariana)'}</button></div>`:''}
@@ -563,11 +571,11 @@ function renderCena(){
   $('meBubble').className='bubble me'+(ok?' ok':'');
   $('meBubble').innerHTML=`<div class="who"><span>${meName}</span>${ok?'<span>✓ resolvido</span>':''}</div>
     ${(c.tarefa&&!ok)?`<div class="tarefa">🎯 ${typeof c.tarefa==='string'?c.tarefa:'Responda: “'+c.ansPt+'”'}</div>`:''}
-    <div class="slots">${c.ans.map((_,k)=>{ const t=placed[k]!==undefined?bank[placed[k]]:null;
+    <div class="slots">${Array.from({length:NSLOT(c)},(_,k)=>{ const t=placed[k]!==undefined?bank[placed[k]]:null;
       return t?`<button type="button" class="slot filled" data-k="${k}"><span><b>${t.k}</b><small>${t.r}</small></span></button>`:`<span class="slot"></span>`; }).join('')}</div>
-    ${ok?`<div class="pt">${c.ansPt}</div>`:''}`;
+    ${ok?`<div class="pt">${okPt[ci]||c.ansPt}</div>`:''}`;
   $('bank').innerHTML=bank.map((t,k)=>`<button type="button" class="tile ${placed.includes(k)?'used':''}" data-k="${k}" ${ok?'disabled':''}><b>${t.k}</b><small>${t.r}</small></button>`).join('');
-  const full=placed.length===c.ans.length;
+  const full=SEQS(c).some(q=>q.ans.length===placed.length);
   $('btnCheck').disabled=!full||ok; $('btnCheck').hidden=ok;
   $('btnNext').hidden=!ok; $('btnNext').textContent=ci<CENAS.length-1?'Próxima →':'Ver minha insígnia ✨';
   $('btnClear').hidden=ok;
@@ -575,14 +583,14 @@ function renderCena(){
 }
 function wireCena(){
   $('bank').onclick=e=>{ const b=e.target.closest('.tile'); if(!b||done[ci]) return; const k=+b.dataset.k; if(placed.includes(k)) return;
-    if(placed.length>=CENAS[ci].ans.length) return; placed.push(k); speak(bank[k].k); mood='idle'; renderCena(); };
+    if(placed.length>=NSLOT(CENAS[ci])) return; placed.push(k); speak(bank[k].k); mood='idle'; renderCena(); };
   $('meBubble').onclick=e=>{ const b=e.target.closest('.slot.filled'); if(!b||done[ci]) return; placed.splice(+b.dataset.k,1); mood='idle'; renderCena(); };
   $('btnClear').onclick=()=>{ placed=[]; mood='idle'; renderCena(); };
   $('btnListen').onclick=()=>speak(CENAS[ci].say);
   if($('btnMolde')) $('btnMolde').onclick=()=>{ const k=CENAS[ci].molde, m=A.moldes[k]; hint(`📐 Molde ${k+1}: <b>${m.tpl.replace(/<\/?i>/g,'')}</b> <span class="ro">${m.tplRo}</span> · ${m.titulo}`); };
   $('btnCheck').onclick=()=>{
-    const c=CENAS[ci], right=placed.every((k,j)=>[].concat(c.ans[j]).some(t=>t.k===bank[k].k));
-    if(right){ done[ci]=true; mood='ok'; renderCena(); speak(placed.map(k=>bank[k].k).join(' ')); sparkle(['💖','✨','🌸','⭐','✨']); hint(`<b>せいかい！</b> ${c.ansPt}`); }
+    const c=CENAS[ci], hit=SEQS(c).find(q=>CASA(c,q)), right=!!hit;
+    if(right){ done[ci]=true; okPt[ci]=hit.ansPt; mood='ok'; renderCena(); speak(placed.map(k=>bank[k].k).join(' ')); sparkle(['💖','✨','🌸','⭐','✨']); hint(`<b>せいかい！</b> ${hit.ansPt}${SEQS(c).length>1?' <span class="ro">(há mais de um jeito certo nesta cena)</span>':''}`); }
     else { mood='wrong'; renderStage(); hint(`<b>Hmm…</b> a pessoa ficou confusa. ${c.molde!=null?'Toque em <b>📐 Ver o molde</b> ou ':''}tire uma peça do balão e tente outra ordem.`);
       setTimeout(()=>{ if(mood==='wrong'){ mood='idle'; renderStage(); } },2200); }
   };
@@ -648,14 +656,14 @@ function stConsulta(){
 }
 
 /* ---------- montagem ---------- */
-function prep(c){ return Object.assign({},c,{ans:c.ans.map(s=>Array.isArray(s)?s.map(x=>tok(fillName(x))):tok(fillName(s))),extra:c.extra.map(s=>tok(fillName(s))),q:fillName(c.q),say:fillName(c.say),ro:fillName(c.ro),ansPt:fillName(c.ansPt||'')}); }
+function prep(c){ return Object.assign({},c,{ans:c.ans.map(s=>Array.isArray(s)?s.map(x=>tok(fillName(x))):tok(fillName(s))),extra:c.extra.map(s=>tok(fillName(s))),q:fillName(c.q),say:fillName(c.say),ro:fillName(c.ro),ansPt:fillName(c.ansPt||''),alts:(c.alts||[]).map(a=>({ans:a.ans.map(s=>Array.isArray(s)?s.map(x=>tok(fillName(x))):tok(fillName(s))),ansPt:fillName(a.ansPt||'')}))}); }
 function prepMolde(m){ return Object.assign({},m,{slots:m.slots.map(opts=>opts.map(o=>Object.assign(tok(fillName(o[0])),{pt:fillName(o[1]),en:fillName(o[2]),h:o[3]||tok(fillName(o[0])).k})))}); }
 function loadAula(slug){
   const raw=window.AULAS[slug]; if(!raw) return;
   A=Object.assign({},raw,{moldes:raw.moldes.map(prepMolde).map(m=>Object.assign(m,{titulo:rk(m.titulo),gram:rk(m.gram),use:rk(m.use)})),
     intro:{titulo:rk(raw.intro.titulo),txt:raw.intro.txt.map(rk),metas:raw.intro.metas.map(rk),metasTit:raw.intro.metasTit},
     words:raw.words.map(w=>Object.assign({},w,{tip:rk(w.tip)})), fim:rk(raw.fim||''), insignia:raw.insignia?rk(raw.insignia):raw.insignia});
-  const prepC=c=>Object.assign(c,{pt:rk(c.pt),ansPt:rk(c.ansPt),dica:c.dica?rk(c.dica):c.dica,distr:(c.distr||[]).map(rk)});
+  const prepC=c=>Object.assign(c,{pt:rk(c.pt),ansPt:rk(c.ansPt),alts:c.alts.map(a=>Object.assign(a,{ansPt:rk(a.ansPt)})),dica:c.dica?rk(c.dica):c.dica,distr:(c.distr||[]).map(rk)});
   CENAS=raw.cenas.map(prep).map(prepC); CENAS_N=CENAS; CENAS_V=raw.cenasVeg?raw.cenasVeg.map(prep).map(prepC):null; VEG=false;
   P=M[slug]=Object.assign({words:{},steps:{}},M[slug]||{});
   step=0; wi=0; mi=0; oi=0; ci=0; done={}; $('fx').innerHTML='';

@@ -50,7 +50,7 @@ const R=(k,f)=>`<ruby>${k}<rt>${f}</rt></ruby>`;
     {q:R('今日','きょう')+'は '+R('二割引','にわりびき')+'です！どれに なさいますか？', say:'きょうは にわりびきです！どれに なさいますか？', ro:'Kyō wa niwaribiki desu! Dore ni nasaimasu ka?', pt:'Hoje tem 20% de desconto! Qual vai levar?',
      ans:['あれ|are','に|ni','します|shimasu'], extra:['は|wa','いくら|ikura','おみやげ|omiyage'], ansPt:'Vou levar aquele (lá na prateleira).', molde:2, dica:'Você quer aquele, lá longe na prateleira.', distr:['Hoje a loja fecha cedo!','Hoje não tem desconto.']},
     {q:'お'+R('支払','しはら')+'いは どう なさいますか？', say:'おしはらいは どう なさいますか？', ro:'O-shiharai wa dō nasaimasu ka?', pt:'Como vai pagar?',
-     ans:['カード|kādo','で|de','おねがいします|onegaishimasu'], extra:['に|ni','を|o','げんきん|genkin'], ansPt:'Com cartão, por favor.', molde:3, dica:'Pague com cartão.', distr:['Quer embrulhar para presente?','Quantos vai levar?']}
+     ans:['カード|kādo','で|de','おねがいします|onegaishimasu'], extra:['に|ni','を|o','げんきん|genkin'], alts:[{ans:['げんきん|genkin','で|de','おねがいします|onegaishimasu'],ansPt:'Em dinheiro, por favor.'}], ansPt:'Com cartão, por favor.', molde:3, dica:'Pague com cartão.', distr:['Quer embrulhar para presente?','Quantos vai levar?']}
   ]
 };
 })();
