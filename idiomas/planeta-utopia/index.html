@@ -651,11 +651,19 @@ function winScene(){
   setTimeout(showSpeak, 500);
 }
 
+/* a pergunta da Prova de fala também aparece em kana (com o romaji pequeno), como nas cenas */
+const KANA_EXTRA={'ご予約はありますか。':'ごよやくは ありますか。','どちらまでですか。':'どちらまでですか。','お支払いはどうしますか。':'おしはらいは どうしますか。','どうしましたか。':'どうしましたか。','今何時ですか。':'いま なんじですか。','出口はどこですか。':'でぐちは どこですか。'};
+function comKana(npc){
+  if(!npc||npc.kana||curLang!=='ja') return npc;
+  const mapa={}; (function w(o){ if(!o||typeof o!=='object')return; if(typeof o.say==='string'&&typeof o.kana==='string')mapa[o.say]=o.kana; for(const k in o)w(o[k]); })(SCENES[curLang]);
+  const k=mapa[npc.say]||KANA_EXTRA[npc.say];
+  return k?Object.assign({},npc,{kana:k}):npc;
+}
 function showSpeak(){
   const U=ui(), t=terr();
   const sp=(SPEAK[curLang]||{})[curTerr];
   if(!sp){ grantStamp(); return; }
-  npcBubble(sp.npc);
+  npcBubble(comKana(sp.npc));
   const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
   const box=document.getElementById('interaction');
   const kwHtml = sp.kws.slice(0,4).map(kwChip).join('');
