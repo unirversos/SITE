@@ -7,13 +7,14 @@ function $(s){return document.querySelector(s);}
 function esc(s){return String(s==null?'':s).replace(/[&<>"']/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c];});}
 var S=null; try{S=JSON.parse(localStorage.getItem(KEY)||'null');}catch(e){S=null;}
 if(!S||typeof S!=='object')S=null;
-function orc(){ if(!S)S={titulo:'',ini:'',fim:'',fuso:'auto',chegada:'',atualizado:'',ev:[]}; if(!S.orc||typeof S.orc!=='object')S.orc={cot:'',pax:1,t:{}}; if(!S.orc.t)S.orc.t={}; if(!S.orc.pax)S.orc.pax=1; return S.orc; }
+function orc(){ if(!S)S={titulo:'',ini:'',fim:'',fuso:'auto',chegada:'',atualizado:'',ev:[],pas:[]}; if(!Array.isArray(S.ev))S.ev=[]; if(!Array.isArray(S.pas))S.pas=[]; if(!S.ok||typeof S.ok!=='object')S.ok={}; if(!S.orc||typeof S.orc!=='object')S.orc={cot:'',pax:1,t:{}}; if(!S.orc.t)S.orc.t={}; if(!S.orc.pax)S.orc.pax=1; return S.orc; }
 function grava(){ try{ S.atualizado=new Date().toISOString(); localStorage.setItem(KEY,JSON.stringify(S)); }catch(e){} }
 
 /* ---------- lugares do calendário ---------- */
 var lugares={}, eventos=[];
 (function(){
-  var ev=(S&&Array.isArray(S.ev)?S.ev:[]).filter(function(e){return e&&e.local&&e.titulo;});
+  var meus={}; ((S&&Array.isArray(S.pas))?S.pas:[]).forEach(function(q){if(q&&q.evId)meus[q.evId]=1;});
+  var ev=(S&&Array.isArray(S.ev)?S.ev:[]).filter(function(e){return e&&e.local&&e.titulo&&!meus[e.id];});
   ev.sort(function(a,b){return (a.data+(a.hora||'00:00'))<(b.data+(b.hora||'00:00'))?-1:1;});
   var usados={};
   ev.forEach(function(e){
@@ -89,6 +90,7 @@ function mostra(a,b,pa,pb){
     '<label>¥ 100 = R$<input id="pc" type="number" inputmode="decimal" min="0" step="0.01" value="'+(o.cot?(o.cot*100).toFixed(2):'')+'" placeholder="3,50" style="width:96px"></label></div>'+
     '<div class="preco"><span class="rs" id="tot"></span><span class="tg'+(conf?' ok':'')+'" id="tg">'+(conf?'✓ valor confirmado':'estimativa')+'</span>'+(conf?'<button type="button" class="btn sm" id="rev">↺ estimativa</button>':'')+'</div>'+
     '<div id="est" class="est">Procurando estações perto…</div>'+
+    '<div class="salva"><label>Data<input id="sd" type="date" value="'+(dataDoEvento(b)||dataDoEvento(a)||'')+'"></label><label>Hora<input id="sh" type="time"></label><button type="button" class="btn pri" id="sv">➕ Salvar esta passagem</button></div><p class="nt" id="smsg"></p>'+
     '<div class="btns"><a class="btn pri" id="rt" href="'+esc(rotaUrl(pa,pb))+'" target="_blank" rel="noopener">🚆 Ver rota e preço</a></div>'+
     '<div class="btns" id="jr"><a class="btn" href="https://world.jorudan.co.jp/mln/pt/" target="_blank" rel="noopener">🔎 Abrir no Jorudan</a><button type="button" class="btn sm" id="cpDe" disabled>📋 Copiar origem</button><button type="button" class="btn sm" id="cpPara" disabled>📋 Copiar destino</button></div>';
   res.innerHTML=h; res.hidden=false; total(E.fare);
@@ -97,6 +99,12 @@ function mostra(a,b,pa,pb){
   $('#pp').onchange=function(){var n=parseInt(this.value,10); if(n>=1&&n<=20){orc().pax=n;grava();total(E.fare);} };
   $('#pc').onchange=function(){var c=parseFloat(String(this.value).replace(',','.')); orc().cot=(isFinite(c)&&c>0&&c<100000)?c/100:''; grava(); total(E.fare);};
   if($('#rev'))$('#rev').onclick=function(){delete orc().t[key];grava();mostra(a,b,pa,pb);};
+  $('#sv').onclick=function(){
+    var dt=$('#sd').value; if(!/^\d{4}-\d{2}-\d{2}$/.test(dt)){$('#smsg').textContent='Escolha a data da viagem para salvar.';return;}
+    var vv=parseFloat($('#pv').value); if(!isFinite(vv))vv=E.fare;
+    var p={id:'p'+Date.now().toString(36)+Math.random().toString(36).slice(2,6),evId:'',de:$('#de').value.trim().slice(0,120),para:$('#para').value.trim().slice(0,120),deLocal:a.slice(0,300),paraLocal:b.slice(0,300),
+      modo:modo,rapido:modo==='trem'&&d>100&&d<=700,data:dt,hora:$('#sh').value||'',v:Math.round(vv),pax:orc().pax,estado:'comprar',codigo:''};
+    PAS().push(p); syncEvento(p); grava(); lista(); $('#smsg').textContent='✓ Salva em Minhas passagens e no calendário.'; };
   /* aviso de antecedência do trem-bala */
   if(modo==='trem'&&d>100&&d<=700){
     var dt=dataDoEvento(b)||dataDoEvento(a), av=(window.CalAvisos&&dt)?CalAvisos.para({data:dt,tipo:'transp',titulo:'Shinkansen'}):null;
@@ -116,6 +124,48 @@ function mostra(a,b,pa,pb){
     $('#tot').textContent=G.yen(tp)+(oo.pax>1?' ('+oo.pax+' pessoas)':'')+(oo.cot?' · ≈ R$ '+(tp*oo.cot).toLocaleString('pt-BR',{minimumFractionDigits:2,maximumFractionDigits:2}):'');
   }
 }
+/* ---------- minhas passagens ---------- */
+function PAS(){orc();return S.pas;}
+var ROTULO={comprar:'A comprar',comprado:'Comprado',cancelado:'Cancelado'};
+function fd(d){return d?d.slice(8)+'/'+d.slice(5,7):'';}
+function brl(n){return 'R$ '+n.toLocaleString('pt-BR',{minimumFractionDigits:2,maximumFractionDigits:2});}
+function syncEvento(p){
+  var o=orc(), ev=o&&S.ev.filter(function(e){return e.id===p.evId;})[0];
+  var tit=p.de+' → '+p.para+(p.rapido?' (trem-bala)':' ('+G.MODOS[p.modo].replace(/^\S+\s/,'').toLowerCase()+')');
+  var det=p.de+' → '+p.para+'\nMeio: '+G.MODOS[p.modo]+'\nCusto: '+G.yen(p.v)+' por pessoa × '+p.pax+' = '+G.yen(p.v*p.pax)+'\nEstado: '+ROTULO[p.estado]+(p.codigo?'\nCódigo da reserva: '+p.codigo:'');
+  if(!ev){ p.evId='e'+Date.now().toString(36)+Math.random().toString(36).slice(2,8);
+    ev={id:p.evId,titulo:tit,tipo:'transp',data:p.data,dataFim:'',hora:p.hora,horaFim:'',fuso:(S.fuso||'auto'),local:p.deLocal,detalhes:det}; S.ev.push(ev); }
+  else { ev.titulo=tit; ev.data=p.data; ev.hora=p.hora; ev.local=p.deLocal; ev.detalhes=det; }
+  if(p.estado==='comprado')S.ok[p.evId]=1; else delete S.ok[p.evId];
+}
+var COMPRA=[['SmartEX','https://smart-ex.jp/en/','Tóquio ↔ Nagoia ↔ Quioto ↔ Osaka ↔ Hiroshima ↔ Hakata'],['JR-East','https://www.eki-net.com/en/jreast-train-reservation/','saindo de Tóquio para Nagano, Niigata, Kanazawa e o norte'],['JR-West','https://www.westjr.co.jp/global/en/','Kansai, Hokuriku e Sanyo']];
+function lista(){
+  var box=$('#minhas'), L=(S&&Array.isArray(S.pas))?S.pas:[]; if(!box)return;
+  if(!L.length){box.hidden=true;return;}
+  box.hidden=false; var o=orc(), cot=o.cot||0, ativos=L.filter(function(p){return p.estado!=='cancelado';});
+  var tC=0,tA=0; ativos.forEach(function(p){var x=p.v*p.pax; if(p.estado==='comprado')tC+=x; else tA+=x;});
+  function m(x){return G.yen(x)+(cot?'<small>≈ '+brl(x*cot)+'</small>':'');}
+  var h='<h2>Minhas passagens</h2><div class="tots"><div><small>Comprado</small><b>'+m(tC)+'</b></div><div><small>A comprar</small><b>'+m(tA)+'</b></div><div><small>Total</small><b>'+m(tC+tA)+'</b></div></div>';
+  L.slice().sort(function(a,b){return (a.data+a.hora)<(b.data+b.hora)?-1:1;}).forEach(function(p){
+    var aviso='';
+    if(p.rapido&&p.estado==='comprar'&&window.CalAvisos&&p.data){var av=CalAvisos.para({data:p.data,tipo:'transp',titulo:'trem-bala'}); if(av){var st=CalAvisos.situacao(av); aviso='<div class="aviso">⏰ '+(st.est==='aberto'?'Já abriu: compre agora. ':st.est==='hoje'?'Abre hoje. ':'Faltam '+st.dias+' dias. ')+av.texto+'</div>';}}
+    var links=(p.rapido&&p.estado!=='cancelado')?'<div class="onde">Onde comprar: '+COMPRA.map(function(c){return '<a href="'+esc(c[1])+'" target="_blank" rel="noopener" title="'+esc(c[2])+'">'+c[0]+'</a>';}).join(' · ')+'<small>SmartEX: '+esc(COMPRA[0][2])+'. JR-East: '+esc(COMPRA[1][2])+'. JR-West: '+esc(COMPRA[2][2])+'.</small></div>':'';
+    h+='<div class="pas '+p.estado+'" data-id="'+esc(p.id)+'"><div class="ph"><b>'+esc(p.de)+' → '+esc(p.para)+'</b><span class="md2">'+G.MODOS[p.modo]+'</span></div>'+
+      '<div class="pl">'+esc(fd(p.data))+(p.hora?' às '+esc(p.hora):'')+' · '+G.yen(p.v)+' × '+p.pax+' = <b>'+G.yen(p.v*p.pax)+'</b>'+(cot?' · ≈ '+brl(p.v*p.pax*cot):'')+'</div>'+
+      '<div class="pr"><label>Estado<select data-e>'+Object.keys(ROTULO).map(function(k){return '<option value="'+k+'"'+(k===p.estado?' selected':'')+'>'+ROTULO[k]+'</option>';}).join('')+'</select></label>'+
+      '<label>Código da reserva<input data-c value="'+esc(p.codigo)+'" maxlength="60" placeholder="quando comprar"></label><button type="button" class="btn sm" data-x>Remover</button></div>'+aviso+links+'</div>';
+  });
+  box.innerHTML=h;
+}
+$('#minhas').addEventListener('change',function(ev){
+  var c=ev.target.closest('.pas'); if(!c)return; var p=PAS().filter(function(x){return x.id===c.dataset.id;})[0]; if(!p)return;
+  if(ev.target.hasAttribute('data-e'))p.estado=ev.target.value; else if(ev.target.hasAttribute('data-c'))p.codigo=ev.target.value.trim().slice(0,60);
+  syncEvento(p); grava(); lista(); });
+$('#minhas').addEventListener('click',function(ev){
+  var b=ev.target.closest('[data-x]'); if(!b)return; var c=b.closest('.pas'), o=orc(), p=PAS().filter(function(x){return x.id===c.dataset.id;})[0]; if(!p)return;
+  if(!confirm('Remover esta passagem da lista e do calendário?'))return;
+  S.ev=S.ev.filter(function(e){return e.id!==p.evId;}); delete S.ok[p.evId]; S.pas=S.pas.filter(function(x){return x.id!==p.id;}); grava(); lista(); });
+lista();
 var tmr; function agenda(){clearTimeout(tmr);tmr=setTimeout(calcula,450);}
 $('#de').addEventListener('input',agenda); $('#para').addEventListener('input',agenda);
 $('#de').addEventListener('change',calcula); $('#para').addEventListener('change',calcula);
