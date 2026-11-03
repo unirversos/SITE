@@ -18,7 +18,7 @@ const R=(k,f)=>`<ruby>${k}<rt>${f}</rt></ruby>`;
     {id:'eki',h:R('駅','えき'),k:'えき',r:'eki',pt:'estação',en:'station',ic:'🚉',tip:'しんじゅくえき = estação Shinjuku.'},
     {id:'densha',h:R('電車','でんしゃ'),k:'でんしゃ',r:'densha',pt:'trem',en:'train',ic:'🚃',tip:'でん (eletricidade) + しゃ (veículo).'},
     {id:'kippu',h:R('切符','きっぷ'),k:'きっぷ',r:'kippu',pt:'bilhete',en:'ticket',ic:'🎫',tip:'O っ pequeno é uma pausinha: ki-ppu.'},
-    {id:'ikitai',h:R('行','い')+'きたい',k:'いきたい',r:'ikitai',pt:'quero ir',en:'want to go',ic:'🧭',tip:'いく (ir) + たい (querer).'},
+    {id:'ikitai',h:R('行','い')+'きたい',k:'いきたい',r:'ikitai',pt:'quero ir',en:'want to go',ic:'🧭',tip:'いきます → いき + たい. Tire o ます e ponha たい: vira "querer" em qualquer verbo (たべたい = quero comer, のみたい = quero beber).'},
     {id:'ikura',k:'いくら',r:'ikura',pt:'quanto custa',en:'how much',ic:'💴',tip:'Vale para tudo: passagem, comida, lembrancinha.'},
     {id:'nanbansen',h:R('何番線','なんばんせん'),k:'なんばんせん',r:'nanbansen',pt:'qual plataforma',en:'which platform',ic:'🔢',tip:'ばんせん = plataforma número… 3ばんせん = plataforma 3.'},
     {id:'norikae',h:R('乗','の')+'り'+R('換','か')+'え',k:'のりかえ',r:'norikae',pt:'baldeação',en:'transfer',ic:'🔀',tip:'Trocar de trem ou de linha.'},
@@ -28,7 +28,7 @@ const R=(k,f)=>`<ruby>${k}<rt>${f}</rt></ruby>`;
   moldes:[
     {titulo:'"Quero ir a ___."', tpl:'<i>lugar</i> に いきたいです', tplRo:'[lugar] ni ikitai desu', parts:[0,'に|ni',{k:'いきたいです',r:'ikitai desu',h:R('行','い')+'きたいです'}],
      slots:[[['しんじゅく|Shinjuku','Quero ir a Shinjuku.','I want to go to Shinjuku.',R('新宿','しんじゅく')],['あさくさ|Asakusa','Quero ir a Asakusa.','I want to go to Asakusa.',R('浅草','あさくさ')],['きょうと|Kyōto','Quero ir a Kyoto.','I want to go to Kyoto.',R('京都','きょうと')]]],
-     gram:'<b>に</b> aponta o destino, como o "a/para" do português.', use:'Na cena: dizer para onde você vai.'},
+     gram:'<b>に</b> aponta o destino, como o "a/para" do português.<br><b>Por que いきたい?</b> O verbo いきます é feito de <b>いき</b> (a raiz, que carrega o sentido de "ir") + <b>ます</b> (só a terminação educada).<br>Para dizer "quero", tire o <b>ます</b> e coloque <b>たい</b>: いきます → <b>いきたい</b> (quero ir).<br>Funciona com todos os verbos: たべます → たべたい (quero comer), のみます → のみたい (quero beber), みます → みたい (quero ver), かいます → かいたい (quero comprar), します → したい (quero fazer).<br>Para ficar educado, junte <b>です</b>: いきたい<b>です</b>.', use:'Na cena: dizer para onde você vai.'},
     {titulo:'"Quanto custa até ___?"', tpl:'<i>lugar</i> まで いくら ですか', tplRo:'[lugar] made ikura desu ka', parts:[0,'まで|made','いくら|ikura','ですか|desu ka'],
      slots:[[['しんじゅく|Shinjuku','Quanto custa até Shinjuku?','How much is it to Shinjuku?',R('新宿','しんじゅく')],['あさくさ|Asakusa','Quanto custa até Asakusa?','How much is it to Asakusa?',R('浅草','あさくさ')],['きょうと|Kyōto','Quanto custa até Kyoto?','How much is it to Kyoto?',R('京都','きょうと')]]],
      gram:'<b>まで</b> = até. <b>いくら</b> = quanto (dinheiro).', use:'Na cena: perguntar o preço.'},
