@@ -11,7 +11,8 @@ function orc(){ if(!S)S={titulo:'',ini:'',fim:'',fuso:'auto',chegada:'',atualiza
 function grava(){ try{ S.atualizado=new Date().toISOString(); localStorage.setItem(KEY,JSON.stringify(S)); }catch(e){} }
 
 /* ---------- lugares do calendário ---------- */
-var lugares={}, eventos=[];
+var lugares={}, eventos=[], PARAM_DT='';
+function okUrl(u){u=String(u||'').trim(); return /^https?:\/\/\S+$/i.test(u)?u.slice(0,500):'';}
 (function(){
   var meus={}; ((S&&Array.isArray(S.pas))?S.pas:[]).forEach(function(q){if(q&&q.evId)meus[q.evId]=1;});
   var ev=(S&&Array.isArray(S.ev)?S.ev:[]).filter(function(e){return e&&e.local&&e.titulo&&!meus[e.id];});
@@ -91,7 +92,7 @@ function mostra(a,b,pa,pb){
     '<label>¥ 100 = R$<input id="pc" type="number" inputmode="decimal" min="0" step="0.01" value="'+(o.cot?(o.cot*100).toFixed(2):'')+'" placeholder="3,50" style="width:96px"></label></div>'+
     '<div class="preco"><span class="rs" id="tot"></span><span class="tg'+(conf?' ok':'')+'" id="tg">'+(conf?'✓ valor confirmado':'estimativa')+'</span>'+(conf?'<button type="button" class="btn sm" id="rev">↺ estimativa</button>':'')+'</div>'+
     '<div id="est" class="est">Procurando estações perto…</div>'+
-    '<div class="salva"><label>Data<input id="sd" type="date" value="'+(dataDoEvento(b)||dataDoEvento(a)||'')+'"></label><label>Hora<input id="sh" type="time"></label><button type="button" class="btn pri" id="sv">➕ Salvar esta passagem</button></div><p class="nt" id="smsg"></p>'+
+    '<div class="salva"><label>Data<input id="sd" type="date" value="'+(PARAM_DT||dataDoEvento(b)||dataDoEvento(a)||'')+'"></label><label>Hora<input id="sh" type="time"></label><label style="flex:1 1 220px">Link do trajeto (Jorudan, JR…)<input id="sl" type="url" maxlength="500" placeholder="https://…"></label><button type="button" class="btn pri" id="sv">➕ Salvar esta passagem</button></div><p class="nt" id="smsg"></p>'+
     '<div class="btns"><a class="btn pri" id="rt" href="'+esc(rotaUrl(pa,pb))+'" target="_blank" rel="noopener">🚆 Ver rota e preço</a></div>'+
     '<div class="btns" id="jr"><a class="btn" href="https://world.jorudan.co.jp/mln/pt/" target="_blank" rel="noopener">🔎 Abrir no Jorudan</a><button type="button" class="btn sm" id="cpDe" disabled>📋 Copiar origem</button><button type="button" class="btn sm" id="cpPara" disabled>📋 Copiar destino</button></div>';
   res.innerHTML=h; res.hidden=false; total(E.fare);
@@ -104,8 +105,8 @@ function mostra(a,b,pa,pb){
     var dt=$('#sd').value; if(!/^\d{4}-\d{2}-\d{2}$/.test(dt)){$('#smsg').textContent='Escolha a data da viagem para salvar.';return;}
     var vv=parseFloat($('#pv').value); if(!isFinite(vv))vv=E.fare;
     var p={id:'p'+Date.now().toString(36)+Math.random().toString(36).slice(2,6),evId:'',de:$('#de').value.trim().slice(0,120),para:$('#para').value.trim().slice(0,120),deLocal:a.slice(0,600),paraLocal:b.slice(0,600),
-      modo:modo,rapido:modo==='trem'&&d>100&&d<=700,data:dt,hora:$('#sh').value||'',v:Math.round(vv),pax:orc().pax,estado:'comprar',codigo:''};
-    PAS().push(p); syncEvento(p); grava(); lista(); $('#smsg').textContent='✓ Salva em Minhas passagens e no calendário.'; };
+      modo:modo,rapido:modo==='trem'&&d>100&&d<=700,data:dt,hora:$('#sh').value||'',v:Math.round(vv),pax:orc().pax,estado:'comprar',codigo:'',link:okUrl($('#sl').value)};
+    PAS().push(p); syncEvento(p); grava(); lista(); $('#smsg').textContent='✓ Salva em Minhas passagens e no calendário.'; try{if(window.parent!==window)window.parent.postMessage({uni:'pas-salva'},location.origin);}catch(e){} };
   /* aviso de antecedência do trem-bala */
   if(modo==='trem'&&d>100&&d<=700){
     var dt=dataDoEvento(b)||dataDoEvento(a), av=(window.CalAvisos&&dt)?CalAvisos.para({data:dt,tipo:'transp',titulo:'Shinkansen'}):null;
@@ -133,7 +134,7 @@ function brl(n){return 'R$ '+n.toLocaleString('pt-BR',{minimumFractionDigits:2,m
 function syncEvento(p){
   var o=orc(), ev=o&&S.ev.filter(function(e){return e.id===p.evId;})[0];
   var tit=p.de+' → '+p.para+(p.rapido?' (trem-bala)':' ('+G.MODOS[p.modo].replace(/^\S+\s/,'').toLowerCase()+')');
-  var det=p.de+' → '+p.para+'\nMeio: '+G.MODOS[p.modo]+'\nCusto: '+G.yen(p.v)+' por pessoa × '+p.pax+' = '+G.yen(p.v*p.pax)+'\nEstado: '+ROTULO[p.estado]+(p.codigo?'\nCódigo da reserva: '+p.codigo:'');
+  var det=p.de+' → '+p.para+'\nMeio: '+G.MODOS[p.modo]+'\nCusto: '+G.yen(p.v)+' por pessoa × '+p.pax+' = '+G.yen(p.v*p.pax)+'\nEstado: '+ROTULO[p.estado]+(p.codigo?'\nCódigo da reserva: '+p.codigo:'')+(p.link?'\nLink do trajeto: '+p.link:'');
   if(!ev){ p.evId='e'+Date.now().toString(36)+Math.random().toString(36).slice(2,8);
     ev={id:p.evId,titulo:tit,tipo:'transp',data:p.data,dataFim:'',hora:p.hora,horaFim:'',fuso:(S.fuso||'auto'),local:p.deLocal,detalhes:det}; S.ev.push(ev); }
   else { ev.titulo=tit; ev.data=p.data; ev.hora=p.hora; ev.local=p.deLocal; ev.detalhes=det; }
@@ -170,6 +171,6 @@ lista();
 var tmr; function agenda(){clearTimeout(tmr);tmr=setTimeout(calcula,450);}
 $('#de').addEventListener('input',agenda); $('#para').addEventListener('input',agenda);
 $('#de').addEventListener('change',calcula); $('#para').addEventListener('change',calcula);
-(function(){try{var q=new URLSearchParams(location.search),d=q.get('de'),p=q.get('para'); if(d&&p){$('#de').value=d.slice(0,120);$('#para').value=p.slice(0,120);calcula();}}catch(e){}})();
+(function(){try{var q=new URLSearchParams(location.search),d=q.get('de'),p=q.get('para'); if(d&&p){ if(q.get('dl'))lugares[d.slice(0,120)]=q.get('dl').slice(0,600); if(q.get('pl'))lugares[p.slice(0,120)]=q.get('pl').slice(0,600); if(/^\d{4}-\d{2}-\d{2}$/.test(q.get('dt')||''))PARAM_DT=q.get('dt');$('#de').value=d.slice(0,120);$('#para').value=p.slice(0,120);calcula();}}catch(e){}})();
 $('#troca').onclick=function(){var x=$('#de').value;$('#de').value=$('#para').value;$('#para').value=x;calcula();};
 })();

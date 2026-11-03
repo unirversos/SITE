@@ -11,14 +11,14 @@ function sync(S,G,p){
   if(!Array.isArray(S.ev))S.ev=[]; if(!S.ok)S.ok={};
   var ev=S.ev.filter(function(e){return e.id===p.evId;})[0];
   var tit=p.de+' → '+p.para+(p.rapido?' (trem-bala)':' ('+G.MODOS[p.modo].replace(/^\S+\s/,'').toLowerCase()+')');
-  var det=p.de+' → '+p.para+'\nMeio: '+G.MODOS[p.modo]+'\nCusto: '+G.yen(p.v)+' por pessoa × '+p.pax+' = '+G.yen(p.v*p.pax)+'\nEstado: '+ROTULO[p.estado]+(p.codigo?'\nCódigo da reserva: '+p.codigo:'');
+  var det=p.de+' → '+p.para+'\nMeio: '+G.MODOS[p.modo]+'\nCusto: '+G.yen(p.v)+' por pessoa × '+p.pax+' = '+G.yen(p.v*p.pax)+'\nEstado: '+ROTULO[p.estado]+(p.codigo?'\nCódigo da reserva: '+p.codigo:'')+(p.link?'\nLink do trajeto: '+p.link:'');
   if(!ev){ p.evId='e'+Date.now().toString(36)+Math.random().toString(36).slice(2,8);
     ev={id:p.evId,titulo:tit,tipo:'transp',data:p.data,dataFim:'',hora:p.hora,horaFim:'',fuso:(S.fuso||'auto'),local:p.deLocal,detalhes:det}; S.ev.push(ev); }
   else { ev.titulo=tit; ev.data=p.data; ev.hora=p.hora; ev.local=p.deLocal; ev.detalhes=det; }
   if(p.estado==='comprado')S.ok[p.evId]=1; else delete S.ok[p.evId];
 }
 function nova(S,G,d){
-  var p={id:rid(),evId:'',de:d.de,para:d.para,deLocal:d.deLocal||'',paraLocal:d.paraLocal||'',modo:d.modo,rapido:!!d.rapido,data:d.data,hora:d.hora||'',v:d.v,pax:d.pax||1,estado:'comprar',codigo:''};
+  var p={id:rid(),evId:'',de:d.de,para:d.para,deLocal:d.deLocal||'',paraLocal:d.paraLocal||'',modo:d.modo,rapido:!!d.rapido,data:d.data,hora:d.hora||'',v:d.v,pax:d.pax||1,estado:'comprar',codigo:'',link:d.link||''};
   pas(S).push(p); sync(S,G,p); return p;
 }
 function jaSalvo(S,a,b){ return pas(S).some(function(p){return p.evId===a.id||p.evId===b.id||(p.de===a.titulo&&p.para===b.titulo);}); }
@@ -38,7 +38,7 @@ function html(S,G){
     h+='<div class="pas '+p.estado+'" data-pid="'+esc(p.id)+'"><div class="ph"><b>'+esc(p.de)+' → '+esc(p.para)+'</b><span class="md2">'+G.MODOS[p.modo]+'</span></div>'+
       '<div class="pl">'+esc(fd(p.data))+(p.hora?' às '+esc(p.hora):'')+' · '+G.yen(p.v)+' × '+p.pax+' = <b>'+G.yen(p.v*p.pax)+'</b>'+(cot?' · ≈ '+brl(p.v*p.pax*cot):'')+'</div>'+
       '<div class="pr"><label>Estado<select data-pe>'+Object.keys(ROTULO).map(function(k){return '<option value="'+k+'"'+(k===p.estado?' selected':'')+'>'+ROTULO[k]+'</option>';}).join('')+'</select></label>'+
-      '<label>Código da reserva<input data-pc value="'+esc(p.codigo)+'" maxlength="60" placeholder="quando comprar"></label><button type="button" class="btn sm" data-px>Remover</button></div>'+aviso+links+'</div>';
+      '<label>Código da reserva<input data-pc value="'+esc(p.codigo)+'" maxlength="60" placeholder="quando comprar"></label><button type="button" class="btn sm" data-px>Remover</button></div>'+(p.link?'<div class="onde"><a href="'+esc(p.link)+'" target="_blank" rel="noopener">🔗 Abrir o trajeto salvo</a></div>':'')+aviso+links+'</div>';
   });
   return h+'</details>';
 }

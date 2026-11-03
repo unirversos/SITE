@@ -76,6 +76,9 @@ h1 em{font-style:normal;color:var(--pink)}
 .est{font-size:14px;color:var(--muted);line-height:1.7}
 .btns{display:flex;gap:8px;flex-wrap:wrap}
 .salva{display:flex;gap:10px;flex-wrap:wrap;align-items:end}
+html.embed .sitebar,html.embed .crumb,html.embed h1,html.embed .rodape,html.embed #minhas,html.embed .sug{display:none!important}
+html.embed body{background:#fff}
+html.embed .pagina{padding-top:8px}
 .salva label{display:grid;gap:4px;font-size:13px;color:var(--muted);font-weight:700}
 .salva input{font:inherit;font-size:16px;color:var(--ink);border:1.5px solid var(--line);border-radius:12px;padding:8px 10px;background:#fff}
 .minhas{display:grid;gap:12px}
@@ -98,6 +101,7 @@ h1 em{font-style:normal;color:var(--pink)}
 </style>
 <link rel="icon" href="/favicon.svg" type="image/svg+xml"><link rel="icon" href="/favicon.ico" sizes="48x48"><link rel="apple-touch-icon" href="/apple-touch-icon.png"></head>
 <body>
+<script>if(/[?&]embed=1/.test(location.search))document.documentElement.classList.add('embed');</script>
 <div class="pagina">
   <div class="sitebar" role="navigation" aria-label="Site">
     <a href="/" class="logo">UNI<span>R</span>VERSOS</a>
@@ -123,6 +127,6 @@ h1 em{font-style:normal;color:var(--pink)}
 <script src="../calendario/geo.js?v=2"></script>
 <script src="../agendamentos/regras.js?v=1"></script>
 <script src="../calendario/avisos.js?v=2"></script>
-<script src="./deslocamento.js?v=10"></script>
+<script src="./deslocamento.js?v=11"></script>
 </body>
 </html>
