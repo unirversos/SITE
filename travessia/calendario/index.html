@@ -293,7 +293,7 @@ function limpaPas(a){
   a.slice(0,200).forEach(function(p){ if(!p||typeof p!=='object')return;
     var v=Math.round(+p.v), n=parseInt(p.pax,10); if(!isFinite(v)||v<0||v>99999999)v=0; if(!(n>=1&&n<=20))n=1;
     var t=function(x,m){return typeof x==='string'?x.slice(0,m):'';};
-    out.push({id:t(p.id,40)||uid(),evId:t(p.evId,40),de:t(p.de,120),para:t(p.para,120),deLocal:t(p.deLocal,300),paraLocal:t(p.paraLocal,300),
+    out.push({id:t(p.id,40)||uid(),evId:t(p.evId,40),de:t(p.de,120),para:t(p.para,120),deLocal:t(p.deLocal,600),paraLocal:t(p.paraLocal,600),
       modo:/^(pe|trem|onibus|taxi|aviao)$/.test(p.modo)?p.modo:'trem',rapido:!!p.rapido,data:okData(p.data)?p.data:'',hora:okHora(p.hora)?p.hora:'',
       v:v,pax:n,estado:/^(comprar|comprado|cancelado)$/.test(p.estado)?p.estado:'comprar',codigo:t(p.codigo,60)});});
   return out;
@@ -321,7 +321,7 @@ function limpar(o){
     if(!e||typeof e.titulo!=='string'||!okData(e.data))return;
     var x={id:typeof e.id==='string'&&e.id?e.id.slice(0,40):uid(),titulo:e.titulo.slice(0,160),tipo:TIPOS[e.tipo]?e.tipo:'outro',data:e.data,
       dataFim:okData(e.dataFim)&&e.dataFim>e.data?e.dataFim:'',hora:okHora(e.hora)?e.hora:'',horaFim:'',fuso:FUSOS[e.fuso]?e.fuso:r.fuso,
-      local:typeof e.local==='string'?e.local.slice(0,300):'',detalhes:typeof e.detalhes==='string'?e.detalhes.slice(0,4000):''};
+      local:typeof e.local==='string'?e.local.slice(0,600):'',detalhes:typeof e.detalhes==='string'?e.detalhes.slice(0,4000):''};
     if(x.hora&&okHora(e.horaFim))x.horaFim=e.horaFim;
     r.ev.push(x);
   });
@@ -347,7 +347,22 @@ function horaTxt(e){
   if(e.dataFim)t+=' · até '+curto(e.dataFim);
   return t;
 }
-function mapaUrl(l){return 'https://www.google.com/maps/search/?api=1&query='+encodeURIComponent(l);}
+function mapaUrl(l){var c=window.CalGeo&&CalGeo.coordDe(l); return 'https://www.google.com/maps/search/?api=1&query='+(c?c.lat+','+c.lon:encodeURIComponent(l));}
+/* link do Google Maps colado no Local: guarda só o nome + coordenadas exatas (@lat,lon) */
+function compactaLocal(t){
+  t=String(t||'').trim(); if(!/https?:\/\//i.test(t)||!window.CalGeo)return t;
+  var c=CalGeo.coordDe(t); if(!c)return t;
+  var m=t.match(/\/place\/([^\/@?]+)/), nome=''; try{nome=m?decodeURIComponent(m[1].replace(/\+/g,' ')):'';}catch(e){nome=m?m[1].replace(/\+/g,' '):'';}
+  return (nome?nome.slice(0,80)+' ':'')+'@'+c.lat.toFixed(6)+','+c.lon.toFixed(6);
+}
+function estadoLocal(t){
+  t=String(t||'').trim();
+  if(!t)return '⚠ Sem Local, não calculo deslocamento nem passagens. Cole o link do Google Maps ou escreva o endereço.';
+  if(!window.CalGeo)return '';
+  if(CalGeo.coordDe(t))return '✓ Localização exata reconhecida. Já dá para calcular o deslocamento.';
+  if(CalGeo.soLinkCurto(t))return '⚠ Esse link curto (maps.app.goo.gl) não dá para ler aqui. No computador, abra o lugar no Google Maps e copie o link da barra de endereços (tem @latitude,longitude). No celular, toque e segure o ponto e copie as coordenadas.';
+  return 'ℹ Vou procurar pelo nome ou endereço no mapa (menos exato que o link do Google Maps).';
+}
 
 /* ---------- Google Agenda e .ics ---------- */
 function utcMs(d,h,fuso){
@@ -526,7 +541,7 @@ function umaLig(el){
     var de=ea.titulo||'', pa=eb.titulo||'';
     var longo=d>30&&window.CalPas&&(m==='trem'||m==='aviao'), extra='';
     if(longo)extra=CalPas.jaSalvo(S,ea,eb)?' · ✓ trecho nas Passagens':' <button type="button" class="btn sm" data-act="trecho" data-a="'+esc(ea.id)+'" data-b="'+esc(eb.id)+'">🎫 Salvar este trecho nas Passagens</button>';
-    el.innerHTML='↓ '+CalGeo.MODOS[m]+' · ~'+CalGeo.fmtMin(E.min)+' · '+CalGeo.fmtKm(d)+' · <a href="../deslocamento/?de='+encodeURIComponent(de.slice(0,120))+'&para='+encodeURIComponent(pa.slice(0,120))+'">ajustar no De → Para</a>'+extra;
+    el.innerHTML='↓ '+CalGeo.MODOS[m]+' · ~'+CalGeo.fmtMin(E.min)+' · '+CalGeo.fmtKm(d)+' · <a href="../deslocamento/?de='+encodeURIComponent(de.slice(0,120))+'&para='+encodeURIComponent(pa.slice(0,120))+'">ajustar no De → Para</a> · <a href="https://www.google.com/maps/dir/?api=1&origin='+r[0].lat+','+r[0].lon+'&destination='+r[1].lat+','+r[1].lon+'&travelmode=transit" target="_blank" rel="noopener">🗺️ rota no Google Maps</a>'+extra;
   }).catch(function(){});
 }
 function preencheLig(root,ja){
@@ -571,7 +586,7 @@ function salvaTrecho(ida,idb){
     if(!r[0]||!r[1])return;
     var d=CalGeo.km(r[0],r[1]), rk=[CalGeo.chave(ea.local),CalGeo.chave(eb.local)].sort().join('>'), m=(S.orc&&S.orc.m&&S.orc.m[rk])||CalGeo.modoPadrao(d), E=CalGeo.estModo(m,d);
     var tv=S.orc&&S.orc.t&&S.orc.t[rk+'|'+m], v=(tv&&isFinite(+tv.v))?+tv.v:E.fare;
-    CalPas.nova(S,CalGeo,{de:ea.titulo.slice(0,120),para:eb.titulo.slice(0,120),deLocal:ea.local.slice(0,300),paraLocal:eb.local.slice(0,300),modo:m,rapido:m==='trem'&&d>100&&d<=700,data:eb.data,hora:'',v:Math.round(v),pax:(S.orc&&S.orc.pax)||1});
+    CalPas.nova(S,CalGeo,{de:ea.titulo.slice(0,120),para:eb.titulo.slice(0,120),deLocal:ea.local.slice(0,600),paraLocal:eb.local.slice(0,600),modo:m,rapido:m==='trem'&&d>100&&d<=700,data:eb.data,hora:'',v:Math.round(v),pax:(S.orc&&S.orc.pax)||1});
     gravar(); tudo(); if(diaAberto&&dlg.open)abrirDia(diaAberto);
   });
 }
@@ -603,7 +618,9 @@ function abrirDia(d){
   abrir('<div class="dlg-top"><h2 id="dlgT">'+esc(longo(d))+'</h2><button class="btn sm" type="button" data-act="fechar" aria-label="Fechar">✕</button></div>'+
     (d>=S.ini&&d<=S.fim?'<p class="nota">Dia '+(diff(S.ini,d)+1)+' da viagem</p>':'<p class="nota">Fora das datas da viagem</p>')+
     (function(){var ant=Object.keys(S.ev.reduce(function(o,e){if(e.data<d)o[e.data]=1;return o;},{})).sort().pop(), ult=ant?ordemDia(ant).pop():null; return (evs.length&&ult&&evs[0].local?'<p class="nota" style="margin:0">Vindo de “'+esc(ult.titulo)+'” ('+esc(curto(ant))+'):</p>'+ligHtml(ult,evs[0]):'');})()+
-    (evs.length?comLig(evs):'<div class="vazio">Nenhum evento neste dia.</div>')+'<div id="otim"></div>'+
+    (evs.length?comLig(evs):'<div class="vazio">Nenhum evento neste dia.</div>')+
+    (function(){var dep=Object.keys(S.ev.reduce(function(o,e){if(e.data>d)o[e.data]=1;return o;},{})).sort()[0], prim=dep?ordemDia(dep)[0]:null, ult=evs[evs.length-1];
+      return (prim&&ult&&ult.local&&prim.local?'<p class="nota" style="margin:8px 0 0">Próximo destino: “'+esc(prim.titulo)+'” ('+esc(curto(dep))+'):</p>'+ligHtml(ult,prim):'');})()+'<div id="otim"></div>'+
     '<div class="barra"><button class="btn pri" type="button" data-act="novo" data-d="'+d+'">➕ Novo evento neste dia</button></div>');
   preencheLig(dlgIn,true); sugereOrdem(evs);
 }
@@ -622,11 +639,14 @@ function formEvento(e,dataPadrao,topo){
     '<label class="f">Termina em outro dia?<input type="date" name="dataFim" value="'+esc(e.dataFim)+'"><small>Para estadias e viagens longas. Deixe vazio se for no mesmo dia.</small></label></div>'+
     '<div class="par2"><label class="f">Hora de início<input type="time" name="hora" value="'+esc(e.hora)+'"><small>Deixe vazio para o dia todo.</small></label>'+
     '<label class="f">Hora de término<input type="time" name="horaFim" value="'+esc(e.horaFim)+'"></label></div>'+
-    '<label class="f">Local<input name="local" maxlength="300" value="'+esc(e.local)+'" placeholder="nome do lugar ou endereço" autocomplete="off"></label>'+
+    '<label class="f">Local<input name="local" maxlength="600" value="'+esc(e.local)+'" placeholder="link do Google Maps, nome do lugar ou endereço" autocomplete="off"><small id="locSt" role="status"></small></label>'+
     '<label class="f">Detalhes<textarea name="detalhes" maxlength="4000" placeholder="código de reserva, como chegar, o que levar…">'+esc(e.detalhes)+'</textarea></label>'+
     '<p class="erro" id="evErr" role="alert"></p>'+
     '<div class="barra"><button class="btn pri" type="submit">'+(novo?'Adicionar':'Salvar')+'</button><button class="btn" type="button" data-act="voltar">Cancelar</button></div></form>');
   var f=$('#fEv');
+  (function(){var li=f.querySelector('[name=local]'), st=$('#locSt');
+    function mostra(){st.textContent=estadoLocal(li.value);}
+    li.addEventListener('input',mostra); li.addEventListener('change',function(){var c=compactaLocal(li.value); if(c!==li.value)li.value=c; mostra();}); mostra();})();
   f.querySelector('[name=titulo]').focus();
   f.onsubmit=function(ev){
     ev.preventDefault();
@@ -639,7 +659,7 @@ function formEvento(e,dataPadrao,topo){
     if(x.horaFim&&!x.hora){er.textContent='Para usar hora de término, preencha também a de início.';return;}
     if(x.hora&&x.horaFim&&!x.dataFim&&x.horaFim<=x.hora){er.textContent='A hora de término precisa ser depois da de início.';return;}
     var o={id:e.id||uid(),titulo:x.titulo,tipo:TIPOS[x.tipo]?x.tipo:'outro',data:x.data,dataFim:x.dataFim,hora:x.hora,horaFim:x.hora?x.horaFim:'',
-      fuso:FUSOS[x.fuso]?x.fuso:S.fuso,local:x.local.trim(),detalhes:x.detalhes.trim()};
+      fuso:FUSOS[x.fuso]?x.fuso:S.fuso,local:compactaLocal(x.local).slice(0,600),detalhes:x.detalhes.trim()};
     if(x.chegada)S.chegada=o.id;else if(S.chegada===o.id)S.chegada='';
     var i=S.ev.findIndex(function(z){return z.id===o.id;});
     if(i>=0)S.ev[i]=o;else S.ev.push(o);

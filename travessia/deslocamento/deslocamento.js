@@ -102,7 +102,7 @@ function mostra(a,b,pa,pb){
   $('#sv').onclick=function(){
     var dt=$('#sd').value; if(!/^\d{4}-\d{2}-\d{2}$/.test(dt)){$('#smsg').textContent='Escolha a data da viagem para salvar.';return;}
     var vv=parseFloat($('#pv').value); if(!isFinite(vv))vv=E.fare;
-    var p={id:'p'+Date.now().toString(36)+Math.random().toString(36).slice(2,6),evId:'',de:$('#de').value.trim().slice(0,120),para:$('#para').value.trim().slice(0,120),deLocal:a.slice(0,300),paraLocal:b.slice(0,300),
+    var p={id:'p'+Date.now().toString(36)+Math.random().toString(36).slice(2,6),evId:'',de:$('#de').value.trim().slice(0,120),para:$('#para').value.trim().slice(0,120),deLocal:a.slice(0,600),paraLocal:b.slice(0,600),
       modo:modo,rapido:modo==='trem'&&d>100&&d<=700,data:dt,hora:$('#sh').value||'',v:Math.round(vv),pax:orc().pax,estado:'comprar',codigo:''};
     PAS().push(p); syncEvento(p); grava(); lista(); $('#smsg').textContent='✓ Salva em Minhas passagens e no calendário.'; };
   /* aviso de antecedência do trem-bala */
