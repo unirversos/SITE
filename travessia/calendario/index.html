@@ -144,7 +144,7 @@ footer a{color:var(--pink);text-decoration:none;margin-right:12px}
         <label class="f">Nome da viagem (opcional)<input id="sTitulo" maxlength="80" placeholder="ex.: Japão com a família" autocomplete="off"></label>
         <label class="f">Primeiro dia<input type="date" id="sIni" required></label>
         <label class="f">Último dia<input type="date" id="sFim" required></label>
-        <label class="f">Fuso dos horários<select id="sFuso"></select><small>Vale para os eventos novos. Dá para trocar em cada evento.</small></label>
+        <label class="f">Fuso dos horários<select id="sFuso"></select><small>Automático é o mais prático: Brasília até o evento marcado como chegada ao Japão, Japão depois.</small></label>
       </div>
       <p class="erro" id="sErr" role="alert"></p>
       <div class="barra"><button class="btn pri" type="submit" id="sBtn">Criar meu calendário</button><button class="btn" type="button" id="sCancel" hidden>Cancelar</button></div>
@@ -208,7 +208,7 @@ var TIPOS={
   transp:['🚄','Transporte','#3b6ea5'], voo:['✈️','Voo','#6b5aa8'], comida:['🍜','Refeição','#a85a1c'], outro:['📝','Outro','#6b5a67']
 };
 /* Japão e Brasília não têm horário de verão hoje, então o deslocamento é fixo (minutos em relação ao UTC). */
-var FUSOS={ jp:['Horário do Japão',540], br:['Horário de Brasília',-180], dev:['Fuso do meu aparelho',null] };
+var FUSOS={ auto:['Automático: Brasília até a chegada ao Japão, Japão depois',null], jp:['Horário do Japão',540], br:['Horário de Brasília',-180], dev:['Fuso do meu aparelho',null] };
 
 function $(s){return document.querySelector(s);}
 function esc(s){return String(s==null?'':s).replace(/[&<>"']/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c];});}
@@ -225,16 +225,22 @@ function curto(s){return (+s.slice(8))+' '+MESES[+s.slice(5,7)-1].slice(0,3)+' '
 function hojeStr(){var t=new Date();return t.getFullYear()+'-'+pad(t.getMonth()+1)+'-'+pad(t.getDate());}
 function uid(){return 'e'+Date.now().toString(36)+Math.random().toString(36).slice(2,8);}
 
-var S={titulo:'',ini:'',fim:'',fuso:'jp',ev:[]};
+var S={titulo:'',ini:'',fim:'',fuso:'auto',chegada:'',ev:[]};
+var CURTO={jp:'horário do Japão',br:'horário de Brasília',dev:'fuso do aparelho'};
+function fusoDe(e){
+  if(e.fuso!=='auto')return e.fuso;
+  var ch=S.ev.find(function(z){return z.id===S.chegada;});
+  return ch&&e.data<ch.data?'br':'jp';
+}
 var mes='', visao='mes', salvouOk=true;
 
 /* ---------- salvar e abrir ---------- */
 function limpar(o){
-  var r={titulo:'',ini:'',fim:'',fuso:'jp',ev:[]};
+  var r={titulo:'',ini:'',fim:'',fuso:'auto',chegada:'',ev:[]};
   if(!o||typeof o!=='object')return r;
   r.titulo=typeof o.titulo==='string'?o.titulo.slice(0,80):'';
   if(okData(o.ini)&&okData(o.fim)&&o.fim>=o.ini){r.ini=o.ini;r.fim=o.fim;}
-  r.fuso=FUSOS[o.fuso]?o.fuso:'jp';
+  r.fuso=FUSOS[o.fuso]?o.fuso:'auto';
   (Array.isArray(o.ev)?o.ev:[]).slice(0,2000).forEach(function(e){
     if(!e||typeof e.titulo!=='string'||!okData(e.data))return;
     var x={id:typeof e.id==='string'&&e.id?e.id.slice(0,40):uid(),titulo:e.titulo.slice(0,160),tipo:TIPOS[e.tipo]?e.tipo:'outro',data:e.data,
@@ -243,6 +249,7 @@ function limpar(o){
     if(x.hora&&okHora(e.horaFim))x.horaFim=e.horaFim;
     r.ev.push(x);
   });
+  if(typeof o.chegada==='string'&&r.ev.some(function(z){return z.id===o.chegada;}))r.chegada=o.chegada;
   return r;
 }
 function carregar(){try{S=limpar(JSON.parse(localStorage.getItem(KEY)||'null'));}catch(e){S=limpar(null);}}
@@ -274,7 +281,7 @@ function utcMs(d,h,fuso){
 function zulu(ms){return new Date(ms).toISOString().replace(/[-:]/g,'').replace(/\.\d{3}/,'');}
 function intervalo(e){
   if(!e.hora){return {dia:true,a:e.data.replace(/-/g,''),b:add(e.dataFim||e.data,1).replace(/-/g,'')};}
-  var ini=utcMs(e.data,e.hora,e.fuso),fim=e.horaFim?utcMs(e.dataFim||e.data,e.horaFim,e.fuso):ini+36e5;
+  var fz=fusoDe(e),ini=utcMs(e.data,e.hora,fz),fim=e.horaFim?utcMs(e.dataFim||e.data,e.horaFim,fz):ini+36e5;
   return {dia:false,a:zulu(ini),b:zulu(fim)};
 }
 function urlGoogle(e){
@@ -366,7 +373,8 @@ function desenharMes(){
 }
 function cartao(e){
   var t=TIPOS[e.tipo];
-  return '<article class="evc" style="--c:'+t[2]+'"><span class="hora">'+esc(horaTxt(e))+(e.hora&&e.fuso!==S.fuso?' ('+esc(FUSOS[e.fuso][0])+')':'')+'</span>'+
+  return '<article class="evc" style="--c:'+t[2]+'"><span class="hora">'+esc(horaTxt(e))+(e.hora?' · '+CURTO[fusoDe(e)]:'')+'</span>'+
+    (e.id===S.chegada?'<span class="hora" style="color:var(--sage)">🛬 Chegada ao Japão: dali em diante, tudo no horário do Japão</span>':'')+
     '<h4>'+t[0]+' '+esc(e.titulo)+'</h4>'+
     (e.local?'<p class="loc">📍 '+esc(e.local)+' · <a href="'+mapaUrl(e.local)+'" target="_blank" rel="noopener">ver no mapa</a></p>':'')+
     (e.detalhes?'<p class="det">'+esc(e.detalhes).replace(/\n/g,'<br>')+'</p>':'')+
@@ -423,7 +431,8 @@ function formEvento(e,dataPadrao){
     '<form id="fEv" novalidate class="wrap" style="gap:12px">'+
     '<label class="f">O que vai acontecer?<input name="titulo" required maxlength="160" value="'+esc(e.titulo)+'" placeholder="ex.: teamLab, jantar, Shinkansen para Quioto" autocomplete="off"></label>'+
     '<div class="par2"><label class="f">Tipo<select name="tipo">'+tipos+'</select></label>'+
-    '<label class="f">Fuso do horário<select name="fuso">'+fusos+'</select></label></div>'+
+    '<label class="f">Fuso do horário<select name="fuso">'+fusos+'</select><small>Automático: Brasília antes da chegada ao Japão, Japão depois.</small></label></div>'+
+    '<label class="f" style="display:flex;gap:10px;align-items:center;flex-direction:row;font-size:15px;color:var(--ink)"><input type="checkbox" name="chegada" style="width:auto"'+(e.id&&e.id===S.chegada?' checked':'')+'> 🛬 Este evento é a chegada ao Japão (os dias seguintes ficam no horário de lá)</label>'+
     '<div class="par2"><label class="f">Dia<input type="date" name="data" required value="'+esc(e.data)+'"></label>'+
     '<label class="f">Termina em outro dia?<input type="date" name="dataFim" value="'+esc(e.dataFim)+'"><small>Para estadias e viagens longas. Deixe vazio se for no mesmo dia.</small></label></div>'+
     '<div class="par2"><label class="f">Hora de início<input type="time" name="hora" value="'+esc(e.hora)+'"><small>Deixe vazio para o dia todo.</small></label>'+
@@ -446,6 +455,7 @@ function formEvento(e,dataPadrao){
     if(x.hora&&x.horaFim&&!x.dataFim&&x.horaFim<=x.hora){er.textContent='A hora de término precisa ser depois da de início.';return;}
     var o={id:e.id||uid(),titulo:x.titulo,tipo:TIPOS[x.tipo]?x.tipo:'outro',data:x.data,dataFim:x.dataFim,hora:x.hora,horaFim:x.hora?x.horaFim:'',
       fuso:FUSOS[x.fuso]?x.fuso:S.fuso,local:x.local.trim(),detalhes:x.detalhes.trim()};
+    if(x.chegada)S.chegada=o.id;else if(S.chegada===o.id)S.chegada='';
     var i=S.ev.findIndex(function(z){return z.id===o.id;});
     if(i>=0)S.ev[i]=o;else S.ev.push(o);
     gravar();tudo();
@@ -469,6 +479,7 @@ function acaoEvento(ev){
     if(b.dataset.sure!=='1'){b.dataset.sure='1';b.textContent='Confirmar exclusão?';setTimeout(function(){if(b.isConnected){b.dataset.sure='';b.textContent='Excluir';}},4000);return;}
     var d=diaAberto;
     S.ev=S.ev.filter(function(z){return z.id!==id;});
+    if(S.chegada===id)S.chegada='';
     gravar();tudo();aviso('Evento excluído.');
     if(dlg.open&&d)abrirDia(d);
   }
@@ -490,7 +501,7 @@ $('#bGoogle').onclick=function(){
     '<li>Escolha o arquivo e o calendário de destino. Se quiser testar antes, crie um calendário novo só para a viagem.</li></ol>'+
     '<div class="barra"><button class="btn pri" type="button" data-act="ics"'+(n?'':' disabled')+'>📥 Baixar arquivo para o Google Agenda (.ics)</button></div>'+
     '<p><b>Um evento por vez:</b> abra o dia e use o botão <b>➕ Google Agenda</b> do evento. O Google abre com tudo preenchido e você só confirma.</p>'+
-    '<p class="nota">O arquivo também funciona no Apple Calendário e no Outlook. Cada evento leva um código fixo, o que costuma fazer o Google reconhecer o mesmo evento se você importar de novo; se aparecer duplicado, apague os antigos antes. Mudanças feitas depois dentro do Google Agenda não voltam para este calendário.</p>');
+    '<p class="nota">O Google mostra os horários no fuso da sua agenda: no Brasil, um evento às 10h do Japão aparece às 22h do dia anterior, e é isso mesmo.</p><p class="nota">O arquivo também funciona no Apple Calendário e no Outlook. Cada evento leva um código fixo, o que costuma fazer o Google reconhecer o mesmo evento se você importar de novo; se aparecer duplicado, apague os antigos antes. Mudanças feitas depois dentro do Google Agenda não voltam para este calendário.</p>');
 };
 dlg.addEventListener('click',function(ev){
   var b=ev.target.closest('[data-act="ics"]');if(!b)return;
@@ -519,9 +530,10 @@ $('#bExemplo').onclick=function(){
   abrir('<h2 id="dlgT" style="text-transform:none">Preencher com exemplo?</h2>'+se+'<div class="barra"><button class="btn pri" type="button" id="okEx">Preencher</button><button class="btn" type="button" data-act="fechar">Cancelar</button></div>');
   $('#okEx').onclick=function(){
     var span=diff(S.ini,S.fim),nota='Evento de exemplo: edite ou apague.';
-    [[0,'Chegada ao Japão','voo','','',''],[0,'Check-in no hotel','hosp','15:00','','Nome do hotel, cidade'],[1,'Passeio pelo bairro de Asakusa','passeio','10:00','13:00','Asakusa, Tóquio'],
+    [[0,'Chegada ao Japão','voo','14:00','','Aeroporto de Tóquio'],[0,'Check-in no hotel','hosp','15:00','','Nome do hotel, cidade'],[1,'Passeio pelo bairro de Asakusa','passeio','10:00','13:00','Asakusa, Tóquio'],
      [1,'Jantar','comida','19:00','20:30','Restaurante a escolher'],[Math.min(3,span),'Shinkansen para Quioto','transp','09:30','12:00','Estação de Tóquio'],[Math.min(5,span),'Check-out do hotel','hosp','11:00','','']]
     .forEach(function(x){S.ev.push({id:uid(),titulo:x[1],tipo:x[2],data:add(S.ini,x[0]),dataFim:'',hora:x[3],horaFim:x[4],fuso:S.fuso,local:x[5],detalhes:nota});});
+    if(!S.chegada){var c=S.ev.find(function(z){return z.titulo==='Chegada ao Japão';});if(c)S.chegada=c.id;}
     gravar();fechar();tudo();aviso('Exemplo adicionado.');
   };
 };
