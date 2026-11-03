@@ -12,7 +12,19 @@ function acharDatas(t){
   const R2=/\b(\d{1,2})[\/.](\d{1,2})[\/.](\d{4})\b/g; while((m=R2.exec(t))){ let d=+m[1],mo=+m[2]; if(mo>12&&d<=12){const x=d;d=mo;mo=x;} add(m.index,okData(m[3],mo,d)); }
   const R3=/\b(\d{1,2})(?:º|°)?\s*(?:de\s+)?([a-zA-Zçã]{3,9})\.?,?\s*(?:de\s+)?(\d{4})\b/g; while((m=R3.exec(t))){ const mo=MESES[m[2].toLowerCase()]; if(mo) add(m.index,okData(m[3],mo,m[1])); }
   const R4=/\b([a-zA-Zçã]{3,9})\.?\s+(\d{1,2})(?:st|nd|rd|th)?,?\s+(\d{4})\b/g; while((m=R4.exec(t))){ const mo=MESES[m[1].toLowerCase()]; if(mo) add(m.index,okData(m[3],mo,m[2])); }
+  // sem ano, como no Booking: "15 DEZEMBRO / Terça-feira". O dia da semana (ou a próxima ocorrência) define o ano.
+  const R5=/(?<![\d\/.-])(\d{1,2})(?:º|°)?\s+(?:de\s+)?([a-zA-Zçã]{3,9})\b(?!\.?,?\s*(?:de\s+)?\d{4})/g; while((m=R5.exec(t))){ const mo=MESES[m[2].toLowerCase()]; if(mo) add(m.index,okData(anoSem(+m[1],mo,t.slice(m.index+m[0].length,m.index+m[0].length+40)),mo,m[1])); }
+  const R6=/\b([a-zA-Zçã]{3,9})\.?\s+(\d{1,2})(?:st|nd|rd|th)?\b(?!,?\s*\d{4})(?![:\d])/g; while((m=R6.exec(t))){ const mo=MESES[m[1].toLowerCase()]; if(mo) add(m.index,okData(anoSem(+m[2],mo,t.slice(m.index+m[0].length,m.index+m[0].length+40)),mo,m[2])); }
   return out.sort((a,b)=>a.i-b.i);
+}
+const SEM_ID={domingo:0,sunday:0,segunda:1,monday:1,terca:2,tuesday:2,quarta:3,wednesday:3,quinta:4,thursday:4,sexta:5,friday:5,sabado:6,saturday:6};
+function anoSem(d,mo,depois){
+  const hoje=new Date(), y0=hoje.getFullYear();
+  const w=depois.match(/^[\s,.\-–]*(domingo|segunda|ter[cç]a|quarta|quinta|sexta|s[aá]bado|sunday|monday|tuesday|wednesday|thursday|friday|saturday)/i);
+  if(w){ const alvo=SEM_ID[w[1].toLowerCase().replace('ç','c').replace('á','a')];
+    for(const y of [y0,y0+1,y0-1,y0+2]) if(new Date(Date.UTC(y,mo-1,d)).getUTCDay()===alvo) return y; }
+  const lim=new Date(Date.UTC(y0,hoje.getMonth(),hoje.getDate()-7));
+  return new Date(Date.UTC(y0,mo-1,d))>=lim?y0:y0+1;
 }
 function acharHora(t){
   let m=t.match(/\b(\d{1,2})(?::(\d{2}))?\s*(a\.?m\.?|p\.?m\.?)(?![a-z])/i);
@@ -44,6 +56,7 @@ function lerTexto(t){
   r.reserva=cod?cod[1].replace(/\.$/,''):'';
   const vou=t.match(/(?:c[oó]digo\s+do\s+voucher|voucher\s*(?:no\.?|number|code|n[uú]mero)?|ticket\s*(?:no\.?|number|code)|n[uú]mero\s+do\s+ingresso|order\s*(?:no\.?|number|id)|n[uú]mero\s+do\s+pedido|booking\s+code|チケット番号|受付番号)[ \t]*[:：#nº°]*[ \t]*([A-Z0-9\-]*\d[A-Z0-9\-]*)/i);
   r.voucher=vou?vou[1]:'';
+  const pin=t.match(/c[oó]digo\s+pin\s*[:：]?\s*(\d{3,8})|\bpin\s*(?:code)?\s*[:：]\s*(\d{3,8})/i); r.pin=pin?(pin[1]||pin[2]):'';
   const tel=t.match(/(?:telefone|phone|tel\.?|電話)\s*[:：]?\s*(\+?\d[\d\s\-().]{7,}\d)/i); r.telefone=tel?tel[1].trim():'';
   let end=linhaApos(t,/(?:endere[cç]o|address|localiza[cç][aã]o|location|住所)\s*[:：]?[ \t]*([^\n]*)/i);
   if(!end){ const l=t.split('\n').map(s=>s.trim()).find(s=>/\d+-\d+(-\d+)?\b.*(-ku|-shi|-cho|chome|tokyo|kyoto|osaka)|[都道府]\S*[区市町村]/i.test(s)); end=l||''; }
@@ -61,6 +74,12 @@ function lerTexto(t){
   // datas
   r.entrada=ent?ent.data:(todas[0]?todas[0].v:''); r.checkin=ent?ent.hora:'';
   r.saida=sai?sai.data:(todas.find(d=>d.v>r.entrada)||{}).v||''; r.checkout=sai?sai.hora:'';
+  if(r.entrada&&!(r.saida>r.entrada)){ // rótulos juntos ("ENTRADA SAÍDA") e valores depois: usa a ordem das datas e as frases de horário
+    const ds=[...new Set(todas.map(d=>d.v))]; if(ds.length>=2){ r.entrada=ds[0]; r.saida=ds.find(v=>v>r.entrada)||''; }
+    const hh=x=>{ const m=x&&x.match(/(\d{1,2})[:h](\d{2})/); return m?p2(+m[1])+':'+m[2]:''; };
+    const hi=t.match(/(?:a\s+partir\s+d[ao]s?|from|after|desde)\s*(?:as\s*)?(\d{1,2}[:h]\d{2})/i), ho=t.match(/(?:at[eé]\s+(?:as\s*)?|until|before|antes\s+d[ao]s?)\s*(\d{1,2}[:h]\d{2})/i);
+    if(hi) r.checkin=hh(hi[1]); if(ho) r.checkout=hh(ho[1]);
+  }
   const v1=vis||ent; r.data=v1?v1.data:(todas[0]?todas[0].v:''); r.hora=v1?v1.hora:acharHora(t);
   // nome do hotel
   let nome=linhaApos(t,/(?:nome\s+do\s+hotel|hotel\s+name|propriedade|property|acomoda[cç][aã]o|accommodation|hospedagem|宿泊施設)\s*[:：][ \t]*([^\n]*)/i);

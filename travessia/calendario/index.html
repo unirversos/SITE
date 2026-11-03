@@ -705,6 +705,7 @@ var ATRN={pokepark:'PokéPark Kanto','ghibli-park':'Ghibli Park','ghibli-mitaka'
 function dePedido(r){
   var hotel=r.tipo==='hotel',det=[];
   if(r.reserva)det.push('Reserva nº '+r.reserva);
+  if(r.pin)det.push('Código PIN: '+r.pin);
   if(r.voucher&&r.voucher!==r.reserva)det.push('Código: '+r.voucher);
   if(r.plataforma)det.push('Reservado em: '+r.plataforma);
   if(r.telefone)det.push('Telefone: '+r.telefone);
@@ -740,7 +741,7 @@ function lerArq(f){
   if(/\.pdf$/i.test(f.name)||f.type==='application/pdf'){
     go.disabled=true;go.textContent='Lendo o PDF…';
     LeitorReserva.textoDoPDF(f).then(function(t){
-      if(t.replace(/\s/g,'').length<30){volta();er.textContent='Não achei texto nesse PDF: parece uma foto. Use "Novo evento" e digite os dados.';return;}
+      if(t.replace(/\s/g,'').length<30){volta();er.textContent='Esse PDF não tem texto: ele foi salvo como imagem, o que acontece com "Microsoft Print to PDF". Abra a confirmação do Booking, selecione e copie o texto e cole na caixa abaixo. Ou gere o PDF de novo pelo Chrome, em Imprimir → "Salvar como PDF".';return;}
       revisar(LeitorReserva.lerTexto(t));
     }).catch(function(e){volta();er.textContent=e&&e.message==='rede'?'Não consegui abrir o leitor de PDF, que precisa de internet. Copie o texto do PDF e cole na caixa.':'Não consegui ler esse PDF. Copie o texto dele e cole na caixa.';});
     return;
