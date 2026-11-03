@@ -64,7 +64,7 @@ function estacaoPerto(pos){
     .then(function(r){if(!r.ok)throw new Error('http');return r.json();})
     .then(function(j){
       var L=((j&&j.elements)||[]).filter(function(x){return x.tags&&(x.tags['name:pt']||x.tags['name:en']||x.tags.name);}).map(function(x){
-        return {nome:String(x.tags['name:pt']||x.tags['name:en']||x.tags.name).slice(0,80),lat:x.lat,lon:x.lon,m:Math.round(G.km(pos,{lat:x.lat,lon:x.lon})*1000)};});
+        return {nome:String(x.tags['name:pt']||x.tags['name:en']||x.tags.name).slice(0,80),en:String(x.tags['name:en']||x.tags['name:ja-Latn']||x.tags['name:ja_rm']||x.tags.name||'').slice(0,80),lat:x.lat,lon:x.lon,m:Math.round(G.km(pos,{lat:x.lat,lon:x.lon})*1000)};});
       L.sort(function(p,q){return p.m-q.m;});
       var v=L[0]||null; estCache[k]=v; try{localStorage.setItem(EST_KEY,JSON.stringify(estCache));}catch(e){} return v;});
 }
@@ -89,7 +89,8 @@ function mostra(a,b,pa,pb){
     '<label>¥ 100 = R$<input id="pc" type="number" inputmode="decimal" min="0" step="0.01" value="'+(o.cot?(o.cot*100).toFixed(2):'')+'" placeholder="3,50" style="width:96px"></label></div>'+
     '<div class="preco"><span class="rs" id="tot"></span><span class="tg'+(conf?' ok':'')+'" id="tg">'+(conf?'✓ valor confirmado':'estimativa')+'</span>'+(conf?'<button type="button" class="btn sm" id="rev">↺ estimativa</button>':'')+'</div>'+
     '<div id="est" class="est">Procurando estações perto…</div>'+
-    '<div class="btns"><a class="btn pri" id="rt" href="'+esc(rotaUrl(pa,pb))+'" target="_blank" rel="noopener">🚆 Ver rota e preço</a></div>';
+    '<div class="btns"><a class="btn pri" id="rt" href="'+esc(rotaUrl(pa,pb))+'" target="_blank" rel="noopener">🚆 Ver rota e preço</a></div>'+
+    '<div class="btns" id="jr"><a class="btn" href="https://world.jorudan.co.jp/mln/pt/" target="_blank" rel="noopener">🔎 Abrir no Jorudan</a><button type="button" class="btn sm" id="cpDe" disabled>📋 Copiar origem</button><button type="button" class="btn sm" id="cpPara" disabled>📋 Copiar destino</button></div>';
   res.innerHTML=h; res.hidden=false; total(E.fare);
   res.querySelector('.modos').onclick=function(ev){var bt=ev.target.closest('[data-m]'); if(!bt)return; orc().m[rk]=bt.dataset.m; grava(); mostra(a,b,pa,pb);};
   $('#pv').onchange=function(){var x=Math.round(parseFloat(String(this.value).replace(',','.'))); if(isFinite(x)&&x>=0&&x<=99999999){ if(!(x===E.fare&&!orc().t[key]))orc().t[key]={v:x,c:1}; grava(); mostra(a,b,pa,pb);} };
@@ -106,6 +107,8 @@ function mostra(a,b,pa,pb){
     if(!$('#est'))return; var ea=r[0], eb=r[1];
     function lin(rot,e){return e?'🚉 '+rot+': <b>'+esc(e.nome)+'</b> · '+(e.m<1000?e.m+' m':(e.m/1000).toFixed(1).replace('.',',')+' km')+' a pé':'🚉 '+rot+': nenhuma estação em 1,5 km';}
     $('#est').innerHTML=lin('Saindo de',ea)+'<br>'+lin('Chegando em',eb);
+    function copia(btn,e,rot){ if(!e)return; btn.disabled=false; btn.onclick=function(){var t=e.en||e.nome; (navigator.clipboard?navigator.clipboard.writeText(t):Promise.reject()).then(function(){btn.textContent='✓ copiado: '+t;},function(){btn.textContent=t;}); }; }
+    copia($('#cpDe'),ea,'origem'); copia($('#cpPara'),eb,'destino');
     if(ea&&eb&&modo==='trem'){ $('#rt').href=rotaEntre(ea,eb); $('#rt').textContent='🚆 Rota de trem: '+ea.nome+' → '+eb.nome; }
   }).catch(function(){ if($('#est'))$('#est').textContent='Não consegui procurar as estações agora (sem internet ou serviço fora do ar). A rota abre pelos endereços.'; });
   function total(es){
