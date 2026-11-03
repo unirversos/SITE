@@ -89,6 +89,48 @@ function desenhaMapa(){
   setTimeout(function(){mapa.invalidateSize();},60);
 }
 
+/* ---------- orçamento das passagens (¥) ----------
+   Cada trecho tem uma ESTIMATIVA automática (por distância e tipo de transporte) que a pessoa
+   pode trocar pelo valor real conferido nos links de rota. O valor real fica salvo no calendário. */
+function estTarifa(d){
+  if(d<=LIM_CIDADE_B){ var real=d*1.3; if(real/4.8*60<=15)return 0; return Math.min(600,Math.round((170+12*real)/10)*10); }
+  if(d<=100)return Math.round(20*d*1.25/10)*10;
+  if(d<=700)return Math.round(30*d*1.25/100)*100;
+  return Math.round((20000+5*d)/1000)*1000;
+}
+var LIM_CIDADE_B=30;
+function orc(){var S=window.CalAPI.estado(); if(!S.orc)S.orc={cot:'',pax:1,t:{}}; return S.orc;}
+function kTar(a,b){return [chave(a.local),chave(b.local)].sort().join('>');}
+function yen(n){return '¥ '+Math.round(n).toLocaleString('pt-BR');}
+function brl(n){return 'R$ '+n.toLocaleString('pt-BR',{minimumFractionDigits:2,maximumFractionDigits:2});}
+/* item: {key, est}; devolve {v, conf} */
+function valor(it){var t=orc().t[it.key]; return t?{v:t.v,conf:true}:{v:it.est,conf:false};}
+function campoPreco(it){var x=valor(it);
+  return '<div class="pc'+(x.conf?' ok':'')+'"><label>Passagem (¥, por pessoa) <input type="number" inputmode="numeric" min="0" step="10" value="'+x.v+'" data-leg="'+esc(it.key)+'" data-est="'+it.est+'"></label>'+
+    '<span class="tg">'+(x.conf?'✓ valor confirmado':'estimativa — confira nos links')+'</span>'+(x.conf?' <button type="button" class="btn sm" data-rev="'+esc(it.key)+'">↺ voltar à estimativa</button>':'')+'</div>';}
+function painelOrc(items,rotulo){
+  var o=orc(), tot=0, conf=0; items.forEach(function(it){var x=valor(it);tot+=x.v;if(x.conf)conf++;});
+  var tp=tot*o.pax, h='<div class="orc"><b>💴 '+rotulo+'</b><div class="orcl">'+
+    '<label>Pessoas <input type="number" min="1" max="20" step="1" value="'+o.pax+'" data-pax></label>'+
+    '<label>Cotação: ¥ 100 = R$ <input type="number" inputmode="decimal" min="0" step="0.01" value="'+(o.cot?(o.cot*100).toFixed(2):'')+'" placeholder="ex.: 3,50" data-cot></label></div>'+
+    '<p class="orct">Por pessoa: <b>'+yen(tot)+'</b>'+(o.pax>1?' · para '+o.pax+' pessoas: <b>'+yen(tp)+'</b>':'')+
+    (o.cot?' · <b>≈ '+brl(tp*o.cot)+'</b>':' · <span class="nota">digite a cotação para ver em reais</span>')+'</p>'+
+    '<p class="nota">'+conf+' de '+items.length+' trecho'+(items.length===1?'':'s')+' com valor confirmado; o resto é estimativa (pode errar bastante). Não inclui reserva de assento, taxas de cartão nem o IOF.</p></div>';
+  return h;
+}
+function ligaOrc(onMudou){
+  var el=$('#mapaLista'); if(!el||el._orcLigado)return; el._orcLigado=true;
+  el.addEventListener('change',function(ev){var t=ev.target,o=orc();
+    if(t.dataset&&t.dataset.leg!==undefined){var v=Math.round(parseFloat(String(t.value).replace(',','.')));
+      if(isFinite(v)&&v>=0&&v<=99999999){ if(v===+t.dataset.est&&!o.t[t.dataset.leg]){} else o.t[t.dataset.leg]={v:v,c:1}; } onMudou(true);}
+    else if(t.hasAttribute&&t.hasAttribute('data-pax')){var n=parseInt(t.value,10);if(n>=1&&n<=20)o.pax=n;onMudou(true);}
+    else if(t.hasAttribute&&t.hasAttribute('data-cot')){var c=parseFloat(String(t.value).replace(',','.'));o.cot=(isFinite(c)&&c>0&&c<100000)?c/100:'';onMudou(true);}
+  });
+  el.addEventListener('click',function(ev){var b=ev.target.closest('[data-rev]'); if(!b)return; delete orc().t[b.dataset.rev]; onMudou(true);});
+}
+function salvaOrc(){try{window.CalAPI.gravar();}catch(e){}}
+function digitando(){var a=document.activeElement,el=$('#mapaLista');return !!(a&&el&&el.contains(a)&&a.tagName==='INPUT');}
+
 /* ---------- viagem toda: regiões e deslocamentos entre cidades ---------- */
 var LIM_CIDADE=30; /* km: pontos mais perto que isso contam como a mesma cidade/região */
 function estimaLonga(d){var real=d*1.25;
@@ -113,11 +155,12 @@ function agrupaRegioes(seq){
 }
 function pintaViagem(){
   var el=$('#mapaLista'); if(!el)return;
+  if(digitando()){setTimeout(pintaViagem,900);return;}
   var seq=viagem.seq, regs=agrupaRegioes(seq), faltam=seq.filter(function(x){return !x.pos&&!x.buscando;}).length, buscando=seq.filter(function(x){return x.buscando;}).length;
-  var kmLoc=0,minLoc=0,kmEnt=0,minEnt=0,legs=[],i;
+  var kmLoc=0,minLoc=0,kmEnt=0,minEnt=0,legs=[],locais=[],i;
   for(i=0;i<seq.length-1;i++){var a=seq[i],b=seq[i+1]; if(!a.pos||!b.pos)continue; var d=km(a.pos,b.pos);
-    if(d<=LIM_CIDADE){var e=estima(d);kmLoc+=d;minLoc+=e.min;}
-    else{var L2=estimaLonga(d);kmEnt+=d;minEnt+=L2.min;legs.push({a:a,b:b,d:d,e:L2});} }
+    if(d<=LIM_CIDADE){var e=estima(d);kmLoc+=d;minLoc+=e.min;locais.push({a:a,b:b,it:{key:kTar(a,b),est:estTarifa(d)}});}
+    else{var L2=estimaLonga(d);kmEnt+=d;minEnt+=L2.min;legs.push({a:a,b:b,d:d,e:L2,it:{key:kTar(a,b),est:estTarifa(d)}});} }
   var h='';
   if(buscando)h+='<p class="nota">Procurando os lugares no mapa… ('+buscando+' restante'+(buscando>1?'s':'')+')</p>';
   var usadas=regs.filter(function(r){return r.pts.length;});
@@ -134,12 +177,22 @@ function pintaViagem(){
     var prox=etapas[k+1];
     if(prox){ var leg=legs.filter(function(g){return g.a.reg===et.reg&&g.b.reg===prox.reg;})[0];
       if(leg)h+='<li class="leg"><span class="mn">↓</span><div><b>'+esc(r.nome)+' → '+esc(regs[prox.reg].nome)+'</b>: '+fmtKm(leg.d)+' em linha reta · '+leg.e.modo+' ≈ '+fmtMin(leg.e.min)+
-        '<div class="lk"><a href="'+esc(rotaUrl(leg.a,leg.b,'transit'))+'" target="_blank" rel="noopener">🚆 ver rota e horários</a></div></div></li>';
+        '<div class="lk"><a href="'+esc(rotaUrl(leg.a,leg.b,'transit'))+'" target="_blank" rel="noopener">🚆 ver rota e preço</a></div>'+campoPreco(leg.it)+'</div></li>';
       else h+='<li class="leg"><span class="mn">↓</span><div class="nota">Sem como calcular este trecho ainda.</div></li>'; }
   });
   h+='</ol>';
+  /* lista de trechos dentro das cidades (um campo por par de lugares; ida e volta valem o mesmo) */
+  var vistos={},unicos=[]; locais.forEach(function(g){if(!vistos[g.it.key]){vistos[g.it.key]=1;unicos.push(g);}});
+  var itensU=legs.map(function(g){return g.it;});
+  itensU=itensU.filter(function(it,i,ar){return ar.findIndex(function(z){return z.key===it.key;})===i;}).concat(unicos.map(function(g){return g.it;}));
+  /* o total conta cada trecho tantas vezes quanto ele é feito */
+  var cont={}; legs.concat(locais).forEach(function(g){cont[g.it.key]=(cont[g.it.key]||0)+1;});
+  var itensCont=[]; itensU.forEach(function(it){for(var n=0;n<cont[it.key];n++)itensCont.push(it);});
+  if(itensCont.length){ h=painelOrc(itensCont,'Orçamento das passagens da viagem toda')+h;
+    if(unicos.length)h+='<details class="mais"><summary>Trechos dentro das cidades ('+unicos.length+')</summary><div style="display:grid;gap:10px;margin-top:8px">'+unicos.map(function(g){return '<div><b>'+esc(g.a.rotulo)+' → '+esc(g.b.rotulo)+'</b> <span class="nota">('+fmtKm(km(g.a.pos,g.b.pos))+(cont[g.it.key]>1?' · '+cont[g.it.key]+'×':'')+')</span>'+campoPreco(g.it)+'</div>';}).join('')+'</div></details>'; }
   if(faltam)h+='<p class="nota"><b>'+faltam+' lugar'+(faltam>1?'es':'')+' não achado'+(faltam>1?'s':'')+' no mapa</b> e ficou'+(faltam>1?'ram':'')+' de fora da conta. Veja o dia a dia para marcar no mapa: '+seq.filter(function(x){return !x.pos&&!x.buscando;}).map(function(x){return esc(x.local);}).join('; ')+'.</p>';
   el.innerHTML=h;
+  ligaOrc(function(){salvaOrc();pintaViagem();});
   desenhaViagem(seq,legs,regs);
 }
 function desenhaViagem(seq,legs,regs){
@@ -173,7 +226,8 @@ function carregaViagem(){
 function rotaUrl(a,b,modo){return 'https://www.google.com/maps/dir/?api=1&origin='+encodeURIComponent(a.local)+'&destination='+encodeURIComponent(b.local)+'&travelmode='+modo;}
 function pinta(){
   var el=$('#mapaLista'); if(!el)return;
-  var h='<ol class="mp">',tot=0,totMin=0,alertas=0,i;
+  if(digitando()){setTimeout(pinta,900);return;}
+  var h='<ol class="mp">',tot=0,totMin=0,alertas=0,i,itens=[];
   for(i=0;i<paradas.length;i++){var p=paradas[i];
     h+='<li><span class="mn">'+(i+1)+'</span><div><b>'+esc(p.rotulo)+'</b>'+(p.hora?' <span class="ho">'+esc(p.hora)+(p.horaFim?'–'+esc(p.horaFim):'')+'</span>':'')+
       '<div class="lc">📍 '+esc(p.local)+(p.pos?'':' — '+(p.buscando?'procurando no mapa…':'<b>não achei no mapa</b> <button type="button" class="btn sm" data-marca="'+i+'">'+(colocando===i?'toque no mapa…':'📍 marcar no mapa')+'</button>'))+'</div></div></li>';
@@ -184,13 +238,15 @@ function pinta(){
         h+='<li class="leg'+(risco?' risco':'')+'"><span class="mn">↓</span><div>'+
           '<b>'+fmtKm(es.km)+'</b> em linha reta · a pé ≈ '+fmtMin(es.pe)+' · de trem/ônibus ≈ '+fmtMin(es.trans)+
           (gap!==null?'<div class="gp">'+(risco?'⚠️ Só '+fmtMin(Math.max(gap,0))+' entre o fim de um e o começo do outro — pode ficar apertado.':'✓ Sobram '+fmtMin(gap)+' entre os dois.')+'</div>':'')+
-          '<div class="lk"><a href="'+esc(rotaUrl(p,q,'transit'))+'" target="_blank" rel="noopener">🚆 rota de trem</a> · <a href="'+esc(rotaUrl(p,q,'walking'))+'" target="_blank" rel="noopener">🚶 a pé</a></div></div></li>';
+          '<div class="lk"><a href="'+esc(rotaUrl(p,q,'transit'))+'" target="_blank" rel="noopener">🚆 rota de trem</a> · <a href="'+esc(rotaUrl(p,q,'walking'))+'" target="_blank" rel="noopener">🚶 a pé</a></div>'+(function(){var it={key:kTar(p,q),est:estTarifa(es.km)};itens.push(it);return campoPreco(it);})()+'</div></li>';
       } else h+='<li class="leg"><span class="mn">↓</span><div class="nota">Sem como calcular: falta achar um dos lugares no mapa.</div></li>';
     }
   }
   h+='</ol>';
+  if(itens.length)h=painelOrc(itens,'Custo de transporte deste dia')+h;
   if(paradas.length>1&&tot>0)h='<p class="mt"><b>Total do dia:</b> ≈ '+fmtKm(tot)+' em linha reta · cerca de '+fmtMin(totMin)+' só de deslocamento'+(alertas?' · <b style="color:var(--red)">'+alertas+' trecho(s) apertado(s)</b>':'')+'</p>'+h;
   el.innerHTML=h;
+  ligaOrc(function(){salvaOrc();pinta();});
   desenhaMapa();
 }
 function resolve(){
@@ -209,7 +265,7 @@ function carrega(){
   $('#mapaVazio').hidden=!vazio; $('#mapaCorpo').hidden=vazio;
   if(vazio)return;
   var tem=paradas.some(function(p){return p.hotel;}); $('#mapaHotelBox').hidden=!tem;
-  pinta(); resolve();
+  resolve(); pinta();
 }
 function abrir(){
   var api=window.CalAPI; if(!api)return;

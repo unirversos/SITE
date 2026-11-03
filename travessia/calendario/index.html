@@ -91,6 +91,14 @@ h1 em{font-style:normal;color:var(--pink)}
 .mp .lc{font-size:13.5px;color:var(--muted)}
 .mp .gp{margin-top:2px}.mp .lk{font-size:13px;margin-top:2px}
 .mt{margin:0 0 6px;font-size:15px}
+.orc{background:var(--gold-soft);border:1.5px solid #ecd9a8;border-radius:16px;padding:12px 14px;display:grid;gap:8px;margin-bottom:8px}
+.orcl{display:flex;gap:12px;flex-wrap:wrap}
+.orcl label,.pc label{display:flex;gap:6px;align-items:center;font-size:14px;color:var(--muted)}
+.orcl input,.pc input{font:inherit;font-size:16px;color:var(--ink);border:1.5px solid var(--line);border-radius:10px;padding:4px 8px;background:#fff;width:110px}
+.orcl input[data-pax]{width:64px}
+.orct{margin:0;font-size:15px}
+.pc{margin-top:6px;display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+.pc .tg{font-size:12.5px;color:var(--muted)}.pc.ok .tg{color:var(--sage);font-weight:700}
 .lista{display:grid;gap:18px}
 .lista h3{font-family:var(--f-display);font-weight:800;font-size:19px;margin:0 0 6px}
 .lista .grp{display:grid;gap:8px}
@@ -239,7 +247,7 @@ footer a{color:var(--pink);text-decoration:none;margin-right:12px}
 <p class="toast" id="msg" role="status"></p>
 
 <script src="./leitor.js?v=1"></script>
-<script src="./mapa.js?v=4"></script>
+<script src="./mapa.js?v=6"></script>
 <script>
 (function(){
 'use strict';
@@ -269,7 +277,7 @@ function curto(s){return (+s.slice(8))+' '+MESES[+s.slice(5,7)-1].slice(0,3)+' '
 function hojeStr(){var t=new Date();return t.getFullYear()+'-'+pad(t.getMonth()+1)+'-'+pad(t.getDate());}
 function uid(){return 'e'+Date.now().toString(36)+Math.random().toString(36).slice(2,8);}
 
-var S={titulo:'',ini:'',fim:'',fuso:'auto',chegada:'',atualizado:'',ev:[]};
+var S={titulo:'',ini:'',fim:'',fuso:'auto',chegada:'',atualizado:'',ev:[],orc:{cot:'',pax:1,t:{}}};
 var CURTO={jp:'horário do Japão',br:'horário de Brasília',dev:'fuso do aparelho'};
 function fusoDe(e){
   if(e.fuso!=='auto')return e.fuso;
@@ -279,9 +287,17 @@ function fusoDe(e){
 var mes='', visao='mes', salvouOk=true;
 
 /* ---------- salvar e abrir ---------- */
+function limpaOrc(o,r){
+  if(!o||typeof o!=='object')return;
+  var c=parseFloat(o.cot); if(isFinite(c)&&c>0&&c<1000)r.cot=c;
+  var n=parseInt(o.pax,10); if(n>=1&&n<=20)r.pax=n;
+  if(o.t&&typeof o.t==='object')Object.keys(o.t).slice(0,600).forEach(function(k){
+    var v=o.t[k]&&+o.t[k].v; if(k.length<=700&&isFinite(v)&&v>=0&&v<=99999999)r.t[k]={v:Math.round(v),c:1};});
+}
 function limpar(o){
-  var r={titulo:'',ini:'',fim:'',fuso:'auto',chegada:'',atualizado:'',ev:[]};
+  var r={titulo:'',ini:'',fim:'',fuso:'auto',chegada:'',atualizado:'',ev:[],orc:{cot:'',pax:1,t:{}}};
   if(!o||typeof o!=='object')return r;
+  limpaOrc(o.orc,r.orc);
   r.titulo=typeof o.titulo==='string'?o.titulo.slice(0,80):'';
   if(okData(o.ini)&&okData(o.fim)&&o.fim>=o.ini){r.ini=o.ini;r.fim=o.fim;}
   r.fuso=FUSOS[o.fuso]?o.fuso:'auto';
@@ -447,7 +463,7 @@ function trocarVisao(v){
 $('#vbMes').onclick=function(){trocarVisao('mes');};
 $('#vbLista').onclick=function(){trocarVisao('lista');};
 $('#vbMapa').onclick=function(){trocarVisao('mapa');};
-window.CalAPI={estado:function(){return S;},doDia:doDia,longo:longo};
+window.CalAPI={estado:function(){return S;},doDia:doDia,longo:longo,gravar:function(){gravar();}};
 function moverMes(n){var y=+mes.slice(0,4),m=+mes.slice(5,7)-1+n;mes=new Date(Date.UTC(y,m,1)).toISOString().slice(0,7);desenharMes();}
 $('#mPrev').onclick=function(){moverMes(-1);};
 $('#mNext').onclick=function(){moverMes(1);};
@@ -601,7 +617,7 @@ $('#bLimpar').onclick=function(){
 /* ---------- conta (guardar online) ---------- */
 var usuario=null, syncPronto=false, estadoNuvem='', ultimoSalvo=null, tNuv=null;
 function igual(a,b){
-  function k(o){return JSON.stringify({t:o.titulo,i:o.ini,f:o.fim,u:o.fuso,c:o.chegada,e:o.ev});}
+  function k(o){return JSON.stringify({t:o.titulo,i:o.ini,f:o.fim,u:o.fuso,c:o.chegada,e:o.ev,o:o.orc});}
   return k(a)===k(b);
 }
 function nome(u){return (u&&(u.email||u.displayName)||'sua conta').split('@')[0];}
@@ -682,7 +698,7 @@ async function passa(bytes,Stream,modo){
   return new Uint8Array(await new Response(st.readable).arrayBuffer());
 }
 async function empacotar(detalhes){
-  var o={v:1,titulo:S.titulo,ini:S.ini,fim:S.fim,fuso:S.fuso,chegada:S.chegada,ev:S.ev.map(function(e){var x=Object.assign({},e);if(!detalhes)x.detalhes='';return x;})};
+  var o={v:1,titulo:S.titulo,ini:S.ini,fim:S.fim,fuso:S.fuso,chegada:S.chegada,orc:S.orc,ev:S.ev.map(function(e){var x=Object.assign({},e);if(!detalhes)x.detalhes='';return x;})};
   var bytes=new TextEncoder().encode(JSON.stringify(o));
   if(window.CompressionStream)return 'g'+b64u(await passa(bytes,CompressionStream,'gzip'));
   return 'j'+b64u(bytes);
