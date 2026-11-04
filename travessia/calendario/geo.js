@@ -154,12 +154,14 @@ function linksRota(m,pa,pb,o){
       {t:'🗺️ Até o aeroporto de '+A.nome,u:gmaps(pa,A,'transit')}],
       nota:'Aeroporto mais perto: saída '+A.nome+' ('+fmtKm(A.km)+'), chegada '+B.nome+' ('+fmtKm(B.km)+'). O Google Voos abre com origem, destino'+(o.data?' e data':'')+' preenchidos; compre direto no site da companhia.'};
   }
-  /* trem: Jorudan (乗換案内), com as estações mais perto já preenchidas em japonês */
+  /* trem: Google Maps (rota e horários de trem, de estação a estação quando achamos as estações) + Jorudan (preço e horário detalhado) */
+  var temE=!!(o.estA&&o.estB&&o.estA.lat!=null&&o.estB.lat!=null&&o.estA.ja!==o.estB.ja);
+  var maps={t:'🗺️ Ver rota de trem no Google Maps'+(temE?': '+o.estA.nome+' → '+o.estB.nome:''),u:temE?gmaps(o.estA,o.estB,'transit'):gmaps(pa,pb,'transit'),pri:1};
   if(o.estA&&o.estB&&o.estA.ja&&o.estB.ja&&o.estA.ja!==o.estB.ja)
-    return {links:[{t:'🚆 Ver trem e preço no Jorudan: '+o.estA.nome+' → '+o.estB.nome,u:'https://www.jorudan.co.jp/norikae/cgi/nori.cgi?eki1='+encodeURIComponent(o.estA.ja)+'&eki2='+encodeURIComponent(o.estB.ja)+'&Cway=0',pri:1},
+    return {links:[maps,{t:'🚆 Ver trem e preço no Jorudan: '+o.estA.nome+' → '+o.estB.nome,u:'https://www.jorudan.co.jp/norikae/cgi/nori.cgi?eki1='+encodeURIComponent(o.estA.ja)+'&eki2='+encodeURIComponent(o.estB.ja)+'&Cway=0'},
       {t:'🔎 Jorudan em inglês (sem preencher)',u:'https://world.jorudan.co.jp/mln/en/'}],
-      nota:'O Jorudan abre em japonês, com as estações preenchidas e o horário de agora; troque a data lá se precisar. A versão em inglês não aceita estações pelo link: use os botões de copiar.'};
-  return {links:[{t:'🔎 Abrir o Jorudan',u:'https://world.jorudan.co.jp/mln/pt/',pri:1}],nota:o.buscando?'Procurando as estações mais perto para preencher o Jorudan…':'Não achei estação perto de um dos pontos: escreva as estações no Jorudan.'};
+      nota:'O Google Maps mostra a rota e os horários dos trens. O Jorudan abre em japonês, com as estações preenchidas e o horário de agora, e mostra o preço; troque a data lá se precisar. A versão em inglês não aceita estações pelo link: use os botões de copiar.'};
+  return {links:[maps,{t:'🔎 Abrir o Jorudan',u:'https://world.jorudan.co.jp/mln/pt/'}],nota:o.buscando?'Procurando as estações mais perto para preencher o Jorudan…':'Não achei estação perto de um dos pontos: no Jorudan, escreva as estações você mesma.'};
 }
 /* ---------- rota real por rua (a pé / carro): OpenStreetMap, com cache e plano B ---------- */
 var ROTA_KEY='uniCalRota1', rcache={}, rfalha={}, rpend={};
