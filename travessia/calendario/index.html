@@ -912,8 +912,9 @@ async function passa(bytes,Stream,modo){
   var st=new Stream(modo),w=st.writable.getWriter();w.write(bytes);w.close();
   return new Uint8Array(await new Response(st.readable).arrayBuffer());
 }
-async function empacotar(detalhes){
+async function empacotar(detalhes,comLista){
   var o={v:1,titulo:S.titulo,ini:S.ini,fim:S.fim,fuso:S.fuso,chegada:S.chegada,orc:S.orc,ok:S.ok,pas:S.pas,ev:S.ev.map(function(e){var x=Object.assign({},e);if(!detalhes)x.detalhes='';return x;})};
+  if(comLista&&S.lista&&S.lista.length)o.lista=S.lista.map(function(q){var x=Object.assign({},q);if(!detalhes)x.nota='';return x;});
   var bytes=new TextEncoder().encode(JSON.stringify(o));
   if(window.CompressionStream)return 'g'+b64u(await passa(bytes,CompressionStream,'gzip'));
   return 'j'+b64u(bytes);
@@ -929,16 +930,17 @@ $('#bCompart').onclick=function(){
   abrir('<div class="dlg-top"><h2 id="dlgT" style="text-transform:none">Compartilhar o calendário</h2><button class="btn sm" type="button" data-act="fechar" aria-label="Fechar">✕</button></div>'+
     '<p>O link leva uma <b>cópia</b> do calendário de agora. Quem abrir recebe os eventos no navegador dele, prontos para editar e levar ao Google Agenda.</p>'+
     '<label style="display:flex;gap:10px;align-items:center"><input type="checkbox" id="cDet" checked style="width:auto"> Incluir os detalhes dos eventos (códigos de reserva e anotações)</label>'+
+    (S.lista&&S.lista.length?'<label style="display:flex;gap:10px;align-items:center"><input type="checkbox" id="cLista" checked style="width:auto"> Incluir a lista “Quero fazer” ('+S.lista.length+(S.lista.length===1?' item':' itens')+')</label>':'')+
     '<input class="lk-box" id="lkTxt" readonly aria-label="Link do calendário" value="Gerando o link…">'+
     '<div class="barra"><button class="btn pri" type="button" id="lkCopia" disabled>📋 Copiar link</button>'+(navigator.share?'<button class="btn" type="button" id="lkEnvia" disabled>📲 Enviar…</button>':'')+'</div>'+
     '<p class="nota" id="lkNota"></p>'+
     '<p class="nota">Quem tiver o link vê tudo o que estiver nele. O link é uma foto de hoje: se você mudar algo depois, gere e mande outro. Os eventos viajam dentro do link e não ficam guardados no site.</p>');
   async function gerar(){
-    var tok=await empacotar($('#cDet').checked),url=location.origin+location.pathname+'#c='+tok;
+    var tok=await empacotar($('#cDet').checked,$('#cLista')?$('#cLista').checked:false),url=location.origin+location.pathname+'#c='+tok;
     $('#lkTxt').value=url;$('#lkCopia').disabled=false;if($('#lkEnvia'))$('#lkEnvia').disabled=false;
     $('#lkNota').textContent=url.length>6000?'Este link ficou longo ('+url.length+' caracteres) e alguns aplicativos podem cortá-lo. Se o seu marido não conseguir abrir, use "Salvar uma cópia" em Mais opções e mande o arquivo.':'';
   }
-  $('#cDet').onchange=gerar;gerar();
+  $('#cDet').onchange=gerar;if($('#cLista'))$('#cLista').onchange=gerar;gerar();
   $('#lkCopia').onclick=async function(){
     var t=$('#lkTxt');
     try{await navigator.clipboard.writeText(t.value);aviso('Link copiado.');}
@@ -952,9 +954,10 @@ function receberLink(){
   desempacotar(m[1]).then(function(novo){
     if(!novo.ini)throw new Error('vazio');
     abrir('<h2 id="dlgT" style="text-transform:none">Abrir este calendário?</h2><p>Alguém compartilhou um calendário com você'+(novo.titulo?': <b>'+esc(novo.titulo)+'</b>':'')+'. Ele tem <b>'+novo.ev.length+'</b> '+(novo.ev.length===1?'evento':'eventos')+', de '+esc(curto(novo.ini))+' a '+esc(curto(novo.fim))+'.</p>'+
+      (novo.lista&&novo.lista.length?'<p>Vem também a lista “Quero fazer” ('+novo.lista.length+(novo.lista.length===1?' item':' itens')+').</p>':'')+
       (S.ev.length?'<p>Ao abrir, ele <b>substitui</b> o calendário que você tem aqui ('+S.ev.length+' '+(S.ev.length===1?'evento':'eventos')+'). Se quiser guardar o seu, feche esta janela, salve uma cópia em Mais opções e abra o link de novo.</p>':'')+
       '<div class="barra"><button class="btn pri" type="button" id="okLink">Abrir</button><button class="btn" type="button" id="noLink">Agora não</button></div>');
-    $('#okLink').onclick=function(){S=novo;S.atualizado='';gravar();var h=hojeStr();mes=(h>=S.ini&&h<=S.fim?h:S.ini).slice(0,7);$('#setup').hidden=true;$('#app').hidden=false;tudo();fechar();limpaHash();aviso('Calendário aberto.');};
+    $('#okLink').onclick=function(){var minhaLista=S.lista; S=novo; if(!(novo.lista&&novo.lista.length)&&minhaLista)S.lista=minhaLista; S.atualizado='';gravar();var h=hojeStr();mes=(h>=S.ini&&h<=S.fim?h:S.ini).slice(0,7);$('#setup').hidden=true;$('#app').hidden=false;tudo();fechar();limpaHash();aviso('Calendário aberto.');};
     $('#noLink').onclick=function(){fechar();limpaHash();};
   }).catch(function(){
     abrir('<h2 id="dlgT" style="text-transform:none">Não consegui abrir o link</h2><p>O link parece estar incompleto ou cortado. Peça para a pessoa mandar de novo, ou use o arquivo de cópia (Mais opções → Salvar uma cópia).</p><div class="barra"><button class="btn" type="button" data-act="fechar">Fechar</button></div>');
