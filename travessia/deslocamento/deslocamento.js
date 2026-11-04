@@ -76,12 +76,12 @@ function dataDoEvento(local){var k=G.chave(local),e=eventos.filter(function(x){r
 function mostra(a,b,pa,pb){
   var d=G.km(pa,pb), res=$('#res'), rk=kTar(a,b), o=orc();
   if(!o.m)o.m={};
-  var modo=o.m[rk]||G.modoPadrao(d), key=rk+'|'+modo, E=G.estModo(modo,d), t=o.t[key], conf=!!t, v=conf?t.v:E.fare, h='';
-  var chips=Object.keys(G.MODOS).map(function(m){var em=G.estModo(m,d), tm=o.t[rk+'|'+m], cm=tm?tm.v:em.fare;
+  var modo=o.m[rk]||G.modoPadrao(d), key=rk+'|'+modo, cf=(o.r&&o.r[key])||null, E=G.estModo(modo,d,G.rotaCache(pa,pb,G.perfilDe(modo)),cf), t=o.t[key], conf=!!t, v=conf?t.v:E.fare, h='';
+  var chips=Object.keys(G.MODOS).map(function(m){var em=G.estModo(m,d,G.rotaCache(pa,pb,G.perfilDe(m)),o.r&&o.r[rk+'|'+m]), tm=o.t[rk+'|'+m], cm=tm?tm.v:em.fare;
     return '<button type="button" class="md'+(m===modo?' on':'')+'" data-m="'+m+'" aria-pressed="'+(m===modo)+'">'+G.MODOS[m]+'<small>'+G.fmtMin(em.min)+' · '+(cm===0?'grátis':G.yen(cm))+(tm?' ✓':'')+'</small></button>';}).join('');
-  h+='<div class="km">'+G.fmtKm(d).replace(' km','')+' <small>km em linha reta</small></div>'+
+  h+='<div class="km">'+(E.kmTag==='conf'?'':'~')+G.fmtKm(E.km).replace(' km','')+' <small>'+(E.kmTag==='conf'?'km conferido por você':E.kmTag==='real'?'km pelo caminho (rota real)':modo==='trem'?'km pelo trilho (estimativa)':modo==='aviao'?'km em voo (estimativa)':'km pelo caminho (estimativa)')+'</small></div>'+
     '<div class="modos" role="group" aria-label="Meio de transporte">'+chips+'</div>'+
-    '<div class="tempos"><div>'+G.MODOS[modo]+'<b>'+G.fmtMin(E.min)+'</b></div></div>'+
+    '<div class="tempos"><div>'+G.MODOS[modo]+'<b>'+G.fmtMin(E.min)+'</b><small>'+(E.minTag==='conf'?'✓ conferido por você':E.minTag==='real'?'rota real':'estimado')+'</small></div></div>'+
     '<p class="nt">'+esc(E.nota)+'</p>'+
     ((/^coordenadas/.test(pa.nome||'')&&/^coordenadas/.test(pb.nome||''))?'':'<p class="nt" style="color:#8a5a00">⚠ Confira as localizações: '+[[$('#de').value.trim(),pa],[$('#para').value.trim(),pb]].filter(function(x){return !/^coordenadas/.test(x[1].nome||'');}).map(function(x){return '“'+esc(x[0])+'” → achei “'+esc(String(x[1].nome).split(',').slice(0,3).join(','))+'”';}).join('; ')+'. Foram localizadas pelo texto escrito à mão; não confie 100%. Para ficar exato, use o link do Google Maps no Local do evento.</p>')+
     '<div id="av"></div>'+
@@ -89,8 +89,9 @@ function mostra(a,b,pa,pb){
     '<label>Pessoas<input id="pp" type="number" min="1" max="20" value="'+o.pax+'" style="width:76px"></label>'+
     '<label>¥ 100 = R$<input id="pc" type="number" inputmode="decimal" min="0" step="0.01" value="'+(o.cot?(o.cot*100).toFixed(2):'')+'" placeholder="3,50" style="width:96px"></label></div>'+
     '<div class="preco"><span class="rs" id="tot"></span><span class="tg'+(conf?' ok':'')+'" id="tg">'+(conf?'✓ valor confirmado':'estimativa')+'</span>'+(conf?'<button type="button" class="btn sm" id="rev">↺ estimativa</button>':'')+'</div>'+
+    '<div class="conf"><b>Conferiu no Jorudan, na JR ou no Google Maps?</b><small>Digite aqui o valor real e ele passa a valer em todo o Calendário.</small><div class="preco"><label>Saída<input id="rs" type="time" value="'+(cf&&cf.s||'')+'"></label><label>Chegada<input id="rc" type="time" value="'+(cf&&cf.c||'')+'"></label><label>Tempo (min)<input id="rm" type="number" inputmode="numeric" min="1" max="3000" value="'+(cf&&cf.min||'')+'" style="width:92px"></label><label>Distância (km)<input id="rkm" type="number" inputmode="decimal" min="0" step="0.1" value="'+(cf&&cf.km||'')+'" style="width:96px"></label></div></div>'+
     '<div id="est" class="est">Procurando estações perto…</div>'+
-    '<div class="salva"><label>Data<input id="sd" type="date" value="'+(PARAM_DT||dataDoEvento(b)||dataDoEvento(a)||'')+'"></label><label>Hora<input id="sh" type="time"></label><label style="flex:1 1 220px">Link do trajeto (Jorudan, JR…)<input id="sl" type="url" maxlength="500" placeholder="https://…"></label><button type="button" class="btn pri" id="sv">➕ Salvar esta passagem</button></div><p class="nt" id="smsg"></p>'+
+    '<div class="salva"><label>Data<input id="sd" type="date" value="'+(PARAM_DT||dataDoEvento(b)||dataDoEvento(a)||'')+'"></label><label>Hora<input id="sh" type="time" value="'+(cf&&cf.s||'')+'"></label><label style="flex:1 1 220px">Link do trajeto (Jorudan, JR…)<input id="sl" type="url" maxlength="500" placeholder="https://…"></label><button type="button" class="btn pri" id="sv">➕ Salvar esta passagem</button></div><p class="nt" id="smsg"></p>'+
     '<div class="btns" id="rts"></div><p class="nt" id="rtn"></p>'+
     (modo==='trem'||modo==='onibus'?'<div class="btns" id="jr"><button type="button" class="btn sm" id="cpDe" disabled>📋 Copiar origem</button><button type="button" class="btn sm" id="cpPara" disabled>📋 Copiar destino</button></div>':'');
   res.innerHTML=h; res.hidden=false; total(E.fare);
@@ -104,6 +105,11 @@ function mostra(a,b,pa,pb){
   botoes(); $('#sd').addEventListener('change',botoes);
   res.querySelector('.modos').onclick=function(ev){var bt=ev.target.closest('[data-m]'); if(!bt)return; orc().m[rk]=bt.dataset.m; grava(); mostra(a,b,pa,pb);};
   $('#pv').onchange=function(){var x=Math.round(parseFloat(String(this.value).replace(',','.'))); if(isFinite(x)&&x>=0&&x<=99999999){ if(!(x===E.fare&&!orc().t[key]))orc().t[key]={v:x,c:1}; grava(); mostra(a,b,pa,pb);} };
+  function salvaConf(){var oo=orc(); if(!oo.r)oo.r={}; var mm=parseInt($('#rm').value,10), kv=parseFloat(String($('#rkm').value).replace(',','.')), s=$('#rs').value, c=$('#rc').value, x={};
+    if(mm>0&&mm<=3000)x.min=mm; if(kv>0&&kv<=5000)x.km=Math.round(kv*10)/10; if(/^\d\d:\d\d$/.test(s))x.s=s; if(/^\d\d:\d\d$/.test(c))x.c=c;
+    if(Object.keys(x).length)oo.r[key]=x; else delete oo.r[key]; grava(); mostra(a,b,pa,pb);}
+  ['rs','rc','rm','rkm'].forEach(function(id){$('#'+id).onchange=salvaConf;});
+  if(d<=150)['foot','car'].forEach(function(pf){ if(!G.rotaCache(pa,pb,pf)){ G.rotaReal(pa,pb,pf).then(function(r){ if(r&&$('#res')&&localDe($('#de').value)===a&&localDe($('#para').value)===b)mostra(a,b,pa,pb); }); } });
   $('#pp').onchange=function(){var n=parseInt(this.value,10); if(n>=1&&n<=20){orc().pax=n;grava();total(E.fare);botoes();} };
   $('#pc').onchange=function(){var c=parseFloat(String(this.value).replace(',','.')); orc().cot=(isFinite(c)&&c>0&&c<100000)?c/100:''; grava(); total(E.fare);};
   if($('#rev'))$('#rev').onclick=function(){delete orc().t[key];grava();mostra(a,b,pa,pb);};

@@ -249,7 +249,7 @@ footer a{color:var(--pink);text-decoration:none;margin-right:12px}
 
 <script src="./leitor.js?v=2"></script>
 <script src="../agendamentos/regras.js?v=1"></script>
-<script src="./geo.js?v=2"></script>
+<script src="./geo.js?v=3"></script>
 <script src="./avisos.js?v=2"></script>
 <script src="./passagens.js?v=1"></script>
 <script>
@@ -306,6 +306,8 @@ function limpaOrc(o,r){
   var c=parseFloat(o.cot); if(isFinite(c)&&c>0&&c<1000)r.cot=c;
   var n=parseInt(o.pax,10); if(n>=1&&n<=20)r.pax=n;
   if(o.m&&typeof o.m==='object'){r.m={};Object.keys(o.m).slice(0,600).forEach(function(k){if(k.length<=700&&/^(pe|trem|onibus|taxi|aviao)$/.test(o.m[k]))r.m[k]=o.m[k];});}
+  if(o.r&&typeof o.r==='object'){r.r={};Object.keys(o.r).slice(0,600).forEach(function(k){var x=o.r[k]; if(k.length>700||!x||typeof x!=='object')return; var y={}, mn=Math.round(+x.min), kk=+x.km;
+    if(mn>0&&mn<=3000)y.min=mn; if(kk>0&&kk<=5000)y.km=Math.round(kk*10)/10; if(/^\d\d:\d\d$/.test(x.s))y.s=x.s; if(/^\d\d:\d\d$/.test(x.c))y.c=x.c; if(Object.keys(y).length)r.r[k]=y;});}
   var ps=parseFloat(o.passe); if(isFinite(ps)&&ps>0&&ps<=9999999)r.passe=Math.round(ps);
   if(o.t&&typeof o.t==='object')Object.keys(o.t).slice(0,600).forEach(function(k){
     var v=o.t[k]&&+o.t[k].v; if(k.length<=700&&isFinite(v)&&v>=0&&v<=99999999)r.t[k]={v:Math.round(v),c:1};});
@@ -553,7 +555,7 @@ function umaLig(el){
       var falta=!r[0]&&!r[1]?'“'+nm(el.dataset.a)+'” e “'+nm(el.dataset.b)+'”':'“'+nm(!r[0]?el.dataset.a:el.dataset.b)+'”';
       el.innerHTML='↓ sem tempo estimado: não achei '+esc(falta)+' no mapa (no Local, escreva o nome com a cidade, o endereço ou cole as coordenadas)'; return; }
     var d=CalGeo.km(r[0],r[1]); if(d<0.05)return;
-    var rk=[CalGeo.chave(a),CalGeo.chave(b)].sort().join('>'), m=(S.orc&&S.orc.m&&S.orc.m[rk])||CalGeo.modoPadrao(d), E=CalGeo.estModo(m,d);
+    var rk=[CalGeo.chave(a),CalGeo.chave(b)].sort().join('>'), m=(S.orc&&S.orc.m&&S.orc.m[rk])||CalGeo.modoPadrao(d), E=CalGeo.estModo(m,d,CalGeo.rotaCache(r[0],r[1],CalGeo.perfilDe(m)),S.orc&&S.orc.r&&S.orc.r[rk+'|'+m]);
     var ea=S.ev.filter(function(x){return x.id===el.dataset.a;})[0]||{}, eb=S.ev.filter(function(x){return x.id===el.dataset.b;})[0]||{};
     var de=ea.titulo||'', pa=eb.titulo||'';
     var manual=function(x){return !/^coordenadas/.test(x.nome||'');}, aviso='';
@@ -562,7 +564,7 @@ function umaLig(el){
       aviso='<br><small>⚠ Confira: '+esc(q.join(' e '))+' foi localizado pelo texto escrito à mão. Não confie 100% neste tempo; para ficar exato, cole o link do Google Maps no Local.</small>'; }
     var longo=d>30&&window.CalPas&&(m==='trem'||m==='aviao'), extra=' <button type="button" class="btn sm" data-act="trajeto" data-a="'+esc(ea.id)+'" data-b="'+esc(eb.id)+'">🧭 Definir trajeto</button>';
     if(longo)extra+=CalPas.jaSalvo(S,ea,eb)?' · ✓ trecho nas Passagens':' <button type="button" class="btn sm" data-act="trecho" data-a="'+esc(ea.id)+'" data-b="'+esc(eb.id)+'">🎫 Salvar este trecho nas Passagens</button>';
-    el.innerHTML=(el.dataset.h?'🏨 da hospedagem “'+esc(de)+'”: ':'')+'↓ '+CalGeo.MODOS[m]+' · ~'+CalGeo.fmtMin(E.min)+' · '+CalGeo.fmtKm(d)+' · <a href="../deslocamento/?de='+encodeURIComponent(de.slice(0,120))+'&para='+encodeURIComponent(pa.slice(0,120))+'">ajustar no De → Para</a> '+(m==='trem'?'':' · '+(function(){var L=CalGeo.linksRota(m,r[0],r[1],{de:de,para:pa,data:eb.data||''}).links[0];return '<a href="'+esc(L.u)+'" target="_blank" rel="noopener">'+esc(L.t)+'</a>';})())+extra+aviso;
+    el.innerHTML=(el.dataset.h?'🏨 da hospedagem “'+esc(de)+'”: ':'')+'↓ '+CalGeo.MODOS[m]+' · ~'+CalGeo.fmtMin(E.min)+(E.minTag==='conf'?' ✓ conferido':'')+' · '+(E.kmTag==='conf'?'':'~')+CalGeo.fmtKm(E.km)+' · <a href="../deslocamento/?de='+encodeURIComponent(de.slice(0,120))+'&para='+encodeURIComponent(pa.slice(0,120))+'">ajustar no De → Para</a> '+(m==='trem'?'':' · '+(function(){var L=CalGeo.linksRota(m,r[0],r[1],{de:de,para:pa,data:eb.data||''}).links[0];return '<a href="'+esc(L.u)+'" target="_blank" rel="noopener">'+esc(L.t)+'</a>';})())+extra+aviso;
   }).catch(function(){});
 }
 function preencheLig(root,ja){
@@ -598,7 +600,7 @@ function sugereOrdem(evs){
     var ka=tot(atual), poupa=ka-mk;
     if(poupa<1||poupa<ka*0.1){ box.innerHTML='<div class="otim"><b>✓ A ordem dos lugares já está boa</b>Não achei um jeito bem mais curto de visitar esses pontos.</div>'; return; }
     var dm=minutos(atual)-minutos(melhor);
-    box.innerHTML='<div class="otim"><b>💡 Dá para encurtar o dia</b>Ordem sugerida (começando em “'+esc(melhor[0].e.titulo)+'”):<ol>'+melhor.map(function(x){return '<li>'+esc(x.e.titulo)+'</li>';}).join('')+'</ol>De '+CalGeo.fmtKm(ka)+' para '+CalGeo.fmtKm(mk)+' em linha reta'+(dm>0?' (cerca de '+CalGeo.fmtMin(dm)+' a menos de deslocamento)':'')+'. É só uma sugestão: não mudei seus horários, e se algo tem hora marcada, ele manda na ordem.'+avM+'</div>';
+    box.innerHTML='<div class="otim"><b>💡 Dá para encurtar o dia</b>Ordem sugerida (começando em “'+esc(melhor[0].e.titulo)+'”):<ol>'+melhor.map(function(x){return '<li>'+esc(x.e.titulo)+'</li>';}).join('')+'</ol>De '+CalGeo.fmtKm(ka)+' para '+CalGeo.fmtKm(mk)+' de distância aproximada entre os pontos'+(dm>0?' (cerca de '+CalGeo.fmtMin(dm)+' a menos de deslocamento)':'')+'. É só uma sugestão: não mudei seus horários, e se algo tem hora marcada, ele manda na ordem.'+avM+'</div>';
   }).catch(function(){});
 }
 /* ---------- popup do trajeto: a tela De → Para aberta dentro do Calendário ---------- */
@@ -619,7 +621,7 @@ function salvaTrecho(ida,idb){
   if(!ea||!eb||!window.CalPas||CalPas.jaSalvo(S,ea,eb))return;
   Promise.all([CalGeo.geocodificar(ea.local),CalGeo.geocodificar(eb.local)]).then(function(r){
     if(!r[0]||!r[1])return;
-    var d=CalGeo.km(r[0],r[1]), rk=[CalGeo.chave(ea.local),CalGeo.chave(eb.local)].sort().join('>'), m=(S.orc&&S.orc.m&&S.orc.m[rk])||CalGeo.modoPadrao(d), E=CalGeo.estModo(m,d);
+    var d=CalGeo.km(r[0],r[1]), rk=[CalGeo.chave(ea.local),CalGeo.chave(eb.local)].sort().join('>'), m=(S.orc&&S.orc.m&&S.orc.m[rk])||CalGeo.modoPadrao(d), E=CalGeo.estModo(m,d,CalGeo.rotaCache(r[0],r[1],CalGeo.perfilDe(m)),S.orc&&S.orc.r&&S.orc.r[rk+'|'+m]);
     var tv=S.orc&&S.orc.t&&S.orc.t[rk+'|'+m], v=(tv&&isFinite(+tv.v))?+tv.v:E.fare;
     CalPas.nova(S,CalGeo,{de:ea.titulo.slice(0,120),para:eb.titulo.slice(0,120),deLocal:ea.local.slice(0,600),paraLocal:eb.local.slice(0,600),modo:m,rapido:m==='trem'&&d>100&&d<=700,data:eb.data,hora:'',v:Math.round(v),pax:(S.orc&&S.orc.pax)||1});
     gravar(); tudo(); if(diaAberto&&dlg.open)abrirDia(diaAberto);

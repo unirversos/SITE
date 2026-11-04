@@ -112,14 +112,14 @@ function estTarifa(d){
    a pé ¥0 · trem: por distância · ônibus urbano ~¥230 (Quioto) e rodoviário ~¥12/km · táxi ~¥500 + ¥390/km (Tóquio) · avião ~¥20.000 + ¥5/km */
 var MODOS={pe:'🚶 A pé',trem:'🚆 Trem',onibus:'🚌 Ônibus',taxi:'🚕 Táxi',aviao:'✈️ Avião'};
 function modoPadrao(d){ if(d<=1.2)return 'pe'; if(d>700)return 'aviao'; return 'trem'; }
-function estModo(m,d){
-  var real=d*1.3, r;
-  if(m==='pe') return {min:Math.round(real/4.8*60),fare:0,nota:'Estimativa de 4,8 km/h.'};
+function estModoBase(m,d,rr){
+  var real=(rr&&rr.km)?rr.km:d*1.3, r;
+  if(m==='pe') return {min:(rr&&rr.min)?rr.min:Math.round(real/4.8*60),fare:0,nota:'Estimativa de 4,8 km/h.'};
   if(m==='trem'){ var t=d<=LIM_CIDADE?estima(d).trans:estimaLonga(d).min; var f=estTarifa(d); if(d<=LIM_CIDADE)f=Math.max(f,170);
     return {min:t,fare:f,nota:d>100?'Trem rápido (ex.: trem-bala): conta espera e acesso às estações.':'Inclui uns 10 min de espera.'}; }
   if(m==='onibus'){ if(d<=30){ return {min:Math.round(10+real/18*60),fare:Math.round((230+Math.max(0,real-6)*30)/10)*10,nota:'Ônibus urbano: base de ¥ 230; em algumas cidades o preço sobe com a distância.'}; }
     return {min:Math.round(20+real/60*60),fare:Math.max(1500,Math.round(real*12/100)*100),nota:'Ônibus rodoviário: valor muito variável conforme a empresa e o horário.'}; }
-  if(m==='taxi'){ var sp=d<=30?25:60; return {min:Math.round((d<=30?0:10)+real/sp*60),fare:Math.round((500+Math.max(0,real-1.1)*390)/10)*10,nota:'Táxi: bandeirada de ~¥ 500 e ~¥ 390 por km (Tóquio); fora de Tóquio costuma ser parecido.'}; }
+  if(m==='taxi'){ var sp=d<=30?25:60; return {min:(rr&&rr.min)?rr.min:Math.round((d<=30?0:10)+real/sp*60),fare:Math.round((500+Math.max(0,real-1.1)*390)/10)*10,nota:'Táxi: bandeirada de ~¥ 500 e ~¥ 390 por km (Tóquio); fora de Tóquio costuma ser parecido.'}; }
   return {min:Math.round(150+d/750*60),fare:Math.round((20000+5*d)/1000)*1000,nota:'Avião: inclui aeroporto; o preço varia muito conforme a data.'};
 }
 
@@ -161,5 +161,35 @@ function linksRota(m,pa,pb,o){
       nota:'O Jorudan abre em japonês, com as estações preenchidas e o horário de agora; troque a data lá se precisar. A versão em inglês não aceita estações pelo link: use os botões de copiar.'};
   return {links:[{t:'🔎 Abrir o Jorudan',u:'https://world.jorudan.co.jp/mln/pt/',pri:1}],nota:o.buscando?'Procurando as estações mais perto para preencher o Jorudan…':'Não achei estação perto de um dos pontos: escreva as estações no Jorudan.'};
 }
-window.CalGeo={MODOS:MODOS,modoPadrao:modoPadrao,estModo:estModo,geocodificar:geocodificar,coordDe:coordDe,soLinkCurto:soLinkCurto,km:km,estima:estima,estimaLonga:estimaLonga,estTarifa:estTarifa,fmtMin:fmtMin,fmtKm:fmtKm,chave:chave,linksRota:linksRota,gmaps:gmaps,yen:function(n){return '¥ '+Math.round(n).toLocaleString('pt-BR');}};
+/* ---------- rota real por rua (a pé / carro): OpenStreetMap, com cache e plano B ---------- */
+var ROTA_KEY='uniCalRota1', rcache={}, rfalha={}, rpend={};
+try{rcache=JSON.parse(localStorage.getItem(ROTA_KEY)||'{}')||{};}catch(e){rcache={};}
+function rchave(a,b,p){return p+'|'+a.lat.toFixed(4)+','+a.lon.toFixed(4)+'>'+b.lat.toFixed(4)+','+b.lon.toFixed(4);}
+function perfilDe(m){return m==='pe'?'foot':(m==='taxi'||m==='onibus')?'car':null;}
+function rotaCache(a,b,p){return (p&&a&&b)?(rcache[rchave(a,b,p)]||null):null;}
+function rotaReal(a,b,p){
+  if(!p||!a||!b)return Promise.resolve(null);
+  var k=rchave(a,b,p); if(rcache[k])return Promise.resolve(rcache[k]); if(rfalha[k])return Promise.resolve(null); if(rpend[k])return rpend[k];
+  var base=p==='foot'?'https://routing.openstreetmap.de/routed-foot':'https://routing.openstreetmap.de/routed-car';
+  var url=base+'/route/v1/driving/'+a.lon+','+a.lat+';'+b.lon+','+b.lat+'?overview=false&alternatives=false&steps=false';
+  var ctl=window.AbortController?new AbortController():null, to=setTimeout(function(){if(ctl)ctl.abort();},7000);
+  rpend[k]=fetch(url,ctl?{signal:ctl.signal}:{}).then(function(r){if(!r.ok)throw new Error('http');return r.json();}).then(function(j){
+    clearTimeout(to); var x=j&&j.routes&&j.routes[0]; if(!x||!(x.distance>0)||!(x.duration>0)){rfalha[k]=1;return null;}
+    var v={km:Math.round(x.distance/100)/10,min:Math.max(1,Math.round(x.duration/60))}; rcache[k]=v;
+    var ks=Object.keys(rcache); if(ks.length>400)ks.slice(0,ks.length-400).forEach(function(z){delete rcache[z];});
+    try{localStorage.setItem(ROTA_KEY,JSON.stringify(rcache));}catch(e){} return v;
+  }).catch(function(){clearTimeout(to);rfalha[k]=1;return null;}).then(function(v){delete rpend[k];return v;});
+  return rpend[k];
+}
+function difHora(s,c){var a=s.split(':'),b=c.split(':'),x=(+b[0]*60+ +b[1])-(+a[0]*60+ +a[1]); if(x<=0)x+=1440; return x;}
+/* rr: rota real (km, min) do meio; cf: valores conferidos pela pessoa (min, km, s, c). Devolve também km e as etiquetas kmTag/minTag: real | est | conf */
+function estModo(m,d,rr,cf){
+  var r=estModoBase(m,d,rr), tem=!!(rr&&rr.km);
+  if(m==='trem'||m==='aviao'){r.km=d*(m==='aviao'?1:1.25);r.kmTag='est';}
+  else{r.km=tem?rr.km:d*1.3;r.kmTag=tem?'real':'est';}
+  r.minTag=(tem&&(m==='pe'||m==='taxi'))?'real':'est';
+  if(cf){var cm=+cf.min; if(!(cm>0)&&cf.s&&cf.c)cm=difHora(cf.s,cf.c); if(cm>0){r.min=Math.round(cm);r.minTag='conf';} if(+cf.km>0){r.km=+cf.km;r.kmTag='conf';}}
+  return r;
+}
+window.CalGeo={perfilDe:perfilDe,rotaCache:rotaCache,rotaReal:rotaReal,MODOS:MODOS,modoPadrao:modoPadrao,estModo:estModo,geocodificar:geocodificar,coordDe:coordDe,soLinkCurto:soLinkCurto,km:km,estima:estima,estimaLonga:estimaLonga,estTarifa:estTarifa,fmtMin:fmtMin,fmtKm:fmtKm,chave:chave,linksRota:linksRota,gmaps:gmaps,yen:function(n){return '¥ '+Math.round(n).toLocaleString('pt-BR');}};
 })();
