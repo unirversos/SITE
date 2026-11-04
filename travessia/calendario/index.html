@@ -131,7 +131,7 @@ dialog::backdrop{background:rgba(58,43,56,.45)}
 .lq{list-style:none;margin:0;padding:0;display:grid;gap:10px}
 .hband{display:block;font-size:11px;line-height:1.3;background:#e3efe8;color:#2f5d46;border-radius:6px;padding:1px 5px;margin:2px 0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .estq{border:1px solid #cfe0d6;background:#f1f7f3;border-radius:14px;padding:10px 12px;display:grid;gap:6px}
-.estq h3{margin:0;color:#2f5d46;font-size:16px}
+.estq summary{cursor:pointer;font-weight:700;color:#2f5d46;font-size:14.5px;list-style:none;display:flex;gap:6px;align-items:center}.estq summary::-webkit-details-marker{display:none}.estq summary span{flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.estq summary::after{content:'▾';color:#2f5d46}.estq[open] summary::after{content:'▴'}.estq{padding:8px 12px}
 .est-i{display:flex;justify-content:space-between;align-items:center;gap:10px;padding:6px 0;border-top:1px solid #d8e6dd}
 .est-i:first-of-type{border-top:0}
 .est-i>div{display:grid;gap:2px}
@@ -529,13 +529,16 @@ function cartao(e){
 function desenharEstadias(){
   var el=$('#estadias'); if(!el)return;
   var hs=S.ev.filter(function(e){return e.tipo==='hosp';}).sort(function(a,b){return a.data<b.data?-1:a.data>b.data?1:0;});
-  el.innerHTML='<div class="estq"><h3>🏨 Estadia</h3>'+(hs.length?hs.map(function(h){
+  var resumo=hs.length?hs.map(function(h){return esc(h.titulo)+(h.dataFim?' · '+esc(curto(h.data))+' → '+esc(curto(h.dataFim)):'');}).join(' | '):'Sem estadia · adicionar';
+  el.innerHTML='<details class="estq"'+(estAberta?' open':'')+'><summary>🏨 <span>'+resumo+'</span></summary>'+(hs.length?hs.map(function(h){
     var n=h.dataFim?diff(h.data,h.dataFim):0, nome=(h.local||'').replace(/\s*@-?\d+\.\d+,-?\d+\.\d+.*$/,'').trim().slice(0,70);
     return '<div class="est-i"><div><b>'+esc(h.titulo)+'</b><small class="nota">'+esc(curto(h.data))+(h.dataFim?' → '+esc(curto(h.dataFim))+' ('+n+(n===1?' noite':' noites')+')':'')+'</small>'+
       (h.local?'<small class="nota">📍 '+esc(nome||'endereço salvo')+' · <a href="'+mapaUrl(h.local)+'" target="_blank" rel="noopener">ver no mapa</a></small>':'<small class="nota" style="color:#8a5a00">⚠ sem endereço: não calculo trajetos a partir daqui</small>')+'</div>'+
       '<button type="button" class="btn sm" data-act="edit" data-id="'+esc(h.id)+'">✏️ Editar</button></div>';}).join(''):'<p class="nota" style="margin:0">Ainda sem estadia. Cadastre o hotel para eu usar o endereço dele como base dos trajetos.</p>')+
-    '<div class="barra"><button type="button" class="btn sm" data-act="novohosp">➕ Adicionar estadia</button></div></div>';
+    '<div class="barra"><button type="button" class="btn sm" data-act="novohosp">➕ Adicionar estadia</button></div></details>';
+  var d=el.querySelector('details');if(d)d.addEventListener('toggle',function(){estAberta=d.open;});
 }
+var estAberta=false;
 function desenharLista(){
   var datas={};
   S.ev.forEach(function(e){datas[e.data]=1;});
