@@ -135,14 +135,16 @@ function aeroPerto(p){var m=null,md=1e9; AERO.forEach(function(a){var k=km(p,{la
 function crd(p){return (+p.lat).toFixed(5)+','+(+p.lon).toFixed(5);}
 function gmaps(pa,pb,tm){return 'https://www.google.com/maps/dir/?api=1&origin='+crd(pa)+'&destination='+crd(pb)+'&travelmode='+tm;}
 /* o = {de, para, data 'AAAA-MM-DD', pax, estA, estB, buscando} → {links:[{t,u,pri}], nota} */
+var APP={goI:'https://apps.apple.com/us/app/go-taxi-app-for-japan-visit/id1254341709',goA:'https://play.google.com/store/apps/details?id=com.dena.automotive.taxibell',
+  exI:'https://apps.apple.com/us/app/shinkansen-smartex-app/id1253336330',exA:'https://play.google.com/store/apps/details?id=jp.co.jr_central.exreserve.or'};
 function linksRota(m,pa,pb,o){
   o=o||{}; var d=km(pa,pb);
   if(m==='pe')return {links:[{t:'🚶 Ver caminho a pé (Google Maps)',u:gmaps(pa,pb,'walking'),pri:1}],nota:'Abre o Google Maps já no modo a pé.'};
   if(m==='taxi'){
     var u='https://m.uber.com/ul/?action=setPickup&pickup[latitude]='+(+pa.lat).toFixed(6)+'&pickup[longitude]='+(+pa.lon).toFixed(6)+'&pickup[nickname]='+encodeURIComponent(String(o.de||'Origem').slice(0,60))+
       '&dropoff[latitude]='+(+pb.lat).toFixed(6)+'&dropoff[longitude]='+(+pb.lon).toFixed(6)+'&dropoff[nickname]='+encodeURIComponent(String(o.para||'Destino').slice(0,60));
-    return {links:[{t:'🚕 Pedir pelo Uber (origem e destino já preenchidos)',u:u,pri:1},{t:'🗺️ Trajeto de carro (Google Maps)',u:gmaps(pa,pb,'driving')}],
-      nota:'No Japão o Uber chama táxis comuns nas cidades grandes; se não aparecer carro, dá para pegar táxi no ponto ou pelo app GO.'};
+    return {links:[{t:'🚕 Pedir pelo Uber (origem e destino já preenchidos)',u:u,pri:1},{t:'🗺️ Trajeto de carro (Google Maps)',u:gmaps(pa,pb,'driving')},{t:'📱 App GO Taxi · iPhone',u:APP.goI},{t:'📱 App GO Taxi · Android',u:APP.goA}],
+      nota:'No Japão o Uber chama táxis comuns nas cidades grandes; se não aparecer carro, dá para pegar táxi no ponto ou pelo app GO Taxi (abre só a página do app; não leva origem e destino).'};
   }
   if(m==='onibus')return {links:[{t:'🚌 Abrir o Japan Bus Online',u:'https://japanbusonline.com/en',pri:1},{t:'🗺️ Ônibus da cidade (Google Maps)',u:gmaps(pa,pb,'transit')}],
     nota:'O Japan Bus Online não aceita o trajeto pelo link: copie a origem e o destino abaixo e cole nos campos de saída e chegada. Para ônibus dentro da cidade, use o Google Maps.'};
@@ -156,12 +158,13 @@ function linksRota(m,pa,pb,o){
   }
   /* trem: Google Maps (rota e horários de trem, de estação a estação quando achamos as estações) + Jorudan (preço e horário detalhado) */
   var temE=!!(o.estA&&o.estB&&o.estA.lat!=null&&o.estB.lat!=null&&o.estA.ja!==o.estB.ja);
+  var ex=(d>100&&d<=700)?[{t:'🚄 App SmartEX (trem-bala) · iPhone',u:APP.exI},{t:'🚄 App SmartEX · Android',u:APP.exA}]:[];
   var maps={t:'🗺️ Ver rota de trem no Google Maps'+(temE?': '+o.estA.nome+' → '+o.estB.nome:''),u:temE?gmaps(o.estA,o.estB,'transit'):gmaps(pa,pb,'transit'),pri:1};
   if(o.estA&&o.estB&&o.estA.ja&&o.estB.ja&&o.estA.ja!==o.estB.ja)
     return {links:[maps,{t:'🚆 Ver trem e preço no Jorudan: '+o.estA.nome+' → '+o.estB.nome,u:'https://www.jorudan.co.jp/norikae/cgi/nori.cgi?eki1='+encodeURIComponent(o.estA.ja)+'&eki2='+encodeURIComponent(o.estB.ja)+'&Cway=0'},
-      {t:'🔎 Jorudan em inglês (sem preencher)',u:'https://world.jorudan.co.jp/mln/en/'}],
+      {t:'🔎 Jorudan em inglês (sem preencher)',u:'https://world.jorudan.co.jp/mln/en/'}].concat(ex),
       nota:'O Google Maps mostra a rota e os horários dos trens. O Jorudan abre em japonês, com as estações preenchidas e o horário de agora, e mostra o preço; troque a data lá se precisar. A versão em inglês não aceita estações pelo link: use os botões de copiar.'};
-  return {links:[maps,{t:'🔎 Abrir o Jorudan',u:'https://world.jorudan.co.jp/mln/pt/'}],nota:o.buscando?'Procurando as estações mais perto para preencher o Jorudan…':'Não achei estação perto de um dos pontos: no Jorudan, escreva as estações você mesma.'};
+  return {links:[maps,{t:'🔎 Abrir o Jorudan',u:'https://world.jorudan.co.jp/mln/pt/'}].concat(ex),nota:o.buscando?'Procurando as estações mais perto para preencher o Jorudan…':'Não achei estação perto de um dos pontos: no Jorudan, escreva as estações você mesma.'};
 }
 /* ---------- rota real por rua (a pé / carro): OpenStreetMap, com cache e plano B ---------- */
 var ROTA_KEY='uniCalRota1', rcache={}, rfalha={}, rpend={};

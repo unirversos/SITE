@@ -249,7 +249,7 @@ footer a{color:var(--pink);text-decoration:none;margin-right:12px}
 
 <script src="./leitor.js?v=2"></script>
 <script src="../agendamentos/regras.js?v=1"></script>
-<script src="./geo.js?v=4"></script>
+<script src="./geo.js?v=5"></script>
 <script src="./avisos.js?v=2"></script>
 <script src="./passagens.js?v=1"></script>
 <script>
@@ -565,7 +565,7 @@ function umaLig(el){
       aviso='<br><small>⚠ Confira: '+esc(q.join(' e '))+' foi localizado pelo texto escrito à mão. Não confie 100% neste tempo; para ficar exato, cole o link do Google Maps no Local.</small>'; }
     var longo=d>30&&window.CalPas&&(m==='trem'||m==='aviao'), extra=' <button type="button" class="btn sm" data-act="trajeto" data-a="'+esc(ea.id)+'" data-b="'+esc(eb.id)+'">🧭 Definir trajeto</button>';
     if(longo)extra+=CalPas.jaSalvo(S,ea,eb)?' · ✓ trecho nas Passagens':' <button type="button" class="btn sm" data-act="trecho" data-a="'+esc(ea.id)+'" data-b="'+esc(eb.id)+'">🎫 Salvar este trecho nas Passagens</button>';
-    el.innerHTML=(el.dataset.h?'🏨 da hospedagem “'+esc(de)+'”: ':'')+'↓ '+CalGeo.MODOS[m]+' · ~'+CalGeo.fmtMin(E.min)+(E.minTag==='conf'?' ✓ conferido':'')+' · '+(E.kmTag==='conf'?'':'~')+CalGeo.fmtKm(E.km)+' · <a href="../deslocamento/?de='+encodeURIComponent(de.slice(0,120))+'&para='+encodeURIComponent(pa.slice(0,120))+'">ajustar no De → Para</a> '+(' · '+(function(){var LL=CalGeo.linksRota(m,r[0],r[1],{de:de,para:pa,data:eb.data||''}).links, ls=m==='trem'?[LL[0],LL[LL.length-1]]:[LL[0]];return ls.map(function(L){return '<a href="'+esc(L.u)+'" target="_blank" rel="noopener">'+esc(L.t)+'</a>';}).join(' · ');})())+extra+aviso;
+    el.innerHTML=(el.dataset.h?'🏨 da hospedagem “'+esc(de)+'”: ':'')+'↓ '+CalGeo.MODOS[m]+' · ~'+CalGeo.fmtMin(E.min)+(E.minTag==='conf'?' ✓ conferido':'')+' · '+(E.kmTag==='conf'?'':'~')+CalGeo.fmtKm(E.km)+' · <a href="../deslocamento/?de='+encodeURIComponent(de.slice(0,120))+'&para='+encodeURIComponent(pa.slice(0,120))+'">ajustar no De → Para</a> '+(' · '+(function(){var LL=CalGeo.linksRota(m,r[0],r[1],{de:de,para:pa,data:eb.data||''}).links, ls=m==='trem'?[LL[0],LL.filter(function(x){return /Jorudan/.test(x.t);}).pop()||LL[LL.length-1]]:[LL[0]];return ls.map(function(L){return '<a href="'+esc(L.u)+'" target="_blank" rel="noopener">'+esc(L.t)+'</a>';}).join(' · ');})())+extra+aviso;
   }).catch(function(){});
 }
 function preencheLig(root,ja){

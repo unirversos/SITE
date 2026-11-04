@@ -127,13 +127,13 @@ function mostra(a,b,pa,pb){
     var dt=dataDoEvento(b)||dataDoEvento(a), av=(window.CalAvisos&&dt)?CalAvisos.para({data:dt,tipo:'transp',titulo:'Shinkansen'}):null;
     $('#av').innerHTML='<div class="aviso">🚄 <b>Assento reservado no trem-bala:</b> '+(av?av.texto:'no balcão abre 1 mês antes, às 10h do Japão; pelo SmartEX dá para reservar antes.')+'</div>';
   }
-  /* última milha: da estação de chegada até o destino (táxi estimado, ônibus no Maps, anotações salvas por destino) */
+  /* da estação até o destino: da estação de chegada até o destino (táxi estimado, ônibus no Maps, anotações salvas por destino) */
   function ultima(eb){
     var box=$('#um'); if(!box)return;
     if(modo!=='trem'&&modo!=='onibus'){box.hidden=true;return;}
     box.hidden=false;
     var oo=orc(); if(!oo.um||typeof oo.um!=='object')oo.um={};
-    var uk=G.chave(b), nt=oo.um[uk]||{}, topo='<b>🏨 Última milha:</b> da estação até “'+esc($('#para').value.trim()||'o destino')+'”<br>', corpo='';
+    var uk=G.chave(b), nt=oo.um[uk]||{}, topo='<b>🏨 Da estação até “'+esc($('#para').value.trim()||'o destino')+'”</b><br>', corpo='';
     if(eb){
       var dk=eb.m/1000, tx=G.estModo('taxi',Math.max(dk,0.1),null,null), pe=Math.max(1,Math.round(dk*1.3/4.8*60));
       corpo+='🚶 A pé: ~'+G.fmtMin(pe)+' ('+(eb.m<1000?eb.m+' m':(dk).toFixed(1).replace('.',',')+' km')+' em linha reta)<br>'+
