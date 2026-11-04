@@ -261,7 +261,7 @@ footer a{color:var(--pink);text-decoration:none;margin-right:12px}
 <script src="./geo.js?v=6"></script>
 <script src="./avisos.js?v=2"></script>
 <script src="./passagens.js?v=1"></script>
-<script src="./lista.js?v=8"></script>
+<script src="./lista.js?v=9"></script>
 <script>
 (function(){
 'use strict';
@@ -678,7 +678,7 @@ function abrirDia(d){
 var usadoLista='';
 function usarDaLista(x){
   voltarPara='';
-  formEvento({id:'',titulo:x.nome,tipo:CalLista.CATS[x.cat][2],data:S.ini,dataFim:'',hora:'',horaFim:'',fuso:S.fuso,local:x.local,detalhes:''},S.ini,'<p class="nota">⭐ Vindo da sua lista'+(x.achouPeloNome?': endereço achado pelo nome, confira.':'.')+'</p>',x.id);
+  formEvento({id:'',titulo:x.nome,tipo:CalLista.CATS[x.cat][2],data:S.ini,dataFim:'',hora:'',horaFim:'',fuso:S.fuso,local:x.local,detalhes:x.nota||''},S.ini,'<p class="nota">⭐ Vindo da sua lista'+(x.achouPeloNome?': endereço achado pelo nome, confira.':'.')+'</p>',x.id);
 }
 function formEvento(e,dataPadrao,topo,idLista){
   var novo=!e||!e.id; usadoLista=idLista||'';
@@ -703,7 +703,7 @@ function formEvento(e,dataPadrao,topo,idLista){
   var f=$('#fEv');
   if($('#evLista'))$('#evLista').onchange=function(){
     var x=(S.lista||[]).find(function(z){return z.id===this.value;}.bind(this)); if(!x)return;
-    usadoLista=x.id; f.querySelector('[name=titulo]').value=x.nome; f.querySelector('[name=tipo]').value=CalLista.CATS[x.cat][2]; var li=f.querySelector('[name=local]'); li.value=x.local; li.dispatchEvent(new Event('input'));
+    usadoLista=x.id; f.querySelector('[name=titulo]').value=x.nome; f.querySelector('[name=tipo]').value=CalLista.CATS[x.cat][2]; var li=f.querySelector('[name=local]'); li.value=x.local; li.dispatchEvent(new Event('input')); if(x.nota){var dt=f.querySelector('[name=detalhes]'); if(dt&&!dt.value.trim())dt.value=x.nota;}
     $('#locSt').textContent=x.local?'⭐ Da sua lista'+(x.achouPeloNome?': endereço achado pelo nome ('+x.achado.split(',').slice(0,3).join(',')+'). Confira se é o lugar certo.':': ponto vindo do link ou endereço que você colou.'):'⚠ Este item da lista está sem endereço: não calculo deslocamento. Escreva o endereço ou cole o link do Google Maps.';
   };
   (function(){var li=f.querySelector('[name=local]'), st=$('#locSt');
@@ -1016,7 +1016,7 @@ function lerArq(f){
 }
 function abrirLista(){
   diaAberto=''; abrir(CalLista.html(S.lista||[],S.ev));
-  CalLista.ligar(dlgIn,function(){return S;},gravar,compactaLocal,usarDaLista,abrirLista);
+  CalLista.ligar(dlgIn,function(){return S;},gravar,compactaLocal,usarDaLista,function(){desenharLista();abrirLista();});
 }
 $('#bLista').onclick=function(){ if(!window.CalLista){aviso('A lista não carregou. Recarregue a página.');return;} abrirLista(); };
 $('#bImport').onclick=function(){
