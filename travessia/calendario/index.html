@@ -872,7 +872,8 @@ $('#bLimpar').onclick=function(){
 /* ---------- conta (guardar online) ---------- */
 var usuario=null, syncPronto=false, estadoNuvem='', ultimoSalvo=null, tNuv=null;
 function igual(a,b){
-  function k(o){return JSON.stringify({t:o.titulo,i:o.ini,f:o.fim,u:o.fuso,c:o.chegada,e:o.ev,o:o.orc,k:o.ok,p:o.pas});}
+  function ord(v){if(Array.isArray(v))return v.map(ord);if(v&&typeof v==='object'){var r={};Object.keys(v).sort().forEach(function(q){if(v[q]!==undefined)r[q]=ord(v[q]);});return r;}return v;}
+  function k(o){return JSON.stringify(ord({t:o.titulo,i:o.ini,f:o.fim,u:o.fuso,c:o.chegada,e:o.ev,o:o.orc,k:o.ok,p:o.pas}));}
   return k(a)===k(b);
 }
 function nome(u){return (u&&(u.email||u.displayName)||'sua conta').split('@')[0];}
