@@ -5,7 +5,7 @@
 'use strict';
 var G=window.CalGeo;
 /* categoria → [ícone, nome, tipo do evento no calendário] */
-var CATS={passeio:['⛩️','Passeio','passeio'],restaurante:['🍜','Restaurante','comida'],compras:['🛍️','Compras','outro']};
+var CATS={passeio:['⛩️','Passeio','passeio'],cultura:['🏛️','Cultura (templos, museus)','passeio'],parque:['🎡','Parque e diversão','passeio'],natureza:['🌸','Natureza e mirantes','passeio'],experiencia:['🎟️','Experiência (aula, show, evento)','ingresso'],onsen:['🛁','Onsen e relax','outro'],restaurante:['🍜','Restaurante','comida'],cafe:['☕','Café e doces','comida'],bar:['🍶','Bar e noite','comida'],compras:['🛍️','Compras','outro']};
 function esc(s){return String(s==null?'':s).replace(/[&<>"']/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c];});}
 function uid(){return 'q'+Date.now().toString(36)+Math.random().toString(36).slice(2,6);}
 
