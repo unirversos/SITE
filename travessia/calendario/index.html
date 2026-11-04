@@ -131,7 +131,7 @@ dialog::backdrop{background:rgba(58,43,56,.45)}
 .lq{list-style:none;margin:0;padding:0;display:grid;gap:10px}
 .hband{display:block;font-size:11px;line-height:1.3;background:#e3efe8;color:#2f5d46;border-radius:6px;padding:1px 5px;margin:2px 0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .estq{border:1px solid #cfe0d6;background:#f1f7f3;border-radius:14px;padding:10px 12px;display:grid;gap:6px}
-.ver #bNovo,.ver #bImport,.ver #lqF,.ver [data-lq],.ver #bCompart,.ver #bDesloc,.ver [data-act=edit],.ver [data-act=del],.ver [data-act=novo],.ver [data-act=novohosp],.ver [data-act=trajeto],.ver [data-act=trecho],.ver [data-act=qlista],.ver [data-act=qusar],.ver details.mais,.ver #bAjustar,.ver #nuvem,.ver #nuvemSetup,.ver .qpd,.ver #qPre,.ver #qPerto{display:none!important}
+.ver #bNovo,.ver #bImport,.ver #lqF,.ver [data-lq],.ver #bCompart,.ver #bDesloc,.ver [data-act=edit],.ver [data-act=del],.ver [data-act=novo],.ver [data-act=novohosp],.ver [data-act=trajeto],.ver [data-act=trecho],.ver [data-act=qlista],.ver [data-act=qusar],.ver details.mais,.ver #bAjustar,.ver #nuvem,.ver #nuvemSetup,.ver .qpd,.ver [data-ok],.ver [data-undo],.ver [data-qok],.ver [data-qundo],.ver #qPre,.ver #qPerto{display:none!important}
 #verBanner{background:#eef3fb;border:1px solid #c9d8ef;border-radius:14px;padding:10px 12px;display:flex;gap:10px;align-items:center;justify-content:space-between;flex-wrap:wrap;font-size:14px;margin:0 0 10px}
 .estq summary{cursor:pointer;font-weight:700;color:#2f5d46;font-size:14.5px;list-style:none;display:flex;gap:6px;align-items:center}.estq summary::-webkit-details-marker{display:none}.estq summary i{font-style:normal;font-weight:700;background:#d8e6dd;border-radius:999px;padding:0 7px;font-size:12px}.estq summary span{flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.estq summary::after{content:'▾';color:#2f5d46}.estq[open] summary::after{content:'▴'}.estq{padding:8px 12px}
 .est-i{display:flex;justify-content:space-between;align-items:center;gap:10px;padding:6px 0;border-top:1px solid #d8e6dd}
@@ -272,7 +272,7 @@ footer a{color:var(--pink);text-decoration:none;margin-right:12px}
 <script src="./geo.js?v=6"></script>
 <script src="./avisos.js?v=2"></script>
 <script src="./passagens.js?v=1"></script>
-<script src="./lista.js?v=11"></script>
+<script src="./lista.js?v=12"></script>
 <script>
 (function(){
 'use strict';
@@ -498,15 +498,21 @@ function desenharAvisos(){
   S.ev.forEach(function(e){ if(e.data<hoje)return; var a=CalAvisos.para(e); if(!a)return; var st=CalAvisos.situacao(a);
     (S.ok&&S.ok[e.id]?feitos:lista).push({e:e,a:a,st:st}); });
   lista.sort(function(x,y){return x.a.abre-y.a.abre;});
-  if(!lista.length&&!feitos.length){box.innerHTML='';return;}
+  var qc=window.CalLista?CalLista.paraComprar(S):{pend:[],ok:[]};
+  if(!lista.length&&!feitos.length&&!qc.pend.length&&!qc.ok.length){box.innerHTML='';return;}
   function chip(st){return st.est==='passou'?'<span class="av-c agora">inscrição encerrada: procure sobras</span>':st.est==='aberto'?'<span class="av-c agora">já abriu: compre agora</span>':st.est==='hoje'?'<span class="av-c agora">abre hoje</span>':st.est==='logo'?'<span class="av-c agora">faltam '+st.dias+(st.dias===1?' dia':' dias')+'</span>':'<span class="av-c">faltam '+st.dias+' dias</span>';}
   var urg=lista.filter(function(x){return x.st.est!=='futuro';}).length;
-  box.innerHTML='<details class="av"'+(urg?' open':'')+'><summary>⏰ Compre com antecedência'+(lista.length?' · '+lista.length+(lista.length===1?' aviso':' avisos'):'')+(urg?' · <b style="color:var(--red)">'+urg+(urg===1?' pede atenção':' pedem atenção')+'</b>':'')+'</summary><div class="av-lista">'+
+  box.innerHTML='<details class="av"'+(urg?' open':'')+'><summary>⏰ Compre com antecedência'+(lista.length+qc.pend.length?' · '+(lista.length+qc.pend.length)+(lista.length+qc.pend.length===1?' aviso':' avisos'):'')+(urg?' · <b style="color:var(--red)">'+urg+(urg===1?' pede atenção':' pedem atenção')+'</b>':'')+'</summary><div class="av-lista">'+
     lista.map(function(x){return '<div class="av-i'+(x.st.est==='futuro'?'':' urg')+'"><b>'+esc(x.a.nome)+'</b> <span class="nota">· '+esc(x.e.titulo)+' · '+esc(curto(x.e.data))+'</span> '+chip(x.st)+'<p>'+x.a.texto+'</p><div class="av-b">'+
       (x.a.url?'<a class="btn sm" href="'+esc(x.a.url)+'" target="_blank" rel="noopener">Abrir o site de venda</a> ':'')+'<button type="button" class="btn sm" data-ok="'+esc(x.e.id)+'">✓ Já comprei</button></div></div>';}).join('')+
+    qc.pend.map(function(r){return '<div class="av-i"><b>🛒 '+esc(r.x.nome)+'</b> <span class="nota">· Quero fazer · '+(r.data?esc(curto(r.data)):'ainda sem dia')+'</span><p>Marcado para comprar antes.'+(r.x.nota?' 📝 '+esc(r.x.nota.length>160?r.x.nota.slice(0,159)+'…':r.x.nota):'')+'</p><div class="av-b"><button type="button" class="btn sm" data-qok="'+esc(r.x.id)+'">✓ Já comprei</button></div></div>';}).join('')+
+    (qc.ok.length?'<p class="nota">Já comprados (Quero fazer): '+qc.ok.map(function(r){return esc(r.x.nome)+' <button type="button" class="lkb" data-qundo="'+esc(r.x.id)+'">desfazer</button>';}).join(' · ')+'</p>':'')+
     (feitos.length?'<p class="nota">Já resolvidos: '+feitos.map(function(x){return esc(x.e.titulo)+' <button type="button" class="lkb" data-undo="'+esc(x.e.id)+'">desfazer</button>';}).join(' · ')+'</p>':'')+'</div></details>';
 }
-$('#avisos').addEventListener('click',function(ev){var b=ev.target.closest('[data-ok],[data-undo]'); if(!b)return; if(!S.ok)S.ok={};
+$('#avisos').addEventListener('click',function(ev){
+  var q=ev.target.closest('[data-qok],[data-qundo]');
+  if(q){var it=(S.lista||[]).find(function(z){return z.id===(q.dataset.qok||q.dataset.qundo);}); if(it){it.comprar=q.dataset.qok?'ok':'sim'; gravar(); desenharAvisos(); if(window.CalLista&&$('#vLista'))desenharLista();} return;}
+  var b=ev.target.closest('[data-ok],[data-undo]'); if(!b)return; if(!S.ok)S.ok={};
   if(b.dataset.ok)S.ok[b.dataset.ok]=1; else delete S.ok[b.dataset.undo]; gravar(); desenharAvisos();});
 function desenharMes(){
   var y=+mes.slice(0,4),m=+mes.slice(5,7),primeiro=y+'-'+pad(m)+'-01',off=wd(primeiro),dm=new Date(Date.UTC(y,m,0)).getUTCDate();
@@ -1151,7 +1157,7 @@ function lerArq(f){
 function abrirLista(){
   diaAberto=''; abrir(CalLista.html(S.lista||[],S.ev));
   if(VER){var pn=dlgIn.querySelector('p.nota');if(pn)pn.textContent='Lugares e rolês que quem compartilhou quer fazer. Só leitura.';return;}
-  CalLista.ligar(dlgIn,function(){return S;},gravar,compactaLocal,usarDaLista,function(){desenharLista();abrirLista();});
+  CalLista.ligar(dlgIn,function(){return S;},gravar,compactaLocal,usarDaLista,function(){desenharLista();desenharAvisos();abrirLista();});
 }
 $('#bLista').onclick=function(){ if(!window.CalLista){aviso('A lista não carregou. Recarregue a página.');return;} abrirLista(); };
 $('#bImport').onclick=function(){

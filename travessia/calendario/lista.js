@@ -15,7 +15,7 @@ function limpa(a){
     if(!x||typeof x!=='object'||typeof x.nome!=='string'||!x.nome.trim())return;
     r.push({id:typeof x.id==='string'&&x.id?x.id.slice(0,40):uid(),nome:x.nome.trim().slice(0,80),
       cat:CATS[x.cat]?x.cat:'passeio',evId:typeof x.evId==='string'?x.evId.slice(0,40):'',nota:typeof x.nota==='string'?x.nota.trim().slice(0,600):'',local:typeof x.local==='string'?x.local.slice(0,600):'',achado:typeof x.achado==='string'?x.achado.slice(0,200):'',
-      achouPeloNome:!!x.achouPeloNome});
+      achouPeloNome:!!x.achouPeloNome,comprar:(x.comprar==='sim'||x.comprar==='ok')?x.comprar:''});
   });
   return r;
 }
@@ -29,6 +29,7 @@ function itemHtml(x,evs){
   var ev=noCal(x,evs);
   var aviso=x.local?(x.achouPeloNome?'<small class="nota" style="color:#8a5a00">⚠ Endereço achado pelo nome: confira se é o lugar certo.</small>':'<small class="nota">✓ Localização do link ou do endereço que você colou.</small>'):'<small class="nota" style="color:#8a5a00">⚠ Sem endereço: não calculo deslocamento para este lugar.</small>';
   return '<li class="lq-i"><b>'+CATS[x.cat][0]+' '+esc(x.nome)+'</b>'+(x.achado?'<small class="nota">'+esc(x.achado)+'</small>':'')+aviso+(x.nota?'<small class="nota" style="white-space:pre-wrap">📝 '+esc(x.nota)+'</small>':'')+
+    (x.comprar==='sim'?'<small class="nota" style="color:#8a3b00">🛒 Comprar antes · <button type="button" class="btn sm" data-lq="comprei" data-id="'+esc(x.id)+'">✓ Já comprei</button></small>':x.comprar==='ok'?'<small class="nota">🛒 ✓ Comprado</small>':'')+
     '<div class="barra">'+(ev?'<small class="nota">✓ Já está no calendário em '+dm(ev.data)+'.</small>':'<button type="button" class="btn sm pri" data-lq="usar" data-id="'+esc(x.id)+'">📅 Pôr no calendário</button>')+
     '<button type="button" class="btn sm" data-lq="edit" data-id="'+esc(x.id)+'">✏️ Editar</button><button type="button" class="btn sm" data-lq="del" data-id="'+esc(x.id)+'">Excluir</button></div></li>';
 }
@@ -58,6 +59,7 @@ function html(lista,evs){
     '<label class="f">Nome do lugar ou do rolê<input name="nome" maxlength="80" placeholder="ex.: teamLab Planets, Tóquio" autocomplete="off"><small>Escreva com a cidade: acho melhor.</small></label>'+
     '<label class="f">Endereço ou link do Google Maps (opcional)<input name="end" maxlength="600" placeholder="se colar o link do Maps, o ponto fica exato" autocomplete="off"></label>'+
     '<label class="f">Anotações (opcional)<textarea name="nota" maxlength="600" rows="3" placeholder="horário, preço, reserva, o que pedir, quem vai…"></textarea></label>'+
+    '<label class="f" style="flex-direction:row;gap:8px;align-items:center"><input type="checkbox" name="comprar" style="width:auto"> 🛒 Preciso comprar antes (ingresso, reserva): avisar em “Compre com antecedência”</label>'+
     '<p class="nota" id="lqEd" hidden></p><p class="erro" id="lqErr" role="alert"></p><div id="lqRes" class="nota" role="status"></div>'+
     '<div class="barra"><button class="btn pri" type="submit" id="lqSub">➕ Add</button><button class="btn" type="button" id="lqCan" hidden>Cancelar edição</button></div></form>'+
     '<h3 style="margin:6px 0 0">Minha lista ('+lista.length+')</h3>'+
@@ -165,13 +167,14 @@ function preencherPre(box,S,d,evsDia,usar){
 function ligar(root,getS,gravar,compacta,usar,redesenhar){
   var f=root.querySelector('#lqF'); if(!f)return;
   var seq=0, editId='';
+  function cv(prev){return f.comprar&&f.comprar.checked?(prev==='ok'?'ok':'sim'):'';}
   root.querySelector('#lqCan').onclick=function(){editId='';redesenhar();};
   function salva(nome,local,achado,pelo){ var cat=CATS[f.cat.value]?f.cat.value:'passeio';
     var S=getS(); if(!Array.isArray(S.lista))S.lista=[];
     var ex=editId?S.lista.find(function(z){return z.id===editId;}):null;
-    var nt=f.nota.value.trim().slice(0,600);
-    if(ex){ex.nome=nome;ex.cat=cat;ex.local=local;ex.achado=achado;ex.achouPeloNome=!!pelo;ex.nota=nt;}
-    else S.lista.push({id:uid(),nome:nome,cat:cat,nota:nt,local:local,achado:achado,achouPeloNome:!!pelo});
+    var nt=f.nota.value.trim().slice(0,600), cp=cv(ex&&ex.comprar);
+    if(ex){ex.nome=nome;ex.cat=cat;ex.local=local;ex.achado=achado;ex.achouPeloNome=!!pelo;ex.nota=nt;ex.comprar=cp;}
+    else S.lista.push({id:uid(),nome:nome,cat:cat,nota:nt,local:local,achado:achado,achouPeloNome:!!pelo,comprar:cp});
     editId=''; gravar(); redesenhar();
   }
   f.onsubmit=function(ev){
@@ -181,7 +184,7 @@ function ligar(root,getS,gravar,compacta,usar,redesenhar){
     var meu=++seq;
     var ant=editId?(getS().lista||[]).find(function(z){return z.id===editId;}):null, cat0=CATS[f.cat.value]?f.cat.value:'passeio';
     if(ant&&(!end||end===ant.local)&&ant.local&&G&&G.coordDe(ant.local)){ /* só mudou nome ou categoria: mantém o ponto */
-      var c0=G.coordDe(ant.local); ant.nome=nome; ant.cat=cat0; ant.nota=f.nota.value.trim().slice(0,600); ant.local=localDe(nome,c0); editId=''; gravar(); redesenhar(); return; }
+      var c0=G.coordDe(ant.local); ant.nome=nome; ant.cat=cat0; ant.nota=f.nota.value.trim().slice(0,600); ant.comprar=cv(ant.comprar); ant.local=localDe(nome,c0); editId=''; gravar(); redesenhar(); return; }
     if(end&&G&&G.coordDe(end)){ /* link ou coordenadas coladas: já é exato */
       var c=G.coordDe(end), loc=compacta(end); if(!/@/.test(loc))loc=localDe(nome,c);
       salva(nome,loc,'',false); return; }
@@ -200,8 +203,9 @@ function ligar(root,getS,gravar,compacta,usar,redesenhar){
   root.querySelector('.lqg')&&(root.querySelector('.lqg').onclick=function(ev){
     var b=ev.target.closest('[data-lq]'); if(!b)return; var S=getS(), id=b.dataset.id, x=(S.lista||[]).find(function(z){return z.id===id;}); if(!x)return;
     if(b.dataset.lq==='usar'){usar(x);return;}
+    if(b.dataset.lq==='comprei'){x.comprar='ok';gravar();redesenhar();return;}
     if(b.dataset.lq==='edit'){
-      editId=x.id; f.cat.value=x.cat; f.nome.value=x.nome; f.end.value=x.local||''; f.nota.value=x.nota||'';
+      editId=x.id; f.cat.value=x.cat; f.nome.value=x.nome; f.end.value=x.local||''; f.nota.value=x.nota||''; if(f.comprar)f.comprar.checked=!!x.comprar;
       var ed=root.querySelector('#lqEd'); ed.hidden=false;
       ed.textContent='✏️ Editando “'+x.nome+'”. '+(x.local?'O ponto no mapa continua o mesmo'+(x.achado?' ('+x.achado.split(',').slice(0,3).join(',')+')':'')+'. Para trocar, apague o campo de endereço e escreva o novo endereço ou cole o link do Google Maps.':'Este item está sem endereço: escreva o endereço, cole o link do Maps, ou deixe vazio para procurar pelo nome.');
       root.querySelector('#lqSub').textContent=x.local?'💾 Salvar alterações':'💾 Salvar'; root.querySelector('#lqCan').hidden=false;
@@ -216,5 +220,9 @@ function opcoes(lista){return Object.keys(CATS).map(function(k){
   var L=lista.filter(function(x){return x.cat===k;}); if(!L.length)return '';
   return '<optgroup label="'+CATS[k][0]+' '+CATS[k][1]+'">'+L.map(function(x){return '<option value="'+esc(x.id)+'">'+esc(x.nome)+(x.local?'':' (sem endereço)')+'</option>';}).join('')+'</optgroup>';}).join('');}
 
-window.CalLista={preencherPre:preencherPre,porDoSol:porDoSol,cidadeDe:cidadeDe,preencherPerto:preencherPerto,marcarPerto:marcarPerto,semDia:semDia,CATS:CATS,limpa:limpa,html:html,ligar:ligar,opcoes:opcoes};
+function paraComprar(S,evs){
+  var pend=[],ok=[]; (S.lista||[]).forEach(function(x){ if(x.comprar==='sim'||x.comprar==='ok'){ var e=noCal(x,evs||S.ev); (x.comprar==='sim'?pend:ok).push({x:x,data:e?e.data:''}); }});
+  pend.sort(function(a,b){return (a.data||'9999')<(b.data||'9999')?-1:1;}); return {pend:pend,ok:ok};
+}
+window.CalLista={paraComprar:paraComprar,preencherPre:preencherPre,porDoSol:porDoSol,cidadeDe:cidadeDe,preencherPerto:preencherPerto,marcarPerto:marcarPerto,semDia:semDia,CATS:CATS,limpa:limpa,html:html,ligar:ligar,opcoes:opcoes};
 })();
