@@ -954,14 +954,26 @@ $('#bCompart').onclick=function(){
     '<label style="display:flex;gap:10px;align-items:center"><input type="checkbox" id="cDet" checked style="width:auto"> Incluir os detalhes dos eventos (códigos de reserva e anotações)</label>'+
     (S.lista&&S.lista.length?'<label style="display:flex;gap:10px;align-items:center"><input type="checkbox" id="cLista" checked style="width:auto"> Incluir a lista “Quero fazer” ('+S.lista.length+(S.lista.length===1?' item':' itens')+')</label>':'')+
     '<input class="lk-box" id="lkTxt" readonly aria-label="Link do calendário" value="Gerando o link…">'+
-    '<div class="barra"><button class="btn pri" type="button" id="lkCopia" disabled>📋 Copiar link</button>'+(navigator.share?'<button class="btn" type="button" id="lkEnvia" disabled>📲 Enviar…</button>':'')+'</div>'+
+    '<div class="barra"><button class="btn pri" type="button" id="lkCopia" disabled>📋 Copiar link</button><button class="btn" type="button" id="lkCurto" disabled>🔗 Criar link curto</button>'+(navigator.share?'<button class="btn" type="button" id="lkEnvia" disabled>📲 Enviar…</button>':'')+'</div>'+
     '<p class="nota" id="lkNota"></p>'+
-    '<p class="nota">Quem tiver o link vê tudo o que estiver nele. O link é uma foto de hoje: se você mudar algo depois, gere e mande outro. Os eventos viajam dentro do link e não ficam guardados no site.</p>');
+    '<p class="nota">Quem tiver o link vê tudo o que estiver nele. O link é uma foto de hoje: se você mudar algo depois, gere e mande outro. O link comprido leva os eventos dentro dele e não guarda nada no site. O link curto guarda uma cópia no site.</p>');
   async function gerar(){
     var tok=await empacotar($('#cDet').checked,$('#cLista')?$('#cLista').checked:false),url=location.origin+location.pathname+'#c='+tok;
-    $('#lkTxt').value=url;$('#lkCopia').disabled=false;if($('#lkEnvia'))$('#lkEnvia').disabled=false;
+    $('#lkTxt').value=url;$('#lkCopia').disabled=false;$('#lkCurto').disabled=false;if($('#lkEnvia'))$('#lkEnvia').disabled=false;
     $('#lkNota').textContent=url.length>6000?'Este link ficou longo ('+url.length+' caracteres) e alguns aplicativos podem cortá-lo. Se o seu marido não conseguir abrir, use "Salvar uma cópia" em Mais opções e mande o arquivo.':'';
   }
+  $('#lkCurto').onclick=async function(){
+    if(!usuario){pedirLogin();aviso('Entre na sua conta para criar o link curto.');return;}
+    if(!window.CalNuvem||!CalNuvem.criarCurto){aviso('O login não carregou. Recarregue a página.');return;}
+    var bt=this,tok=$('#lkTxt').value.split('#c=')[1];if(!tok)return;
+    bt.disabled=true;bt.textContent='Criando…';
+    try{
+      var cod=await CalNuvem.criarCurto(tok);
+      $('#lkTxt').value=location.origin+location.pathname+'#l='+cod;
+      $('#lkNota').textContent='Link curto criado. Ele guarda uma cópia deste calendário no site; quem tiver o link vê tudo o que estiver nele.';
+      bt.textContent='🔗 Link curto criado';
+    }catch(e){bt.disabled=false;bt.textContent='🔗 Criar link curto';aviso('Não consegui criar o link curto. Use o link comprido.');}
+  };
   $('#cDet').onchange=gerar;if($('#cLista'))$('#cLista').onchange=gerar;gerar();
   $('#lkCopia').onclick=async function(){
     var t=$('#lkTxt');
@@ -970,10 +982,18 @@ $('#bCompart').onclick=function(){
   };
   if($('#lkEnvia'))$('#lkEnvia').onclick=function(){navigator.share({title:S.titulo||'Calendário da viagem',text:'Calendário da viagem',url:$('#lkTxt').value}).catch(function(){});};
 };
+function esperaNuvem(){
+  return new Promise(function(ok,no){
+    if(window.CalNuvem)return ok(window.CalNuvem);
+    var t=setTimeout(function(){no(new Error('nuvem'));},8000);
+    document.addEventListener('cal-nuvem-pronto',function(){clearTimeout(t);ok(window.CalNuvem);},{once:true});
+  });
+}
 function receberLink(){
-  var m=/^#c=([A-Za-z0-9_-]+)$/.exec(location.hash);if(!m)return;
+  var m=/^#c=([A-Za-z0-9_-]+)$/.exec(location.hash),c=/^#l=([a-z0-9]{6,16})$/.exec(location.hash);if(!m&&!c)return;
   function limpaHash(){try{history.replaceState(null,'',location.pathname+location.search);}catch(e){}}
-  desempacotar(m[1]).then(function(novo){
+  (m?Promise.resolve(m[1]):esperaNuvem().then(function(n){return n.lerCurto(c[1]);}).then(function(t){if(!t)throw new Error('nao achei');return t;}))
+  .then(desempacotar).then(function(novo){
     if(!novo.ini)throw new Error('vazio');
     abrir('<h2 id="dlgT" style="text-transform:none">Abrir este calendário?</h2><p>Alguém compartilhou um calendário com você'+(novo.titulo?': <b>'+esc(novo.titulo)+'</b>':'')+'. Ele tem <b>'+novo.ev.length+'</b> '+(novo.ev.length===1?'evento':'eventos')+', de '+esc(curto(novo.ini))+' a '+esc(curto(novo.fim))+'.</p>'+
       (novo.lista&&novo.lista.length?'<p>Vem também a lista “Quero fazer” ('+novo.lista.length+(novo.lista.length===1?' item':' itens')+').</p>':'')+
@@ -1075,7 +1095,7 @@ else{mostrarSetup(false);}
 nuvemUI();receberLink();
 })();
 </script>
-<script type="module" src="./nuvem.js?v=1"></script>
+<script type="module" src="./nuvem.js?v=2"></script>
 <script defer src="/menu-ativo.js?v=1"></script>
 </body>
 </html>

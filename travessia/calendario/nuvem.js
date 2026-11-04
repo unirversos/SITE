@@ -18,6 +18,18 @@ window.CalNuvem = {
   async salvar(obj) {
     await setDoc(ref(), { calendario: obj, calendarioAtualizado: obj.atualizado || "" }, { merge: true });
   },
+  /* link curto: guarda só o pacote do link em compartilhados/{codigo}. Quem tem o código lê; só quem está logado cria. */
+  async criarCurto(token) {
+    if (!auth.currentUser) throw new Error("sem login");
+    const alf = "abcdefghijkmnpqrstuvwxyz23456789", r = crypto.getRandomValues(new Uint8Array(10));
+    let cod = ""; for (const b of r) cod += alf[b % alf.length];
+    await setDoc(doc(db, "compartilhados", cod), { t: token, criado: new Date().toISOString() });
+    return cod;
+  },
+  async lerCurto(cod) {
+    const snap = await getDoc(doc(db, "compartilhados", cod));
+    return snap.exists() ? (snap.data().t || null) : null;
+  },
   async apagar() {
     await setDoc(ref(), { calendario: deleteField(), calendarioAtualizado: deleteField() }, { merge: true });
   }
