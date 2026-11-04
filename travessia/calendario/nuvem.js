@@ -2,7 +2,7 @@
    Usa o mesmo login do resto do site (idiomas/dados/conta.js) e grava no documento da própria pessoa,
    progress/{uid}, no campo "calendario". Se algo falhar, o calendário continua funcionando só no aparelho. */
 import { auth, db, entrar } from "/idiomas/dados/conta.js";
-import { doc, getDoc, setDoc, deleteField } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+import { doc, getDoc, setDoc, updateDoc, deleteDoc, deleteField } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
 
 function ref() {
   const u = auth.currentUser;
@@ -29,6 +29,23 @@ window.CalNuvem = {
   async lerCurto(cod) {
     const snap = await getDoc(doc(db, "compartilhados", cod));
     return snap.exists() ? (snap.data().t || null) : null;
+  },
+  /* link ao vivo: o documento tem dono; só o dono atualiza ou apaga. Quem tem o código só lê. */
+  async criarVivo(token) {
+    if (!auth.currentUser) throw new Error("sem login");
+    const alf = "abcdefghijkmnpqrstuvwxyz23456789", r = crypto.getRandomValues(new Uint8Array(10));
+    let cod = ""; for (const b of r) cod += alf[b % alf.length];
+    const agora = new Date().toISOString();
+    await setDoc(doc(db, "compartilhados", cod), { t: token, criado: agora, atualizado: agora, dono: auth.currentUser.uid, vivo: true });
+    return cod;
+  },
+  async atualizarVivo(cod, token) {
+    await updateDoc(doc(db, "compartilhados", cod), { t: token, atualizado: new Date().toISOString() });
+  },
+  async pararVivo(cod) { await deleteDoc(doc(db, "compartilhados", cod)); },
+  async lerDoc(cod) {
+    const snap = await getDoc(doc(db, "compartilhados", cod));
+    return snap.exists() ? snap.data() : null;
   },
   async apagar() {
     await setDoc(ref(), { calendario: deleteField(), calendarioAtualizado: deleteField() }, { merge: true });

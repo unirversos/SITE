@@ -131,6 +131,8 @@ dialog::backdrop{background:rgba(58,43,56,.45)}
 .lq{list-style:none;margin:0;padding:0;display:grid;gap:10px}
 .hband{display:block;font-size:11px;line-height:1.3;background:#e3efe8;color:#2f5d46;border-radius:6px;padding:1px 5px;margin:2px 0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .estq{border:1px solid #cfe0d6;background:#f1f7f3;border-radius:14px;padding:10px 12px;display:grid;gap:6px}
+.ver #bNovo,.ver #bImport,.ver #bLista,.ver #bCompart,.ver #bDesloc,.ver [data-act=edit],.ver [data-act=del],.ver [data-act=novo],.ver [data-act=novohosp],.ver [data-act=trajeto],.ver [data-act=trecho],.ver [data-act=qlista],.ver [data-act=qusar],.ver details.mais,.ver #bAjustar,.ver #nuvem,.ver #nuvemSetup,.ver .qpd,.ver #qPerto{display:none!important}
+#verBanner{background:#eef3fb;border:1px solid #c9d8ef;border-radius:14px;padding:10px 12px;display:flex;gap:10px;align-items:center;justify-content:space-between;flex-wrap:wrap;font-size:14px;margin:0 0 10px}
 .estq summary{cursor:pointer;font-weight:700;color:#2f5d46;font-size:14.5px;list-style:none;display:flex;gap:6px;align-items:center}.estq summary::-webkit-details-marker{display:none}.estq summary i{font-style:normal;font-weight:700;background:#d8e6dd;border-radius:999px;padding:0 7px;font-size:12px}.estq summary span{flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.estq summary::after{content:'▾';color:#2f5d46}.estq[open] summary::after{content:'▴'}.estq{padding:8px 12px}
 .est-i{display:flex;justify-content:space-between;align-items:center;gap:10px;padding:6px 0;border-top:1px solid #d8e6dd}
 .est-i:first-of-type{border-top:0}
@@ -215,6 +217,7 @@ footer a{color:var(--pink);text-decoration:none;margin-right:12px}
       <div class="faixa no-print"><span><b id="fTitulo"></b> <span id="fDatas"></span></span><button class="btn sm" type="button" id="bAjustar">✏️ Ajustar datas</button></div>
       <p class="nota no-print" id="nuvem" role="status"></p>
       <div id="passagensPainel" class="no-print"></div>
+      <div id="verBanner" class="no-print" hidden></div>
       <div id="avisos" class="no-print"></div>
       <div id="estadias" class="no-print"></div>
 
@@ -341,6 +344,7 @@ function limpar(o){
   if(okData(o.ini)&&okData(o.fim)&&o.fim>=o.ini){r.ini=o.ini;r.fim=o.fim;}
   r.fuso=FUSOS[o.fuso]?o.fuso:'auto';
   r.atualizado=typeof o.atualizado==='string'?o.atualizado.slice(0,40):'';
+  if(o.vivo&&typeof o.vivo.c==='string'&&/^[a-z0-9]{6,16}$/.test(o.vivo.c))r.vivo={c:o.vivo.c,det:!!o.vivo.det,lista:!!o.vivo.lista};
   (Array.isArray(o.ev)?o.ev:[]).slice(0,2000).forEach(function(e){
     if(!e||typeof e.titulo!=='string'||!okData(e.data))return;
     var x={id:typeof e.id==='string'&&e.id?e.id.slice(0,40):uid(),titulo:e.titulo.slice(0,160),tipo:TIPOS[e.tipo]?e.tipo:'outro',data:e.data,
@@ -353,11 +357,20 @@ function limpar(o){
   return r;
 }
 function carregar(){try{S=limpar(JSON.parse(localStorage.getItem(KEY)||'null'));}catch(e){S=limpar(null);}}
+var VER=null,tViv=null;
 function gravarLocal(){
+  if(VER)return;
   try{localStorage.setItem(KEY,JSON.stringify(S));salvouOk=true;}
   catch(e){salvouOk=false;aviso('Seu navegador não deixou salvar. Use "Salvar uma cópia" para não perder nada.');}
 }
-function gravar(){S.atualizado=new Date().toISOString();gravarLocal();agendarNuvem();}
+function gravar(){if(VER)return;S.atualizado=new Date().toISOString();gravarLocal();agendarNuvem();agendarVivo();}
+function agendarVivo(){
+  if(VER||!S.vivo||!usuario||!window.CalNuvem||!CalNuvem.atualizarVivo)return;
+  clearTimeout(tViv);tViv=setTimeout(async function(){
+    if(!S.vivo)return;
+    try{await CalNuvem.atualizarVivo(S.vivo.c,await empacotar(S.vivo.det,S.vivo.lista));}catch(e){}
+  },2500);
+}
 var tMsg;
 function aviso(t){var m=$('#msg');m.textContent=t;clearTimeout(tMsg);tMsg=setTimeout(function(){m.textContent='';},4200);}
 
@@ -890,17 +903,20 @@ document.addEventListener('click',function(ev){
 });
 document.addEventListener('uni-conta',function(ev){
   usuario=(ev.detail&&ev.detail.user)||null;syncPronto=false;estadoNuvem='';
-  nuvemUI();if(usuario)sincronizar();
+  nuvemUI();if(usuario){sincronizar();setTimeout(agendarVivo,4000);}
 });
 function adotar(c){
+  if(VER)return;
   S=c;gravarLocal();var h=hojeStr();mes=(h>=S.ini&&h<=S.fim?h:S.ini).slice(0,7);
   $('#setup').hidden=true;$('#app').hidden=false;tudo();
 }
 async function sincronizar(){
+  if(VER)return;
   if(!usuario||!window.CalNuvem)return;
   estadoNuvem='sync';nuvemUI();
   var nuvem;
   try{nuvem=await CalNuvem.carregar();}catch(e){estadoNuvem='erro';nuvemUI();return;}
+  if(VER)return;
   var c=nuvem?limpar(nuvem):null;if(c&&!c.ini)c=null;
   estadoNuvem='';
   if(!c){if(S.ini){await salvarNuvem();}else{syncPronto=true;nuvemUI();}return;}
@@ -920,6 +936,7 @@ function escolherVersao(c){
   $('#usaAparelho').onclick=function(){fechar();S.atualizado=new Date().toISOString();gravarLocal();salvarNuvem();};
 }
 async function salvarNuvem(){
+  if(VER)return;
   if(!usuario||!window.CalNuvem||!S.ini)return;
   clearTimeout(tNuv);tNuv=null;estadoNuvem='salvando';nuvemUI();
   try{await CalNuvem.salvar(JSON.parse(JSON.stringify(S)));syncPronto=true;ultimoSalvo=new Date();estadoNuvem='';}
@@ -927,6 +944,7 @@ async function salvarNuvem(){
   nuvemUI();
 }
 function agendarNuvem(){
+  if(VER)return;
   if(!usuario||!syncPronto||!window.CalNuvem)return;
   clearTimeout(tNuv);tNuv=setTimeout(salvarNuvem,1200);
 }
@@ -960,6 +978,7 @@ $('#bCompart').onclick=function(){
     (S.lista&&S.lista.length?'<label style="display:flex;gap:10px;align-items:center"><input type="checkbox" id="cLista" checked style="width:auto"> Incluir a lista “Quero fazer” ('+S.lista.length+(S.lista.length===1?' item':' itens')+')</label>':'')+
     '<input class="lk-box" id="lkTxt" readonly aria-label="Link do calendário" value="Gerando o link…">'+
     '<div class="barra"><button class="btn pri" type="button" id="lkCopia" disabled>📋 Copiar link</button><button class="btn" type="button" id="lkCurto" disabled>🔗 Criar link curto</button>'+(navigator.share?'<button class="btn" type="button" id="lkEnvia" disabled>📲 Enviar…</button>':'')+'</div>'+
+    '<div id="vivoBox" style="display:grid;gap:8px"></div>'+
     '<p class="nota" id="lkNota"></p>'+
     '<p class="nota">Quem tiver o link vê tudo o que estiver nele. O link é uma foto de hoje: se você mudar algo depois, gere e mande outro. O link comprido leva os eventos dentro dele e não guarda nada no site. O link curto guarda uma cópia no site.</p>');
   async function gerar(){
@@ -967,6 +986,28 @@ $('#bCompart').onclick=function(){
     $('#lkTxt').value=url;$('#lkCopia').disabled=false;$('#lkCurto').disabled=false;if($('#lkEnvia'))$('#lkEnvia').disabled=false;
     $('#lkNota').textContent=url.length>6000?'Este link ficou longo ('+url.length+' caracteres) e alguns aplicativos podem cortá-lo. Se o seu marido não conseguir abrir, use "Salvar uma cópia" em Mais opções e mande o arquivo.':'';
   }
+  function vivoUI(){
+    var bx=$('#vivoBox');if(!bx)return;
+    if(S.vivo){
+      var u=location.origin+location.pathname+'#l='+S.vivo.c;
+      bx.innerHTML='<p class="nota" style="margin:0">📡 <b>Link ao vivo ativo.</b> Quem abrir só vê, e a tela dessa pessoa se atualiza sozinha quando você mexe no calendário.</p><input class="lk-box" id="vvTxt" readonly aria-label="Link ao vivo" value="'+esc(u)+'"><div class="barra"><button class="btn pri" type="button" id="vvCopia">📋 Copiar link ao vivo</button><button class="btn perigo" type="button" id="vvPara">⛔ Parar de compartilhar</button></div>';
+      $('#vvCopia').onclick=async function(){var t=$('#vvTxt');try{await navigator.clipboard.writeText(t.value);aviso('Link copiado.');}catch(e){t.focus();t.select();aviso('Selecione e copie o link manualmente.');}};
+      $('#vvPara').onclick=async function(){
+        var c=S.vivo.c;try{await CalNuvem.pararVivo(c);}catch(e){aviso('Não consegui parar agora. Tente de novo.');return;}
+        S.vivo=null;gravar();vivoUI();aviso('Parei de compartilhar. O link deixou de funcionar.');
+      };
+    }else{
+      bx.innerHTML='<button class="btn" type="button" id="vvCria">📡 Criar link ao vivo (só ver)</button>';
+      $('#vvCria').onclick=async function(){
+        if(!usuario){pedirLogin();aviso('Entre na sua conta para criar o link ao vivo.');return;}
+        if(!window.CalNuvem||!CalNuvem.criarVivo){aviso('O login não carregou. Recarregue a página.');return;}
+        var bt=this,det=$('#cDet').checked,lis=$('#cLista')?$('#cLista').checked:false;bt.disabled=true;bt.textContent='Criando…';
+        try{var cod=await CalNuvem.criarVivo(await empacotar(det,lis));S.vivo={c:cod,det:det,lista:lis};gravar();vivoUI();}
+        catch(e){bt.disabled=false;bt.textContent='📡 Criar link ao vivo (só ver)';aviso('Não consegui criar o link ao vivo.');}
+      };
+    }
+  }
+  vivoUI();
   $('#lkCurto').onclick=async function(){
     if(!usuario){pedirLogin();aviso('Entre na sua conta para criar o link curto.');return;}
     if(!window.CalNuvem||!CalNuvem.criarCurto){aviso('O login não carregou. Recarregue a página.');return;}
@@ -997,8 +1038,16 @@ function esperaNuvem(){
 function receberLink(){
   var m=/^#c=([A-Za-z0-9_-]+)$/.exec(location.hash),c=/^#l=([a-z0-9]{6,16})$/.exec(location.hash);if(!m&&!c)return;
   function limpaHash(){try{history.replaceState(null,'',location.pathname+location.search);}catch(e){}}
-  (m?Promise.resolve(m[1]):esperaNuvem().then(function(n){return n.lerCurto(c[1]);}).then(function(t){if(!t)throw new Error('nao achei');return t;}))
-  .then(desempacotar).then(function(novo){
+  if(c){
+    esperaNuvem().then(function(n){return n.lerDoc(c[1]);}).then(function(d){
+      if(!d||!d.t)throw new Error('nao achei');
+      if(d.vivo)return entrarVer(c[1],d);
+      return desempacotar(d.t).then(oferecer);
+    }).catch(falhou);
+    return;
+  }
+  desempacotar(m[1]).then(oferecer).catch(falhou);
+  function oferecer(novo){
     if(!novo.ini)throw new Error('vazio');
     abrir('<h2 id="dlgT" style="text-transform:none">Abrir este calendário?</h2><p>Alguém compartilhou um calendário com você'+(novo.titulo?': <b>'+esc(novo.titulo)+'</b>':'')+'. Ele tem <b>'+novo.ev.length+'</b> '+(novo.ev.length===1?'evento':'eventos')+', de '+esc(curto(novo.ini))+' a '+esc(curto(novo.fim))+'.</p>'+
       (novo.lista&&novo.lista.length?'<p>Vem também a lista “Quero fazer” ('+novo.lista.length+(novo.lista.length===1?' item':' itens')+').</p>':'')+
@@ -1006,10 +1055,36 @@ function receberLink(){
       '<div class="barra"><button class="btn pri" type="button" id="okLink">Abrir</button><button class="btn" type="button" id="noLink">Agora não</button></div>');
     $('#okLink').onclick=function(){var minhaLista=S.lista; S=novo; if(!(novo.lista&&novo.lista.length)&&minhaLista)S.lista=minhaLista; S.atualizado='';gravar();var h=hojeStr();mes=(h>=S.ini&&h<=S.fim?h:S.ini).slice(0,7);$('#setup').hidden=true;$('#app').hidden=false;tudo();fechar();limpaHash();aviso('Calendário aberto.');};
     $('#noLink').onclick=function(){fechar();limpaHash();};
-  }).catch(function(){
+  }
+  function falhou(){
     abrir('<h2 id="dlgT" style="text-transform:none">Não consegui abrir o link</h2><p>O link parece estar incompleto ou cortado. Peça para a pessoa mandar de novo, ou use o arquivo de cópia (Mais opções → Salvar uma cópia).</p><div class="barra"><button class="btn" type="button" data-act="fechar">Fechar</button></div>');
     limpaHash();
+  }
+}
+var tVer=null,verUlt='';
+function entrarVer(cod,d){
+  return desempacotar(d.t).then(function(novo){
+    if(!novo.ini)throw new Error('vazio');
+    VER={cod:cod};verUlt=d.atualizado||'';S=novo;
+    document.documentElement.classList.add('ver');
+    var h=hojeStr();mes=(h>=S.ini&&h<=S.fim?h:S.ini).slice(0,7);
+    $('#setup').hidden=true;$('#app').hidden=false;tudo();verBanner('');
+    clearInterval(tVer);tVer=setInterval(atualizaVer,30000);
+    document.addEventListener('visibilitychange',function(){if(document.visibilityState==='visible')atualizaVer();});
   });
+}
+function verBanner(extra){
+  var b=$('#verBanner');b.hidden=false;
+  b.innerHTML='<span>👀 Você está vendo o calendário'+(S.titulo?' <b>'+esc(S.titulo)+'</b>':'')+' <b>ao vivo</b>: só leitura, atualiza sozinho. '+extra+'</span><button class="btn sm" type="button" id="verCopia">Salvar uma cópia minha</button>';
+  $('#verCopia').onclick=async function(){var tok=await empacotar(true,true);VER=null;document.documentElement.classList.remove('ver');clearInterval(tVer);location.hash='#c='+tok;location.reload();};
+}
+async function atualizaVer(){
+  if(!VER)return;
+  try{
+    var d=await CalNuvem.lerDoc(VER.cod);
+    if(!d){clearInterval(tVer);verBanner('⚠️ O link foi desativado por quem compartilhou. O que está na tela é a última versão.');return;}
+    if((d.atualizado||'')!==verUlt){verUlt=d.atualizado||'';S=await desempacotar(d.t);tudo();verBanner('Atualizado às '+hhmm(new Date())+'.');}
+  }catch(e){}
 }
 
 /* ---------- importar reserva (Booking, e-mail, PDF, .ics) ---------- */
@@ -1100,7 +1175,7 @@ else{mostrarSetup(false);}
 nuvemUI();receberLink();
 })();
 </script>
-<script type="module" src="./nuvem.js?v=2"></script>
+<script type="module" src="./nuvem.js?v=3"></script>
 <script defer src="/menu-ativo.js?v=1"></script>
 </body>
 </html>
