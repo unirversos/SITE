@@ -129,6 +129,11 @@ dialog::backdrop{background:rgba(58,43,56,.45)}
 .dlg-in h2{font-family:var(--f-display);font-weight:800;font-size:22px;line-height:1.2;margin:0}
 .nav h2::first-letter,.dlg-in h2::first-letter,.lista h3::first-letter{text-transform:uppercase}
 .lq{list-style:none;margin:0;padding:0;display:grid;gap:10px}
+.qf{background:#efe9fb;border:2px dashed #8a78c8;border-radius:14px;padding:10px 12px}
+.qf h3{color:#4b3a8a}
+.qf-i{display:flex;justify-content:space-between;align-items:center;gap:10px;padding:8px 0;border-top:1px dashed #cdc3ee}
+.qf-i:first-of-type{border-top:0}
+.qf-i>div{display:grid;gap:2px}
 .lq-h{margin:10px 0 4px;font-size:15px}
 .lq-i{display:grid;gap:4px;padding:10px 12px;border:1px solid var(--line,#ead9d9);border-radius:12px;background:#fff}
 .dlg-top{display:flex;justify-content:space-between;align-items:start;gap:10px}
@@ -256,7 +261,7 @@ footer a{color:var(--pink);text-decoration:none;margin-right:12px}
 <script src="./geo.js?v=6"></script>
 <script src="./avisos.js?v=2"></script>
 <script src="./passagens.js?v=1"></script>
-<script src="./lista.js?v=3"></script>
+<script src="./lista.js?v=4"></script>
 <script>
 (function(){
 'use strict';
@@ -516,8 +521,9 @@ function desenharLista(){
   var datas={};
   S.ev.forEach(function(e){datas[e.data]=1;});
   var ks=Object.keys(datas).sort();
-  if(!ks.length){$('#vLista').innerHTML='<div class="vazio">Nada anotado ainda. Clique em <b>Novo evento</b> ou em um dia do calendário.</div>';return;}
-  $('#vLista').innerHTML=trajToggle()+ks.map(function(d){
+  var qh=window.CalLista?CalLista.semDia(S.lista,S.ev):'';
+  if(!ks.length){$('#vLista').innerHTML=qh+'<div class="vazio">Nada anotado ainda. Clique em <b>Novo evento</b> ou em um dia do calendário.</div>';return;}
+  $('#vLista').innerHTML=trajToggle()+qh+ks.map(function(d){
     var evs=S.ev.filter(function(e){return e.data===d;}).sort(function(a,b){return (a.hora||'')<(b.hora||'')?-1:(a.hora||'')>(b.hora||'')?1:0;});
     var prox=ks[ks.indexOf(d)+1], pe=prox?ordemDia(prox)[0]:null;
     return '<section class="grp"><h3>'+esc(longo(d))+'</h3>'+comLig(evs,d)+ligHtml(evs[evs.length-1],pe)+'</section>';
@@ -669,8 +675,13 @@ function abrirDia(d){
     '<div class="barra"><button class="btn pri" type="button" data-act="novo" data-d="'+d+'">➕ Novo evento neste dia</button></div>');
   preencheLig(dlgIn,true); sugereOrdem(evs);
 }
-function formEvento(e,dataPadrao,topo){
-  var novo=!e||!e.id;
+var usadoLista='';
+function usarDaLista(x){
+  voltarPara='';
+  formEvento({id:'',titulo:x.nome,tipo:CalLista.CATS[x.cat][2],data:S.ini,dataFim:'',hora:'',horaFim:'',fuso:S.fuso,local:x.local,detalhes:''},S.ini,'<p class="nota">⭐ Vindo da sua lista'+(x.achouPeloNome?': endereço achado pelo nome, confira.':'.')+'</p>',x.id);
+}
+function formEvento(e,dataPadrao,topo,idLista){
+  var novo=!e||!e.id; usadoLista=idLista||'';
   e=e||{id:'',titulo:'',tipo:'passeio',data:dataPadrao||S.ini,dataFim:'',hora:'',horaFim:'',fuso:S.fuso,local:'',detalhes:''};
   var tipos=Object.keys(TIPOS).map(function(k){return '<option value="'+k+'"'+(k===e.tipo?' selected':'')+'>'+TIPOS[k][0]+' '+TIPOS[k][1]+'</option>';}).join('');
   var fusos=Object.keys(FUSOS).map(function(k){return '<option value="'+k+'"'+(k===e.fuso?' selected':'')+'>'+FUSOS[k][0]+'</option>';}).join('');
@@ -692,7 +703,7 @@ function formEvento(e,dataPadrao,topo){
   var f=$('#fEv');
   if($('#evLista'))$('#evLista').onchange=function(){
     var x=(S.lista||[]).find(function(z){return z.id===this.value;}.bind(this)); if(!x)return;
-    f.querySelector('[name=titulo]').value=x.nome; f.querySelector('[name=tipo]').value=CalLista.CATS[x.cat][2]; var li=f.querySelector('[name=local]'); li.value=x.local; li.dispatchEvent(new Event('input'));
+    usadoLista=x.id; f.querySelector('[name=titulo]').value=x.nome; f.querySelector('[name=tipo]').value=CalLista.CATS[x.cat][2]; var li=f.querySelector('[name=local]'); li.value=x.local; li.dispatchEvent(new Event('input'));
     $('#locSt').textContent=x.local?'⭐ Da sua lista'+(x.achouPeloNome?': endereço achado pelo nome ('+x.achado.split(',').slice(0,3).join(',')+'). Confira se é o lugar certo.':': ponto vindo do link ou endereço que você colou.'):'⚠ Este item da lista está sem endereço: não calculo deslocamento. Escreva o endereço ou cole o link do Google Maps.';
   };
   (function(){var li=f.querySelector('[name=local]'), st=$('#locSt');
@@ -718,6 +729,7 @@ function formEvento(e,dataPadrao,topo){
     if(x.chegada)S.chegada=o.id;else if(S.chegada===o.id)S.chegada='';
     var i=S.ev.findIndex(function(z){return z.id===o.id;});
     if(i>=0)S.ev[i]=o;else S.ev.push(o);
+    if(novo&&usadoLista){var qi=(S.lista||[]).find(function(z){return z.id===usadoLista;}); if(qi)qi.evId=o.id;} usadoLista='';
     gravar();tudo();
     if(salvouOk)aviso(novo?'Evento adicionado.':'Evento salvo.');
     if(o.data.slice(0,7)!==mes&&visao==='mes'){mes=o.data.slice(0,7);desenharMes();}
@@ -729,6 +741,8 @@ function acaoEvento(ev){
   var a=b.dataset.act,id=b.dataset.id;
   if(trajetoAberto&&(a==='fechar'||a==='voltar')){recarregaDoDisco();}
   if(a==='fechar'){fechar();return;}
+  if(a==='qlista'){abrirLista();return;}
+  if(a==='qusar'){var qx=(S.lista||[]).find(function(z){return z.id===id;}); if(qx)usarDaLista(qx); return;}
   if(a==='trajeto'){abrirTrajeto(b.dataset.a,b.dataset.b);return;}
   if(a==='traj'){ modoTraj=b.dataset.m==='seq'?'seq':'hosp'; try{localStorage.setItem('uniCalTraj',modoTraj);}catch(e){} desenharLista(); if(dlg.open&&diaAberto)abrirDia(diaAberto); return; }
   if(a==='trecho'){ salvaTrecho(b.dataset.a,b.dataset.b); return; }
@@ -1001,11 +1015,8 @@ function lerArq(f){
   fr.readAsText(f);
 }
 function abrirLista(){
-  diaAberto=''; abrir(CalLista.html(S.lista||[]));
-  CalLista.ligar(dlgIn,function(){return S;},gravar,compactaLocal,function(x){
-    voltarPara='';
-    formEvento({id:'',titulo:x.nome,tipo:CalLista.CATS[x.cat][2],data:S.ini,dataFim:'',hora:'',horaFim:'',fuso:S.fuso,local:x.local,detalhes:''},S.ini,'<p class="nota">⭐ Vindo da sua lista'+(x.achouPeloNome?': endereço achado pelo nome, confira.':'.')+'</p>');
-  },abrirLista);
+  diaAberto=''; abrir(CalLista.html(S.lista||[],S.ev));
+  CalLista.ligar(dlgIn,function(){return S;},gravar,compactaLocal,usarDaLista,abrirLista);
 }
 $('#bLista').onclick=function(){ if(!window.CalLista){aviso('A lista não carregou. Recarregue a página.');return;} abrirLista(); };
 $('#bImport').onclick=function(){
