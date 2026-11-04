@@ -122,5 +122,44 @@ function estModo(m,d){
   if(m==='taxi'){ var sp=d<=30?25:60; return {min:Math.round((d<=30?0:10)+real/sp*60),fare:Math.round((500+Math.max(0,real-1.1)*390)/10)*10,nota:'Táxi: bandeirada de ~¥ 500 e ~¥ 390 por km (Tóquio); fora de Tóquio costuma ser parecido.'}; }
   return {min:Math.round(150+d/750*60),fare:Math.round((20000+5*d)/1000)*1000,nota:'Avião: inclui aeroporto; o preço varia muito conforme a data.'};
 }
-window.CalGeo={MODOS:MODOS,modoPadrao:modoPadrao,estModo:estModo,geocodificar:geocodificar,coordDe:coordDe,soLinkCurto:soLinkCurto,km:km,estima:estima,estimaLonga:estimaLonga,estTarifa:estTarifa,fmtMin:fmtMin,fmtKm:fmtKm,chave:chave,yen:function(n){return '¥ '+Math.round(n).toLocaleString('pt-BR');}};
+
+/* ---------- "Ver rota" de cada meio: abre o site certo já preenchido ---------- */
+/* aeroportos com voo doméstico (código, lat, lon, nome); TYO e OSA juntam os aeroportos da mesma cidade no Google Voos */
+var AERO=[['TYO',35.5494,139.7798,'Tóquio (Haneda)'],['TYO',35.7720,140.3929,'Tóquio (Narita)'],['OSA',34.7855,135.4382,'Osaka (Itami)'],['OSA',34.4320,135.2304,'Osaka (Kansai)'],['UKB',34.6328,135.2239,'Kobe'],
+  ['NGO',34.8584,136.8054,'Nagoya (Chubu)'],['CTS',42.7752,141.6923,'Sapporo (New Chitose)'],['HKD',41.7700,140.8219,'Hakodate'],['AKJ',43.6708,142.4475,'Asahikawa'],['AOJ',40.7347,140.6908,'Aomori'],
+  ['AXT',39.6156,140.2189,'Akita'],['SDJ',38.1397,140.9170,'Sendai'],['KIJ',37.9559,139.1206,'Niigata'],['TOY',36.6483,137.1875,'Toyama'],['KMQ',36.3946,136.4065,'Komatsu (Kanazawa)'],
+  ['FSZ',34.7960,138.1894,'Shizuoka'],['OKJ',34.7569,133.8553,'Okayama'],['HIJ',34.4361,132.9195,'Hiroshima'],['TAK',34.2142,134.0156,'Takamatsu'],['MYJ',33.8272,132.6997,'Matsuyama'],
+  ['KCZ',33.5461,133.6694,'Kochi'],['FUK',33.5859,130.4511,'Fukuoka'],['NGS',32.9169,129.9136,'Nagasaki'],['KMJ',32.8373,130.8550,'Kumamoto'],['OIT',33.4794,131.7372,'Oita'],
+  ['KMI',31.8772,131.4486,'Miyazaki'],['KOJ',31.8034,130.7194,'Kagoshima'],['OKA',26.1958,127.6459,'Naha (Okinawa)'],['ISG',24.3964,124.2450,'Ishigaki'],['MMY',24.7828,125.2950,'Miyako']];
+function aeroPerto(p){var m=null,md=1e9; AERO.forEach(function(a){var k=km(p,{lat:a[1],lon:a[2]}); if(k<md){md=k;m=a;}}); return m?{cod:m[0],nome:m[3],lat:m[1],lon:m[2],km:md}:null;}
+function crd(p){return (+p.lat).toFixed(5)+','+(+p.lon).toFixed(5);}
+function gmaps(pa,pb,tm){return 'https://www.google.com/maps/dir/?api=1&origin='+crd(pa)+'&destination='+crd(pb)+'&travelmode='+tm;}
+/* o = {de, para, data 'AAAA-MM-DD', pax, estA, estB, buscando} → {links:[{t,u,pri}], nota} */
+function linksRota(m,pa,pb,o){
+  o=o||{}; var d=km(pa,pb);
+  if(m==='pe')return {links:[{t:'🚶 Ver caminho a pé (Google Maps)',u:gmaps(pa,pb,'walking'),pri:1}],nota:'Abre o Google Maps já no modo a pé.'};
+  if(m==='taxi'){
+    var u='https://m.uber.com/ul/?action=setPickup&pickup[latitude]='+(+pa.lat).toFixed(6)+'&pickup[longitude]='+(+pa.lon).toFixed(6)+'&pickup[nickname]='+encodeURIComponent(String(o.de||'Origem').slice(0,60))+
+      '&dropoff[latitude]='+(+pb.lat).toFixed(6)+'&dropoff[longitude]='+(+pb.lon).toFixed(6)+'&dropoff[nickname]='+encodeURIComponent(String(o.para||'Destino').slice(0,60));
+    return {links:[{t:'🚕 Pedir pelo Uber (origem e destino já preenchidos)',u:u,pri:1},{t:'🗺️ Trajeto de carro (Google Maps)',u:gmaps(pa,pb,'driving')}],
+      nota:'No Japão o Uber chama táxis comuns nas cidades grandes; se não aparecer carro, dá para pegar táxi no ponto ou pelo app GO.'};
+  }
+  if(m==='onibus')return {links:[{t:'🚌 Abrir o Japan Bus Online',u:'https://japanbusonline.com/en',pri:1},{t:'🗺️ Ônibus da cidade (Google Maps)',u:gmaps(pa,pb,'transit')}],
+    nota:'O Japan Bus Online não aceita o trajeto pelo link: copie a origem e o destino abaixo e cole nos campos de saída e chegada. Para ônibus dentro da cidade, use o Google Maps.'};
+  if(m==='aviao'){
+    var A=aeroPerto(pa), B=aeroPerto(pb);
+    if(!A||!B||A.cod===B.cod)return {links:[{t:'🚆 Ver rota (Google Maps)',u:gmaps(pa,pb,'transit'),pri:1}],nota:'Os dois pontos ficam perto do mesmo aeroporto: avião não compensa aqui.'};
+    var q='Flights from '+A.cod+' to '+B.cod+(/^\d{4}-\d{2}-\d{2}$/.test(o.data||'')?' on '+o.data:'')+' one way'+(o.pax>1?' with '+o.pax+' adults':'');
+    return {links:[{t:'✈️ Ver voos '+A.cod+' → '+B.cod+' (Google Voos)',u:'https://www.google.com/travel/flights?q='+encodeURIComponent(q)+'&hl=pt-BR&curr=JPY',pri:1},
+      {t:'🗺️ Até o aeroporto de '+A.nome,u:gmaps(pa,A,'transit')}],
+      nota:'Aeroporto mais perto: saída '+A.nome+' ('+fmtKm(A.km)+'), chegada '+B.nome+' ('+fmtKm(B.km)+'). O Google Voos abre com origem, destino'+(o.data?' e data':'')+' preenchidos; compre direto no site da companhia.'};
+  }
+  /* trem: Jorudan (乗換案内), com as estações mais perto já preenchidas em japonês */
+  if(o.estA&&o.estB&&o.estA.ja&&o.estB.ja&&o.estA.ja!==o.estB.ja)
+    return {links:[{t:'🚆 Ver trem e preço no Jorudan: '+o.estA.nome+' → '+o.estB.nome,u:'https://www.jorudan.co.jp/norikae/cgi/nori.cgi?eki1='+encodeURIComponent(o.estA.ja)+'&eki2='+encodeURIComponent(o.estB.ja)+'&Cway=0',pri:1},
+      {t:'🔎 Jorudan em inglês (sem preencher)',u:'https://world.jorudan.co.jp/mln/en/'}],
+      nota:'O Jorudan abre em japonês, com as estações preenchidas e o horário de agora; troque a data lá se precisar. A versão em inglês não aceita estações pelo link: use os botões de copiar.'};
+  return {links:[{t:'🔎 Abrir o Jorudan',u:'https://world.jorudan.co.jp/mln/pt/',pri:1}],nota:o.buscando?'Procurando as estações mais perto para preencher o Jorudan…':'Não achei estação perto de um dos pontos: escreva as estações no Jorudan.'};
+}
+window.CalGeo={MODOS:MODOS,modoPadrao:modoPadrao,estModo:estModo,geocodificar:geocodificar,coordDe:coordDe,soLinkCurto:soLinkCurto,km:km,estima:estima,estimaLonga:estimaLonga,estTarifa:estTarifa,fmtMin:fmtMin,fmtKm:fmtKm,chave:chave,linksRota:linksRota,gmaps:gmaps,yen:function(n){return '¥ '+Math.round(n).toLocaleString('pt-BR');}};
 })();

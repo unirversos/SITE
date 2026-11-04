@@ -546,7 +546,7 @@ function umaLig(el){
       aviso='<br><small>⚠ Confira: '+esc(q.join(' e '))+' foi localizado pelo texto escrito à mão. Não confie 100% neste tempo; para ficar exato, cole o link do Google Maps no Local.</small>'; }
     var longo=d>30&&window.CalPas&&(m==='trem'||m==='aviao'), extra=' <button type="button" class="btn sm" data-act="trajeto" data-a="'+esc(ea.id)+'" data-b="'+esc(eb.id)+'">🧭 Definir trajeto</button>';
     if(longo)extra+=CalPas.jaSalvo(S,ea,eb)?' · ✓ trecho nas Passagens':' <button type="button" class="btn sm" data-act="trecho" data-a="'+esc(ea.id)+'" data-b="'+esc(eb.id)+'">🎫 Salvar este trecho nas Passagens</button>';
-    el.innerHTML='↓ '+CalGeo.MODOS[m]+' · ~'+CalGeo.fmtMin(E.min)+' · '+CalGeo.fmtKm(d)+' · <a href="../deslocamento/?de='+encodeURIComponent(de.slice(0,120))+'&para='+encodeURIComponent(pa.slice(0,120))+'">ajustar no De → Para</a> · <a href="https://www.google.com/maps/dir/?api=1&origin='+r[0].lat+','+r[0].lon+'&destination='+r[1].lat+','+r[1].lon+'&travelmode=transit" target="_blank" rel="noopener">🗺️ rota no Google Maps</a>'+extra+aviso;
+    el.innerHTML='↓ '+CalGeo.MODOS[m]+' · ~'+CalGeo.fmtMin(E.min)+' · '+CalGeo.fmtKm(d)+' · <a href="../deslocamento/?de='+encodeURIComponent(de.slice(0,120))+'&para='+encodeURIComponent(pa.slice(0,120))+'">ajustar no De → Para</a> '+(m==='trem'?'':' · '+(function(){var L=CalGeo.linksRota(m,r[0],r[1],{de:de,para:pa,data:eb.data||''}).links[0];return '<a href="'+esc(L.u)+'" target="_blank" rel="noopener">'+esc(L.t)+'</a>';})())+extra+aviso;
   }).catch(function(){});
 }
 function preencheLig(root,ja){

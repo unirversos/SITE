@@ -35,7 +35,6 @@ function okUrl(u){u=String(u||'').trim(); return /^https?:\/\/\S+$/i.test(u)?u.s
 
 function localDe(v){v=String(v||'').trim(); return lugares[v]||v;}
 function kTar(a,b){return [G.chave(a),G.chave(b)].sort().join('>');}
-function rotaUrl(pa,pb){return 'https://www.google.com/maps/dir/?api=1&origin='+pontoRota(pa)+'&destination='+pontoRota(pb)+'&travelmode=transit';}
 
 var seq=0;
 function calcula(){
@@ -57,7 +56,7 @@ function calcula(){
 }
 
 /* ---------- estações perto de cada ponto (OpenStreetMap / Overpass) ---------- */
-var EST_KEY='uniEstacoes1', estCache={}; try{estCache=JSON.parse(localStorage.getItem(EST_KEY)||'{}')||{};}catch(e){estCache={};}
+var EST_KEY='uniEstacoes2', estCache={}; try{estCache=JSON.parse(localStorage.getItem(EST_KEY)||'{}')||{};}catch(e){estCache={};}
 function estacaoPerto(pos){
   var k=pos.lat.toFixed(3)+','+pos.lon.toFixed(3);
   if(estCache.hasOwnProperty(k))return Promise.resolve(estCache[k]);
@@ -66,12 +65,11 @@ function estacaoPerto(pos){
     .then(function(r){if(!r.ok)throw new Error('http');return r.json();})
     .then(function(j){
       var L=((j&&j.elements)||[]).filter(function(x){return x.tags&&(x.tags['name:pt']||x.tags['name:en']||x.tags.name);}).map(function(x){
-        return {nome:String(x.tags['name:pt']||x.tags['name:en']||x.tags.name).slice(0,80),en:String(x.tags['name:en']||x.tags['name:ja-Latn']||x.tags['name:ja_rm']||x.tags.name||'').slice(0,80),lat:x.lat,lon:x.lon,m:Math.round(G.km(pos,{lat:x.lat,lon:x.lon})*1000)};});
+        return {nome:String(x.tags['name:pt']||x.tags['name:en']||x.tags.name).slice(0,80),ja:String(x.tags['name:ja']||x.tags.name||'').slice(0,40),en:String(x.tags['name:en']||x.tags['name:ja-Latn']||x.tags['name:ja_rm']||x.tags.name||'').slice(0,80),lat:x.lat,lon:x.lon,m:Math.round(G.km(pos,{lat:x.lat,lon:x.lon})*1000)};});
       L.sort(function(p,q){return p.m-q.m;});
       var v=L[0]||null; estCache[k]=v; try{localStorage.setItem(EST_KEY,JSON.stringify(estCache));}catch(e){} return v;});
 }
 function pontoRota(p){return (+p.lat).toFixed(5)+','+(+p.lon).toFixed(5);}
-function rotaEntre(o,d){return 'https://www.google.com/maps/dir/?api=1&origin='+encodeURIComponent(pontoRota(o))+'&destination='+encodeURIComponent(pontoRota(d))+'&travelmode=transit';}
 
 function dataDoEvento(local){var k=G.chave(local),e=eventos.filter(function(x){return G.chave(x.local)===k;});return e.length?e[e.length-1].data:'';}
 
@@ -93,12 +91,20 @@ function mostra(a,b,pa,pb){
     '<div class="preco"><span class="rs" id="tot"></span><span class="tg'+(conf?' ok':'')+'" id="tg">'+(conf?'✓ valor confirmado':'estimativa')+'</span>'+(conf?'<button type="button" class="btn sm" id="rev">↺ estimativa</button>':'')+'</div>'+
     '<div id="est" class="est">Procurando estações perto…</div>'+
     '<div class="salva"><label>Data<input id="sd" type="date" value="'+(PARAM_DT||dataDoEvento(b)||dataDoEvento(a)||'')+'"></label><label>Hora<input id="sh" type="time"></label><label style="flex:1 1 220px">Link do trajeto (Jorudan, JR…)<input id="sl" type="url" maxlength="500" placeholder="https://…"></label><button type="button" class="btn pri" id="sv">➕ Salvar esta passagem</button></div><p class="nt" id="smsg"></p>'+
-    '<div class="btns"><a class="btn pri" id="rt" href="'+esc(rotaUrl(pa,pb))+'" target="_blank" rel="noopener">🚆 Ver rota e preço</a></div>'+
-    '<div class="btns" id="jr"><a class="btn" href="https://world.jorudan.co.jp/mln/pt/" target="_blank" rel="noopener">🔎 Abrir no Jorudan</a><button type="button" class="btn sm" id="cpDe" disabled>📋 Copiar origem</button><button type="button" class="btn sm" id="cpPara" disabled>📋 Copiar destino</button></div>';
+    '<div class="btns" id="rts"></div><p class="nt" id="rtn"></p>'+
+    (modo==='trem'||modo==='onibus'?'<div class="btns" id="jr"><button type="button" class="btn sm" id="cpDe" disabled>📋 Copiar origem</button><button type="button" class="btn sm" id="cpPara" disabled>📋 Copiar destino</button></div>':'');
   res.innerHTML=h; res.hidden=false; total(E.fare);
+  /* botões de rota: cada meio abre o site certo, já preenchido */
+  var estA=null, estB=null, buscando=true;
+  function botoes(){
+    var R=G.linksRota(modo,pa,pb,{de:$('#de').value.trim(),para:$('#para').value.trim(),data:$('#sd').value,pax:orc().pax,estA:estA,estB:estB,buscando:buscando});
+    $('#rts').innerHTML=R.links.map(function(l){return '<a class="btn'+(l.pri?' pri':'')+'"'+(l.pri?' id="rt"':'')+' href="'+esc(l.u)+'" target="_blank" rel="noopener">'+esc(l.t)+'</a>';}).join('');
+    $('#rtn').textContent=R.nota||''; $('#rtn').hidden=!R.nota;
+  }
+  botoes(); $('#sd').addEventListener('change',botoes);
   res.querySelector('.modos').onclick=function(ev){var bt=ev.target.closest('[data-m]'); if(!bt)return; orc().m[rk]=bt.dataset.m; grava(); mostra(a,b,pa,pb);};
   $('#pv').onchange=function(){var x=Math.round(parseFloat(String(this.value).replace(',','.'))); if(isFinite(x)&&x>=0&&x<=99999999){ if(!(x===E.fare&&!orc().t[key]))orc().t[key]={v:x,c:1}; grava(); mostra(a,b,pa,pb);} };
-  $('#pp').onchange=function(){var n=parseInt(this.value,10); if(n>=1&&n<=20){orc().pax=n;grava();total(E.fare);} };
+  $('#pp').onchange=function(){var n=parseInt(this.value,10); if(n>=1&&n<=20){orc().pax=n;grava();total(E.fare);botoes();} };
   $('#pc').onchange=function(){var c=parseFloat(String(this.value).replace(',','.')); orc().cot=(isFinite(c)&&c>0&&c<100000)?c/100:''; grava(); total(E.fare);};
   if($('#rev'))$('#rev').onclick=function(){delete orc().t[key];grava();mostra(a,b,pa,pb);};
   $('#sv').onclick=function(){
@@ -117,10 +123,10 @@ function mostra(a,b,pa,pb){
     if(!$('#est'))return; var ea=r[0], eb=r[1];
     function lin(rot,e){return e?'🚉 '+rot+': <b>'+esc(e.nome)+'</b> · '+(e.m<1000?e.m+' m':(e.m/1000).toFixed(1).replace('.',',')+' km')+' a pé':'🚉 '+rot+': nenhuma estação em 1,5 km';}
     $('#est').innerHTML=lin('Saindo de',ea)+'<br>'+lin('Chegando em',eb);
-    function copia(btn,e,rot){ if(!e)return; btn.disabled=false; btn.onclick=function(){var t=e.en||e.nome; (navigator.clipboard?navigator.clipboard.writeText(t):Promise.reject()).then(function(){btn.textContent='✓ copiado: '+t;},function(){btn.textContent=t;}); }; }
-    copia($('#cpDe'),ea,'origem'); copia($('#cpPara'),eb,'destino');
-    if(ea&&eb&&modo==='trem'){ $('#rt').href=rotaEntre(ea,eb); $('#rt').textContent='🚆 Rota de trem: '+ea.nome+' → '+eb.nome; }
-  }).catch(function(){ if($('#est'))$('#est').textContent='Não consegui procurar as estações agora (sem internet ou serviço fora do ar). A rota abre pelos endereços.'; });
+    function copia(btn,e,rot){ if(!e)return; btn.disabled=false; btn.textContent='📋 Copiar '+rot+': '+(e.en||e.nome); btn.onclick=function(){var t=e.en||e.nome; (navigator.clipboard?navigator.clipboard.writeText(t):Promise.reject()).then(function(){btn.textContent='✓ copiado: '+t;},function(){btn.textContent=t;}); }; }
+    if($('#cpDe')){copia($('#cpDe'),ea,'origem'); copia($('#cpPara'),eb,'destino');}
+    estA=ea; estB=eb; buscando=false; botoes();
+  }).catch(function(){ buscando=false; if($('#rts'))botoes(); if($('#est'))$('#est').textContent='Não consegui procurar as estações agora (sem internet ou serviço fora do ar). A rota abre pelos endereços.'; });
   function total(es){
     var oo=orc(), vv=parseFloat($('#pv').value); if(!isFinite(vv))vv=es; var tp=vv*oo.pax;
     $('#tot').textContent=G.yen(tp)+(oo.pax>1?' ('+oo.pax+' pessoas)':'')+(oo.cot?' · ≈ R$ '+(tp*oo.cot).toLocaleString('pt-BR',{minimumFractionDigits:2,maximumFractionDigits:2}):'');
