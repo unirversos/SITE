@@ -135,15 +135,22 @@ function aeroPerto(p){var m=null,md=1e9; AERO.forEach(function(a){var k=km(p,{la
 function crd(p){return (+p.lat).toFixed(5)+','+(+p.lon).toFixed(5);}
 function gmaps(pa,pb,tm){return 'https://www.google.com/maps/dir/?api=1&origin='+crd(pa)+'&destination='+crd(pb)+'&travelmode='+tm;}
 /* o = {de, para, data 'AAAA-MM-DD', pax, estA, estB, buscando} → {links:[{t,u,pri}], nota} */
-var APP={goI:'https://apps.apple.com/us/app/go-taxi-app-for-japan-visit/id1254341709',goA:'https://play.google.com/store/apps/details?id=com.dena.automotive.taxibell',
-  exI:'https://apps.apple.com/us/app/shinkansen-smartex-app/id1253336330',exA:'https://play.google.com/store/apps/details?id=jp.co.jr_central.exreserve.or'};
+var APP={goI:'https://apps.apple.com/us/app/go-taxi-app-for-japan-visit/id1254341709',goA:'https://play.google.com/store/apps/details?id=com.dena.automotive.taxibell',goP:'com.dena.automotive.taxibell',
+  exI:'https://apps.apple.com/us/app/shinkansen-smartex-app/id1253336330',exA:'https://play.google.com/store/apps/details?id=jp.co.jr_central.exreserve.or',exP:'jp.co.jr_central.exreserve.or'};
+/* um botão por app: no Android tenta abrir o app instalado e, se não houver, cai na Play Store; no iPhone abre a página do app na App Store (com "Abrir" se já instalado); no computador mostra os dois links */
+function appLinks(rot,ios,and,pkg){
+  var ua=(typeof navigator!=='undefined'&&navigator.userAgent)||'';
+  if(/Android/i.test(ua))return [{t:rot,u:'intent://#Intent;package='+pkg+';S.browser_fallback_url='+encodeURIComponent(and)+';end'}];
+  if(/iPhone|iPad|iPod/i.test(ua))return [{t:rot,u:ios}];
+  return [{t:rot+' · iPhone',u:ios},{t:rot+' · Android',u:and}];
+}
 function linksRota(m,pa,pb,o){
   o=o||{}; var d=km(pa,pb);
   if(m==='pe')return {links:[{t:'🚶 Ver caminho a pé (Google Maps)',u:gmaps(pa,pb,'walking'),pri:1}],nota:'Abre o Google Maps já no modo a pé.'};
   if(m==='taxi'){
     var u='https://m.uber.com/ul/?action=setPickup&pickup[latitude]='+(+pa.lat).toFixed(6)+'&pickup[longitude]='+(+pa.lon).toFixed(6)+'&pickup[nickname]='+encodeURIComponent(String(o.de||'Origem').slice(0,60))+
       '&dropoff[latitude]='+(+pb.lat).toFixed(6)+'&dropoff[longitude]='+(+pb.lon).toFixed(6)+'&dropoff[nickname]='+encodeURIComponent(String(o.para||'Destino').slice(0,60));
-    return {links:[{t:'🚕 Pedir pelo Uber (origem e destino já preenchidos)',u:u,pri:1},{t:'🗺️ Trajeto de carro (Google Maps)',u:gmaps(pa,pb,'driving')},{t:'📱 App GO Taxi · iPhone',u:APP.goI},{t:'📱 App GO Taxi · Android',u:APP.goA}],
+    return {links:[{t:'🚕 Pedir pelo Uber (origem e destino já preenchidos)',u:u,pri:1},{t:'🗺️ Trajeto de carro (Google Maps)',u:gmaps(pa,pb,'driving')},].concat(appLinks('📱 Abrir o app GO Taxi',APP.goI,APP.goA,APP.goP)),
       nota:'No Japão o Uber chama táxis comuns nas cidades grandes; se não aparecer carro, dá para pegar táxi no ponto ou pelo app GO Taxi (abre só a página do app; não leva origem e destino).'};
   }
   if(m==='onibus')return {links:[{t:'🚌 Abrir o Japan Bus Online',u:'https://japanbusonline.com/en',pri:1},{t:'🗺️ Ônibus da cidade (Google Maps)',u:gmaps(pa,pb,'transit')}],
@@ -158,7 +165,7 @@ function linksRota(m,pa,pb,o){
   }
   /* trem: Google Maps (rota e horários de trem, de estação a estação quando achamos as estações) + Jorudan (preço e horário detalhado) */
   var temE=!!(o.estA&&o.estB&&o.estA.lat!=null&&o.estB.lat!=null&&o.estA.ja!==o.estB.ja);
-  var ex=(d>100&&d<=700)?[{t:'🚄 App SmartEX (trem-bala) · iPhone',u:APP.exI},{t:'🚄 App SmartEX · Android',u:APP.exA}]:[];
+  var ex=(d>100&&d<=700)?appLinks('🚄 Abrir o app SmartEX (trem-bala)',APP.exI,APP.exA,APP.exP):[];
   var maps={t:'🗺️ Ver rota de trem no Google Maps'+(temE?': '+o.estA.nome+' → '+o.estB.nome:''),u:temE?gmaps(o.estA,o.estB,'transit'):gmaps(pa,pb,'transit'),pri:1};
   if(o.estA&&o.estB&&o.estA.ja&&o.estB.ja&&o.estA.ja!==o.estB.ja)
     return {links:[maps,{t:'🚆 Ver trem e preço no Jorudan: '+o.estA.nome+' → '+o.estB.nome,u:'https://www.jorudan.co.jp/norikae/cgi/nori.cgi?eki1='+encodeURIComponent(o.estA.ja)+'&eki2='+encodeURIComponent(o.estB.ja)+'&Cway=0'},
