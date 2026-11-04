@@ -77,7 +77,7 @@ function ligar(root,getS,gravar,compacta,usar,redesenhar){
     if(!nome){er.textContent='Escreva o nome do lugar ou do rolê.';return;}
     var meu=++seq;
     var ant=editId?(getS().lista||[]).find(function(z){return z.id===editId;}):null, cat0=CATS[f.cat.value]?f.cat.value:'passeio';
-    if(ant&&!end&&ant.local&&G&&G.coordDe(ant.local)){ /* só mudou nome ou categoria: mantém o ponto */
+    if(ant&&(!end||end===ant.local)&&ant.local&&G&&G.coordDe(ant.local)){ /* só mudou nome ou categoria: mantém o ponto */
       var c0=G.coordDe(ant.local); ant.nome=nome; ant.cat=cat0; ant.local=localDe(nome,c0); editId=''; gravar(); redesenhar(); return; }
     if(end&&G&&G.coordDe(end)){ /* link ou coordenadas coladas: já é exato */
       var c=G.coordDe(end), loc=compacta(end); if(!/@/.test(loc))loc=localDe(nome,c);
@@ -98,9 +98,9 @@ function ligar(root,getS,gravar,compacta,usar,redesenhar){
     var b=ev.target.closest('[data-lq]'); if(!b)return; var S=getS(), id=b.dataset.id, x=(S.lista||[]).find(function(z){return z.id===id;}); if(!x)return;
     if(b.dataset.lq==='usar'){usar(x);return;}
     if(b.dataset.lq==='edit'){
-      editId=x.id; f.cat.value=x.cat; f.nome.value=x.nome; f.end.value='';
+      editId=x.id; f.cat.value=x.cat; f.nome.value=x.nome; f.end.value=x.local||'';
       var ed=root.querySelector('#lqEd'); ed.hidden=false;
-      ed.textContent='✏️ Editando “'+x.nome+'”. '+(x.local?'Para manter o endereço atual, deixe o campo de endereço vazio. Para trocar, escreva o novo endereço ou cole o link do Google Maps.':'Este item está sem endereço: escreva o endereço, cole o link do Maps, ou deixe vazio para procurar pelo nome.');
+      ed.textContent='✏️ Editando “'+x.nome+'”. '+(x.local?'O ponto no mapa continua o mesmo'+(x.achado?' ('+x.achado.split(',').slice(0,3).join(',')+')':'')+'. Para trocar, apague o campo de endereço e escreva o novo endereço ou cole o link do Google Maps.':'Este item está sem endereço: escreva o endereço, cole o link do Maps, ou deixe vazio para procurar pelo nome.');
       root.querySelector('#lqSub').textContent=x.local?'💾 Salvar alterações':'🔎 Procurar o endereço e salvar'; root.querySelector('#lqCan').hidden=false;
       root.querySelector('#lqRes').textContent=''; f.nome.focus(); try{f.scrollIntoView({block:'center'});}catch(e){} return; }
     if(b.dataset.sure!=='1'){b.dataset.sure='1';b.textContent='Confirmar exclusão?';setTimeout(function(){if(b.isConnected){b.dataset.sure='';b.textContent='Excluir';}},4000);return;}
