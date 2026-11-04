@@ -129,6 +129,12 @@ dialog::backdrop{background:rgba(58,43,56,.45)}
 .dlg-in h2{font-family:var(--f-display);font-weight:800;font-size:22px;line-height:1.2;margin:0}
 .nav h2::first-letter,.dlg-in h2::first-letter,.lista h3::first-letter{text-transform:uppercase}
 .lq{list-style:none;margin:0;padding:0;display:grid;gap:10px}
+.hband{display:block;font-size:11px;line-height:1.3;background:#e3efe8;color:#2f5d46;border-radius:6px;padding:1px 5px;margin:2px 0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.estq{border:1px solid #cfe0d6;background:#f1f7f3;border-radius:14px;padding:10px 12px;display:grid;gap:6px}
+.estq h3{margin:0;color:#2f5d46;font-size:16px}
+.est-i{display:flex;justify-content:space-between;align-items:center;gap:10px;padding:6px 0;border-top:1px solid #d8e6dd}
+.est-i:first-of-type{border-top:0}
+.est-i>div{display:grid;gap:2px}
 .qf{background:#efe9fb;border:2px dashed #8a78c8;border-radius:14px;padding:10px 12px}
 .qf h3{color:#4b3a8a}
 .qf-i{display:flex;justify-content:space-between;align-items:center;gap:10px;padding:8px 0;border-top:1px dashed #cdc3ee}
@@ -210,6 +216,7 @@ footer a{color:var(--pink);text-decoration:none;margin-right:12px}
       <p class="nota no-print" id="nuvem" role="status"></p>
       <div id="passagensPainel" class="no-print"></div>
       <div id="avisos" class="no-print"></div>
+      <div id="estadias" class="no-print"></div>
 
       <div class="barra no-print">
         <button class="btn" type="button" id="vbMes" aria-pressed="true">🗓️ Mês</button>
@@ -459,7 +466,7 @@ function tudo(){
   var n=diff(S.ini,S.fim)+1;
   $('#fDatas').textContent='· '+curto(S.ini)+' a '+curto(S.fim)+' ('+n+' dias) · '+S.ev.length+' '+(S.ev.length===1?'evento':'eventos');
   $('#legenda').innerHTML=Object.keys(TIPOS).map(function(k){return '<span><i style="--c:'+TIPOS[k][2]+'"></i>'+TIPOS[k][0]+' '+TIPOS[k][1]+'</span>';}).join('');
-  desenharMes();desenharLista();desenharAvisos();desenharPassagens();
+  desenharMes();desenharLista();desenharEstadias();desenharAvisos();desenharPassagens();
 }
 /* ---------- painel de passagens ---------- */
 function desenharPassagens(){
@@ -498,11 +505,13 @@ function desenharMes(){
     if(d>=S.ini&&d<=S.fim)cls+=' dentro';
     if(d===h)cls+=' hoje';
     var num=+d.slice(8),dn=(d>=S.ini&&d<=S.fim)?'<small>dia '+(diff(S.ini,d)+1)+'</small>':'';
+    var hs=evs.filter(function(e){return e.tipo==='hosp';}), evs0=evs; evs=evs.filter(function(e){return e.tipo!=='hosp';});
+    var band=hs.length?'<span class="hband">🏨 '+esc(hs[0].titulo)+(hs.length>1?' +'+(hs.length-1):'')+'</span>':'';
     var chips=evs.slice(0,3).map(function(e){return '<span class="chip" style="--c:'+TIPOS[e.tipo][2]+'">'+(e.hora?esc(e.hora)+' ':'')+esc(e.titulo)+'</span>';}).join('');
     var mais=evs.length>3?'<span class="mais-n">+'+(evs.length-3)+' mais</span>':'';
-    var dots=evs.length?'<span class="dots">'+evs.slice(0,6).map(function(e){return '<i style="--c:'+TIPOS[e.tipo][2]+'"></i>';}).join('')+'</span>':'';
+    evs=evs0; var dots=evs.length?'<span class="dots">'+evs.slice(0,6).map(function(e){return '<i style="--c:'+TIPOS[e.tipo][2]+'"></i>';}).join('')+'</span>':'';
     var rotulo=longo(d)+(evs.length?', '+evs.length+(evs.length===1?' evento':' eventos'):', sem eventos');
-    html+='<button type="button" class="'+cls+'" data-d="'+d+'" aria-label="'+esc(rotulo)+'"><span class="n"><span>'+num+'</span>'+dn+'</span>'+chips+mais+dots+'</button>';
+    html+='<button type="button" class="'+cls+'" data-d="'+d+'" aria-label="'+esc(rotulo)+'"><span class="n"><span>'+num+'</span>'+dn+'</span>'+band+chips+mais+dots+'</button>';
   }
   $('#grade').innerHTML=html;
 }
@@ -516,6 +525,16 @@ function cartao(e){
     '<div class="evb"><button type="button" class="btn sm" data-act="edit" data-id="'+esc(e.id)+'">✏️ Editar</button>'+
     '<a class="btn sm" href="'+esc(urlGoogle(e))+'" target="_blank" rel="noopener">➕ Google Agenda</a>'+
     '<button type="button" class="btn sm perigo" data-act="del" data-id="'+esc(e.id)+'">Excluir</button></div></article>';
+}
+function desenharEstadias(){
+  var el=$('#estadias'); if(!el)return;
+  var hs=S.ev.filter(function(e){return e.tipo==='hosp';}).sort(function(a,b){return a.data<b.data?-1:a.data>b.data?1:0;});
+  el.innerHTML='<div class="estq"><h3>🏨 Estadia</h3>'+(hs.length?hs.map(function(h){
+    var n=h.dataFim?diff(h.data,h.dataFim):0, nome=(h.local||'').replace(/\s*@-?\d+\.\d+,-?\d+\.\d+.*$/,'').trim().slice(0,70);
+    return '<div class="est-i"><div><b>'+esc(h.titulo)+'</b><small class="nota">'+esc(curto(h.data))+(h.dataFim?' → '+esc(curto(h.dataFim))+' ('+n+(n===1?' noite':' noites')+')':'')+'</small>'+
+      (h.local?'<small class="nota">📍 '+esc(nome||'endereço salvo')+' · <a href="'+mapaUrl(h.local)+'" target="_blank" rel="noopener">ver no mapa</a></small>':'<small class="nota" style="color:#8a5a00">⚠ sem endereço: não calculo trajetos a partir daqui</small>')+'</div>'+
+      '<button type="button" class="btn sm" data-act="edit" data-id="'+esc(h.id)+'">✏️ Editar</button></div>';}).join(''):'<p class="nota" style="margin:0">Ainda sem estadia. Cadastre o hotel para eu usar o endereço dele como base dos trajetos.</p>')+
+    '<div class="barra"><button type="button" class="btn sm" data-act="novohosp">➕ Adicionar estadia</button></div></div>';
 }
 function desenharLista(){
   var datas={};
@@ -653,6 +672,7 @@ $('#mPrev').onclick=function(){moverMes(-1);};
 $('#mNext').onclick=function(){moverMes(1);};
 $('#grade').addEventListener('click',function(ev){var b=ev.target.closest('[data-d]');if(b)abrirDia(b.dataset.d);});
 $('#vLista').addEventListener('click',acaoEvento);
+$('#estadias').addEventListener('click',acaoEvento);
 
 /* ---------- janela ---------- */
 var dlg=$('#dlg'),dlgIn=$('#dlgIn'),diaAberto='',voltarPara='';
@@ -666,10 +686,11 @@ dlg.addEventListener('close',function(){
 });
 function abrirDia(d){
   diaAberto=d;
-  var evs=doDia(d);
+  var todos=doDia(d), hs=todos.filter(function(e){return e.tipo==='hosp'&&e.data!==d;}), evs=todos.filter(function(e){return !(e.tipo==='hosp'&&e.data!==d);});
   abrir('<div class="dlg-top"><h2 id="dlgT">'+esc(longo(d))+'</h2><button class="btn sm" type="button" data-act="fechar" aria-label="Fechar">✕</button></div>'+
     (d>=S.ini&&d<=S.fim?'<p class="nota">Dia '+(diff(S.ini,d)+1)+' da viagem</p>':'<p class="nota">Fora das datas da viagem</p>')+(evs.length>1||(evs.length&&hospDoDia(d))?trajToggle():'')+
     (function(){var ant=Object.keys(S.ev.reduce(function(o,e){if(e.data<d)o[e.data]=1;return o;},{})).sort().pop(), ult=ant?ordemDia(ant).pop():null; return (evs.length&&ult&&evs[0].local?'<p class="nota" style="margin:0">Vindo de “'+esc(ult.titulo)+'” ('+esc(curto(ant))+'):</p>'+ligHtml(ult,evs[0]):'');})()+
+    hs.map(function(h){return '<div class="estq"><div class="est-i"><div><b>🏨 Estadia: '+esc(h.titulo)+'</b><small class="nota">'+esc(curto(h.data))+(h.dataFim?' → '+esc(curto(h.dataFim)):'')+'</small></div><button type="button" class="btn sm" data-act="edit" data-id="'+esc(h.id)+'">✏️ Editar</button></div></div>';}).join('')+
     (evs.length?comLig(evs,d):'<div class="vazio">Nenhum evento neste dia.</div>')+
     (function(){var dep=Object.keys(S.ev.reduce(function(o,e){if(e.data>d)o[e.data]=1;return o;},{})).sort()[0], prim=dep?ordemDia(dep)[0]:null, ult=evs[evs.length-1];
       return (prim&&ult&&ult.local&&prim.local?'<p class="nota" style="margin:8px 0 0">Próximo destino: “'+esc(prim.titulo)+'” ('+esc(curto(dep))+'):</p>'+ligHtml(ult,prim):'');})()+'<div id="otim"></div>'+'<div id="qPerto"></div>'+
@@ -745,6 +766,7 @@ function acaoEvento(ev){
   if(a==='fechar'){fechar();return;}
   if(a==='qlista'){abrirLista();return;}
   if(a==='qusar'){var qx=(S.lista||[]).find(function(z){return z.id===id;}); if(qx)usarDaLista(qx); return;}
+  if(a==='novohosp'){voltarPara='';formEvento({id:'',titulo:'',tipo:'hosp',data:S.ini,dataFim:'',hora:'',horaFim:'',fuso:S.fuso,local:'',detalhes:''},S.ini);return;}
   if(a==='trajeto'){abrirTrajeto(b.dataset.a,b.dataset.b);return;}
   if(a==='traj'){ modoTraj=b.dataset.m==='seq'?'seq':'hosp'; try{localStorage.setItem('uniCalTraj',modoTraj);}catch(e){} desenharLista(); if(dlg.open&&diaAberto)abrirDia(diaAberto); return; }
   if(a==='trecho'){ salvaTrecho(b.dataset.a,b.dataset.b); return; }
