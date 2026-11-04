@@ -44,7 +44,7 @@ function html(lista,evs){
     '<label class="f">Nome do lugar ou do rolê<input name="nome" maxlength="80" placeholder="ex.: teamLab Planets, Tóquio" autocomplete="off"><small>Escreva com a cidade: acho melhor.</small></label>'+
     '<label class="f">Endereço ou link do Google Maps (opcional)<input name="end" maxlength="600" placeholder="se colar o link do Maps, o ponto fica exato" autocomplete="off"></label>'+
     '<p class="nota" id="lqEd" hidden></p><p class="erro" id="lqErr" role="alert"></p><div id="lqRes" class="nota" role="status"></div>'+
-    '<div class="barra"><button class="btn pri" type="submit" id="lqSub">🔎 Procurar o endereço</button><button class="btn" type="button" id="lqCan" hidden>Cancelar edição</button></div></form>'+
+    '<div class="barra"><button class="btn pri" type="submit" id="lqSub">➕ Add</button><button class="btn" type="button" id="lqCan" hidden>Cancelar edição</button></div></form>'+
     '<h3 style="margin:6px 0 0">Minha lista ('+lista.length+')</h3>'+
     (lista.length?'<div class="lqg">'+grupos+'</div>':'<p class="nota">Ainda não tem nada na lista.</p>');
 }
@@ -101,7 +101,7 @@ function ligar(root,getS,gravar,compacta,usar,redesenhar){
       editId=x.id; f.cat.value=x.cat; f.nome.value=x.nome; f.end.value=x.local||'';
       var ed=root.querySelector('#lqEd'); ed.hidden=false;
       ed.textContent='✏️ Editando “'+x.nome+'”. '+(x.local?'O ponto no mapa continua o mesmo'+(x.achado?' ('+x.achado.split(',').slice(0,3).join(',')+')':'')+'. Para trocar, apague o campo de endereço e escreva o novo endereço ou cole o link do Google Maps.':'Este item está sem endereço: escreva o endereço, cole o link do Maps, ou deixe vazio para procurar pelo nome.');
-      root.querySelector('#lqSub').textContent=x.local?'💾 Salvar alterações':'🔎 Procurar o endereço e salvar'; root.querySelector('#lqCan').hidden=false;
+      root.querySelector('#lqSub').textContent=x.local?'💾 Salvar alterações':'💾 Salvar'; root.querySelector('#lqCan').hidden=false;
       root.querySelector('#lqRes').textContent=''; f.nome.focus(); try{f.scrollIntoView({block:'center'});}catch(e){} return; }
     if(b.dataset.sure!=='1'){b.dataset.sure='1';b.textContent='Confirmar exclusão?';setTimeout(function(){if(b.isConnected){b.dataset.sure='';b.textContent='Excluir';}},4000);return;}
     S.lista=S.lista.filter(function(z){return z.id!==id;}); gravar(); redesenhar();
