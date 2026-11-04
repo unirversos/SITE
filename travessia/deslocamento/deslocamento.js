@@ -73,8 +73,9 @@ function pontoRota(p){return (+p.lat).toFixed(5)+','+(+p.lon).toFixed(5);}
 
 function dataDoEvento(local){var k=G.chave(local),e=eventos.filter(function(x){return G.chave(x.local)===k;});return e.length?e[e.length-1].data:'';}
 
+var rtok=0;
 function mostra(a,b,pa,pb){
-  var d=G.km(pa,pb), res=$('#res'), rk=kTar(a,b), o=orc();
+  var tok=++rtok, d=G.km(pa,pb), res=$('#res'), rk=kTar(a,b), o=orc();
   if(!o.m)o.m={};
   var modo=o.m[rk]||G.modoPadrao(d), key=rk+'|'+modo, cf=(o.r&&o.r[key])||null, E=G.estModo(modo,d,G.rotaCache(pa,pb,G.perfilDe(modo)),cf), t=o.t[key], conf=!!t, v=conf?t.v:E.fare, h='';
   var chips=Object.keys(G.MODOS).map(function(m){var em=G.estModo(m,d,G.rotaCache(pa,pb,G.perfilDe(m)),o.r&&o.r[rk+'|'+m]), tm=o.t[rk+'|'+m], cm=tm?tm.v:em.fare;
@@ -150,7 +151,7 @@ function mostra(a,b,pa,pb){
   ultima(null);
   /* estações mais perto de cada ponto */
   Promise.all([estacaoPerto(pa),estacaoPerto(pb)]).then(function(r){
-    if(!$('#est'))return; var ea=r[0], eb=r[1];
+    if(tok!==rtok||!$('#est'))return; var ea=r[0], eb=r[1];
     function lin(rot,e){return e?'🚉 '+rot+': <b>'+esc(e.nome)+'</b> · '+(e.m<1000?e.m+' m':(e.m/1000).toFixed(1).replace('.',',')+' km')+' a pé':'🚉 '+rot+': nenhuma estação em 1,5 km';}
     var viag='';
     if(modo==='trem'&&ea&&eb&&ea.lat!=null&&eb.lat!=null&&ea.nome!==eb.nome){
@@ -162,7 +163,7 @@ function mostra(a,b,pa,pb){
     if($('#cpDe')){copia($('#cpDe'),ea,'origem'); copia($('#cpPara'),eb,'destino');}
     estA=ea; estB=eb; buscando=false; botoes();
     ultima(eb);
-  }).catch(function(){ buscando=false; if($('#rts'))botoes(); if($('#est'))$('#est').textContent='Não consegui procurar as estações agora (sem internet ou serviço fora do ar). A rota abre pelos endereços.'; });
+  }).catch(function(){ if(tok!==rtok)return; buscando=false; if($('#rts'))botoes(); if($('#est'))$('#est').textContent='Não consegui procurar as estações agora (sem internet ou serviço fora do ar). A rota abre pelos endereços.'; });
   function total(es){
     var oo=orc(), vv=parseFloat($('#pv').value); if(!isFinite(vv))vv=es; var tp=vv*oo.pax;
     $('#tot').textContent=G.yen(tp)+(oo.pax>1?' ('+oo.pax+' pessoas)':'')+(oo.cot?' · ≈ R$ '+(tp*oo.cot).toLocaleString('pt-BR',{minimumFractionDigits:2,maximumFractionDigits:2}):'');
