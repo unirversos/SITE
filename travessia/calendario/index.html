@@ -885,7 +885,7 @@ var pendLink=/^#(c|l)=/.test(location.hash), linkOk=false;
 var usuario=null, syncPronto=false, estadoNuvem='', ultimoSalvo=null, tNuv=null;
 function igual(a,b){
   function ord(v){if(Array.isArray(v))return v.map(ord);if(v&&typeof v==='object'){var r={};Object.keys(v).sort().forEach(function(q){if(v[q]!==undefined)r[q]=ord(v[q]);});return r;}return v;}
-  function k(o){return JSON.stringify(ord({t:o.titulo,i:o.ini,f:o.fim,u:o.fuso,c:o.chegada,e:o.ev,o:o.orc,k:o.ok,p:o.pas}));}
+  function k(o){return JSON.stringify(ord({t:o.titulo,i:o.ini,f:o.fim,u:o.fuso,c:o.chegada,e:o.ev,o:o.orc,k:o.ok,p:o.pas,l:(o.lista||[]).map(function(x){return [x.id,x.nome,x.cat,x.evId,x.nota,x.local,x.comprar||''];})}));}
   return k(a)===k(b);
 }
 function nome(u){return (u&&(u.email||u.displayName)||'sua conta').split('@')[0];}
@@ -938,7 +938,7 @@ async function sincronizar(){
   escolherVersao(c);
 }
 function resumo(o,rot){
-  return '<article class="evc" style="--c:#8e6a1f"><h4>'+rot+'</h4><p>'+(o.titulo?esc(o.titulo)+' · ':'')+esc(curto(o.ini))+' a '+esc(curto(o.fim))+'</p><p class="det">'+o.ev.length+' '+(o.ev.length===1?'evento':'eventos')+(o.atualizado?' · alterado em '+esc(curto(o.atualizado.slice(0,10)))+' às '+esc(hhmm(new Date(o.atualizado))):'')+'</p></article>';
+  return '<article class="evc" style="--c:#8e6a1f"><h4>'+rot+'</h4><p>'+(o.titulo?esc(o.titulo)+' · ':'')+esc(curto(o.ini))+' a '+esc(curto(o.fim))+'</p><p class="det">'+o.ev.length+' '+(o.ev.length===1?'evento':'eventos')+' · '+(o.lista||[]).length+' no Quero fazer'+(o.atualizado?' · alterado em '+esc(curto(o.atualizado.slice(0,10)))+' às '+esc(hhmm(new Date(o.atualizado))):'')+'</p></article>';
 }
 function escolherVersao(c){
   abrir('<h2 id="dlgT" style="text-transform:none">Qual calendário vale?</h2><p>Existe um calendário guardado na sua conta e outro diferente neste aparelho. Escolha qual manter; o outro será substituído.</p>'+
