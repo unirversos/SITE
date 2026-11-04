@@ -130,7 +130,12 @@ function mostra(a,b,pa,pb){
   Promise.all([estacaoPerto(pa),estacaoPerto(pb)]).then(function(r){
     if(!$('#est'))return; var ea=r[0], eb=r[1];
     function lin(rot,e){return e?'🚉 '+rot+': <b>'+esc(e.nome)+'</b> · '+(e.m<1000?e.m+' m':(e.m/1000).toFixed(1).replace('.',',')+' km')+' a pé':'🚉 '+rot+': nenhuma estação em 1,5 km';}
-    $('#est').innerHTML=lin('Saindo de',ea)+'<br>'+lin('Chegando em',eb);
+    var viag='';
+    if(modo==='trem'&&ea&&eb&&ea.lat!=null&&eb.lat!=null&&ea.nome!==eb.nome){
+      var dd=G.km(ea,eb), mn=dd<=30?dd*1.3/32*60:(dd<=100?dd*1.25:(dd<=700?dd*1.25/3:0)); mn=Math.max(2,Math.round(mn));
+      if(dd<=700)viag='<br>🚆 <b>~'+G.fmtMin(mn)+'</b> de '+esc(ea.nome)+' → '+esc(eb.nome)+' <span style="color:#777">(só o trem, estimado; sem espera nem caminhada)</span>';
+    }
+    $('#est').innerHTML=lin('Saindo de',ea)+'<br>'+lin('Chegando em',eb)+viag;
     function copia(btn,e,rot){ if(!e)return; btn.disabled=false; btn.textContent='📋 Copiar '+rot+': '+(e.en||e.nome); btn.onclick=function(){var t=e.en||e.nome; (navigator.clipboard?navigator.clipboard.writeText(t):Promise.reject()).then(function(){btn.textContent='✓ copiado: '+t;},function(){btn.textContent=t;}); }; }
     if($('#cpDe')){copia($('#cpDe'),ea,'origem'); copia($('#cpPara'),eb,'destino');}
     estA=ea; estB=eb; buscando=false; botoes();
