@@ -696,6 +696,10 @@ $('#estadias').addEventListener('click',acaoEvento);
 var dlg=$('#dlg'),dlgIn=$('#dlgIn'),diaAberto='',voltarPara='';
 function abrir(html){dlgIn.innerHTML=html;if(!dlg.open)dlg.showModal();}
 function fechar(){if(dlg.open)dlg.close();}
+dlg.addEventListener('close',function(){
+  if(!pendLink)return;
+  pendLink=false;if(!linkOk&&!VER&&usuario)sincronizar();
+});
 dlg.addEventListener('click',function(ev){if(ev.target===dlg)fechar();});
 dlg.addEventListener('close',function(){
   if(trajetoAberto)recarregaDoDisco();
@@ -870,6 +874,7 @@ $('#bLimpar').onclick=function(){
 
 
 /* ---------- conta (guardar online) ---------- */
+var pendLink=/^#(c|l)=/.test(location.hash), linkOk=false;
 var usuario=null, syncPronto=false, estadoNuvem='', ultimoSalvo=null, tNuv=null;
 function igual(a,b){
   function ord(v){if(Array.isArray(v))return v.map(ord);if(v&&typeof v==='object'){var r={};Object.keys(v).sort().forEach(function(q){if(v[q]!==undefined)r[q]=ord(v[q]);});return r;}return v;}
@@ -912,12 +917,12 @@ function adotar(c){
   $('#setup').hidden=true;$('#app').hidden=false;tudo();
 }
 async function sincronizar(){
-  if(VER)return;
+  if(VER||pendLink)return;
   if(!usuario||!window.CalNuvem)return;
   estadoNuvem='sync';nuvemUI();
   var nuvem;
   try{nuvem=await CalNuvem.carregar();}catch(e){estadoNuvem='erro';nuvemUI();return;}
-  if(VER)return;
+  if(VER||pendLink)return;
   var c=nuvem?limpar(nuvem):null;if(c&&!c.ini)c=null;
   estadoNuvem='';
   if(!c){if(S.ini){await salvarNuvem();}else{syncPronto=true;nuvemUI();}return;}
@@ -1052,9 +1057,9 @@ function receberLink(){
     if(!novo.ini)throw new Error('vazio');
     abrir('<h2 id="dlgT" style="text-transform:none">Abrir este calendário?</h2><p>Alguém compartilhou um calendário com você'+(novo.titulo?': <b>'+esc(novo.titulo)+'</b>':'')+'. Ele tem <b>'+novo.ev.length+'</b> '+(novo.ev.length===1?'evento':'eventos')+', de '+esc(curto(novo.ini))+' a '+esc(curto(novo.fim))+'.</p>'+
       (novo.lista&&novo.lista.length?'<p>Vem também a lista “Quero fazer” ('+novo.lista.length+(novo.lista.length===1?' item':' itens')+').</p>':'')+
-      (S.ev.length?'<p>Ao abrir, ele <b>substitui</b> o calendário que você tem aqui ('+S.ev.length+' '+(S.ev.length===1?'evento':'eventos')+'). Se quiser guardar o seu, feche esta janela, salve uma cópia em Mais opções e abra o link de novo.</p>':'')+
+      (S.ev.length?'<p>Ao abrir, ele <b>substitui</b> o calendário que você tem aqui ('+S.ev.length+' '+(S.ev.length===1?'evento':'eventos')+')'+(usuario?' e o guardado na sua conta':'')+'. Se quiser guardar o seu, feche esta janela, salve uma cópia em Mais opções e abra o link de novo.</p>':'')+
       '<div class="barra"><button class="btn pri" type="button" id="okLink">Abrir</button><button class="btn" type="button" id="noLink">Agora não</button></div>');
-    $('#okLink').onclick=function(){var minhaLista=S.lista; S=novo; if(!(novo.lista&&novo.lista.length)&&minhaLista)S.lista=minhaLista; S.atualizado='';gravar();var h=hojeStr();mes=(h>=S.ini&&h<=S.fim?h:S.ini).slice(0,7);$('#setup').hidden=true;$('#app').hidden=false;tudo();fechar();limpaHash();aviso('Calendário aberto.');};
+    $('#okLink').onclick=function(){var minhaLista=S.lista; S=novo; if(!(novo.lista&&novo.lista.length)&&minhaLista)S.lista=minhaLista; S.atualizado='';linkOk=true;gravar();if(usuario)salvarNuvem();var h=hojeStr();mes=(h>=S.ini&&h<=S.fim?h:S.ini).slice(0,7);$('#setup').hidden=true;$('#app').hidden=false;tudo();fechar();limpaHash();aviso('Calendário aberto.');};
     $('#noLink').onclick=function(){fechar();limpaHash();};
   }
   function falhou(){
@@ -1066,7 +1071,7 @@ var tVer=null,verUlt='';
 function entrarVer(cod,d){
   return desempacotar(d.t).then(function(novo){
     if(!novo.ini)throw new Error('vazio');
-    VER={cod:cod};verUlt=d.atualizado||'';S=novo;
+    VER={cod:cod};pendLink=false;verUlt=d.atualizado||'';S=novo;
     document.documentElement.classList.add('ver');
     var h=hojeStr();mes=(h>=S.ini&&h<=S.fim?h:S.ini).slice(0,7);
     $('#setup').hidden=true;$('#app').hidden=false;tudo();verBanner('');
