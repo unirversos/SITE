@@ -84,16 +84,17 @@ function mostra(a,b,pa,pb){
     '<div class="tempos"><div>'+G.MODOS[modo]+'<b>'+G.fmtMin(E.min)+'</b><small>'+(E.minTag==='conf'?'✓ conferido por você':E.minTag==='real'?'rota real':'estimado')+'</small></div></div>'+
     '<p class="nt">'+esc(E.nota)+'</p>'+
     ((/^coordenadas/.test(pa.nome||'')&&/^coordenadas/.test(pb.nome||''))?'':'<p class="nt" style="color:#8a5a00">⚠ Confira as localizações: '+[[$('#de').value.trim(),pa],[$('#para').value.trim(),pb]].filter(function(x){return !/^coordenadas/.test(x[1].nome||'');}).map(function(x){return '“'+esc(x[0])+'” → achei “'+esc(String(x[1].nome).split(',').slice(0,3).join(','))+'”';}).join('; ')+'. Foram localizadas pelo texto escrito à mão; não confie 100%. Para ficar exato, use o link do Google Maps no Local do evento.</p>')+
+    '<div class="btns" id="rts"></div><p class="nt" id="rtn"></p>'+
+    (modo==='trem'||modo==='onibus'?'<div class="btns" id="jr"><button type="button" class="btn sm" id="cpDe" disabled>📋 Copiar origem</button><button type="button" class="btn sm" id="cpPara" disabled>📋 Copiar destino</button></div>':'')+
+    '<div id="est" class="est">Procurando estações perto…</div>'+
     '<div id="av"></div>'+
     '<div class="preco"><label>Custo (¥ por pessoa)<input id="pv" type="number" inputmode="numeric" min="0" step="10" value="'+v+'" class="'+(conf?'ok':'')+'"></label>'+
     '<label>Pessoas<input id="pp" type="number" min="1" max="20" value="'+o.pax+'" style="width:76px"></label>'+
     '<label>¥ 100 = R$<input id="pc" type="number" inputmode="decimal" min="0" step="0.01" value="'+(o.cot?(o.cot*100).toFixed(2):'')+'" placeholder="3,50" style="width:96px"></label></div>'+
     '<div class="preco"><span class="rs" id="tot"></span><span class="tg'+(conf?' ok':'')+'" id="tg">'+(conf?'✓ valor confirmado':'estimativa')+'</span>'+(conf?'<button type="button" class="btn sm" id="rev">↺ estimativa</button>':'')+'</div>'+
     '<div class="conf"><b>Conferiu no Jorudan, na JR ou no Google Maps?</b><small>Digite aqui o valor real e ele passa a valer em todo o Calendário.</small><div class="preco"><label>Saída<input id="rs" type="time" value="'+(cf&&cf.s||'')+'"></label><label>Chegada<input id="rc" type="time" value="'+(cf&&cf.c||'')+'"></label><label>Tempo (min)<input id="rm" type="number" inputmode="numeric" min="1" max="3000" value="'+(cf&&cf.min||'')+'" style="width:92px"></label><label>Distância (km)<input id="rkm" type="number" inputmode="decimal" min="0" step="0.1" value="'+(cf&&cf.km||'')+'" style="width:96px"></label></div></div>'+
-    '<div id="est" class="est">Procurando estações perto…</div>'+
-    '<div class="salva"><label>Data<input id="sd" type="date" value="'+(PARAM_DT||dataDoEvento(b)||dataDoEvento(a)||'')+'"></label><label>Hora<input id="sh" type="time" value="'+(cf&&cf.s||'')+'"></label><label style="flex:1 1 220px">Link do trajeto (Jorudan, JR…)<input id="sl" type="url" maxlength="500" placeholder="https://…"></label><button type="button" class="btn pri" id="sv">➕ Salvar esta passagem</button></div><p class="nt" id="smsg"></p>'+
-    '<div class="btns" id="rts"></div><p class="nt" id="rtn"></p>'+
-    (modo==='trem'||modo==='onibus'?'<div class="btns" id="jr"><button type="button" class="btn sm" id="cpDe" disabled>📋 Copiar origem</button><button type="button" class="btn sm" id="cpPara" disabled>📋 Copiar destino</button></div>':'');
+    '<div class="salva"><label>Data<input id="sd" type="date" value="'+(PARAM_DT||dataDoEvento(b)||dataDoEvento(a)||'')+'"></label><label>Hora<input id="sh" type="time" value="'+(cf&&cf.s||'')+'"></label><label style="flex:1 1 220px">Link do trajeto (Jorudan, JR…)<input id="sl" type="url" maxlength="500" placeholder="https://…"></label><button type="button" class="btn pri" id="sv">➕ Salvar esta passagem</button></div><p class="nt" id="smsg"></p>';
+
   res.innerHTML=h; res.hidden=false; total(E.fare);
   /* botões de rota: cada meio abre o site certo, já preenchido */
   var estA=null, estB=null, buscando=true;
