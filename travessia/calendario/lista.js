@@ -5,7 +5,7 @@
 'use strict';
 var G=window.CalGeo;
 /* categoria → [ícone, nome, tipo do evento no calendário] */
-var CATS={passeio:['⛩️','Passeio','passeio'],cultura:['🏛️','Cultura (templos, museus)','passeio'],parque:['🎡','Parque e diversão','passeio'],nerd:['🎮','Nerd (jogos, anime, colecionáveis)','passeio'],natureza:['🌸','Natureza e mirantes','passeio'],experiencia:['🎟️','Experiência (aula, show, evento)','ingresso'],onsen:['🛁','Onsen e relax','outro'],restaurante:['🍜','Restaurante','comida'],cafe:['☕','Café e doces','comida'],bar:['🍶','Bar e noite','comida'],compras:['🛍️','Compras','outro']};
+var CATS={passeio:['⛩️','Passeio','passeio'],cultura:['🏛️','Cultura (templos, museus)','passeio'],parque:['🎡','Parque e diversão','passeio'],nerd:['🎮','Nerd (jogos, anime, colecionáveis)','passeio'],natureza:['🌸','Natureza e mirantes','passeio'],experiencia:['🎟️','Experiência (aula, show, evento)','ingresso'],onsen:['🛁','Onsen e relax','outro'],restaurante:['🍜','Restaurante','comida'],cafe:['☕','Café e doces','comida'],bar:['🍶','Bar e noite','comida'],beco:['🏮','Beco para jantar (yokocho)','comida'],compras:['🛍️','Compras','outro']};
 function esc(s){return String(s==null?'':s).replace(/[&<>"']/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c];});}
 function uid(){return 'q'+Date.now().toString(36)+Math.random().toString(36).slice(2,6);}
 
@@ -32,10 +32,24 @@ function itemHtml(x,evs){
     '<div class="barra">'+(ev?'<small class="nota">✓ Já está no calendário em '+dm(ev.data)+'.</small>':'<button type="button" class="btn sm pri" data-lq="usar" data-id="'+esc(x.id)+'">📅 Pôr no calendário</button>')+
     '<button type="button" class="btn sm" data-lq="edit" data-id="'+esc(x.id)+'">✏️ Editar</button><button type="button" class="btn sm" data-lq="del" data-id="'+esc(x.id)+'">Excluir</button></div></li>';
 }
+/* cidade pelo ponto no mapa: a cidade conhecida mais perto, até 40 km (sem consultar internet) */
+var CIDADES=[['Tóquio',35.6762,139.6503],['Yokohama',35.4437,139.6380],['Kamakura',35.3192,139.5467],['Hakone',35.2326,139.1070],['Nikko',36.7500,139.5985],['Quioto',35.0116,135.7681],['Osaka',34.6937,135.5023],['Nara',34.6851,135.8048],['Kobe',34.6901,135.1955],['Himeji',34.8151,134.6853],['Nagoya',35.1815,136.9066],['Kanazawa',36.5613,136.6562],['Hiroshima',34.3853,132.4553],['Fukuoka',33.5902,130.4017],['Sapporo',43.0618,141.3545]];
+var SEMLOC='Sem localização';
+function cidadeDe(x){
+  var c=x.local&&G?G.coordDe(x.local):null; if(!c)return SEMLOC;
+  var best=null; CIDADES.forEach(function(k){var d=G.km(c,{lat:k[1],lon:k[2]}); if(!best||d<best.d)best={d:d,n:k[0]};});
+  return best&&best.d<=40?best.n:'Outros lugares';
+}
 function html(lista,evs){
-  var grupos=Object.keys(CATS).map(function(k){
-    var L=lista.filter(function(x){return x.cat===k;}); if(!L.length)return '';
-    return '<h4 class="lq-h">'+CATS[k][0]+' '+CATS[k][1]+' ('+L.length+')</h4><ul class="lq">'+L.map(function(x){return itemHtml(x,evs);}).join('')+'</ul>';}).join('');
+  var porCid={}; lista.forEach(function(x){var c=cidadeDe(x); (porCid[c]=porCid[c]||[]).push(x);});
+  var cids=Object.keys(porCid).sort(function(a,b){
+    var pa=a===SEMLOC?2:a==='Outros lugares'?1:0, pb=b===SEMLOC?2:b==='Outros lugares'?1:0;
+    return pa!==pb?pa-pb:porCid[b].length-porCid[a].length;});
+  var grupos=cids.map(function(c){
+    var LC=porCid[c];
+    return '<h3 class="lq-c">📍 '+esc(c)+' ('+LC.length+')</h3>'+Object.keys(CATS).map(function(k){
+      var L=LC.filter(function(x){return x.cat===k;}); if(!L.length)return '';
+      return '<h4 class="lq-h">'+CATS[k][0]+' '+CATS[k][1]+' ('+L.length+')</h4><ul class="lq">'+L.map(function(x){return itemHtml(x,evs);}).join('')+'</ul>';}).join('');}).join('');
   var cats=Object.keys(CATS).map(function(k){return '<option value="'+k+'">'+CATS[k][0]+' '+CATS[k][1]+'</option>';}).join('');
   return '<div class="dlg-top"><h2 id="dlgT" style="text-transform:none">⭐ Quero fazer</h2><button class="btn sm" type="button" data-act="fechar" aria-label="Fechar">✕</button></div>'+
     '<p class="nota">Anote os lugares e rolês que você quer encaixar na viagem. Eu procuro o endereço pelo nome, você confere, e depois é só puxar para um evento.</p>'+
@@ -112,6 +126,41 @@ function marcarPerto(root,S,doDia,abrirDia){
   });
 }
 
+/* ---- rolê antes do beco: hora do pôr do sol e itens da lista a pé do beco ---- */
+function porDoSol(lat,lon,data,zenite){
+  var d0=new Date(data+'T00:00:00Z'); if(isNaN(d0))return null;
+  var n=Math.floor((d0-Date.UTC(d0.getUTCFullYear(),0,0))/864e5), g=2*Math.PI/365*(n-1+0.5), R=Math.PI/180;
+  var eqt=229.18*(0.000075+0.001868*Math.cos(g)-0.032077*Math.sin(g)-0.014615*Math.cos(2*g)-0.040849*Math.sin(2*g));
+  var dec=0.006918-0.399912*Math.cos(g)+0.070257*Math.sin(g)-0.006758*Math.cos(2*g)+0.000907*Math.sin(2*g)-0.002697*Math.cos(3*g)+0.00148*Math.sin(3*g);
+  var cosH=Math.cos(zenite*R)/(Math.cos(lat*R)*Math.cos(dec))-Math.tan(lat*R)*Math.tan(dec); if(cosH<-1||cosH>1)return null;
+  var min=720-4*(lon-Math.acos(cosH)/R)-eqt; return new Date(d0.getTime()+min*60000);
+}
+function horaLocal(dt,lon){
+  try{return new Intl.DateTimeFormat('pt-BR',{hour:'2-digit',minute:'2-digit',hour12:false,timeZone:(lon>122&&lon<146)?'Asia/Tokyo':undefined}).format(dt);}catch(e){return '';}
+}
+var ROLE=['passeio','cultura','parque','nerd','natureza','experiencia','onsen','compras'], RAIO_PRE=2; /* km */
+function preBeco(S,evsDia,d){
+  var becos=(evsDia||[]).filter(function(e){return e.local&&(S.lista||[]).some(function(x){return x.cat==='beco'&&x.evId===e.id;});});
+  if(!becos.length||!G)return Promise.resolve([]);
+  var itens=(S.lista||[]).filter(function(x){return ROLE.indexOf(x.cat)>=0&&!noCal(x,S.ev)&&x.local&&G.coordDe(x.local);});
+  return Promise.all(becos.map(function(e){return coordsDe(e).then(function(c){if(!c)return null;
+    var sol=porDoSol(c.lat,c.lon,d,90.833), fim=porDoSol(c.lat,c.lon,d,96);
+    var L=itens.map(function(x){var k=G.km(G.coordDe(x.local),c);return {x:x,km:k,min:caminhando(k)};}).filter(function(r){return r.km<=RAIO_PRE;}).sort(function(a,b){return a.km-b.km;});
+    return {e:e,sol:sol&&horaLocal(sol,c.lon),fim:fim&&horaLocal(fim,c.lon),itens:L};});})).then(function(P){return P.filter(Boolean);});
+}
+function preencherPre(box,S,d,evsDia,usar){
+  if(!box)return;
+  preBeco(S,evsDia,d).then(function(P){
+    if(!box.isConnected||!P.length){return;}
+    box.innerHTML=P.map(function(p){
+      return '<div class="qf qp"><h3>🌆 Antes do beco “'+esc(p.e.titulo)+'”</h3>'+
+        (p.sol?'<small class="nota">Pôr do sol ~'+p.sol+(p.fim?' · luz do crepúsculo até ~'+p.fim:'')+' (cálculo aproximado, sem clima).'+(p.e.hora?' Jantar marcado às '+esc(p.e.hora)+'.':'')+'</small>':'')+
+        (p.itens.length?p.itens.map(function(r){return '<div class="qf-i"><div><b>'+CATS[r.x.cat][0]+' '+esc(r.x.nome)+'</b><small class="nota">~'+G.fmtMin(r.min)+' a pé do beco (estimado)</small>'+(r.x.achouPeloNome?'<small class="nota" style="color:#8a5a00">⚠ endereço achado pelo nome</small>':'')+'</div>'+
+          '<button type="button" class="btn sm pri" data-qp="'+esc(r.x.id)+'">📅 Pôr neste dia</button></div>';}).join(''):'<small class="nota">Nada da sua lista a menos de 2 km. Adicione rolês perto em ⭐ Quero fazer.</small>')+'</div>';}).join('');
+    box.onclick=function(ev){var b=ev.target.closest('[data-qp]'); if(!b)return; var it=null; P.forEach(function(p){p.itens.forEach(function(r){if(r.x.id===b.dataset.qp)it=r;});}); if(it)usar(it.x,d);};
+  });
+}
+
 /* ligar(raiz, getS, gravar, compacta, usar, redesenhar): eventos do painel */
 function ligar(root,getS,gravar,compacta,usar,redesenhar){
   var f=root.querySelector('#lqF'); if(!f)return;
@@ -167,5 +216,5 @@ function opcoes(lista){return Object.keys(CATS).map(function(k){
   var L=lista.filter(function(x){return x.cat===k;}); if(!L.length)return '';
   return '<optgroup label="'+CATS[k][0]+' '+CATS[k][1]+'">'+L.map(function(x){return '<option value="'+esc(x.id)+'">'+esc(x.nome)+(x.local?'':' (sem endereço)')+'</option>';}).join('')+'</optgroup>';}).join('');}
 
-window.CalLista={preencherPerto:preencherPerto,marcarPerto:marcarPerto,semDia:semDia,CATS:CATS,limpa:limpa,html:html,ligar:ligar,opcoes:opcoes};
+window.CalLista={preencherPre:preencherPre,porDoSol:porDoSol,cidadeDe:cidadeDe,preencherPerto:preencherPerto,marcarPerto:marcarPerto,semDia:semDia,CATS:CATS,limpa:limpa,html:html,ligar:ligar,opcoes:opcoes};
 })();
