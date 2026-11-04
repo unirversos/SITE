@@ -261,7 +261,7 @@ footer a{color:var(--pink);text-decoration:none;margin-right:12px}
 <script src="./geo.js?v=6"></script>
 <script src="./avisos.js?v=2"></script>
 <script src="./passagens.js?v=1"></script>
-<script src="./lista.js?v=9"></script>
+<script src="./lista.js?v=10"></script>
 <script>
 (function(){
 'use strict';
@@ -526,9 +526,10 @@ function desenharLista(){
   $('#vLista').innerHTML=trajToggle()+qh+ks.map(function(d){
     var evs=S.ev.filter(function(e){return e.data===d;}).sort(function(a,b){return (a.hora||'')<(b.hora||'')?-1:(a.hora||'')>(b.hora||'')?1:0;});
     var prox=ks[ks.indexOf(d)+1], pe=prox?ordemDia(prox)[0]:null;
-    return '<section class="grp"><h3>'+esc(longo(d))+'</h3>'+comLig(evs,d)+ligHtml(evs[evs.length-1],pe)+'</section>';
+    return '<section class="grp"><h3>'+esc(longo(d))+'</h3>'+comLig(evs,d)+ligHtml(evs[evs.length-1],pe)+'<div class="qpd" data-d="'+d+'"></div></section>';
   }).join('');
   preencheLig($('#vLista'),false);
+  if(window.CalLista)CalLista.marcarPerto($('#vLista'),S,doDia,abrirDia);
 }
 /* ---------- tempo entre paradas do dia e sugestão de ordem ---------- */
 function ligHtml(a,b){
@@ -671,14 +672,15 @@ function abrirDia(d){
     (function(){var ant=Object.keys(S.ev.reduce(function(o,e){if(e.data<d)o[e.data]=1;return o;},{})).sort().pop(), ult=ant?ordemDia(ant).pop():null; return (evs.length&&ult&&evs[0].local?'<p class="nota" style="margin:0">Vindo de “'+esc(ult.titulo)+'” ('+esc(curto(ant))+'):</p>'+ligHtml(ult,evs[0]):'');})()+
     (evs.length?comLig(evs,d):'<div class="vazio">Nenhum evento neste dia.</div>')+
     (function(){var dep=Object.keys(S.ev.reduce(function(o,e){if(e.data>d)o[e.data]=1;return o;},{})).sort()[0], prim=dep?ordemDia(dep)[0]:null, ult=evs[evs.length-1];
-      return (prim&&ult&&ult.local&&prim.local?'<p class="nota" style="margin:8px 0 0">Próximo destino: “'+esc(prim.titulo)+'” ('+esc(curto(dep))+'):</p>'+ligHtml(ult,prim):'');})()+'<div id="otim"></div>'+
+      return (prim&&ult&&ult.local&&prim.local?'<p class="nota" style="margin:8px 0 0">Próximo destino: “'+esc(prim.titulo)+'” ('+esc(curto(dep))+'):</p>'+ligHtml(ult,prim):'');})()+'<div id="otim"></div>'+'<div id="qPerto"></div>'+
     '<div class="barra"><button class="btn pri" type="button" data-act="novo" data-d="'+d+'">➕ Novo evento neste dia</button></div>');
   preencheLig(dlgIn,true); sugereOrdem(evs);
+  if(window.CalLista)CalLista.preencherPerto($('#qPerto'),S,d,evs,usarDaLista);
 }
 var usadoLista='';
-function usarDaLista(x){
+function usarDaLista(x,dia){
   voltarPara='';
-  formEvento({id:'',titulo:x.nome,tipo:CalLista.CATS[x.cat][2],data:S.ini,dataFim:'',hora:'',horaFim:'',fuso:S.fuso,local:x.local,detalhes:x.nota||''},S.ini,'<p class="nota">⭐ Vindo da sua lista'+(x.achouPeloNome?': endereço achado pelo nome, confira.':'.')+'</p>',x.id);
+  formEvento({id:'',titulo:x.nome,tipo:CalLista.CATS[x.cat][2],data:dia||S.ini,dataFim:'',hora:'',horaFim:'',fuso:S.fuso,local:x.local,detalhes:x.nota||''},dia||S.ini,'<p class="nota">⭐ Vindo da sua lista'+(x.achouPeloNome?': endereço achado pelo nome, confira.':'.')+'</p>',x.id);
 }
 function formEvento(e,dataPadrao,topo,idLista){
   var novo=!e||!e.id; usadoLista=idLista||'';

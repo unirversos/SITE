@@ -60,6 +60,58 @@ function semDia(lista,evs){
     '<div class="barra"><button type="button" class="btn sm" data-act="qlista">⭐ Abrir minha lista</button></div></section>';
 }
 
+/* ---- sugestões: itens da lista que ficam perto do roteiro de um dia ---- */
+var RAIO=2.5; /* km em linha reta: dá uns 40 min a pé */
+function caminhando(km){return Math.max(1,Math.round(km*1.3/4.8*60));}
+function coordsDe(e){var c=G&&G.coordDe(e.local); if(c)return Promise.resolve(c); return G?G.geocodificar(e.local).catch(function(){return null;}):Promise.resolve(null);}
+/* âncoras do dia: os eventos "de rolê"; se não houver, a hospedagem */
+function ancoras(evsDia){
+  var L=(evsDia||[]).filter(function(e){return e.local&&e.tipo!=='hosp'&&e.tipo!=='transp'&&e.tipo!=='voo';});
+  if(!L.length)L=(evsDia||[]).filter(function(e){return e.local&&e.tipo==='hosp';});
+  return L;
+}
+function perto(S,evsDia){
+  var itens=(S.lista||[]).filter(function(x){return !noCal(x,S.ev)&&x.local&&G&&G.coordDe(x.local);}), A=ancoras(evsDia);
+  if(!itens.length||!A.length)return Promise.resolve([]);
+  return Promise.all(A.map(function(e){return coordsDe(e).then(function(c){return c?{e:e,c:c}:null;});})).then(function(P){
+    P=P.filter(Boolean); var r=[];
+    itens.forEach(function(x){var cx=G.coordDe(x.local), best=null;
+      P.forEach(function(a){var k=G.km(cx,a.c); if(!best||k<best.km)best={km:k,de:a.e.titulo};});
+      if(best&&best.km<=RAIO)r.push({x:x,km:best.km,de:best.de,min:caminhando(best.km)});});
+    r.sort(function(a,b){return a.km-b.km;}); return r;});
+}
+function preencherPerto(box,S,d,evsDia,usar){
+  if(!box)return; var filtro='';
+  perto(S,evsDia).then(function(R){
+    if(!box.isConnected)return;
+    if(!R.length){box.innerHTML='';return;}
+    function desenha(){
+      var cats=Object.keys(CATS).filter(function(k){return R.some(function(r){return r.x.cat===k;});});
+      var V=R.filter(function(r){return !filtro||r.x.cat===filtro;});
+      box.innerHTML='<div class="qf qp"><h3>⭐ Da sua lista, perto do roteiro de hoje</h3>'+
+        (cats.length>1?'<div class="barra" role="group" aria-label="Filtrar por categoria"><button type="button" class="btn sm" data-qf="" aria-pressed="'+(!filtro)+'">Todos ('+R.length+')</button>'+cats.map(function(k){return '<button type="button" class="btn sm" data-qf="'+k+'" aria-pressed="'+(filtro===k)+'">'+CATS[k][0]+' '+CATS[k][1].split(' (')[0]+'</button>';}).join('')+'</div>':'')+
+        V.map(function(r){return '<div class="qf-i"><div><b>'+CATS[r.x.cat][0]+' '+esc(r.x.nome)+'</b><small class="nota">'+(r.min<=40?'~'+G.fmtMin(r.min)+' a pé':'~'+G.fmtKm(r.km))+' de “'+esc(r.de)+'” (estimado)</small>'+
+          (r.x.achouPeloNome?'<small class="nota" style="color:#8a5a00">⚠ endereço achado pelo nome</small>':'')+(r.x.nota?'<small class="nota" style="white-space:pre-wrap">📝 '+esc(r.x.nota.length>100?r.x.nota.slice(0,99)+'…':r.x.nota)+'</small>':'')+'</div>'+
+          '<button type="button" class="btn sm pri" data-qp="'+esc(r.x.id)+'">📅 Pôr neste dia</button></div>';}).join('')+'</div>';
+    }
+    desenha();
+    box.onclick=function(ev){
+      var f=ev.target.closest('[data-qf]'); if(f){filtro=f.dataset.qf; desenha(); return;}
+      var b=ev.target.closest('[data-qp]'); if(!b)return; var it=R.find(function(r){return r.x.id===b.dataset.qp;}); if(it)usar(it.x,d);
+    };
+  });
+}
+/* na visão em lista: um botão por dia que tem sugestões */
+function marcarPerto(root,S,doDia,abrirDia){
+  root.querySelectorAll('.qpd').forEach(function(el){
+    var d=el.dataset.d; perto(S,doDia(d)).then(function(R){
+      if(!el.isConnected||!R.length)return;
+      el.innerHTML='<button type="button" class="btn sm" data-qdia="'+d+'">⭐ '+R.length+' da sua lista '+(R.length===1?'fica':'ficam')+' perto deste dia</button>';
+      el.firstChild.onclick=function(){abrirDia(d);};
+    });
+  });
+}
+
 /* ligar(raiz, getS, gravar, compacta, usar, redesenhar): eventos do painel */
 function ligar(root,getS,gravar,compacta,usar,redesenhar){
   var f=root.querySelector('#lqF'); if(!f)return;
@@ -115,5 +167,5 @@ function opcoes(lista){return Object.keys(CATS).map(function(k){
   var L=lista.filter(function(x){return x.cat===k;}); if(!L.length)return '';
   return '<optgroup label="'+CATS[k][0]+' '+CATS[k][1]+'">'+L.map(function(x){return '<option value="'+esc(x.id)+'">'+esc(x.nome)+(x.local?'':' (sem endereço)')+'</option>';}).join('')+'</optgroup>';}).join('');}
 
-window.CalLista={semDia:semDia,CATS:CATS,limpa:limpa,html:html,ligar:ligar,opcoes:opcoes};
+window.CalLista={preencherPerto:preencherPerto,marcarPerto:marcarPerto,semDia:semDia,CATS:CATS,limpa:limpa,html:html,ligar:ligar,opcoes:opcoes};
 })();
