@@ -36,6 +36,19 @@ function itemHtml(x,evs){
 /* cidade pelo ponto no mapa: a cidade conhecida mais perto, até 40 km (sem consultar internet) */
 var CIDADES=[['Tóquio',35.6762,139.6503],['Yokohama',35.4437,139.6380],['Kamakura',35.3192,139.5467],['Hakone',35.2326,139.1070],['Nikko',36.7500,139.5985],['Quioto',35.0116,135.7681],['Osaka',34.6937,135.5023],['Nara',34.6851,135.8048],['Kobe',34.6901,135.1955],['Himeji',34.8151,134.6853],['Nagoya',35.1815,136.9066],['Kanazawa',36.5613,136.6562],['Hiroshima',34.3853,132.4553],['Fukuoka',33.5902,130.4017],['Sapporo',43.0618,141.3545]];
 var SEMLOC='Sem localização';
+/* cidades fechadas na lista: lembradas só neste aparelho */
+function fechadas(){try{var a=JSON.parse(localStorage.getItem('uniLqFechadas')||'[]');return Array.isArray(a)?a:[];}catch(e){return [];}}
+function guardaFechadas(a){try{localStorage.setItem('uniLqFechadas',JSON.stringify(a));}catch(e){}}
+document.addEventListener('toggle',function(ev){
+  var d=ev.target; if(!d||!d.classList||!d.classList.contains('lq-cd'))return;
+  var c=d.dataset.c, a=fechadas().filter(function(z){return z!==c;}); if(!d.open)a.push(c); guardaFechadas(a);
+},true);
+document.addEventListener('click',function(ev){
+  var b=ev.target.closest&&ev.target.closest('[data-lqall]'); if(!b)return;
+  var fecha=b.dataset.lqall==='1', box=b.closest('.lqg'); if(!box)return;
+  var todas=[]; box.querySelectorAll('details.lq-cd').forEach(function(d){d.open=!fecha; todas.push(d.dataset.c);});
+  guardaFechadas(fecha?todas:[]);
+});
 function cidadeDe(x){
   var c=x.local&&G?G.coordDe(x.local):null; if(!c)return SEMLOC;
   var best=null; CIDADES.forEach(function(k){var d=G.km(c,{lat:k[1],lon:k[2]}); if(!best||d<best.d)best={d:d,n:k[0]};});
@@ -48,9 +61,9 @@ function html(lista,evs){
     return pa!==pb?pa-pb:porCid[b].length-porCid[a].length;});
   var grupos=cids.map(function(c){
     var LC=porCid[c];
-    return '<h3 class="lq-c">📍 '+esc(c)+' ('+LC.length+')</h3>'+Object.keys(CATS).map(function(k){
+    return '<details class="lq-cd" data-c="'+esc(c)+'"'+(fechadas().indexOf(c)<0?' open':'')+'><summary class="lq-c">📍 '+esc(c)+' ('+LC.length+')</summary>'+Object.keys(CATS).map(function(k){
       var L=LC.filter(function(x){return x.cat===k;}); if(!L.length)return '';
-      return '<h4 class="lq-h">'+CATS[k][0]+' '+CATS[k][1]+' ('+L.length+')</h4><ul class="lq">'+L.map(function(x){return itemHtml(x,evs);}).join('')+'</ul>';}).join('');}).join('');
+      return '<h4 class="lq-h">'+CATS[k][0]+' '+CATS[k][1]+' ('+L.length+')</h4><ul class="lq">'+L.map(function(x){return itemHtml(x,evs);}).join('')+'</ul>';}).join('')+'</details>';}).join('');
   var cats=Object.keys(CATS).map(function(k){return '<option value="'+k+'">'+CATS[k][0]+' '+CATS[k][1]+'</option>';}).join('');
   return '<div class="dlg-top"><h2 id="dlgT" style="text-transform:none">⭐ Quero fazer</h2><button class="btn sm" type="button" data-act="fechar" aria-label="Fechar">✕</button></div>'+
     '<p class="nota">Anote os lugares e rolês que você quer encaixar na viagem. Eu procuro o endereço pelo nome, você confere, e depois é só puxar para um evento.</p>'+
@@ -63,7 +76,7 @@ function html(lista,evs){
     '<p class="nota" id="lqEd" hidden></p><p class="erro" id="lqErr" role="alert"></p><div id="lqRes" class="nota" role="status"></div>'+
     '<div class="barra"><button class="btn pri" type="submit" id="lqSub">➕ Add</button><button class="btn" type="button" id="lqCan" hidden>Cancelar edição</button></div></form>'+
     '<h3 style="margin:6px 0 0">Minha lista ('+lista.length+')</h3>'+
-    (lista.length?'<div class="lqg">'+grupos+'</div>':'<p class="nota">Ainda não tem nada na lista.</p>');
+    (lista.length?'<div class="lqg">'+(cids.length>1?'<div class="barra"><button type="button" class="btn sm" data-lqall="0">▾ Abrir todas as cidades</button><button type="button" class="btn sm" data-lqall="1">▸ Fechar todas</button></div>':'')+grupos+'</div>':'<p class="nota">Ainda não tem nada na lista.</p>');
 }
 
 /* bloco da visão em lista: o que ainda está sem dia, com cor própria */
