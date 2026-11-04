@@ -131,7 +131,7 @@ dialog::backdrop{background:rgba(58,43,56,.45)}
 .lq{list-style:none;margin:0;padding:0;display:grid;gap:10px}
 .hband{display:block;font-size:11px;line-height:1.3;background:#e3efe8;color:#2f5d46;border-radius:6px;padding:1px 5px;margin:2px 0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .estq{border:1px solid #cfe0d6;background:#f1f7f3;border-radius:14px;padding:10px 12px;display:grid;gap:6px}
-.ver #bNovo,.ver #bImport,.ver #bLista,.ver #bCompart,.ver #bDesloc,.ver [data-act=edit],.ver [data-act=del],.ver [data-act=novo],.ver [data-act=novohosp],.ver [data-act=trajeto],.ver [data-act=trecho],.ver [data-act=qlista],.ver [data-act=qusar],.ver details.mais,.ver #bAjustar,.ver #nuvem,.ver #nuvemSetup,.ver .qpd,.ver #qPerto{display:none!important}
+.ver #bNovo,.ver #bImport,.ver #lqF,.ver [data-lq],.ver #bCompart,.ver #bDesloc,.ver [data-act=edit],.ver [data-act=del],.ver [data-act=novo],.ver [data-act=novohosp],.ver [data-act=trajeto],.ver [data-act=trecho],.ver [data-act=qlista],.ver [data-act=qusar],.ver details.mais,.ver #bAjustar,.ver #nuvem,.ver #nuvemSetup,.ver .qpd,.ver #qPerto{display:none!important}
 #verBanner{background:#eef3fb;border:1px solid #c9d8ef;border-radius:14px;padding:10px 12px;display:flex;gap:10px;align-items:center;justify-content:space-between;flex-wrap:wrap;font-size:14px;margin:0 0 10px}
 .estq summary{cursor:pointer;font-weight:700;color:#2f5d46;font-size:14.5px;list-style:none;display:flex;gap:6px;align-items:center}.estq summary::-webkit-details-marker{display:none}.estq summary i{font-style:normal;font-weight:700;background:#d8e6dd;border-radius:999px;padding:0 7px;font-size:12px}.estq summary span{flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.estq summary::after{content:'▾';color:#2f5d46}.estq[open] summary::after{content:'▴'}.estq{padding:8px 12px}
 .est-i{display:flex;justify-content:space-between;align-items:center;gap:10px;padding:6px 0;border-top:1px solid #d8e6dd}
@@ -1144,6 +1144,7 @@ function lerArq(f){
 }
 function abrirLista(){
   diaAberto=''; abrir(CalLista.html(S.lista||[],S.ev));
+  if(VER){var pn=dlgIn.querySelector('p.nota');if(pn)pn.textContent='Lugares e rolês que quem compartilhou quer fazer. Só leitura.';return;}
   CalLista.ligar(dlgIn,function(){return S;},gravar,compactaLocal,usarDaLista,function(){desenharLista();abrirLista();});
 }
 $('#bLista').onclick=function(){ if(!window.CalLista){aviso('A lista não carregou. Recarregue a página.');return;} abrirLista(); };
