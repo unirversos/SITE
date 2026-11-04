@@ -88,6 +88,7 @@ function mostra(a,b,pa,pb){
     (modo==='trem'||modo==='onibus'?'<div class="btns" id="jr"><button type="button" class="btn sm" id="cpDe" disabled>📋 Copiar origem</button><button type="button" class="btn sm" id="cpPara" disabled>📋 Copiar destino</button></div>':'')+
     '<p class="nt" id="rtn"></p>'+
     '<div id="est" class="est">Procurando estações perto…</div>'+
+    '<div id="um" class="est" style="margin-top:10px"></div>'+
     '<div id="av"></div>'+
     '<div class="preco"><label>Custo (¥ por pessoa)<input id="pv" type="number" inputmode="numeric" min="0" step="10" value="'+v+'" class="'+(conf?'ok':'')+'"></label>'+
     '<label>Pessoas<input id="pp" type="number" min="1" max="20" value="'+o.pax+'" style="width:76px"></label>'+
@@ -126,6 +127,27 @@ function mostra(a,b,pa,pb){
     var dt=dataDoEvento(b)||dataDoEvento(a), av=(window.CalAvisos&&dt)?CalAvisos.para({data:dt,tipo:'transp',titulo:'Shinkansen'}):null;
     $('#av').innerHTML='<div class="aviso">🚄 <b>Assento reservado no trem-bala:</b> '+(av?av.texto:'no balcão abre 1 mês antes, às 10h do Japão; pelo SmartEX dá para reservar antes.')+'</div>';
   }
+  /* última milha: da estação de chegada até o destino (táxi estimado, ônibus no Maps, anotações salvas por destino) */
+  function ultima(eb){
+    var box=$('#um'); if(!box)return;
+    if(modo!=='trem'&&modo!=='onibus'){box.hidden=true;return;}
+    box.hidden=false;
+    var oo=orc(); if(!oo.um||typeof oo.um!=='object')oo.um={};
+    var uk=G.chave(b), nt=oo.um[uk]||{}, topo='<b>🏨 Última milha:</b> da estação até “'+esc($('#para').value.trim()||'o destino')+'”<br>', corpo='';
+    if(eb){
+      var dk=eb.m/1000, tx=G.estModo('taxi',Math.max(dk,0.1),null,null), pe=Math.max(1,Math.round(dk*1.3/4.8*60));
+      corpo+='🚶 A pé: ~'+G.fmtMin(pe)+' ('+(eb.m<1000?eb.m+' m':(dk).toFixed(1).replace('.',',')+' km')+' em linha reta)<br>'+
+        '🚕 Táxi da praça da estação: ~'+G.fmtMin(Math.max(2,tx.min))+' · ~'+G.yen(tx.fare)+' <span style="color:#777">(estimado)</span><br>'+
+        '<div class="btns" style="margin:6px 0"><a class="btn" target="_blank" rel="noopener" href="'+esc(G.gmaps(eb,pb,'transit'))+'">🚌 Ver ônibus de '+esc(eb.nome)+' até o destino (Google Maps)</a></div>';
+    } else corpo+='<span style="color:#777">Sem estação de chegada encontrada: táxi e ônibus não calculados.</span><br>';
+    corpo+='<label style="display:block;margin-top:6px">🚐 Shuttle / transfer do hotel (ponto, horários, telefone)<textarea id="umS" maxlength="300" rows="2" style="width:100%;box-sizing:border-box">'+esc(nt.sh||'')+'</textarea></label>'+
+      '<label style="display:block;margin-top:6px">🚌 Ônibus local (linha e parada de descida)<textarea id="umO" maxlength="300" rows="2" style="width:100%;box-sizing:border-box">'+esc(nt.on||'')+'</textarea></label>'+
+      '<small style="color:#777" id="umM">Suas anotações ficam salvas neste destino e voltam sempre que ele for o ponto de chegada.</small>';
+    box.innerHTML=topo+corpo;
+    function gv(){var x={sh:$('#umS').value.trim().slice(0,300),on:$('#umO').value.trim().slice(0,300)}, o2=orc(); if(!o2.um)o2.um={}; if(x.sh||x.on)o2.um[uk]=x; else delete o2.um[uk]; grava(); $('#umM').textContent='✓ anotação salva para este destino';}
+    $('#umS').onchange=gv; $('#umO').onchange=gv;
+  }
+  ultima(null);
   /* estações mais perto de cada ponto */
   Promise.all([estacaoPerto(pa),estacaoPerto(pb)]).then(function(r){
     if(!$('#est'))return; var ea=r[0], eb=r[1];
@@ -139,6 +161,7 @@ function mostra(a,b,pa,pb){
     function copia(btn,e,rot){ if(!e)return; btn.disabled=false; btn.textContent='📋 Copiar '+rot+': '+(e.en||e.nome); btn.onclick=function(){var t=e.en||e.nome; (navigator.clipboard?navigator.clipboard.writeText(t):Promise.reject()).then(function(){btn.textContent='✓ copiado: '+t;},function(){btn.textContent=t;}); }; }
     if($('#cpDe')){copia($('#cpDe'),ea,'origem'); copia($('#cpPara'),eb,'destino');}
     estA=ea; estB=eb; buscando=false; botoes();
+    ultima(eb);
   }).catch(function(){ buscando=false; if($('#rts'))botoes(); if($('#est'))$('#est').textContent='Não consegui procurar as estações agora (sem internet ou serviço fora do ar). A rota abre pelos endereços.'; });
   function total(es){
     var oo=orc(), vv=parseFloat($('#pv').value); if(!isFinite(vv))vv=es; var tp=vv*oo.pax;
