@@ -48,6 +48,8 @@ st.textContent = `
 #uni-gate a{color:#c23f5e}
 #uni-gate .lk{border:0;background:none;color:#c23f5e;font:inherit;font-size:13px;cursor:pointer;padding:0;justify-self:start;text-decoration:underline}
 .uni-chip{display:inline-flex;align-items:center;gap:6px;font-size:13px;color:#6b5a67;white-space:nowrap}
+.uni-av{width:22px;height:22px;border-radius:50%;background:#c4405f;color:#fff;display:inline-grid;place-items:center;font-weight:700;font-size:12px;line-height:1}
+.uni-chip.uni-entrar button{background:#c4405f;border-color:#c4405f;color:#fff;font-weight:700;padding:5px 14px}
 .uni-chip button{border:1px solid #ecdadd;background:#fff;border-radius:999px;padding:3px 10px;font:inherit;font-size:12.5px;cursor:pointer;color:#6b5a67}
 .uni-chip.solta{position:fixed;right:12px;bottom:12px;z-index:50;background:#fff;border:1px solid #ecdadd;border-radius:999px;padding:4px 6px 4px 12px;box-shadow:0 6px 16px -10px rgba(58,43,56,.4)}
 `;
@@ -96,16 +98,26 @@ function gate(opc){
     try { if (modo === 'criar') await createUserWithEmailAndPassword(auth, em, pw); else await signInWithEmailAndPassword(auth, em, pw); } catch (x) { err(msg(x)); } };
   $('uni-esq').onclick = async () => { const em = $('uni-e').value.trim(); if (!em) { err('Escreva o seu e-mail acima e clique de novo.'); return; }
     try { await sendPasswordResetEmail(auth, em); err('Mandamos um link para trocar a senha no seu e-mail.'); } catch (x) { err(msg(x)); } };
+  if (opc.modo === 'entrar') g.querySelector('button[data-m="entrar"]').click();
 }
 function tiraGate(){ const g = document.getElementById('uni-gate'); if (g) g.remove(); }
 
 /* ---------- chip "logada como" ---------- */
 function chip(user){
   document.querySelectorAll('.uni-chip').forEach(c => c.remove());
-  if (!user) return;
+  if (!user) {
+    /* sem login: botão "Entrar" na barra do site (páginas que já exigem login mostram o portão) */
+    const alvo0 = document.querySelector('.sitebar .navlinks') || document.querySelector('.nav .links');
+    if (OBRIG || !alvo0) return;
+    const b = document.createElement('span'); b.className = 'uni-chip uni-entrar';
+    b.innerHTML = '<button type="button">Entrar</button>';
+    b.querySelector('button').onclick = () => gate({ titulo: 'Entre na sua conta', modo: 'entrar' });
+    alvo0.appendChild(b); return;
+  }
   const c = document.createElement('span'); c.className = 'uni-chip';
   const nome = (user.displayName || user.email || 'você').split(' ')[0].split('@')[0];
-  c.innerHTML = `👤 ${nome.replace(/[<>&"]/g,'')} <button type="button">sair</button>`;
+  const nm = nome.replace(/[<>&"]/g,'');
+  c.innerHTML = `<span class="uni-av" aria-hidden="true">${(nm[0] || '?').toUpperCase()}</span> ${nm} <button type="button">sair</button>`;
   c.querySelector('button').onclick = async () => { await enviar(); await signOut(auth); };
   const alvo = document.querySelector('.sitebar .navlinks') || document.querySelector('.nav .links');
   if (alvo) alvo.appendChild(c); else { c.classList.add('solta'); document.body.appendChild(c); }
@@ -157,7 +169,7 @@ async function puxa(user){
 
 /* ---------- estado do login ---------- */
 const entrar = opc => gate(opc || {});
-window.UniConta = { auth, db, entrar, sair: () => signOut(auth), enviar };
+window.UniConta = { auth, db, entrar, gate, sair: () => signOut(auth), enviar };
 export { auth, db, entrar };
 onAuthStateChanged(auth, async user => {
   if (user) {
