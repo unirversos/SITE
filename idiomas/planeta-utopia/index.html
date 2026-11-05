@@ -531,10 +531,10 @@ function npcBubble(npc){
   div.scrollIntoView({behavior:'smooth',block:'end'});
   return div;
 }
-function meBubble(txt){
+function meBubble(txt,ro){
   const div=document.createElement('div');
   div.className='bubble me';
-  const mini=avatarSVG(); div.innerHTML=`<div class="who">${mini?'<span class="mini-av">'+mini+'</span>':''}${G.name}</div><div class="line-txt">${txt}</div>`;
+  const mini=avatarSVG(); div.innerHTML=`<div class="who">${mini?'<span class="mini-av">'+mini+'</span>':''}${G.name}</div><div class="line-txt">${txt}${ro?roSpan(ro):''}</div>`;
   document.getElementById('chat').appendChild(div);
   div.scrollIntoView({behavior:'smooth',block:'end'});
 }
@@ -552,7 +552,7 @@ function showStep(){
     btn.onclick=()=>{
       const c=shuffled[i];
       if(c.ok){
-        meBubble(c.k?c.k.replace(/\s\([^()]*\)$/,'').replace(/\[seu nome\]/g,G.name):btn.textContent);
+        meBubble(c.k?c.k.replace(/\s\([^()]*\)$/,'').replace(/\[seu nome\]/g,G.name):btn.textContent, c.k&&c.ro?String(c.ro).replace(/\s\([^()]*\)$/,'').replace(/\[seu nome\]/g,G.name).replace(/\[your name\]/g,G.name):'');
         if(window.UniPalco&&UniPalco.ready()){ UniPalco.mood('ok',1300); UniPalco.sparkle(['✨','💖'],5); }
         box.innerHTML='';
         stepIdx++; 
@@ -593,7 +593,7 @@ function showBoss(){
    </div>`;
 }
 /* peças: a 1ª forma aparece (kana); o campo aceita romaji, kana ou kanji */
-function kwChip(k){ const alts=String(k).split('|'); return `<span class="kw" data-kw="${alts.map(x=>x.toLowerCase()).join('|').replace(/"/g,'&quot;')}">${alts[0]}</span>`; }
+function kwChip(k){ const alts=String(k).split('|'); const jp=/[\u3040-\u30ff\u4e00-\u9fff]/.test(alts[0]); const ro=jp?alts.find(x=>/^[a-z][a-z\- ]*$/.test(x)):''; return `<span class="kw" data-kw="${alts.map(x=>x.toLowerCase()).join('|').replace(/"/g,'&quot;')}">${alts[0]}${ro?roSpan(ro):''}</span>`; }
 function kwHit(txt,el){ const t=txt.replace(/\s+/g,' '), sem=t.replace(/[\s\-]/g,''); return el.getAttribute('data-kw').split('|').some(a=>a&&(t.includes(a)||sem.includes(a.replace(/[\s\-]/g,'')))); }
 /* correção de partículas na resposta escrita (japonês): só regras seguras, por território */
 const PRED_PEDIR='(?:おねがいします|お願いします|ください)';
