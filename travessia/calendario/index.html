@@ -354,6 +354,7 @@ function limpar(o){
       dataFim:okData(e.dataFim)&&e.dataFim>e.data?e.dataFim:'',hora:okHora(e.hora)?e.hora:'',horaFim:'',fuso:FUSOS[e.fuso]?e.fuso:r.fuso,
       local:typeof e.local==='string'?e.local.slice(0,600):'',detalhes:typeof e.detalhes==='string'?e.detalhes.slice(0,4000):''};
     if(x.hora&&okHora(e.horaFim))x.horaFim=e.horaFim;
+    if(x.tipo==='hosp'){var vl=Math.round(+e.valor); if(isFinite(vl)&&vl>0&&vl<=99999999){x.valor=vl;x.moeda=e.moeda==='brl'?'brl':'jpy';}}
     r.ev.push(x);
   });
   if(typeof o.chegada==='string'&&r.ev.some(function(z){return z.id===o.chegada;}))r.chegada=o.chegada;
@@ -549,6 +550,8 @@ function cartao(e){
     '<button type="button" class="btn sm perigo" data-act="del" data-id="'+esc(e.id)+'">Excluir</button></div></article>';
 }
 function nomeEst(h){return (h.titulo||'').replace(/\s*@-?\d+\.\d+,-?\d+\.\d+.*$/,'').trim()||'Hospedagem';}
+function moedaTxt(v,m){return (m==='brl'?'R$ ':'¥')+v.toLocaleString('pt-BR');}
+function totalEst(hs){var t={jpy:0,brl:0};hs.forEach(function(h){if(h.valor)t[h.moeda==='brl'?'brl':'jpy']+=h.valor;});var p=[];if(t.jpy)p.push(moedaTxt(t.jpy,'jpy'));if(t.brl)p.push(moedaTxt(t.brl,'brl'));return p.join(' + ');}
 function desenharEstadias(){
   var el=$('#estadias'); if(!el)return;
   var hs=S.ev.filter(function(e){return e.tipo==='hosp';}).sort(function(a,b){return a.data<b.data?-1:a.data>b.data?1:0;});
@@ -557,8 +560,9 @@ function desenharEstadias(){
   el.innerHTML='<details class="estq"'+(estAberta?' open':'')+'><summary>🏨 <span>'+resumo+'</span></summary>'+(hs.length?hs.map(function(h){
     var n=h.dataFim?diff(h.data,h.dataFim):0, nome=(h.local||'').replace(/\s*@-?\d+\.\d+,-?\d+\.\d+.*$/,'').trim().slice(0,70);
     return '<div class="est-i"><div><b>'+esc(nomeEst(h))+'</b><small class="nota">'+esc(curto(h.data))+(h.dataFim?' → '+esc(curto(h.dataFim))+' ('+n+(n===1?' noite':' noites')+')':'')+'</small>'+
-      (h.local?'<small class="nota">📍 '+esc(nome||'endereço salvo')+' · <a href="'+mapaUrl(h.local)+'" target="_blank" rel="noopener">ver no mapa</a></small>':'<small class="nota" style="color:#8a5a00">⚠ sem endereço: não calculo trajetos a partir daqui</small>')+'</div>'+
+      (h.valor?'<small class="nota">💰 '+moedaTxt(h.valor,h.moeda)+'</small>':'')+(h.local?'<small class="nota">📍 '+esc(nome||'endereço salvo')+' · <a href="'+mapaUrl(h.local)+'" target="_blank" rel="noopener">ver no mapa</a></small>':'<small class="nota" style="color:#8a5a00">⚠ sem endereço: não calculo trajetos a partir daqui</small>')+'</div>'+
       '<button type="button" class="btn sm" data-act="edit" data-id="'+esc(h.id)+'">✏️ Editar</button></div>';}).join(''):'<p class="nota" style="margin:0">Ainda sem estadia. Cadastre o hotel para eu usar o endereço dele como base dos trajetos.</p>')+
+    (totalEst(hs)?'<p class="nota" style="margin:8px 0 0"><b>💰 Total das estadias: '+totalEst(hs)+'</b></p>':'')+
     '<div class="barra"><button type="button" class="btn sm" data-act="novohosp">➕ Adicionar estadia</button></div></details>';
   var d=el.querySelector('details');if(d)d.addEventListener('toggle',function(){estAberta=d.open;});
 }
@@ -750,6 +754,8 @@ function formEvento(e,dataPadrao,topo,idLista){
     '<label class="f">Termina em outro dia?<input type="date" name="dataFim" value="'+esc(e.dataFim)+'"><small>Para estadias e viagens longas. Deixe vazio se for no mesmo dia.</small></label></div>'+
     '<div class="par2"><label class="f">Hora de início<input type="time" name="hora" value="'+esc(e.hora)+'"><small>Deixe vazio para o dia todo.</small></label>'+
     '<label class="f">Hora de término<input type="time" name="horaFim" value="'+esc(e.horaFim)+'"></label></div>'+
+    '<div class="par2" id="evValorBox"'+(e.tipo==='hosp'?'':' hidden')+'><label class="f">Valor da estadia (opcional)<input name="valor" type="number" inputmode="numeric" min="0" step="1" value="'+(e.valor?esc(String(e.valor)):'')+'" placeholder="total das noites"><small>Some o gasto total no painel de estadias.</small></label>'+
+    '<label class="f">Moeda<select name="moeda"><option value="jpy"'+(e.moeda!=='brl'?' selected':'')+'>¥ ienes</option><option value="brl"'+(e.moeda==='brl'?' selected':'')+'>R$ reais</option></select></label></div>'+
     '<label class="f">Local<input name="local" maxlength="600" value="'+esc(e.local)+'" placeholder="link do Google Maps, nome do lugar ou endereço" autocomplete="off"><small id="locSt" role="status"></small></label>'+
     '<label class="f">Detalhes<textarea name="detalhes" maxlength="4000" placeholder="código de reserva, como chegar, o que levar…">'+esc(e.detalhes)+'</textarea></label>'+
     '<p class="erro" id="evErr" role="alert"></p>'+
@@ -767,6 +773,7 @@ function formEvento(e,dataPadrao,topo,idLista){
         st.textContent+=' Procurando no mapa…';
         CalGeo.geocodificar(t).then(function(r){ if(li.value.trim()!==v)return;
           st.textContent=r?'⚠ Localização escrita à mão. Achei: “'+r.nome+'”. Confira se é o lugar certo; se não for, escreva com a cidade ou cole o link do Google Maps.':'⚠ Não achei esse endereço no mapa. Escreva com a cidade, ou cole o link do Google Maps.'; }).catch(function(){}); } }); mostra();})();
+  (function(){var tp=f.querySelector('[name=tipo]'),bx=$('#evValorBox'); tp.addEventListener('change',function(){bx.hidden=tp.value!=='hosp';});})();
   f.querySelector('[name=titulo]').focus();
   f.onsubmit=function(ev){
     ev.preventDefault();
@@ -780,6 +787,7 @@ function formEvento(e,dataPadrao,topo,idLista){
     if(x.hora&&x.horaFim&&!x.dataFim&&x.horaFim<=x.hora){er.textContent='A hora de término precisa ser depois da de início.';return;}
     var o={id:e.id||uid(),titulo:x.titulo,tipo:TIPOS[x.tipo]?x.tipo:'outro',data:x.data,dataFim:x.dataFim,hora:x.hora,horaFim:x.hora?x.horaFim:'',
       fuso:FUSOS[x.fuso]?x.fuso:S.fuso,local:compactaLocal(x.local).slice(0,600),detalhes:x.detalhes.trim()};
+    var vlr=Math.round(+x.valor); if(o.tipo==='hosp'&&isFinite(vlr)&&vlr>0&&vlr<=99999999){o.valor=vlr;o.moeda=x.moeda==='brl'?'brl':'jpy';}
     if(x.chegada)S.chegada=o.id;else if(S.chegada===o.id)S.chegada='';
     var i=S.ev.findIndex(function(z){return z.id===o.id;});
     if(i>=0)S.ev[i]=o;else S.ev.push(o);
