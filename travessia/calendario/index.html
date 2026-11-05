@@ -229,6 +229,7 @@ footer a{color:var(--pink);text-decoration:none;margin-right:12px}
         <button class="btn pri" type="button" id="bNovo">➕ Novo evento</button>
         <button class="btn" type="button" id="bImport">📥 Importar reserva</button>
         <button class="btn" type="button" id="bLista">⭐ Quero fazer</button>
+        <button class="btn" type="button" id="bPasses">🚆 Passes</button>
         <button class="btn" type="button" id="bCompart">🔗 Compartilhar</button>
         <a class="btn" href="/travessia/deslocamento/" id="bDesloc">🧭 De → para</a>
         <button class="btn" type="button" id="bGoogle">📤 Levar para o Google Agenda</button>
@@ -273,6 +274,7 @@ footer a{color:var(--pink);text-decoration:none;margin-right:12px}
 <script src="./avisos.js?v=2"></script>
 <script src="./passagens.js?v=1"></script>
 <script src="./lista.js?v=13"></script>
+<script src="./passes.js?v=1"></script>
 <script>
 (function(){
 'use strict';
@@ -1159,6 +1161,7 @@ function abrirLista(){
   if(VER){var pn=dlgIn.querySelector('p.nota');if(pn)pn.textContent='Lugares e rolês que quem compartilhou quer fazer. Só leitura.';return;}
   CalLista.ligar(dlgIn,function(){return S;},gravar,compactaLocal,usarDaLista,function(){desenharLista();desenharAvisos();abrirLista();});
 }
+$('#bPasses').onclick=function(){ if(!window.CalPasses){aviso('Os passes não carregaram. Recarregue a página.');return;} CalPasses.abrir(S,abrir,dlgIn); };
 $('#bLista').onclick=function(){ if(!window.CalLista){aviso('A lista não carregou. Recarregue a página.');return;} abrirLista(); };
 $('#bImport').onclick=function(){
   if(!window.LeitorReserva){aviso('O leitor de reservas não carregou. Recarregue a página.');return;}
