@@ -14,6 +14,7 @@
     metroTq: { 1: 1000, 2: 1500, 3: 2000 },     /* Tokyo Subway Ticket 24/48/72 h (Tokyo Metro, oficial) */
     osaka: { 1: 3500, 2: 5000 },                /* Osaka Amazing Pass (site oficial) */
     kansaiArea: { 1: 2700, 2: 4700, 3: 5500 }, /* JR West, só trens JR da região; sem Shinkansen, sem Osaka Metro */
+    nozomi: 4960,                               /* bilhete adicional por trecho p/ usar Nozomi/Mizuho com o JR Pass, Tóquio–Shin-Osaka (print enviado em 5 nov 2026) */
     tokyoWide: 16000                            /* 3 dias, JR East; não cobre o Tokaido Shinkansen */
   };
   var FONTES = [
@@ -22,6 +23,7 @@
     ['Tokyo Subway Ticket (1.000 / 1.500 / 2.000)', 'https://www.tokyometro.jp/en/ticket/travel', 'Tokyo Metro (oficial) · compra online'],
     ['Osaka Amazing Pass (3.500 / 5.000)', 'https://osaka-amazing-pass.com/en/info.html', 'site oficial · compra online, QR no celular'],
     ['Kansai Area Pass (2.700 / 4.700 / 5.500)', 'https://www.japan-travel-kit.com/guides/attractions/kansai-area-pass', 'guia de terceiros, nov 2026 (conferido no site da JR West em 3 nov 2026)'],
+    ['Bilhete adicional Nozomi/Mizuho com JR Pass (Tóquio–Shin-Osaka ¥4.960 por trecho, só ida)', '', 'Japan Travel by NAVITIME · print da página enviado pela Aline em 5 nov 2026; não consegui abrir a página daqui'],
     ['JR Tokyo Wide Pass (16.000, 3 dias)', 'https://www.japan-guide.com/e/e2361_06.html', 'japan-guide, 14 mar 2026']
   ];
 
@@ -68,7 +70,10 @@
       { nome: 'Tudo avulso', total: shin + extras + metroTqAv + metroOsAv, nota: 'Shinkansen e metrô pagos a cada viagem.' },
       { nome: 'Shinkansen avulso + passes de metrô', total: shin + extras + metroTq + metroOs, nota: 'Usa o passe de metrô só onde ele sai mais barato que o avulso.' }
     ];
-    if (jr != null) rows.push({ nome: 'JR Pass de ' + nj + ' dias', total: jr + metroTq + metroOs, nota: 'JR Pass não cobre metrô, então soma o metrô pelo menor custo. Viagens extras de trem JR ficam por conta do passe.' });
+    if (jr != null) {
+      rows.push({ nome: 'JR Pass de ' + nj + ' dias (Hikari/Kodama)', total: jr + metroTq + metroOs, nota: 'JR Pass não cobre metrô, então soma o metrô pelo menor custo. Hikari leva ~3 h. Viagens extras de trem JR ficam por conta do passe.' });
+      if (v.viagens > 0) rows.push({ nome: 'JR Pass de ' + nj + ' dias + Nozomi', total: jr + metroTq + metroOs + v.viagens * P.nozomi, nota: 'Nozomi (~2h30) com bilhete adicional de ' + yen(P.nozomi) + ' por trecho entre Tóquio e Shin-Osaka.' });
+    }
     var melhor = rows.reduce(function (a, b) { return b.total < a.total ? b : a; });
     return { rows: rows, melhor: melhor, shinUnit: shinUnit, jrNivel: nj, metroTq: [metroTqAv, metroTqPass], metroOs: [metroOsAv, metroOsPass] };
   }
@@ -113,8 +118,8 @@
       '<details><summary style="cursor:pointer;font-weight:700">Outros passes (só informação)</summary><div style="display:grid;gap:6px;margin-top:6px;font-size:14px">' +
       '<p style="margin:0"><b>Kansai Area Pass</b> (JR West): 1 dia ' + yen(P.kansaiArea[1]) + ', 2 dias ' + yen(P.kansaiArea[2]) + ', 3 dias ' + yen(P.kansaiArea[3]) + '. Só trens JR em Osaka, Quioto, Kobe, Nara e região. <b>Não cobre o Shinkansen nem o metrô de Osaka.</b> Serve para bate-volta de um dia.</p>' +
       '<p style="margin:0"><b>JR Tokyo Wide Pass</b>: ' + yen(P.tokyoWide) + ' por 3 dias seguidos, trens JR East (Fuji, Nikko, Karuizawa…). <b>Não cobre o Tokaido Shinkansen</b> (Tóquio–Osaka). Só compensa se você fizer esses passeios nos mesmos 3 dias.</p></div></details>' +
-      '<details><summary style="cursor:pointer;font-weight:700">Fontes dos preços</summary><ul style="margin:6px 0 0;padding-left:18px;font-size:13px">' + FONTES.map(function (f) { return '<li><a href="' + f[1] + '" target="_blank" rel="noopener">' + esc(f[0]) + '</a> · ' + esc(f[2]) + '</li>'; }).join('') + '</ul>' +
-      '<p class="nota">Dúvida que eu não resolvi: se o JR Pass cobre o Nozomi (o trem mais rápido) ou só o Hikari e o Kodama. As fontes de hoje não dizem. Confira no site oficial; o Hikari leva ~3 h contra ~2h30 do Nozomi.</p></details></div>');
+      '<details><summary style="cursor:pointer;font-weight:700">Fontes dos preços</summary><ul style="margin:6px 0 0;padding-left:18px;font-size:13px">' + FONTES.map(function (f) { return '<li>' + (f[1] ? '<a href="' + f[1] + '" target="_blank" rel="noopener">' + esc(f[0]) + '</a>' : esc(f[0])) + ' · ' + esc(f[2]) + '</li>'; }).join('') + '</ul>' +
+      '<p class="nota">Nozomi/Mizuho: segundo o print que você enviou, o JR Pass passa a permitir, mas com bilhete adicional por trecho (só ida): Tóquio–Shin-Osaka ou Quioto ¥4.960, Tóquio–Nagoya ¥4.180, Tóquio–Hiroshima ¥6.500. Confirme no site oficial.</p></details></div>');
     function ler() {
       var v = {
         viagens: num(raiz.querySelector('#psVia').value, 0), lugar: raiz.querySelector('#psLug').value,
@@ -126,7 +131,7 @@
     }
     function desenha() {
       var v = ler(); guarda(v); var c = calcular(v);
-      var sem = c.rows.length < 3 ? '<p class="nota">Com mais de 21 dias de uso o JR Pass não cabe em um só passe.</p>' : '';
+      var sem = c.rows.length < 2 ? '<p class="nota">Com mais de 21 dias de uso o JR Pass não cabe em um só passe.</p>' : '';
       raiz.querySelector('#psOut').innerHTML = '<div style="display:grid;gap:8px">' + c.rows.map(function (x) {
         var top = x === c.melhor;
         return '<div style="border:1.5px solid ' + (top ? '#2f7d5b' : '#ecdadd') + ';background:' + (top ? '#eaf6ef' : '#fff') + ';border-radius:14px;padding:10px 12px"><div style="display:flex;justify-content:space-between;gap:8px"><b>' + (top ? '✅ ' : '') + esc(x.nome) + '</b><b>' + yen(x.total) + '</b></div><small class="nota">' + esc(x.nota) + '</small></div>';
