@@ -528,8 +528,8 @@ function desenharMes(){
     if(d>=S.ini&&d<=S.fim)cls+=' dentro';
     if(d===h)cls+=' hoje';
     var num=+d.slice(8),dn=(d>=S.ini&&d<=S.fim)?'<small>dia '+(diff(S.ini,d)+1)+'</small>':'';
-    var hs=evs.filter(function(e){return e.tipo==='hosp';}), evs0=evs; evs=evs.filter(function(e){return e.tipo!=='hosp';});
-    var band=hs.length?'<span class="hband">🏨 '+esc(nomeEst(hs[0]))+(hs.length>1?' +'+(hs.length-1):'')+'</span>':'';
+    var hs=evs.filter(function(e){return e.tipo==='hosp';}).sort(function(x,y){return x.data<y.data?-1:x.data>y.data?1:0;}), evs0=evs; evs=evs.filter(function(e){return e.tipo!=='hosp';});
+    var band=hs.slice(0,2).map(function(x){return '<span class="hband">🏨 '+esc(nomeEst(x))+'</span>';}).join('')+(hs.length>2?'<span class="mais-n">+'+(hs.length-2)+' estadia'+(hs.length>3?'s':'')+'</span>':'');
     var chips=evs.slice(0,3).map(function(e){return '<span class="chip" style="--c:'+TIPOS[e.tipo][2]+'">'+(e.hora?esc(e.hora)+' ':'')+esc(e.titulo)+'</span>';}).join('');
     var mais=evs.length>3?'<span class="mais-n">+'+(evs.length-3)+' mais</span>':'';
     evs=evs0; var dots=evs.length?'<span class="dots">'+evs.slice(0,6).map(function(e){return '<i style="--c:'+TIPOS[e.tipo][2]+'"></i>';}).join('')+'</span>':'';
