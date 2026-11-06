@@ -61,7 +61,7 @@ function html(lista,evs){
     return pa!==pb?pa-pb:porCid[b].length-porCid[a].length;});
   var grupos=cids.map(function(c){
     var LC=porCid[c];
-    return '<details class="lq-cd" data-c="'+esc(c)+'"'+(fechadas().indexOf(c)<0?' open':'')+'><summary class="lq-c">📍 '+esc(c)+' ('+LC.length+')</summary>'+Object.keys(CATS).map(function(k){
+    return '<details class="lq-cd" data-c="'+esc(c)+'"'+((window.UNI_ABERTAS||{})['lq:'+c]?' open':'')+'><summary class="lq-c">📍 '+esc(c)+' ('+LC.length+')</summary>'+Object.keys(CATS).map(function(k){
       var L=LC.filter(function(x){return x.cat===k;}); if(!L.length)return '';
       return '<h4 class="lq-h">'+CATS[k][0]+' '+CATS[k][1]+' ('+L.length+')</h4><ul class="lq">'+L.map(function(x){return itemHtml(x,evs);}).join('')+'</ul>';}).join('')+'</details>';}).join('');
   var cats=Object.keys(CATS).map(function(k){return '<option value="'+k+'">'+CATS[k][0]+' '+CATS[k][1]+'</option>';}).join('');

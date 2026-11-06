@@ -275,8 +275,11 @@ footer a{color:var(--pink);text-decoration:none;margin-right:12px}
 <script src="../agendamentos/regras.js?v=2"></script>
 <script src="./geo.js?v=6"></script>
 <script src="./avisos.js?v=3"></script>
-<script src="./passagens.js?v=1"></script>
-<script src="./lista.js?v=13"></script>
+<script>/* Painéis recolhíveis: ao abrir o site começam sempre recolhidos; o que a pessoa abre fica aberto só nesta visita. */
+window.UNI_ABERTAS=window.UNI_ABERTAS||{};
+document.addEventListener("toggle",function(ev){var d=ev.target;if(!d||!d.classList)return;var k=d.classList.contains("av")?"av":d.classList.contains("pasp")?"pasp":d.classList.contains("lq-cd")?"lq:"+d.dataset.c:"";if(k)window.UNI_ABERTAS[k]=d.open;},true);</script>
+<script src="./passagens.js?v=2"></script>
+<script src="./lista.js?v=14"></script>
 <script src="./passes.js?v=1"></script>
 <script>
 (function(){
@@ -508,7 +511,7 @@ function desenharAvisos(){
   if(!lista.length&&!feitos.length&&!qc.pend.length&&!qc.ok.length){box.innerHTML='';return;}
   function chip(st){return st.est==='passou'?'<span class="av-c agora">inscrição encerrada: procure sobras</span>':st.est==='aberto'?'<span class="av-c agora">já abriu: compre agora</span>':st.est==='hoje'?'<span class="av-c agora">abre hoje</span>':st.est==='logo'?'<span class="av-c agora">faltam '+st.dias+(st.dias===1?' dia':' dias')+'</span>':'<span class="av-c">faltam '+st.dias+' dias</span>';}
   var urg=lista.filter(function(x){return x.st.est!=='futuro';}).length;
-  box.innerHTML='<details class="av"'+(urg?' open':'')+'><summary>⏰ Compre com antecedência'+(lista.length+qc.pend.length?' · '+(lista.length+qc.pend.length)+(lista.length+qc.pend.length===1?' aviso':' avisos'):'')+(urg?' · <b style="color:var(--red)">'+urg+(urg===1?' pede atenção':' pedem atenção')+'</b>':'')+'</summary><div class="av-lista">'+
+  box.innerHTML='<details class="av"'+(window.UNI_ABERTAS.av?' open':'')+'><summary>⏰ Compre com antecedência'+(lista.length+qc.pend.length?' · '+(lista.length+qc.pend.length)+(lista.length+qc.pend.length===1?' aviso':' avisos'):'')+(urg?' · <b style="color:var(--red)">'+urg+(urg===1?' pede atenção':' pedem atenção')+'</b>':'')+'</summary><div class="av-lista">'+
     lista.map(function(x){return '<div class="av-i'+(x.st.est==='futuro'?'':' urg')+'"><b>'+esc(x.a.nome)+'</b> <span class="nota">· '+esc(x.e.titulo)+' · '+esc(curto(x.e.data))+'</span> '+chip(x.st)+'<p>'+x.a.texto+'</p><div class="av-b">'+
       (x.a.url?'<a class="btn sm" href="'+esc(x.a.url)+'" target="_blank" rel="noopener">Abrir o site de venda</a> ':'')+'<button type="button" class="btn sm" data-ok="'+esc(x.e.id)+'">✓ Já comprei</button></div></div>';}).join('')+
     qc.pend.map(function(r){return '<div class="av-i"><b>🛒 '+esc(r.x.nome)+'</b> <span class="nota">· Quero fazer · '+(r.data?esc(curto(r.data)):'ainda sem dia')+'</span><p>Marcado para comprar antes.'+(r.x.nota?' 📝 '+esc(r.x.nota.length>160?r.x.nota.slice(0,159)+'…':r.x.nota):'')+'</p><div class="av-b"><button type="button" class="btn sm" data-qok="'+esc(r.x.id)+'">✓ Já comprei</button></div></div>';}).join('')+

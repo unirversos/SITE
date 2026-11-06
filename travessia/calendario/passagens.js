@@ -29,7 +29,7 @@ function html(S,G){
   ativos.forEach(function(p){var x=p.v*p.pax; if(p.estado==='comprado')tC+=x; else tA+=x;});
   function m(x){return G.yen(x)+(cot?' <small>≈ '+brl(x*cot)+'</small>':'');}
   var nA=ativos.filter(function(p){return p.estado==='comprar';}).length;
-  var h='<details class="pasp"'+(nA?' open':'')+'><summary>🎫 Passagens · '+L.length+(L.length===1?' trecho':' trechos')+(nA?' · '+nA+' a comprar':' · tudo comprado')+'</summary>'+
+  var h='<details class="pasp"'+((window.UNI_ABERTAS||{}).pasp?' open':'')+'><summary>🎫 Passagens · '+L.length+(L.length===1?' trecho':' trechos')+(nA?' · '+nA+' a comprar':' · tudo comprado')+'</summary>'+
     '<div class="tots"><div><small>Comprado</small><b>'+m(tC)+'</b></div><div><small>A comprar</small><b>'+m(tA)+'</b></div><div><small>Total</small><b>'+m(tC+tA)+'</b></div></div>';
   L.slice().sort(function(a,b){return (a.data+a.hora)<(b.data+b.hora)?-1:1;}).forEach(function(p){
     var aviso='';
