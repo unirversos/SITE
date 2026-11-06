@@ -990,7 +990,7 @@ vigiaPend();
 
 /* Ingressos com antecedência: a lista abre aqui dentro (mesma página de /agendamentos, sem sair do calendário). */
 (function(){var d=document.getElementById('dlgQI'),f=document.getElementById('qiFrame'),b=document.getElementById('bQI');if(!d||!b)return;
-  b.addEventListener('click',function(){window.__pendRapido=true;if(!f.getAttribute('src'))f.src='/travessia/agendamentos/?embed=1';if(d.showModal)d.showModal();else d.setAttribute('open','');});
+  b.addEventListener('click',function(){window.__pendRapido=true;if(!f.getAttribute('src'))f.src='/travessia/agendamentos/?embed=1&v=3';if(d.showModal)d.showModal();else d.setAttribute('open','');});
   document.getElementById('qiFecha').addEventListener('click',function(){d.close();vigiaPend();});
   d.addEventListener('close',vigiaPend);
   window.addEventListener('storage',function(e){if(e.key==='uniCalPend')vigiaPend();});
