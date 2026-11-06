@@ -270,9 +270,9 @@ footer a{color:var(--pink);text-decoration:none;margin-right:12px}
 <p class="toast" id="msg" role="status"></p>
 
 <script src="./leitor.js?v=2"></script>
-<script src="../agendamentos/regras.js?v=1"></script>
+<script src="../agendamentos/regras.js?v=2"></script>
 <script src="./geo.js?v=6"></script>
-<script src="./avisos.js?v=2"></script>
+<script src="./avisos.js?v=3"></script>
 <script src="./passagens.js?v=1"></script>
 <script src="./lista.js?v=13"></script>
 <script src="./passes.js?v=1"></script>
@@ -943,6 +943,26 @@ document.addEventListener('click',function(ev){
   var b=ev.target.closest('[data-nuv]');if(!b)return;
   if(b.dataset.nuv==='entrar')pedirLogin();else{syncPronto?salvarNuvem():sincronizar();}
 });
+/* Itens vindos da página de ingressos ("Quero ir" -> salvar no calendário). Entram só depois de a conta sincronizar
+   (ou, sem login, depois de uns segundos), para não criar conflito entre o aparelho e a conta. */
+function aplicarPend(){
+  if(VER||!S.ini)return false;
+  var pend; try{pend=JSON.parse(localStorage.getItem('uniCalPend')||'[]');}catch(e){pend=[];}
+  if(!Array.isArray(pend)||!pend.length)return true;
+  var c=limpar({ini:S.ini,fim:S.fim,fuso:'jp',ev:pend.filter(function(p){return p&&typeof p.id==='string'&&p.id.indexOf('qi-')===0;}).map(function(p){
+    return {id:p.id,titulo:p.titulo,tipo:p.tipo,data:p.data,dataFim:'',hora:p.hora||'',horaFim:'',fuso:p.fuso||'jp',local:'',detalhes:p.detalhes||''};})});
+  var ids={}; c.ev.forEach(function(e){ids[e.id]=1;});
+  S.ev=S.ev.filter(function(e){return !ids[e.id];}).concat(c.ev);
+  try{localStorage.removeItem('uniCalPend');}catch(e){}
+  gravar();tudo();aviso(c.ev.length+(c.ev.length===1?' item entrou':' itens entraram')+' no calendário (Quero ir e avisos).');
+  return true;
+}
+(function(){var t0=Date.now(),iv=setInterval(function(){
+  var tem; try{tem=(JSON.parse(localStorage.getItem('uniCalPend')||'[]')||[]).length;}catch(e){tem=0;}
+  if(!tem||Date.now()-t0>25000){clearInterval(iv);return;}
+  if(!$('#app')||$('#app').hidden||document.querySelector('#dlg[open]'))return;
+  if(syncPronto||(!usuario&&Date.now()-t0>6000)){clearInterval(iv);aplicarPend();}
+},800);})();
 document.addEventListener('uni-conta',function(ev){
   usuario=(ev.detail&&ev.detail.user)||null;syncPronto=false;estadoNuvem='';
   nuvemUI();if(usuario){sincronizar();setTimeout(agendarVivo,4000);}

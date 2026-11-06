@@ -639,7 +639,29 @@
                 left: -2.06rem;
             }
         }
-    </style>
+    
+ .conf { font-size: 0.8rem; line-height: 1.6; margin-top: 0.6rem; color: #5f7d62; }
+ .conf.nao { color: #8a5a00; }
+ .conf a { color: inherit; }
+ .qi { margin-top: 1rem; padding-top: 0.9rem; border-top: 1px dashed #e0d6d6; }
+ .qi-l { display: inline-flex; align-items: center; gap: 0.5rem; font-size: 1rem; cursor: pointer; min-height: 44px; }
+ .qi-l input { width: 22px; height: 22px; accent-color: var(--color-rose); }
+ .qi-d { display: inline-flex; align-items: center; gap: 0.5rem; margin-left: 1rem; font-size: 0.9rem; }
+ .qi-d input { font: inherit; padding: 0.55rem 0.7rem; border: 1px solid #e0e0e0; border-radius: 4px; min-height: 44px; }
+ .qi-quando { font-size: 0.92rem; margin-top: 0.6rem; }
+ .qi-nota { font-size: 0.85rem; color: #8a5a00; margin-top: 0.5rem; }
+ .qi-nota.forte { color: #b04a4a; font-weight: 600; }
+ .qi-av { font-size: 0.85rem; font-weight: 600; margin-top: 0.7rem; }
+ .qi-lista { font-size: 0.85rem; padding-left: 1.2rem; margin: 0.3rem 0 0.8rem; }
+ .qi-btns { display: flex; gap: 0.6rem; flex-wrap: wrap; }
+ .qi-btns button { min-height: 44px; }
+ .qi .btn-ghost { background: #fff; border: 1px solid var(--color-rose); border-radius: 100px; padding: 0.7rem 1.4rem; font-family: inherit; font-size: 0.95rem; color: var(--color-rose); cursor: pointer; }
+ .qi .cta-button { border-radius: 100px; }
+ .qi-btns button { flex: 1 1 220px; }
+ @media (max-width: 520px) { .qi-d { display: flex; flex-wrap: wrap; margin: 0.4rem 0 0; } .qi-d input { flex: 1 1 160px; } }
+ .qi-ok { font-size: 0.85rem; margin-top: 0.7rem; color: #5f7d62; }
+ .qi-ok a { color: var(--color-rose); }
+</style>
 <link rel="stylesheet" href="/tema-unirversos.css?v=1">
     <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@500;600;700&family=Zen+Maru+Gothic:wght@400;500;700&display=swap">
@@ -777,7 +799,8 @@
         <p class="disclaimer">As regras desta página são as mecânicas fixas de venda de cada atração, não datas de uma temporada específica. Sistemas, preços e janelas mudam sem aviso no Japão: confirme sempre na página oficial antes de pagar — o link de cada atração leva até lá. Em 15 de outubro de 2026, onze das dezenove regras foram conferidas nas fontes oficiais e confirmadas: PokéPark KANTO, Museu Ghibli de Mitaka, Ghibli Park, Museu da Nintendo, Pokémon Café, Kirby Café, Tokyo Disney, Shibuya Sky, Comiket, Jump Festa e sumô. As oito restantes — Doraemon, USJ, Warner Bros, teamLab (ambos), Toyosu, Saihō-ji e Villas Imperiais — não puderam ser confirmadas porque as páginas oficiais não publicam a antecedência ou bloqueiam leitura automática; nessas, confirme no site oficial antes de contar com a data.</p>
     </footer>
 
-<script src="./regras.js?v=1"></script>
+<script src="./regras.js?v=2"></script>
+<script src="../calendario/avisos.js?v=3"></script>
 <script>
 // ---------- catálogo de regras ----------
 const A = window.AGENDA_REGRAS;
@@ -817,11 +840,11 @@ function montar(ida, volta){
           quando = jstParaBrasilia(alvo.getFullYear(), alvo.getMonth(), 15, r.hora);
           label = 'em ' + MES[alvo.getMonth()] + ' de ' + alvo.getFullYear() + ', data anunciada no site';
         } else {
-          quando = jstParaBrasilia(alvo.getFullYear(), alvo.getMonth(), r.dia, r.hora);
-          label = fmtData(quando) + ' · ' + fmtHora(quando) + ' de Brasília';
+          quando = jstParaBrasilia(alvo.getFullYear(), alvo.getMonth(), r.dia, r.semHora ? '09:00' : r.hora);
+          label = r.semHora ? 'por volta de ' + fmtData(quando) + ' · horário não informado' : fmtData(quando) + ' · ' + fmtHora(quando) + ' de Brasília';
         }
         itens.push({quando, label, a,
-          detalhe:'Libera as datas de <strong>'+MES[mv.mes]+'</strong>. No Japão é dia '+(r.dia||'(a anunciar)')+' às '+r.hora+'.'});
+          detalhe:'Libera as datas de <strong>'+MES[mv.mes]+'</strong>. No Japão é dia '+(r.dia||'(a anunciar)')+(r.semHora ? ', sem horário divulgado.' : ' às '+r.hora+'.')});
       }
     }
 
@@ -918,6 +941,7 @@ document.getElementById('go').addEventListener('click', render);
 function regraResumo(a){
   const r = a.regra;
   if(r.t === 'mensal'){
+    if(r.semHora) return '<b>Por volta do dia ' + r.dia + '</b>, ' + (r.offset === 1 ? 'para o mês seguinte' : r.offset + ' meses à frente') + '. O site oficial não informa o horário.';
     if(r.variavel) return '<b>Lote mensal</b>, às ' + r.hora + ' no Japão, com a data anunciada antes no site oficial. Cobre o mês seguinte.';
     return '<b>Todo dia ' + r.dia + '</b>, às ' + r.hora + ' no Japão, liberando ' + (r.offset === 1 ? 'o mês seguinte' : r.offset + ' meses à frente') + '.';
   }
@@ -943,9 +967,76 @@ function renderCards(){
       '<p>' + a.desc + '</p>' +
       '<div class="rule">' + regraResumo(a) + '</div>' +
       '<p>' + a.nota + '</p>' +
+      confLinha(a) +
+      queroIr(a) +
       (a.url ? '<a href="' + a.url + '" target="_blank" rel="noopener">página oficial →</a>' : '') +
     '</div>').join('');
+  cards.querySelectorAll('.qi').forEach(qiAtualizar);
 }
+function fmtConf(iso){ const p = iso.split('-'); return +p[2] + ' de ' + MES[+p[1]-1] + ' de ' + p[0]; }
+function confLinha(a){
+  if(!a.conf) return '<p class="conf nao">⚠ Esta regra ainda não foi conferida no site oficial. Confirme lá antes de depender dela.</p>';
+  return '<p class="conf ok">✓ Conferido no site oficial em ' + fmtConf(a.conf.em) + ': ' + a.conf.ok + (a.conf.fonte ? ' <a href="' + a.conf.fonte + '" target="_blank" rel="noopener">fonte</a>' : '') + '</p>';
+}
+
+// ---------- quero ir + avisos ----------
+const CHQ = 'agQueroIr';
+let quero = {};
+try { quero = JSON.parse(localStorage.getItem(CHQ) || '{}') || {}; } catch(e){ quero = {}; }
+function salvarQuero(){ try { localStorage.setItem(CHQ, JSON.stringify(quero)); } catch(e){} }
+function queroIr(a){
+  const q = quero[a.id] || {};
+  return '<div class="qi" data-id="' + a.id + '">' +
+    '<label class="qi-l"><input type="checkbox" class="qi-ck"' + (q.ir ? ' checked' : '') + '> <b>Quero ir</b></label>' +
+    '<label class="qi-d"' + (q.ir ? '' : ' hidden') + '>Dia do passeio <input type="date" class="qi-dt" value="' + (q.data || '') + '"></label>' +
+    '<div class="qi-out" aria-live="polite"></div></div>';
+}
+function qiAtualizar(box){
+  const id = box.dataset.id, q = quero[id] || {}, out = box.querySelector('.qi-out');
+  out.innerHTML = '';
+  if(!q.ir || !q.data) return;
+  const pl = window.CalAvisos && CalAvisos.plano(id, q.data);
+  if(!pl){ out.innerHTML = '<p class="qi-nota">Este é um evento anual, sem horário de venda que o site consiga calcular. Acompanhe a página oficial e anote a data no calendário.</p>'; return; }
+  const sit = CalAvisos.situacao(pl.av), futuros = pl.avisos.filter(x => x.ms > Date.now());
+  let h = '<p class="qi-quando">' + pl.av.texto + '</p>';
+  if(pl.av.aprox) h += '<p class="qi-nota">⚠ Horário aproximado: confira a data exata no site oficial. Só há aviso de 1 dia antes.</p>';
+  if(sit.est === 'aberto') h += '<p class="qi-nota forte">Essa venda já abriu. Se ainda tem vaga, compre agora na página oficial.</p>';
+  if(sit.est === 'passou') h += '<p class="qi-nota forte">As inscrições dessa data já encerraram.</p>';
+  if(futuros.length){
+    h += '<p class="qi-av">Avisos:</p><ul class="qi-lista">' + futuros.map(x => { const b = CalAvisos.brParts(x.ms); return '<li>' + x.titulo.replace(/^⏰ /, '') + ' — <b>' + b.data.split('-').reverse().join('/') + ' às ' + b.hora.replace(':','h') + '</b> (Brasília)</li>'; }).join('') + '</ul>' +
+      '<div class="qi-btns"><button type="button" class="cta-button small qi-cal">📅 Salvar no calendário do site</button> <button type="button" class="btn-ghost qi-ics">Google Agenda (.ics)</button></div>' +
+      '<p class="qi-ok" hidden></p>';
+  }
+  out.innerHTML = h;
+}
+function qiItem(box){ const id = box.dataset.id; return {id: id, data: (quero[id] || {}).data, pl: CalAvisos.plano(id, (quero[id] || {}).data)}; }
+document.getElementById('cards').addEventListener('change', e => {
+  const box = e.target.closest('.qi'); if(!box) return;
+  const id = box.dataset.id; quero[id] = quero[id] || {};
+  if(e.target.classList.contains('qi-ck')){ quero[id].ir = e.target.checked; box.querySelector('.qi-d').hidden = !e.target.checked; }
+  if(e.target.classList.contains('qi-dt')){ quero[id].data = e.target.value; }
+  salvarQuero(); qiAtualizar(box);
+});
+document.getElementById('cards').addEventListener('click', e => {
+  const box = e.target.closest('.qi'); if(!box) return;
+  const it = qiItem(box); if(!it.pl) return;
+  if(e.target.closest('.qi-ics')){
+    const blob = new Blob([CalAvisos.ics([it])], {type:'text/calendar;charset=utf-8'});
+    const u = URL.createObjectURL(blob), a = document.createElement('a');
+    a.href = u; a.download = 'avisos-' + it.id + '-' + it.data + '.ics'; document.body.appendChild(a); a.click(); a.remove(); setTimeout(() => URL.revokeObjectURL(u), 4000);
+    const ok = box.querySelector('.qi-ok'); ok.hidden = false; ok.textContent = 'Arquivo gerado. Abra-o no celular para adicionar ao Google Agenda ou a outro calendário.';
+  }
+  if(e.target.closest('.qi-cal')){
+    let pend = []; try { pend = JSON.parse(localStorage.getItem('uniCalPend') || '[]') || []; } catch(x){ pend = []; }
+    const av = it.pl.av, base = 'qi-' + it.id + '-' + it.data;
+    const evs = [{id: base + '-v', titulo: '🎟️ Quero ir: ' + av.nome, tipo: 'passeio', data: it.data, hora: '', fuso: 'jp', detalhes: 'Regra de venda: ' + av.texto.replace(/<[^>]+>/g,'') + (av.url ? '\n' + av.url : '')}];
+    it.pl.avisos.forEach((x, i) => { if(x.ms <= Date.now()) return; const b = CalAvisos.brParts(x.ms); evs.push({id: base + '-a' + i, titulo: x.titulo, tipo: 'outro', data: b.data, hora: b.hora, fuso: 'br', detalhes: (av.url || '')}); });
+    pend = pend.filter(p => !p.id.startsWith(base)).concat(evs);
+    try { localStorage.setItem('uniCalPend', JSON.stringify(pend)); } catch(x){}
+    const ok = box.querySelector('.qi-ok'); ok.hidden = false;
+    ok.innerHTML = '✓ Pronto: ' + evs.length + ' itens vão entrar no seu calendário. <a href="/travessia/calendario/">Abrir meu calendário →</a>';
+  }
+});
 const FILTROS = [
   {id:'todos', nome:'tudo'},
   {id:'nerd', nome:'🎮 nerd'},
