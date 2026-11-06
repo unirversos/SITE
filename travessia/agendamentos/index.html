@@ -640,6 +640,22 @@
             }
         }
     
+
+ details.card { padding: 0; align-self: start; }
+ details.card > summary { list-style: none; cursor: pointer; display: block; padding: 1.3rem 3rem 1.2rem 1.5rem; position: relative; min-height: 44px; }
+ details.card > summary::-webkit-details-marker { display: none; }
+ details.card > summary::after { content: '▾'; position: absolute; right: 1.2rem; top: 1.2rem; font-size: 1.1rem; color: var(--color-rose); transition: transform .2s; }
+ details.card[open] > summary::after { transform: rotate(180deg); }
+ details.card > summary:focus-visible { outline: 2px solid var(--color-rose); outline-offset: -2px; border-radius: 8px; }
+ .card-top { display: flex; align-items: baseline; gap: 0.6rem; flex-wrap: wrap; }
+ .card summary .where { display: block; font-size: 0.8rem; color: #747474; margin-bottom: 0.6rem; }
+ .card summary .rule { display: block; margin-bottom: 0; }
+ .card-corpo { padding: 0 1.5rem 1.5rem; }
+ .qi-badge { font-size: 0.72rem; font-weight: 700; color: #5f7d62; background: #e9efe9; border-radius: 100px; padding: 0.15rem 0.7rem; white-space: nowrap; }
+ .cards-tools { display: flex; justify-content: space-between; align-items: center; gap: 0.8rem; flex-wrap: wrap; margin: 0 0 1rem; font-size: 0.85rem; color: var(--color-gray); }
+ .cards-tools .btn-ghost { background: #fff; border: 1px solid #e0e0e0; border-radius: 100px; padding: 0.5rem 1rem; font-family: inherit; font-size: 0.85rem; color: var(--color-gray); cursor: pointer; min-height: 44px; }
+ .cards-tools .btn-ghost:hover { border-color: var(--color-rose); color: var(--color-rose); }
+ @media (max-width: 768px) { .cards { grid-template-columns: 1fr; } }
  .conf { font-size: 0.8rem; line-height: 1.6; margin-top: 0.6rem; color: #5f7d62; }
  .conf.nao { color: #8a5a00; }
  .conf a { color: inherit; }
@@ -961,18 +977,36 @@ function renderCards(){
   const cards = document.getElementById('cards');
   const lista = A.filter(a => filtroAtivo === 'todos' || a.cat === filtroAtivo || a.tag === filtroAtivo);
   cards.innerHTML = lista.map(a =>
-    '<div class="card ' + (a.cat === 'classico' ? 'classico' : '') + '">' +
-      '<h4>' + a.nome + '</h4>' +
-      '<div class="where">' + a.onde + '</div>' +
+    '<details class="card ' + (a.cat === 'classico' ? 'classico' : '') + '" data-id="' + a.id + '"' + (abertos.has(a.id) ? ' open' : '') + '>' +
+      '<summary><span class="card-top"><h4>' + a.nome + '</h4><span class="qi-badge" hidden></span></span>' +
+      '<span class="where">' + a.onde + '</span>' +
+      '<span class="rule">' + regraResumo(a) + '</span></summary>' +
+      '<div class="card-corpo">' +
       '<p>' + a.desc + '</p>' +
-      '<div class="rule">' + regraResumo(a) + '</div>' +
       '<p>' + a.nota + '</p>' +
       confLinha(a) +
       queroIr(a) +
       (a.url ? '<a href="' + a.url + '" target="_blank" rel="noopener">página oficial →</a>' : '') +
-    '</div>').join('');
+      '</div></details>').join('');
   cards.querySelectorAll('.qi').forEach(qiAtualizar);
+  atualizarContagem(lista.length);
 }
+const abertos = new Set();
+function atualizarContagem(n){
+  const t = document.getElementById('cards-tools'); if(!t) return;
+  t.querySelector('.ct-n').textContent = n + (n === 1 ? ' atração' : ' atrações');
+}
+(function(){
+  const t = document.createElement('div'); t.id = 'cards-tools'; t.className = 'cards-tools';
+  t.innerHTML = '<span class="ct-n"></span><span><button type="button" class="btn-ghost" data-ct="abrir">Expandir tudo</button> <button type="button" class="btn-ghost" data-ct="fechar">Recolher tudo</button></span>';
+  const c = document.getElementById('cards'); c.parentNode.insertBefore(t, c);
+  t.addEventListener('click', e => {
+    const b = e.target.closest('[data-ct]'); if(!b) return;
+    const abrir = b.dataset.ct === 'abrir';
+    c.querySelectorAll('details.card').forEach(d => { d.open = abrir; if(abrir) abertos.add(d.dataset.id); else abertos.delete(d.dataset.id); });
+  });
+  c.addEventListener('toggle', e => { const d = e.target; if(d.matches && d.matches('details.card')){ if(d.open) abertos.add(d.dataset.id); else abertos.delete(d.dataset.id); } }, true);
+})();
 function fmtConf(iso){ const p = iso.split('-'); return +p[2] + ' de ' + MES[+p[1]-1] + ' de ' + p[0]; }
 function confLinha(a){
   if(!a.conf) return '<p class="conf nao">⚠ Esta regra ainda não foi conferida no site oficial. Confirme lá antes de depender dela.</p>';
@@ -993,6 +1027,8 @@ function queroIr(a){
 }
 function qiAtualizar(box){
   const id = box.dataset.id, q = quero[id] || {}, out = box.querySelector('.qi-out');
+  const bd = box.closest('details.card') && box.closest('details.card').querySelector('.qi-badge');
+  if(bd){ bd.hidden = !q.ir; bd.textContent = q.ir ? '✓ quero ir' + (q.data ? ' · ' + q.data.split('-').reverse().join('/') : '') : ''; }
   out.innerHTML = '';
   if(!q.ir || !q.data) return;
   const pl = window.CalAvisos && CalAvisos.plano(id, q.data);
