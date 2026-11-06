@@ -641,7 +641,9 @@
         }
     
 
- .qi-noCal{margin:.2rem 0 .6rem;font-size:.95rem}.qi-dica{font-size:.85rem;color:var(--color-gray);margin:.3rem 0}
+ .fora-nota{font-size:.85rem;color:var(--color-gray);margin:0 0 .8rem}.fora-nota .btn-ghost{margin-left:.4rem;padding:.3rem .8rem;border:1px solid #e0e0e0;border-radius:100px;background:#fff;font:inherit;font-size:.8rem;cursor:pointer}
+        .fitem .qi{margin-top:.7rem;padding-top:.6rem;border-top:1px dashed #e6d9de}
+        .qi-noCal{margin:.2rem 0 .6rem;font-size:.95rem}.qi-dica{font-size:.85rem;color:var(--color-gray);margin:.3rem 0}
         .quero-h{font-size:1.1rem;margin:1rem 0 .6rem;color:var(--color-rose)}.quero-h2{margin-top:1.6rem;color:var(--color-gray)}
         details.card { padding: 0; align-self: start; }
  details.card > summary { list-style: none; cursor: pointer; display: block; padding: 1.3rem 3rem 1.2rem 1.5rem; position: relative; min-height: 44px; }
@@ -685,7 +687,7 @@
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@500;600;700&family=Zen+Maru+Gothic:wght@400;500;700&display=swap">
 <link rel="stylesheet" href="/estilo-celular.css?v=2">
 <script defer src="/menu-ativo.js?v=1"></script>
-<link rel="icon" href="/favicon.svg" type="image/svg+xml"><link rel="icon" href="/favicon.ico" sizes="48x48"><link rel="apple-touch-icon" href="/apple-touch-icon.png"><link rel="manifest" href="/manifest.webmanifest"><meta name="theme-color" content="#3a2b38"><meta name="mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-title" content="Unirversos"><script src="/app.js" defer></script><script>if(/[?&]embed=1/.test(location.search))document.documentElement.classList.add("embed");</script><style>.embed .sitebar,.embed .hero,.embed footer,.embed .calc,.embed #result,.embed #armadilhas,.embed #livres,.embed .cta-section,.embed #catalogo .section-title,.embed #catalogo .section-subtitle{display:none!important}.embed body{background:#fff}.embed main{padding-top:.5rem}</style></head>
+<link rel="icon" href="/favicon.svg" type="image/svg+xml"><link rel="icon" href="/favicon.ico" sizes="48x48"><link rel="apple-touch-icon" href="/apple-touch-icon.png"><link rel="manifest" href="/manifest.webmanifest"><meta name="theme-color" content="#3a2b38"><meta name="mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-title" content="Unirversos"><script src="/app.js" defer></script><script>if(/[?&]embed=1/.test(location.search))document.documentElement.classList.add("embed");</script><style>.embed .sitebar,.embed .hero,.embed footer,.embed .calc,.embed #result,.embed .cta-section,.embed #catalogo .section-title,.embed #catalogo .section-subtitle,.embed #livres .section-subtitle{display:none!important}.embed #livres{padding-top:1rem}.embed body{background:#fff}.embed main{padding-top:.5rem}</style></head>
 <body>
     <!-- HEADER -->
     <div class="sitebar" role="navigation" aria-label="Site">
@@ -734,61 +736,16 @@
             <h2 class="section-title">O catálogo de regras</h2>
             <p class="section-subtitle">Cada atração com a sua mecânica de venda, explicada uma vez. É daqui que o cronograma acima sai.</p>
             <div class="filters" id="filters"></div>
+            <p class="fora-nota" id="fora-nota" hidden></p>
             <div id="quero-box" hidden><h3 class="quero-h">✓ Meus “quero ir”</h3><div class="cards" id="cards-quero"></div><h3 class="quero-h quero-h2">Outras atrações</h3></div>
             <div class="cards" id="cards"></div>
-        </section>
-
-        <!-- ARMADILHAS -->
-        <section id="armadilhas">
-            <h2 class="section-title">As armadilhas que derrubam brasileiro</h2>
-            <p class="section-subtitle">Coisas que quase nenhum guia menciona, e que eu só sei porque morei dez anos lá.</p>
-
-            <div class="trap">
-                <h4><span class="n">01</span>Você não pode dirigir no Japão</h4>
-                <p>A Permissão Internacional brasileira é emitida sob a Convenção de Viena de 1968, e o Japão só reconhece a de <strong>Genebra de 1949</strong>, da qual o Brasil não é signatário. Nem a CNH, nem a PID, nem tradução juramentada valem. Isso elimina o <strong>kart de rua fantasiado</strong> por Shibuya, que aparece em todo roteiro de Tóquio — não é questão de risco, é ilegal para nós. Vale o mesmo para aluguel de carro.</p>
-            </div>
-
-            <div class="trap">
-                <h4><span class="n">02</span>O Ano Novo fecha o país</h4>
-                <p>De <strong>29 de dezembro a 3 de janeiro</strong>, boa parte dos museus, lojas e restaurantes fecha — vários dos grandes museus têm recesso de fim de ano. Ao mesmo tempo, templos e trens lotam e o hotel dispara. Não deixe nada caro e com reserva nessa faixa: use esses dias para templos, iluminações e eventos de rua.</p>
-            </div>
-
-            <div class="trap">
-                <h4><span class="n">03</span>O cartão vai ser recusado</h4>
-                <p>Sites japoneses de ingresso rejeitam cartão estrangeiro com frequência, principalmente na etapa do 3D Secure. Quem consegue, geralmente consegue <strong>trocando de cartão</strong>. Antes de começar: avise o banco, habilite compra internacional, tenha dois ou três cartões de bandeiras diferentes à mão e teste um numa compra pequena. Numa loteria você tem dias para pagar; numa venda por ordem de chegada, segundos.</p>
-            </div>
-
-            <div class="trap">
-                <h4><span class="n">04</span>Algumas contas exigem telefone japonês</h4>
-                <p>Certos sistemas de ingresso pedem verificação por chamada — você precisa ligar para um número japonês <strong>do mesmo telefone que cadastrou</strong>. Um número, uma conta. Decida qual telefone vai usar antes de criar a conta, confirme que ele faz ligação internacional, e não troque de chip no meio do processo.</p>
-            </div>
-
-            <div class="trap">
-                <h4><span class="n">05</span>Todo mundo é revendedor, quase ninguém é oficial</h4>
-                <p>Isso muda de atração para atração, e errar significa não entrar. Há lugares em que só o canal oficial e uma bilheteria específica valem, e outros em que revendedores grandes <strong>são</strong> canais legítimos. A regra segura: confira sempre na página oficial da atração quais revendedores ela reconhece — e nunca compre de terceiros em marketplaces, leilões ou mensagem direta.</p>
-            </div>
-
-            <div class="trap">
-                <h4><span class="n">06</span>Madrugada de Brasília é horário comercial no Japão</h4>
-                <p>O Japão está <strong>12 horas à frente</strong> de Brasília, e nunca tem horário de verão. Uma venda que abre às 14h no Japão cai às 2h da manhã aqui; às 10h de lá são 22h do dia anterior aqui. Todas as datas que esta página calcula já vêm convertidas — mas vale colocar despertador, porque é literalmente de madrugada.</p>
-            </div>
         </section>
 
         <!-- SEM RESERVA -->
         <section id="livres">
             <h2 class="section-title">E o que não precisa de reserva nenhuma</h2>
             <p class="section-subtitle">Para equilibrar o roteiro: coisas enormes que são só chegar e entrar.</p>
-            <div class="free-list">
-                <div class="fitem"><div class="loc">Tóquio · Akihabara</div><h5>Electric Town</h5><p>Games retrô, figures, andares inteiros de gachapon e as lojas de componentes que são o Akihabara original.</p></div>
-                <div class="fitem"><div class="loc">Tóquio · Nakano</div><h5>Nakano Broadway</h5><p>Akihabara em miniatura e sem multidão. Colecionador de verdade prefere aqui.</p></div>
-                <div class="fitem"><div class="loc">Tóquio · Odaiba</div><h5>Gundam em tamanho real</h5><p>Os quase 20 metros do RX-0 que se transformam em horários marcados, com som e luz. Grátis.</p></div>
-                <div class="fitem"><div class="loc">Tóquio · Ogikubo</div><h5>Museu de Animação de Suginami</h5><p>Grátis. Como um anime é feito, do storyboard à dublagem, no bairro dos estúdios de verdade.</p></div>
-                <div class="fitem"><div class="loc">Kyoto · Karasuma Oike</div><h5>Museu Internacional do Mangá</h5><p>Uma escola antiga com 300 metros lineares de prateleira que você pode pegar e ler sentado no chão.</p></div>
-                <div class="fitem"><div class="loc">Kyoto · Fushimi</div><h5>Fushimi Inari</h5><p>Os milhares de torii vermelhos subindo a montanha. Aberto 24 horas, sem bilheteria — vá ao amanhecer.</p></div>
-                <div class="fitem"><div class="loc">Osaka · Nipponbashi</div><h5>Den Den Town</h5><p>O Akihabara de Osaka, com clima mais solto e bem menos turista.</p></div>
-                <div class="fitem"><div class="loc">Nov → fev</div><h5>Iluminações de inverno</h5><p>Quilômetros de avenida acesos em Tóquio e Osaka, de novembro até fevereiro. Quase tudo gratuito.</p></div>
-                <div class="fitem"><div class="loc">Em qualquer cidade</div><h5>Os konbini</h5><p>Abertos 24 horas, com comida de verdade, caixa eletrônico que aceita cartão estrangeiro e banheiro limpo.</p></div>
-            </div>
+            <div class="free-list" id="free-list"></div>
         </section>
 
         <!-- PRÓXIMO PASSO -->
@@ -975,6 +932,7 @@ function regraResumo(a){
   return '';
 }
 
+const LIVRES = [{"id": "livre-electric-town", "onde": "Tóquio · Akihabara", "nome": "Electric Town", "desc": "Games retrô, figures, andares inteiros de gachapon e as lojas de componentes que são o Akihabara original."}, {"id": "livre-nakano", "onde": "Tóquio · Nakano", "nome": "Nakano Broadway", "desc": "Akihabara em miniatura e sem multidão. Colecionador de verdade prefere aqui."}, {"id": "livre-gundam", "onde": "Tóquio · Odaiba", "nome": "Gundam em tamanho real", "desc": "Os quase 20 metros do RX-0 que se transformam em horários marcados, com som e luz. Grátis."}, {"id": "livre-suginami", "onde": "Tóquio · Ogikubo", "nome": "Museu de Animação de Suginami", "desc": "Grátis. Como um anime é feito, do storyboard à dublagem, no bairro dos estúdios de verdade."}, {"id": "livre-manga-kyoto", "onde": "Kyoto · Karasuma Oike", "nome": "Museu Internacional do Mangá", "desc": "Uma escola antiga com 300 metros lineares de prateleira que você pode pegar e ler sentado no chão."}, {"id": "livre-fushimi", "onde": "Kyoto · Fushimi", "nome": "Fushimi Inari", "desc": "Os milhares de torii vermelhos subindo a montanha. Aberto 24 horas, sem bilheteria — vá ao amanhecer."}, {"id": "livre-den-den", "onde": "Osaka · Nipponbashi", "nome": "Den Den Town", "desc": "O Akihabara de Osaka, com clima mais solto e bem menos turista."}, {"id": "livre-iluminacoes", "onde": "Nov → fev", "nome": "Iluminações de inverno", "desc": "Quilômetros de avenida acesos em Tóquio e Osaka, de novembro até fevereiro. Quase tudo gratuito."}, {"id": "livre-konbini", "onde": "Em qualquer cidade", "nome": "Os konbini", "desc": "Abertos 24 horas, com comida de verdade, caixa eletrônico que aceita cartão estrangeiro e banheiro limpo."}];
 let filtroAtivo = 'todos';
 function cardHtml(a){
   return '<details class="card ' + (a.cat === 'classico' ? 'classico' : '') + '" data-id="' + a.id + '"' + (abertos.has(a.id) ? ' open' : '') + '>' +
@@ -1006,17 +964,40 @@ function sincronizarCal(){
 }
 window.addEventListener('storage', e => { if(e.key === 'uniCalendario1' || e.key === 'uniCalPend'){ if(sincronizarCal() || true) renderCards(); } });
 window.addEventListener('focus', () => { if(sincronizarCal()) renderCards(); });
+// Dentro do calendário: eventos de época (anuais) que não caem em nenhum mês da viagem ficam de fora.
+let mostrarFora = false;
+function mesesViagem(){
+  if(!document.documentElement.classList.contains('embed')) return null;
+  try { const c = JSON.parse(localStorage.getItem('uniCalendario1') || 'null'); if(!c || !c.ini || !c.fim) return null;
+    const m = new Set(); let [y, mo] = c.ini.slice(0,7).split('-').map(Number); const [y2, mo2] = c.fim.slice(0,7).split('-').map(Number);
+    while(y < y2 || (y === y2 && mo <= mo2)){ m.add(mo - 1); mo++; if(mo > 12){ mo = 1; y++; } if(m.size >= 12) break; }
+    return m; } catch(e){ return null; }
+}
+function foraDaViagem(a){
+  const m = mesesViagem(); if(!m || mostrarFora || !a.regra || a.regra.t !== 'anual' || !Array.isArray(a.regra.meses)) return false;
+  return !a.regra.meses.some(x => m.has(x));
+}
+function livreCard(l){
+  return '<details class="card" data-id="' + l.id + '"' + (abertos.has(l.id) ? ' open' : '') + '><summary><span class="card-top"><h4>' + l.nome + '</h4><span class="qi-badge" hidden></span></span><span class="where">' + l.onde + '</span></summary><div class="card-corpo"><p>' + l.desc + '</p>' + queroIr(l) + '</div></details>';
+}
+function livreItem(l){
+  return '<div class="fitem"><div class="loc">' + l.onde + '</div><h5>' + l.nome + '</h5><p>' + l.desc + '</p>' + queroIr(l) + '</div>';
+}
 function renderCards(){
   sincronizarCal();
   const cards = document.getElementById('cards'), meus = document.getElementById('cards-quero');
-  const lista = A.filter(a => !ehMeu(a) && (filtroAtivo === 'todos' || a.cat === filtroAtivo || a.tag === filtroAtivo));
-  const mine = A.filter(ehMeu);
+  const lista = A.filter(a => !ehMeu(a) && !foraDaViagem(a) && (filtroAtivo === 'todos' || a.cat === filtroAtivo || a.tag === filtroAtivo));
+  const mine = A.filter(ehMeu), mineL = LIVRES.filter(ehMeu);
   cards.innerHTML = lista.map(cardHtml).join('');
-  meus.innerHTML = mine.map(cardHtml).join('');
-  document.getElementById('quero-box').hidden = !mine.length;
+  meus.innerHTML = mine.map(cardHtml).join('') + mineL.map(livreCard).join('');
+  document.getElementById('free-list').innerHTML = LIVRES.filter(l => !ehMeu(l)).map(livreItem).join('');
+  document.getElementById('quero-box').hidden = !(mine.length || mineL.length);
   document.querySelector('.quero-h2').hidden = !lista.length;
+  document.getElementById('livres').hidden = !LIVRES.some(l => !ehMeu(l));
   document.querySelectorAll('.qi').forEach(qiAtualizar);
   atualizarContagem(lista.length);
+  const esc = A.filter(a => !ehMeu(a) && foraDaViagem(a)).length, nf = document.getElementById('fora-nota');
+  if(nf){ nf.hidden = !esc && !mostrarFora; nf.innerHTML = mostrarFora ? 'Mostrando também os eventos fora das datas da viagem. <button type="button" class="btn-ghost" data-fora="0">Esconder</button>' : esc + (esc === 1 ? ' evento fora' : ' eventos fora') + ' das datas da sua viagem foi escondido. <button type="button" class="btn-ghost" data-fora="1">Mostrar</button>'; }
 }
 const abertos = new Set();
 function atualizarContagem(n){
@@ -1034,6 +1015,7 @@ function atualizarContagem(n){
   });
   [c, document.getElementById('cards-quero')].forEach(x => x.addEventListener('toggle', e => { const d = e.target; if(d.matches && d.matches('details.card')){ if(d.open) abertos.add(d.dataset.id); else abertos.delete(d.dataset.id); } }, true));
 })();
+document.getElementById('fora-nota').addEventListener('click', e => { const b = e.target.closest('[data-fora]'); if(!b) return; mostrarFora = b.dataset.fora === '1'; renderCards(); });
 function fmtConf(iso){ const p = iso.split('-'); return +p[2] + ' de ' + MES[+p[1]-1] + ' de ' + p[0]; }
 function confLinha(a){
   if(!a.conf) return '<p class="conf nao">⚠ Esta regra ainda não foi conferida no site oficial. Confirme lá antes de depender dela.</p>';
@@ -1059,6 +1041,7 @@ function qiAtualizar(box){
   const bd = box.closest('details.card') && box.closest('details.card').querySelector('.qi-badge');
   if(bd){ bd.hidden = !q.ir; bd.textContent = q.ir ? '✓ quero ir' + (q.data ? ' · ' + q.data.split('-').reverse().join('/') : '') : ''; }
   out.innerHTML = '';
+  if(id.indexOf('livre-') === 0) return;
   if(!q.ir || !q.data) return;
   const pl = window.CalAvisos && CalAvisos.plano(id, q.data);
   if(!pl){ out.innerHTML = '<p class="qi-nota">Este é um evento anual, sem horário de venda que o site consiga calcular. Acompanhe a página oficial e anote a data no calendário.</p>'; return; }
@@ -1076,16 +1059,16 @@ function qiAtualizar(box){
 }
 // Cria o passeio + os avisos no calendário do site (o calendário aplica ao abrir, ou na hora se estiver aberto).
 function enviarCal(id){
-  const q = quero[id], a = A.find(x => x.id === id), pl = window.CalAvisos && CalAvisos.plano(id, q.data);
+  const q = quero[id], livre = id.indexOf('livre-') === 0, a = livre ? LIVRES.find(x => x.id === id) : A.find(x => x.id === id), pl = !livre && window.CalAvisos && CalAvisos.plano(id, q.data);
   let pend = []; try { pend = JSON.parse(localStorage.getItem('uniCalPend') || '[]') || []; } catch(x){ pend = []; }
   const grupo = 'qi-' + id + '-', base = grupo + q.data, av = pl && pl.av;
-  const evs = [{id: base + '-v', grupo: grupo, titulo: '🎟️ Quero ir: ' + (av ? av.nome : a.nome), tipo: 'passeio', data: q.data, hora: '', fuso: 'jp', detalhes: (av ? 'Regra de venda: ' + av.texto.replace(/<[^>]+>/g,'') : (a.nota || '').replace(/<[^>]+>/g,'')) + (a.url ? '\n' + a.url : '')}];
+  const evs = [{id: base + '-v', grupo: grupo, titulo: (livre ? '📍 Quero ir: ' : '🎟️ Quero ir: ') + (av ? av.nome : a.nome), tipo: 'passeio', data: q.data, hora: '', fuso: 'jp', detalhes: (av ? 'Regra de venda: ' + av.texto.replace(/<[^>]+>/g,'') : (livre ? a.desc : (a.nota || '')).replace(/<[^>]+>/g,'')) + (a.url ? '\n' + a.url : '')}];
   if(pl) pl.avisos.forEach((x, i) => { if(x.ms <= Date.now()) return; const b = CalAvisos.brParts(x.ms); evs.push({id: base + '-a' + i, grupo: grupo, titulo: x.titulo.replace(/^⏰ /, ''), tipo: 'outro', data: b.data, hora: b.hora, fuso: 'br', detalhes: (a.url || '')}); });
   pend = pend.filter(p => !(p && typeof p.id === 'string' && p.id.indexOf(grupo) === 0)).concat(evs);
   try { localStorage.setItem('uniCalPend', JSON.stringify(pend)); } catch(x){}
 }
 function qiItem(box){ const id = box.dataset.id; return {id: id, data: (quero[id] || {}).data, pl: CalAvisos.plano(id, (quero[id] || {}).data)}; }
-['cards','cards-quero'].forEach(cid => document.getElementById(cid).addEventListener('change', e => {
+['cards','cards-quero','free-list'].forEach(cid => document.getElementById(cid).addEventListener('change', e => {
   const box = e.target.closest('.qi'); if(!box) return;
   const id = box.dataset.id; quero[id] = quero[id] || {};
   if(e.target.classList.contains('qi-ck')){ quero[id].ir = e.target.checked; if(!e.target.checked) quero[id] = {}; box.querySelector('.qi-d').hidden = !e.target.checked; const dc = box.querySelector('.qi-dica'); if(dc) dc.hidden = !e.target.checked; }
@@ -1094,7 +1077,7 @@ function qiItem(box){ const id = box.dataset.id; return {id: id, data: (quero[id
   salvarQuero(); qiAtualizar(box);
   if(e.target.classList.contains('qi-dt') || (e.target.classList.contains('qi-ck') && !e.target.checked)){ const d = box.closest('details.card'); if(d) abertos.add(d.dataset.id); renderCards(); }
 }));
-['cards','cards-quero'].forEach(cid => document.getElementById(cid).addEventListener('click', e => {
+['cards','cards-quero','free-list'].forEach(cid => document.getElementById(cid).addEventListener('click', e => {
   const box = e.target.closest('.qi'); if(!box) return;
   const it = qiItem(box); if(!it.pl) return;
   if(e.target.closest('.qi-ics')){
