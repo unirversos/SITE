@@ -1041,12 +1041,13 @@ function qiAtualizar(box){
   const bd = box.closest('details.card') && box.closest('details.card').querySelector('.qi-badge');
   if(bd){ bd.hidden = !q.ir; bd.textContent = q.ir ? '✓ quero ir' + (q.data ? ' · ' + q.data.split('-').reverse().join('/') : '') : ''; }
   out.innerHTML = '';
-  if(id.indexOf('livre-') === 0) return;
   if(!q.ir || !q.data) return;
+  const alerta = avisoCidade(id, q.data);
+  if(id.indexOf('livre-') === 0){ out.innerHTML = alerta; return; }
   const pl = window.CalAvisos && CalAvisos.plano(id, q.data);
-  if(!pl){ out.innerHTML = '<p class="qi-nota">Este é um evento anual, sem horário de venda que o site consiga calcular. Acompanhe a página oficial e anote a data no calendário.</p>'; return; }
+  if(!pl){ out.innerHTML = alerta + '<p class="qi-nota">Este é um evento anual, sem horário de venda que o site consiga calcular. Acompanhe a página oficial e anote a data no calendário.</p>'; return; }
   const sit = CalAvisos.situacao(pl.av), futuros = pl.avisos.filter(x => x.ms > Date.now());
-  let h = '<p class="qi-quando">' + pl.av.texto + '</p>';
+  let h = alerta + '<p class="qi-quando">' + pl.av.texto + '</p>';
   if(pl.av.aprox) h += '<p class="qi-nota">⚠ Horário aproximado: confira a data exata no site oficial. Só há aviso de 1 dia antes.</p>';
   if(sit.est === 'aberto') h += '<p class="qi-nota forte">Essa venda já abriu. Se ainda tem vaga, compre agora na página oficial.</p>';
   if(sit.est === 'passou') h += '<p class="qi-nota forte">As inscrições dessa data já encerraram.</p>';
@@ -1062,10 +1063,43 @@ function enviarCal(id){
   const q = quero[id], livre = id.indexOf('livre-') === 0, a = livre ? LIVRES.find(x => x.id === id) : A.find(x => x.id === id), pl = !livre && window.CalAvisos && CalAvisos.plano(id, q.data);
   let pend = []; try { pend = JSON.parse(localStorage.getItem('uniCalPend') || '[]') || []; } catch(x){ pend = []; }
   const grupo = 'qi-' + id + '-', base = grupo + q.data, av = pl && pl.av;
-  const evs = [{id: base + '-v', grupo: grupo, titulo: (livre ? '📍 Quero ir: ' : '🎟️ Quero ir: ') + (av ? av.nome : a.nome), tipo: 'passeio', data: q.data, hora: '', fuso: 'jp', detalhes: (av ? 'Regra de venda: ' + av.texto.replace(/<[^>]+>/g,'') : (livre ? a.desc : (a.nota || '')).replace(/<[^>]+>/g,'')) + (a.url ? '\n' + a.url : '')}];
+  const local = a.onde && a.onde.indexOf(' · ') > -1 ? a.nome + ', ' + a.onde.replace(/ · /g, ', ') : '';
+  const evs = [{id: base + '-v', grupo: grupo, local: local, titulo: (livre ? '📍 Quero ir: ' : '🎟️ Quero ir: ') + (av ? av.nome : a.nome), tipo: 'passeio', data: q.data, hora: '', fuso: 'jp', detalhes: (av ? 'Regra de venda: ' + av.texto.replace(/<[^>]+>/g,'') : (livre ? a.desc : (a.nota || '')).replace(/<[^>]+>/g,'')) + (a.url ? '\n' + a.url : '')}];
   if(pl) pl.avisos.forEach((x, i) => { if(x.ms <= Date.now()) return; const b = CalAvisos.brParts(x.ms); evs.push({id: base + '-a' + i, grupo: grupo, titulo: x.titulo.replace(/^⏰ /, ''), tipo: 'outro', data: b.data, hora: b.hora, fuso: 'br', detalhes: (a.url || '')}); });
   pend = pend.filter(p => !(p && typeof p.id === 'string' && p.id.indexOf(grupo) === 0)).concat(evs);
   try { localStorage.setItem('uniCalPend', JSON.stringify(pend)); } catch(x){}
+}
+
+// Aviso de deslocamento: compara a região da atração com a hospedagem do dia (só avisa quando consegue identificar as duas).
+const REGIOES = {
+  kanto: ['toquio','tokyo','chiba','kawasaki','yokohama','kanagawa','saitama','inagi','mitaka','maihama','odaiba','makuhari','ogikubo','nakano','akihabara','shinjuku','shibuya','asakusa','ueno','ikebukuro','toyosu','chiyoda','minato','kamakura'],
+  kansai: ['kyoto','quioto','osaka','nara','kobe','fushimi','nipponbashi','arashiyama','kansai','kamigyo','shimogyo'],
+  nagoya: ['nagoya','aichi'],
+  fuji: ['fuji','kawaguchi','hakone'],
+  fukuoka: ['fukuoka'],
+  hokkaido: ['sapporo','hokkaido']
+};
+const REG_NOME = {kanto:'Tóquio e arredores', kansai:'Kyoto/Osaka', nagoya:'Nagoya', fuji:'Monte Fuji/Hakone', fukuoka:'Fukuoka', hokkaido:'Hokkaido'};
+function regioesDe(txt){
+  const t = ' ' + String(txt || '').normalize('NFD').replace(/[̀-ͯ]/g, '').toLowerCase() + ' ', r = new Set();
+  Object.keys(REGIOES).forEach(k => { if(REGIOES[k].some(w => t.indexOf(w) > -1)) r.add(k); });
+  return r;
+}
+function itemDe(id){ return A.find(x => x.id === id) || LIVRES.find(x => x.id === id); }
+function avisoCidade(id, data){
+  const it = itemDe(id); if(!it || !data) return '';
+  const ra = regioesDe(it.onde); if(!ra.size) return '';
+  let c; try { c = JSON.parse(localStorage.getItem('uniCalendario1') || 'null'); } catch(e){ c = null; }
+  if(!c || !Array.isArray(c.ev)) return '';
+  const est = c.ev.filter(e => e && e.tipo === 'hosp' && e.data && e.data <= data && data < (e.dataFim || e.data) || (e && e.tipo === 'hosp' && e.data === data && !e.dataFim));
+  if(!est.length) return '';
+  const comReg = est.map(e => ({e, r: regioesDe((e.titulo || '') + ' ' + (e.local || ''))})).filter(x => x.r.size);
+  if(!comReg.length) return '';
+  if(comReg.some(x => [...x.r].some(k => ra.has(k)))) return '';
+  const h = comReg[0], donde = [...h.r].map(k => REG_NOME[k]).join(' / '), onde = [...ra].map(k => REG_NOME[k]).join(' / ');
+  const dest = it.onde.indexOf(' · ') > -1 ? it.nome + ', ' + it.onde.replace(/ · /g, ', ') : it.nome;
+  const rota = 'https://www.google.com/maps/dir/?api=1&origin=' + encodeURIComponent(h.e.local || h.e.titulo) + '&destination=' + encodeURIComponent(dest);
+  return '<p class="qi-nota forte">⚠ Nesse dia a sua hospedagem (' + (h.e.titulo || 'estadia').replace(/</g, '&lt;') + ') é em ' + donde + ', e ' + it.nome + ' fica em ' + onde + '. Confira se dá para ir e voltar no mesmo dia, ou escolha outra data. <a href="' + rota + '" target="_blank" rel="noopener">Ver o trajeto no Google Maps →</a></p>';
 }
 function qiItem(box){ const id = box.dataset.id; return {id: id, data: (quero[id] || {}).data, pl: CalAvisos.plano(id, (quero[id] || {}).data)}; }
 ['cards','cards-quero','free-list'].forEach(cid => document.getElementById(cid).addEventListener('change', e => {

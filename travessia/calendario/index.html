@@ -952,7 +952,7 @@ function aplicarPend(){
   var pend; try{pend=JSON.parse(localStorage.getItem('uniCalPend')||'[]');}catch(e){pend=[];}
   if(!Array.isArray(pend)||!pend.length)return true;
   var c=limpar({ini:S.ini,fim:S.fim,fuso:'jp',ev:pend.filter(function(p){return p&&typeof p.id==='string'&&p.id.indexOf('qi-')===0;}).map(function(p){
-    return {id:p.id,titulo:p.titulo,tipo:p.tipo,data:p.data,dataFim:'',hora:p.hora||'',horaFim:'',fuso:p.fuso||'jp',local:'',detalhes:p.detalhes||''};})});
+    return {id:p.id,titulo:p.titulo,tipo:p.tipo,data:p.data,dataFim:'',hora:p.hora||'',horaFim:'',fuso:p.fuso||'jp',local:typeof p.local==='string'?p.local:'',detalhes:p.detalhes||''};})});
   var ids={},gr=[]; c.ev.forEach(function(e){ids[e.id]=1;}); pend.forEach(function(p){if(p&&typeof p.grupo==='string'&&p.grupo.indexOf('qi-')===0&&gr.indexOf(p.grupo)<0)gr.push(p.grupo);});
   S.ev=S.ev.filter(function(e){return !ids[e.id]&&!gr.some(function(g){return e.id.indexOf(g)===0;});}).concat(c.ev);
   gravar();tudo();try{localStorage.removeItem('uniCalPend');}catch(e){}aviso(c.ev.length+(c.ev.length===1?' item entrou':' itens entraram')+' no calendário (Quero ir e avisos).');
