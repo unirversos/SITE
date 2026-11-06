@@ -643,6 +643,7 @@
 
  .fora-nota{font-size:.85rem;color:var(--color-gray);margin:0 0 .8rem}.fora-nota .btn-ghost{margin-left:.4rem;padding:.3rem .8rem;border:1px solid #e0e0e0;border-radius:100px;background:#fff;font:inherit;font-size:.8rem;cursor:pointer}
         .fitem .qi{margin-top:.7rem;padding-top:.6rem;border-top:1px dashed #e6d9de}
+        .qi-loc{margin:.6rem 0}.qi-loc label{display:block;font-size:.85rem;color:var(--color-gray)}.qi-loc input{display:block;width:100%;margin:.25rem 0;padding:.6rem .8rem;border:1px solid #ddd;border-radius:8px;font:inherit;min-height:44px}.qi-lbtn{display:flex;gap:.5rem;flex-wrap:wrap}.qi-lbtn .btn-ghost{background:#fff;border:1px solid #e0e0e0;border-radius:100px;padding:.5rem 1rem;font:inherit;font-size:.85rem;color:var(--color-gray);cursor:pointer;min-height:44px;text-decoration:none;display:inline-flex;align-items:center}
         .qi-noCal{margin:.2rem 0 .6rem;font-size:.95rem}.qi-dica{font-size:.85rem;color:var(--color-gray);margin:.3rem 0}
         .quero-h{font-size:1.1rem;margin:1rem 0 .6rem;color:var(--color-rose)}.quero-h2{margin-top:1.6rem;color:var(--color-gray)}
         details.card { padding: 0; align-self: start; }
@@ -776,6 +777,7 @@
     </footer>
 
 <script src="./regras.js?v=2"></script>
+<script src="../calendario/geo.js?v=6"></script>
 <script src="../calendario/avisos.js?v=3"></script>
 <script>
 // ---------- catálogo de regras ----------
@@ -933,6 +935,8 @@ function regraResumo(a){
 }
 
 const LIVRES = [{"id": "livre-electric-town", "onde": "Tóquio · Akihabara", "nome": "Electric Town", "desc": "Games retrô, figures, andares inteiros de gachapon e as lojas de componentes que são o Akihabara original."}, {"id": "livre-nakano", "onde": "Tóquio · Nakano", "nome": "Nakano Broadway", "desc": "Akihabara em miniatura e sem multidão. Colecionador de verdade prefere aqui."}, {"id": "livre-gundam", "onde": "Tóquio · Odaiba", "nome": "Gundam em tamanho real", "desc": "Os quase 20 metros do RX-0 que se transformam em horários marcados, com som e luz. Grátis."}, {"id": "livre-suginami", "onde": "Tóquio · Ogikubo", "nome": "Museu de Animação de Suginami", "desc": "Grátis. Como um anime é feito, do storyboard à dublagem, no bairro dos estúdios de verdade."}, {"id": "livre-manga-kyoto", "onde": "Kyoto · Karasuma Oike", "nome": "Museu Internacional do Mangá", "desc": "Uma escola antiga com 300 metros lineares de prateleira que você pode pegar e ler sentado no chão."}, {"id": "livre-fushimi", "onde": "Kyoto · Fushimi", "nome": "Fushimi Inari", "desc": "Os milhares de torii vermelhos subindo a montanha. Aberto 24 horas, sem bilheteria — vá ao amanhecer."}, {"id": "livre-den-den", "onde": "Osaka · Nipponbashi", "nome": "Den Den Town", "desc": "O Akihabara de Osaka, com clima mais solto e bem menos turista."}, {"id": "livre-iluminacoes", "onde": "Nov → fev", "nome": "Iluminações de inverno", "desc": "Quilômetros de avenida acesos em Tóquio e Osaka, de novembro até fevereiro. Quase tudo gratuito."}, {"id": "livre-konbini", "onde": "Em qualquer cidade", "nome": "Os konbini", "desc": "Abertos 24 horas, com comida de verdade, caixa eletrônico que aceita cartão estrangeiro e banheiro limpo."}];
+// Nomes em japonês (ajudam o Google Maps a achar o lugar certo). Vêm do meu conhecimento, não foram conferidos no Maps: a pessoa confirma.
+const JP = {"pokepark": "ポケパーク カントー", "ghibli-mitaka": "三鷹の森ジブリ美術館", "ghibli-park": "ジブリパーク", "pokemon-cafe": "ポケモンカフェ", "kirby": "カービィカフェ", "disney": "東京ディズニーリゾート", "doraemon": "藤子・F・不二雄ミュージアム", "usj": "ユニバーサル・スタジオ・ジャパン", "harrypotter": "ワーナー ブラザース スタジオツアー東京 メイキング・オブ・ハリー・ポッター", "teamlab-tokyo": "チームラボボーダレス", "nintendo-museum": "任天堂ミュージアム", "biovortex": "チームラボ バイオヴォルテックス 京都", "toyosu": "豊洲市場", "shibuya-sky": "渋谷スカイ", "saihoji": "西芳寺", "katsura": "桂離宮", "comiket": "東京ビッグサイト コミックマーケット", "jumpfesta": "幕張メッセ ジャンプフェスタ", "sumo": "両国国技館", "livre-electric-town": "秋葉原電気街", "livre-nakano": "中野ブロードウェイ", "livre-gundam": "ダイバーシティ東京 プラザ ユニコーンガンダム立像", "livre-suginami": "杉並アニメーションミュージアム", "livre-manga-kyoto": "京都国際マンガミュージアム", "livre-fushimi": "伏見稲荷大社", "livre-den-den": "日本橋 でんでんタウン"};
 let filtroAtivo = 'todos';
 function cardHtml(a){
   return '<details class="card ' + (a.cat === 'classico' ? 'classico' : '') + '" data-id="' + a.id + '"' + (abertos.has(a.id) ? ' open' : '') + '>' +
@@ -1027,9 +1031,15 @@ const CHQ = 'agQueroIr';
 let quero = {};
 try { quero = JSON.parse(localStorage.getItem(CHQ) || '{}') || {}; } catch(e){ quero = {}; }
 function salvarQuero(){ try { localStorage.setItem(CHQ, JSON.stringify(quero)); } catch(e){} }
+function localBloco(a){
+  const l = localDe(a.id), url = mapsUrl(l), jp = JP[a.id];
+  return '<div class="qi-loc"><label>Local no mapa<input type="text" class="qi-lc" maxlength="300" value="' + l.replace(/"/g, '&quot;') + '" placeholder="Cole o link do Google Maps, o endereço ou o nome em japonês"></label>' +
+    '<div class="qi-lbtn">' + (url ? '<a class="btn-ghost qi-maps" href="' + url + '" target="_blank" rel="noopener">Conferir no Google Maps</a>' : '') + (jp ? ' <button type="button" class="btn-ghost qi-jp" data-jp="' + jp.replace(/"/g, '&quot;') + '">Copiar nome em japonês</button>' : '') + '</div>' +
+    '<p class="qi-dica">' + (l ? 'Confirme se o Maps achou o lugar certo. Se estiver errado, cole o link do Maps ou o nome em japonês' + (jp ? ' (<span lang="ja">' + jp + '</span>)' : '') + ': isso ajuda o Maps a acertar.' : 'Este item não tem endereço fixo. Se quiser, cole aqui o link do Google Maps ou um endereço.') + '</p></div>';
+}
 function queroIr(a){
   const q = quero[a.id] || {};
-  if(ehMeu(a)) return '<div class="qi qi-meu" data-id="' + a.id + '"><p class="qi-noCal">✓ <b>No seu calendário</b> em ' + q.data.split('-').reverse().join('/') + '. Para tirar da lista, apague esse evento lá no calendário.</p><div class="qi-out" aria-live="polite"></div></div>';
+  if(ehMeu(a)) return '<div class="qi qi-meu" data-id="' + a.id + '"><p class="qi-noCal">✓ <b>No seu calendário</b> em ' + q.data.split('-').reverse().join('/') + '. Para tirar da lista, apague esse evento lá no calendário.</p>' + localBloco(a) + '<div class="qi-out" aria-live="polite"></div></div>';
   return '<div class="qi" data-id="' + a.id + '">' +
     '<label class="qi-l"><input type="checkbox" class="qi-ck"' + (q.ir ? ' checked' : '') + '> <b>Quero ir</b></label>' +
     '<label class="qi-d"' + (q.ir ? '' : ' hidden') + '>Dia do passeio <input type="date" class="qi-dt" value="' + (q.data || '') + '"></label>' +
@@ -1059,11 +1069,16 @@ function qiAtualizar(box){
   out.innerHTML = h;
 }
 // Cria o passeio + os avisos no calendário do site (o calendário aplica ao abrir, ou na hora se estiver aberto).
+function cidadeTxt(it){ return it.onde && it.onde.indexOf(' · ') > -1 ? it.onde.replace(/ · /g, ', ') : ''; }
+// Local padrão: nome em japonês + cidade (o Maps acha melhor). A pessoa pode trocar por link do Maps ou endereço.
+function localPadrao(it){ const c = cidadeTxt(it); if(!c) return ''; return (JP[it.id] ? JP[it.id] + ', ' : it.nome + ', ') + c; }
+function localDe(id){ const q = quero[id] || {}; if(typeof q.local === 'string' && q.local.trim()) return q.local.trim(); const it = itemDe(id); return it ? localPadrao(it) : ''; }
+function mapsUrl(l){ if(!l) return ''; const c = window.CalGeo && CalGeo.coordDe(l); return 'https://www.google.com/maps/search/?api=1&query=' + (c ? c.lat + ',' + c.lon : encodeURIComponent(l.replace(/https?:\/\/\S+/g,' ').trim() || l)); }
 function enviarCal(id){
   const q = quero[id], livre = id.indexOf('livre-') === 0, a = livre ? LIVRES.find(x => x.id === id) : A.find(x => x.id === id), pl = !livre && window.CalAvisos && CalAvisos.plano(id, q.data);
   let pend = []; try { pend = JSON.parse(localStorage.getItem('uniCalPend') || '[]') || []; } catch(x){ pend = []; }
   const grupo = 'qi-' + id + '-', base = grupo + q.data, av = pl && pl.av;
-  const local = a.onde && a.onde.indexOf(' · ') > -1 ? a.nome + ', ' + a.onde.replace(/ · /g, ', ') : '';
+  const local = localDe(id);
   const evs = [{id: base + '-v', grupo: grupo, local: local, titulo: (livre ? '📍 Quero ir: ' : '🎟️ Quero ir: ') + (av ? av.nome : a.nome), tipo: 'passeio', data: q.data, hora: '', fuso: 'jp', detalhes: (av ? 'Regra de venda: ' + av.texto.replace(/<[^>]+>/g,'') : (livre ? a.desc : (a.nota || '')).replace(/<[^>]+>/g,'')) + (a.url ? '\n' + a.url : '')}];
   if(pl) pl.avisos.forEach((x, i) => { if(x.ms <= Date.now()) return; const b = CalAvisos.brParts(x.ms); evs.push({id: base + '-a' + i, grupo: grupo, titulo: x.titulo.replace(/^⏰ /, ''), tipo: 'outro', data: b.data, hora: b.hora, fuso: 'br', detalhes: (a.url || '')}); });
   pend = pend.filter(p => !(p && typeof p.id === 'string' && p.id.indexOf(grupo) === 0)).concat(evs);
@@ -1085,6 +1100,9 @@ function regioesDe(txt){
   Object.keys(REGIOES).forEach(k => { if(REGIOES[k].some(w => t.indexOf(w) > -1)) r.add(k); });
   return r;
 }
+const CENTROS = [['kanto',35.68,139.77,70],['kansai',34.8,135.6,50],['nagoya',35.18,136.9,40],['fuji',35.45,138.75,40],['fukuoka',33.59,130.4,50],['hokkaido',43.06,141.35,60]];
+function regioesDeCoord(c){ const r = new Set(); if(!c || !window.CalGeo) return r; CENTROS.forEach(x => { if(CalGeo.km({lat:c.lat, lon:c.lon}, {lat:x[1], lon:x[2]}) <= x[3]) r.add(x[0]); }); return r; }
+function regioesHotel(e){ const c = window.CalGeo && CalGeo.coordDe(e.local || ''); const r = regioesDeCoord(c); if(r.size) return r; return regioesDe((e.titulo || '') + ' ' + (e.local || '')); }
 function itemDe(id){ return A.find(x => x.id === id) || LIVRES.find(x => x.id === id); }
 function avisoCidade(id, data){
   const it = itemDe(id); if(!it || !data) return '';
@@ -1093,7 +1111,7 @@ function avisoCidade(id, data){
   if(!c || !Array.isArray(c.ev)) return '';
   const est = c.ev.filter(e => e && e.tipo === 'hosp' && e.data && e.data <= data && data < (e.dataFim || e.data) || (e && e.tipo === 'hosp' && e.data === data && !e.dataFim));
   if(!est.length) return '';
-  const comReg = est.map(e => ({e, r: regioesDe((e.titulo || '') + ' ' + (e.local || ''))})).filter(x => x.r.size);
+  const comReg = est.map(e => ({e, r: regioesHotel(e)})).filter(x => x.r.size);
   if(!comReg.length) return '';
   if(comReg.some(x => [...x.r].some(k => ra.has(k)))) return '';
   const h = comReg[0], donde = [...h.r].map(k => REG_NOME[k]).join(' / '), onde = [...ra].map(k => REG_NOME[k]).join(' / ');
@@ -1105,6 +1123,7 @@ function qiItem(box){ const id = box.dataset.id; return {id: id, data: (quero[id
 ['cards','cards-quero','free-list'].forEach(cid => document.getElementById(cid).addEventListener('change', e => {
   const box = e.target.closest('.qi'); if(!box) return;
   const id = box.dataset.id; quero[id] = quero[id] || {};
+  if(e.target.classList.contains('qi-lc')){ quero[id].local = e.target.value.trim(); salvarQuero(); if(quero[id].ir && quero[id].data) enviarCal(id); const a2 = box.querySelector('.qi-maps'), u = mapsUrl(localDe(id)); if(a2 && u) a2.href = u; return; }
   if(e.target.classList.contains('qi-ck')){ quero[id].ir = e.target.checked; if(!e.target.checked) quero[id] = {}; box.querySelector('.qi-d').hidden = !e.target.checked; const dc = box.querySelector('.qi-dica'); if(dc) dc.hidden = !e.target.checked; }
   if(e.target.classList.contains('qi-dt')){ quero[id].data = e.target.value; }
   if(quero[id].ir && quero[id].data){ enviarCal(id); quero[id].salvo = true; }
@@ -1113,6 +1132,10 @@ function qiItem(box){ const id = box.dataset.id; return {id: id, data: (quero[id
 }));
 ['cards','cards-quero','free-list'].forEach(cid => document.getElementById(cid).addEventListener('click', e => {
   const box = e.target.closest('.qi'); if(!box) return;
+  const bj = e.target.closest('.qi-jp');
+  if(bj){ const t = bj.dataset.jp, ok = () => { bj.textContent = 'Copiado ✓'; setTimeout(() => { bj.textContent = 'Copiar nome em japonês'; }, 2000); };
+    if(navigator.clipboard && navigator.clipboard.writeText) navigator.clipboard.writeText(t).then(ok, () => {}); else { const ta = document.createElement('textarea'); ta.value = t; document.body.appendChild(ta); ta.select(); try { document.execCommand('copy'); ok(); } catch(x){} ta.remove(); }
+    return; }
   const it = qiItem(box); if(!it.pl) return;
   if(e.target.closest('.qi-ics')){
     const blob = new Blob([CalAvisos.ics([it])], {type:'text/calendar;charset=utf-8'});
