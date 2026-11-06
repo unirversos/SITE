@@ -310,7 +310,7 @@ function curto(s){return (+s.slice(8))+' '+MESES[+s.slice(5,7)-1].slice(0,3)+' '
 function hojeStr(){var t=new Date();return t.getFullYear()+'-'+pad(t.getMonth()+1)+'-'+pad(t.getDate());}
 function uid(){return 'e'+Date.now().toString(36)+Math.random().toString(36).slice(2,8);}
 
-var S={titulo:'',ini:'',fim:'',fuso:'auto',chegada:'',atualizado:'',ev:[],orc:{cot:'',pax:1,t:{}},ok:{},pas:[]};
+var S={titulo:'',ini:'',fim:'',fuso:'auto',chegada:'',atualizado:'',ev:[],orc:{cot:'',pax:1,t:{}},ok:{},pas:[],qi:{}};
 var CURTO={jp:'horário do Japão',br:'horário de Brasília',dev:'fuso do aparelho'};
 function fusoDe(e){
   if(e.fuso!=='auto')return e.fuso;
@@ -342,9 +342,32 @@ function limpaOrc(o,r){
   if(o.t&&typeof o.t==='object')Object.keys(o.t).slice(0,600).forEach(function(k){
     var v=o.t[k]&&+o.t[k].v; if(k.length<=700&&isFinite(v)&&v>=0&&v<=99999999)r.t[k]={v:Math.round(v),c:1};});
 }
+/* Escolhas da página de ingressos ("Quero ir"): marcação, dia, link, número, observações. Seguem junto com o calendário (e com a conta). */
+function limpaQi(q){
+  var r={}; if(!q||typeof q!=='object')return r;
+  Object.keys(q).slice(0,120).forEach(function(k){
+    var x=q[k]; if(!/^[a-z0-9-]{1,60}$/.test(k)||!x||typeof x!=='object')return;
+    var y={}; if(x.ir===true)y.ir=true; if(x.salvo===true)y.salvo=true;
+    if(okData(x.data))y.data=x.data;
+    ['link','local'].forEach(function(f){if(typeof x[f]==='string'&&x[f].trim())y[f]=x[f].trim().slice(0,f==='link'?500:300);});
+    if(typeof x.num==='string'&&x.num.trim())y.num=x.num.trim().slice(0,80);
+    if(typeof x.obs==='string'&&x.obs.trim())y.obs=x.obs.trim().slice(0,500);
+    y.t=isFinite(+x.t)&&+x.t>0?Math.round(+x.t):0;
+    if(Object.keys(y).length>1||y.t)r[k]=y;
+  });
+  return r;
+}
+/* Junta duas cópias: em cada item vale a mais recente. */
+function juntaQi(a,b){
+  var m={},k; a=a||{};b=b||{};
+  Object.keys(a).forEach(function(i){m[i]=a[i];});
+  Object.keys(b).forEach(function(i){if(!m[i]||(b[i].t||0)>(m[i].t||0))m[i]=b[i];});
+  return m;
+}
 function limpar(o){
-  var r={titulo:'',ini:'',fim:'',fuso:'auto',chegada:'',atualizado:'',ev:[],orc:{cot:'',pax:1,t:{}},ok:{},pas:[],lista:[]};
+  var r={titulo:'',ini:'',fim:'',fuso:'auto',chegada:'',atualizado:'',ev:[],orc:{cot:'',pax:1,t:{}},ok:{},pas:[],lista:[],qi:{}};
   if(!o||typeof o!=='object')return r;
+  r.qi=limpaQi(o.qi);
   limpaOrc(o.orc,r.orc);
   r.pas=limpaPas(o.pas);
   r.lista=window.CalLista?CalLista.limpa(o.lista):[];
@@ -475,10 +498,24 @@ $('#fSetup').addEventListener('submit',function(ev){
   if(!okData(ini)||!okData(fim)){er.textContent='Escolha o primeiro e o último dia da viagem.';return;}
   if(fim<ini){er.textContent='O último dia precisa ser igual ou depois do primeiro.';return;}
   if(diff(ini,fim)>540){er.textContent='Escolha um período de até 18 meses.';return;}
-  S.titulo=$('#sTitulo').value.trim();S.ini=ini;S.fim=fim;S.fuso=$('#sFuso').value;
-  var h=hojeStr();mes=(h>=ini&&h<=fim?h:ini).slice(0,7);
-  gravar();$('#setup').hidden=true;tudo();$('#app').hidden=false;
-  $('#app').scrollIntoView({behavior:'smooth',block:'start'});
+  function criar(){
+    S.titulo=$('#sTitulo').value.trim();S.ini=ini;S.fim=fim;S.fuso=$('#sFuso').value;
+    var h=hojeStr();mes=(h>=ini&&h<=fim?h:ini).slice(0,7);
+    gravar();$('#setup').hidden=true;tudo();$('#app').hidden=false;
+    $('#app').scrollIntoView({behavior:'smooth',block:'start'});
+  }
+  /* Sem conta: antes de criar, convida a entrar (é grátis). Pode seguir sem conta. */
+  if(!usuario&&window.CalNuvem&&!window.__semConta){
+    abrir('<h2 id="dlgT" style="text-transform:none">Guarde tudo na sua conta — é grátis</h2>'+
+      '<p>Com a conta, o seu calendário, os ingressos que você marcou, os números de inscrição e as observações ficam guardados e aparecem em qualquer aparelho em que você entrar.</p>'+
+      '<p class="nota">Sem conta, tudo fica salvo só neste aparelho: se você trocar de celular ou limpar o navegador, perde.</p>'+
+      '<div class="barra"><button class="btn pri" type="button" id="cvEntrar">Entrar ou criar conta grátis</button></div>'+
+      '<div class="barra"><button class="btn" type="button" id="cvSem">Criar sem conta (só neste aparelho)</button></div>');
+    $('#cvEntrar').onclick=function(){fechar();pedirLogin();aviso('Depois de entrar, toque em “Criar meu calendário”.');};
+    $('#cvSem').onclick=function(){window.__semConta=true;fechar();criar();};
+    return;
+  }
+  criar();
 });
 $('#sCancel').onclick=function(){$('#setup').hidden=true;};
 $('#bAjustar').onclick=function(){mostrarSetup(true);$('#setup').scrollIntoView({behavior:'smooth',block:'center'});};
@@ -943,7 +980,7 @@ function nuvemUI(){
   var a=$('#nuvem'),b=$('#nuvemSetup'),t='',ts='';
   if(!usuario){
     t='☁️ Seu calendário está salvo só neste aparelho. <button type="button" data-nuv="entrar">Entrar para guardar online</button>';
-    ts='Já criou um calendário e ele está guardado na sua conta? <button type="button" data-nuv="entrar">Entrar para buscar</button>';
+    ts='☁️ Entre com a sua conta — é grátis — para guardar tudo online e abrir em qualquer aparelho. Já criou um calendário? Ele aparece ao entrar. <button type="button" data-nuv="entrar">Entrar ou criar conta grátis</button>';
   }else if(estadoNuvem==='erro'){
     t='⚠️ Não consegui falar com a conta agora. O calendário continua salvo neste aparelho. <button type="button" data-nuv="tentar">Tentar de novo</button>';ts=t;
   }else if(estadoNuvem==='salvando'||estadoNuvem==='sync'){
@@ -971,11 +1008,22 @@ function aplicarPend(){
   if(!Array.isArray(pend)||!pend.length)return true;
   var c=limpar({ini:S.ini,fim:S.fim,fuso:'jp',ev:pend.filter(function(p){return p&&typeof p.id==='string'&&p.id.indexOf('qi-')===0;}).map(function(p){
     return {id:p.id,titulo:p.titulo,tipo:p.tipo,data:p.data,dataFim:'',hora:p.hora||'',horaFim:'',fuso:p.fuso||'jp',local:typeof p.local==='string'?p.local:'',detalhes:p.detalhes||''};})});
-  var ids={},gr=[]; c.ev.forEach(function(e){ids[e.id]=1;}); pend.forEach(function(p){if(p&&typeof p.grupo==='string'&&p.grupo.indexOf('qi-')===0&&gr.indexOf(p.grupo)<0)gr.push(p.grupo);});
+  var ids={},gr=[]; c.ev.forEach(function(e){ids[e.id]=1;}); pend.forEach(function(p){if(p&&!p.upd&&typeof p.grupo==='string'&&p.grupo.indexOf('qi-')===0&&gr.indexOf(p.grupo)<0)gr.push(p.grupo);});
   S.ev=S.ev.filter(function(e){return !ids[e.id]&&!gr.some(function(g){return e.id.indexOf(g)===0;});}).concat(c.ev);
   gravar();tudo();try{localStorage.removeItem('uniCalPend');}catch(e){}aviso(c.ev.length+(c.ev.length===1?' item entrou':' itens entraram')+' no calendário (Quero ir e avisos).');
   return true;
 }
+/* A página de ingressos (janela dentro do calendário) lê e grava as escolhas por aqui. */
+window.UniQI={
+  get:function(){return JSON.parse(JSON.stringify(S.qi||{}));},
+  set:function(obj){
+    if(VER)return; var novo=limpaQi(obj), ant=S.qi||{};
+    Object.keys(novo).forEach(function(k){ if(JSON.stringify(Object.assign({},novo[k],{t:0}))!==JSON.stringify(Object.assign({},ant[k]||{},{t:0})))novo[k].t=Date.now(); else novo[k].t=(ant[k]&&ant[k].t)||novo[k].t; });
+    if(JSON.stringify(novo)===JSON.stringify(ant))return;
+    S.qi=novo; gravar();
+  }
+};
+function avisaQi(){var f=document.getElementById('qiFrame');try{if(f&&f.contentWindow)f.contentWindow.postMessage({uniQi:1},location.origin);}catch(e){}}
 var pendIv=null;
 function vigiaPend(){
   if(pendIv)return; var t0=Date.now();
@@ -990,7 +1038,7 @@ vigiaPend();
 
 /* Ingressos com antecedência: a lista abre aqui dentro (mesma página de /agendamentos, sem sair do calendário). */
 (function(){var d=document.getElementById('dlgQI'),f=document.getElementById('qiFrame'),b=document.getElementById('bQI');if(!d||!b)return;
-  b.addEventListener('click',function(){window.__pendRapido=true;if(!f.getAttribute('src'))f.src='/travessia/agendamentos/?embed=1&v=3';if(d.showModal)d.showModal();else d.setAttribute('open','');});
+  b.addEventListener('click',function(){window.__pendRapido=true;avisaQi();if(!f.getAttribute('src'))f.src='/travessia/agendamentos/?embed=1&v=3';if(d.showModal)d.showModal();else d.setAttribute('open','');});
   document.getElementById('qiFecha').addEventListener('click',function(){d.close();vigiaPend();});
   d.addEventListener('close',vigiaPend);
   window.addEventListener('storage',function(e){if(e.key==='uniCalPend')vigiaPend();});
@@ -1004,6 +1052,9 @@ function adotar(c){
   S=c;gravarLocal();var h=hojeStr();mes=(h>=S.ini&&h<=S.fim?h:S.ini).slice(0,7);
   $('#setup').hidden=true;$('#app').hidden=false;tudo();
 }
+/* Última versão que o aparelho e a conta tinham igual. Com ela dá para saber quem mudou desde então. */
+function lerBase(){try{return localStorage.getItem('uniCalBase')||'';}catch(e){return '';}}
+function gravaBase(v){try{if(v)localStorage.setItem('uniCalBase',v);}catch(e){}}
 async function sincronizar(){
   if(VER||pendLink)return;
   if(!usuario||!window.CalNuvem)return;
@@ -1014,8 +1065,19 @@ async function sincronizar(){
   var c=nuvem?limpar(nuvem):null;if(c&&!c.ini)c=null;
   estadoNuvem='';
   if(!c){if(S.ini){await salvarNuvem();}else{syncPronto=true;nuvemUI();}return;}
-  if(!S.ini){adotar(c);syncPronto=true;nuvemUI();aviso('Calendário buscado da sua conta.');return;}
-  if(igual(c,S)){syncPronto=true;nuvemUI();return;}
+  if(!S.ini){adotar(c);gravaBase(c.atualizado);syncPronto=true;nuvemUI();aviso('Calendário buscado da sua conta.');return;}
+  if(igual(c,S)){
+    var mq=juntaQi(c.qi,S.qi), difLocal=JSON.stringify(mq)!==JSON.stringify(S.qi||{}), difNuvem=JSON.stringify(mq)!==JSON.stringify(c.qi||{});
+    if(difLocal){S.qi=mq;gravarLocal();avisaQi();}
+    syncPronto=true;
+    if(difNuvem)salvarNuvem(); else nuvemUI();
+    gravaBase(S.atualizado);
+    return;
+  }
+  /* Só um dos lados mudou desde a última vez que bateram: vale o que mudou, sem perguntar. */
+  var base=lerBase();
+  if(base&&S.atualizado===base&&c.atualizado&&c.atualizado!==base){adotar(c);gravaBase(c.atualizado);syncPronto=true;nuvemUI();aviso('Atualizei com o que você mudou em outro aparelho.');return;}
+  if(base&&c.atualizado===base&&S.atualizado&&S.atualizado!==base){await salvarNuvem();return;}
   escolherVersao(c);
 }
 function resumo(o,rot){
@@ -1037,6 +1099,7 @@ function juntarVersoes(c,d){
   var idsP={}, chP={}, kp=function(x){return [n(x.de),n(x.para),x.data].join('|');}; (m.pas||[]).forEach(function(x){idsP[x.id]=1;chP[kp(x)]=1;});
   (d.pas||[]).forEach(function(x){ if(idsP[x.id]||chP[kp(x)])return; var y=JSON.parse(JSON.stringify(x)); if(y.evId&&mapa[y.evId])y.evId=mapa[y.evId]; m.pas.push(y); idsP[x.id]=1; chP[kp(x)]=1; });
   Object.keys(d.ok||{}).forEach(function(k){m.ok[k]=1;});
+  m.qi=juntaQi(c.qi,d.qi);
   if(d.ini<m.ini)m.ini=d.ini; if(d.fim>m.fim)m.fim=d.fim;
   if(!m.titulo)m.titulo=d.titulo;
   if(!m.chegada&&d.chegada&&idsEv[d.chegada])m.chegada=mapa[d.chegada]||d.chegada;
@@ -1050,14 +1113,14 @@ function escolherVersao(c){
     '<div class="barra"><button class="btn pri" type="button" id="juntaDois">🔀 Juntar os dois (não perde nada)</button></div><div class="barra"><button class="btn" type="button" id="usaConta">Usar só o da conta</button><button class="btn" type="button" id="usaAparelho">Usar só o deste aparelho</button></div><p class="nota">“Juntar” soma os eventos, as ideias do Quero fazer e as passagens dos dois. Se você apagou algo em um dos lados, isso pode voltar.</p>'+
     '<p class="nota">Dica: se tiver dúvida, feche esta janela, vá em Mais opções e salve uma cópia do deste aparelho antes de escolher.</p>');
   $('#juntaDois').onclick=function(){var j=juntarVersoes(c,S);fechar();adotar(j);syncPronto=true;gravarLocal();salvarNuvem();nuvemUI();aviso('Juntei os dois: '+j.ev.length+' eventos e '+(j.lista||[]).length+' no Quero fazer.');};
-  $('#usaConta').onclick=function(){adotar(c);syncPronto=true;fechar();nuvemUI();aviso('Usando o calendário da conta.');};
+  $('#usaConta').onclick=function(){adotar(c);gravaBase(c.atualizado);syncPronto=true;fechar();nuvemUI();aviso('Usando o calendário da conta.');};
   $('#usaAparelho').onclick=function(){fechar();S.atualizado=new Date().toISOString();gravarLocal();salvarNuvem();};
 }
 async function salvarNuvem(){
   if(VER)return;
   if(!usuario||!window.CalNuvem||!S.ini)return;
   clearTimeout(tNuv);tNuv=null;estadoNuvem='salvando';nuvemUI();
-  try{await CalNuvem.salvar(JSON.parse(JSON.stringify(S)));syncPronto=true;ultimoSalvo=new Date();estadoNuvem='';}
+  try{await CalNuvem.salvar(JSON.parse(JSON.stringify(S)));syncPronto=true;ultimoSalvo=new Date();estadoNuvem='';gravaBase(S.atualizado);}
   catch(e){estadoNuvem='erro';}
   nuvemUI();
 }

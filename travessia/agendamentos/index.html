@@ -968,7 +968,7 @@ function sincronizarCal(){
   if(mudou) salvarQuero();
   return mudou;
 }
-window.addEventListener('storage', e => { if(e.key === 'uniCalendario1' || e.key === 'uniCalPend'){ if(sincronizarCal() || true) renderCards(); } });
+window.addEventListener('storage', e => { if(e.key === 'uniCalendario1' || e.key === 'uniCalPend'){ const a = recarregarQuero(), b = sincronizarCal(); if(a || b) renderCards(); } });
 window.addEventListener('focus', () => { if(sincronizarCal()) renderCards(); });
 // Dentro do calendário: eventos de época (anuais) que não caem em nenhum mês da viagem ficam de fora.
 let mostrarFora = false;
@@ -1030,19 +1030,37 @@ function confLinha(a){
 
 // ---------- quero ir + avisos ----------
 const CHQ = 'agQueroIr';
-let quero = {};
-try { quero = JSON.parse(localStorage.getItem(CHQ) || '{}') || {}; } catch(e){ quero = {}; }
-function salvarQuero(){ try { localStorage.setItem(CHQ, JSON.stringify(quero)); } catch(e){} }
+// As escolhas ficam junto do calendário (e vão para a conta com ele). Dentro do calendário, via janela-mãe; fora dele, direto no armazenamento do calendário.
+function viaPai(){ try { return window.parent !== window && window.parent.UniQI ? window.parent.UniQI : null; } catch(e){ return null; } }
+function calLocal(){ try { const c = JSON.parse(localStorage.getItem('uniCalendario1') || 'null'); return c && c.ini ? c : null; } catch(e){ return null; } }
+function lerQuero(){
+  const pai = viaPai(); if(pai){ const q = pai.get(); if(Object.keys(q).length) return q; }
+  else { const c = calLocal(); if(c && c.qi && Object.keys(c.qi).length) return c.qi; }
+  try { return JSON.parse(localStorage.getItem(CHQ) || '{}') || {}; } catch(e){ return {}; }
+}
+let quero = lerQuero();
+function salvarQuero(){
+  try { localStorage.setItem(CHQ, JSON.stringify(quero)); } catch(e){}
+  const pai = viaPai(); if(pai){ pai.set(quero); quero = pai.get(); return; }
+  const c = calLocal(); if(!c) return;
+  const ant = c.qi || {}, novo = {};
+  Object.keys(quero).forEach(k => { const q = Object.assign({}, quero[k]); if(!Object.keys(q).filter(x => x !== 't').length) return;
+    q.t = JSON.stringify(Object.assign({}, q, {t: 0})) !== JSON.stringify(Object.assign({}, ant[k] || {}, {t: 0})) ? Date.now() : (q.t || 0); novo[k] = q; });
+  if(JSON.stringify(novo) === JSON.stringify(ant)) return;
+  c.qi = novo; try { localStorage.setItem('uniCalendario1', JSON.stringify(c)); } catch(e){}
+}
+function recarregarQuero(){ const n = lerQuero(); if(JSON.stringify(n) !== JSON.stringify(quero)){ quero = n; return true; } return false; }
+window.addEventListener('message', e => { if(e.origin === location.origin && e.data && e.data.uniQi){ recarregarQuero(); renderCards(); } });
 function escAttr(v){ return String(v == null ? '' : v).replace(/&/g,'&amp;').replace(/"/g,'&quot;').replace(/</g,'&lt;'); }
 function linkSeguro(u){ u = String(u || '').trim(); return /^https?:\/\/\S+$/i.test(u) ? u : ''; }
-// Acompanhamento da inscrição/compra: link e número. O número fica só neste aparelho; o link vai nos detalhes do evento.
+// Acompanhamento da inscrição/compra: link, número e observações (vão com o calendário e nos detalhes do evento).
 function acompBloco(a){
   const q = quero[a.id] || {}, lot = a.regra && a.regra.t === 'loteria', u = linkSeguro(q.link);
   return '<div class="qi-ac"><label>' + (lot ? 'Link da loteria' : 'Link da inscrição ou da compra') + '<input type="url" class="qi-lk" maxlength="500" value="' + escAttr(q.link) + '" placeholder="Cole aqui o link"></label>' +
     '<label>' + (lot ? 'Meu número de inscrição' : 'Meu número do pedido') + '<input type="text" class="qi-nm" maxlength="80" value="' + escAttr(q.num) + '" placeholder="Para conferir o resultado depois" autocomplete="off"></label>' +
     '<label>Observações<textarea class="qi-ob" rows="2" maxlength="500" placeholder="Anotações suas: horário, quem vai, o que lembrar…">' + escAttr(q.obs).replace(/&quot;/g, '"') + '</textarea></label>' +
     '<div class="qi-lbtn"><a class="btn-ghost qi-abrir" href="' + escAttr(u) + '" target="_blank" rel="noopener"' + (u ? '' : ' hidden') + '>' + (lot ? 'Abrir a loteria / ver resultado' : 'Abrir o link') + '</a> <button type="button" class="btn-ghost qi-cpnum"' + (q.num ? '' : ' hidden') + '>Copiar meu número</button></div>' +
-    '<p class="qi-dica">O número e as observações ficam salvos só neste aparelho, e não vão para o calendário nem para a nuvem. O link vai nos detalhes do evento no calendário.</p></div>';
+    '<p class="qi-dica">Tudo isso é salvo junto com o seu calendário: entrando na sua conta, aparece em todos os seus aparelhos. O link, o número e as observações vão também nos detalhes do evento.</p></div>';
 }
 function localBloco(a){
   const l = localDe(a.id), url = mapsUrl(l), jp = JP[a.id];
@@ -1087,14 +1105,15 @@ function cidadeTxt(it){ return it.onde && it.onde.indexOf(' · ') > -1 ? it.onde
 function localPadrao(it){ const c = cidadeTxt(it); if(!c) return ''; return (JP[it.id] ? JP[it.id] + ', ' : it.nome + ', ') + c; }
 function localDe(id){ const q = quero[id] || {}; if(typeof q.local === 'string' && q.local.trim()) return q.local.trim(); const it = itemDe(id); return it ? localPadrao(it) : ''; }
 function mapsUrl(l){ if(!l) return ''; const c = window.CalGeo && CalGeo.coordDe(l); return 'https://www.google.com/maps/search/?api=1&query=' + (c ? c.lat + ',' + c.lon : encodeURIComponent(l.replace(/https?:\/\/\S+/g,' ').trim() || l)); }
-function enviarCal(id){
+function detalhesExtra(q){ return (linkSeguro(q.link) ? '\nLink da inscrição: ' + q.link.trim() : '') + (q.num ? '\nNº de inscrição: ' + q.num : '') + (q.obs ? '\nObs: ' + q.obs : ''); }
+function enviarCal(id, upd){
   const q = quero[id], livre = id.indexOf('livre-') === 0, a = livre ? LIVRES.find(x => x.id === id) : A.find(x => x.id === id), pl = !livre && window.CalAvisos && CalAvisos.plano(id, q.data);
   let pend = []; try { pend = JSON.parse(localStorage.getItem('uniCalPend') || '[]') || []; } catch(x){ pend = []; }
   const grupo = 'qi-' + id + '-', base = grupo + q.data, av = pl && pl.av;
   const local = localDe(id);
-  const evs = [{id: base + '-v', grupo: grupo, local: local, titulo: (livre ? '📍 Quero ir: ' : '🎟️ Quero ir: ') + (av ? av.nome : a.nome), tipo: 'passeio', data: q.data, hora: '', fuso: 'jp', detalhes: (av ? 'Regra de venda: ' + av.texto.replace(/<[^>]+>/g,'') : (livre ? a.desc : (a.nota || '')).replace(/<[^>]+>/g,'')) + (a.url ? '\n' + a.url : '') + (linkSeguro(q.link) ? '\nLink da inscrição: ' + q.link.trim() : '')}];
-  if(pl) pl.avisos.forEach((x, i) => { if(x.ms <= Date.now()) return; const b = CalAvisos.brParts(x.ms); evs.push({id: base + '-a' + i, grupo: grupo, titulo: x.titulo.replace(/^⏰ /, ''), tipo: 'outro', data: b.data, hora: b.hora, fuso: 'br', detalhes: (a.url || '')}); });
-  pend = pend.filter(p => !(p && typeof p.id === 'string' && p.id.indexOf(grupo) === 0)).concat(evs);
+  const evs = [{id: base + '-v', grupo: grupo, upd: !!upd, local: local, titulo: (livre ? '📍 Quero ir: ' : '🎟️ Quero ir: ') + (av ? av.nome : a.nome), tipo: 'passeio', data: q.data, hora: '', fuso: 'jp', detalhes: (av ? 'Regra de venda: ' + av.texto.replace(/<[^>]+>/g,'') : (livre ? a.desc : (a.nota || '')).replace(/<[^>]+>/g,'')) + (a.url ? '\n' + a.url : '') + detalhesExtra(q)}];
+  if(!upd && pl) pl.avisos.forEach((x, i) => { if(x.ms <= Date.now()) return; const b = CalAvisos.brParts(x.ms); evs.push({id: base + '-a' + i, grupo: grupo, titulo: x.titulo.replace(/^⏰ /, ''), tipo: 'outro', data: b.data, hora: b.hora, fuso: 'br', detalhes: (a.url || '')}); });
+  pend = pend.filter(p => !(p && typeof p.id === 'string' && (upd ? p.id === evs[0].id : p.id.indexOf(grupo) === 0))).concat(evs);
   try { localStorage.setItem('uniCalPend', JSON.stringify(pend)); } catch(x){}
 }
 
@@ -1136,10 +1155,10 @@ function qiItem(box){ const id = box.dataset.id; return {id: id, data: (quero[id
 ['cards','cards-quero','free-list'].forEach(cid => document.getElementById(cid).addEventListener('change', e => {
   const box = e.target.closest('.qi'); if(!box) return;
   const id = box.dataset.id; quero[id] = quero[id] || {};
-  if(e.target.classList.contains('qi-lk')){ quero[id].link = linkSeguro(e.target.value) ? e.target.value.trim() : ''; if(e.target.value.trim() && !quero[id].link){ e.target.value = ''; } salvarQuero(); if(quero[id].ir && quero[id].data) enviarCal(id); const ab = box.querySelector('.qi-abrir'); if(ab){ ab.href = quero[id].link || ''; ab.hidden = !quero[id].link; } return; }
-  if(e.target.classList.contains('qi-ob')){ quero[id].obs = e.target.value.trim(); salvarQuero(); return; }
-  if(e.target.classList.contains('qi-nm')){ quero[id].num = e.target.value.trim(); salvarQuero(); const cp = box.querySelector('.qi-cpnum'); if(cp) cp.hidden = !quero[id].num; return; }
-  if(e.target.classList.contains('qi-lc')){ quero[id].local = e.target.value.trim(); salvarQuero(); if(quero[id].ir && quero[id].data) enviarCal(id); const a2 = box.querySelector('.qi-maps'), u = mapsUrl(localDe(id)); if(a2 && u) a2.href = u; return; }
+  if(e.target.classList.contains('qi-lk')){ quero[id].link = linkSeguro(e.target.value) ? e.target.value.trim() : ''; if(e.target.value.trim() && !quero[id].link){ e.target.value = ''; } salvarQuero(); if(ehMeu({id})) enviarCal(id, true); const ab = box.querySelector('.qi-abrir'); if(ab){ ab.href = quero[id].link || ''; ab.hidden = !quero[id].link; } return; }
+  if(e.target.classList.contains('qi-ob')){ quero[id].obs = e.target.value.trim(); salvarQuero(); if(ehMeu({id})) enviarCal(id, true); return; }
+  if(e.target.classList.contains('qi-nm')){ quero[id].num = e.target.value.trim(); salvarQuero(); if(ehMeu({id})) enviarCal(id, true); const cp = box.querySelector('.qi-cpnum'); if(cp) cp.hidden = !quero[id].num; return; }
+  if(e.target.classList.contains('qi-lc')){ quero[id].local = e.target.value.trim(); salvarQuero(); if(ehMeu({id})) enviarCal(id, true); const a2 = box.querySelector('.qi-maps'), u = mapsUrl(localDe(id)); if(a2 && u) a2.href = u; return; }
   if(e.target.classList.contains('qi-ck')){ quero[id].ir = e.target.checked; if(!e.target.checked) quero[id] = soAcomp(quero[id]); box.querySelector('.qi-d').hidden = !e.target.checked; const dc = box.querySelector('.qi-dica'); if(dc) dc.hidden = !e.target.checked; }
   if(e.target.classList.contains('qi-dt')){ quero[id].data = e.target.value; }
   if(quero[id].ir && quero[id].data){ enviarCal(id); quero[id].salvo = true; }
