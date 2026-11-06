@@ -230,6 +230,7 @@ footer a{color:var(--pink);text-decoration:none;margin-right:12px}
         <button class="btn pri" type="button" id="bNovo">➕ Novo evento</button>
         <button class="btn" type="button" id="bImport">📥 Importar reserva</button>
         <button class="btn" type="button" id="bLista">⭐ Quero fazer</button>
+        <button class="btn" type="button" id="bQI">🎟️ Quero ir: ingressos com antecedência</button>
         <button class="btn" type="button" id="bPasses">🚆 Passes</button>
         <button class="btn" type="button" id="bCompart">🔗 Compartilhar</button>
         <a class="btn" href="/travessia/deslocamento/" id="bDesloc">🧭 De → para</a>
@@ -266,6 +267,7 @@ footer a{color:var(--pink);text-decoration:none;margin-right:12px}
   </footer>
 </div>
 
+<dialog id="dlgQI" aria-label="Ingressos com antecedência"><div class="dlg-in"><div style="display:flex;justify-content:space-between;align-items:center;gap:10px"><h2>🎟️ Ingressos com antecedência</h2><button class="btn sm" type="button" id="qiFecha">Fechar</button></div><iframe id="qiFrame" title="Ingressos com antecedência" style="width:100%;height:70vh;border:0;border-radius:12px;background:#fff"></iframe></div></dialog>
 <dialog id="dlg" aria-labelledby="dlgT"><div class="dlg-in" id="dlgIn"></div></dialog>
 <p class="toast" id="msg" role="status"></p>
 
@@ -951,18 +953,30 @@ function aplicarPend(){
   if(!Array.isArray(pend)||!pend.length)return true;
   var c=limpar({ini:S.ini,fim:S.fim,fuso:'jp',ev:pend.filter(function(p){return p&&typeof p.id==='string'&&p.id.indexOf('qi-')===0;}).map(function(p){
     return {id:p.id,titulo:p.titulo,tipo:p.tipo,data:p.data,dataFim:'',hora:p.hora||'',horaFim:'',fuso:p.fuso||'jp',local:'',detalhes:p.detalhes||''};})});
-  var ids={}; c.ev.forEach(function(e){ids[e.id]=1;});
-  S.ev=S.ev.filter(function(e){return !ids[e.id];}).concat(c.ev);
-  try{localStorage.removeItem('uniCalPend');}catch(e){}
-  gravar();tudo();aviso(c.ev.length+(c.ev.length===1?' item entrou':' itens entraram')+' no calendário (Quero ir e avisos).');
+  var ids={},gr=[]; c.ev.forEach(function(e){ids[e.id]=1;}); pend.forEach(function(p){if(p&&typeof p.grupo==='string'&&p.grupo.indexOf('qi-')===0&&gr.indexOf(p.grupo)<0)gr.push(p.grupo);});
+  S.ev=S.ev.filter(function(e){return !ids[e.id]&&!gr.some(function(g){return e.id.indexOf(g)===0;});}).concat(c.ev);
+  gravar();tudo();try{localStorage.removeItem('uniCalPend');}catch(e){}aviso(c.ev.length+(c.ev.length===1?' item entrou':' itens entraram')+' no calendário (Quero ir e avisos).');
   return true;
 }
-(function(){var t0=Date.now(),iv=setInterval(function(){
-  var tem; try{tem=(JSON.parse(localStorage.getItem('uniCalPend')||'[]')||[]).length;}catch(e){tem=0;}
-  if(!tem||Date.now()-t0>25000){clearInterval(iv);return;}
-  if(!$('#app')||$('#app').hidden||document.querySelector('#dlg[open]'))return;
-  if(syncPronto||(!usuario&&Date.now()-t0>6000)){clearInterval(iv);aplicarPend();}
-},800);})();
+var pendIv=null;
+function vigiaPend(){
+  if(pendIv)return; var t0=Date.now();
+  pendIv=setInterval(function(){
+    var tem; try{tem=(JSON.parse(localStorage.getItem('uniCalPend')||'[]')||[]).length;}catch(e){tem=0;}
+    if(!tem||Date.now()-t0>25000){clearInterval(pendIv);pendIv=null;return;}
+    if(!$('#app')||$('#app').hidden||document.querySelector('#dlg[open]'))return;
+    if(syncPronto||(!usuario&&Date.now()-t0>(window.__pendRapido?0:6000))){clearInterval(pendIv);pendIv=null;aplicarPend();}
+  },800);
+}
+vigiaPend();
+
+/* Ingressos com antecedência: a lista abre aqui dentro (mesma página de /agendamentos, sem sair do calendário). */
+(function(){var d=document.getElementById('dlgQI'),f=document.getElementById('qiFrame'),b=document.getElementById('bQI');if(!d||!b)return;
+  b.addEventListener('click',function(){window.__pendRapido=true;if(!f.getAttribute('src'))f.src='/travessia/agendamentos/?embed=1';if(d.showModal)d.showModal();else d.setAttribute('open','');});
+  document.getElementById('qiFecha').addEventListener('click',function(){d.close();vigiaPend();});
+  d.addEventListener('close',vigiaPend);
+  window.addEventListener('storage',function(e){if(e.key==='uniCalPend')vigiaPend();});
+})();
 document.addEventListener('uni-conta',function(ev){
   usuario=(ev.detail&&ev.detail.user)||null;syncPronto=false;estadoNuvem='';
   nuvemUI();if(usuario){sincronizar();setTimeout(agendarVivo,4000);}

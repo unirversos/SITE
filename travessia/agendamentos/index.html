@@ -641,7 +641,9 @@
         }
     
 
- details.card { padding: 0; align-self: start; }
+ .qi-noCal{margin:.2rem 0 .6rem;font-size:.95rem}.qi-dica{font-size:.85rem;color:var(--color-gray);margin:.3rem 0}
+        .quero-h{font-size:1.1rem;margin:1rem 0 .6rem;color:var(--color-rose)}.quero-h2{margin-top:1.6rem;color:var(--color-gray)}
+        details.card { padding: 0; align-self: start; }
  details.card > summary { list-style: none; cursor: pointer; display: block; padding: 1.3rem 3rem 1.2rem 1.5rem; position: relative; min-height: 44px; }
  details.card > summary::-webkit-details-marker { display: none; }
  details.card > summary::after { content: '▾'; position: absolute; right: 1.2rem; top: 1.2rem; font-size: 1.1rem; color: var(--color-rose); transition: transform .2s; }
@@ -683,7 +685,7 @@
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@500;600;700&family=Zen+Maru+Gothic:wght@400;500;700&display=swap">
 <link rel="stylesheet" href="/estilo-celular.css?v=2">
 <script defer src="/menu-ativo.js?v=1"></script>
-<link rel="icon" href="/favicon.svg" type="image/svg+xml"><link rel="icon" href="/favicon.ico" sizes="48x48"><link rel="apple-touch-icon" href="/apple-touch-icon.png"><link rel="manifest" href="/manifest.webmanifest"><meta name="theme-color" content="#3a2b38"><meta name="mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-title" content="Unirversos"><script src="/app.js" defer></script></head>
+<link rel="icon" href="/favicon.svg" type="image/svg+xml"><link rel="icon" href="/favicon.ico" sizes="48x48"><link rel="apple-touch-icon" href="/apple-touch-icon.png"><link rel="manifest" href="/manifest.webmanifest"><meta name="theme-color" content="#3a2b38"><meta name="mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-title" content="Unirversos"><script src="/app.js" defer></script><script>if(/[?&]embed=1/.test(location.search))document.documentElement.classList.add("embed");</script><style>.embed .sitebar,.embed .hero,.embed footer{display:none!important}.embed body{background:#fff}.embed main{padding-top:.5rem}</style></head>
 <body>
     <!-- HEADER -->
     <div class="sitebar" role="navigation" aria-label="Site">
@@ -732,6 +734,7 @@
             <h2 class="section-title">O catálogo de regras</h2>
             <p class="section-subtitle">Cada atração com a sua mecânica de venda, explicada uma vez. É daqui que o cronograma acima sai.</p>
             <div class="filters" id="filters"></div>
+            <div id="quero-box" hidden><h3 class="quero-h">✓ Meus “quero ir”</h3><div class="cards" id="cards-quero"></div><h3 class="quero-h quero-h2">Outras atrações</h3></div>
             <div class="cards" id="cards"></div>
         </section>
 
@@ -973,11 +976,8 @@ function regraResumo(a){
 }
 
 let filtroAtivo = 'todos';
-function renderCards(){
-  const cards = document.getElementById('cards');
-  const lista = A.filter(a => filtroAtivo === 'todos' || a.cat === filtroAtivo || a.tag === filtroAtivo);
-  cards.innerHTML = lista.map(a =>
-    '<details class="card ' + (a.cat === 'classico' ? 'classico' : '') + '" data-id="' + a.id + '"' + (abertos.has(a.id) ? ' open' : '') + '>' +
+function cardHtml(a){
+  return '<details class="card ' + (a.cat === 'classico' ? 'classico' : '') + '" data-id="' + a.id + '"' + (abertos.has(a.id) ? ' open' : '') + '>' +
       '<summary><span class="card-top"><h4>' + a.nome + '</h4><span class="qi-badge" hidden></span></span>' +
       '<span class="where">' + a.onde + '</span>' +
       '<span class="rule">' + regraResumo(a) + '</span></summary>' +
@@ -987,8 +987,35 @@ function renderCards(){
       confLinha(a) +
       queroIr(a) +
       (a.url ? '<a href="' + a.url + '" target="_blank" rel="noopener">página oficial →</a>' : '') +
-      '</div></details>').join('');
-  cards.querySelectorAll('.qi').forEach(qiAtualizar);
+      '</div></details>';
+}
+// "Meus quero ir": quem tem Quero ir marcado E data escolhida sai da lista grande e sobe para este bloco.
+function ehMeu(a){ const q = quero[a.id] || {}; return !!(q.ir && q.data && q.salvo); }
+// Fonte da verdade: o calendário. Se o evento "Quero ir" foi apagado de lá, a atração volta para a lista.
+function noCalendario(id){
+  const pre = 'qi-' + id + '-', tem = x => x && typeof x.id === 'string' && x.id.indexOf(pre) === 0 && /-v$/.test(x.id);
+  try { const c = JSON.parse(localStorage.getItem('uniCalendario1') || 'null'); if(c && Array.isArray(c.ev) && c.ev.some(tem)) return true; } catch(e){}
+  try { const p = JSON.parse(localStorage.getItem('uniCalPend') || '[]'); if(Array.isArray(p) && p.some(tem)) return true; } catch(e){}
+  return false;
+}
+function sincronizarCal(){
+  let mudou = false;
+  Object.keys(quero).forEach(id => { if(quero[id] && quero[id].salvo && !noCalendario(id)){ quero[id] = {}; mudou = true; } });
+  if(mudou) salvarQuero();
+  return mudou;
+}
+window.addEventListener('storage', e => { if(e.key === 'uniCalendario1' || e.key === 'uniCalPend'){ if(sincronizarCal() || true) renderCards(); } });
+window.addEventListener('focus', () => { if(sincronizarCal()) renderCards(); });
+function renderCards(){
+  sincronizarCal();
+  const cards = document.getElementById('cards'), meus = document.getElementById('cards-quero');
+  const lista = A.filter(a => !ehMeu(a) && (filtroAtivo === 'todos' || a.cat === filtroAtivo || a.tag === filtroAtivo));
+  const mine = A.filter(ehMeu);
+  cards.innerHTML = lista.map(cardHtml).join('');
+  meus.innerHTML = mine.map(cardHtml).join('');
+  document.getElementById('quero-box').hidden = !mine.length;
+  document.querySelector('.quero-h2').hidden = !lista.length;
+  document.querySelectorAll('.qi').forEach(qiAtualizar);
   atualizarContagem(lista.length);
 }
 const abertos = new Set();
@@ -999,13 +1026,13 @@ function atualizarContagem(n){
 (function(){
   const t = document.createElement('div'); t.id = 'cards-tools'; t.className = 'cards-tools';
   t.innerHTML = '<span class="ct-n"></span><span><button type="button" class="btn-ghost" data-ct="abrir">Expandir tudo</button> <button type="button" class="btn-ghost" data-ct="fechar">Recolher tudo</button></span>';
-  const c = document.getElementById('cards'); c.parentNode.insertBefore(t, c);
+  const c = document.getElementById('cards'); c.parentNode.insertBefore(t, document.getElementById('quero-box'));
   t.addEventListener('click', e => {
     const b = e.target.closest('[data-ct]'); if(!b) return;
     const abrir = b.dataset.ct === 'abrir';
-    c.querySelectorAll('details.card').forEach(d => { d.open = abrir; if(abrir) abertos.add(d.dataset.id); else abertos.delete(d.dataset.id); });
+    document.querySelectorAll('#cards details.card, #cards-quero details.card').forEach(d => { d.open = abrir; if(abrir) abertos.add(d.dataset.id); else abertos.delete(d.dataset.id); });
   });
-  c.addEventListener('toggle', e => { const d = e.target; if(d.matches && d.matches('details.card')){ if(d.open) abertos.add(d.dataset.id); else abertos.delete(d.dataset.id); } }, true);
+  [c, document.getElementById('cards-quero')].forEach(x => x.addEventListener('toggle', e => { const d = e.target; if(d.matches && d.matches('details.card')){ if(d.open) abertos.add(d.dataset.id); else abertos.delete(d.dataset.id); } }, true));
 })();
 function fmtConf(iso){ const p = iso.split('-'); return +p[2] + ' de ' + MES[+p[1]-1] + ' de ' + p[0]; }
 function confLinha(a){
@@ -1020,9 +1047,11 @@ try { quero = JSON.parse(localStorage.getItem(CHQ) || '{}') || {}; } catch(e){ q
 function salvarQuero(){ try { localStorage.setItem(CHQ, JSON.stringify(quero)); } catch(e){} }
 function queroIr(a){
   const q = quero[a.id] || {};
+  if(ehMeu(a)) return '<div class="qi qi-meu" data-id="' + a.id + '"><p class="qi-noCal">✓ <b>No seu calendário</b> em ' + q.data.split('-').reverse().join('/') + '. Para tirar da lista, apague esse evento lá no calendário.</p><div class="qi-out" aria-live="polite"></div></div>';
   return '<div class="qi" data-id="' + a.id + '">' +
     '<label class="qi-l"><input type="checkbox" class="qi-ck"' + (q.ir ? ' checked' : '') + '> <b>Quero ir</b></label>' +
     '<label class="qi-d"' + (q.ir ? '' : ' hidden') + '>Dia do passeio <input type="date" class="qi-dt" value="' + (q.data || '') + '"></label>' +
+    '<p class="qi-dica"' + (q.ir ? '' : ' hidden') + '>Escolha o dia: o passeio e os avisos entram sozinhos no seu calendário.</p>' +
     '<div class="qi-out" aria-live="polite"></div></div>';
 }
 function qiAtualizar(box){
@@ -1040,20 +1069,32 @@ function qiAtualizar(box){
   if(sit.est === 'passou') h += '<p class="qi-nota forte">As inscrições dessa data já encerraram.</p>';
   if(futuros.length){
     h += '<p class="qi-av">Avisos:</p><ul class="qi-lista">' + futuros.map(x => { const b = CalAvisos.brParts(x.ms); return '<li>' + x.titulo.replace(/^⏰ /, '') + ' — <b>' + b.data.split('-').reverse().join('/') + ' às ' + b.hora.replace(':','h') + '</b> (Brasília)</li>'; }).join('') + '</ul>' +
-      '<div class="qi-btns"><button type="button" class="cta-button small qi-cal">📅 Salvar no calendário do site</button> <button type="button" class="btn-ghost qi-ics">Google Agenda (.ics)</button></div>' +
+      '<div class="qi-btns"><button type="button" class="btn-ghost qi-ics">Google Agenda (.ics)</button></div>' +
       '<p class="qi-ok" hidden></p>';
   }
   out.innerHTML = h;
 }
+// Cria o passeio + os avisos no calendário do site (o calendário aplica ao abrir, ou na hora se estiver aberto).
+function enviarCal(id){
+  const q = quero[id], a = A.find(x => x.id === id), pl = window.CalAvisos && CalAvisos.plano(id, q.data);
+  let pend = []; try { pend = JSON.parse(localStorage.getItem('uniCalPend') || '[]') || []; } catch(x){ pend = []; }
+  const grupo = 'qi-' + id + '-', base = grupo + q.data, av = pl && pl.av;
+  const evs = [{id: base + '-v', grupo: grupo, titulo: '🎟️ Quero ir: ' + (av ? av.nome : a.nome), tipo: 'passeio', data: q.data, hora: '', fuso: 'jp', detalhes: (av ? 'Regra de venda: ' + av.texto.replace(/<[^>]+>/g,'') : (a.nota || '').replace(/<[^>]+>/g,'')) + (a.url ? '\n' + a.url : '')}];
+  if(pl) pl.avisos.forEach((x, i) => { if(x.ms <= Date.now()) return; const b = CalAvisos.brParts(x.ms); evs.push({id: base + '-a' + i, grupo: grupo, titulo: x.titulo.replace(/^⏰ /, ''), tipo: 'outro', data: b.data, hora: b.hora, fuso: 'br', detalhes: (a.url || '')}); });
+  pend = pend.filter(p => !(p && typeof p.id === 'string' && p.id.indexOf(grupo) === 0)).concat(evs);
+  try { localStorage.setItem('uniCalPend', JSON.stringify(pend)); } catch(x){}
+}
 function qiItem(box){ const id = box.dataset.id; return {id: id, data: (quero[id] || {}).data, pl: CalAvisos.plano(id, (quero[id] || {}).data)}; }
-document.getElementById('cards').addEventListener('change', e => {
+['cards','cards-quero'].forEach(cid => document.getElementById(cid).addEventListener('change', e => {
   const box = e.target.closest('.qi'); if(!box) return;
   const id = box.dataset.id; quero[id] = quero[id] || {};
-  if(e.target.classList.contains('qi-ck')){ quero[id].ir = e.target.checked; box.querySelector('.qi-d').hidden = !e.target.checked; }
+  if(e.target.classList.contains('qi-ck')){ quero[id].ir = e.target.checked; if(!e.target.checked) quero[id] = {}; box.querySelector('.qi-d').hidden = !e.target.checked; const dc = box.querySelector('.qi-dica'); if(dc) dc.hidden = !e.target.checked; }
   if(e.target.classList.contains('qi-dt')){ quero[id].data = e.target.value; }
+  if(quero[id].ir && quero[id].data){ enviarCal(id); quero[id].salvo = true; }
   salvarQuero(); qiAtualizar(box);
-});
-document.getElementById('cards').addEventListener('click', e => {
+  if(e.target.classList.contains('qi-dt') || (e.target.classList.contains('qi-ck') && !e.target.checked)){ const d = box.closest('details.card'); if(d) abertos.add(d.dataset.id); renderCards(); }
+}));
+['cards','cards-quero'].forEach(cid => document.getElementById(cid).addEventListener('click', e => {
   const box = e.target.closest('.qi'); if(!box) return;
   const it = qiItem(box); if(!it.pl) return;
   if(e.target.closest('.qi-ics')){
@@ -1062,17 +1103,7 @@ document.getElementById('cards').addEventListener('click', e => {
     a.href = u; a.download = 'avisos-' + it.id + '-' + it.data + '.ics'; document.body.appendChild(a); a.click(); a.remove(); setTimeout(() => URL.revokeObjectURL(u), 4000);
     const ok = box.querySelector('.qi-ok'); ok.hidden = false; ok.textContent = 'Arquivo gerado. Abra-o no celular para adicionar ao Google Agenda ou a outro calendário.';
   }
-  if(e.target.closest('.qi-cal')){
-    let pend = []; try { pend = JSON.parse(localStorage.getItem('uniCalPend') || '[]') || []; } catch(x){ pend = []; }
-    const av = it.pl.av, base = 'qi-' + it.id + '-' + it.data;
-    const evs = [{id: base + '-v', titulo: '🎟️ Quero ir: ' + av.nome, tipo: 'passeio', data: it.data, hora: '', fuso: 'jp', detalhes: 'Regra de venda: ' + av.texto.replace(/<[^>]+>/g,'') + (av.url ? '\n' + av.url : '')}];
-    it.pl.avisos.forEach((x, i) => { if(x.ms <= Date.now()) return; const b = CalAvisos.brParts(x.ms); evs.push({id: base + '-a' + i, titulo: x.titulo.replace(/^⏰ /, ''), tipo: 'outro', data: b.data, hora: b.hora, fuso: 'br', detalhes: (av.url || '')}); });
-    pend = pend.filter(p => !p.id.startsWith(base)).concat(evs);
-    try { localStorage.setItem('uniCalPend', JSON.stringify(pend)); } catch(x){}
-    const ok = box.querySelector('.qi-ok'); ok.hidden = false;
-    ok.innerHTML = '✓ Pronto: ' + evs.length + ' itens vão entrar no seu calendário. <a href="/travessia/calendario/">Abrir meu calendário →</a>';
-  }
-});
+}));
 const FILTROS = [
   {id:'todos', nome:'tudo'},
   {id:'nerd', nome:'🎮 nerd'},
