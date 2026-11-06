@@ -28,8 +28,7 @@ function para(ev){
   if(g.t==='mensal'){
     var am=m-g.offset;
     if(g.semHora){abre=jst(y,am,g.dia,'09:00');aprox=true;txt='A venda abre <b>por volta do dia '+g.dia+' de '+MES[((am%12)+12)%12]+'</b>; o site oficial não informa o horário.';}
-    else if(g.variavel){abre=Date.UTC(y,am,15,3);aprox=true;txt='A venda abre em <b>'+MES[((am%12)+12)%12]+'</b>, com a data anunciada no site oficial.';}
-    else{abre=jst(y,am,g.dia,g.hora);txt='Venda abre '+quando(abre)+', liberando as datas de '+MES[m]+'.';}
+    else{abre=jst(y,am,g.dia,g.hora);txt='Venda abre '+quando(abre)+', liberando as datas de '+MES[m]+'.'+(g.variavel?' <b>Confirme no site oficial:</b> esse horário já mudou antes.':'');}
   } else if(g.t==='loteria'){
     var lm=m-g.offset;
     abre=Date.UTC(y,lm,g.mesInteiro?1:g.d1,3); fim=g.mesInteiro?Date.UTC(y,lm+1,0,14,59):Date.UTC(y,lm,g.d2,23);  /* mês inteiro: até 23h59 do último dia (Japão) */
