@@ -641,7 +641,8 @@
         }
     
 
- .fora-nota{font-size:.85rem;color:var(--color-gray);margin:0 0 .8rem}.fora-nota .btn-ghost{margin-left:.4rem;padding:.3rem .8rem;border:1px solid #e0e0e0;border-radius:100px;background:#fff;font:inherit;font-size:.8rem;cursor:pointer}
+ .nuvem-st{font-size:.85rem;margin:0 0 .8rem;padding:.6rem .9rem;border-radius:8px;background:#f1f6f1;color:var(--color-gray)}.nuvem-st.erro,.nuvem-st.pend,.nuvem-st.sem{background:#fdf1ef;color:#8a3a30}.nuvem-st .btn-ghost{margin-left:.4rem;padding:.3rem .8rem;border:1px solid #e0e0e0;border-radius:100px;background:#fff;font:inherit;font-size:.8rem;cursor:pointer}
+        .fora-nota{font-size:.85rem;color:var(--color-gray);margin:0 0 .8rem}.fora-nota .btn-ghost{margin-left:.4rem;padding:.3rem .8rem;border:1px solid #e0e0e0;border-radius:100px;background:#fff;font:inherit;font-size:.8rem;cursor:pointer}
         .fitem .qi{margin-top:.7rem;padding-top:.6rem;border-top:1px dashed #e6d9de}
         .qi-ac{margin:.8rem 0;padding-top:.7rem;border-top:1px dashed #e6d9de}.qi-ac label{display:block;font-size:.85rem;color:var(--color-gray);margin-bottom:.5rem}.qi-ac textarea{display:block;width:100%;margin:.25rem 0;padding:.6rem .8rem;border:1px solid #ddd;border-radius:8px;font:inherit;resize:vertical}.qi-ac input{display:block;width:100%;margin:.25rem 0;padding:.6rem .8rem;border:1px solid #ddd;border-radius:8px;font:inherit;min-height:44px}
         .qi-loc{margin:.6rem 0}.qi-loc label{display:block;font-size:.85rem;color:var(--color-gray)}.qi-loc input{display:block;width:100%;margin:.25rem 0;padding:.6rem .8rem;border:1px solid #ddd;border-radius:8px;font:inherit;min-height:44px}.qi-lbtn{display:flex;gap:.5rem;flex-wrap:wrap}.qi-lbtn .btn-ghost{background:#fff;border:1px solid #e0e0e0;border-radius:100px;padding:.5rem 1rem;font:inherit;font-size:.85rem;color:var(--color-gray);cursor:pointer;min-height:44px;text-decoration:none;display:inline-flex;align-items:center}
@@ -738,6 +739,7 @@
             <h2 class="section-title">O catálogo de regras</h2>
             <p class="section-subtitle">Cada atração com a sua mecânica de venda, explicada uma vez. É daqui que o cronograma acima sai.</p>
             <div class="filters" id="filters"></div>
+            <p class="nuvem-st" id="nuvem-st" hidden></p>
             <p class="fora-nota" id="fora-nota" hidden></p>
             <div id="quero-box" hidden><h3 class="quero-h">✓ Meus “quero ir”</h3><div class="cards" id="cards-quero"></div><h3 class="quero-h quero-h2">Outras atrações</h3></div>
             <div class="cards" id="cards"></div>
@@ -1049,6 +1051,11 @@ function salvarQuero(){
   if(JSON.stringify(novo) === JSON.stringify(ant)) return;
   c.qi = novo; try { localStorage.setItem('uniCalendario1', JSON.stringify(c)); } catch(e){}
 }
+// Situação da conta (só dentro do calendário): mostra se as escolhas estão indo para a conta.
+function atualizarNuvemSt(){ const el = document.getElementById('nuvem-st'), pai = viaPai(); if(!el) return; if(!pai || !pai.estado){ el.hidden = true; return; }
+  const e = pai.estado(); el.hidden = false; el.className = 'nuvem-st ' + e.t; el.innerHTML = e.txt + (e.bt ? ' <button type="button" class="btn-ghost" data-nst="1">' + e.bt + '</button>' : ''); }
+document.getElementById('nuvem-st').addEventListener('click', e => { if(e.target.closest('[data-nst]')){ const pai = viaPai(); if(pai && pai.agir) pai.agir(); } });
+if(document.documentElement.classList.contains('embed')){ setInterval(atualizarNuvemSt, 1500); setTimeout(atualizarNuvemSt, 300); }
 function recarregarQuero(){ const n = lerQuero(); if(JSON.stringify(n) !== JSON.stringify(quero)){ quero = n; return true; } return false; }
 window.addEventListener('message', e => { if(e.origin === location.origin && e.data && e.data.uniQi){ recarregarQuero(); renderCards(); } });
 function escAttr(v){ return String(v == null ? '' : v).replace(/&/g,'&amp;').replace(/"/g,'&quot;').replace(/</g,'&lt;'); }
@@ -1092,7 +1099,11 @@ function qiAtualizar(box){
   let h = alerta + '<p class="qi-quando">' + pl.av.texto + '</p>';
   if(pl.av.aprox) h += '<p class="qi-nota">⚠ Horário aproximado: confira a data exata no site oficial. Só há aviso de 1 dia antes.</p>';
   if(sit.est === 'aberto') h += '<p class="qi-nota forte">Essa venda já abriu. Se ainda tem vaga, compre agora na página oficial.</p>';
-  if(sit.est === 'passou') h += '<p class="qi-nota forte">As inscrições dessa data já encerraram.</p>';
+  if(sit.est === 'passou'){
+    const jaInsc = q.num || q.link;
+    h += jaInsc ? '<p class="qi-nota">As inscrições dessa data já encerraram, e você já se inscreveu' + (q.num ? ' (nº ' + escAttr(q.num) + ')' : '') + '. Agora é esperar o resultado: use “Verificar o resultado até” mais abaixo para criar o lembrete.</p>'
+      : '<p class="qi-nota forte">As inscrições dessa data já encerraram. Se você já se inscreveu, preencha o número e o link nos campos abaixo e crie o lembrete de verificar o resultado.</p>';
+  }
   if(futuros.length){
     h += '<p class="qi-av">Avisos:</p><ul class="qi-lista">' + futuros.map(x => { const b = CalAvisos.brParts(x.ms); return '<li>' + x.titulo.replace(/^⏰ /, '') + ' — <b>' + b.data.split('-').reverse().join('/') + ' às ' + b.hora.replace(':','h') + '</b> (Brasília)</li>'; }).join('') + '</ul>' +
       '<div class="qi-btns"><button type="button" class="btn-ghost qi-ics">Google Agenda (.ics)</button></div>' +
@@ -1174,10 +1185,10 @@ function qiItem(box){ const id = box.dataset.id; return {id: id, data: (quero[id
 ['cards','cards-quero','free-list'].forEach(cid => document.getElementById(cid).addEventListener('change', e => {
   const box = e.target.closest('.qi'); if(!box) return;
   const id = box.dataset.id; quero[id] = quero[id] || {};
-  if(e.target.classList.contains('qi-lk')){ quero[id].link = linkSeguro(e.target.value) ? e.target.value.trim() : ''; if(e.target.value.trim() && !quero[id].link){ e.target.value = ''; } salvarQuero(); if(ehMeu({id})) enviarCal(id, true); const ab = box.querySelector('.qi-abrir'); if(ab){ ab.href = quero[id].link || ''; ab.hidden = !quero[id].link; } return; }
+  if(e.target.classList.contains('qi-lk')){ quero[id].link = linkSeguro(e.target.value) ? e.target.value.trim() : ''; if(e.target.value.trim() && !quero[id].link){ e.target.value = ''; } salvarQuero(); if(ehMeu({id})) enviarCal(id, true); qiAtualizar(box); const ab = box.querySelector('.qi-abrir'); if(ab){ ab.href = quero[id].link || ''; ab.hidden = !quero[id].link; } return; }
   if(e.target.classList.contains('qi-vf')){ quero[id].verif = /^\d{4}-\d{2}-\d{2}$/.test(e.target.value) ? e.target.value : ''; salvarQuero(); return; }
   if(e.target.classList.contains('qi-ob')){ quero[id].obs = e.target.value.trim(); salvarQuero(); if(ehMeu({id})) enviarCal(id, true); return; }
-  if(e.target.classList.contains('qi-nm')){ quero[id].num = e.target.value.trim(); salvarQuero(); if(ehMeu({id})) enviarCal(id, true); const cp = box.querySelector('.qi-cpnum'); if(cp) cp.hidden = !quero[id].num; return; }
+  if(e.target.classList.contains('qi-nm')){ quero[id].num = e.target.value.trim(); salvarQuero(); if(ehMeu({id})) enviarCal(id, true); qiAtualizar(box); const cp = box.querySelector('.qi-cpnum'); if(cp) cp.hidden = !quero[id].num; return; }
   if(e.target.classList.contains('qi-lc')){ quero[id].local = e.target.value.trim(); salvarQuero(); if(ehMeu({id})) enviarCal(id, true); const a2 = box.querySelector('.qi-maps'), u = mapsUrl(localDe(id)); if(a2 && u) a2.href = u; return; }
   if(e.target.classList.contains('qi-ck')){ quero[id].ir = e.target.checked; if(!e.target.checked) quero[id] = soAcomp(quero[id]); box.querySelector('.qi-d').hidden = !e.target.checked; const dc = box.querySelector('.qi-dica'); if(dc) dc.hidden = !e.target.checked; }
   if(e.target.classList.contains('qi-dt')){ quero[id].data = e.target.value; }

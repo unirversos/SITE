@@ -1015,6 +1015,14 @@ function aplicarPend(){
 }
 /* A página de ingressos (janela dentro do calendário) lê e grava as escolhas por aqui. */
 window.UniQI={
+  estado:function(){
+    if(!usuario)return {t:'sem',txt:'☁️ Você não está logada: as escolhas ficam só neste aparelho.',bt:'Entrar (grátis)'};
+    if(estadoNuvem==='erro')return {t:'erro',txt:'⚠️ Não consegui salvar na sua conta agora. As escolhas continuam neste aparelho.',bt:'Tentar de novo'};
+    if(estadoNuvem==='salvando'||estadoNuvem==='sync')return {t:'sync',txt:'☁️ Sincronizando com a sua conta…',bt:''};
+    if(!syncPronto)return {t:'pend',txt:'⚠️ Ainda não sincronizou com a conta: falta escolher qual calendário vale.',bt:'Escolher agora'};
+    return {t:'ok',txt:'☁️ Guardado na conta de '+nome(usuario)+(ultimoSalvo?' · salvo às '+hhmm(ultimoSalvo):''),bt:''};
+  },
+  agir:function(){var e=this.estado();if(e.t==='sem')pedirLogin();else if(e.t==='erro'||e.t==='pend')document.getElementById('qiFecha').click(),syncPronto?salvarNuvem():sincronizar();},
   get:function(){return JSON.parse(JSON.stringify(S.qi||{}));},
   set:function(obj){
     if(VER)return; var novo=limpaQi(obj), ant=S.qi||{};
@@ -1065,20 +1073,21 @@ async function sincronizar(){
   var c=nuvem?limpar(nuvem):null;if(c&&!c.ini)c=null;
   estadoNuvem='';
   if(!c){if(S.ini){await salvarNuvem();}else{syncPronto=true;nuvemUI();}return;}
+  /* As escolhas do "Quero ir" são sempre juntadas (vale a mais recente de cada item), seja qual for o calendário escolhido. */
+  var qiNuvem=JSON.stringify(c.qi||{}); c.qi=juntaQi(c.qi,S.qi); var subirQi=JSON.stringify(c.qi)!==qiNuvem;
   if(!S.ini){adotar(c);gravaBase(c.atualizado);syncPronto=true;nuvemUI();aviso('Calendário buscado da sua conta.');return;}
   if(igual(c,S)){
-    var mq=juntaQi(c.qi,S.qi), difLocal=JSON.stringify(mq)!==JSON.stringify(S.qi||{}), difNuvem=JSON.stringify(mq)!==JSON.stringify(c.qi||{});
-    if(difLocal){S.qi=mq;gravarLocal();avisaQi();}
+    if(JSON.stringify(c.qi)!==JSON.stringify(S.qi||{})){S.qi=c.qi;gravarLocal();avisaQi();}
     syncPronto=true;
-    if(difNuvem)salvarNuvem(); else nuvemUI();
+    if(subirQi)salvarNuvem(); else nuvemUI();
     gravaBase(S.atualizado);
     return;
   }
   /* Só um dos lados mudou desde a última vez que bateram: vale o que mudou, sem perguntar. */
   var base=lerBase();
-  if(base&&S.atualizado===base&&c.atualizado&&c.atualizado!==base){adotar(c);gravaBase(c.atualizado);syncPronto=true;nuvemUI();aviso('Atualizei com o que você mudou em outro aparelho.');return;}
-  if(base&&c.atualizado===base&&S.atualizado&&S.atualizado!==base){await salvarNuvem();return;}
-  escolherVersao(c);
+  if(base&&S.atualizado===base&&c.atualizado&&c.atualizado!==base){adotar(c);gravaBase(c.atualizado);syncPronto=true;nuvemUI();avisaQi();aviso('Atualizei com o que você mudou em outro aparelho.');if(subirQi)salvarNuvem();return;}
+  if(base&&c.atualizado===base&&S.atualizado&&S.atualizado!==base){S.qi=c.qi;gravarLocal();await salvarNuvem();return;}
+  escolherVersao(c,subirQi);
 }
 function resumo(o,rot){
   return '<article class="evc" style="--c:#8e6a1f"><h4>'+rot+'</h4><p>'+(o.titulo?esc(o.titulo)+' · ':'')+esc(curto(o.ini))+' a '+esc(curto(o.fim))+'</p><p class="det">'+o.ev.length+' '+(o.ev.length===1?'evento':'eventos')+' · '+(o.lista||[]).length+' no Quero fazer'+(o.atualizado?' · alterado em '+esc(curto(o.atualizado.slice(0,10)))+' às '+esc(hhmm(new Date(o.atualizado))):'')+'</p></article>';
@@ -1106,15 +1115,15 @@ function juntarVersoes(c,d){
   m.atualizado=new Date().toISOString();
   return limpar(m);
 }
-function escolherVersao(c){
+function escolherVersao(c,subirQi){
   try{localStorage.setItem('uniCalBackupConta',JSON.stringify(c));localStorage.setItem('uniCalBackupAparelho',JSON.stringify(S));}catch(e){}
   abrir('<h2 id="dlgT" style="text-transform:none">Qual calendário vale?</h2><p>Existe um calendário guardado na sua conta e outro diferente neste aparelho. Escolha qual manter, ou junte os dois para não perder nada.</p>'+
     '<div class="dois">'+resumo(c,'Da sua conta')+resumo(S,'Deste aparelho')+'</div>'+
     '<div class="barra"><button class="btn pri" type="button" id="juntaDois">🔀 Juntar os dois (não perde nada)</button></div><div class="barra"><button class="btn" type="button" id="usaConta">Usar só o da conta</button><button class="btn" type="button" id="usaAparelho">Usar só o deste aparelho</button></div><p class="nota">“Juntar” soma os eventos, as ideias do Quero fazer e as passagens dos dois. Se você apagou algo em um dos lados, isso pode voltar.</p>'+
     '<p class="nota">Dica: se tiver dúvida, feche esta janela, vá em Mais opções e salve uma cópia do deste aparelho antes de escolher.</p>');
   $('#juntaDois').onclick=function(){var j=juntarVersoes(c,S);fechar();adotar(j);syncPronto=true;gravarLocal();salvarNuvem();nuvemUI();aviso('Juntei os dois: '+j.ev.length+' eventos e '+(j.lista||[]).length+' no Quero fazer.');};
-  $('#usaConta').onclick=function(){adotar(c);gravaBase(c.atualizado);syncPronto=true;fechar();nuvemUI();aviso('Usando o calendário da conta.');};
-  $('#usaAparelho').onclick=function(){fechar();S.atualizado=new Date().toISOString();gravarLocal();salvarNuvem();};
+  $('#usaConta').onclick=function(){adotar(c);gravaBase(c.atualizado);syncPronto=true;fechar();nuvemUI();avisaQi();aviso('Usando o calendário da conta.');if(subirQi)salvarNuvem();};
+  $('#usaAparelho').onclick=function(){fechar();S.qi=c.qi;S.atualizado=new Date().toISOString();gravarLocal();salvarNuvem();};
 }
 async function salvarNuvem(){
   if(VER)return;
