@@ -31,8 +31,9 @@
   var st=null;
   function el(h){var d=document.createElement('div');d.innerHTML=h;return d.firstChild;}
   function esc(s){return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;');}
-  function match(txt,kws){txt=String(txt||'').toLowerCase();var sem=txt.replace(/[\s\-、。,.!?！？]/g,'');
-    return kws.some(function(k){return k.split('|').some(function(a){a=a.toLowerCase();return a&&(txt.indexOf(a)>-1||sem.indexOf(a.replace(/[\s\-]/g,''))>-1);});});}
+  function match(txt,kws,min){txt=String(txt||'').toLowerCase();var sem=txt.replace(/[\s\-、。,.!?！？]/g,'');
+    var n=kws.filter(function(k){return k.split('|').some(function(a){a=a.toLowerCase();return a&&(txt.indexOf(a)>-1||sem.indexOf(a.replace(/[\s\-]/g,''))>-1);});}).length;
+    return n>=(min||1);}
   function shuffle(a){a=a.slice();for(var i=a.length-1;i>0;i--){var j=Math.floor(Math.random()*(i+1));var t=a[i];a[i]=a[j];a[j]=t;}return a;}
   function aula(slug){return (window.AULAS||{})[slug];}
   function npcSVG(a,mood){
@@ -84,7 +85,7 @@
       msg.textContent='🎧 Estou ouvindo...'; mic.disabled=true;
       rec.onresult=function(ev){
         var txt='';for(var i=0;i<ev.results[0].length;i++)txt+=' '+ev.results[0][i].transcript;
-        if(match(txt,t.kws)) certo(ev.results[0][0].transcript);
+        if(match(txt,t.kws,t.min)) certo(ev.results[0][0].transcript);
         else{ st.tries++; mic.disabled=false; hint.textContent='Ouvi: “'+ev.results[0][0].transcript+'”'; msg.textContent='Não deu para entender. Tente de novo.'; mood('wrong'); fala('もう一度、お願いします。');
           if(st.tries>=3) mostraOpcoes('Sem problema, escolha a resposta.'); }
       };
