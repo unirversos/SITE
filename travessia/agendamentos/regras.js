@@ -46,7 +46,8 @@ window.AGENDA_REGRAS = [
   url:'https://www.e-tix.jp/fujiko-museum'},
 
  {id:'usj', nome:'Super Nintendo World (USJ)', onde:'Osaka · Universal City', cat:'nerd', tag:'corrida',
-  regra:{t:'antes', dias:30, hora:'10:00'},
+  regra:{t:'mesesAntes', meses:2, hora:'10:00'},
+  conf:{em:'2026-11-06', fonte:'https://www.usj.co.jp/company/company_e/news/2025/0421/', ok:'Comunicado oficial: durante a Expo de Osaka (até out/2025) a venda foi de 3 meses antes e depois deveria voltar a cerca de 2 meses antes. O horário de abertura (10h do Japão) NÃO foi confirmado: confira na página de ingressos.'},
   desc:'Mario Kart, Yoshi e a expansão do Donkey Kong com o carrinho de minério. No mesmo parque fica o mundo do Harry Potter.',
   nota:'Atenção ao erro clássico: a entrada do parque NÃO garante entrada na área da Nintendo. Procure um Express Pass que diga explicitamente "Area Entry", ou pegue a senha gratuita pelo app assim que o portão abrir. Em feriado, compre com muito mais antecedência.',
   url:'https://www.usj.co.jp/web/en/us'},
