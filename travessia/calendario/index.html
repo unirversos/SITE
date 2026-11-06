@@ -969,11 +969,35 @@ async function sincronizar(){
 function resumo(o,rot){
   return '<article class="evc" style="--c:#8e6a1f"><h4>'+rot+'</h4><p>'+(o.titulo?esc(o.titulo)+' · ':'')+esc(curto(o.ini))+' a '+esc(curto(o.fim))+'</p><p class="det">'+o.ev.length+' '+(o.ev.length===1?'evento':'eventos')+' · '+(o.lista||[]).length+' no Quero fazer'+(o.atualizado?' · alterado em '+esc(curto(o.atualizado.slice(0,10)))+' às '+esc(hhmm(new Date(o.atualizado))):'')+'</p></article>';
 }
+function juntarVersoes(c,d){
+  var m=JSON.parse(JSON.stringify(c)), n=function(x){return String(x||'').trim().toLowerCase();};
+  var idsEv={}, mapa={};
+  m.ev.forEach(function(e){idsEv[e.id]=1;});
+  var chaveEv=function(e){return [e.tipo,n(e.titulo),e.data].join('|');}, chaves={};
+  m.ev.forEach(function(e){chaves[chaveEv(e)]=e.id;});
+  d.ev.forEach(function(e){
+    if(idsEv[e.id])return;
+    if(chaves[chaveEv(e)]){mapa[e.id]=chaves[chaveEv(e)];return;}
+    m.ev.push(JSON.parse(JSON.stringify(e))); idsEv[e.id]=1; chaves[chaveEv(e)]=e.id;
+  });
+  var idsL={}, nomes={}; (m.lista||[]).forEach(function(x){idsL[x.id]=1;nomes[n(x.nome)]=1;});
+  (d.lista||[]).forEach(function(x){ if(idsL[x.id]||nomes[n(x.nome)])return; var y=JSON.parse(JSON.stringify(x)); if(y.evId&&mapa[y.evId])y.evId=mapa[y.evId]; m.lista.push(y); idsL[x.id]=1; nomes[n(x.nome)]=1; });
+  var idsP={}, chP={}, kp=function(x){return [n(x.de),n(x.para),x.data].join('|');}; (m.pas||[]).forEach(function(x){idsP[x.id]=1;chP[kp(x)]=1;});
+  (d.pas||[]).forEach(function(x){ if(idsP[x.id]||chP[kp(x)])return; var y=JSON.parse(JSON.stringify(x)); if(y.evId&&mapa[y.evId])y.evId=mapa[y.evId]; m.pas.push(y); idsP[x.id]=1; chP[kp(x)]=1; });
+  Object.keys(d.ok||{}).forEach(function(k){m.ok[k]=1;});
+  if(d.ini<m.ini)m.ini=d.ini; if(d.fim>m.fim)m.fim=d.fim;
+  if(!m.titulo)m.titulo=d.titulo;
+  if(!m.chegada&&d.chegada&&idsEv[d.chegada])m.chegada=mapa[d.chegada]||d.chegada;
+  m.atualizado=new Date().toISOString();
+  return limpar(m);
+}
 function escolherVersao(c){
-  abrir('<h2 id="dlgT" style="text-transform:none">Qual calendário vale?</h2><p>Existe um calendário guardado na sua conta e outro diferente neste aparelho. Escolha qual manter; o outro será substituído.</p>'+
+  try{localStorage.setItem('uniCalBackupConta',JSON.stringify(c));localStorage.setItem('uniCalBackupAparelho',JSON.stringify(S));}catch(e){}
+  abrir('<h2 id="dlgT" style="text-transform:none">Qual calendário vale?</h2><p>Existe um calendário guardado na sua conta e outro diferente neste aparelho. Escolha qual manter, ou junte os dois para não perder nada.</p>'+
     '<div class="dois">'+resumo(c,'Da sua conta')+resumo(S,'Deste aparelho')+'</div>'+
-    '<div class="barra"><button class="btn pri" type="button" id="usaConta">Usar o da conta</button><button class="btn" type="button" id="usaAparelho">Usar o deste aparelho</button></div>'+
+    '<div class="barra"><button class="btn pri" type="button" id="juntaDois">🔀 Juntar os dois (não perde nada)</button></div><div class="barra"><button class="btn" type="button" id="usaConta">Usar só o da conta</button><button class="btn" type="button" id="usaAparelho">Usar só o deste aparelho</button></div><p class="nota">“Juntar” soma os eventos, as ideias do Quero fazer e as passagens dos dois. Se você apagou algo em um dos lados, isso pode voltar.</p>'+
     '<p class="nota">Dica: se tiver dúvida, feche esta janela, vá em Mais opções e salve uma cópia do deste aparelho antes de escolher.</p>');
+  $('#juntaDois').onclick=function(){var j=juntarVersoes(c,S);fechar();adotar(j);syncPronto=true;gravarLocal();salvarNuvem();nuvemUI();aviso('Juntei os dois: '+j.ev.length+' eventos e '+(j.lista||[]).length+' no Quero fazer.');};
   $('#usaConta').onclick=function(){adotar(c);syncPronto=true;fechar();nuvemUI();aviso('Usando o calendário da conta.');};
   $('#usaAparelho').onclick=function(){fechar();S.atualizado=new Date().toISOString();gravarLocal();salvarNuvem();};
 }
