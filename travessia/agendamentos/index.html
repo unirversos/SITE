@@ -1066,7 +1066,7 @@ document.getElementById('cards').addEventListener('click', e => {
     let pend = []; try { pend = JSON.parse(localStorage.getItem('uniCalPend') || '[]') || []; } catch(x){ pend = []; }
     const av = it.pl.av, base = 'qi-' + it.id + '-' + it.data;
     const evs = [{id: base + '-v', titulo: '🎟️ Quero ir: ' + av.nome, tipo: 'passeio', data: it.data, hora: '', fuso: 'jp', detalhes: 'Regra de venda: ' + av.texto.replace(/<[^>]+>/g,'') + (av.url ? '\n' + av.url : '')}];
-    it.pl.avisos.forEach((x, i) => { if(x.ms <= Date.now()) return; const b = CalAvisos.brParts(x.ms); evs.push({id: base + '-a' + i, titulo: x.titulo, tipo: 'outro', data: b.data, hora: b.hora, fuso: 'br', detalhes: (av.url || '')}); });
+    it.pl.avisos.forEach((x, i) => { if(x.ms <= Date.now()) return; const b = CalAvisos.brParts(x.ms); evs.push({id: base + '-a' + i, titulo: x.titulo.replace(/^⏰ /, ''), tipo: 'outro', data: b.data, hora: b.hora, fuso: 'br', detalhes: (av.url || '')}); });
     pend = pend.filter(p => !p.id.startsWith(base)).concat(evs);
     try { localStorage.setItem('uniCalPend', JSON.stringify(pend)); } catch(x){}
     const ok = box.querySelector('.qi-ok'); ok.hidden = false;
