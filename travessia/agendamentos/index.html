@@ -643,7 +643,7 @@
 
  .fora-nota{font-size:.85rem;color:var(--color-gray);margin:0 0 .8rem}.fora-nota .btn-ghost{margin-left:.4rem;padding:.3rem .8rem;border:1px solid #e0e0e0;border-radius:100px;background:#fff;font:inherit;font-size:.8rem;cursor:pointer}
         .fitem .qi{margin-top:.7rem;padding-top:.6rem;border-top:1px dashed #e6d9de}
-        .qi-ac{margin:.8rem 0;padding-top:.7rem;border-top:1px dashed #e6d9de}.qi-ac label{display:block;font-size:.85rem;color:var(--color-gray);margin-bottom:.5rem}.qi-ac input{display:block;width:100%;margin:.25rem 0;padding:.6rem .8rem;border:1px solid #ddd;border-radius:8px;font:inherit;min-height:44px}
+        .qi-ac{margin:.8rem 0;padding-top:.7rem;border-top:1px dashed #e6d9de}.qi-ac label{display:block;font-size:.85rem;color:var(--color-gray);margin-bottom:.5rem}.qi-ac textarea{display:block;width:100%;margin:.25rem 0;padding:.6rem .8rem;border:1px solid #ddd;border-radius:8px;font:inherit;resize:vertical}.qi-ac input{display:block;width:100%;margin:.25rem 0;padding:.6rem .8rem;border:1px solid #ddd;border-radius:8px;font:inherit;min-height:44px}
         .qi-loc{margin:.6rem 0}.qi-loc label{display:block;font-size:.85rem;color:var(--color-gray)}.qi-loc input{display:block;width:100%;margin:.25rem 0;padding:.6rem .8rem;border:1px solid #ddd;border-radius:8px;font:inherit;min-height:44px}.qi-lbtn{display:flex;gap:.5rem;flex-wrap:wrap}.qi-lbtn .btn-ghost{background:#fff;border:1px solid #e0e0e0;border-radius:100px;padding:.5rem 1rem;font:inherit;font-size:.85rem;color:var(--color-gray);cursor:pointer;min-height:44px;text-decoration:none;display:inline-flex;align-items:center}
         .qi-noCal{margin:.2rem 0 .6rem;font-size:.95rem}.qi-dica{font-size:.85rem;color:var(--color-gray);margin:.3rem 0}
         .quero-h{font-size:1.1rem;margin:1rem 0 .6rem;color:var(--color-rose)}.quero-h2{margin-top:1.6rem;color:var(--color-gray)}
@@ -961,9 +961,10 @@ function noCalendario(id){
   try { const p = JSON.parse(localStorage.getItem('uniCalPend') || '[]'); if(Array.isArray(p) && p.some(tem)) return true; } catch(e){}
   return false;
 }
+function soAcomp(q){ q = q || {}; const o = {}; ['link','num','obs','local'].forEach(k => { if(q[k]) o[k] = q[k]; }); return o; }
 function sincronizarCal(){
   let mudou = false;
-  Object.keys(quero).forEach(id => { if(quero[id] && quero[id].salvo && !noCalendario(id)){ quero[id] = {}; mudou = true; } });
+  Object.keys(quero).forEach(id => { if(quero[id] && quero[id].salvo && !noCalendario(id)){ quero[id] = soAcomp(quero[id]); mudou = true; } });
   if(mudou) salvarQuero();
   return mudou;
 }
@@ -1039,8 +1040,9 @@ function acompBloco(a){
   const q = quero[a.id] || {}, lot = a.regra && a.regra.t === 'loteria', u = linkSeguro(q.link);
   return '<div class="qi-ac"><label>' + (lot ? 'Link da loteria' : 'Link da inscrição ou da compra') + '<input type="url" class="qi-lk" maxlength="500" value="' + escAttr(q.link) + '" placeholder="Cole aqui o link"></label>' +
     '<label>' + (lot ? 'Meu número de inscrição' : 'Meu número do pedido') + '<input type="text" class="qi-nm" maxlength="80" value="' + escAttr(q.num) + '" placeholder="Para conferir o resultado depois" autocomplete="off"></label>' +
+    '<label>Observações<textarea class="qi-ob" rows="2" maxlength="500" placeholder="Anotações suas: horário, quem vai, o que lembrar…">' + escAttr(q.obs).replace(/&quot;/g, '"') + '</textarea></label>' +
     '<div class="qi-lbtn"><a class="btn-ghost qi-abrir" href="' + escAttr(u) + '" target="_blank" rel="noopener"' + (u ? '' : ' hidden') + '>' + (lot ? 'Abrir a loteria / ver resultado' : 'Abrir o link') + '</a> <button type="button" class="btn-ghost qi-cpnum"' + (q.num ? '' : ' hidden') + '>Copiar meu número</button></div>' +
-    '<p class="qi-dica">O número fica salvo só neste aparelho, e não vai para o calendário nem para a nuvem. O link vai nos detalhes do evento no calendário.</p></div>';
+    '<p class="qi-dica">O número e as observações ficam salvos só neste aparelho, e não vão para o calendário nem para a nuvem. O link vai nos detalhes do evento no calendário.</p></div>';
 }
 function localBloco(a){
   const l = localDe(a.id), url = mapsUrl(l), jp = JP[a.id];
@@ -1054,7 +1056,7 @@ function queroIr(a){
   return '<div class="qi" data-id="' + a.id + '">' +
     '<label class="qi-l"><input type="checkbox" class="qi-ck"' + (q.ir ? ' checked' : '') + '> <b>Quero ir</b></label>' +
     '<label class="qi-d"' + (q.ir ? '' : ' hidden') + '>Dia do passeio <input type="date" class="qi-dt" value="' + (q.data || '') + '"></label>' +
-    '<p class="qi-dica"' + (q.ir ? '' : ' hidden') + '>Escolha o dia: o passeio e os avisos entram sozinhos no seu calendário.</p>' +
+    '<p class="qi-dica"' + (q.ir ? '' : ' hidden') + '>Escolha o dia: o passeio e os avisos entram sozinhos no seu calendário.</p>' + acompBloco(a) +
     '<div class="qi-out" aria-live="polite"></div></div>';
 }
 function qiAtualizar(box){
@@ -1135,9 +1137,10 @@ function qiItem(box){ const id = box.dataset.id; return {id: id, data: (quero[id
   const box = e.target.closest('.qi'); if(!box) return;
   const id = box.dataset.id; quero[id] = quero[id] || {};
   if(e.target.classList.contains('qi-lk')){ quero[id].link = linkSeguro(e.target.value) ? e.target.value.trim() : ''; if(e.target.value.trim() && !quero[id].link){ e.target.value = ''; } salvarQuero(); if(quero[id].ir && quero[id].data) enviarCal(id); const ab = box.querySelector('.qi-abrir'); if(ab){ ab.href = quero[id].link || ''; ab.hidden = !quero[id].link; } return; }
+  if(e.target.classList.contains('qi-ob')){ quero[id].obs = e.target.value.trim(); salvarQuero(); return; }
   if(e.target.classList.contains('qi-nm')){ quero[id].num = e.target.value.trim(); salvarQuero(); const cp = box.querySelector('.qi-cpnum'); if(cp) cp.hidden = !quero[id].num; return; }
   if(e.target.classList.contains('qi-lc')){ quero[id].local = e.target.value.trim(); salvarQuero(); if(quero[id].ir && quero[id].data) enviarCal(id); const a2 = box.querySelector('.qi-maps'), u = mapsUrl(localDe(id)); if(a2 && u) a2.href = u; return; }
-  if(e.target.classList.contains('qi-ck')){ quero[id].ir = e.target.checked; if(!e.target.checked) quero[id] = {}; box.querySelector('.qi-d').hidden = !e.target.checked; const dc = box.querySelector('.qi-dica'); if(dc) dc.hidden = !e.target.checked; }
+  if(e.target.classList.contains('qi-ck')){ quero[id].ir = e.target.checked; if(!e.target.checked) quero[id] = soAcomp(quero[id]); box.querySelector('.qi-d').hidden = !e.target.checked; const dc = box.querySelector('.qi-dica'); if(dc) dc.hidden = !e.target.checked; }
   if(e.target.classList.contains('qi-dt')){ quero[id].data = e.target.value; }
   if(quero[id].ir && quero[id].data){ enviarCal(id); quero[id].salvo = true; }
   salvarQuero(); qiAtualizar(box);
