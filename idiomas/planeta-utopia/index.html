@@ -334,6 +334,8 @@ body.ro-on .ro{display:block}
 <script src="/idiomas/dados/trilha-mapas.js?v=1"></script>
 <script src="/idiomas/dados/glossario.js?v=1"></script>
 <script src="/idiomas/dados/palco.js?v=1"></script>
+<script src="/idiomas/dados/chamada-dados.js?v=1"></script>
+<script src="/idiomas/dados/chamada.js?v=1"></script>
 <script src="/idiomas/dados/velocidade-voz.js?v=1"></script>
 <script src="/idiomas/dados/audio-mapa.js?v=4a8ffd4b"></script>
 <script>
@@ -475,7 +477,15 @@ function openScene(id){
   document.getElementById('interaction').innerHTML='';
   window.scrollTo(0,0);
   montaPalco();
+  if(curLang==='ja' && window.UniChamada && UniChamada.existe(curTerr)){ iniciaChamada(); return; }
   setTimeout(showStep,400);
+}
+/* prova em chamada de vídeo simulada (mapas que já têm roteiro em /idiomas/dados/chamada-dados.js) */
+function iniciaChamada(){
+  const m=UniTrilha.MAPAS.find(x=>x[4]===curTerr); if(!m) { setTimeout(showStep,400); return; }
+  const go=()=>{ const ok=UniChamada.start(curTerr,{say:say, nome:G.name, onDone:grantStamp, onHangup:backToHub, onMistake:()=>{mistakes++;}}); if(!ok) setTimeout(showStep,400); };
+  if((window.AULAS||{})[m[0]]) return go();
+  const sc=document.createElement('script'); sc.src='/idiomas/dados/aulas/'+m[0]+'.js?v=20261029g'; sc.onload=go; sc.onerror=()=>setTimeout(showStep,400); document.head.appendChild(sc);
 }
 /* japonês: mostra o cenário da aula (carrega /idiomas/dados/aulas/<slug>.js) */
 function montaPalco(){
