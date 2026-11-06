@@ -643,6 +643,7 @@
 
  .fora-nota{font-size:.85rem;color:var(--color-gray);margin:0 0 .8rem}.fora-nota .btn-ghost{margin-left:.4rem;padding:.3rem .8rem;border:1px solid #e0e0e0;border-radius:100px;background:#fff;font:inherit;font-size:.8rem;cursor:pointer}
         .fitem .qi{margin-top:.7rem;padding-top:.6rem;border-top:1px dashed #e6d9de}
+        .qi-ac{margin:.8rem 0;padding-top:.7rem;border-top:1px dashed #e6d9de}.qi-ac label{display:block;font-size:.85rem;color:var(--color-gray);margin-bottom:.5rem}.qi-ac input{display:block;width:100%;margin:.25rem 0;padding:.6rem .8rem;border:1px solid #ddd;border-radius:8px;font:inherit;min-height:44px}
         .qi-loc{margin:.6rem 0}.qi-loc label{display:block;font-size:.85rem;color:var(--color-gray)}.qi-loc input{display:block;width:100%;margin:.25rem 0;padding:.6rem .8rem;border:1px solid #ddd;border-radius:8px;font:inherit;min-height:44px}.qi-lbtn{display:flex;gap:.5rem;flex-wrap:wrap}.qi-lbtn .btn-ghost{background:#fff;border:1px solid #e0e0e0;border-radius:100px;padding:.5rem 1rem;font:inherit;font-size:.85rem;color:var(--color-gray);cursor:pointer;min-height:44px;text-decoration:none;display:inline-flex;align-items:center}
         .qi-noCal{margin:.2rem 0 .6rem;font-size:.95rem}.qi-dica{font-size:.85rem;color:var(--color-gray);margin:.3rem 0}
         .quero-h{font-size:1.1rem;margin:1rem 0 .6rem;color:var(--color-rose)}.quero-h2{margin-top:1.6rem;color:var(--color-gray)}
@@ -1031,6 +1032,16 @@ const CHQ = 'agQueroIr';
 let quero = {};
 try { quero = JSON.parse(localStorage.getItem(CHQ) || '{}') || {}; } catch(e){ quero = {}; }
 function salvarQuero(){ try { localStorage.setItem(CHQ, JSON.stringify(quero)); } catch(e){} }
+function escAttr(v){ return String(v == null ? '' : v).replace(/&/g,'&amp;').replace(/"/g,'&quot;').replace(/</g,'&lt;'); }
+function linkSeguro(u){ u = String(u || '').trim(); return /^https?:\/\/\S+$/i.test(u) ? u : ''; }
+// Acompanhamento da inscrição/compra: link e número. O número fica só neste aparelho; o link vai nos detalhes do evento.
+function acompBloco(a){
+  const q = quero[a.id] || {}, lot = a.regra && a.regra.t === 'loteria', u = linkSeguro(q.link);
+  return '<div class="qi-ac"><label>' + (lot ? 'Link da loteria' : 'Link da inscrição ou da compra') + '<input type="url" class="qi-lk" maxlength="500" value="' + escAttr(q.link) + '" placeholder="Cole aqui o link"></label>' +
+    '<label>' + (lot ? 'Meu número de inscrição' : 'Meu número do pedido') + '<input type="text" class="qi-nm" maxlength="80" value="' + escAttr(q.num) + '" placeholder="Para conferir o resultado depois" autocomplete="off"></label>' +
+    '<div class="qi-lbtn"><a class="btn-ghost qi-abrir" href="' + escAttr(u) + '" target="_blank" rel="noopener"' + (u ? '' : ' hidden') + '>' + (lot ? 'Abrir a loteria / ver resultado' : 'Abrir o link') + '</a> <button type="button" class="btn-ghost qi-cpnum"' + (q.num ? '' : ' hidden') + '>Copiar meu número</button></div>' +
+    '<p class="qi-dica">O número fica salvo só neste aparelho, e não vai para o calendário nem para a nuvem. O link vai nos detalhes do evento no calendário.</p></div>';
+}
 function localBloco(a){
   const l = localDe(a.id), url = mapsUrl(l), jp = JP[a.id];
   return '<div class="qi-loc"><label>Local no mapa<input type="text" class="qi-lc" maxlength="300" value="' + l.replace(/"/g, '&quot;') + '" placeholder="Cole o link do Google Maps, o endereço ou o nome em japonês"></label>' +
@@ -1039,7 +1050,7 @@ function localBloco(a){
 }
 function queroIr(a){
   const q = quero[a.id] || {};
-  if(ehMeu(a)) return '<div class="qi qi-meu" data-id="' + a.id + '"><p class="qi-noCal">✓ <b>No seu calendário</b> em ' + q.data.split('-').reverse().join('/') + '. Para tirar da lista, apague esse evento lá no calendário.</p>' + localBloco(a) + '<div class="qi-out" aria-live="polite"></div></div>';
+  if(ehMeu(a)) return '<div class="qi qi-meu" data-id="' + a.id + '"><p class="qi-noCal">✓ <b>No seu calendário</b> em ' + q.data.split('-').reverse().join('/') + '. Para tirar da lista, apague esse evento lá no calendário.</p>' + localBloco(a) + acompBloco(a) + '<div class="qi-out" aria-live="polite"></div></div>';
   return '<div class="qi" data-id="' + a.id + '">' +
     '<label class="qi-l"><input type="checkbox" class="qi-ck"' + (q.ir ? ' checked' : '') + '> <b>Quero ir</b></label>' +
     '<label class="qi-d"' + (q.ir ? '' : ' hidden') + '>Dia do passeio <input type="date" class="qi-dt" value="' + (q.data || '') + '"></label>' +
@@ -1079,7 +1090,7 @@ function enviarCal(id){
   let pend = []; try { pend = JSON.parse(localStorage.getItem('uniCalPend') || '[]') || []; } catch(x){ pend = []; }
   const grupo = 'qi-' + id + '-', base = grupo + q.data, av = pl && pl.av;
   const local = localDe(id);
-  const evs = [{id: base + '-v', grupo: grupo, local: local, titulo: (livre ? '📍 Quero ir: ' : '🎟️ Quero ir: ') + (av ? av.nome : a.nome), tipo: 'passeio', data: q.data, hora: '', fuso: 'jp', detalhes: (av ? 'Regra de venda: ' + av.texto.replace(/<[^>]+>/g,'') : (livre ? a.desc : (a.nota || '')).replace(/<[^>]+>/g,'')) + (a.url ? '\n' + a.url : '')}];
+  const evs = [{id: base + '-v', grupo: grupo, local: local, titulo: (livre ? '📍 Quero ir: ' : '🎟️ Quero ir: ') + (av ? av.nome : a.nome), tipo: 'passeio', data: q.data, hora: '', fuso: 'jp', detalhes: (av ? 'Regra de venda: ' + av.texto.replace(/<[^>]+>/g,'') : (livre ? a.desc : (a.nota || '')).replace(/<[^>]+>/g,'')) + (a.url ? '\n' + a.url : '') + (linkSeguro(q.link) ? '\nLink da inscrição: ' + q.link.trim() : '')}];
   if(pl) pl.avisos.forEach((x, i) => { if(x.ms <= Date.now()) return; const b = CalAvisos.brParts(x.ms); evs.push({id: base + '-a' + i, grupo: grupo, titulo: x.titulo.replace(/^⏰ /, ''), tipo: 'outro', data: b.data, hora: b.hora, fuso: 'br', detalhes: (a.url || '')}); });
   pend = pend.filter(p => !(p && typeof p.id === 'string' && p.id.indexOf(grupo) === 0)).concat(evs);
   try { localStorage.setItem('uniCalPend', JSON.stringify(pend)); } catch(x){}
@@ -1123,6 +1134,8 @@ function qiItem(box){ const id = box.dataset.id; return {id: id, data: (quero[id
 ['cards','cards-quero','free-list'].forEach(cid => document.getElementById(cid).addEventListener('change', e => {
   const box = e.target.closest('.qi'); if(!box) return;
   const id = box.dataset.id; quero[id] = quero[id] || {};
+  if(e.target.classList.contains('qi-lk')){ quero[id].link = linkSeguro(e.target.value) ? e.target.value.trim() : ''; if(e.target.value.trim() && !quero[id].link){ e.target.value = ''; } salvarQuero(); if(quero[id].ir && quero[id].data) enviarCal(id); const ab = box.querySelector('.qi-abrir'); if(ab){ ab.href = quero[id].link || ''; ab.hidden = !quero[id].link; } return; }
+  if(e.target.classList.contains('qi-nm')){ quero[id].num = e.target.value.trim(); salvarQuero(); const cp = box.querySelector('.qi-cpnum'); if(cp) cp.hidden = !quero[id].num; return; }
   if(e.target.classList.contains('qi-lc')){ quero[id].local = e.target.value.trim(); salvarQuero(); if(quero[id].ir && quero[id].data) enviarCal(id); const a2 = box.querySelector('.qi-maps'), u = mapsUrl(localDe(id)); if(a2 && u) a2.href = u; return; }
   if(e.target.classList.contains('qi-ck')){ quero[id].ir = e.target.checked; if(!e.target.checked) quero[id] = {}; box.querySelector('.qi-d').hidden = !e.target.checked; const dc = box.querySelector('.qi-dica'); if(dc) dc.hidden = !e.target.checked; }
   if(e.target.classList.contains('qi-dt')){ quero[id].data = e.target.value; }
@@ -1132,6 +1145,10 @@ function qiItem(box){ const id = box.dataset.id; return {id: id, data: (quero[id
 }));
 ['cards','cards-quero','free-list'].forEach(cid => document.getElementById(cid).addEventListener('click', e => {
   const box = e.target.closest('.qi'); if(!box) return;
+  const bn = e.target.closest('.qi-cpnum');
+  if(bn){ const t = (quero[box.dataset.id] || {}).num || '', ok = () => { bn.textContent = 'Copiado ✓'; setTimeout(() => { bn.textContent = 'Copiar meu número'; }, 2000); };
+    if(t && navigator.clipboard && navigator.clipboard.writeText) navigator.clipboard.writeText(t).then(ok, () => {}); else if(t){ const ta = document.createElement('textarea'); ta.value = t; document.body.appendChild(ta); ta.select(); try { document.execCommand('copy'); ok(); } catch(x){} ta.remove(); }
+    return; }
   const bj = e.target.closest('.qi-jp');
   if(bj){ const t = bj.dataset.jp, ok = () => { bj.textContent = 'Copiado ✓'; setTimeout(() => { bj.textContent = 'Copiar nome em japonês'; }, 2000); };
     if(navigator.clipboard && navigator.clipboard.writeText) navigator.clipboard.writeText(t).then(ok, () => {}); else { const ta = document.createElement('textarea'); ta.value = t; document.body.appendChild(ta); ta.select(); try { document.execCommand('copy'); ok(); } catch(x){} ta.remove(); }
