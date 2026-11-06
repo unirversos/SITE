@@ -555,9 +555,14 @@ function moedaTxt(v,m){return (m==='brl'?'R$ ':'¥')+v.toLocaleString('pt-BR');}
 function totalEst(hs){var t={jpy:0,brl:0};hs.forEach(function(h){if(h.valor)t[h.moeda==='brl'?'brl':'jpy']+=h.valor;});var p=[];if(t.jpy)p.push(moedaTxt(t.jpy,'jpy'));if(t.brl)p.push(moedaTxt(t.brl,'brl'));return p.join(' + ');}
 function roteiroHosp(hs){
   if(hs.length<2)return '';
-  var it=[];
-  for(var i=0;i<hs.length-1;i++){
-    var a=hs[i],b=hs[i+1], tit='<b>'+esc(nomeEst(a))+' → '+esc(nomeEst(b))+'</b><small class="nota">troca em '+esc(curto(b.data))+'</small>';
+  var it=[], fimDe=function(x){return x.dataFim||x.data;};
+  for(var i=1;i<hs.length;i++){
+    var b=hs[i], a=null, ant=hs.filter(function(x){return x!==b&&x.data<b.data;});
+    var ja=ant.filter(function(x){return fimDe(x)<=b.data;});
+    if(ja.length){a=ja.reduce(function(m,x){return fimDe(x)>fimDe(m)||(fimDe(x)===fimDe(m)&&x.data<m.data)?x:m;});}
+    else if(ant.length){a=ant.reduce(function(m,x){return x.data>m.data?x:m;});}
+    if(!a)continue;
+    var tit='<b>'+esc(nomeEst(a))+' → '+esc(nomeEst(b))+'</b><small class="nota">troca em '+esc(curto(b.data))+'</small>';
     if(!a.local||!b.local){it.push('<div class="rh-i">'+tit+'<small class="nota" style="color:#8a5a00">⚠ falta o endereço de '+esc(!a.local?nomeEst(a):nomeEst(b))+': não calculo este trecho</small></div>');continue;}
     if(window.CalGeo&&CalGeo.chave(a.local)===CalGeo.chave(b.local))continue;
     it.push('<div class="rh-i">'+tit+'<div class="lig" data-a="'+esc(a.id)+'" data-b="'+esc(b.id)+'"><small class="nota">calculando…</small></div></div>');
