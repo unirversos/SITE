@@ -348,7 +348,7 @@ function limpaQi(q){
   Object.keys(q).slice(0,120).forEach(function(k){
     var x=q[k]; if(!/^[a-z0-9-]{1,60}$/.test(k)||!x||typeof x!=='object')return;
     var y={}; if(x.ir===true)y.ir=true; if(x.salvo===true)y.salvo=true;
-    if(okData(x.data))y.data=x.data;
+    if(okData(x.data))y.data=x.data; if(okData(x.verif))y.verif=x.verif;
     ['link','local'].forEach(function(f){if(typeof x[f]==='string'&&x[f].trim())y[f]=x[f].trim().slice(0,f==='link'?500:300);});
     if(typeof x.num==='string'&&x.num.trim())y.num=x.num.trim().slice(0,80);
     if(typeof x.obs==='string'&&x.obs.trim())y.obs=x.obs.trim().slice(0,500);

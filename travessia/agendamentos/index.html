@@ -1058,6 +1058,7 @@ function acompBloco(a){
   const q = quero[a.id] || {}, lot = a.regra && a.regra.t === 'loteria', u = linkSeguro(q.link);
   return '<div class="qi-ac"><label>' + (lot ? 'Link da loteria' : 'Link da inscrição ou da compra') + '<input type="url" class="qi-lk" maxlength="500" value="' + escAttr(q.link) + '" placeholder="Cole aqui o link"></label>' +
     '<label>' + (lot ? 'Meu número de inscrição' : 'Meu número do pedido') + '<input type="text" class="qi-nm" maxlength="80" value="' + escAttr(q.num) + '" placeholder="Para conferir o resultado depois" autocomplete="off"></label>' +
+    (lot ? '<div class="qi-vf-box"><label>Verificar o resultado até<input type="date" class="qi-vf" value="' + escAttr(q.verif) + '"></label><div class="qi-lbtn"><button type="button" class="cta-button small qi-vfb">⏰ Lembrar de verificar</button></div><p class="qi-vf-ok qi-dica" hidden></p></div>' : '') +
     '<label>Observações<textarea class="qi-ob" rows="2" maxlength="500" placeholder="Anotações suas: horário, quem vai, o que lembrar…">' + escAttr(q.obs).replace(/&quot;/g, '"') + '</textarea></label>' +
     '<div class="qi-lbtn"><a class="btn-ghost qi-abrir" href="' + escAttr(u) + '" target="_blank" rel="noopener"' + (u ? '' : ' hidden') + '>' + (lot ? 'Abrir a loteria / ver resultado' : 'Abrir o link') + '</a> <button type="button" class="btn-ghost qi-cpnum"' + (q.num ? '' : ' hidden') + '>Copiar meu número</button></div>' +
     '<p class="qi-dica">Tudo isso é salvo junto com o seu calendário: entrando na sua conta, aparece em todos os seus aparelhos. O link, o número e as observações vão também nos detalhes do evento.</p></div>';
@@ -1106,6 +1107,23 @@ function localPadrao(it){ const c = cidadeTxt(it); if(!c) return ''; return (JP[
 function localDe(id){ const q = quero[id] || {}; if(typeof q.local === 'string' && q.local.trim()) return q.local.trim(); const it = itemDe(id); return it ? localPadrao(it) : ''; }
 function mapsUrl(l){ if(!l) return ''; const c = window.CalGeo && CalGeo.coordDe(l); return 'https://www.google.com/maps/search/?api=1&query=' + (c ? c.lat + ',' + c.lon : encodeURIComponent(l.replace(/https?:\/\/\S+/g,' ').trim() || l)); }
 function detalhesExtra(q){ return (linkSeguro(q.link) ? '\nLink da inscrição: ' + q.link.trim() : '') + (q.num ? '\nNº de inscrição: ' + q.num : '') + (q.obs ? '\nObs: ' + q.obs : ''); }
+// Lembrete de "verificar o resultado até o dia X": um evento no último dia e outro na véspera.
+function eventosVerif(id){
+  const q = quero[id] || {}, a = itemDe(id); if(!a || !/^\d{4}-\d{2}-\d{2}$/.test(q.verif || '')) return [];
+  const grupo = 'qi-' + id + '-', d = new Date(q.verif + 'T12:00:00Z'); d.setUTCDate(d.getUTCDate() - 1);
+  const vespera = d.toISOString().slice(0, 10), det = 'Verificar o resultado da loteria.' + detalhesExtra(q) + (a.url ? '\n' + a.url : '');
+  const evs = [{id: grupo + 'vf0', titulo: '🎰 Último dia para verificar o resultado: ' + a.nome, tipo: 'outro', data: q.verif, hora: '', fuso: 'jp', detalhes: det, upd: true}];
+  if(vespera >= new Date().toISOString().slice(0, 10)) evs.push({id: grupo + 'vf1', titulo: '🎰 Amanhã é o último dia para verificar: ' + a.nome, tipo: 'outro', data: vespera, hora: '', fuso: 'jp', detalhes: det, upd: true});
+  return evs;
+}
+function enviarVerif(id){
+  const evs = eventosVerif(id); if(!evs.length) return 0;
+  let pend = []; try { pend = JSON.parse(localStorage.getItem('uniCalPend') || '[]') || []; } catch(x){ pend = []; }
+  const ids = {}; evs.forEach(e => ids[e.id] = 1);
+  pend = pend.filter(p => !(p && ids[p.id])).concat(evs);
+  try { localStorage.setItem('uniCalPend', JSON.stringify(pend)); } catch(x){}
+  return evs.length;
+}
 function enviarCal(id, upd){
   const q = quero[id], livre = id.indexOf('livre-') === 0, a = livre ? LIVRES.find(x => x.id === id) : A.find(x => x.id === id), pl = !livre && window.CalAvisos && CalAvisos.plano(id, q.data);
   let pend = []; try { pend = JSON.parse(localStorage.getItem('uniCalPend') || '[]') || []; } catch(x){ pend = []; }
@@ -1113,6 +1131,7 @@ function enviarCal(id, upd){
   const local = localDe(id);
   const evs = [{id: base + '-v', grupo: grupo, upd: !!upd, local: local, titulo: (livre ? '📍 Quero ir: ' : '🎟️ Quero ir: ') + (av ? av.nome : a.nome), tipo: 'passeio', data: q.data, hora: '', fuso: 'jp', detalhes: (av ? 'Regra de venda: ' + av.texto.replace(/<[^>]+>/g,'') : (livre ? a.desc : (a.nota || '')).replace(/<[^>]+>/g,'')) + (a.url ? '\n' + a.url : '') + detalhesExtra(q)}];
   if(!upd && pl) pl.avisos.forEach((x, i) => { if(x.ms <= Date.now()) return; const b = CalAvisos.brParts(x.ms); evs.push({id: base + '-a' + i, grupo: grupo, titulo: x.titulo.replace(/^⏰ /, ''), tipo: 'outro', data: b.data, hora: b.hora, fuso: 'br', detalhes: (a.url || '')}); });
+  if(!upd) eventosVerif(id).forEach(e => evs.push(e));
   pend = pend.filter(p => !(p && typeof p.id === 'string' && (upd ? p.id === evs[0].id : p.id.indexOf(grupo) === 0))).concat(evs);
   try { localStorage.setItem('uniCalPend', JSON.stringify(pend)); } catch(x){}
 }
@@ -1156,6 +1175,7 @@ function qiItem(box){ const id = box.dataset.id; return {id: id, data: (quero[id
   const box = e.target.closest('.qi'); if(!box) return;
   const id = box.dataset.id; quero[id] = quero[id] || {};
   if(e.target.classList.contains('qi-lk')){ quero[id].link = linkSeguro(e.target.value) ? e.target.value.trim() : ''; if(e.target.value.trim() && !quero[id].link){ e.target.value = ''; } salvarQuero(); if(ehMeu({id})) enviarCal(id, true); const ab = box.querySelector('.qi-abrir'); if(ab){ ab.href = quero[id].link || ''; ab.hidden = !quero[id].link; } return; }
+  if(e.target.classList.contains('qi-vf')){ quero[id].verif = /^\d{4}-\d{2}-\d{2}$/.test(e.target.value) ? e.target.value : ''; salvarQuero(); return; }
   if(e.target.classList.contains('qi-ob')){ quero[id].obs = e.target.value.trim(); salvarQuero(); if(ehMeu({id})) enviarCal(id, true); return; }
   if(e.target.classList.contains('qi-nm')){ quero[id].num = e.target.value.trim(); salvarQuero(); if(ehMeu({id})) enviarCal(id, true); const cp = box.querySelector('.qi-cpnum'); if(cp) cp.hidden = !quero[id].num; return; }
   if(e.target.classList.contains('qi-lc')){ quero[id].local = e.target.value.trim(); salvarQuero(); if(ehMeu({id})) enviarCal(id, true); const a2 = box.querySelector('.qi-maps'), u = mapsUrl(localDe(id)); if(a2 && u) a2.href = u; return; }
@@ -1167,6 +1187,11 @@ function qiItem(box){ const id = box.dataset.id; return {id: id, data: (quero[id
 }));
 ['cards','cards-quero','free-list'].forEach(cid => document.getElementById(cid).addEventListener('click', e => {
   const box = e.target.closest('.qi'); if(!box) return;
+  const bv = e.target.closest('.qi-vfb');
+  if(bv){ const id2 = box.dataset.id, inp = box.querySelector('.qi-vf'), msg = box.querySelector('.qi-vf-ok'); quero[id2] = quero[id2] || {};
+    quero[id2].verif = /^\d{4}-\d{2}-\d{2}$/.test(inp.value) ? inp.value : ''; salvarQuero();
+    if(!quero[id2].verif){ msg.hidden = false; msg.textContent = 'Escolha primeiro o último dia para verificar.'; return; }
+    const n = enviarVerif(id2); msg.hidden = false; msg.textContent = n ? '✓ Lembrete criado no calendário: no dia ' + quero[id2].verif.split('-').reverse().join('/') + (n > 1 ? ' e na véspera.' : '.') : 'Essa data já passou.'; return; }
   const bn = e.target.closest('.qi-cpnum');
   if(bn){ const t = (quero[box.dataset.id] || {}).num || '', ok = () => { bn.textContent = 'Copiado ✓'; setTimeout(() => { bn.textContent = 'Copiar meu número'; }, 2000); };
     if(t && navigator.clipboard && navigator.clipboard.writeText) navigator.clipboard.writeText(t).then(ok, () => {}); else if(t){ const ta = document.createElement('textarea'); ta.value = t; document.body.appendChild(ta); ta.select(); try { document.execCommand('copy'); ok(); } catch(x){} ta.remove(); }
