@@ -367,7 +367,7 @@ function limpar(o){
   return r;
 }
 function carregar(){try{S=limpar(JSON.parse(localStorage.getItem(KEY)||'null'));}catch(e){S=limpar(null);}}
-var VER=null,tViv=null;
+var VER=null,tViv=null,urgVisto={};
 function gravarLocal(){
   if(VER)return;
   try{localStorage.setItem(KEY,JSON.stringify(S));salvouOk=true;}
@@ -510,14 +510,29 @@ function desenharAvisos(){
   var qc=window.CalLista?CalLista.paraComprar(S):{pend:[],ok:[]};
   if(!lista.length&&!feitos.length&&!qc.pend.length&&!qc.ok.length){box.innerHTML='';return;}
   function chip(st){return st.est==='passou'?'<span class="av-c agora">inscrição encerrada: procure sobras</span>':st.est==='aberto'?'<span class="av-c agora">já abriu: compre agora</span>':st.est==='hoje'?'<span class="av-c agora">abre hoje</span>':st.est==='logo'?'<span class="av-c agora">faltam '+st.dias+(st.dias===1?' dia':' dias')+'</span>':'<span class="av-c">faltam '+st.dias+' dias</span>';}
+  function cardAviso(x){return '<div class="av-i'+(x.st.est==='futuro'?'':' urg')+'"><b>'+esc(x.a.nome)+'</b> <span class="nota">· '+esc(x.e.titulo)+' · '+esc(curto(x.e.data))+'</span> '+chip(x.st)+'<p>'+x.a.texto+'</p><div class="av-b">'+
+      (x.a.url?'<a class="btn sm" href="'+esc(x.a.url)+'" target="_blank" rel="noopener">Abrir o site de venda</a> ':'')+'<button type="button" class="btn sm" data-ok="'+esc(x.e.id)+'">✓ Já comprei</button></div></div>';}
   var urg=lista.filter(function(x){return x.st.est!=='futuro';}).length;
   box.innerHTML='<details class="av"'+(window.UNI_ABERTAS.av?' open':'')+'><summary>⏰ Compre com antecedência'+(lista.length+qc.pend.length?' · '+(lista.length+qc.pend.length)+(lista.length+qc.pend.length===1?' aviso':' avisos'):'')+(urg?' · <b style="color:var(--red)">'+urg+(urg===1?' pede atenção':' pedem atenção')+'</b>':'')+'</summary><div class="av-lista">'+
-    lista.map(function(x){return '<div class="av-i'+(x.st.est==='futuro'?'':' urg')+'"><b>'+esc(x.a.nome)+'</b> <span class="nota">· '+esc(x.e.titulo)+' · '+esc(curto(x.e.data))+'</span> '+chip(x.st)+'<p>'+x.a.texto+'</p><div class="av-b">'+
-      (x.a.url?'<a class="btn sm" href="'+esc(x.a.url)+'" target="_blank" rel="noopener">Abrir o site de venda</a> ':'')+'<button type="button" class="btn sm" data-ok="'+esc(x.e.id)+'">✓ Já comprei</button></div></div>';}).join('')+
+    lista.map(cardAviso).join('')+
     qc.pend.map(function(r){return '<div class="av-i"><b>🛒 '+esc(r.x.nome)+'</b> <span class="nota">· Quero fazer · '+(r.data?esc(curto(r.data)):'ainda sem dia')+'</span><p>Marcado para comprar antes.'+(r.x.nota?' 📝 '+esc(r.x.nota.length>160?r.x.nota.slice(0,159)+'…':r.x.nota):'')+'</p><div class="av-b"><button type="button" class="btn sm" data-qok="'+esc(r.x.id)+'">✓ Já comprei</button></div></div>';}).join('')+
     (qc.ok.length?'<p class="nota">Já comprados (Quero fazer): '+qc.ok.map(function(r){return esc(r.x.nome)+' <button type="button" class="lkb" data-qundo="'+esc(r.x.id)+'">desfazer</button>';}).join(' · ')+'</p>':'')+
     (feitos.length?'<p class="nota">Já resolvidos: '+feitos.map(function(x){return esc(x.e.titulo)+' <button type="button" class="lkb" data-undo="'+esc(x.e.id)+'">desfazer</button>';}).join(' · ')+'</p>':'')+'</div></details>';
+  /* Urgência: só o card que pede ação agora (venda aberta ou abrindo em menos de 24 h) vira janela; o painel segue recolhido. Uma vez por visita. */
+  var u=lista.filter(function(x){return x.st.est==='aberto'||x.st.est==='hoje';});
+  if(u.length&&!VER&&$('#app')&&!$('#app').hidden&&!document.querySelector('dialog[open]')){
+    var k=u.map(function(x){return x.e.id+x.st.est;}).join('|');
+    if(!urgVisto[k]){urgVisto[k]=1;
+      abrir('<div class="urgPop"><h2 id="dlgT">⏰ '+(u.length===1?'Esta compra pede atenção agora':'Estas compras pedem atenção agora')+'</h2>'+u.map(cardAviso).join('')+'<div class="barra"><button class="btn" type="button" data-urgfecha="1">Fechar</button></div></div>');}
+  }
 }
+$('#dlgIn').addEventListener('click',function(ev){
+  var f=ev.target.closest('[data-urgfecha]'); if(f){dlg.close();return;}
+  var b=ev.target.closest('.urgPop [data-ok]'); if(!b)return;
+  if(!S.ok)S.ok={}; S.ok[b.dataset.ok]=1; gravar();
+  var card=b.closest('.av-i'); if(card)card.remove();
+  if(!document.querySelector('.urgPop .av-i'))dlg.close();
+  desenharAvisos();});
 $('#avisos').addEventListener('click',function(ev){
   var q=ev.target.closest('[data-qok],[data-qundo]');
   if(q){var it=(S.lista||[]).find(function(z){return z.id===(q.dataset.qok||q.dataset.qundo);}); if(it){it.comprar=q.dataset.qok?'ok':'sim'; gravar(); desenharAvisos(); if(window.CalLista&&$('#vLista'))desenharLista();} return;}
