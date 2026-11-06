@@ -22,3 +22,36 @@
     }).catch(function () {});
   });
 })();
+
+/* Botão "Instalar" na barra do topo: abre o pedido do navegador (Android/computador) ou mostra o passo a passo (iPhone e outros). */
+(function () {
+  var standalone = (window.matchMedia && matchMedia('(display-mode: standalone)').matches) || navigator.standalone === true;
+  if (standalone) return;
+  var alvo = document.querySelector('.sitebar .navlinks') || document.querySelector('.nav .links');
+  if (!alvo) return;
+  var ua = navigator.userAgent || '';
+  var ios = /iPhone|iPad|iPod/.test(ua) || (/Macintosh/.test(ua) && navigator.maxTouchPoints > 1);
+  var evt = null;
+  window.addEventListener('beforeinstallprompt', function (e) { e.preventDefault(); evt = e; });
+  window.addEventListener('appinstalled', function () { var x = document.querySelector('.uni-inst'); if (x) x.remove(); });
+  var st = document.createElement('style');
+  st.textContent = '.uni-inst{display:inline-flex;align-items:center;margin-left:8px}.uni-inst button{border:1px solid #c4405f;background:#fff;color:#c4405f;font:inherit;font-size:13px;font-weight:700;padding:5px 12px;border-radius:999px;cursor:pointer;white-space:nowrap}'
+    + '#uni-inst-dlg{position:fixed;inset:0;z-index:99998;background:rgba(58,43,56,.55);display:flex;align-items:center;justify-content:center;padding:16px}#uni-inst-dlg div{background:#fff;color:#3a2b38;max-width:380px;border-radius:16px;padding:18px 20px;font:15px/1.5 system-ui,sans-serif;box-shadow:0 20px 50px rgba(0,0,0,.35)}#uni-inst-dlg h2{margin:0 0 8px;font-size:18px}#uni-inst-dlg ol{margin:8px 0 12px;padding-left:20px}#uni-inst-dlg button{border:0;background:#c4405f;color:#fff;font:700 14px system-ui,sans-serif;padding:8px 18px;border-radius:999px;cursor:pointer}';
+  document.head.appendChild(st);
+  function dialogo() {
+    var d = document.createElement('div'); d.id = 'uni-inst-dlg'; d.setAttribute('role', 'dialog'); d.setAttribute('aria-label', 'Instalar o app');
+    var passos = ios
+      ? '<li>Abra este site no <b>Safari</b> (em outro navegador não aparece).</li><li>Toque no botão <b>Compartilhar</b> (o quadrado com uma seta para cima).</li><li>Escolha <b>Adicionar à Tela de Início</b>.</li>'
+      : '<li>Abra o <b>menu do navegador</b> (⋮ ou ⋯).</li><li>Escolha <b>Instalar app</b> ou <b>Adicionar à tela inicial</b>.</li><li>Se a opção não aparecer, navegue uns segundos pelo site e tente de novo.</li>';
+    d.innerHTML = '<div><h2>📲 Instalar o app</h2><ol>' + passos + '</ol><button type="button">Entendi</button></div>';
+    d.onclick = function (e) { if (e.target === d || e.target.tagName === 'BUTTON') d.remove(); };
+    document.body.appendChild(d);
+  }
+  var c = document.createElement('span'); c.className = 'uni-inst';
+  c.innerHTML = '<button type="button">📲 Instalar</button>';
+  c.firstChild.onclick = function () {
+    if (evt) { var e = evt; evt = null; e.prompt(); e.userChoice && e.userChoice.then(function (r) { if (r && r.outcome === 'accepted') c.remove(); }); }
+    else dialogo();
+  };
+  alvo.appendChild(c);
+})();
