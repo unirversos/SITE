@@ -736,5 +736,7 @@ if(picker){
 loadAula(start);
 if(location.hash==='#cena') go(4); // vindo do Caderno: abre direto na Cena
 if(window.AUDIO_CREDITO){ const cr=document.createElement('p'); cr.className='credito-voz'; cr.textContent='Vozes sintéticas: '+window.AUDIO_CREDITO+'. Aos poucos, as gravações da professora vão substituindo.'; document.body.appendChild(cr); }
+{ const sw=document.querySelector('.stage-wrap'); if(sw){ sw.setAttribute('role','button'); sw.setAttribute('tabindex','0'); sw.setAttribute('aria-label','Ampliar ou recolher a animação da cena');
+  const tg=()=>sw.classList.toggle('grande'); sw.addEventListener('click',tg); sw.addEventListener('keydown',e=>{ if(e.key==='Enter'||e.key===' '){ e.preventDefault(); tg(); } }); } }
 window.__aulaFrases=()=>({A,CENAS,moldeParts,AR}); // usado só para levantar as frases a gravar
 })();

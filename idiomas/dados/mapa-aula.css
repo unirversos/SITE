@@ -301,3 +301,11 @@ body.no-ro .rk rt{display:none}
 .ar-duvida{display:grid;gap:8px;background:var(--sage-soft);border:1.5px solid #cfdccf;border-radius:16px;padding:10px 12px;margin-bottom:6px}
 .ar-duvida .arp small{color:#6b5a66;font-size:12px}
 .ar-duvida .arp{flex-wrap:wrap}
+
+/* animação da cena: só um pedacinho da tela, sobre a lição (toque para ampliar/recolher) */
+.stage-wrap{position:fixed;right:10px;bottom:76px;width:min(36vw,150px);z-index:30;border-radius:14px;overflow:hidden;border:2px solid #fff;box-shadow:0 8px 24px rgba(0,0,0,.28);cursor:pointer;transition:width .25s ease}
+.stage-wrap.grande{width:min(92vw,420px)}
+.stage-wrap::after{content:'⤢';position:absolute;top:4px;right:6px;font-size:13px;line-height:1;background:rgba(0,0,0,.45);color:#fff;border-radius:8px;padding:2px 5px;pointer-events:none}
+.stage-wrap.grande::after{content:'⤡'}
+body{padding-bottom:190px}
+@media (prefers-reduced-motion:reduce){.stage-wrap{transition:none}}
