@@ -641,7 +641,7 @@
         }
     
 
- .nuvem-st{font-size:.85rem;margin:0 0 .8rem;padding:.6rem .9rem;border-radius:8px;background:#f1f6f1;color:var(--color-gray)}.nuvem-st.erro,.nuvem-st.pend,.nuvem-st.sem{background:#fdf1ef;color:#8a3a30}.nuvem-st .btn-ghost{margin-left:.4rem;padding:.3rem .8rem;border:1px solid #e0e0e0;border-radius:100px;background:#fff;font:inherit;font-size:.8rem;cursor:pointer}
+ .nuvem-st{font-size:.85rem;margin:0 0 .8rem;padding:.6rem .9rem;border-radius:8px;background:#f1f6f1;color:var(--color-gray)}.nuvem-st.erro,.nuvem-st.pend,.nuvem-st.sem{background:#fdf1ef;color:#8a3a30}.nuvem-st a.btn-ghost{text-decoration:none;display:inline-block}.nuvem-st .btn-ghost{margin-left:.4rem;padding:.3rem .8rem;border:1px solid #e0e0e0;border-radius:100px;background:#fff;font:inherit;font-size:.8rem;cursor:pointer}
         .fora-nota{font-size:.85rem;color:var(--color-gray);margin:0 0 .8rem}.fora-nota .btn-ghost{margin-left:.4rem;padding:.3rem .8rem;border:1px solid #e0e0e0;border-radius:100px;background:#fff;font:inherit;font-size:.8rem;cursor:pointer}
         .fitem .qi{margin-top:.7rem;padding-top:.6rem;border-top:1px dashed #e6d9de}
         .qi-ac{margin:.8rem 0;padding-top:.7rem;border-top:1px dashed #e6d9de}.qi-ac label{display:block;font-size:.85rem;color:var(--color-gray);margin-bottom:.5rem}.qi-ac textarea{display:block;width:100%;margin:.25rem 0;padding:.6rem .8rem;border:1px solid #ddd;border-radius:8px;font:inherit;resize:vertical}.qi-ac input{display:block;width:100%;margin:.25rem 0;padding:.6rem .8rem;border:1px solid #ddd;border-radius:8px;font:inherit;min-height:44px}
@@ -1041,6 +1041,8 @@ function lerQuero(){
   try { return JSON.parse(localStorage.getItem(CHQ) || '{}') || {}; } catch(e){ return {}; }
 }
 let quero = lerQuero();
+// Dados guardados pela versão antiga (só neste navegador) passam para o calendário assim que a página abre, para irem à conta.
+(function(){ try { const pai = viaPai(), c = pai ? {qi: pai.get()} : calLocal(); if(c && (!c.qi || !Object.keys(c.qi).length) && Object.keys(quero).length) setTimeout(() => { if(typeof salvarQuero === 'function') salvarQuero(); }, 0); } catch(e){} })();
 function salvarQuero(){
   try { localStorage.setItem(CHQ, JSON.stringify(quero)); } catch(e){}
   const pai = viaPai(); if(pai){ pai.set(quero); quero = pai.get(); return; }
@@ -1052,10 +1054,10 @@ function salvarQuero(){
   c.qi = novo; try { localStorage.setItem('uniCalendario1', JSON.stringify(c)); } catch(e){}
 }
 // Situação da conta (só dentro do calendário): mostra se as escolhas estão indo para a conta.
-function atualizarNuvemSt(){ const el = document.getElementById('nuvem-st'), pai = viaPai(); if(!el) return; if(!pai || !pai.estado){ el.hidden = true; return; }
+function atualizarNuvemSt(){ const el = document.getElementById('nuvem-st'), pai = viaPai(); if(!el) return; if(!pai || !pai.estado){ el.hidden = false; el.className = 'nuvem-st sem'; el.innerHTML = 'Aqui as suas escolhas ficam só neste navegador. Para guardá-las na sua conta e ver em todos os seus aparelhos, use a lista pelo calendário. <a class="btn-ghost" href="/travessia/calendario/">Abrir o calendário</a>'; return; }
   const e = pai.estado(); el.hidden = false; el.className = 'nuvem-st ' + e.t; el.innerHTML = e.txt + (e.bt ? ' <button type="button" class="btn-ghost" data-nst="1">' + e.bt + '</button>' : ''); }
 document.getElementById('nuvem-st').addEventListener('click', e => { if(e.target.closest('[data-nst]')){ const pai = viaPai(); if(pai && pai.agir) pai.agir(); } });
-if(document.documentElement.classList.contains('embed')){ setInterval(atualizarNuvemSt, 1500); setTimeout(atualizarNuvemSt, 300); }
+if(document.documentElement.classList.contains('embed')){ setInterval(atualizarNuvemSt, 1500); setTimeout(atualizarNuvemSt, 300); } else { atualizarNuvemSt(); }
 function recarregarQuero(){ const n = lerQuero(); if(JSON.stringify(n) !== JSON.stringify(quero)){ quero = n; return true; } return false; }
 window.addEventListener('message', e => { if(e.origin === location.origin && e.data && e.data.uniQi){ recarregarQuero(); renderCards(); } });
 function escAttr(v){ return String(v == null ? '' : v).replace(/&/g,'&amp;').replace(/"/g,'&quot;').replace(/</g,'&lt;'); }
