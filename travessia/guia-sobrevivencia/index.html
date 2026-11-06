@@ -286,6 +286,27 @@ body::before{
   font-family:'Shippori Mincho',serif;font-size:16.5px;color:var(--indigo);margin-bottom:14px;
 }
 .diary .ln{border-bottom:1px solid var(--line);height:30px;}
+
+/* ---------- cartas de bolso ---------- */
+.carta{background:var(--white);border:1px solid var(--line);border-radius:12px;margin-bottom:10px;}
+.carta.warn{border-left:4px solid var(--hanko);border-radius:0 12px 12px 0;}
+.carta summary{list-style:none;cursor:pointer;padding:14px 46px 14px 18px;font-weight:700;font-size:16px;position:relative;min-height:48px;display:flex;align-items:center;gap:10px;flex-wrap:wrap;}
+.carta summary::-webkit-details-marker{display:none;}
+.carta summary::after{content:'+';position:absolute;right:18px;top:50%;transform:translateY(-50%);font-size:22px;color:var(--indigo);font-weight:400;}
+.carta[open] summary::after{content:'–';}
+.carta summary .tag{font-family:'JetBrains Mono',monospace;font-size:10px;font-weight:600;letter-spacing:1.5px;text-transform:uppercase;color:var(--hanko);border:1px solid var(--hanko);border-radius:20px;padding:2px 10px;}
+.carta > p,.carta > ul,.carta > .allergens,.carta > .phrase,.carta > .price-row{margin:0 18px;}
+.carta > p{color:var(--ink-soft);font-size:15.5px;padding-bottom:16px;}
+.carta > p strong,.carta > p b,.carta li b{color:var(--ink);}
+.carta > ul{list-style:none;padding-bottom:10px;}
+.carta > ul li{position:relative;padding:8px 0 8px 22px;color:var(--ink-soft);font-size:15.5px;border-top:1px dashed var(--line);}
+.carta > ul li:first-child{border-top:none;}
+.carta > ul li::before{content:'—';position:absolute;left:0;color:var(--gold);font-weight:700;}
+.carta > .allergens{margin-bottom:16px;}
+.carta .allergen{min-height:96px;padding:12px 8px;cursor:default;}
+.carta .allergen .kj{font-size:28px;margin-bottom:4px;}
+.chapter{padding:34px 0 4px;}
+.ch-head{margin-bottom:16px;}
 @media (max-width:560px){
   .phrase .pt{text-align:left;}
   .cover{padding-top:44px;}
@@ -312,6 +333,7 @@ body::before{
     <ul>
       <li><a href="#vespera" onclick="updateActiveIndex(event)"><span>🧳</span> Véspera</a></li>
       <li><a href="#manha" onclick="updateActiveIndex(event)"><span>☕</span> Manhã</a></li>
+      <li><a href="#rua" onclick="updateActiveIndex(event)"><span>🚶</span> Rua</a></li>
       <li><a href="#mesa" onclick="updateActiveIndex(event)"><span>🍜</span> Almoço</a></li>
       <li><a href="#aguas" onclick="updateActiveIndex(event)"><span>🫖</span> Águas</a></li>
       <li><a href="#emergencia" onclick="updateActiveIndex(event)"><span>🆘</span> Emergência</a></li>
@@ -325,273 +347,113 @@ body::before{
     <p class="kicker">Unirversos travessia · caderno de bordo nº 1</p>
     <p class="jp-vert">日本での一日</p>
     <h1>Um dia inteiro<br>no Japão <em>—</em><br>e tudo o que ninguém<br>te conta sobre ele</h1>
-    <p class="lede">Este mini guia acompanha você da véspera da viagem até o último trem da noite. Nada de listas infinitas: só o que <strong>evita perrengue de verdade</strong> — contado por quem viveu dez anos do lado de dentro.</p>
+    <p class="lede">Só o que <strong>evita perrengue de verdade</strong>, da véspera ao último trem. Toque numa carta para abrir.</p>
     <div class="cover-foot">
       <span>Do amanhecer ao shuuden</span>
       <div class="seal" aria-hidden="true">旅</div>
     </div>
   </header>
 
-  <!-- ============ VÉSPERA ============ -->
   <section class="chapter" id="vespera">
     <div class="ch-head">
       <div class="seal" aria-hidden="true">備</div>
-      <div class="ch-txt">
-        <p class="ch-time">VÉSPERA · MALA ABERTA</p>
-        <h2>Antes de embarcar</h2>
-      </div>
+      <div class="ch-txt"><p class="ch-time">VÉSPERA</p><h2>Antes de embarcar</h2></div>
     </div>
-    <p class="ch-intro">A viagem começa em casa. Três decisões tomadas antes do voo — remédios, seguro e internet — evitam noventa por cento das dores de cabeça do outro lado.</p>
+    <details class="carta warn"><summary>Remédio comum pode ser proibido <span class="tag">alfândega</span></summary><p>Descongestionantes com <b>pseudoefedrina</b> (Sudafed, Vicks Inhaler) são proibidos mesmo com receita e podem ser apreendidos. Confira no site do Ministério da Saúde japonês (<em>Yakkan Shoumei</em>).</p></details>
+    <details class="carta"><summary>Faça seguro viagem</summary><p>Pronto-socorro para estrangeiro sem cobertura pode custar centenas de dólares.</p></details>
+    <details class="carta"><summary>Resolva a internet antes do voo</summary><p><b>eSIM</b> ativa antes de decolar. <b>Pocket wifi</b> vale para grupo. Chip físico exige celular desbloqueado.</p></details>
+    <details class="carta"><summary>Mala pequena</summary><p>No Shinkansen Tokaido, Sanyo e Kyushu, mala com soma de altura, largura e profundidade acima de <b>160 cm</b> exige assento na última fileira. Sem isso, multa de ¥1.000.</p></details>
 
-    <div class="card warn">
-      <h3>Remédios comuns podem ser ilegais lá <span class="tag">alfândega</span></h3>
-      <p>Alguns descongestionantes muito comuns no Brasil e em outros países (com <strong>pseudoefedrina</strong>, como certas versões de Sudafed e Vicks Inhaler) são <strong>proibidos no Japão mesmo com receita médica</strong> — e podem gerar apreensão na alfândega. Antes de colocar qualquer remédio na mala, verifique no site do Ministério da Saúde japonês se ele é permitido (procure por <em>Yakkan Shoumei</em>).</p>
-    </div>
-
-    <div class="grid2">
-      <div class="card">
-        <h3>Seguro viagem não é opcional</h3>
-        <p>Hospitais japoneses podem sair muito caros para estrangeiros sem cobertura — uma consulta simples de pronto-socorro chega a custar centenas de dólares. Viaje sempre com seguro de saúde internacional.</p>
-      </div>
-      <div class="card">
-        <h3>Internet: resolva antes do embarque</h3>
-        <p><strong>eSIM</strong> é o mais prático hoje: você compra e ativa antes mesmo de decolar, sem retirar nada no aeroporto. <strong>Pocket wifi</strong> vale pra grupos (todos conectam no mesmo aparelho). Chip físico exige celular desbloqueado.</p>
-      </div>
-    </div>
-
-    <div class="card">
-      <h3>Viaje leve — o trem não perdoa mala grande</h3>
-      <p>Trens urbanos e de longa distância têm pouquíssimo espaço pra bagagem. E atenção: no Shinkansen das linhas Tokaido, Sanyo e Kyushu, malas com <strong>soma de altura, largura e profundidade acima de 160 cm</strong> exigem reserva de assento na última fileira — sem isso, multa de ¥1.000.</p>
-    </div>
   </section>
 
-  <!-- ============ MANHÃ ============ -->
   <section class="chapter" id="manha">
     <div class="ch-head">
       <div class="seal" aria-hidden="true">金</div>
-      <div class="ch-txt">
-        <p class="ch-time">07:00 · PRIMEIRO CAFÉ</p>
-        <h2>Bom dia, dinheiro</h2>
-      </div>
+      <div class="ch-txt"><p class="ch-time">MANHÃ · DINHEIRO</p><h2>Bom dia, ienes</h2></div>
     </div>
-    <p class="ch-intro">O Japão é futurista, mas o bolso dele é old school. A primeira lição do dia: <strong>ienes em espécie na carteira, sempre.</strong></p>
+    <details class="carta"><summary>Leve dinheiro vivo</summary><p>Templos, restaurantes pequenos e lojas locais muitas vezes <b>só aceitam dinheiro</b>.</p></details>
+    <details class="carta"><summary>Saque no 7-Eleven ou nos Correios</summary><p>Os caixas do <b>Seven Bank</b> e do <b>Japan Post Bank</b> aceitam cartão estrangeiro. Outros nem sempre.</p></details>
+    <details class="carta warn"><summary>Suica: escolha o certo</summary><ul><li><b>Suica comum:</b> depósito de ¥500, devolvido no balcão da JR East com taxa de ¥220.</li><li><b>Welcome Suica:</b> vale 28 dias e o saldo não é reembolsável. Não carregue mais do que vai gastar.</li><li><b>Mobile Suica:</b> exige chip FeliCa, garantido só em iPhone.</li><li>Encoste na catraca <b>ao entrar e ao sair</b>. Esquecer a saída pode travar o cartão.</li></ul></details>
 
-    <div class="grid2">
-      <div class="card">
-        <h3>O país ainda é bem "cash-based"</h3>
-        <p>Fora das grandes cidades, muitos restaurantes pequenos, templos e lojas locais <strong>só aceitam dinheiro</strong>. Não dá pra contar com cartão em todo lugar — nem nos lugares mais charmosos, justamente.</p>
-      </div>
-      <div class="card">
-        <h3>Onde sacar sem drama</h3>
-        <p>Nem todo caixa eletrônico aceita cartão estrangeiro. Os confiáveis são os do <strong>7-Eleven (Seven Bank)</strong> e dos <strong>Correios japoneses (Japan Post Bank)</strong> — presentes em praticamente qualquer bairro.</p>
-      </div>
-    </div>
-
-    <div class="card warn">
-      <h3>Não compre o Suica errado <span class="tag">existem vários</span></h3>
-      <p>O cartão que abre o Japão inteiro — trens, ônibus, conveniências, máquinas de venda. Mas "Suica" não é uma coisa só, e escolher o tipo errado pode te fazer perder dinheiro:</p>
-      <ul>
-        <li><strong>Suica comum (verde)</strong> — cartão físico com depósito reembolsável de ¥500. Ao devolver no balcão da JR East, você recebe saldo + depósito de volta, menos taxa de ¥220.</li>
-        <li><strong>Welcome Suica</strong> — versão de turista, sem depósito, vendida em aeroportos. Vale só <strong>28 dias</strong> a partir do primeiro uso e o saldo restante <strong>não é reembolsável</strong> — não carregue mais do que vai gastar.</li>
-        <li><strong>Mobile Suica</strong> (Apple/Google Wallet) — recarrega pelo celular e nunca se perde. Mas exige chip <strong>FeliCa</strong>: a maioria dos Android vendidos no Brasil não tem — só funciona garantido em iPhone.</li>
-        <li>E a regra de ouro: encoste o cartão na catraca <strong>ao entrar E ao sair</strong>. Esquecer a saída pode travar o cartão.</li>
-      </ul>
-    </div>
   </section>
 
-  <!-- ============ NA RUA ============ -->
   <section class="chapter" id="rua">
     <div class="ch-head">
       <div class="seal" aria-hidden="true">道</div>
-      <div class="ch-txt">
-        <p class="ch-time">10:00 · EXPLORANDO</p>
-        <h2>As regras invisíveis da rua</h2>
-      </div>
+      <div class="ch-txt"><p class="ch-time">10:00 · RUA</p><h2>Regras invisíveis</h2></div>
     </div>
-    <p class="ch-intro">Ninguém vai te dar bronca — mas todo mundo percebe. Quatro costumes que separam o turista apressado do viajante presente.</p>
+    <details class="carta"><summary>Leve seu lixo de volta</summary><p>Quase não há lixeiras na rua. Um saquinho na mochila resolve.</p></details>
+    <details class="carta"><summary>Não coma andando</summary><p>Comprou algo na banca ou no konbini? Coma ali, parado.</p></details>
+    <details class="carta"><summary>Escada rolante: o lado muda</summary><p><b>Tóquio:</b> fique à esquerda. <b>Osaka e Kansai:</b> fique à direita. Na dúvida, copie a maioria.</p></details>
+    <details class="carta"><summary>Tire os sapatos</summary><p>Casas, ryokan, vestiário de onsen, restaurantes com tatame e muitos templos.</p></details>
 
-    <div class="grid2">
-      <div class="card">
-        <h3>Lixeiras públicas quase não existem</h3>
-        <p>O país é impecavelmente limpo — e mesmo assim, quase não há lixeiras na rua. O normal é <strong>levar seu lixo de volta</strong> pro hotel ou esperar uma lixeira de conveniência ou estação. Um saquinho vazio na mochila resolve o dia.</p>
-      </div>
-      <div class="card">
-        <h3>Não coma andando</h3>
-        <p>Fora dos festivais de rua, comer enquanto anda é visto como falta de educação. Comprou algo numa banca ou konbini? Coma ali mesmo, parado, e siga em frente.</p>
-      </div>
-      <div class="card">
-        <h3>Escada rolante: o lado muda de cidade</h3>
-        <p>Em <strong>Tóquio</strong>, fica-se à esquerda e anda-se pela direita. Em <strong>Osaka e no Kansai</strong>, é o oposto. Confunde até japonês de outra região — observe a maioria antes de se posicionar.</p>
-      </div>
-      <div class="card">
-        <h3>Onde tirar os sapatos</h3>
-        <ul>
-          <li>Casas particulares, sempre</li>
-          <li>Muitos templos e alguns santuários</li>
-          <li>Ryokan (pousadas tradicionais)</li>
-          <li>Vestiários de onsen</li>
-          <li>Restaurantes tradicionais com tatame</li>
-        </ul>
-      </div>
-    </div>
   </section>
 
-  <!-- ============ À MESA ============ -->
   <section class="chapter" id="mesa">
     <div class="ch-head">
       <div class="seal" aria-hidden="true">食</div>
-      <div class="ch-txt">
-        <p class="ch-time">13:00 · HORA DO ALMOÇO</p>
-        <h2>À mesa, sem sustos</h2>
-      </div>
+      <div class="ch-txt"><p class="ch-time">13:00 · ALMOÇO</p><h2>À mesa, sem sustos</h2></div>
     </div>
-    <p class="ch-intro">Comer bem no Japão é fácil. Comer <strong>sabendo o que está comendo</strong> é o que este capítulo garante.</p>
-
-    <div class="card warn">
-      <h3>Cuidado: wasabi escondido</h3>
-      <p>Muitos rolinhos de sushi, onigiri de conveniência e até alguns sanduíches vêm com uma camada fina de wasabi por dentro — <strong>sem nenhum aviso na embalagem</strong>. Se você não gosta ou tem sensibilidade, pergunte antes de morder de uma vez.</p>
-    </div>
-
-    <div class="card">
-      <h3>Os 8 alergênicos de declaração obrigatória</h3>
-      <p>Por lei, todo alimento embalado no Japão precisa declarar estes oito. Aprenda a reconhecer os kanji:</p>
-      <div class="allergens">
-        <div class="allergen"><div class="kj">卵</div><div class="nm">Ovo</div><div class="rj">tamago</div></div>
-        <div class="allergen"><div class="kj">乳</div><div class="nm">Leite</div><div class="rj">nyuu</div></div>
-        <div class="allergen"><div class="kj">小麦</div><div class="nm">Trigo</div><div class="rj">komugi</div></div>
-        <div class="allergen"><div class="kj">そば</div><div class="nm">Soba (trigo sarraceno)</div><div class="rj">soba</div></div>
-        <div class="allergen"><div class="kj">落花生</div><div class="nm">Amendoim</div><div class="rj">rakkasei</div></div>
-        <div class="allergen"><div class="kj">えび</div><div class="nm">Camarão</div><div class="rj">ebi</div></div>
-        <div class="allergen"><div class="kj">かに</div><div class="nm">Caranguejo</div><div class="rj">kani</div></div>
-        <div class="allergen"><div class="kj">くるみ</div><div class="nm">Nozes</div><div class="rj">kurumi</div></div>
-      </div>
-    </div>
-
-    <div class="card">
-      <h3>Frases que salvam o almoço</h3>
+    <details class="carta warn"><summary>Wasabi escondido</summary><p>Rolinhos de sushi, onigiri de conveniência e alguns sanduíches têm wasabi por dentro, sem aviso. Pergunte antes.</p></details>
+    <details class="carta"><summary>Os 8 alergênicos obrigatórios</summary><p>Todo alimento embalado precisa declarar estes oito:</p><div class="allergens"><div class="allergen"><div class="kj">卵</div><div class="nm">Ovo</div><div class="rj">tamago</div></div><div class="allergen"><div class="kj">乳</div><div class="nm">Leite</div><div class="rj">nyuu</div></div><div class="allergen"><div class="kj">小麦</div><div class="nm">Trigo</div><div class="rj">komugi</div></div><div class="allergen"><div class="kj">そば</div><div class="nm">Soba</div><div class="rj">soba</div></div><div class="allergen"><div class="kj">落花生</div><div class="nm">Amendoim</div><div class="rj">rakkasei</div></div><div class="allergen"><div class="kj">えび</div><div class="nm">Camarão</div><div class="rj">ebi</div></div><div class="allergen"><div class="kj">かに</div><div class="nm">Caranguejo</div><div class="rj">kani</div></div><div class="allergen"><div class="kj">くるみ</div><div class="nm">Nozes</div><div class="rj">kurumi</div></div></div></details>
+    <details class="carta"><summary>Frases que salvam o almoço</summary>
       <div class="phrase"><span class="jp">Bejitarian ryouri wa arimasu ka.</span><span class="pt">Tem comida vegetariana?</span></div>
       <div class="phrase"><span class="jp">Kore o kudasai.</span><span class="pt">Isto, por favor.</span></div>
       <div class="phrase"><span class="jp">Mizu o onegaishimasu.</span><span class="pt">Água, por favor.</span></div>
       <div class="phrase"><span class="jp">Ikura desu ka.</span><span class="pt">Quanto custa?</span></div>
-    </div>
+    </details>
+    <div class="practice-banner"><p>🎯 Treine a pronúncia dessas frases no mini-game.</p><a href="/idiomas/planeta-utopia/">Ir para Planeta Utopia →</a></div>
 
-    <div class="practice-banner">
-      <h4>🎯 Quer praticar a pronúncia?</h4>
-      <p>Teste essas frases num mini-game de sobrevivência de verdade.</p>
-      <a href="/idiomas/planeta-utopia/">Ir para Planeta Utopia →</a>
-    </div>
   </section>
 
-  <!-- ============ ÁGUAS ============ -->
   <section class="chapter" id="aguas">
     <div class="ch-head">
       <div class="seal" aria-hidden="true">湯</div>
-      <div class="ch-txt">
-        <p class="ch-time">16:00 · PAUSA QUENTE</p>
-        <h2>A hora das águas</h2>
-      </div>
+      <div class="ch-txt"><p class="ch-time">16:00 · ÁGUAS</p><h2>A hora das águas</h2></div>
     </div>
-    <p class="ch-intro">Fim de tarde é hora de fazer como os locais: entrar na água quente e deixar o dia dissolver.</p>
+    <details class="carta"><summary>Onsen não é sentou</summary><p><b>Onsen</b> é fonte termal de verdade. <b>Sentou</b> é banho público de bairro, bem mais barato.</p></details>
+    <details class="carta"><summary>Lave-se antes de entrar</summary><p>Chuveiro completo antes. A toalha nunca entra na água.</p></details>
+    <details class="carta"><summary>Tem tatuagem?</summary><p>Alguns onsens tradicionais ainda proíbem. Procure os "tattoo friendly".</p></details>
+    <details class="carta"><summary>Quanto custa</summary>
+      <div class="price-row"><span class="what">Sentou</span><span class="val">¥400–600</span></div>
+      <div class="price-row"><span class="what">Onsen de dia (higaeri)</span><span class="val">¥700–2.000</span></div>
+      <div class="price-row"><span class="what">Onsen em ryokan</span><span class="val">incluso na diária (a partir de ¥15.000)</span></div>
+      <div class="price-row"><span class="what">Sala privativa urbana (por sala)</span><span class="val">¥8.000–28.000+</span></div>
+    </details>
+    <details class="carta"><summary>Dica: Kudochi Sauna, Tóquio <span class="tag">dica de residente</span></summary><p>Sauna e onsen privativos em Roppongi, Akasaka e Ginza, 24h. Aceita tatuagem e grupos mistos. Reserve pelo site oficial com 1 dia de antecedência.</p></details>
 
-    <div class="card">
-      <h3>Onsen ou sentou? São coisas diferentes</h3>
-      <p><strong>Onsen</strong> (温泉) é fonte termal de verdade — água mineral do subsolo vulcânico, típica de cidades termais como Hakone, Kusatsu e Beppu, com preço e ambiente mais elaborados. <strong>Sentou</strong> (銭湯) é o banho público de bairro, com água aquecida comum, muito mais barato e simples — historicamente usado por quem não tinha banheira em casa.</p>
-      <p>A etiqueta é a mesma nos dois: <strong>lave-se por completo no chuveiro antes</strong> de entrar na água (a banheira é pra relaxar, não pra se lavar), e a toalha nunca entra na água — fica na cabeça ou na beira. Tatuagens ainda são proibidas em alguns onsens tradicionais; se for o seu caso, procure locais "tattoo friendly".</p>
-    </div>
-
-    <div class="card">
-      <h3>Quanto custa mergulhar</h3>
-      <div class="price-row"><span class="what">Sentou <small>banho público de bairro, em quase toda cidade</small></span><span class="val">¥400–600</span></div>
-      <div class="price-row"><span class="what">Onsen de dia (higaeri) <small>sem hospedagem, em cidades termais e spas urbanos</small></span><span class="val">¥700–2.000</span></div>
-      <div class="price-row"><span class="what">Onsen de ryokan <small>geralmente incluso na diária da pousada</small></span><span class="val">diárias a partir de ¥15.000</span></div>
-      <div class="price-row"><span class="what">Sala privativa urbana <small>por sala, não por pessoa — sessões de horas ou pernoite</small></span><span class="val">¥8.000–28.000+</span></div>
-    </div>
-
-    <div class="card gold-card">
-      <h3>Achado escondido: Kudochi Sauna, Tóquio <span class="tag">dica de residente</span></h3>
-      <p>Saunas e onsen <strong>totalmente privativos</strong> em Roppongi, Akasaka e Ginza — cada sala tem sauna própria, banheira fria e uma banheira de onsen com água trazida de fontes termais reais. Aberto 24h, entrada por QR code, e por ser privativo não tem as restrições do onsen público: <strong>aceita tatuagem e grupos mistos</strong> (casais, amigos, família). Reserve pelo site oficial com pelo menos um dia de antecedência — vaga de última hora é raro.</p>
-    </div>
   </section>
 
-  <!-- ============ EMERGÊNCIA ============ -->
   <section class="chapter" id="emergencia">
     <div class="ch-head">
       <div class="seal" aria-hidden="true">助</div>
-      <div class="ch-txt">
-        <p class="ch-time">A QUALQUER HORA</p>
-        <h2>Se algo sair do controle</h2>
-      </div>
+      <div class="ch-txt"><p class="ch-time">A QUALQUER HORA</p><h2>Se algo sair do controle</h2></div>
     </div>
-    <p class="ch-intro">Provavelmente você não vai precisar deste capítulo. Mas ele existe pra que, se precisar, você já saiba de cor.</p>
-
     <div class="emg">
-      <div class="card">
-        <div class="num">110</div>
-        <div class="num-label">Polícia</div>
-        <div class="num-jp">hyaku-tō-ban · 百十番</div>
-        <p>Só para polícia. Repare na leitura irregular: usa <em>tō</em> (a contagem japonesa antiga) em vez de <em>juu</em>.</p>
-      </div>
-      <div class="card">
-        <div class="num">119</div>
-        <div class="num-label">Ambulância / Bombeiros</div>
-        <div class="num-jp">hyaku-juu-kyū-ban · 百十九番</div>
-        <p>Atende os dois casos — a telefonista pergunta <em>"kaji desu ka, kyuukyuu desu ka?"</em> (é incêndio ou emergência médica?).</p>
-      </div>
+      <div class="card"><div class="num">110</div><div class="num-label">Polícia</div><div class="num-jp">hyaku-tō-ban · 百十番</div></div>
+      <div class="card"><div class="num">119</div><div class="num-label">Ambulância e bombeiros</div><div class="num-jp">hyaku-juu-kyū-ban · 百十九番</div></div>
     </div>
-
-    <div class="card">
-      <h3>Depois de um tremor</h3>
-      <p>Siga a sinalização até o ponto de evacuação mais próximo (<em>hinanjo</em>) — geralmente uma escola ou parque. Tenha o app <strong>Safety Tips</strong> instalado pra receber alertas em português e inglês. E lembre: elevadores param automaticamente após tremores fortes — <strong>use as escadas</strong>.</p>
-    </div>
-
-    <div class="card">
-      <h3>Frases de emergência</h3>
+    <details class="carta"><summary>Depois de um tremor</summary><p>Siga a sinalização até o <b>hinanjo</b> (escola ou parque). Instale o app <b>Safety Tips</b>. Elevadores param sozinhos: use as escadas.</p></details>
+    <details class="carta"><summary>Frases de emergência</summary>
       <div class="phrase"><span class="jp">Tasukete!</span><span class="pt">Socorro!</span></div>
       <div class="phrase"><span class="jp">Michi ni mayoimashita.</span><span class="pt">Estou perdido(a).</span></div>
       <div class="phrase"><span class="jp">Byouin wa doko desu ka.</span><span class="pt">Onde fica o hospital?</span></div>
       <div class="phrase"><span class="jp">Kusuri o kudasai.</span><span class="pt">Remédio, por favor.</span></div>
       <div class="phrase"><span class="jp">Keisatsu o yonde kudasai.</span><span class="pt">Chame a polícia, por favor.</span></div>
-    </div>
+    </details>
+    <div class="practice-banner"><p>🎯 Treine essas situações no Planeta Utopia.</p><a href="/idiomas/planeta-utopia/">Ir para Planeta Utopia →</a></div>
 
-    <div class="practice-banner">
-      <h4>🎯 Quer praticar essas situações?</h4>
-      <p>Descubra como usar essas frases num contexto real no Planeta Utopia.</p>
-      <a href="/idiomas/planeta-utopia/">Ir para Planeta Utopia →</a>
-    </div>
   </section>
 
-  <!-- ============ ÚLTIMO TREM ============ -->
   <section class="chapter" id="noite">
     <div class="ch-head">
       <div class="seal" aria-hidden="true">終</div>
-      <div class="ch-txt">
-        <p class="ch-time">23:30 · A NOITE ACABA CEDO</p>
-        <h2>O último trem</h2>
-      </div>
+      <div class="ch-txt"><p class="ch-time">23:30 · NOITE</p><h2>O último trem</h2></div>
     </div>
-    <p class="ch-intro">A cidade brilha a noite toda — mas os trilhos, não. O <strong>shuuden</strong>, o último trem, é o relógio secreto de qualquer noite no Japão.</p>
+    <details class="carta warn"><summary>Não perca o shuuden</summary><p>Muitas linhas param por volta da meia-noite. Confira o horário da sua linha antes da última rodada.</p></details>
+    <details class="carta"><summary>Guarde a mochila no coin locker</summary><p>Pequeno ¥400–500, médio ¥500–700, grande ¥600–1.000 por dia. Muitos só aceitam moedas de ¥100. Pernoite conta como dois dias.</p></details>
+    <details class="carta"><summary>Mande a mala sozinha (takuhaibin)</summary><p>Yamato e Sagawa levam a mala entre aeroporto, hotel e cidades, geralmente no dia seguinte, por cerca de ¥2.000–2.500.</p></details>
 
-    <div class="card warn">
-      <h3>Não perca o shuuden</h3>
-      <p>Muitas linhas param por volta da meia-noite e só voltam de manhã cedo. Perder o último trem significa, na prática, <strong>táxi caro</strong> ou horas de espera numa loja de conveniência ou num karaokê 24h até o primeiro trem do dia. Cheque o horário da sua linha antes de pedir a última rodada.</p>
-    </div>
-
-    <div class="grid2">
-      <div class="card">
-        <h3>Coin lockers: a mochila descansa</h3>
-        <ul>
-          <li><strong>Pequeno</strong> — em quase toda estação, ¥400–500/dia</li>
-          <li><strong>Médio</strong> — nas estações maiores, ¥500–700/dia</li>
-          <li><strong>Grande</strong> — poucos por estação, ¥600–1.000/dia</li>
-          <li>Muitos só aceitam moedas de ¥100 (guarde algumas); cada vez mais aceitam cartão IC</li>
-          <li>O preço é por dia corrido (meia-noite a meia-noite): pernoitar conta como dois dias</li>
-        </ul>
-      </div>
-      <div class="card">
-        <h3>Takuhaibin: a mala viaja sozinha</h3>
-        <p>O segredo mais bem guardado dos viajantes leves: empresas como <strong>Yamato e Sagawa</strong> entregam sua mala entre aeroporto, hotel e até entre cidades, geralmente no dia seguinte, por cerca de <strong>¥2.000–2.500 por mala</strong>. Você passeia livre; a mala chega antes de você.</p>
-      </div>
-    </div>
   </section>
 
   <!-- ============ CTA FINAL - REVISTA PERSONALIZADA ============ -->
@@ -652,7 +514,7 @@ function setActiveLink(href) {
 
 // Atualizar link ativo ao fazer scroll
 window.addEventListener('scroll', () => {
-  const sections = ['vespera', 'manha', 'mesa', 'aguas', 'emergencia', 'noite', 'amuleto'];
+  const sections = ['vespera', 'manha', 'rua', 'mesa', 'aguas', 'emergencia', 'noite', 'amuleto'];
   
   for (let i = sections.length - 1; i >= 0; i--) {
     const section = document.getElementById(sections[i]);
