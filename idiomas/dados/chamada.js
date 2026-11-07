@@ -25,6 +25,7 @@
   '.uc-st{font-size:13.5px;min-height:20px;text-align:center;opacity:.92}'+
   '.uc-hint{font-size:13px;opacity:.85;text-align:center}'+
   '.uc-opts{display:grid;gap:8px}.uc-opts button{background:#fff;color:#2b2330;border:0;border-radius:12px;padding:12px;font-size:17px;cursor:pointer}'+
+  '.uc-write{display:flex;gap:8px}.uc-inp{flex:1;min-width:0;font:inherit;font-size:16px;border:0;border-radius:12px;padding:12px;color:#2b2330}.uc-send{background:#9fe3b0;color:#1d3a27;border:0;border-radius:12px;padding:0 16px;font:inherit;font-weight:700;cursor:pointer}'+
   '.uc-bye{align-self:center;background:#e0384c;color:#fff;border:0;border-radius:40px;padding:10px 22px;font-size:14px;cursor:pointer}'+
   '.pc-char{transform-box:fill-box;transform-origin:50% 100%}.uc-tile.talk .uc-npc{animation:ucbob .5s ease-in-out infinite}'+
   '@keyframes ucbob{50%{transform:translateY(-3px)}}';
@@ -69,16 +70,24 @@
     var mic=ans.querySelector('.uc-mic'), msg=ans.querySelector('.uc-st'), hint=ans.querySelector('.uc-hint'), opts=ans.querySelector('.uc-opts');
     function certo(txt){
       msg.textContent='✓ Entendi!'; if(txt)hint.textContent='Você disse: “'+txt+'”';
-      if(mic)mic.disabled=true; opts.innerHTML=''; mood('ok'); st.i++;
+      if(mic)mic.disabled=true; opts.innerHTML=''; var wb=ans.querySelector('.uc-write'); if(wb)wb.remove(); mood('ok'); st.i++;
       setTimeout(function(){ if(!st)return; if(st.i>=st.c.turnos.length)fim(); else turno(); },1300);
     }
     function mostraOpcoes(motivo){
-      hint.innerHTML=motivo+(t.model?' Exemplo: <b lang="ja">'+esc(t.model)+'</b>':'');
-      opts.innerHTML=''; shuffle(t.opts).forEach(function(o){var b=document.createElement('button');b.type='button';b.textContent=o;b.lang='ja';
-        b.onclick=function(){ if(o===t.opts[0]){ if(st.o.onMistake)st.o.onMistake(); certo(); } else { msg.textContent='Hmm, não é isso. Tente outra.'; mood('wrong'); fala('もう一度、お願いします。'); } };
-        opts.appendChild(b);});
+      /* sem alternativas: depois de 3 erros, mostra a resposta de exemplo e segue */
+      hint.innerHTML=motivo+(t.model?' Resposta de exemplo: <b lang="ja">'+esc(t.model)+'</b>'+(t.modelRo?' <span class="ro">'+esc(t.modelRo)+'</span>':''):'');
+      opts.innerHTML=''; var b=document.createElement('button');b.type='button';b.textContent='Continuar →';
+      b.onclick=function(){ certo(); }; opts.appendChild(b);
     }
-    if(!SR){ msg.textContent='Seu navegador não ouve o microfone. Escolha a resposta:'; mostraOpcoes(''); return; }
+    function escreve(){
+      var w=document.createElement('div'); w.className='uc-write'; w.innerHTML='<input type="text" class="uc-inp" lang="ja" autocomplete="off" autocapitalize="off" spellcheck="false" placeholder="ou escreva em kana ou romaji" aria-label="Sua resposta"><button type="button" class="uc-send">Enviar</button>';
+      ans.insertBefore(w,msg);
+      var inp=w.querySelector('.uc-inp');
+      function envia(){ var v=inp.value.trim(); if(!v) return; if(match(v,t.kws,t.min)) certo(v); else{ st.tries++; if(st.o.onMistake)st.o.onMistake(); inp.value=''; msg.textContent='Ainda não. Tente de novo.'; mood('wrong'); if(st.tries>=3){ mostraOpcoes('Sem problema.'); w.remove(); } } }
+      w.querySelector('.uc-send').onclick=envia; inp.addEventListener('keydown',function(e){ if(e.key==='Enter'){ e.preventDefault(); envia(); } });
+    }
+    escreve();
+    if(!SR){ msg.textContent='Seu navegador não ouve o microfone. Escreva a resposta.'; return; }
     mic.onclick=function(){
       try{speechSynthesis.cancel();}catch(e){}
       var rec=new SR(); st.rec=rec; rec.lang='ja-JP'; rec.interimResults=false; rec.maxAlternatives=3;
@@ -87,9 +96,9 @@
         var txt='';for(var i=0;i<ev.results[0].length;i++)txt+=' '+ev.results[0][i].transcript;
         if(match(txt,t.kws,t.min)) certo(ev.results[0][0].transcript);
         else{ st.tries++; mic.disabled=false; hint.textContent='Ouvi: “'+ev.results[0][0].transcript+'”'; msg.textContent='Não deu para entender. Tente de novo.'; mood('wrong'); fala('もう一度、お願いします。');
-          if(st.tries>=3) mostraOpcoes('Sem problema, escolha a resposta.'); }
+          if(st.tries>=3) mostraOpcoes('Sem problema.'); }
       };
-      rec.onerror=function(){ mic.disabled=false; msg.textContent='Não consegui ouvir.'; st.tries++; if(st.tries>=2) mostraOpcoes('Se o microfone não funciona, escolha a resposta.'); };
+      rec.onerror=function(){ mic.disabled=false; msg.textContent='Não consegui ouvir.'; st.tries++; if(st.tries>=2) msg.textContent='Se o microfone não funciona, escreva a resposta.'; };
       rec.onend=function(){ if(mic.disabled && msg.textContent.indexOf('ouvindo')>-1){mic.disabled=false;msg.textContent='';} };
       try{rec.start();}catch(e){ mic.disabled=false; }
     };

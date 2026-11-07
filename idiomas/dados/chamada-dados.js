@@ -868,6 +868,24 @@ window.CHAMADAS = {
      "かんこうです。"
     ],
     "min": 2
+   },
+   {
+    "say": "あ、しちじはんに きますか？",
+    "kana": "あ、しちじはんに きますか？",
+    "ro": "A, shichiji han ni kimasu ka?",
+    "tr": "Ah, e se você vier às 7h30?",
+    "kws": [
+     "しちじ|七時|shichiji|shichi-ji",
+     "はん|半|han"
+    ],
+    "model": "しちじはんに きます。",
+    "modelRo": "Shichiji han ni kimasu.",
+    "opts": [
+     "しちじはんに きます。",
+     "くじに きます。",
+     "ふたつです。"
+    ],
+    "min": 2
    }
   ],
   "fim": {

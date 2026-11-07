@@ -339,8 +339,10 @@ body.ro-on .ro{display:block}
 <script src="/idiomas/dados/trilha-mapas.js?v=1"></script>
 <script src="/idiomas/dados/glossario.js?v=1"></script>
 <script src="/idiomas/dados/palco.js?v=1"></script>
-<script src="/idiomas/dados/chamada-dados.js?v=2"></script>
-<script src="/idiomas/dados/chamada.js?v=2"></script>
+<script src="/idiomas/dados/chamada-dados.js?v=3"></script>
+<script src="/idiomas/dados/prova-etapas-dados.js?v=3"></script>
+<script src="/idiomas/dados/prova-etapas.js?v=4"></script>
+<script src="/idiomas/dados/chamada.js?v=3"></script>
 <script src="/idiomas/dados/velocidade-voz.js?v=1"></script>
 <script src="/idiomas/dados/audio-mapa.js?v=4a8ffd4b"></script>
 <script>
@@ -482,8 +484,20 @@ function openScene(id){
   document.getElementById('interaction').innerHTML='';
   window.scrollTo(0,0);
   montaPalco();
+  if(curLang==='ja' && window.UniProva && UniProva.existe(curTerr)){ iniciaProva(); return; }
   if(curLang==='ja' && window.UniChamada && UniChamada.existe(curTerr)){ iniciaChamada(); return; }
   setTimeout(showStep,400);
+}
+/* prova em etapas (ouvir, montar, ler, surpresa, chamada, resultado): mapas com roteiro em /idiomas/dados/prova-etapas-dados.js */
+function iniciaProva(){
+  const m=UniTrilha.MAPAS.find(x=>x[4]===curTerr);
+  const chamada=(volta,erro)=>{
+    const go=()=>{ const ok=UniChamada.start(curTerr,{say:say, nome:G.name, onDone:volta, onHangup:backToHub, onMistake:()=>{ erro(); }}); if(!ok) volta(); };
+    if(!m||(window.AULAS||{})[m[0]]) return go();
+    const sc=document.createElement('script'); sc.src='/idiomas/dados/aulas/'+m[0]+'.js?v=20261029g'; sc.onload=go; sc.onerror=()=>volta(); document.head.appendChild(sc);
+  };
+  const ok=UniProva.start(curTerr,{say:say, sayGravado:(t,c)=>sayGravado(t,c||'ja-JP'), onMistake:()=>{mistakes++;}, chamada:chamada, onDone:grantStamp, onExit:backToHub});
+  if(!ok) setTimeout(showStep,400);
 }
 /* prova em chamada de vídeo simulada (mapas que já têm roteiro em /idiomas/dados/chamada-dados.js) */
 function iniciaChamada(){
