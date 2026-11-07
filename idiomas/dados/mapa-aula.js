@@ -752,4 +752,13 @@ if(window.AUDIO_CREDITO){ const cr=document.createElement('p'); cr.className='cr
 { const sw=document.querySelector('.stage-wrap'); if(sw){ sw.setAttribute('role','button'); sw.setAttribute('tabindex','0'); sw.setAttribute('aria-label','Ampliar ou recolher a animação da cena');
   const tg=()=>sw.classList.toggle('grande'); sw.addEventListener('click',tg); sw.addEventListener('keydown',e=>{ if(e.key==='Enter'||e.key===' '){ e.preventDefault(); tg(); } }); } }
 window.__aulaFrases=()=>({A,CENAS,moldeParts,AR}); // usado só para levantar as frases a gravar
+
+/* frase de orientação no começo de cada exercício (o que fazer e qual habilidade vale) */
+(function(){
+  const ORI=[['Ouça e toque na figura','👂 Escuta: toque em 🔊, ouça a palavra e toque na figura que combina.'],['Responda na cena','👀✍️ Leitura e escrita: leia o que a pessoa disse e monte a sua resposta tocando nas palavras, na ordem certa.']];
+  const pn=document.getElementById('panel'); if(!pn||!window.MutationObserver) return;
+  const mo=new MutationObserver(()=>{ const h=pn.querySelector('h2'); if(!h||pn.querySelector('.orient')) return; const t=h.textContent.trim();
+    const o=ORI.find(x=>t.indexOf(x[0])===0); if(!o) return; const row=h.closest('.row')||h; const p=document.createElement('p'); p.className='orient'; p.textContent=o[1]; row.insertAdjacentElement('afterend',p); });
+  mo.observe(pn,{childList:true});
+})();
 })();

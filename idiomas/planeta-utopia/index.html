@@ -10,7 +10,8 @@
 .pstage-wrap.grande::after{content:'⤡'}
 body{padding-bottom:150px}
 .pstage-wrap[hidden]{display:none}
-@media (min-width:900px){.pstage-wrap{width:320px}.pstage-wrap.grande{width:min(60vw,640px)}}
+@media (min-width:1100px){body:has(.pstage-wrap:not([hidden])){padding-right:360px}.pstage-wrap,.pstage-wrap.grande{width:336px;top:120px;bottom:auto;right:14px;cursor:default}.pstage-wrap::after,.pstage-wrap.grande::after{display:none}}
+@media (min-width:900px) and (max-width:1099px){.pstage-wrap{width:300px}.pstage-wrap.grande{width:min(60vw,560px)}}
 .pstage{display:block;width:100%;height:auto;max-height:30vh}
 .pfx{position:absolute;inset:0;pointer-events:none;overflow:hidden}
 .pc-spark{position:absolute;font-size:24px;animation:pcrise 1.6s ease-out forwards}

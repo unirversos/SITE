@@ -309,9 +309,16 @@ body.no-ro .rk rt{display:none}
 .stage-wrap.grande::after{content:'⤡'}
 body{padding-bottom:190px}
 @media (prefers-reduced-motion:reduce){.stage-wrap{transition:none}}
-/* computador: cena maior (no celular continua o pedacinho) */
-@media (min-width:900px){
-  .stage-wrap{width:320px}
-  .stage-wrap.grande{width:min(60vw,640px)}
+/* computador largo: a cena fica numa coluna ao lado da lição, sem cobrir nada */
+@media (min-width:1100px){
+  body{padding-right:360px}
+  .stage-wrap,.stage-wrap.grande{width:336px;top:120px;bottom:auto;right:14px;cursor:default}
+  .stage-wrap::after,.stage-wrap.grande::after{display:none}
+}
+/* computador médio: cena maior sobre a lição (toque para ampliar) */
+@media (min-width:900px) and (max-width:1099px){
+  .stage-wrap{width:300px}
+  .stage-wrap.grande{width:min(60vw,560px)}
   body{padding-bottom:260px}
 }
+.orient{margin:0;font-size:13.5px;color:#6b5a66;background:#fdf0f3;border-radius:12px;padding:8px 12px}
