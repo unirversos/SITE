@@ -309,3 +309,9 @@ body.no-ro .rk rt{display:none}
 .stage-wrap.grande::after{content:'⤡'}
 body{padding-bottom:190px}
 @media (prefers-reduced-motion:reduce){.stage-wrap{transition:none}}
+/* computador: cena maior (no celular continua o pedacinho) */
+@media (min-width:900px){
+  .stage-wrap{width:320px}
+  .stage-wrap.grande{width:min(60vw,640px)}
+  body{padding-bottom:260px}
+}
