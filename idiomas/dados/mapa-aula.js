@@ -199,7 +199,7 @@ function sparkle(list){ const fx=$('fx');
     s.style.left=(60+Math.random()*35)+'%'; s.style.top=(30+Math.random()*40)+'%'; s.style.animationDelay=(k*0.07)+'s';
     fx.appendChild(s); setTimeout(()=>s.remove(),1800); } }
 function renderSteps(){
-  STEPS=C()?['Situação','Palavras','Moldes','Ouvir','Cena','Consulta']:['Situação','Palavras','Moldes','Ouvir','Cena'];
+  STEPS=(C()?['Situação','Palavras','Moldes','Ouvir','Cena','Consulta']:['Situação','Palavras','Moldes','Ouvir','Cena']).concat(PR()?['Falar e escrever']:[]);
   $('steps').innerHTML=STEPS.map((s,k)=>`<button type="button" class="step ${k===step?'now':P.steps[k]?'done':''}" data-s="${k}"><span class="n">${P.steps[k]&&k!==step?'✓':k+1}</span>${s}</button>`).join('')
     +(PROVA_TERR[A.slug]?`<a class="step prova-step" href="/idiomas/planeta-utopia/?lang=ja&terr=${PROVA_TERR[A.slug]}&from=trilha"><span class="n">🏅</span>Prova</a>`:'');
 }
@@ -216,7 +216,7 @@ function preBaixaAudios(){
   const vai=()=>{ for(let i=0;i<4;i++) um(); };
   if(window.requestIdleCallback) requestIdleCallback(vai,{timeout:2000}); else setTimeout(vai,800);
 }
-function go(n){ preBaixaAudios(); step=n; mood='idle'; renderSteps(); [stSituacao,stPalavras,stMoldes,stOuvir,stCena,stConsulta][n](); try{ $('steps').scrollIntoView({block:'start',behavior:'smooth'}); }catch(e){} }
+function go(n){ preBaixaAudios(); step=n; mood='idle'; renderSteps(); [stSituacao,stPalavras,stMoldes,stOuvir,stCena,stConsulta,stPratica][n](); try{ $('steps').scrollIntoView({block:'start',behavior:'smooth'}); }catch(e){} }
 function finish(n){ P.steps[n]=1; persist(); }
 const wordH=w=>w.h||w.k;
 
@@ -626,6 +626,19 @@ function wireCena(){
 
 /* ---------- 6. consulta (caderno de campo do mapa) ---------- */
 const C=()=>(window.CONSULTA||{})[A.slug];
+const PR=()=>(window.PRATICAS||{})[A.slug];
+/* Falar e escrever: prática das 4 habilidades (escuta, fala, leitura, escrita), sem nota; abre a prova com a mesma regra de resposta */
+function stPratica(){
+  mood='idle'; setStage({});
+  const idx=STEPS.indexOf('Falar e escrever');
+  const roda=()=>{
+    $('panel').innerHTML='<div class="row"><h2>🗣️ Falar e escrever</h2></div><p class="pt">Agora é você quem responde, sem alternativas: escrevendo (kana ou romaji) ou falando. Em cada exercício o aviso diz qual habilidade vale.</p><div id="prBox"></div>';
+    UniProva.pratica($('prBox'),PR().slice(),{say:(t)=>speak(t), sayGravado:(t)=>speak(t), onFim:(h)=>{ finish(idx); renderSteps(); $('prBox').innerHTML='<div class="up-card up-res"><p class="up-h">✓ Prática concluída</p><p class="up-sub">Você usou as 4 habilidades: ouvir, falar, ler e escrever. Agora você está pronta para a prova.</p></div>'; }});
+  };
+  if(window.UniProva&&window.PRATICAS) return roda();
+  const cargas=['/idiomas/dados/prova-etapas-dados.js?v=4','/idiomas/dados/prova-etapas.js?v=6']; let n=0;
+  cargas.forEach(u=>{ const sc=document.createElement('script'); sc.src=u; sc.onload=()=>{ if(++n===cargas.length) roda(); }; document.head.appendChild(sc); });
+}
 const CAT={obj:['coisa','#C0913F','#FBF2DF'],act:['ação','#5E9179','#EAF3EE'],dir:['direção','#6E77BE','#EEEFF9'],urg:['urgência','#C4685F','#FBEAE6']};
 function stConsulta(){
   const c=C(); mood='idle'; setStage({});

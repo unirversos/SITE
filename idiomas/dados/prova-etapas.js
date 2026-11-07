@@ -31,7 +31,7 @@
   '.up-cena{font-size:14px;color:#7c6a78;margin:0}'+
   '.up-res{display:grid;gap:10px;text-align:center}.up-star{font-size:40px;letter-spacing:6px}'+
   '.up-rows{display:grid;gap:6px;text-align:left}.up-row{display:flex;justify-content:space-between;gap:8px;background:#fdf6f2;border-radius:12px;padding:9px 14px;font-size:14px}.up-row.ok b{color:#3f6a4a}.up-row.err b{color:#9a3a4c}'+
-  '.up-resp{display:grid;gap:8px}.up-in2[hidden]{display:none}.up-in2{display:flex;gap:8px}.up-inp{flex:1;min-width:0;font:inherit;font-size:17px;border:1.5px solid #dcc9c9;border-radius:12px;padding:12px;color:#3a2b38;background:#fff}'+
+  '.up-card,.up-card>*,.up-resp,.up-resp>*{min-width:0}.up-resp{display:grid;gap:8px}.up-in2[hidden]{display:none}.up-in2{display:flex;gap:8px}.up-inp{flex:1;min-width:0;font:inherit;font-size:17px;border:1.5px solid #dcc9c9;border-radius:12px;padding:12px;color:#3a2b38;background:#fff}'+
   '.up-send,.up-mic,.up-dica{font:inherit;font-size:15px;font-weight:700;border-radius:12px;border:1.5px solid #dcc9c9;background:#fff;color:#3a2b38;padding:0 16px;min-height:46px;cursor:pointer}.up-send{background:#c8415f;border-color:#c8415f;color:#fff}.up-mic{border-color:#c8415f;color:#c8415f}'+
   '.up-row2{display:flex;gap:8px;flex-wrap:wrap}.up-modo{margin:0;font-size:13.5px;color:#7c6a78}.up-semfala{font:inherit;font-size:12.5px;background:none;border:0;text-decoration:underline;color:#7c6a78;cursor:pointer;min-height:46px}.up-st{font-size:13.5px;min-height:20px;color:#7c6a78}.up-send:disabled,.up-mic:disabled,.up-dica:disabled,.up-inp:disabled{opacity:.5;cursor:default}'+
   '@media (prefers-reduced-motion:reduce){.up-slots.bad{animation:none}}';
@@ -56,8 +56,9 @@
     if(o.tipo==='relogio') return '<div class="up-obj">'+clockSVG(o.h,o.m)+'</div>';
     return '';
   }
-  function pills(){ var P=st.p.etapas; $('.up-pills').innerHTML=P.map(function(e,i){return '<span class="'+(i<st.k?'ok':i===st.k?'now':'')+'">'+(i<st.k?'✓ ':'')+esc(e.nome)+'</span>';}).join('')+'<span class="'+(st.k===P.length?'now':'')+'">Resultado</span>'; }
+  function pills(){ if(st.pratica||!$('.up-pills')) return; var P=st.p.etapas; $('.up-pills').innerHTML=P.map(function(e,i){return '<span class="'+(i<st.k?'ok':i===st.k?'now':'')+'">'+(i<st.k?'✓ ':'')+esc(e.nome)+'</span>';}).join('')+'<span class="'+(st.k===P.length?'now':'')+'">Resultado</span>'; }
   function nextStage(){
+    if(st.pratica&&st.k>=0){ var cb=st.o.onFim; if(cb) cb(st.hab); return; }
     st.k++; st.i=0; pills();
     var e=st.p.etapas[st.k];
     if(!e){ resultado(); return; }
@@ -72,7 +73,7 @@
   function item(){
     var e=st.p.etapas[st.k], it=e.itens[st.i];
     if(!it){ nextStage(); return; }
-    ({ouvir:vOuvir,montar:vMontar,ler:vLer,surpresa:vSurpresa})[e.tipo](e,it);
+    ({ouvir:vOuvir,montar:vMontar,ler:vLer,surpresa:vSurpresa})[it.tipo||e.tipo](e,it);
     try{ $('.up-main').scrollIntoView({block:'nearest'}); }catch(_){}
   }
   function cont(e){ return '<div class="up-cnt">'+(st.i+1)+' de '+e.itens.length+'</div>'; }
@@ -163,9 +164,17 @@
     pills();
   }
   function fecha(){ try{speechSynthesis.cancel();}catch(e){} if(st&&st.root) st.root.remove(); st=null; }
+  function injetaCss(){ if(!document.getElementById('up-css')){ var s=document.createElement('style'); s.id='up-css'; s.textContent=CSS; document.head.appendChild(s); } }
+  /* prática solta dentro da aula (sem nota nem carimbo): itens {tipo:ouvir|montar|ler|surpresa, hab, modo, ...} */
+  function pratica(el,itens,o){
+    injetaCss(); el.innerHTML='<div class="up-main"></div>';
+    st={root:el,p:{etapas:[{tipo:'mista',nome:'Praticar',itens:itens}]},o:o||{},terr:'pratica',k:0,i:0,q:0,erros:{},hab:{},cur:null,pratica:true};
+    item();
+    return true;
+  }
   function start(terr,o){
     var p=(window.PROVAS||{})[terr]; if(!p) return false;
-    if(!document.getElementById('up-css')){ var s=document.createElement('style'); s.id='up-css'; s.textContent=CSS; document.head.appendChild(s); }
+    injetaCss();
     var old=document.getElementById('up'); if(old) old.remove();
     var root=document.createElement('div'); root.id='up'; root.setAttribute('role','dialog'); root.setAttribute('aria-label','Prova em etapas');
     root.innerHTML='<div class="up-in"><div class="up-top"><b>🏅 Prova · '+esc(p.titulo)+'</b><button type="button" class="up-x">✕ Sair</button></div><div class="up-pills"></div><div class="up-main"></div></div>';
@@ -175,5 +184,5 @@
     nextStage();
     return true;
   }
-  window.UniProva={start:start,existe:function(t){return !!(window.PROVAS||{})[t];}};
+  window.UniProva={start:start,pratica:pratica,existe:function(t){return !!(window.PROVAS||{})[t];}};
 })();

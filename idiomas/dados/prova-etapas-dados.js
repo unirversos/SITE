@@ -348,3 +348,14 @@ window.PROVAS={
   ]
  }
 };
+/* Prática da aula (etapa "Falar e escrever"): treina as 4 habilidades antes da prova. Mesmo formato dos itens da prova. */
+window.PRATICAS={
+ "horas":[
+  {"tipo":"ouvir","hab":["escuta","escrita"],"modo":"escrever","say":"しちじ","kws":["しちじ|shichiji|七時"],"model":"しちじ","modelRo":"shichiji","tr":"Sete horas.","dica":"7 horas é しちじ (e não ななじ)."},
+  {"tipo":"ouvir","hab":["escuta","fala"],"modo":"falar","say":"ごじ","kws":["ごじ|goji|五時"],"model":"ごじ","modelRo":"goji","tr":"Cinco horas.","dica":"Ouça e repita em voz alta."},
+  {"tipo":"montar","hab":["fala"],"modo":"falar","pt":"Que horas são agora?","kws":["いま|ima","なんじ|nanji|何時"],"model":"いま、なんじですか？","modelRo":"Ima, nanji desu ka?","dica":"いま + なんじ + ですか。"},
+  {"tipo":"montar","hab":["escrita"],"modo":"escrever","pt":"Amanhã, às 9.","kws":["あした|ashita|明日","くじ|kuji|九時"],"model":"あした、くじ","modelRo":"ashita, kuji","dica":"Dia primeiro, hora depois. 9 horas é くじ."},
+  {"tipo":"ler","hab":["leitura"],"obj":{"tipo":"relogio","h":2,"m":0},"qs":[{"q":"Que horas são no relógio? Escreva em japonês.","hab":["leitura","escrita"],"modo":"escrever","kws":["にじ|niji|二時"],"model":"にじ","modelRo":"niji","why":"Os dois ponteiros: o curto no 2 e o longo no 12. Duas horas em ponto.","dica":"Hora + じ."}]},
+  {"tipo":"ler","hab":["leitura"],"obj":{"tipo":"ingresso","nome":"ツアー","dia":"きょう","hora":"5:00"},"qs":[{"q":"Quando é o tour? Diga em voz alta o dia e a hora.","hab":["leitura","fala"],"modo":"falar","kws":["きょう|kyou|kyo|今日","ごじ|goji|五時"],"model":"きょう、ごじ","modelRo":"kyō, goji","why":"きょう = hoje, 5:00 = ごじ.","dica":"Dia primeiro, hora depois."}]}
+ ]
+};
