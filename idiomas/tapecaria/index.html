@@ -1,0 +1,272 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="robots" content="noindex, nofollow">
+<title>Tapeçaria da Travessia (teste) · Unirversos Idiomas</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@500;600;700&family=Zen+Maru+Gothic:wght@500;700&display=swap">
+<style>
+:root{--fogo:#E0805A;--agua:#6E9BC9;--terra:#4f7461;--ar:#686eb2;--ki:#C0913F;--rosa:#b5514d;--ink:#3A3633;--soft:#5A564F;--paper:#F6F1E7}
+*{box-sizing:border-box}
+body{margin:0;background:#FAFBF8;font-family:'Zen Maru Gothic',sans-serif;color:var(--ink)}
+rt{font-size:.32em;font-weight:500;letter-spacing:.05em}
+.aviso{max-width:660px;margin:14px auto 0;padding:10px 14px;border-radius:12px;background:#FBF2DF;border:1px dashed var(--ki);font-size:13px;line-height:1.5}
+.aviso label{display:flex;align-items:center;gap:10px;margin-top:8px;font-weight:700}
+.aviso input{flex:1;accent-color:var(--rosa);min-height:44px}
+.rolo{max-width:700px;height:16px;margin:16px auto 0;border-radius:8px;background:#7A5A48;position:relative}
+.rolo:before,.rolo:after{content:"";position:absolute;top:-5px;width:26px;height:26px;border-radius:50%;background:var(--ki)}
+.rolo:before{left:-6px}.rolo:after{right:-6px}
+.tela{max-width:640px;margin:0 auto;position:relative;background:var(--paper);border-left:10px solid #E8B9AE;border-right:10px solid #E8B9AE;padding:30px 24px 24px;display:flex;flex-direction:column;gap:18px}
+.washi{position:absolute;top:14px;width:92px;height:26px;opacity:.85}
+.topo{display:flex;flex-direction:column;align-items:center;gap:6px;text-align:center}
+.topo svg{width:100%;max-width:520px;height:auto}
+.titulo{font-weight:700;font-size:30px;letter-spacing:.1em}
+.sub{font-family:'Baloo 2',sans-serif;font-size:16px;font-weight:500;color:var(--soft)}
+.phase{font-family:'Baloo 2',sans-serif;font-size:13px;font-weight:600;letter-spacing:.14em;text-transform:uppercase;color:#7A6E62;display:flex;align-items:center;gap:12px;text-align:center}
+.phase:before,.phase:after{content:"";flex:1;border-top:2px dashed #D8CDB8}
+.grid2{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}
+.grid3{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px}
+.cell{background:#FFFDF8;border:2px dashed var(--ki);outline:1px solid #E9DFC8;outline-offset:3px;border-radius:12px;padding:14px 10px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;text-align:center;min-height:118px;transition:background .4s,box-shadow .4s}
+.cell.wide{flex-direction:row;gap:18px;min-height:100px;margin:0 50px}
+.cell.wide .txt{display:flex;flex-direction:column;align-items:flex-start;gap:3px;text-align:left}
+.glyph{font-weight:700;font-size:34px;line-height:1.1;transition:color .4s}
+.ttl{font-family:'Baloo 2',sans-serif;font-weight:600;font-size:16px;line-height:1.2}
+.jp{font-size:12px;color:var(--soft)}
+.opt{font-family:'Baloo 2',sans-serif;font-size:11px;font-weight:600;color:#71676e;border:1px solid #D8CDB8;border-radius:999px;padding:0 8px}
+.badge{font-size:11px;font-weight:700;letter-spacing:.04em;color:#4f7461;margin-top:4px}
+.cur{box-shadow:0 0 0 5px #FBEBE7,0 0 24px rgba(181,81,77,.4);border:3px solid var(--rosa)}
+.cur .badge{color:#9A4A3A}
+.lock{background:#ECE9E4;border:2px dotted #A8A39B;outline-color:transparent}
+.lock .glyph{color:#A8A39B !important}
+.lock .badge{color:var(--soft)}
+.meio{display:grid;grid-template-columns:1fr 210px 1fr;gap:14px;align-items:center}
+.col{display:flex;flex-direction:column;gap:14px}
+.quad{position:relative;width:210px;height:250px}
+.quad svg{position:absolute;left:0;top:0}
+.med{position:absolute;width:70px;height:70px;margin:-35px 0 0 -35px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:26px;color:#fff;border:3px dashed #FFFDF8;box-shadow:0 0 0 3px var(--ki);transition:background .4s}
+.med.grande{width:80px;height:80px;margin:-40px 0 0 -40px;font-size:30px}
+.med.off{background:#DAD6CF !important;color:#7E7970;box-shadow:0 0 0 2px #C4BFB6}
+.barra{display:flex;flex-direction:column;gap:8px;padding:6px 30px 0}
+.barra .linha{display:flex;justify-content:space-between;font-size:13px;color:var(--soft)}
+.trilho{height:10px;border-radius:5px;background:#E3DDD2;overflow:hidden}
+.fio{height:10px;border-radius:5px;background:var(--ki);transition:width .4s}
+.epi{border-top:2px dashed #D8CDB8;padding-top:16px;display:flex;flex-direction:column;align-items:center;gap:4px;text-align:center}
+.epi .nome{font-family:'Baloo 2',sans-serif;font-size:21px;font-weight:600}
+.voltar{display:block;text-align:center;margin:18px auto 30px;color:var(--rosa);font-weight:700}
+.fiocentral{position:absolute;left:4px;top:30px;width:0;border-left:3px dashed var(--ki);transition:height .6s ease;pointer-events:none}
+.fiofundo{position:absolute;left:4px;top:30px;bottom:24px;border-left:2px dotted #D8CDB8;pointer-events:none}
+.cell{position:relative}
+.inkan{position:absolute;right:-8px;top:-12px;width:54px;height:54px;border:3px solid #B53A2E;border-radius:8px;color:#B53A2E;background:rgba(255,253,248,.85);font-weight:700;font-size:18px;line-height:1;display:none;align-items:center;justify-content:center;text-align:center;transform:rotate(-10deg) scale(1.6);opacity:0;transition:transform .35s ease-out,opacity .35s}
+.done .inkan{display:flex;transform:rotate(-10deg) scale(1);opacity:.92}
+.exportar{display:none;flex-direction:column;align-items:center;gap:10px;margin-top:6px}
+.exportar.on{display:flex}
+.exportar input{min-height:44px;border:1.5px solid #D8CDB8;border-radius:12px;padding:0 12px;font:inherit;width:240px;max-width:100%}
+.btn{min-height:44px;border:0;border-radius:999px;padding:0 20px;background:var(--rosa);color:#fff;font-family:'Baloo 2',sans-serif;font-weight:600;font-size:15px;cursor:pointer}
+.flutua{display:none;position:fixed;right:14px;bottom:14px;z-index:9;box-shadow:0 4px 14px rgba(0,0,0,.18)}
+@media (max-width:560px){.flutua{display:block}}
+@media (max-width:560px){
+  .tela{padding:24px 14px 20px;border-width:6px}
+  .meio{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .quad{grid-column:1 / -1;order:-1;margin:0 auto}
+  .grid3{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .grid3 .meio-n5{grid-column:1 / -1;order:-1}
+  .cell.wide{margin:0}
+  .grid2{gap:10px}
+}
+</style>
+</head>
+<body>
+<div class="aviso"><b>Página de teste</b>, fora do menu e sem ligação com o progresso real. Arraste para simular o avanço de uma aluna.
+  <label for="etapa">Etapa <span id="etapaNum">4</span> de 12 <input type="range" id="etapa" min="0" max="12" step="1" value="4"></label>
+</div>
+
+<div class="rolo" aria-hidden="true"></div>
+<main class="tela" id="tela">
+  <div class="fiofundo" aria-hidden="true"></div><div class="fiocentral" id="fiocentral" aria-hidden="true"></div>
+  <div class="washi" aria-hidden="true" style="left:-22px;background:#C9BDE0;transform:rotate(-12deg)"></div>
+  <div class="washi" aria-hidden="true" style="right:-22px;background:#BFD3B8;transform:rotate(12deg)"></div>
+
+  <div class="topo">
+    <svg viewBox="0 0 520 120" aria-hidden="true">
+      <circle cx="260" cy="58" r="40" fill="#F2C4B8"/>
+      <path d="M110 112 L215 46 Q260 18 305 46 L410 112 Z" fill="#B9CBB2"/>
+      <path d="M232 40 Q260 24 288 40 L278 49 L268 42 L258 49 L248 42 Z" fill="#FFFDF8"/>
+      <path d="M0 112 Q40 94 80 112 T160 112 T240 112 T320 112 T400 112 T480 112 T520 112" fill="none" stroke="#A99BC9" stroke-width="3" stroke-dasharray="8 6"/>
+      <path d="M0 16 Q60 28 112 60" fill="none" stroke="#7A5A48" stroke-width="4" stroke-linecap="round"/>
+      <circle cx="52" cy="26" r="7" fill="#E8B9AE"/><circle cx="80" cy="38" r="6" fill="#F2D3CC"/><circle cx="104" cy="54" r="7" fill="#E8B9AE"/>
+      <path d="M520 16 Q460 28 408 60" fill="none" stroke="#7A5A48" stroke-width="4" stroke-linecap="round"/>
+      <circle cx="468" cy="26" r="7" fill="#E8B9AE"/><circle cx="440" cy="38" r="6" fill="#F2D3CC"/><circle cx="416" cy="54" r="7" fill="#E8B9AE"/>
+    </svg>
+    <h1 class="titulo" style="margin:0"><ruby>旅<rt>たび</rt></ruby>の<ruby>織物<rt>おりもの</rt></ruby></h1>
+    <div class="sub">A Tapeçaria da Travessia · UnirVersos</div>
+  </div>
+
+  <div class="phase">I · As Chaves (opcionais)</div>
+  <div class="grid2" style="padding:0 6%">
+    <div class="cell" data-i="0"><span class="glyph" style="color:var(--fogo)">あ</span><div class="ttl">Selo Hiragana</div><div class="opt">opcional</div><div class="jp">ひらがなの はんこ</div><div class="badge"></div></div>
+    <div class="cell" data-i="1"><span class="glyph" style="color:var(--ar)">ア</span><div class="ttl">Selo Katakana</div><div class="opt">opcional</div><div class="jp">カタカナの はんこ</div><div class="badge"></div></div>
+  </div>
+
+  <div class="phase">II · O Marco</div>
+  <div class="cell wide" data-i="2" style="background:#FFF8F2">
+    <span class="inkan" aria-hidden="true">渡</span>
+    <span class="glyph" style="color:var(--ki);font-size:44px"><ruby>渡<rt>わた</rt></ruby></span>
+    <div class="txt"><div class="ttl" style="font-size:18px">Selo da Primeira Travessia</div><div class="jp">De turista perdido a viajante autônomo</div><div class="badge"></div></div>
+  </div>
+
+  <div class="phase">III · O Quadrado Elemental</div>
+  <div class="meio">
+    <div class="col">
+      <div class="cell" data-i="3"><span class="glyph" style="color:var(--fogo)"><ruby>火<rt>ひ</rt></ruby></span><div class="ttl">Fogo</div><div class="jp">Caixa de peças</div><div class="badge"></div></div>
+      <div class="cell" data-i="4"><span class="glyph" style="color:var(--agua)"><ruby>水<rt>みず</rt></ruby></span><div class="ttl">Água</div><div class="jp">Radar de escuta</div><div class="badge"></div></div>
+    </div>
+    <div class="quad" aria-hidden="true">
+      <svg width="210" height="250" viewBox="0 0 210 250">
+        <rect x="40" y="50" width="130" height="150" fill="#EFE6D3" stroke="#C0913F" stroke-width="2" stroke-dasharray="7 5"/>
+        <path d="M40 50 L170 200 M170 50 L40 200" stroke="#D8CDB8" stroke-width="2" stroke-dasharray="4 5"/>
+      </svg>
+      <div class="med" data-m="3" style="left:40px;top:50px;background:var(--fogo)"><ruby>火<rt>ひ</rt></ruby></div>
+      <div class="med" data-m="4" style="left:40px;top:200px;background:var(--agua)"><ruby>水<rt>みず</rt></ruby></div>
+      <div class="med" data-m="5" style="left:170px;top:50px;background:var(--terra)"><ruby>土<rt>つち</rt></ruby></div>
+      <div class="med" data-m="6" style="left:170px;top:200px;background:var(--ar)"><ruby>風<rt>かぜ</rt></ruby></div>
+      <div class="med grande" data-m="7" style="left:105px;top:125px;background:var(--ki)"><ruby>気<rt>き</rt></ruby></div>
+    </div>
+    <div class="col">
+      <div class="cell" data-i="5"><span class="glyph" style="color:var(--terra)"><ruby>土<rt>つち</rt></ruby></span><div class="ttl">Terra</div><div class="jp">Materializar</div><div class="badge"></div></div>
+      <div class="cell" data-i="6"><span class="glyph" style="color:var(--ar)"><ruby>風<rt>かぜ</rt></ruby></span><div class="ttl">Ar</div><div class="jp">Às vezes precisamos de um ar</div><div class="badge"></div></div>
+    </div>
+  </div>
+  <div class="cell wide" data-i="7">
+    <span class="glyph" style="color:var(--ki);font-size:40px"><ruby>気<rt>き</rt></ruby></span>
+    <div class="txt"><div class="ttl" style="font-size:17px">Espírito · Troca real</div><div class="jp">Encontros no Salão do Planeta Utopia</div><div class="badge"></div></div>
+  </div>
+
+  <div class="phase">IV · Névoas de Viagem</div>
+  <div class="grid3">
+    <div class="cell" data-i="8" data-nevoa="酒|O Izakaya Escondido|いざかや の ひみつ"><span class="glyph" style="color:var(--fogo)"></span><div class="ttl"></div><div class="jp"></div><div class="badge"></div></div>
+    <div class="cell meio-n5" data-i="9" style="background:#FFF8F2"><span class="inkan" aria-hidden="true">合<br>格</span><span class="glyph" style="color:var(--ki);font-size:38px"><ruby>証<rt>しょう</rt></ruby></span><div class="ttl">Selo N5</div><div class="jp">にほんごのうりょくしけん</div><div class="badge"></div></div>
+    <div class="cell" data-i="10" data-nevoa="夜|O Trem Noturno|よるの でんしゃ"><span class="glyph" style="color:var(--agua)"></span><div class="ttl"></div><div class="jp"></div><div class="badge"></div></div>
+  </div>
+
+  <div class="phase">V · A Travessia Completa</div>
+  <div class="cell wide" data-i="11">
+    <span class="inkan" aria-hidden="true">旅</span>
+    <span class="glyph" style="color:var(--ink);font-size:42px"><ruby>旅人<rt>たびびと</rt></ruby></span>
+    <div class="txt"><div class="ttl" style="font-size:17px">Viajante Autônomo</div><div class="jp">Um dia inteiro no Japão, só em japonês</div><div class="badge"></div></div>
+  </div>
+
+  <div class="barra">
+    <div class="linha"><span>Pontos bordados</span><b id="conta" style="color:var(--ink)">4 de 12</b></div>
+    <div class="trilho"><div class="fio" id="fio"></div></div>
+  </div>
+
+  <div class="epi">
+    <div class="phase" style="width:100%">Epílogo</div>
+    <div class="nome" id="epi">Aqui será bordado o seu nome</div>
+    <div class="jp" id="epiSub">Cada passo dado vira um ponto de bordado</div>
+    <div class="exportar" id="exportar">
+      <label for="nome" class="jp">Seu nome para bordar no pergaminho</label>
+      <input id="nome" maxlength="24" placeholder="Seu nome">
+      <button class="btn" id="baixar" type="button">Baixar meu kakejiku</button>
+    </div>
+  </div>
+</main>
+<div class="rolo" aria-hidden="true"></div>
+<button class="btn flutua" id="flutua" type="button">Ver onde estou</button>
+<a class="voltar" href="/idiomas/japones/">Voltar à trilha</a>
+
+<script>
+(function(){
+  var r = document.getElementById('etapa');
+  function pinta(){
+    var e = +r.value;
+    document.getElementById('etapaNum').textContent = e;
+    document.querySelectorAll('.cell[data-i]').forEach(function(c){
+      var i = +c.dataset.i;
+      c.classList.remove('cur','lock');
+      if (i === e) c.classList.add('cur'); else if (i > e) c.classList.add('lock');
+      c.querySelector('.badge').textContent = i < e ? '✓ concluído' : (i === e ? '● você está aqui' : 'a fazer');
+      if (c.dataset.nevoa){
+        var p = c.dataset.nevoa.split('|'), aberto = i <= e;
+        c.querySelector('.glyph').textContent = aberto ? p[0] : '霧';
+        c.querySelector('.ttl').textContent = aberto ? p[1] : '???';
+        c.querySelector('.jp').textContent = aberto ? p[2] : 'névoa: ainda não dissipou';
+      }
+    });
+    document.querySelectorAll('.med[data-m]').forEach(function(m){
+      m.classList.toggle('off', +m.dataset.m >= e);
+    });
+    document.getElementById('conta').textContent = e + ' de 12';
+    document.getElementById('fio').style.width = Math.round(e / 12 * 100) + '%';
+    document.getElementById('epi').textContent = e >= 12 ? 'Bordado por você' : 'Aqui será bordado o seu nome';
+    document.getElementById('epiSub').textContent = e >= 12 ? 'A tapeçaria completa vira o certificado da Travessia' : 'Cada passo dado vira um ponto de bordado';
+  }
+  r.addEventListener('input', pinta);
+  pinta();
+  // fio sashiko: desce do topo até o ponto atual
+  function fio(){
+    var tela=document.getElementById('tela'), e=+r.value, alvo=document.querySelector('.cell[data-i="'+Math.min(e,11)+'"]');
+    var h = alvo ? (alvo.offsetTop + alvo.offsetHeight/2 - 30) : 0;
+    if (e>=12) h = tela.offsetHeight - 54;
+    if (e===0) h = Math.max(0,h);
+    document.getElementById('fiocentral').style.height = h + 'px';
+    document.getElementById('exportar').classList.toggle('on', e>=12);
+  }
+  r.addEventListener('input', fio); window.addEventListener('resize', fio);
+  if (document.fonts && document.fonts.ready) document.fonts.ready.then(fio); setTimeout(fio, 300);
+
+  // botão flutuante (celular): zoom no ponto atual / visão geral
+  var geral=false, bt=document.getElementById('flutua');
+  bt.addEventListener('click', function(){
+    var tela=document.getElementById('tela');
+    if (!geral){
+      var alvo=document.querySelector('.cell[data-i="'+Math.min(+r.value,11)+'"]');
+      tela.style.zoom=''; alvo.scrollIntoView({behavior:'smooth',block:'center'});
+      bt.textContent='Ver pergaminho todo'; geral=true;
+    } else {
+      var z=Math.min(1,(window.innerHeight-40)/tela.offsetHeight);
+      tela.style.zoom=z; window.scrollTo({top:0,behavior:'smooth'});
+      bt.textContent='Ver onde estou'; geral=false;
+    }
+    setTimeout(fio,50);
+  });
+
+  // exportar imagem vertical (1080x1920) desenhada em canvas
+  document.getElementById('baixar').addEventListener('click', function(){
+    var nome=(document.getElementById('nome').value||'').trim()||'Viajante';
+    var c=document.createElement('canvas'); c.width=1080; c.height=1920; var x=c.getContext('2d');
+    var F="'Zen Maru Gothic', sans-serif", B="'Baloo 2', sans-serif";
+    x.fillStyle='#FAFBF8'; x.fillRect(0,0,1080,1920);
+    x.fillStyle='#F6F1E7'; x.fillRect(140,110,800,1700);
+    x.fillStyle='#E8B9AE'; x.fillRect(140,110,18,1700); x.fillRect(922,110,18,1700);
+    function rolo(y){ x.fillStyle='#7A5A48'; x.beginPath(); x.roundRect(100,y,880,28,14); x.fill(); x.fillStyle='#C0913F'; [100,980].forEach(function(cx){x.beginPath();x.arc(cx,y+14,22,0,7);x.fill();}); }
+    rolo(84); rolo(1796);
+    x.fillStyle='#F2C4B8'; x.beginPath(); x.arc(540,300,90,0,7); x.fill();
+    x.fillStyle='#B9CBB2'; x.beginPath(); x.moveTo(300,430); x.lineTo(470,300); x.quadraticCurveTo(540,250,610,300); x.lineTo(780,430); x.fill();
+    x.textAlign='center'; x.fillStyle='#3A3633';
+    x.font='700 76px '+F; x.fillText('旅の織物',540,560);
+    x.font='500 34px '+B; x.fillStyle='#5A564F'; x.fillText('A Tapeçaria da Travessia · UnirVersos',540,620);
+    x.setLineDash([16,12]); x.strokeStyle='#C0913F'; x.lineWidth=4; x.strokeRect(370,700,340,400);
+    x.beginPath(); x.moveTo(370,700); x.lineTo(710,1100); x.moveTo(710,700); x.lineTo(370,1100); x.strokeStyle='#D8CDB8'; x.stroke(); x.setLineDash([]);
+    [['火','#E0805A',370,700,80],['土','#4f7461',710,700,80],['水','#6E9BC9',370,1100,80],['風','#686eb2',710,1100,80],['気','#C0913F',540,900,100]].forEach(function(m){
+      x.fillStyle=m[1]; x.beginPath(); x.arc(m[2],m[3],m[4],0,7); x.fill();
+      x.strokeStyle='#FFFDF8'; x.setLineDash([10,8]); x.lineWidth=5; x.beginPath(); x.arc(m[2],m[3],m[4]-10,0,7); x.stroke(); x.setLineDash([]);
+      x.fillStyle='#fff'; x.font='700 '+(m[4]*0.85|0)+'px '+F; x.textBaseline='middle'; x.fillText(m[0],m[2],m[3]+4); x.textBaseline='alphabetic';
+    });
+    function selo(cx,cy,txt){ x.save(); x.translate(cx,cy); x.rotate(-0.17); x.strokeStyle='#B53A2E'; x.lineWidth=7; x.strokeRect(-62,-62,124,124); x.fillStyle='#B53A2E'; x.font='700 64px '+F; x.textBaseline='middle'; x.fillText(txt,0,4); x.restore(); }
+    selo(300,1310,'渡'); selo(540,1310,'証'); selo(780,1310,'旅');
+    x.font='500 26px '+B; x.fillStyle='#5A564F'; x.fillText('Primeira Travessia',300,1420); x.fillText('Selo N5',540,1420); x.fillText('Viajante Autônomo',780,1420);
+    x.setLineDash([10,8]); x.strokeStyle='#D8CDB8'; x.lineWidth=3; x.beginPath(); x.moveTo(220,1500); x.lineTo(860,1500); x.stroke(); x.setLineDash([]);
+    x.font='600 30px '+B; x.fillStyle='#7A6E62'; x.fillText('BORDADO POR',540,1580);
+    x.font='700 72px '+B; x.fillStyle='#3A3633'; x.fillText(nome,540,1670,700);
+    x.font='500 26px '+F; x.fillStyle='#5A564F'; x.fillText('unirversos.com',540,1740);
+    c.toBlob(function(b){ var a=document.createElement('a'); a.href=URL.createObjectURL(b); a.download='meu-kakejiku-unirversos.png'; document.body.appendChild(a); a.click(); a.remove(); });
+  });
+
+})();
+</script>
+</body>
+</html>
