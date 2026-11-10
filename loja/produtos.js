@@ -15,6 +15,11 @@
      chegada: texto como 'dezembro' (opcional)
      exemplo: true só nos cards de exemplo. Apague os exemplos quando colocar os seus.
    ========================================================= */
+/* ARQUIVO (10 nov 2026): categorias guardadas, fora da vitrine.
+   Os itens continuam aqui embaixo. Para trazer uma categoria de volta,
+   é só apagar o nome dela desta lista. */
+window.CATS_ARQUIVADAS = ['consoles','colec','reliquias','gadgets'];
+
 window.ACHADOS = [
   { id:'pro-controller-zelda-40', cat:'zelda', nome:'Zelda 40 anos · controle Pro para Nintendo Switch 2 · com base', novo:true, br:{preco:2000,rotulo:'com base'},
     desc:'Controle Pro do Nintendo Switch 2, edição de 40 anos de The Legend of Zelda, novo. Na foto aparece na caixa, com o controle dourado e verde e a base de exibição incluída (a caixa indica “ディスプレイスタンド付き”, com suporte de exibição). Atenção: existe uma versão parecida do controle SEM a base, mais barata; esta é a versão COM base. Só há uma foto no anúncio, então o estado da embalagem e o conteúdo da caixa devem ser confirmados com o vendedor.',

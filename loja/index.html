@@ -227,7 +227,7 @@ footer a:hover{color:var(--pink)}
 </div>
 
 <div id="lb" role="dialog" aria-label="Foto ampliada" aria-hidden="true"><button class="fx" type="button" aria-label="Fechar">×</button><button class="pv" type="button" aria-label="Foto anterior">‹</button><img alt=""><button class="nx" type="button" aria-label="Próxima foto">›</button><span class="nn"></span></div>
-<script src="/loja/produtos.js?v=20261101h"></script>
+<script src="/loja/produtos.js?v=20261110d"></script>
 <script src="/loja/caixinha.js?v=10"></script>
 <script>
 (function(){
@@ -241,7 +241,9 @@ footer a:hover{color:var(--pink)}
     {id:'didatico', ic:'📚', nome:'Material didático', sub:'Livros e cadernos para estudar japonês.'},
     {id:'gadgets',  ic:'🌸', nome:'Gadgets & Papelaria Japonesa', sub:'Design minimalista, tecnologia portátil e organização para a sua rotina.'}
   ];
-  const ITENS=(window.ACHADOS||[]).filter(x=>x&&x.nome);
+  const ARQ=window.CATS_ARQUIVADAS||[];
+  for(let i=CATS.length-1;i>=0;i--) if(ARQ.includes(CATS[i].id)) CATS.splice(i,1);
+  const ITENS=(window.ACHADOS||[]).filter(x=>x&&x.nome&&!ARQ.includes(x.cat));
   const esc=s=>String(s==null?'':s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
   const iene=n=>'¥ '+Number(n||0).toLocaleString('pt-BR');
   const faixa=x=>{ const de=+x.de||0, ate=+x.ate||de; if(!de&&!ate) return ''; return (de===ate? iene(de) : iene(de)+' – '+iene(ate).replace('¥ ','')); };
