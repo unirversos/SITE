@@ -21,11 +21,11 @@
 window.CATS_ARQUIVADAS = ['consoles','colec','reliquias','gadgets'];
 
 window.ACHADOS = [
-  { id:'kit-zelda-40', cat:'zelda', nome:'Kit Zelda 40 anos · controle Pro com base + estojo para Nintendo Switch 2', novo:true, contem:true, seloTxt:'no kit',
+  { id:'kit-zelda-40', cat:'zelda', lista:true, nome:'Kit Zelda 40 anos · controle Pro com base + estojo para Nintendo Switch 2', novo:true, contem:true, seloTxt:'no kit',
     kit:['Controle Pro para Nintendo Switch 2, edição Zelda 40 anos, com base de exibição','Estojo de transporte para Nintendo Switch 2, edição Zelda 40 anos, com película de tela'],
     desc:'Os dois itens da edição de 40 anos de The Legend of Zelda numa encomenda só: o controle Pro dourado e verde com a base de exibição e o estojo com a Triforce dourada. Produtos novos. Comprando o kit, sai 10% mais barato que os dois separados. Sob encomenda, sujeito a disponibilidade no Japão. Funciona por lista de espera: você entra na lista sem pagar nada e só paga depois que eu conseguir comprar o seu.',
     de:0, ate:0, total:1319, descPct:10, imposto:0, chegada:'dezembro', foto:'', fotos:['/loja/fotos/zelda40-kit-1.jpg','/loja/fotos/zelda40-estojo-1.jpg','/loja/fotos/zelda40-controle-2.jpg','/loja/fotos/zelda40-estojo-2.jpg','/loja/fotos/zelda40-controle-3.jpg','/loja/fotos/zelda40-estojo-3.jpg'], link:'' },
-  { id:'pro-controller-zelda-40', cat:'zelda', nome:'Zelda 40 anos · controle Pro para Nintendo Switch 2 · com base', novo:true, br:{preco:2000,rotulo:'com base'},
+  { id:'pro-controller-zelda-40', cat:'zelda', lista:true, nome:'Zelda 40 anos · controle Pro para Nintendo Switch 2 · com base', novo:true, br:{preco:2000,rotulo:'com base'},
     desc:'Controle Pro do Nintendo Switch 2, edição de 40 anos de The Legend of Zelda, novo. Dourado, preto e verde, com o brasão de Hyrule e a Triforce na frente e o Link em pixel art atrás. Acompanha a base de exibição. Atenção: existe uma versão do controle SEM a base, mais barata; esta é a versão COM base. Fotos de divulgação do produto. Sob encomenda, sujeito a disponibilidade no Japão. Funciona por lista de espera: você entra na lista sem pagar nada e só paga depois que eu conseguir comprar o seu.',
     de:0, ate:0, total:999, descPct:0, imposto:0, custoImposto:649, chegada:'dezembro', foto:'', fotos:['/loja/fotos/zelda40-controle-1.jpg','/loja/fotos/zelda40-controle-2.jpg','/loja/fotos/zelda40-controle-3.jpg'], contem:true, link:'' },
   { id:'game-watch-zelda', arquivado:true, cat:'zelda', nome:'Game & Watch · The Legend of Zelda', novo:true,
@@ -47,7 +47,7 @@ window.ACHADOS = [
   { id:'3ds-rosa-claro-carregador', cat:'consoles', nome:'Nintendo 3DS · rosa claro, com carregador',
     desc:'Console portátil da Nintendo na cor rosa claro, com carregador. Nas fotos a tela de cima mostra pontos escuros (pode ser sujeira ou resto de película) e as telas aparecem desligadas, então não dá para ver se liga. Sem caixa nas fotos. Confirmar com o vendedor.',
     de:0, ate:0, total:1110, imposto:330, chegada:'dezembro', foto:'', fotos:['/loja/fotos/3ds-rosa-claro-carregador-1.jpg','/loja/fotos/3ds-rosa-claro-carregador-2.jpg','/loja/fotos/3ds-rosa-claro-carregador-3.jpg','/loja/fotos/3ds-rosa-claro-carregador-4.jpg','/loja/fotos/3ds-rosa-claro-carregador-5.jpg'], link:'' },
-  { id:'zelda-case-switch2-40', cat:'zelda', nome:'Zelda 40 anos · estojo para Nintendo Switch 2',
+  { id:'zelda-case-switch2-40', cat:'zelda', lista:true, nome:'Zelda 40 anos · estojo para Nintendo Switch 2',
     desc:'Estojo de transporte para Nintendo Switch 2 da edição de 40 anos de The Legend of Zelda, novo. Triforce dourada na frente, mapa de Hyrule no verso e zíper com argolas verdes. Acompanha película protetora de tela e paninho de limpeza. Fotos de divulgação do produto. Sob encomenda, sujeito a disponibilidade no Japão. Funciona por lista de espera: você entra na lista sem pagar nada e só paga depois que eu conseguir comprar o seu.',
     de:0, ate:0, total:320, descPct:0, imposto:0, custoImposto:204, chegada:'dezembro', foto:'', fotos:['/loja/fotos/zelda40-estojo-1.jpg','/loja/fotos/zelda40-estojo-2.jpg','/loja/fotos/zelda40-estojo-3.jpg'], contem:true, link:'' },
   { id:'zelda-master-sword', cat:'colec', nome:'Zelda · Master Sword e outros itens',

@@ -46,6 +46,7 @@ h1 .jp rt{font-size:.5em;letter-spacing:.05em}
 .btn:hover{filter:brightness(.96)}
 .aviso{margin:0;font-size:13.5px;color:var(--muted);background:var(--sage-soft);border-radius:14px;padding:10px 14px;max-width:72ch}
 
+.filtros[hidden]{display:none}
 .filtros{display:flex;flex-wrap:wrap;gap:8px}
 .filtros button{font:inherit;font-weight:700;font-size:14.5px;border:1.5px solid var(--line);background:var(--card);color:var(--ink);padding:7px 14px;border-radius:999px;cursor:pointer;display:inline-flex;gap:6px;align-items:center}
 .filtros button[aria-pressed="true"]{background:var(--ink);color:#fff;border-color:var(--ink)}
@@ -53,16 +54,18 @@ h1 .jp rt{font-size:.5em;letter-spacing:.05em}
 
 .cats{display:grid;gap:40px}
 .cats>section{min-width:0}
-.capa{position:relative;display:block;width:100%;padding:0;border:1.5px solid var(--line);border-radius:var(--r);overflow:hidden;background:var(--card);cursor:pointer;font:inherit;color:#fff;text-align:left;box-shadow:0 10px 24px -18px rgba(58,43,56,.35)}
-.capa img{display:block;width:100%;aspect-ratio:1500/560;object-fit:cover}
-.capa-ic{display:grid;place-items:center;aspect-ratio:1500/560;font-size:64px;background:var(--blush)}
-.capa-t{position:absolute;inset:auto 0 0 0;display:grid;gap:2px;padding:44px 18px 14px;background:linear-gradient(to top,rgba(30,20,28,.88) 0%,rgba(30,20,28,.62) 55%,rgba(30,20,28,0) 100%)}
-.capa-n{font-family:var(--f-display);font-weight:800;font-size:clamp(22px,3.4vw,30px);line-height:1.15}
-.capa-s{font-size:14.5px;max-width:62ch;opacity:.95}
-.capa-b{font-size:13.5px;margin-top:4px}.capa-b b{text-decoration:underline;text-underline-offset:3px}
-.capa:hover,.capa:focus-visible{border-color:var(--pink);outline:none;box-shadow:0 0 0 3px color-mix(in srgb,var(--pink) 30%,transparent)}
+.capa{position:relative;display:grid;width:100%;padding:0;border:1.5px solid var(--line);border-left:6px solid var(--cc);border-radius:var(--r);overflow:hidden;background:var(--card);cursor:pointer;font:inherit;color:var(--ink);text-align:left;box-shadow:0 10px 24px -18px rgba(58,43,56,.35)}
+.capa img{display:block;width:100%;aspect-ratio:3/1;object-fit:cover}
+.capa-ic{display:grid;place-items:center;aspect-ratio:3/1;font-size:56px;background:var(--blush)}
+.capa-t{display:grid;gap:3px;padding:14px 18px 16px;border-top:1.5px solid var(--line)}
+.capa-n{font-family:var(--f-display);font-weight:800;font-size:clamp(21px,3vw,27px);line-height:1.15}
+.capa-s{font-size:14.5px;max-width:64ch;color:var(--muted)}
+.capa-p{font-size:15px;margin-top:2px}.capa-p b{color:var(--pink)}
+.capa-b{font-size:13.5px;margin-top:4px;color:var(--muted)}.capa-b b{color:var(--ink);text-decoration:underline;text-underline-offset:3px}
+.capa:hover,.capa:focus-visible{border-color:var(--cc);outline:none;box-shadow:0 0 0 3px color-mix(in srgb,var(--pink) 22%,transparent)}
+.novo-t{margin:0 0 -4px;font-size:12px;font-weight:800;letter-spacing:.06em;text-transform:uppercase;color:#2f7d57}
 .col-c{margin-top:16px}
-@media(max-width:560px){.capa img,.capa-ic{aspect-ratio:4/3}.capa-s{font-size:13.5px}}
+@media(max-width:560px){.capa-t{padding:12px 14px 14px}.capa-s{font-size:13.5px}}
 .cat-h{display:grid;gap:2px;margin-bottom:14px}
 .cat-h h2{font-family:var(--f-display);font-size:clamp(24px,3.4vw,30px);line-height:1.15;margin:0}
 .cat-h p{margin:0;color:var(--muted);font-size:15px;max-width:62ch}
@@ -71,6 +74,7 @@ h1 .jp rt{font-size:.5em;letter-spacing:.05em}
 .card[data-cat="zelda"]{--c:var(--gold)} .card[data-cat="pokecafe"]{--c:var(--sky)} .card[data-cat="didatico"]{--c:var(--sage)}
 .card[data-cat="skincare"]{--c:var(--pink)}
 .comp{margin-top:8px;font:inherit;font-weight:700;font-size:14px;min-height:44px;width:100%;border:1.5px solid var(--line);background:var(--card);color:var(--muted);border-radius:999px;cursor:pointer}
+.comp{font-size:13px!important;padding:4px 10px!important;min-height:0!important;border-color:transparent!important;background:none!important;color:var(--muted)!important;justify-self:center}
 .comp:hover{color:var(--pink);border-color:var(--pink)}
 .card.alvo{outline:3px solid var(--pink);outline-offset:3px}
 .cxb{min-width:0;max-width:100%;margin:4px 0 22px;padding:18px 0 16px 18px;border:2px solid var(--pink);border-radius:var(--r);background:color-mix(in srgb,var(--pink) 7%,var(--card))}
@@ -192,43 +196,17 @@ footer a:hover{color:var(--pink)}
   <header class="hero">
     <p class="eyebrow">unirversos tesouros · vitrine</p>
     <h1><span class="jp"><ruby>日本<rt>にほん</rt></ruby>で<ruby>見<rt>み</rt></ruby>つけた</span>Relíquias &amp; Garimpos</h1>
-    <p class="lede">Uma seleção cuidadosa de peças raras, consoles preservados e tesouros colecionáveis resgatados no Japão.</p>
     <div class="acts">
-      <a class="btn pri" href="#vitrine">Ver os achados ↓</a>
       <a class="btn sec" href="/loja/guia/">Como comprar e a alfândega →</a>
     </div>
-    <p class="taxa" style="max-width:640px"><b>Malote de dezembro:</b> o preço total está em reais. O produto tem <b>15% de desconto na primeira compra</b> e pode ser <b>parcelado pelo Mercado Pago</b>, com os juros que ele cobrar. A <b>taxa de importação (alfândega)</b> é paga por você na chegada, separada do produto e sem desconto. Cada cartão mostra os valores.</p>
-    <p class="aviso">💡 Transparência: alguns botões levam a links de afiliado ou a serviços de redirecionamento. Se você comprar por eles, a Unirversos pode receber uma comissão, sem custo extra para você.</p>
   </header>
 
   <section id="vitrine" aria-label="Vitrine de achados" style="scroll-margin-top:16px;display:grid;gap:22px">
-    <div class="filtros" role="group" aria-label="Filtrar por categoria" id="filtros"></div>
+    <div class="filtros" role="group" aria-label="Filtrar por categoria" id="filtros" hidden></div>
     <div class="cats" id="cats"></div>
   </section>
 
-  <section class="calcbox" aria-labelledby="t-calc">
-    <h2 id="t-calc">🧮 Estimativa de impostos</h2>
-    <p>Caixas que chegam por redirecionador seguem a tributação comum da alfândega: <b>60% de imposto de importação + ICMS do seu estado</b>, mesmo abaixo de US$ 50. Coloque em reais o valor da caixa inteira (produtos + frete + seguro).</p>
-    <div class="calc">
-      <label>Valor da caixa (R$)<input id="v" type="number" inputmode="decimal" min="0" step="0.01" value="500"></label>
-      <label>Seu estado
-        <select id="icms"><option value="20">Acre (20%)</option><option value="20">Alagoas (20%)</option><option value="17">Amapá (17%)</option><option value="17">Amazonas (17%)</option><option value="20">Bahia (20%)</option><option value="20">Ceará (20%)</option><option value="17">Distrito Federal (17%)</option><option value="17">Espírito Santo (17%)</option><option value="17">Goiás (17%)</option><option value="17">Maranhão (17%)</option><option value="17">Mato Grosso (17%)</option><option value="17">Mato Grosso do Sul (17%)</option><option value="20">Minas Gerais (20%)</option><option value="17">Pará (17%)</option><option value="20">Paraíba (20%)</option><option value="17">Paraná (17%)</option><option value="17">Pernambuco (17%)</option><option value="20">Piauí (20%)</option><option value="17">Rio de Janeiro (17%)</option><option value="20">Rio Grande do Norte (20%)</option><option value="17">Rio Grande do Sul (17%)</option><option value="17">Rondônia (17%)</option><option value="20">Roraima (20%)</option><option value="17">Santa Catarina (17%)</option><option value="17" selected>São Paulo (17%)</option><option value="20">Sergipe (20%)</option><option value="17">Tocantins (17%)</option></select>
-      </label>
-    </div>
-    <div class="res" aria-live="polite">
-      <div><small>Imposto de importação (60%)</small><b id="r-ii">—</b></div>
-      <div><small id="r-icms-t">ICMS</small><b id="r-icms">—</b></div>
-      <div><small>Total de impostos</small><b id="r-imp">—</b></div>
-      <div class="tot"><small>Caixa + impostos</small><b id="r-tot">—</b></div>
-    </div>
-    <p class="aviso">É só uma estimativa: a alíquota do estado, a cotação usada pela Receita e as tarifas dos Correios ou da transportadora podem mudar o valor final. As regras completas estão no guia.</p>
-  </section>
 
-  <section class="guia-card" aria-labelledby="t-guia">
-    <h2 id="t-guia">Antes de comprar: o carrinho único e a alfândega</h2>
-    <p>Dá para juntar um console, um figure e uma relíquia de lojas diferentes numa caixa só, usando um serviço de redirecionamento. O envio sai direto do Japão, e o imposto de importação e o frete ficam por conta de quem compra. O guia explica tudo com calma: consolidação, regras de imposto e como pagar sem cair em golpe.</p>
-    <a class="btn sec" href="/loja/guia/" style="justify-self:start">Ler o guia de compra & alfândega →</a>
-  </section>
 
   <footer>
     <span>unirversos — tudo conectado · Aline Kikuti</span>
@@ -237,18 +215,18 @@ footer a:hover{color:var(--pink)}
 </div>
 
 <div id="lb" role="dialog" aria-label="Foto ampliada" aria-hidden="true"><button class="fx" type="button" aria-label="Fechar">×</button><button class="pv" type="button" aria-label="Foto anterior">‹</button><img alt=""><button class="nx" type="button" aria-label="Próxima foto">›</button><span class="nn"></span></div>
-<script src="/loja/produtos.js?v=20261110m"></script>
+<script src="/loja/produtos.js?v=20261110n"></script>
 <script src="/loja/caixinha.js?v=10"></script>
 <script>
 (function(){
   const CATS=[
-    {id:'skincare', capa:'/loja/fotos/capa-skincare.jpg', ic:'🧴', nome:'Skin & Hair Care', sub:'Beleza japonesa para pele e cabelo, em kits: vários produtos numa encomenda só.'},
-    {id:'zelda', capa:'/loja/fotos/capa-zelda.jpg',    ic:'🗡️', nome:'ZELDA · Edição especial', sub:'Itens da série Zelda e da edição de 40 anos. Pré-venda do malote de dezembro: sem taxa de importação na chegada.'},
-    {id:'pokecafe', capa:'/loja/fotos/capa-pokecafe.jpg', ic:'☕', nome:'ITENS EXCLUSIVOS DO POKECAFÉ', sub:'Itens oficiais para você trazer um pouquinho da magia do café para casa.'},
+    {id:'skincare', capa:'/loja/fotos/capa-skincare.jpg', cor:'var(--pink)', ic:'🧴', nome:'Skin & Hair Care', sub:'Beleza japonesa para pele e cabelo: leve um kit pronto ou monte o seu com produtos soltos (pedido mínimo R$ 600).'},
+    {id:'zelda', capa:'/loja/fotos/capa-zelda.jpg', cor:'var(--sage)', ic:'🗡️', nome:'Zelda · Edição de 40 anos', sub:'Sob encomenda, por lista de espera: você só paga quando eu conseguir comprar o seu. Taxa de importação inclusa.'},
+    {id:'pokecafe', capa:'/loja/fotos/capa-pokecafe.jpg', cor:'var(--gold)', ic:'☕', nome:'Pokémon Café · Itens exclusivos', sub:'Itens oficiais para você trazer um pouquinho da magia do café para casa.'},
     {id:'consoles', ic:'🎮', nome:'Consoles & Portáteis', sub:'Consoles e portáteis preservados, de edições especiais a clássicos.'},
     {id:'colec',    ic:'🗿', nome:'Colecionáveis & Figures', sub:'Figures, pelúcias e peças colecionáveis garimpadas com cuidado.'},
     {id:'reliquias',ic:'🏮', nome:'Relíquias Vintage', sub:'Achados antigos e raros, cada um com a sua história.'},
-    {id:'didatico', capa:'/loja/fotos/capa-didatico.jpg', ic:'📚', nome:'Material didático', sub:'Livros e cadernos para estudar japonês.'},
+    {id:'didatico', capa:'/loja/fotos/capa-didatico.jpg', cor:'var(--lavender)', ic:'📚', nome:'Material didático', sub:'Livros e cadernos para estudar japonês.'},
     {id:'gadgets',  ic:'🌸', nome:'Gadgets & Papelaria Japonesa', sub:'Design minimalista, tecnologia portátil e organização para a sua rotina.'}
   ];
   const ARQ=window.CATS_ARQUIVADAS||[];
@@ -262,6 +240,14 @@ footer a:hover{color:var(--pink)}
   const abertas=new Set(); /* coleções abrem recolhidas; a capa abre e fecha */
   try{ const q=new URLSearchParams(location.search).get('cat'); if(CATS.some(c=>c.id===q)) atual=q; }catch(e){}
 
+  function precoFinal(x){ if(!x.total) return 0; const D=(typeof x.descPct==='number')?x.descPct:(x.semDesc?0:15); return (x.total-(x.imposto||0))*(1-D/100)+(x.imposto||0); }
+  function aPartir(c,lista){
+    const fm=n=>'R$ '+Math.round(n).toLocaleString('pt-BR');
+    const v=lista.filter(x=>x.total&&!x.vendido).map(precoFinal); const m=v.length?Math.min(...v):0;
+    if(c.id==='skincare'){ const P=(window.CAIXINHA||[]).map(p=>+p.preco||0).filter(Boolean); const ms=P.length?Math.min(...P):0;
+      return [m?`kits a partir de <b>${fm(m)}</b>`:'', ms?`soltos a partir de <b>${fm(ms)}</b>`:''].filter(Boolean).join(' · '); }
+    return m?`a partir de <b>${fm(m)}</b>`:'';
+  }
   function card(x,c){
     const fl=(x.fotos&&x.fotos.length)?x.fotos:null;
     const foto = fl ? `<div class="gal${x.contem?' contem':''}" tabindex="0" aria-label="Fotos de ${esc(x.nome)}">${fl.map((u,i)=>`<img src="${esc(u)}" alt="${esc(x.nome)}, foto ${i+1} de ${fl.length}" loading="lazy">`).join('')}</div>${fl.length>1?`<span class="cont">1/${fl.length}</span><button type="button" class="seta e" data-dir="-1" aria-label="Foto anterior">‹</button><button type="button" class="seta d" data-dir="1" aria-label="Próxima foto">›</button>`:''}` : x.foto ? `<img src="${esc(x.foto)}" alt="${esc(x.nome)}" loading="lazy">` : `<span aria-hidden="true">${c.ic}</span>`;
@@ -269,6 +255,7 @@ footer a:hover{color:var(--pink)}
     const esg=vend||(window.__STATUS||{})[x.id]==='esgotado';
     const btn = esg ? `<span class="quero off" aria-disabled="true">${vend?'VENDIDO':'Esgotado no malote'}</span>` : linkOk(x.link)
       ? `<a class="quero" href="${esc(x.link)}" target="_blank" rel="noopener sponsored">Quero este achado →</a>`
+      : (x.total&&x.lista) ? `<a class="quero" href="https://wa.me/5519996390950?text=${encodeURIComponent('LISTA DE ESPERA: '+x.nome+'\n'+location.origin+'/loja/#'+(x.id||''))}" target="_blank" rel="noopener">Entrar na lista de espera →</a>`
       : x.total ? `<a class="quero" href="https://wa.me/5519996390950?text=${encodeURIComponent('PEDIDO ITEM: '+x.nome+'\n'+location.origin+'/loja/#'+(x.id||''))}" target="_blank" rel="noopener">Quero este item →</a>`
       : `<span class="quero off" aria-disabled="true">Reserva em breve</span>`;
     const p=faixa(x);
@@ -280,22 +267,22 @@ footer a:hover{color:var(--pink)}
     const precoV=x.total?`<p class="preco tot">R$ ${fm(totCom)} ${DESC?`<span class="parc"><s>R$ ${fm(x.total)}</s></span>`:''}${x.imposto?' <span class="parc">+ taxa na chegada</span>':''}</p>`:(p?`<p class="preco">${p} <small>referência</small></p>`:'');
     const br=x.br?`<p class="preco br"><span class="parc">No Mercado Livre (${esc(x.br.rotulo)}, preço de referência)</span><br>R$ ${fm(x.br.preco)}</p><p class="economia">Aqui sai R$ ${fm(x.br.preco-totCom)} mais barato <span class="parc">(${esc(x.br.rotulo)})</span></p>`:'';
     const selo=(x.total&&DESC)?`<span class="selo">${DESC}% OFF · ${esc(x.seloTxt||'1ª compra')}</span>`:'';
-    const novo=vend?`<span class="vendido">VENDIDO</span>`:x.novo?`<span class="novo">ITEM NOVO</span>`:'';
+    const novo=vend?`<span class="vendido">VENDIDO</span>`:(x.novo&&!selo)?`<span class="novo">ITEM NOVO</span>`:'';
     return `<article class="card${esg?' esg':''}${x.br?' cmp':''}" data-cat="${c.id}" data-id="${esc(x.id||'')}">
       ${x.exemplo?'<span class="ex">exemplo</span>':''}
       <div class="foto">${foto}${selo}${novo}</div>
       <div class="corpo">
-        <h3>${esc(x.nome)}</h3>
+        ${(x.novo&&selo&&!vend)?'<p class="novo-t">Produto novo</p>':''}<h3>${esc(x.nome)}</h3>
         ${precoV}
         <details class="mais"><summary>Mais detalhes</summary>
-          ${c.id==='zelda'?'<p class="pre">PRÉ-VENDA · MALOTE</p>':''}
+          ${x.lista?'<p class="pre">SOB ENCOMENDA · LISTA DE ESPERA</p>':''}
           ${br}${rsDet}
           ${x.kit?`<p class="d"><b>O que vem no kit:</b></p><ul class="kitl">${x.kit.map(t=>`<li>${esc(t)}</li>`).join('')}</ul>`:''}
           <p class="d">${esc(x.desc)}</p>
           ${(c.id==='consoles'||x.antes)&&!x.novo?`<div class="antes"><b>Antes de comprar</b><ul>${(x.antes||['Item de garimpo: usado, garimpado no Japão e vendido no estado mostrado nas fotos.','Console japonês: roda jogos de 3DS japoneses. A trava de região pode ser contornada por modificação, que é por conta do comprador.','Carregador japonês: confira a tensão antes de ligar.']).map(t=>`<li>${esc(t)}</li>`).join('')}</ul></div>`:''}
         </details>
         ${btn}
-        ${x.id?`<button type="button" class="comp" data-share="${esc(x.id)}" data-cat="${c.id}">🔗 Compartilhar</button>`:''}
+        ${x.id?`<button type="button" class="comp" data-share="${esc(x.id)}" data-cat="${c.id}">🔗 compartilhar</button>`:''}
       </div></article>`;
   }
   function cxBanner(){
@@ -312,9 +299,9 @@ footer a:hover{color:var(--pink)}
       const lista=ITENS.filter(x=>x.cat===c.id);
       const ab=abertas.has(c.id)||atual===c.id;
       return `<section class="col${ab?' ab':''}" aria-labelledby="c-${c.id}">
-        <button type="button" class="capa" data-col="${c.id}" aria-expanded="${ab}" aria-controls="cc-${c.id}">
+        <button type="button" class="capa" style="--cc:${c.cor||'var(--pink)'}" data-col="${c.id}" aria-expanded="${ab}" aria-controls="cc-${c.id}">
           ${c.capa?`<img src="${esc(c.capa)}" alt="" loading="lazy">`:`<span class="capa-ic" aria-hidden="true">${c.ic}</span>`}
-          <span class="capa-t"><span class="capa-n" id="c-${c.id}">${c.ic} ${esc(c.nome)}</span><span class="capa-s">${esc(c.sub)}</span><span class="capa-b">${lista.length} ${lista.length===1?'item':'itens'} · <b>${ab?'Recolher ▴':'Ver coleção ▾'}</b></span></span>
+          <span class="capa-t"><span class="capa-n" id="c-${c.id}">${c.ic} ${esc(c.nome)}</span>${aPartir(c,lista)?`<span class="capa-p">${aPartir(c,lista)}</span>`:''}<span class="capa-b"><b>${ab?'Recolher ▴':'Ver coleção ▾'}</b></span></span>
         </button>
         <div class="col-c" id="cc-${c.id}"${ab?'':' hidden'}>
         ${c.id==='skincare'?cxBanner():''}
@@ -368,22 +355,6 @@ footer a:hover{color:var(--pink)}
     abertas.add(it.cat); render();
     setTimeout(()=>{ const el=document.querySelector('.card[data-id="'+id.replace(/"/g,'')+'"]'); if(!el) return; el.scrollIntoView({block:'center'}); el.classList.add('alvo'); },150);
   })();
-})();
-</script>
-<script>
-(function(){
-  const brl=n=>n.toLocaleString('pt-BR',{style:'currency',currency:'BRL'});
-  const v=document.getElementById('v'), s=document.getElementById('icms');
-  function calc(){
-    const val=Math.max(0,parseFloat(String(v.value).replace(',','.'))||0), a=(+s.value)/100;
-    const ii=val*0.60, icms=(val+ii)/(1-a)*a;
-    document.getElementById('r-ii').textContent=brl(ii);
-    document.getElementById('r-icms').textContent=brl(icms);
-    document.getElementById('r-icms-t').textContent='ICMS ('+s.value+'%)';
-    document.getElementById('r-imp').textContent=brl(ii+icms);
-    document.getElementById('r-tot').textContent=brl(val+ii+icms);
-  }
-  v.addEventListener('input',calc); s.addEventListener('change',calc); calc();
 })();
 </script>
 <div class="pedido-bg" id="pedidoBg" role="dialog" aria-modal="true" aria-labelledby="pedidoT">
