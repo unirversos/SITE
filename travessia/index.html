@@ -75,8 +75,12 @@ h1 em{font-style:normal;color:var(--pink)}
 .destaque{display:grid;gap:12px;justify-items:start;background:linear-gradient(135deg,#fff 0%,var(--gold-soft) 100%);border:2px solid var(--pink);border-radius:28px;padding:clamp(22px,4vw,38px);box-shadow:0 18px 40px -24px rgba(194,63,94,.55)}
 .destaque .tag{font-size:12px;letter-spacing:.16em;text-transform:uppercase;font-weight:700;color:#fff;background:var(--pink);border-radius:999px;padding:3px 12px}
 .destaque h2{font-family:var(--f-display);font-weight:800;font-size:clamp(28px,4.6vw,44px);line-height:1.1;margin:0;text-wrap:balance}
-.destaque p{margin:0;max-width:60ch;font-size:clamp(16px,2vw,18px)}
-.destaque .nota{font-size:14px;color:var(--muted)}
+.vant{list-style:none;margin:6px 0 10px;padding:0;display:grid;gap:14px;width:100%;grid-template-columns:repeat(3,minmax(0,1fr))}
+.vant li{display:flex;gap:12px;align-items:flex-start;background:rgba(255,255,255,.7);border-left:4px solid var(--gold);border-radius:14px;padding:14px 16px}
+.vant .vi{font-size:24px;line-height:1.2;flex:none}
+.vant strong{display:block;font-family:var(--f-display);font-weight:800;font-size:17px;line-height:1.25;margin-bottom:2px}
+.vant div span{display:block;color:var(--muted);font-size:15px;line-height:1.5}
+@media (max-width:820px){.vant{grid-template-columns:1fr}}
 .btn.big{font-size:clamp(18px,3vw,22px);padding:14px 30px;min-height:56px;box-shadow:0 12px 26px -12px rgba(194,63,94,.8)}
 
 /* ferramentas */
@@ -147,8 +151,11 @@ footer a{color:var(--pink);text-decoration:none;display:inline-flex;align-items:
   <section class="destaque" aria-labelledby="t-cal">
     <span class="tag">Comece por aqui</span>
     <h2 id="t-cal">Seu calendário da viagem, dia a dia</h2>
-    <p>Escolha o primeiro e o último dia, toque em qualquer dia e anote evento, horário, local e detalhes. Os horários mudam sozinhos para o fuso do Japão a partir da sua chegada, e você leva tudo para o Google Agenda quando quiser.</p>
-    <p class="nota">Depois, calcule o cronograma de ingressos: tem ingresso que esgota três meses antes.</p>
+    <ul class="vant">
+      <li><span class="vi" aria-hidden="true">🕘</span><div><strong>Fuso automático</strong><span>Horários convertidos para o horário do Japão a partir da sua chegada.</span></div></li>
+      <li><span class="vi" aria-hidden="true">📤</span><div><strong>Google Agenda</strong><span>Leve todo o seu roteiro de uma vez, em um arquivo.</span></div></li>
+      <li><span class="vi" aria-hidden="true">🎟️</span><div><strong>Cronograma de ingressos</strong><span>Saiba a data exata para comprar antes que esgotem.</span></div></li>
+    </ul>
     <a class="btn pri big" href="/travessia/calendario/">📅 Montar meu calendário</a>
   </section>
 
