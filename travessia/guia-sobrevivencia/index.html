@@ -2,458 +2,333 @@
 <html lang="pt-BR">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Um dia inteiro no Japão — mini guia de sobrevivência | Unirversos Travessia</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>Um dia inteiro no Japão · mini guia de sobrevivência | Unirversos Travessia</title>
+<meta name="description" content="Mini guia de sobrevivência no Japão para quem não fala japonês: o que saber da véspera ao último trem, números de emergência e os alergênicos para reconhecer no rótulo.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@500;700;800&family=Zen+Maru+Gothic:wght@400;500;700&display=swap">
 <style>
-@import url('https://fonts.googleapis.com/css2?family=Baloo+2:wght@500;700;800&family=Zen+Maru+Gothic:wght@400;500;700&display=swap');
-
+/* Mesmas cores, fontes e medidas do hub da Travessia e da home. */
 :root{
-  --paper:#fdf6f4; --paper-dark:#f8dde1; --ink:#3a2b38; --ink-soft:#6b5a67;
-  --indigo:#c23f5e; --indigo-soft:#a8344f; --hanko:#c23f5e; --gold:#8e6a1f; --gold-soft:#fbf2df;
-  --sage:#517158; --sage-soft:#e8efe8; --lavender:#b7a6dc; --line:#ecdadd; --white:#ffffff;
+  --paper:#fdf6f4; --card:#ffffff; --ink:#3a2b38; --muted:#6b5a67; --line:#ecdadd; --blush:#f8dde1;
+  --pink:#c23f5e; --pink-d:#a8344f; --gold:#8e6a1f; --gold-soft:#fbf2df; --sage:#517158; --sage-soft:#e8efe8; --lavender:#b7a6dc;
   --f-display:"Baloo 2","Zen Maru Gothic",system-ui,sans-serif;
   --f-body:"Zen Maru Gothic","Hiragino Maru Gothic ProN","Noto Sans JP",system-ui,sans-serif;
+  --r:20px;
+  --s1:8px; --s2:16px; --s3:24px; --s4:40px; --s5:56px;
+  --selo:46px;
 }
-*{box-sizing:border-box;margin:0;padding:0;}
-html{scroll-behavior:smooth;}
-@media (prefers-reduced-motion: reduce){ html{scroll-behavior:auto;} *{transition:none !important;} }
-
-body{
-  font-family:var(--f-body);background:var(--paper);color:var(--ink);line-height:1.75;font-size:16px;
+*{box-sizing:border-box}
+html{scroll-behavior:smooth;-webkit-text-size-adjust:100%}
+@media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}*{transition:none!important}}
+body{margin:0;background:var(--paper);color:var(--ink);font-family:var(--f-body);font-size:16px;line-height:1.7;
   background-image:radial-gradient(var(--line) 1.2px,transparent 1.3px);background-size:22px 22px;
-}
-a:focus-visible,button:focus-visible,summary:focus-visible{outline:3px solid var(--lavender);outline-offset:3px;border-radius:8px}
+  padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));padding-block:18px 40px}
+a{color:inherit}
+a:focus-visible,summary:focus-visible{outline:3px solid var(--lavender);outline-offset:3px;border-radius:8px}
+.pular{position:absolute;left:-999px;top:8px;background:var(--ink);color:#fff;padding:10px 16px;border-radius:999px;z-index:100;text-decoration:none}
+.pular:focus{left:16px}
+.wrap{max-width:760px;margin:0 auto;display:grid;gap:var(--s4)}
+.wrap>*{min-width:0}
+
 /* barra do site, igual à do hub */
-.sitebar{display:flex;flex-wrap:wrap;justify-content:space-between;align-items:center;gap:8px 18px;padding-top:14px}
-.sitebar .logo{font-family:var(--f-display);font-weight:800;font-size:19px;letter-spacing:.14em;text-decoration:none;color:var(--ink);display:inline-flex;align-items:center;min-height:44px}
-.sitebar .logo span{color:var(--hanko)}
-.sitebar .navlinks{display:flex;flex-wrap:wrap;align-items:center;gap:0 18px;font-size:15px}
-.sitebar .navlinks a{text-decoration:none;color:var(--ink-soft);display:inline-flex;align-items:center;min-height:44px}
-.sitebar .navlinks a:hover{color:var(--hanko)}
-.sitebar .navlinks a[aria-current="page"]{color:var(--ink);border-bottom:2px solid var(--hanko)}
-.sitebar .uni-chip button,.sitebar .uni-inst button{min-height:44px!important;padding-inline:16px!important}
-.page{position:relative;z-index:1;max-width:780px;margin:0 auto;padding:0 22px 80px;}
+.sitebar{display:flex;flex-wrap:wrap;justify-content:space-between;align-items:center;gap:var(--s1) 18px}
+.logo{font-family:var(--f-display);font-weight:800;font-size:19px;letter-spacing:.14em;text-decoration:none;display:inline-flex;align-items:center;min-height:44px}
+.logo span{color:var(--pink)}
+.navlinks{display:flex;flex-wrap:wrap;align-items:center;gap:0 18px;font-size:15px}
+.navlinks a{text-decoration:none;color:var(--muted);display:inline-flex;align-items:center;min-height:44px}
+.navlinks a:hover{color:var(--pink)}
+.navlinks a[aria-current="page"]{color:var(--ink);border-bottom:2px solid var(--pink)}
+.uni-chip button,.uni-inst button{min-height:44px;padding-inline:16px!important}
 
-/* ---------- capa ---------- */
-.cover{padding:44px 0 40px;border-bottom:2px solid var(--line);}
-.kicker{
-  font-family:var(--f-body);
-  font-size:11px;letter-spacing:2.5px;text-transform:uppercase;
-  color:var(--indigo-soft);margin-bottom:18px;
-}
-.cover h1{
-  font-family:var(--f-display);
-  font-weight:800;font-size:clamp(34px,6vw,54px);text-wrap:balance;
-  line-height:1.15;letter-spacing:0.3px;margin-bottom:20px;
-}
-.cover h1 em{font-style:normal;color:var(--hanko);}
-.cover .jp-vert{
-  font-family:var(--f-display);
-  color:var(--indigo);font-size:15px;letter-spacing:6px;margin-bottom:8px;
-}
-.lede{font-size:17.5px;color:var(--ink-soft);max-width:560px;}
-.lede strong{color:var(--ink);font-weight:700;}
-.cover-foot{
-  display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap;
-  margin-top:30px;font-family:var(--f-body);font-size:11px;
-  color:var(--indigo-soft);letter-spacing:1.5px;
-}
+/* topo: o bilhete com fita washi da home */
+.bilhete{position:relative;background:var(--card);border:1.5px solid var(--line);border-radius:var(--r);
+  padding:34px clamp(20px,5vw,44px) 28px;margin-top:var(--s1);transform:rotate(-.5deg);
+  box-shadow:0 14px 30px -18px rgba(58,43,56,.35),0 2px 6px -2px rgba(58,43,56,.08);display:grid;gap:10px}
+.tape{position:absolute;top:-12px;z-index:1;box-shadow:0 1px 2px rgba(58,43,56,.12);width:96px;height:24px;border-radius:2px;opacity:.9}
+.tape.l{left:12%;transform:rotate(-5deg);background:repeating-linear-gradient(45deg,var(--blush) 0 8px,color-mix(in srgb,var(--lavender) 55%,transparent) 8px 16px)}
+.tape.r{right:12%;transform:rotate(4deg);background:repeating-linear-gradient(-45deg,var(--sage-soft) 0 8px,color-mix(in srgb,var(--sage) 45%,transparent) 8px 16px)}
+.eyebrow{font-size:12px;letter-spacing:.2em;text-transform:uppercase;color:var(--gold);font-weight:700;margin:0}
+h1{font-family:var(--f-display);font-weight:800;font-size:clamp(36px,7vw,58px);line-height:1.04;margin:0;text-wrap:balance;letter-spacing:-.01em;padding-right:64px}
+h1 em{font-style:normal;color:var(--pink)}
+.lede{font-size:clamp(16px,2vw,18px);font-weight:500;margin:0;max-width:44ch;color:var(--muted)}
 
-/* ---------- selo hanko ---------- */
-.seal{
-  width:58px;height:58px;flex-shrink:0;border-radius:50%;
-  border:2.5px solid var(--hanko);color:var(--hanko);
-  display:flex;align-items:center;justify-content:center;
-  font-family:var(--f-display);font-size:26px;font-weight:700;
-  transform:rotate(-7deg);background:var(--white);
-  box-shadow:0 0 0 3px var(--paper), 0 0 0 4px var(--line);
-}
+/* selo hanko */
+.selo{width:var(--selo);height:var(--selo);flex:none;border-radius:50%;border:2.5px solid var(--pink);color:var(--pink);background:var(--card);
+  display:grid;place-items:center;font-family:var(--f-display);font-size:21px;font-weight:700;line-height:1;transform:rotate(-7deg);
+  transition:background .15s,color .15s}
+.bilhete .selo{position:absolute;right:clamp(16px,4vw,32px);bottom:22px;--selo:58px;font-size:27px;transform:rotate(9deg)}
 
-/* ---------- capítulos (horas do dia) ---------- */
-.chapter{padding:46px 0 8px;}
-.ch-head{
-  display:flex;align-items:center;gap:18px;
-  padding-bottom:14px;border-bottom:2px solid var(--line);margin-bottom:26px;
-}
-.ch-time{
-  font-family:var(--f-body);font-size:12px;font-weight:600;
-  letter-spacing:2px;color:var(--gold);
-}
-.ch-head h2{
-  font-family:var(--f-display);font-weight:800;
-  font-size:clamp(23px,4vw,29px);line-height:1.2;
-}
-.ch-head .ch-txt{flex:1;}
-.ch-intro{color:var(--ink-soft);max-width:600px;margin-bottom:22px;font-size:16.5px;}
-.ch-intro strong{color:var(--ink);}
+/* o dia: uma parada por momento, fechada até a pessoa tocar */
+.dia{position:relative;display:grid;gap:12px}
+.dia::before{content:"";position:absolute;z-index:0;top:30px;bottom:30px;left:calc(18px + var(--selo)/2 - 1px);border-left:2px dashed var(--pink);opacity:.45}
+.parada{position:relative;z-index:1;background:var(--card);border:1.5px solid var(--line);border-radius:var(--r);
+  box-shadow:0 10px 24px -18px rgba(58,43,56,.35);scroll-margin-top:16px}
+.parada summary{list-style:none;cursor:pointer;display:grid;grid-template-columns:var(--selo) minmax(0,1fr) 28px;align-items:center;gap:14px;padding:14px 16px 14px 18px;min-height:76px;border-radius:var(--r)}
+.parada summary::-webkit-details-marker{display:none}
+.hora{display:block;font-size:12px;letter-spacing:.16em;text-transform:uppercase;color:var(--gold);font-weight:700;line-height:1.4}
+.parada h2{font-family:var(--f-display);font-weight:800;font-size:clamp(20px,3.4vw,24px);line-height:1.2;margin:0}
+.tem{display:block;font-size:14px;color:var(--muted);line-height:1.45}
+.mais{width:28px;height:28px;border-radius:50%;border:1.5px solid var(--line);display:grid;place-items:center;color:var(--pink);font-family:var(--f-display);font-weight:700;font-size:20px;line-height:1;transition:transform .2s}
+.mais::before{content:"+"}
+.parada summary:hover .mais{border-color:var(--pink)}
+.parada[open] .mais{transform:rotate(45deg)}
+.parada[open] .selo{background:var(--pink);color:#fff}
+.parada[open] .tem{display:none}
+.dentro{padding:2px 18px 18px calc(18px + var(--selo) + 14px)}
 
-/* ---------- cards ---------- */
-.card{
-  background:var(--white);border:1.5px solid var(--line);border-radius:20px;
-  padding:20px 22px;margin-bottom:16px;
-}
-.card h3{
-  font-family:var(--f-body);font-weight:700;font-size:16px;
-  margin-bottom:8px;display:flex;align-items:baseline;gap:10px;
-}
-.card h3 .tag{
-  font-family:var(--f-body);font-size:10px;font-weight:600;
-  letter-spacing:1.5px;text-transform:uppercase;color:var(--hanko);
-  border:1px solid var(--hanko);border-radius:20px;padding:2px 10px;white-space:nowrap;
-}
-.card p{color:var(--ink-soft);font-size:15.5px;}
-.card p + p{margin-top:10px;}
-.card p strong{color:var(--ink);}
-.card ul{list-style:none;margin-top:10px;}
-.card ul li{
-  position:relative;padding:8px 0 8px 22px;color:var(--ink-soft);font-size:15.5px;
-  border-top:1px dashed var(--line);
-}
-.card ul li:first-child{border-top:none;}
-.card ul li::before{
-  content:'—';position:absolute;left:0;color:var(--gold);font-weight:700;
-}
-.card ul li strong{color:var(--ink);}
+/* dicas */
+.dicas{list-style:none;margin:0;padding:0}
+.dicas li{position:relative;padding:11px 0 11px 22px;border-top:1px dashed var(--line);font-size:15.5px;line-height:1.6;color:var(--muted)}
+.dicas li::before{content:"—";position:absolute;left:0;top:11px;color:var(--gold);font-weight:700}
+.dicas b{color:var(--ink);font-weight:700}
+.dicas li.cuidado::before{content:"!";top:14px;width:16px;height:16px;border-radius:50%;background:var(--pink);color:#fff;font-family:var(--f-display);font-size:12px;line-height:16px;text-align:center}
+.dicas li.cuidado b:first-child{color:var(--pink-d)}
+.lk{font-family:var(--f-display);font-weight:700;color:var(--pink);text-decoration:none;display:inline-flex;align-items:center;min-height:44px}
+.lk:hover{text-decoration:underline}
+.sub{font-family:var(--f-display);font-weight:800;font-size:16px;margin:14px 0 8px;padding-top:14px;border-top:1px dashed var(--line)}
 
-.warn{border-left:6px solid var(--hanko);}
-.gold-card{border-left:6px solid var(--gold);}
+/* alergênicos: o kanji é o que a pessoa procura no rótulo */
+.alerg{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px}
+.alerg li{background:var(--paper);border:1.5px solid var(--line);border-radius:14px;padding:10px 4px 8px;text-align:center;display:grid;gap:2px}
+.alerg .kj{font-family:var(--f-display);font-weight:700;font-size:24px;line-height:1.2;color:var(--pink)}
+.alerg .nm{font-size:13.5px;font-weight:700;line-height:1.3}
+.alerg .rj{font-size:12px;color:var(--muted);line-height:1.3}
 
-.grid2{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:16px;margin-bottom:16px;}
-.grid2 .card{margin-bottom:0;}
+/* preços */
+.precos{margin:0}
+.precos div{display:flex;align-items:baseline;gap:10px;padding:8px 0;font-size:15.5px}
+.precos div+div{border-top:1px dashed var(--line)}
+.precos dt{flex:1}
+.precos dd{margin:0;font-weight:700;color:var(--gold);white-space:nowrap}
 
-/* ---------- frases ---------- */
-.phrase{
-  display:flex;align-items:baseline;justify-content:space-between;gap:14px;
-  padding:9px 0;border-top:1px dashed var(--line);flex-wrap:wrap;
-}
-.phrase:first-of-type{border-top:none;}
-.phrase .jp{
-  font-family:var(--f-body);font-size:14px;font-weight:600;color:var(--indigo);
-}
-.phrase .pt{font-size:14.5px;color:var(--ink-soft);text-align:right;flex:1;min-width:140px;}
+/* emergência: sempre à vista, nunca atrás de um toque */
+.sos{background:var(--card);border:1.5px solid var(--line);border-left:6px solid var(--pink);border-radius:var(--r);padding:18px 20px;display:grid;gap:12px;scroll-margin-top:16px}
+.sos h2{font-family:var(--f-display);font-weight:800;font-size:clamp(20px,3.4vw,24px);line-height:1.2;margin:0}
+.fones{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+.fone{display:grid;gap:0;text-decoration:none;background:var(--paper);border:1.5px solid var(--line);border-radius:16px;padding:10px 16px 12px;transition:border-color .15s}
+.fone:hover{border-color:var(--pink)}
+.fone .num{font-family:var(--f-display);font-weight:800;font-size:40px;line-height:1.1;color:var(--pink)}
+.fone .quem{font-weight:700;font-size:15px;line-height:1.35}
+.sos p:not(.eyebrow){margin:0;font-size:15.5px;color:var(--muted);line-height:1.6}
+.sos p:not(.eyebrow) b{color:var(--ink)}
+.sos .lk{margin-top:-8px}
 
-/* ---------- índice fixo ---------- */
-.sticky-nav{position:sticky;top:0;z-index:100;background:rgba(253,246,244,.94);backdrop-filter:blur(6px);
-  border-bottom:1.5px solid var(--line);margin:0 -22px;padding:8px 22px;overflow-x:auto;scroll-behavior:smooth;scrollbar-width:thin}
-.sticky-nav ul{list-style:none;display:flex;gap:6px;flex-wrap:nowrap;padding:0;font-size:14px}
-.sticky-nav li{flex-shrink:0}
-.sticky-nav a{display:flex;align-items:center;gap:6px;min-height:44px;padding:0 14px;border-radius:999px;background:#fff;color:var(--ink-soft);
-  text-decoration:none;font-family:var(--f-display);font-weight:700;border:1.5px solid var(--line);transition:color .15s,background .15s}
-.sticky-nav a:hover{color:var(--hanko);border-color:var(--hanko)}
-.sticky-nav a.active{background:var(--ink);color:#fff;border-color:var(--ink)}
-.sticky-nav a span{font-size:16px}
+/* fecho: o que dizer */
+.dizer{background:var(--gold-soft);border:1.5px solid var(--line);border-left:6px solid var(--gold);border-radius:var(--r);padding:20px 22px;display:grid;gap:6px;justify-items:start;scroll-margin-top:16px}
+.dizer h2{font-family:var(--f-display);font-weight:800;font-size:clamp(20px,3.4vw,24px);line-height:1.2;margin:0}
+.dizer p{margin:0;max-width:52ch}
+.dizer .jp{font-family:var(--f-display);font-weight:800;color:var(--pink);white-space:nowrap}
+.acts{display:flex;flex-wrap:wrap;gap:10px;margin-top:10px}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;min-height:48px;text-decoration:none;font-family:var(--f-display);font-weight:700;font-size:16px;padding:10px 22px;border-radius:999px;border:1.5px solid var(--pink);transition:filter .15s,transform .15s}
+.btn.pri{background:var(--pink);color:#fff;box-shadow:0 6px 16px -8px rgba(194,63,94,.7)}
+.btn.sec{background:var(--card);color:var(--pink)}
+.btn:hover{filter:brightness(.96)}
+.btn:active{transform:translateY(1px)}
 
-/* ---------- alergênicos (cards coloridos) ---------- */
-.allergens{display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:12px;margin-top:16px;}
-.allergen{
-  background:var(--white);border:1.5px solid;border-radius:18px;
-  padding:22px 16px;text-align:center;font-weight:600;
-  transition:all .2s ease;cursor:pointer;position:relative;
-  min-height:160px;display:flex;flex-direction:column;justify-content:center;
-  box-shadow:0 10px 24px -20px rgba(58,43,56,.35);
-}
-.allergen:hover{transform:translateY(-2px);}
+footer{display:flex;flex-wrap:wrap;gap:0 20px;justify-content:space-between;align-items:center;color:var(--muted);font-size:14px;border-top:1.5px solid var(--line);padding-top:var(--s2)}
+footer a{color:var(--pink);text-decoration:none;display:inline-flex;align-items:center;min-height:44px;margin-right:12px}
 
-/* cores por alérgeno (tons da paleta do site) */
-.allergen:nth-child(1){border-color:#c23f5e;background:#c23f5e14;}
-.allergen:nth-child(1) .kj{color:#c23f5e;}
-.allergen:nth-child(2){border-color:#517158;background:#51715814;}
-.allergen:nth-child(2) .kj{color:#517158;}
-.allergen:nth-child(3){border-color:#8e6a1f;background:#8e6a1f14;}
-.allergen:nth-child(3) .kj{color:#8e6a1f;}
-.allergen:nth-child(4){border-color:#7d6aae;background:#7d6aae14;}
-.allergen:nth-child(4) .kj{color:#7d6aae;}
-.allergen:nth-child(5){border-color:#b5583f;background:#b5583f14;}
-.allergen:nth-child(5) .kj{color:#b5583f;}
-.allergen:nth-child(6){border-color:#3f7a86;background:#3f7a8614;}
-.allergen:nth-child(6) .kj{color:#3f7a86;}
-.allergen:nth-child(7){border-color:#a8447c;background:#a8447c14;}
-.allergen:nth-child(7) .kj{color:#a8447c;}
-.allergen:nth-child(8){border-color:#6f7f3a;background:#6f7f3a14;}
-.allergen:nth-child(8) .kj{color:#6f7f3a;}
-
-.allergen .kj{font-family:var(--f-display);font-size:36px;font-weight:700;line-height:1;margin-bottom:10px;}
-.allergen .nm{font-size:14px;color:var(--ink);font-weight:600;margin-bottom:6px;}
-.allergen .rj{font-family:var(--f-body);font-size:11px;color:var(--ink-soft);letter-spacing:0.5px;}
-
-/* ---------- banners de prática ---------- */
-.practice-banner{background:var(--sage-soft);border:1.5px solid var(--line);border-left:6px solid var(--sage);border-radius:18px;
-  padding:18px 22px;margin:20px 0;display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:10px 16px}
-.practice-banner p{font-size:15px;color:var(--ink);margin:0;flex:1 1 220px}
-.practice-banner a{display:inline-flex;align-items:center;justify-content:center;min-height:48px;background:var(--hanko);color:#fff;padding:0 22px;border-radius:999px;
-  text-decoration:none;font-family:var(--f-display);font-weight:700;font-size:15px;box-shadow:0 6px 16px -8px rgba(194,63,94,.7)}
-.practice-banner a:hover{filter:brightness(.96)}
-
-/* ---------- CTA final ---------- */
-.cta-final{background:linear-gradient(135deg,#fff 0%,var(--gold-soft) 100%);color:var(--ink);border:2px solid var(--hanko);border-radius:28px;
-  padding:clamp(24px,4vw,36px);text-align:left;margin:40px 0 30px;box-shadow:0 18px 40px -24px rgba(194,63,94,.55)}
-.cta-final h3{font-family:var(--f-display);font-size:clamp(24px,4vw,30px);font-weight:800;margin-bottom:10px}
-.cta-final p{font-size:16px;line-height:1.6;color:var(--ink-soft);margin-bottom:20px;max-width:60ch}
-.cta-final-btns{display:flex;gap:10px;flex-wrap:wrap}
-.cta-final a{display:inline-flex;align-items:center;justify-content:center;min-height:48px;padding:0 24px;border-radius:999px;text-decoration:none;
-  font-family:var(--f-display);font-weight:700;font-size:16px;border:1.5px solid var(--hanko)}
-.cta-final a.btn-pdf{background:var(--hanko);color:#fff;box-shadow:0 6px 16px -8px rgba(194,63,94,.7)}
-.cta-final a.btn-revista{background:#fff;color:var(--hanko)}
-.cta-final a:hover{filter:brightness(.96)}
-
-/* ---------- emergência ---------- */
-.emg{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:16px;margin-bottom:16px;}
-.emg .card{margin-bottom:0;text-align:left;}
-.emg .num{
-  font-family:var(--f-display);font-size:44px;font-weight:700;color:var(--hanko);line-height:1;
-}
-.emg .num-label{font-weight:700;font-size:15px;margin:6px 0 2px;}
-.emg .num-jp{font-family:var(--f-body);font-size:12px;color:var(--indigo-soft);letter-spacing:1px;}
-.emg p{margin-top:8px;font-size:14.5px;}
-
-/* ---------- preços onsen ---------- */
-.price-row{
-  display:flex;align-items:baseline;justify-content:space-between;gap:12px;
-  padding:10px 0;border-top:1px dashed var(--line);flex-wrap:wrap;
-}
-.price-row:first-of-type{border-top:none;}
-.price-row .what{font-size:15px;color:var(--ink);font-weight:500;flex:1;min-width:180px;}
-.price-row .what small{display:block;font-weight:400;color:var(--ink-soft);font-size:13px;}
-.price-row .val{font-family:var(--f-body);font-size:13.5px;font-weight:600;color:var(--gold);white-space:nowrap;}
-
-/* ---------- amuleto ---------- */
-.omamori{background:var(--gold-soft);color:var(--ink);border:1.5px solid var(--line);border-left:6px solid var(--gold);border-radius:20px;padding:24px 24px;margin-top:10px}
-.omamori h3{font-family:var(--f-display);font-size:21px;font-weight:800;color:var(--ink);display:flex;align-items:center;gap:12px;margin-bottom:6px}
-.omamori .seal{border-color:var(--gold);color:var(--gold);background:#fff;box-shadow:none;width:46px;height:46px;font-size:20px}
-.omamori .note{color:var(--ink-soft);font-size:15px;margin-bottom:14px}
-.omamori .phrase{border-top:1px dashed #e3cfa0}
-.omamori .phrase .jp{color:var(--hanko)}
-.omamori .phrase .pt{color:var(--ink-soft)}
-.lk{display:inline-flex;align-items:center;min-height:44px;color:var(--pink-d,#a8344f);font-weight:700}
-
-/* ---------- rodapé ---------- */
-.colophon{
-  margin-top:56px;padding-top:18px;border-top:1.5px solid var(--line);
-  display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap;
-}
-.colophon .brand{font-family:var(--f-display);font-size:17px;font-weight:700;}
-.colophon .meta{
-  font-family:var(--f-body);font-size:10.5px;letter-spacing:1.5px;
-  color:var(--indigo-soft);text-transform:uppercase;text-align:right;
-}
-.diary{
-  margin-top:26px;background:var(--white);border:1.5px dashed var(--line);
-  border-radius:18px;padding:20px 22px;
-}
-.diary .q{
-  font-family:var(--f-display);font-size:16.5px;color:var(--indigo);margin-bottom:14px;
-}
-.diary .ln{border-bottom:1px solid var(--line);height:30px;}
-
-/* ---------- cartas de bolso ---------- */
-.carta{background:var(--white);border:1.5px solid var(--line);border-radius:18px;margin-bottom:10px;box-shadow:0 10px 24px -20px rgba(58,43,56,.35)}
-.carta.warn{border-left:6px solid var(--hanko);}
-.carta summary{list-style:none;cursor:pointer;padding:14px 46px 14px 18px;font-weight:700;font-size:16px;position:relative;min-height:48px;display:flex;align-items:center;gap:10px;flex-wrap:wrap;}
-.carta summary::-webkit-details-marker{display:none;}
-.carta summary::after{content:'+';position:absolute;right:18px;top:50%;transform:translateY(-50%);font-size:22px;color:var(--indigo);font-weight:400;}
-.carta[open] summary::after{content:'–';}
-.carta summary .tag{font-family:var(--f-body);font-size:10px;font-weight:600;letter-spacing:1.5px;text-transform:uppercase;color:var(--hanko);border:1px solid var(--hanko);border-radius:20px;padding:2px 10px;}
-.carta > p,.carta > ul,.carta > .allergens,.carta > .phrase,.carta > .price-row{margin:0 18px;}
-.carta > p{color:var(--ink-soft);font-size:15.5px;padding-bottom:16px;}
-.carta > p strong,.carta > p b,.carta li b{color:var(--ink);}
-.carta > ul{list-style:none;padding-bottom:10px;}
-.carta > ul li{position:relative;padding:8px 0 8px 22px;color:var(--ink-soft);font-size:15.5px;border-top:1px dashed var(--line);}
-.carta > ul li:first-child{border-top:none;}
-.carta > ul li::before{content:'—';position:absolute;left:0;color:var(--gold);font-weight:700;}
-.carta > .allergens{margin-bottom:16px;}
-.carta .allergen{min-height:96px;padding:12px 8px;cursor:default;}
-.carta .allergen .kj{font-size:28px;margin-bottom:4px;}
-.chapter{padding:34px 0 4px;}
-.ch-head{margin-bottom:16px;}
-@media (max-width:560px){
-  .phrase .pt{text-align:left;}
-  .cover{padding-top:44px;}
+@media (max-width:640px){
+  .wrap{gap:var(--s3)}
+  :root{--selo:42px}
+  .parada summary{gap:12px;padding:12px 12px 12px 14px}
+  .dia::before{left:calc(14px + var(--selo)/2 - 1px)}
+  .dentro{padding:0 14px 14px}
+  .alerg .kj{font-size:21px}
+  .acts .btn{flex:1 1 100%}
+  h1{padding-right:0}
+  .bilhete{padding-bottom:22px}
+  .bilhete .selo{--selo:48px;font-size:22px;bottom:16px}
+  .lede{padding-right:56px}
 }
 
+/* o PDF sai desta mesma página: tudo aberto, sem menu nem botões */
+@media print{
+  @page{margin:14mm}
+  body{background:#fff;padding:0;font-size:13px}
+  .sitebar,.pular,.mais,.acts,.lk,.tape,.uni-chip,.uni-inst,footer a{display:none!important}
+  .wrap{gap:18px;max-width:none}
+  .bilhete{transform:none;box-shadow:none}
+  .dia{gap:10px}.dia::before{display:none}
+  .parada,.sos,.dizer{box-shadow:none}
+  .sos,.dizer,.dicas li,.alerg,.precos,.parada summary{break-inside:avoid}
+  .so-tela{display:none}
+  .parada .tem{display:none}
+  .dicas li{padding-block:7px}
+}
 </style>
 <link rel="stylesheet" href="/estilo-celular.css?v=2">
-<script defer src="/menu-ativo.js?v=1"></script>
 <link rel="icon" href="/favicon.svg" type="image/svg+xml"><link rel="icon" href="/favicon.ico" sizes="48x48"><link rel="apple-touch-icon" href="/apple-touch-icon.png"><link rel="manifest" href="/manifest.webmanifest"><meta name="theme-color" content="#3a2b38"><meta name="mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-title" content="Unirversos"><script src="/app.js" defer></script></head>
 <body>
-<main class="page">
-
+<a class="pular" href="#dia">Pular para o guia</a>
+<div class="wrap">
   <div class="sitebar" role="navigation" aria-label="Site">
     <a href="/" class="logo">UNI<span>R</span>VERSOS</a>
     <span class="navlinks"><a href="/idiomas/">idiomas</a><a href="/travessia/" aria-current="page">travessia</a><a href="/paralelos/">paralelos</a><a href="/loja/">tesouros</a><a href="/sobre/">sobre</a></span>
   </div>
 
-  <!-- ============ STICKY HEADER COM ÍNDICE ============ -->
-  <nav class="sticky-nav" id="indexNav">
-    <ul>
-      <li><a href="#vespera" onclick="updateActiveIndex(event)"><span>🧳</span> Véspera</a></li>
-      <li><a href="#manha" onclick="updateActiveIndex(event)"><span>☕</span> Manhã</a></li>
-      <li><a href="#rua" onclick="updateActiveIndex(event)"><span>🚶</span> Rua</a></li>
-      <li><a href="#mesa" onclick="updateActiveIndex(event)"><span>🍜</span> Almoço</a></li>
-      <li><a href="#aguas" onclick="updateActiveIndex(event)"><span>🫖</span> Águas</a></li>
-      <li><a href="#emergencia" onclick="updateActiveIndex(event)"><span>🆘</span> Emergência</a></li>
-      <li><a href="#noite" onclick="updateActiveIndex(event)"><span>🚃</span> Noite</a></li>
-      <li><a href="#amuleto" onclick="updateActiveIndex(event)"><span>💬</span> Falar</a></li>
-    </ul>
-  </nav>
-
-  <!-- ============ CAPA ============ -->
-  <header class="cover">
-    <p class="kicker">Unirversos travessia · caderno de bordo nº 1</p>
-    <p class="jp-vert">日本での一日</p>
-    <h1>Um dia inteiro<br>no <em>Japão</em></h1>
-    <p class="lede">Da véspera ao último trem. Toque numa carta para abrir.</p>
-    <div class="cover-foot">
-      <span></span>
-      <div class="seal" aria-hidden="true">旅</div>
-    </div>
+  <header class="bilhete">
+    <span class="tape l"></span><span class="tape r"></span>
+    <p class="eyebrow">Travessia · mini guia de sobrevivência</p>
+    <h1>Um dia inteiro no <em>Japão</em></h1>
+    <p class="lede">Da véspera ao último trem. <span class="so-tela">Toque num momento do dia para abrir.</span></p>
+    <span class="selo" aria-hidden="true">旅</span>
   </header>
 
-  <section class="chapter" id="vespera">
-    <div class="ch-head">
-      <div class="seal" aria-hidden="true">備</div>
-      <div class="ch-txt"><p class="ch-time">VÉSPERA</p><h2>Antes de embarcar</h2></div>
-    </div>
-    <details class="carta warn"><summary>Remédio comum pode ser proibido <span class="tag">alfândega</span></summary><p>Descongestionantes com <b>pseudoefedrina</b> (Sudafed, Vicks Inhaler) são proibidos, mesmo com receita.</p></details>
-    <details class="carta"><summary>Faça seguro viagem</summary><p>Pronto-socorro sem cobertura custa centenas de dólares.</p></details>
-    <details class="carta"><summary>Resolva a internet antes do voo</summary><p><b>eSIM</b> ativa antes de decolar. Chip físico exige celular desbloqueado.</p></details>
-    <details class="carta"><summary>Mala pequena</summary><p>No Shinkansen, mala acima de <b>160 cm</b> (soma das três medidas) exige assento na última fileira. Sem isso, multa de ¥1.000.</p></details>
-  </section>
+  <main class="dia" id="dia">
 
-  <section class="chapter" id="manha">
-    <div class="ch-head">
-      <div class="seal" aria-hidden="true">金</div>
-      <div class="ch-txt"><p class="ch-time">MANHÃ · DINHEIRO</p><h2>Bom dia, ienes</h2></div>
-    </div>
-    <details class="carta"><summary>Leve dinheiro vivo</summary><p>Muitos lugares <b>só aceitam dinheiro</b>. Saque nos caixas do <b>7-Eleven</b> ou dos <b>Correios</b>, que aceitam cartão estrangeiro.</p></details>
-    <details class="carta warn"><summary>Suica: encoste ao entrar e ao sair</summary><p>Esquecer a saída pode travar o cartão. <a href="/travessia/burocracia/" style="display:inline-flex;align-items:center;min-height:44px">Como ter o Suica →</a></p></details>
-  </section>
-
-  <section class="chapter" id="rua">
-    <div class="ch-head">
-      <div class="seal" aria-hidden="true">道</div>
-      <div class="ch-txt"><p class="ch-time">10:00 · RUA</p><h2>Regras invisíveis</h2></div>
-    </div>
-    <details class="carta" open><summary>Na rua</summary><ul>
-      <li><b>Lixo:</b> quase não há lixeiras. Leve o seu de volta.</li>
-      <li><b>Comida:</b> coma parado, não andando.</li>
-      <li><b>Escada rolante:</b> Tóquio à esquerda, Osaka à direita.</li>
-      <li><b>Sapatos:</b> tire em casas, ryokan e onsen.</li>
-    </ul></details>
-  </section>
-
-  <section class="chapter" id="mesa">
-    <div class="ch-head">
-      <div class="seal" aria-hidden="true">食</div>
-      <div class="ch-txt"><p class="ch-time">13:00 · ALMOÇO</p><h2>À mesa, sem sustos</h2></div>
-    </div>
-    <details class="carta warn"><summary>Wasabi escondido</summary><p>Rolinhos, onigiri e alguns sanduíches podem ter wasabi por dentro. Pergunte antes.</p></details>
-    <details class="carta"><summary>Os 8 alergênicos obrigatórios</summary><div class="allergens"><div class="allergen"><div class="kj">卵</div><div class="nm">Ovo</div><div class="rj">tamago</div></div><div class="allergen"><div class="kj">乳</div><div class="nm">Leite</div><div class="rj">nyuu</div></div><div class="allergen"><div class="kj">小麦</div><div class="nm">Trigo</div><div class="rj">komugi</div></div><div class="allergen"><div class="kj">そば</div><div class="nm">Soba</div><div class="rj">soba</div></div><div class="allergen"><div class="kj">落花生</div><div class="nm">Amendoim</div><div class="rj">rakkasei</div></div><div class="allergen"><div class="kj">えび</div><div class="nm">Camarão</div><div class="rj">ebi</div></div><div class="allergen"><div class="kj">かに</div><div class="nm">Caranguejo</div><div class="rj">kani</div></div><div class="allergen"><div class="kj">くるみ</div><div class="nm">Nozes</div><div class="rj">kurumi</div></div></div></details>
-    <details class="carta"><summary>Frases para pedir e pagar</summary><p>Treine no restaurante, com áudio: <a class="lk" href="/idiomas/mapas/restaurante/">Trilha do restaurante →</a></p></details>
-  </section>
-
-  <section class="chapter" id="aguas">
-    <div class="ch-head">
-      <div class="seal" aria-hidden="true">湯</div>
-      <div class="ch-txt"><p class="ch-time">16:00 · ÁGUAS</p><h2>A hora das águas</h2></div>
-    </div>
-    <details class="carta" open><summary>Onsen: o básico</summary><ul>
-      <li><b>Onsen</b> é fonte termal. <b>Sentou</b> é banho público de bairro, mais barato.</li>
-      <li>Lave-se antes de entrar. A toalha não vai para a água.</li>
-      <li>Tem tatuagem? Procure os "tattoo friendly".</li>
-    </ul></details>
-    <details class="carta"><summary>Quanto custa</summary>
-      <div class="price-row"><span class="what">Sentou</span><span class="val">¥400–600</span></div>
-      <div class="price-row"><span class="what">Onsen de dia (higaeri)</span><span class="val">¥700–2.000</span></div>
-      <div class="price-row"><span class="what">Onsen em ryokan</span><span class="val">incluso na diária</span></div>
+    <details class="parada" id="vespera">
+      <summary>
+        <span class="selo" aria-hidden="true">備</span>
+        <span><span class="hora">Véspera</span><h2>Antes de embarcar</h2><span class="tem">remédios · seguro · internet · mala</span></span>
+        <span class="mais" aria-hidden="true"></span>
+      </summary>
+      <div class="dentro">
+        <ul class="dicas">
+          <li class="cuidado"><b>Remédio comum pode ser proibido.</b> Descongestionantes com <b>pseudoefedrina</b> (Sudafed, Vicks Inhaler) são proibidos, mesmo com receita.</li>
+          <li><b>Faça seguro viagem.</b> Pronto-socorro sem cobertura custa centenas de dólares.</li>
+          <li><b>Resolva a internet antes do voo.</b> eSIM ativa antes de decolar. Chip físico exige celular desbloqueado.</li>
+          <li><b>Mala pequena.</b> No Shinkansen, mala acima de <b>160 cm</b> (soma das três medidas) exige assento na última fileira. Sem isso, multa de ¥1.000.</li>
+        </ul>
+      </div>
     </details>
+
+    <details class="parada" id="manha">
+      <summary>
+        <span class="selo" aria-hidden="true">金</span>
+        <span><span class="hora">Manhã</span><h2>Bom dia, ienes</h2><span class="tem">dinheiro vivo · Suica</span></span>
+        <span class="mais" aria-hidden="true"></span>
+      </summary>
+      <div class="dentro">
+        <ul class="dicas">
+          <li><b>Leve dinheiro vivo.</b> Muitos lugares só aceitam dinheiro. Saque nos caixas do <b>7-Eleven</b> ou dos <b>Correios</b>, que aceitam cartão estrangeiro.</li>
+          <li class="cuidado"><b>Suica: encoste ao entrar e ao sair.</b> Esquecer a saída pode travar o cartão.<br><a class="lk" href="/travessia/burocracia/">Como ter o Suica →</a></li>
+        </ul>
+      </div>
+    </details>
+
+    <details class="parada" id="rua">
+      <summary>
+        <span class="selo" aria-hidden="true">道</span>
+        <span><span class="hora">10:00</span><h2>Regras invisíveis da rua</h2><span class="tem">lixo · comida · escada rolante · sapatos</span></span>
+        <span class="mais" aria-hidden="true"></span>
+      </summary>
+      <div class="dentro">
+        <ul class="dicas">
+          <li><b>Lixo:</b> quase não há lixeiras. Leve o seu de volta.</li>
+          <li><b>Comida:</b> coma parado, não andando.</li>
+          <li><b>Escada rolante:</b> Tóquio à esquerda, Osaka à direita.</li>
+          <li><b>Sapatos:</b> tire em casas, ryokan e onsen.</li>
+        </ul>
+      </div>
+    </details>
+
+    <details class="parada" id="mesa">
+      <summary>
+        <span class="selo" aria-hidden="true">食</span>
+        <span><span class="hora">13:00</span><h2>À mesa, sem sustos</h2><span class="tem">wasabi · alergênicos no rótulo</span></span>
+        <span class="mais" aria-hidden="true"></span>
+      </summary>
+      <div class="dentro">
+        <ul class="dicas">
+          <li class="cuidado"><b>Wasabi escondido.</b> Rolinhos, onigiri e alguns sanduíches podem ter wasabi por dentro. Pergunte antes.</li>
+        </ul>
+        <h3 class="sub">Os 8 alergênicos obrigatórios no rótulo</h3>
+        <ul class="alerg">
+          <li><span class="kj" lang="ja">卵</span><span class="nm">Ovo</span><span class="rj">tamago</span></li>
+          <li><span class="kj" lang="ja">乳</span><span class="nm">Leite</span><span class="rj">nyuu</span></li>
+          <li><span class="kj" lang="ja">小麦</span><span class="nm">Trigo</span><span class="rj">komugi</span></li>
+          <li><span class="kj" lang="ja">そば</span><span class="nm">Soba</span><span class="rj">soba</span></li>
+          <li><span class="kj" lang="ja">落花生</span><span class="nm">Amendoim</span><span class="rj">rakkasei</span></li>
+          <li><span class="kj" lang="ja">えび</span><span class="nm">Camarão</span><span class="rj">ebi</span></li>
+          <li><span class="kj" lang="ja">かに</span><span class="nm">Caranguejo</span><span class="rj">kani</span></li>
+          <li><span class="kj" lang="ja">くるみ</span><span class="nm">Nozes</span><span class="rj">kurumi</span></li>
+        </ul>
+        <a class="lk" href="/idiomas/mapas/restaurante/">Treinar as frases do restaurante →</a>
+      </div>
+    </details>
+
+    <details class="parada" id="aguas">
+      <summary>
+        <span class="selo" aria-hidden="true">湯</span>
+        <span><span class="hora">16:00</span><h2>A hora das águas</h2><span class="tem">onsen · sentou · quanto custa</span></span>
+        <span class="mais" aria-hidden="true"></span>
+      </summary>
+      <div class="dentro">
+        <ul class="dicas">
+          <li><b>Onsen</b> é fonte termal. <b>Sentou</b> é banho público de bairro, mais barato.</li>
+          <li>Lave-se antes de entrar. A toalha não vai para a água.</li>
+          <li>Tem tatuagem? Procure os "tattoo friendly".</li>
+        </ul>
+        <h3 class="sub">Quanto custa</h3>
+        <dl class="precos">
+          <div><dt>Sentou</dt><dd>¥400–600</dd></div>
+          <div><dt>Onsen de dia (higaeri)</dt><dd>¥700–2.000</dd></div>
+          <div><dt>Onsen em ryokan</dt><dd>incluso na diária</dd></div>
+        </dl>
+      </div>
+    </details>
+
+    <details class="parada" id="noite">
+      <summary>
+        <span class="selo" aria-hidden="true">終</span>
+        <span><span class="hora">23:30</span><h2>O último trem</h2><span class="tem">shuuden · coin locker · mala sozinha</span></span>
+        <span class="mais" aria-hidden="true"></span>
+      </summary>
+      <div class="dentro">
+        <ul class="dicas">
+          <li class="cuidado"><b>Não perca o shuuden.</b> Muitas linhas param perto da meia-noite. Confira o horário da sua.</li>
+          <li><b>Guarde a mochila no coin locker.</b> ¥400–1.000 por dia. Muitos só aceitam moedas de ¥100.</li>
+          <li><b>Mande a mala sozinha (takuhaibin).</b> Yamato e Sagawa levam a mala entre aeroporto e hotel por cerca de ¥2.000–2.500.</li>
+        </ul>
+      </div>
+    </details>
+
+  </main>
+
+  <section class="sos" id="emergencia" aria-labelledby="t-sos">
+    <p class="eyebrow">A qualquer hora</p>
+    <h2 id="t-sos">Se algo sair do controle</h2>
+    <div class="fones">
+      <a class="fone" href="tel:110"><span class="num">110</span><span class="quem">Polícia</span></a>
+      <a class="fone" href="tel:119"><span class="num">119</span><span class="quem">Ambulância e bombeiros</span></a>
+    </div>
+    <p><b>Depois de um tremor:</b> siga a sinalização até o <b>hinanjo</b> (escola ou parque). Use as escadas, não o elevador.</p>
+    <a class="lk" href="/idiomas/mapas/emergencia/">Treinar as frases de emergência →</a>
   </section>
 
-  <section class="chapter" id="emergencia">
-    <div class="ch-head">
-      <div class="seal" aria-hidden="true">助</div>
-      <div class="ch-txt"><p class="ch-time">A QUALQUER HORA</p><h2>Se algo sair do controle</h2></div>
-    </div>
-    <div class="emg">
-      <div class="card"><div class="num">110</div><div class="num-label">Polícia</div><div class="num-jp">hyaku-tō-ban · 百十番</div></div>
-      <div class="card"><div class="num">119</div><div class="num-label">Ambulância e bombeiros</div><div class="num-jp">hyaku-juu-kyū-ban · 百十九番</div></div>
-    </div>
-    <details class="carta"><summary>Depois de um tremor</summary><p>Siga a sinalização até o <b>hinanjo</b> (escola ou parque). Use as escadas, não o elevador.</p></details>
-    <details class="carta"><summary>Frases de emergência</summary><p>Treine antes de precisar: <a class="lk" href="/idiomas/mapas/emergencia/">Trilha de emergência →</a></p></details>
-  </section>
-
-  <section class="chapter" id="noite">
-    <div class="ch-head">
-      <div class="seal" aria-hidden="true">終</div>
-      <div class="ch-txt"><p class="ch-time">23:30 · NOITE</p><h2>O último trem</h2></div>
-    </div>
-    <details class="carta warn"><summary>Não perca o shuuden</summary><p>Muitas linhas param perto da meia-noite. Confira o horário da sua.</p></details>
-    <details class="carta"><summary>Guarde a mochila no coin locker</summary><p>¥400–1.000 por dia. Muitos só aceitam moedas de ¥100.</p></details>
-    <details class="carta"><summary>Mande a mala sozinha (takuhaibin)</summary><p>Yamato e Sagawa levam a mala entre aeroporto e hotel por cerca de ¥2.000–2.500.</p></details>
-  </section>
-
-  <!-- ============ CTA FINAL - REVISTA PERSONALIZADA ============ -->
-  <div class="cta-final">
-    <h3>📖 Este guia é o começo</h3>
-    <p>Baixe o guia em PDF ou crie a sua Revista de Viagem.</p>
-    <div class="cta-final-btns">
-      <a href="guia-sobrevivencia-japao.pdf" download class="btn-pdf">📥 Baixar PDF</a>
-      <a href="/loja/revista/" class="btn-revista">✨ Criar Revista Personalizada</a>
-    </div>
-  </div>
-
-  <!-- ============ AMULETO ============ -->
-  <section class="chapter" id="amuleto">
-    <div class="omamori">
-      <h3><span class="seal" aria-hidden="true">守</span> O que dizer</h3>
-      <p class="note">Se decorar só uma, que seja <em>sumimasen</em> (com licença / desculpe).</p>
-      <p class="note"><a class="lk" href="/idiomas/amuleto/">Amuleto de bolso: 52 frases com áudio →</a></p>
+  <section class="dizer" id="amuleto" aria-labelledby="t-dizer">
+    <p class="eyebrow">O que dizer</p>
+    <h2 id="t-dizer">Se decorar só uma: <span class="jp">sumimasen</span></h2>
+    <p>Serve para "com licença" e para "desculpe". O amuleto de bolso tem 52 frases com áudio.</p>
+    <div class="acts">
+      <a class="btn pri" href="/idiomas/amuleto/">Abrir o amuleto de bolso →</a>
+      <a class="btn sec" href="guia-sobrevivencia-japao.pdf" download>Baixar o guia em PDF</a>
     </div>
   </section>
 
-  <footer class="colophon">
-    <span class="brand">unirversos — tudo conectado</span>
-    <span class="meta">Travessia · caderno de bordo nº 1<br>fonte: Nihongo Tabi, de Aline</span>
+  <footer>
+    <span>unirversos — tudo conectado · Aline Kikuti</span>
+    <span>
+      <a href="https://instagram.com/unirversos.idiomas" rel="noopener">@unirversos.idiomas</a>
+      <a href="mailto:unirversos.idiomas@gmail.com">unirversos.idiomas@gmail.com</a>
+    </span>
   </footer>
-
-</main>
-
+</div>
 <script>
-// Atualizar link ativo no índice ao scroll
-function updateActiveIndex(e) {
-  e.preventDefault();
-  const href = e.target.closest('a').getAttribute('href');
-  const target = document.querySelector(href);
-  if (target) {
-    target.scrollIntoView({ behavior: 'smooth' });
-    setActiveLink(href);
-  }
-}
-
-function setActiveLink(href) {
-  document.querySelectorAll('.sticky-nav a').forEach(link => {
-    link.classList.remove('active');
-  });
-  document.querySelector(`.sticky-nav a[href="${href}"]`)?.classList.add('active');
-}
-
-// Atualizar link ativo ao fazer scroll
-window.addEventListener('scroll', () => {
-  const sections = ['vespera', 'manha', 'rua', 'mesa', 'aguas', 'emergencia', 'noite', 'amuleto'];
-  
-  for (let i = sections.length - 1; i >= 0; i--) {
-    const section = document.getElementById(sections[i]);
-    if (section && window.scrollY >= section.offsetTop - 100) {
-      setActiveLink(`#${sections[i]}`);
-      break;
-    }
-  }
-});
-
-// Inicializar - marcar primeiro link como ativo
-document.addEventListener('DOMContentLoaded', () => {
-  setActiveLink('#vespera');
-});
+/* Links antigos (#mesa, #noite...) continuam valendo: a parada certa já chega aberta.
+   Na impressão e no PDF, todas as paradas abrem. */
+(function(){
+  function abrir(){var a=location.hash&&document.querySelector('details'+location.hash);if(a)a.open=true;}
+  abrir();window.addEventListener('hashchange',abrir);
+  var antes=[];
+  window.addEventListener('beforeprint',function(){antes=[].map.call(document.querySelectorAll('details.parada'),function(d){var o=d.open;d.open=true;return o;});});
+  window.addEventListener('afterprint',function(){[].forEach.call(document.querySelectorAll('details.parada'),function(d,i){d.open=!!antes[i];});});
+})();
 </script>
+<script defer src="/menu-ativo.js?v=1"></script>
 <script src="/entrar.js" defer></script>
 </body>
 </html>
