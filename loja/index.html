@@ -65,6 +65,37 @@ h1 .jp rt{font-size:.5em;letter-spacing:.05em}
 .capa:hover,.capa:focus-visible{border-color:var(--cc);outline:none;box-shadow:0 0 0 3px color-mix(in srgb,var(--pink) 22%,transparent)}
 .novo-t{margin:0 0 -4px;font-size:12px;font-weight:800;letter-spacing:.06em;text-transform:uppercase;color:#2f7d57}
 .col-c{margin-top:16px}
+.cx-bloco{margin-top:30px;display:grid;gap:12px}
+.cx-tit{font-family:var(--f-display);font-size:clamp(22px,3vw,26px);margin:0;display:flex;flex-wrap:wrap;align-items:baseline;gap:4px 12px}
+.cx-tit small{font-family:var(--f-body);font-size:14px;font-weight:600;color:var(--muted)}
+.cx-g{margin:10px 0 0;font-size:13px;letter-spacing:.14em;text-transform:uppercase;color:var(--muted)}
+.cx-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(170px,1fr));gap:12px}
+.cx{background:var(--card);border:1.5px solid var(--line);border-radius:16px;overflow:hidden;display:grid;grid-template-rows:auto 1fr}
+.cx.tem{border-color:var(--pink);box-shadow:0 0 0 2px color-mix(in srgb,var(--pink) 25%,transparent)}
+.cx .cx-f{aspect-ratio:1/1;background:#fff;font-size:44px}
+.cx .cx-f img{width:100%;height:100%;object-fit:contain;padding:8px;box-sizing:border-box}
+.cx-c{padding:10px 12px 12px;display:grid;gap:2px;align-content:start}
+.cx h4{font-size:14.5px;line-height:1.25;margin:0;font-weight:700}
+.cx-tam{margin:0;font-size:12.5px;color:var(--muted)}
+.cx-pr{margin:4px 0 0;font-family:var(--f-display);font-weight:800;font-size:19px}
+.qtd{display:flex;align-items:center;justify-content:space-between;margin-top:6px}
+.qtd button{width:40px;height:40px;border-radius:999px;border:1.5px solid var(--pink);background:var(--card);color:var(--pink);font-size:21px;font-weight:800;cursor:pointer;line-height:1}
+.qtd button[data-q="+"]{background:var(--pink);color:#fff}
+.qtd button:disabled{opacity:.3;cursor:default}
+.qtd output{font-family:var(--f-display);font-weight:800;font-size:18px;min-width:24px;text-align:center}
+.barra{position:sticky;bottom:10px;z-index:6;margin-top:8px;background:var(--card);border:1.5px solid var(--pink);border-radius:20px;padding:10px 14px;display:grid;gap:6px;box-shadow:0 14px 30px -14px rgba(58,43,56,.55)}
+.barra .lin{display:flex;justify-content:space-between;align-items:baseline;gap:10px;font-size:14px;color:var(--muted)}
+.barra .lin b{font-family:var(--f-display);font-size:21px;color:var(--ink)}
+.prog{height:8px;border-radius:999px;background:var(--blush);overflow:hidden}
+.prog i{display:block;height:100%;width:0;background:var(--pink);transition:width .25s}
+.prog.ok i{background:var(--sage)}
+.falta{margin:0;font-size:14px;font-weight:700;color:var(--pink)}
+.falta.ok{color:var(--sage)}
+.fim{display:grid;grid-template-columns:1fr auto;gap:8px}
+.fim[hidden]{display:none}
+.fim input{font:inherit;border:1.5px solid var(--line);border-radius:12px;padding:9px 12px;min-height:44px;min-width:0}
+.enviar{font-family:var(--f-display);font-weight:800;font-size:15.5px;border:0;border-radius:999px;padding:10px 18px;background:var(--pink);color:#fff;cursor:pointer;min-height:44px}
+@media(max-width:560px){.cx-grid{grid-template-columns:repeat(2,1fr);gap:10px}.fim{grid-template-columns:1fr}}
 @media(max-width:560px){.capa-t{padding:12px 14px 14px}.capa-s{font-size:13.5px}}
 .cat-h{display:grid;gap:2px;margin-bottom:14px}
 .cat-h h2{font-family:var(--f-display);font-size:clamp(24px,3.4vw,30px);line-height:1.15;margin:0}
@@ -215,7 +246,7 @@ footer a:hover{color:var(--pink)}
 </div>
 
 <div id="lb" role="dialog" aria-label="Foto ampliada" aria-hidden="true"><button class="fx" type="button" aria-label="Fechar">×</button><button class="pv" type="button" aria-label="Foto anterior">‹</button><img alt=""><button class="nx" type="button" aria-label="Próxima foto">›</button><span class="nn"></span></div>
-<script src="/loja/produtos.js?v=20261110n"></script>
+<script src="/loja/produtos.js?v=20261110o"></script>
 <script src="/loja/caixinha.js?v=10"></script>
 <script>
 (function(){
@@ -285,12 +316,55 @@ footer a:hover{color:var(--pink)}
         ${x.id?`<button type="button" class="comp" data-share="${esc(x.id)}" data-cat="${c.id}">🔗 compartilhar</button>`:''}
       </div></article>`;
   }
-  function cxBanner(){
-    const P=window.CAIXINHA||[]; if(!P.length) return '';
-    const fm=n=>Number(n).toLocaleString('pt-BR',{minimumFractionDigits:2,maximumFractionDigits:2});
-    return `<div class="cxb"><div class="cxb-t"><div><h3>🧺 Monte seu kit</h3><p>Escolha produtos soltos, um a um. Pedido mínimo R$ 600.</p></div><a class="cxb-all" href="/loja/caixinha/">Ver todos →</a></div>
-      <div class="cxb-tr">${P.map(p=>`<a class="cxm" href="/loja/caixinha/#${esc(p.id)}"><span class="f">${p.foto?`<img src="${esc(p.foto)}" alt="" loading="lazy">`:esc(p.ic||'🧴')}</span><b>${esc(p.nome)}</b><i>R$ ${fm(p.preco)}</i></a>`).join('')}<a class="cxm mais" href="/loja/caixinha/">Ver mais<br>→</a></div></div>`;
+  /* MONTE SEU KIT dentro da coleção: mesma cesta da página /loja/caixinha/ (localStorage uniCaixinha1) */
+  const CX=(window.CAIXINHA||[]).slice(), CXMIN=window.CAIXINHA_MIN||600, CXMAX=window.CAIXINHA_MAX_QTD||5;
+  const fmR=n=>Number(n).toLocaleString('pt-BR',{minimumFractionDigits:2,maximumFractionDigits:2});
+  let cesta={}; try{ cesta=JSON.parse(localStorage.getItem('uniCaixinha1')||'{}')||{}; }catch(e){}
+  CX.forEach(p=>{ const q=Number(cesta[p.id]); cesta[p.id]=(q>0&&q<=(p.max||CXMAX))?Math.floor(q):0; });
+  const guardaCesta=()=>{ try{ localStorage.setItem('uniCaixinha1',JSON.stringify(cesta)); }catch(e){} };
+  const cxTotal=()=>CX.reduce((t,p)=>t+p.preco*(cesta[p.id]||0),0);
+  function kitSoltos(){
+    if(!CX.length) return '';
+    const G=[]; CX.forEach(p=>{ const g=p.grupo||'Produtos'; if(!G.includes(g)) G.push(g); });
+    const cardS=p=>`<article class="cx" data-cx="${esc(p.id)}" id="${esc(p.id)}">
+      <div class="foto cx-f">${p.foto?`<img src="${esc(p.foto)}" alt="${esc(p.nome)}" loading="lazy">`:`<span aria-hidden="true">${esc(p.ic||'🧴')}</span>`}</div>
+      <div class="cx-c"><h4>${esc(p.nome)}</h4><p class="cx-tam">${esc(p.tam||'')}</p><p class="cx-pr">R$ ${fmR(p.preco)}</p>
+      <div class="qtd"><button type="button" data-q="-" aria-label="Tirar um, ${esc(p.nome)}">−</button><output>0</output><button type="button" data-q="+" aria-label="Colocar um, ${esc(p.nome)}">+</button></div></div></article>`;
+    return `<div class="cx-bloco"><h3 class="cx-tit">🧺 Monte seu kit <small>misture skin e hair no mesmo kit · pedido mínimo R$ ${fmR(CXMIN).replace(',00','')}</small></h3>
+      ${G.map(g=>`<h4 class="cx-g">${esc(g)}</h4><div class="cx-grid">${CX.filter(p=>(p.grupo||'Produtos')===g).map(cardS).join('')}</div>`).join('')}
+      <div class="barra" id="cxBarra" aria-live="polite">
+        <div class="lin"><span id="cxN">Seu kit está vazio</span><b id="cxTot">R$ 0,00</b></div>
+        <div class="prog" id="cxProg"><i></i></div>
+        <p class="falta" id="cxFalta"></p>
+        <div class="fim" id="cxFim" hidden><input id="cxNome" type="text" placeholder="Seu nome" autocomplete="name" aria-label="Seu nome"><button type="button" class="enviar" id="cxEnviar">Enviar pedido pelo WhatsApp →</button></div>
+      </div></div>`;
   }
+  function desenhaCesta(){
+    const bar=document.getElementById('cxBarra'); if(!bar) return;
+    const t=cxTotal(), n=CX.reduce((a,p)=>a+(cesta[p.id]||0),0), ok=t>=CXMIN;
+    CX.forEach(p=>{ const el=document.querySelector('[data-cx="'+p.id+'"]'); if(!el) return; const q=cesta[p.id]||0;
+      el.classList.toggle('tem',q>0); el.querySelector('output').textContent=q;
+      el.querySelector('[data-q="-"]').disabled=q<=0; el.querySelector('[data-q="+"]').disabled=q>=(p.max||CXMAX); });
+    bar.classList.toggle('vazia',!n);
+    document.getElementById('cxN').textContent=n?(n+(n===1?' item':' itens')):'Seu kit está vazio';
+    document.getElementById('cxTot').textContent='R$ '+fmR(t);
+    const pr=document.getElementById('cxProg'); pr.classList.toggle('ok',ok); pr.firstElementChild.style.width=Math.min(100,t/CXMIN*100)+'%';
+    const f=document.getElementById('cxFalta'); f.classList.toggle('ok',ok);
+    f.textContent=ok?'✓ Pedido mínimo atingido':(n?'Faltam R$ '+fmR(CXMIN-t):'Escolha os produtos com o +');
+    document.getElementById('cxFim').hidden=!ok;
+  }
+  document.addEventListener('click',e=>{
+    const b=e.target.closest('[data-cx] [data-q]');
+    if(b){ const id=b.closest('[data-cx]').dataset.cx, p=CX.find(x=>x.id===id); if(!p) return;
+      cesta[id]=Math.max(0,Math.min(p.max||CXMAX,(cesta[id]||0)+(b.dataset.q==='+'?1:-1))); guardaCesta(); desenhaCesta(); return; }
+    if(e.target.closest('#cxEnviar')){
+      const t=cxTotal(); if(t<CXMIN) return; const nm=document.getElementById('cxNome'), nome=nm.value.trim();
+      if(!nome){ nm.focus(); document.getElementById('cxFalta').textContent='Escreva seu nome para enviar.'; return; }
+      const linhas=CX.filter(p=>cesta[p.id]).map(p=>'- '+cesta[p.id]+'x '+p.nome+' ('+p.tam+') · R$ '+fmR(p.preco*cesta[p.id]));
+      const msg='PEDIDO · MONTE SEU KIT\nNome: '+nome+'\n\n'+linhas.join('\n')+'\n\nTotal: R$ '+fmR(t)+'\n(pedido mínimo R$ '+fmR(CXMIN)+')';
+      window.open('https://wa.me/5519996390950?text='+encodeURIComponent(msg),'_blank','noopener');
+    }
+  });
   function render(){
     document.getElementById('filtros').innerHTML =
       [{id:'todos',ic:'🗾',nome:'Todos',n:ITENS.length}].concat(CATS.map(c=>({...c,n:ITENS.filter(x=>x.cat===c.id).length})))
@@ -304,11 +378,12 @@ footer a:hover{color:var(--pink)}
           <span class="capa-t"><span class="capa-n" id="c-${c.id}">${c.ic} ${esc(c.nome)}</span>${aPartir(c,lista)?`<span class="capa-p">${aPartir(c,lista)}</span>`:''}<span class="capa-b"><b>${ab?'Recolher ▴':'Ver coleção ▾'}</b></span></span>
         </button>
         <div class="col-c" id="cc-${c.id}"${ab?'':' hidden'}>
-        ${c.id==='skincare'?cxBanner():''}
-        ${lista.length? `<div class="grid">${lista.map(x=>card(x,c)).join('')}</div>` : `<p class="vazio">Os achados desta categoria chegam em breve.</p>`}
+        ${lista.length? `<div class="grid">${lista.map(x=>card(x,c)).join('')}</div>` : (c.id==='skincare'?'':`<p class="vazio">Os achados desta categoria chegam em breve.</p>`)}
+        ${c.id==='skincare'?kitSoltos():''}
         </div>
       </section>`;
     }).join('');
+    desenhaCesta();
   }
   window.__renderVitrine=render;
   /* foto grande: clique na foto do card abre ampliada */
