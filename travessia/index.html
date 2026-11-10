@@ -4,74 +4,113 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 <title>Unirversos Travessia · ferramentas para planejar e viver o Japão</title>
-<meta name="description" content="Ferramentas gratuitas para a sua viagem ao Japão: cronograma de ingressos, acompanhamento das reservas, resumo da viagem e mini guia de sobrevivência.">
+<meta name="description" content="Ferramentas gratuitas para a sua viagem ao Japão: calendário da viagem, cronograma de ingressos, acompanhamento das reservas, deslocamento entre cidades, resumo da viagem e mini guia de sobrevivência.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@500;700;800&family=Zen+Maru+Gothic:wght@400;500;700&display=swap">
 <style>
 :root{
   --paper:#fdf6f4; --card:#ffffff; --ink:#3a2b38; --muted:#6b5a67; --line:#ecdadd;
-  --pink:#c23f5e; --pink-d:#a8344f; --gold:#8e6a1f; --gold-soft:#fbf2df; --sage-soft:#e8efe8; --lavender:#b7a6dc;
+  --pink:#c23f5e; --pink-d:#a8344f; --gold:#8e6a1f; --gold-soft:#fbf2df; --sage:#517158; --sage-soft:#e8efe8; --lavender:#b7a6dc;
   --f-display:"Baloo 2","Zen Maru Gothic",system-ui,sans-serif;
   --f-body:"Zen Maru Gothic","Hiragino Maru Gothic ProN","Noto Sans JP",system-ui,sans-serif;
   --r:20px;
+  --s1:8px; --s2:16px; --s3:24px; --s4:40px; --s5:56px; /* escala de espaços */
 }
 *{box-sizing:border-box}
-html{scroll-behavior:smooth}
+html{scroll-behavior:smooth;-webkit-text-size-adjust:100%}
+@media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}*{transition:none!important}}
 body{margin:0;background:var(--paper);color:var(--ink);font-family:var(--f-body);font-size:16px;line-height:1.7;
   background-image:radial-gradient(var(--line) 1.2px,transparent 1.3px);background-size:22px 22px;
   padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));padding-block:18px 40px}
 a{color:inherit}
 a:focus-visible,button:focus-visible{outline:3px solid var(--lavender);outline-offset:3px;border-radius:8px}
-.wrap{max-width:1060px;margin:0 auto;display:grid;gap:44px}
-.sitebar{display:flex;flex-wrap:wrap;justify-content:space-between;align-items:center;gap:10px 18px}
-.logo{font-family:var(--f-display);font-weight:800;font-size:19px;letter-spacing:.14em;text-decoration:none}
+.pular{position:absolute;left:-999px;top:8px;background:var(--ink);color:#fff;padding:10px 16px;border-radius:999px;z-index:100;text-decoration:none}
+.pular:focus{left:16px}
+.wrap{max-width:1060px;margin:0 auto;display:grid;gap:var(--s5)}
+.wrap>*{min-width:0}
+
+/* barra do site */
+.sitebar{display:flex;flex-wrap:wrap;justify-content:space-between;align-items:center;gap:var(--s1) 18px}
+.logo{font-family:var(--f-display);font-weight:800;font-size:19px;letter-spacing:.14em;text-decoration:none;display:inline-flex;align-items:center;min-height:44px}
 .logo span{color:var(--pink)}
-.navlinks{display:flex;flex-wrap:wrap;gap:6px 20px;font-size:14px}
-.navlinks a{text-decoration:none;color:var(--muted)}
+.navlinks{display:flex;flex-wrap:wrap;align-items:center;gap:0 18px;font-size:15px}
+.navlinks a{text-decoration:none;color:var(--muted);display:inline-flex;align-items:center;min-height:44px}
 .navlinks a:hover{color:var(--pink)}
 .navlinks a[aria-current="page"]{color:var(--ink);border-bottom:2px solid var(--pink)}
-.hero{display:grid;gap:14px;max-width:760px;padding-top:12px}
+
+/* botões Instalar/Entrar (injetados pelo site todo) com área de toque confortável */
+.uni-chip button,.uni-inst button{min-height:44px;padding-inline:16px!important}
+.navlinks{row-gap:0}
+
+/* topo */
+.hero{display:grid;gap:14px;max-width:760px;padding-top:var(--s1)}
 .eyebrow{font-size:12px;letter-spacing:.2em;text-transform:uppercase;color:var(--gold);font-weight:700;margin:0}
 h1{font-family:var(--f-display);font-weight:800;font-size:clamp(38px,6.4vw,62px);line-height:1.04;margin:0;text-wrap:balance;letter-spacing:-.01em}
 h1 em{font-style:normal;color:var(--pink)}
 .lede{font-size:clamp(17px,2vw,19px);font-weight:500;margin:0;max-width:58ch}
 .lede2{margin:0;max-width:58ch;color:var(--muted)}
 .acts{display:flex;flex-wrap:wrap;gap:10px;margin-top:6px}
-.btn{display:inline-flex;align-items:center;gap:8px;text-decoration:none;font-family:var(--f-display);font-weight:700;font-size:16px;padding:10px 20px;border-radius:999px;border:1.5px solid var(--pink)}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;min-height:48px;text-decoration:none;font-family:var(--f-display);font-weight:700;font-size:16px;padding:10px 22px;border-radius:999px;border:1.5px solid var(--pink);transition:filter .15s,transform .15s}
 .btn.pri{background:var(--pink);color:#fff;box-shadow:0 6px 16px -8px rgba(194,63,94,.7)}
 .btn.sec{background:var(--card);color:var(--pink)}
 .btn:hover{filter:brightness(.96)}
-.sec-h{display:grid;gap:4px;margin-bottom:16px}
+.btn:active{transform:translateY(1px)}
+
+/* títulos de seção */
+.sec-h{display:grid;gap:4px;margin-bottom:var(--s2)}
 .sec-h h2{font-family:var(--f-display);font-weight:800;font-size:clamp(26px,3.6vw,34px);line-height:1.15;margin:0}
 .sec-h p{margin:0;color:var(--muted);max-width:62ch}
-.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:18px}
-.tool{position:relative;background:var(--card);border:1.5px solid var(--line);border-top:6px solid var(--gold);border-radius:var(--r);padding:20px 20px 18px;display:grid;gap:8px;align-content:start;box-shadow:0 10px 24px -18px rgba(58,43,56,.35)}
-.tool .ico{font-size:30px;line-height:1}
-.tool h3{font-family:var(--f-display);font-weight:800;font-size:21px;line-height:1.2;margin:0}
-.tool p{margin:0;color:var(--muted);font-size:15px}
-.tool .tag{justify-self:start;font-size:11px;letter-spacing:.14em;text-transform:uppercase;font-weight:700;color:var(--gold);background:var(--gold-soft);border-radius:999px;padding:2px 10px}
-.tool .go{margin-top:4px;text-decoration:none;font-family:var(--f-display);font-weight:700;color:var(--pink)}
-.tool .go:hover{text-decoration:underline}
-.tool.breve{border-top-color:var(--line);border-style:dashed;border-top-style:dashed;background:transparent;box-shadow:none}
-.tool.breve .tag{color:var(--muted);background:var(--line)}
-.pontes{display:grid;gap:12px}
-.ponte{display:flex;flex-wrap:wrap;gap:6px 14px;align-items:center;justify-content:space-between;background:var(--card);border:1.5px solid var(--line);border-radius:16px;padding:14px 18px}
-.ponte p{margin:0;color:var(--muted);font-size:15px}
-.ponte a{font-family:var(--f-display);font-weight:700;color:var(--pink);text-decoration:none;white-space:nowrap}
-.ponte a:hover{text-decoration:underline}
+
+/* destaque: calendário */
 .destaque{display:grid;gap:12px;justify-items:start;background:linear-gradient(135deg,#fff 0%,var(--gold-soft) 100%);border:2px solid var(--pink);border-radius:28px;padding:clamp(22px,4vw,38px);box-shadow:0 18px 40px -24px rgba(194,63,94,.55)}
 .destaque .tag{font-size:12px;letter-spacing:.16em;text-transform:uppercase;font-weight:700;color:#fff;background:var(--pink);border-radius:999px;padding:3px 12px}
 .destaque h2{font-family:var(--f-display);font-weight:800;font-size:clamp(28px,4.6vw,44px);line-height:1.1;margin:0;text-wrap:balance}
 .destaque p{margin:0;max-width:60ch;font-size:clamp(16px,2vw,18px)}
-.btn.big{font-size:clamp(19px,3vw,24px);padding:16px 34px;box-shadow:0 12px 26px -12px rgba(194,63,94,.8)}
-.comece{background:var(--gold-soft);border:1.5px solid color-mix(in srgb,var(--gold) 30%,var(--line));border-radius:var(--r);padding:22px;display:grid;gap:10px;justify-items:start}
-.comece p{margin:0;max-width:60ch}
-footer{display:flex;flex-wrap:wrap;gap:8px 20px;justify-content:space-between;color:var(--muted);font-size:14px;border-top:1.5px solid var(--line);padding-top:18px}
-footer a{color:var(--pink);text-decoration:none;margin-right:12px}
+.destaque .nota{font-size:14px;color:var(--muted)}
+.btn.big{font-size:clamp(18px,3vw,22px);padding:14px 30px;min-height:56px;box-shadow:0 12px 26px -12px rgba(194,63,94,.8)}
+
+/* ferramentas */
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(min(100%,300px),1fr));gap:18px}
+.tool{position:relative;background:var(--card);border:1.5px solid var(--line);border-left:6px solid var(--gold);border-radius:var(--r);padding:20px;display:grid;gap:8px;align-content:start;box-shadow:0 10px 24px -18px rgba(58,43,56,.35);transition:transform .15s,box-shadow .15s}
+.tool:hover{transform:translateY(-2px);box-shadow:0 16px 30px -18px rgba(58,43,56,.45)}
+.tool:focus-within{outline:3px solid var(--lavender);outline-offset:3px}
+.tool .n{font-family:var(--f-display);font-weight:800;font-size:15px;color:var(--gold);letter-spacing:.08em;display:flex;align-items:center;gap:10px}
+.tool .n .ico{font-size:28px;line-height:1;letter-spacing:0}
+.tool h3{font-family:var(--f-display);font-weight:800;font-size:21px;line-height:1.2;margin:0}
+.tool p{margin:0;color:var(--muted);font-size:15px}
+.tool .go{margin-top:6px;display:flex;align-items:center;min-height:48px;text-decoration:none;font-family:var(--f-display);font-weight:700;color:var(--pink)}
+/* o card inteiro é clicável, sem duplicar links para o leitor de tela */
+.tool .go::after{content:"";position:absolute;inset:0;border-radius:var(--r)}
+.tool .go:hover{text-decoration:underline}
+.tool.breve{border-left-color:var(--line);border-style:dashed;border-left-style:dashed;background:transparent;box-shadow:none}
+.tool.breve:hover{transform:none;box-shadow:none}
+.tool.breve .n{color:var(--muted)}
+
+/* pontes */
+.pontes{display:grid;gap:12px;grid-template-columns:repeat(auto-fit,minmax(min(100%,320px),1fr))}
+.ponte{display:grid;gap:4px;background:var(--card);border:1.5px solid var(--line);border-radius:16px;padding:16px 18px;align-content:start}
+.ponte p{margin:0;color:var(--muted);font-size:15px}
+.ponte a{font-family:var(--f-display);font-weight:700;color:var(--pink);text-decoration:none;display:inline-flex;align-items:center;min-height:44px}
+.ponte a:hover{text-decoration:underline}
+
+footer{display:flex;flex-wrap:wrap;gap:0 20px;justify-content:space-between;align-items:center;color:var(--muted);font-size:14px;border-top:1.5px solid var(--line);padding-top:var(--s2)}
+footer a{color:var(--pink);text-decoration:none;display:inline-flex;align-items:center;min-height:44px;margin-right:12px}
+
+/* celular: barra fixa embaixo, ao alcance do polegar */
+.fixo{display:none}
+@media (max-width:640px){
+  body{padding-bottom:96px}
+  .wrap{gap:var(--s4)}
+  .acts .btn{flex:1 1 100%}
+  .destaque .btn.big{width:100%}
+  .fixo{display:flex;position:fixed;left:max(12px,env(safe-area-inset-left,0px));right:max(12px,env(safe-area-inset-right,0px));bottom:max(12px,env(safe-area-inset-bottom,0px));z-index:50;gap:8px;padding:8px;background:rgba(255,255,255,.96);border:1.5px solid var(--line);border-radius:999px;box-shadow:0 10px 30px -10px rgba(58,43,56,.5);backdrop-filter:blur(6px)}
+  .fixo .btn{flex:1 1 0;font-size:15px;padding:8px 10px}
+}
 </style>
 <link rel="icon" href="/favicon.svg" type="image/svg+xml"><link rel="icon" href="/favicon.ico" sizes="48x48"><link rel="apple-touch-icon" href="/apple-touch-icon.png"><link rel="manifest" href="/manifest.webmanifest"><meta name="theme-color" content="#3a2b38"><meta name="mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-title" content="Unirversos"><script src="/app.js" defer></script></head>
 <body>
+<a class="pular" href="#ferramentas">Pular para as ferramentas</a>
 <div class="wrap">
   <div class="sitebar" role="navigation" aria-label="Site">
     <a href="/" class="logo">UNI<span>R</span>VERSOS</a>
@@ -82,7 +121,7 @@ footer a{color:var(--pink);text-decoration:none;margin-right:12px}
     <p class="eyebrow">Unirversos Travessia · ferramentas de viagem</p>
     <h1>Sua viagem<br><em>já começou!</em></h1>
     <p class="lede">Tudo para você planejar, reservar e viver o Japão com autonomia.</p>
-    <p class="lede2">Vivi dez anos no Japão do lado de dentro. Aqui está o que eu gostaria que alguém tivesse me contado antes de embarcar: aberto, gratuito e sem cadastro.</p>
+    <p class="lede2">Aqui está o que eu gostaria que alguém tivesse me contado antes de embarcar. Tudo gratuito; a conta é opcional e serve só para guardar o seu calendário online.</p>
     <div class="acts">
       <a class="btn pri" href="/travessia/calendario/">📅 Abrir o calendário da viagem</a>
       <a class="btn sec" href="#ferramentas">Ver as ferramentas ↓</a>
@@ -90,51 +129,52 @@ footer a{color:var(--pink);text-decoration:none;margin-right:12px}
   </header>
 
   <section class="destaque" aria-labelledby="t-cal">
-    <span class="tag">O coração da travessia</span>
+    <span class="tag">Comece por aqui</span>
     <h2 id="t-cal">Seu calendário da viagem, dia a dia</h2>
-    <p>Escolha o primeiro e o último dia, toque em qualquer dia e anote evento, horário, local e detalhes. Depois leve tudo para o Google Agenda. Os horários mudam sozinhos para o fuso do Japão a partir da sua chegada. Gratuito, sem cadastro.</p>
+    <p>Escolha o primeiro e o último dia, toque em qualquer dia e anote evento, horário, local e detalhes. Os horários mudam sozinhos para o fuso do Japão a partir da sua chegada, e você leva tudo para o Google Agenda quando quiser.</p>
+    <p class="nota">Depois, calcule o cronograma de ingressos: tem ingresso que esgota três meses antes.</p>
     <a class="btn pri big" href="/travessia/calendario/">📅 Montar meu calendário</a>
   </section>
 
   <section aria-labelledby="t-ferr" id="ferramentas">
-    <div class="sec-h"><h2 id="t-ferr">As ferramentas da travessia</h2><p>Antes e durante a viagem. Tudo gratuito, use à vontade.</p></div>
+    <div class="sec-h"><h2 id="t-ferr">As ferramentas da travessia</h2><p>Antes e durante a viagem, na ordem em que costumam ser úteis.</p></div>
     <div class="grid">
       <article class="tool">
-        <span class="ico" aria-hidden="true">🗓️</span><span class="tag">Grátis</span>
+        <span class="n"><span class="ico" aria-hidden="true">🗓️</span>01</span>
         <h3>Cronograma de ingressos</h3>
-        <p>Dezenas de atrações no Japão só vendem ingresso por loteria ou liberam o mês inteiro num minuto específico, quase sempre de madrugada no horário do Brasil. Diga quando você viaja e a página calcula o seu cronograma de compras, já convertido para Brasília.</p>
+        <p>Muitas atrações só vendem por loteria ou liberam o mês inteiro num minuto exato, quase sempre de madrugada no Brasil. Diga quando você viaja e a página calcula o seu cronograma, já em horário de Brasília.</p>
         <a class="go" href="/travessia/agendamentos/">Calcular meu cronograma →</a>
       </article>
       <article class="tool">
-        <span class="ico" aria-hidden="true">✅</span><span class="tag">Grátis</span>
+        <span class="n"><span class="ico" aria-hidden="true">✅</span>02</span>
         <h3>Meus ingressos</h3>
-        <p>O par do cronograma: marque em que pé está cada ingresso (inscrito na loteria, ganhou, já pagou, desistiu) e anote o prazo de pagamento, que é o que derruba quem ganha e esquece. Fica salvo no seu navegador.</p>
+        <p>O par do cronograma: marque em que pé está cada ingresso (loteria, ganhou, pagou, desistiu) e anote o prazo de pagamento, que é o que derruba quem ganha e esquece.</p>
         <a class="go" href="/travessia/status/">Acompanhar meus ingressos →</a>
       </article>
       <article class="tool">
-        <span class="ico" aria-hidden="true">🏨</span><span class="tag">Grátis</span>
+        <span class="n"><span class="ico" aria-hidden="true">🏨</span>03</span>
         <h3>Minha viagem</h3>
-        <p>Hotéis e ingressos na mesma tela. Cada hospedagem mostra os ingressos daquele período, com código de reserva, horário de check-in e endereço, e avisa se um ingresso cai numa cidade diferente da do seu hotel. Dá para imprimir o resumo para a mala.</p>
+        <p>Hotéis e ingressos na mesma tela, com código de reserva, check-in e endereço. Avisa se um ingresso cai numa cidade diferente da do seu hotel e imprime o resumo para a mala.</p>
         <a class="go" href="/travessia/minha-viagem/">Montar minha viagem →</a>
       </article>
       <article class="tool">
-        <span class="ico" aria-hidden="true">🏮</span><span class="tag">Grátis</span>
+        <span class="n"><span class="ico" aria-hidden="true">🚄</span>04</span>
+        <h3>Deslocamento</h3>
+        <p>De onde para onde? Distância, tempo e passagem estimada entre dois lugares da sua viagem, para montar o orçamento de trem.</p>
+        <a class="go" href="/travessia/deslocamento/">Calcular um trecho →</a>
+      </article>
+      <article class="tool">
+        <span class="n"><span class="ico" aria-hidden="true">🏮</span>05</span>
         <h3>Mini guia de sobrevivência</h3>
-        <p>O caderno de bordo: o que falar, o que ler nas placas e o que fazer nas situações em que todo turista trava, do balcão da imigração ao caixa do konbini. Pensado para quem não fala japonês.</p>
+        <p>O caderno de bordo: o que falar, o que ler nas placas e o que fazer quando todo turista trava, do balcão da imigração ao caixa do konbini. Para quem não fala japonês.</p>
         <a class="go" href="/travessia/guia-sobrevivencia/">Abrir o guia →</a>
       </article>
       <article class="tool breve">
-        <span class="ico" aria-hidden="true">🧭</span><span class="tag">Em breve</span>
+        <span class="n"><span class="ico" aria-hidden="true">🧭</span>Em breve</span>
         <h3>Roteiros e experiências</h3>
-        <p>Os lugares que valem o deslocamento, os que não valem e os que ninguém te conta. Organizados por região, por tipo de viajante e pelo tempo que você tem.</p>
+        <p>Os lugares que valem o deslocamento, os que não valem e os que ninguém te conta, por região e pelo tempo que você tem.</p>
       </article>
     </div>
-  </section>
-
-  <section class="comece" aria-labelledby="t-comece">
-    <h2 id="t-comece" style="font-family:var(--f-display);font-weight:800;font-size:24px;margin:0">Começa pelo começo</h2>
-    <p>Monte o calendário com as datas da viagem e, em seguida, calcule o cronograma de ingressos: tem ingresso que esgota três meses antes.</p>
-    <a class="btn pri" href="/travessia/calendario/">Abrir o calendário</a> <a class="btn sec" href="/travessia/agendamentos/">Calcular meu cronograma</a>
   </section>
 
   <section class="pontes" aria-label="Outros caminhos">
@@ -150,6 +190,10 @@ footer a{color:var(--pink);text-decoration:none;margin-right:12px}
     </span>
   </footer>
 </div>
+<nav class="fixo" aria-label="Atalhos">
+  <a class="btn pri" href="/travessia/calendario/">📅 Calendário</a>
+  <a class="btn sec" href="/travessia/agendamentos/">🗓️ Cronograma</a>
+</nav>
 <script defer src="/menu-ativo.js?v=1"></script>
 <script src="/entrar.js" defer></script>
 </body>
