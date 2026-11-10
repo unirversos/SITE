@@ -263,7 +263,7 @@ footer a{color:var(--pink);text-decoration:none;margin-right:12px}
 
   <footer>
     <span>unirversos — tudo conectado · Aline Kikuti</span>
-    <span><a href="/travessia/status/">Meus ingressos</a><a href="/travessia/agendamentos/">Cronograma de ingressos</a></span>
+    <span><a href="/travessia/ingressos/">Ingressos</a></span>
   </footer>
 </div>
 
@@ -348,7 +348,8 @@ function limpaQi(q){
   Object.keys(q).slice(0,120).forEach(function(k){
     var x=q[k]; if(!/^[a-z0-9-]{1,60}$/.test(k)||!x||typeof x!=='object')return;
     var y={}; if(x.ir===true)y.ir=true; if(x.salvo===true)y.salvo=true;
-    if(okData(x.data))y.data=x.data; if(okData(x.verif))y.verif=x.verif;
+    if(okData(x.data))y.data=x.data; if(okData(x.verif))y.verif=x.verif; if(okData(x.prazo))y.prazo=x.prazo;
+    if(['inscrito','ganhei','comprado','perdi','pulei'].indexOf(x.st)>-1)y.st=x.st;
     ['link','local'].forEach(function(f){if(typeof x[f]==='string'&&x[f].trim())y[f]=x[f].trim().slice(0,f==='link'?500:300);});
     if(typeof x.num==='string'&&x.num.trim())y.num=x.num.trim().slice(0,80);
     if(typeof x.obs==='string'&&x.obs.trim())y.obs=x.obs.trim().slice(0,500);
@@ -1046,7 +1047,7 @@ vigiaPend();
 
 /* Ingressos com antecedência: a lista abre aqui dentro (mesma página de /agendamentos, sem sair do calendário). */
 (function(){var d=document.getElementById('dlgQI'),f=document.getElementById('qiFrame'),b=document.getElementById('bQI');if(!d||!b)return;
-  b.addEventListener('click',function(){window.__pendRapido=true;avisaQi();if(!f.getAttribute('src'))f.src='/travessia/agendamentos/?embed=1&v=3';if(d.showModal)d.showModal();else d.setAttribute('open','');});
+  b.addEventListener('click',function(){window.__pendRapido=true;avisaQi();if(!f.getAttribute('src'))f.src='/travessia/ingressos/?embed=1&v=4';if(d.showModal)d.showModal();else d.setAttribute('open','');});
   document.getElementById('qiFecha').addEventListener('click',function(){d.close();vigiaPend();});
   d.addEventListener('close',vigiaPend);
   window.addEventListener('storage',function(e){if(e.key==='uniCalPend')vigiaPend();});

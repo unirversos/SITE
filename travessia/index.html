@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 <title>Unirversos Travessia · ferramentas para planejar e viver o Japão</title>
-<meta name="description" content="Ferramentas gratuitas para a sua viagem ao Japão: calendário da viagem, cronograma de ingressos, acompanhamento das reservas, burocracia de entrada, deslocamento entre cidades e mini guia de sobrevivência.">
+<meta name="description" content="Ferramentas gratuitas para a sua viagem ao Japão: calendário da viagem, ingressos (quando comprar e em que pé está), burocracia de entrada, deslocamento entre cidades e mini guia de sobrevivência.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@500;700;800&family=Zen+Maru+Gothic:wght@400;500;700&display=swap">
@@ -168,31 +168,25 @@ footer a{color:var(--pink);text-decoration:none;display:inline-flex;align-items:
         <a class="go" href="/travessia/burocracia/">Ver o checklist →</a>
       </article>
       <article class="tool">
-        <span class="n"><span class="ico" aria-hidden="true">🗓️</span>02</span>
-        <h3>Cronograma de ingressos</h3>
-        <p>Muitas atrações só vendem por loteria ou liberam o mês inteiro num minuto exato, quase sempre de madrugada no Brasil. Diga quando você viaja e a página calcula o seu cronograma, já em horário de Brasília.</p>
-        <a class="go" href="/travessia/agendamentos/">Calcular meu cronograma →</a>
+        <span class="n"><span class="ico" aria-hidden="true">🎟️</span>02</span>
+        <h3>Ingressos</h3>
+        <p>Muitas atrações só vendem por loteria ou liberam o mês inteiro num minuto exato, quase sempre de madrugada no Brasil. Diga quando você viaja: a lista mostra quando comprar cada ingresso, já em horário de Brasília, e guarda em que pé está cada um.</p>
+        <a class="go" href="/travessia/ingressos/">Montar minha lista de ingressos →</a>
       </article>
       <article class="tool">
-        <span class="n"><span class="ico" aria-hidden="true">✅</span>03</span>
-        <h3>Meus ingressos</h3>
-        <p>O par do cronograma: marque em que pé está cada ingresso (loteria, ganhou, pagou, desistiu) e anote o prazo de pagamento, que é o que derruba quem ganha e esquece.</p>
-        <a class="go" href="/travessia/status/">Acompanhar meus ingressos →</a>
-      </article>
-      <article class="tool">
-        <span class="n"><span class="ico" aria-hidden="true">🚄</span>04</span>
+        <span class="n"><span class="ico" aria-hidden="true">🚄</span>03</span>
         <h3>Deslocamento</h3>
         <p>De onde para onde? Distância, tempo e passagem estimada entre dois lugares da sua viagem, para montar o orçamento de trem.</p>
         <a class="go" href="/travessia/deslocamento/">Calcular um trecho →</a>
       </article>
       <article class="tool">
-        <span class="n"><span class="ico" aria-hidden="true">🏮</span>05</span>
+        <span class="n"><span class="ico" aria-hidden="true">🏮</span>04</span>
         <h3>Mini guia de sobrevivência</h3>
         <p>O caderno de bordo: o que saber e o que fazer para não passar perrengue, da véspera ao último trem. Para quem não fala japonês.</p>
         <a class="go" href="/travessia/guia-sobrevivencia/">Abrir o guia →</a>
       </article>
       <article class="tool">
-        <span class="n"><span class="ico" aria-hidden="true">💬</span>06</span>
+        <span class="n"><span class="ico" aria-hidden="true">💬</span>05</span>
         <h3>Japonês de bolso</h3>
         <p>O que dizer: frases que resolvem a viagem, com áudio, e trilhas de restaurante, trem, hotel e emergência para treinar com o seu avatar.</p>
         <a class="go" href="/idiomas/mapas/">Treinar as frases →</a>
@@ -214,10 +208,10 @@ footer a{color:var(--pink);text-decoration:none;display:inline-flex;align-items:
 </div>
 <nav class="fixo" id="fixo" aria-label="Atalhos">
   <a class="btn pri" href="/travessia/calendario/">📅 Calendário</a>
-  <a class="btn sec" href="/travessia/agendamentos/">🗓️ Cronograma</a>
+  <a class="btn sec" href="/travessia/ingressos/">🎟️ Ingressos</a>
 </nav>
 <script>
-/* Só leitura: lê o que o calendário e o "Meus ingressos" já guardaram NESTE aparelho (uniCalendario1 e travessiaStatusV1).
+/* Só leitura: lê o que o calendário e a página de ingressos já guardaram NESTE aparelho (uniCalendario1, agQueroIr e, dos dados antigos, travessiaStatusV1).
    Não grava nem altera nada. Tudo entra na tela com textContent. */
 (function(){
   function ler(k){try{return JSON.parse(localStorage.getItem(k)||'null');}catch(e){return null;}}
@@ -225,8 +219,11 @@ footer a{color:var(--pink);text-decoration:none;display:inline-flex;align-items:
   var ev=cal&&Array.isArray(cal.ev)?cal.ev.filter(function(e){return e&&/^\d{4}-\d{2}-\d{2}$/.test(e.data);}):[];
   var itens=st&&st.itens&&typeof st.itens==='object'?st.itens:{};
   var hoje=new Date();var hojeS=hoje.getFullYear()+'-'+String(hoje.getMonth()+1).padStart(2,'0')+'-'+String(hoje.getDate()).padStart(2,'0');
-  var prazos=Object.keys(itens).filter(function(id){var i=itens[id];return i&&i.status==='ganhei'&&/^\d{4}-\d{2}-\d{2}$/.test(i.prazo||'')&&i.prazo>=hojeS;})
-    .map(function(id){return {id:id,prazo:itens[id].prazo};}).sort(function(a,b){return a.prazo<b.prazo?-1:1;});
+  var qi=cal&&cal.qi&&typeof cal.qi==='object'&&Object.keys(cal.qi).length?cal.qi:(ler('agQueroIr')||{});
+  var pz={};
+  Object.keys(itens).forEach(function(id){var i=itens[id];if(i&&i.status==='ganhei'&&/^\d{4}-\d{2}-\d{2}$/.test(i.prazo||''))pz[id]=i.prazo;});
+  Object.keys(qi).forEach(function(id){var q=qi[id];if(!q)return;if(q.st==='ganhei'&&/^\d{4}-\d{2}-\d{2}$/.test(q.prazo||''))pz[id]=q.prazo;else if(q.st)delete pz[id];});
+  var prazos=Object.keys(pz).filter(function(id){return pz[id]>=hojeS;}).map(function(id){return {id:id,prazo:pz[id]};}).sort(function(a,b){return a.prazo<b.prazo?-1:1;});
   if(!ev.length&&!prazos.length)return;
   function br(d){var p=d.split('-');return p[2]+'/'+p[1];}
   var dias={};ev.forEach(function(e){dias[e.data]=1;});var nd=Object.keys(dias).length;
@@ -239,7 +236,7 @@ footer a{color:var(--pink);text-decoration:none;display:inline-flex;align-items:
   function mostrar(nome){
     var q=prazos[0];
     pz.textContent='Prazo de pagamento mais próximo: '+(nome?nome+' · ':'')+br(q.prazo)+(prazos.length>1?' (+'+(prazos.length-1)+' depois)':'')+'.';
-    ir.textContent='Abrir meus ingressos →';ir.href='/travessia/status/';
+    ir.textContent='Abrir meus ingressos →';ir.href='/travessia/ingressos/';
   }
   if(prazos.length){
     mostrar('');

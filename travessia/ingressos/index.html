@@ -1,0 +1,1658 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ingressos no Japão: quando comprar e em que pé está | Unirversos Travessia</title>
+    <meta name="description" content="Quando abre a venda de cada ingresso no Japão, já em horário de Brasília, e em que pé está cada um: loteria, resultado e prazo de compra. Grátis.">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --color-dark: #333333;
+            --color-rose: #a8565b;
+            --color-gray: #6f6f6f;
+            --color-light-gray: #f5f5f5;
+            --color-white: #ffffff;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: 'Zen Maru Gothic', 'Segoe UI', system-ui, sans-serif;
+            line-height: 1.8;
+            color: var(--color-dark);
+            background: var(--color-white);
+            font-size: 16px;
+        }
+
+        /* HEADER */
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 2rem 4rem;
+            border-bottom: 1px solid #e0e0e0;
+        }
+
+        .logo {
+            font-size: 13px;
+            font-weight: 700;
+            letter-spacing: 2px;
+            text-decoration: none;
+            color: var(--color-dark);
+            text-transform: uppercase;
+        }
+
+        nav {
+            display: flex;
+            gap: 2.5rem;
+        }
+
+        nav a {
+            text-decoration: none;
+            color: var(--color-rose);
+            font-size: 13px;
+            font-weight: 400;
+            letter-spacing: 0.5px;
+            transition: opacity 0.3s;
+        }
+
+        nav a:hover {
+            opacity: 0.7;
+        }
+
+        /* MAIN */
+        main {
+            max-width: 1100px;
+            margin: 0 auto;
+            padding: 0 4rem;
+        }
+
+        /* HERO */
+        .hero {
+            text-align: center;
+            padding: 4rem 0 2rem;
+        }
+
+        .hero h1 {
+            font-size: 3rem;
+            font-weight: 300;
+            line-height: 1.3;
+            margin-bottom: 1rem;
+            color: var(--color-dark);
+            letter-spacing: -0.5px;
+        }
+
+        .hero .highlight {
+            color: var(--color-rose);
+            font-weight: 400;
+        }
+
+        .hero p {
+            font-size: 1.2rem;
+            color: var(--color-gray);
+            max-width: 700px;
+            margin: 0 auto;
+        }
+
+        .free-badge {
+            display: inline-block;
+            margin-top: 1.5rem;
+            padding: 0.4rem 1.2rem;
+            border: 1px solid var(--color-rose);
+            border-radius: 100px;
+            color: var(--color-rose);
+            font-size: 0.85rem;
+            font-weight: 500;
+        }
+
+        /* SECTION */
+        section {
+            margin: 4rem 0;
+        }
+
+        .section-title {
+            font-size: 2rem;
+            font-weight: 400;
+            margin-bottom: 1rem;
+            color: var(--color-dark);
+            text-align: center;
+        }
+
+        .section-subtitle {
+            font-size: 1.1rem;
+            color: var(--color-gray);
+            text-align: center;
+            margin-bottom: 2.5rem;
+            max-width: 700px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        /* CALCULADORA */
+        .calc {
+            background: var(--color-light-gray);
+            border-radius: 8px;
+            border-left: 4px solid var(--color-rose);
+            padding: 2.5rem;
+            margin: 2rem 0;
+        }
+
+        .calc h2 {
+            font-size: 1.5rem;
+            font-weight: 400;
+            margin-bottom: 0.3rem;
+        }
+
+        .calc .sub {
+            color: var(--color-gray);
+            font-size: 0.95rem;
+            margin-bottom: 1.8rem;
+        }
+
+        .fields {
+            display: flex;
+            gap: 1.2rem;
+            flex-wrap: wrap;
+            align-items: flex-end;
+        }
+
+        .field {
+            flex: 1;
+            min-width: 170px;
+        }
+
+        .field label {
+            display: block;
+            font-size: 0.8rem;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            color: var(--color-gray);
+            margin-bottom: 0.4rem;
+            font-weight: 600;
+        }
+
+        .field input {
+            width: 100%;
+            font-family: inherit;
+            font-size: 1rem;
+            border: 1px solid #e0e0e0;
+            border-radius: 4px;
+            padding: 0.8rem 1rem;
+            background: var(--color-white);
+            color: var(--color-dark);
+            outline: none;
+        }
+
+        .field input:focus {
+            border-color: var(--color-rose);
+        }
+
+        .cta-button {
+            display: inline-block;
+            padding: 1rem 2.5rem;
+            background: var(--color-rose);
+            color: white;
+            text-decoration: none;
+            border: none;
+            border-radius: 4px;
+            font-size: 1.1rem;
+            font-weight: 500;
+            font-family: inherit;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .cta-button:hover {
+            background: var(--color-dark);
+            transform: scale(1.02);
+        }
+
+        .cta-button.small {
+            font-size: 0.95rem;
+            padding: 0.8rem 1.8rem;
+        }
+
+        .calc .hint {
+            font-size: 0.85rem;
+            color: #6f6f6f;
+            margin-top: 1rem;
+        }
+
+        /* RESULTADO */
+        .result-head {
+            display: flex;
+            align-items: baseline;
+            justify-content: space-between;
+            gap: 1rem;
+            flex-wrap: wrap;
+            margin-bottom: 0.4rem;
+        }
+
+        .result-head h2 {
+            font-size: 1.6rem;
+            font-weight: 400;
+        }
+
+        .result-head .count {
+            font-size: 0.85rem;
+            color: var(--color-gray);
+        }
+
+        .result .note-top {
+            color: var(--color-gray);
+            font-size: 0.95rem;
+            margin-bottom: 2rem;
+        }
+
+        .tl {
+            position: relative;
+            margin-left: 0.5rem;
+            padding-left: 2rem;
+            border-left: 2px solid #e8e8e8;
+        }
+
+        .tl-item {
+            position: relative;
+            padding-bottom: 2rem;
+        }
+
+        .tl-item:last-child {
+            padding-bottom: 0.3rem;
+        }
+
+        .tl-item::before {
+            content: '';
+            position: absolute;
+            left: -2.56rem;
+            top: 0.7rem;
+            width: 11px;
+            height: 11px;
+            border-radius: 50%;
+            background: var(--color-white);
+            border: 2.5px solid var(--color-rose);
+        }
+
+        .tl-item.past::before {
+            border-color: #ddd;
+            background: #ddd;
+        }
+
+        .tl-item.soon::before {
+            background: var(--color-rose);
+            box-shadow: 0 0 0 4px rgba(201, 150, 153, 0.22);
+        }
+
+        .tl-item.past {
+            opacity: 0.5;
+        }
+
+        .tl-when {
+            font-size: 0.85rem;
+            font-weight: 600;
+            color: var(--color-rose);
+            letter-spacing: 0.3px;
+            margin-bottom: 0.1rem;
+            line-height: 1.6;
+        }
+
+        .tl-item.past .tl-when {
+            color: #747474;
+        }
+
+        .tl-what {
+            font-weight: 600;
+            font-size: 1.1rem;
+            line-height: 1.5;
+            margin-bottom: 0.1rem;
+        }
+
+        .tl-what .pin {
+            font-weight: 400;
+            color: #747474;
+            font-size: 0.9rem;
+        }
+
+        .tl-body {
+            color: var(--color-gray);
+            font-size: 0.95rem;
+            line-height: 1.7;
+        }
+
+        .tl-body strong {
+            color: var(--color-dark);
+            font-weight: 600;
+        }
+
+        .chip {
+            display: inline-block;
+            font-size: 0.68rem;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            font-weight: 700;
+            border-radius: 100px;
+            padding: 0.1rem 0.7rem;
+            vertical-align: middle;
+            margin-left: 0.5rem;
+            background: var(--color-light-gray);
+            color: var(--color-gray);
+        }
+
+        .chip.agora {
+            background: var(--color-rose);
+            color: var(--color-white);
+        }
+
+        .chip.loteria {
+            background: #efe7e8;
+            color: #a9767a;
+        }
+
+        .chip.corrida {
+            background: #f4efe6;
+            color: #96793f;
+        }
+
+        .chip.tranquilo,
+        .chip.anual {
+            background: #e9efe9;
+            color: #5f7d62;
+        }
+
+        .tl-link {
+            display: inline-block;
+            font-size: 0.85rem;
+            color: var(--color-rose);
+            text-decoration: none;
+            border-bottom: 1px solid #e8e8e8;
+            margin-top: 0.4rem;
+        }
+
+        .tl-link:hover {
+            border-color: var(--color-rose);
+        }
+
+        /* FILTROS + CATÁLOGO */
+        .filters {
+            display: flex;
+            gap: 0.6rem;
+            flex-wrap: wrap;
+            justify-content: center;
+            margin-bottom: 2rem;
+        }
+
+        .filt {
+            border: 1px solid #e0e0e0;
+            background: var(--color-white);
+            border-radius: 100px;
+            padding: 0.45rem 1.1rem;
+            cursor: pointer;
+            font-family: inherit;
+            font-size: 0.85rem;
+            color: var(--color-gray);
+            transition: all 0.3s;
+        }
+
+        .filt:hover {
+            border-color: var(--color-rose);
+        }
+
+        .filt.on {
+            border-color: var(--color-rose);
+            background: var(--color-rose);
+            color: var(--color-white);
+        }
+
+        .cards {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 1.5rem;
+        }
+
+        .card {
+            padding: 1.8rem;
+            border: 1px solid #e8e8e8;
+            border-radius: 8px;
+            background: var(--color-white);
+            border-top: 4px solid var(--color-rose);
+        }
+
+        .card.classico {
+            border-top-color: #8aa98d;
+        }
+
+        .card h4 {
+            font-size: 1.15rem;
+            font-weight: 500;
+            line-height: 1.4;
+            margin-bottom: 0.2rem;
+        }
+
+        .card .where {
+            font-size: 0.8rem;
+            color: #747474;
+            margin-bottom: 0.9rem;
+        }
+
+        .card p {
+            font-size: 0.92rem;
+            color: var(--color-gray);
+            line-height: 1.7;
+            margin-bottom: 0.9rem;
+        }
+
+        .card .rule {
+            background: var(--color-light-gray);
+            border-radius: 4px;
+            padding: 0.8rem 1rem;
+            font-size: 0.88rem;
+            line-height: 1.6;
+            margin-bottom: 0.9rem;
+            color: var(--color-gray);
+        }
+
+        .card .rule b {
+            color: var(--color-dark);
+        }
+
+        .card a {
+            font-size: 0.85rem;
+            color: var(--color-rose);
+            text-decoration: none;
+            border-bottom: 1px solid #e8e8e8;
+        }
+
+        .card a:hover {
+            border-color: var(--color-rose);
+        }
+
+        /* ARMADILHAS */
+        .trap {
+            padding: 1.8rem 2rem;
+            border: 1px solid #e8e8e8;
+            border-left: 4px solid var(--color-rose);
+            border-radius: 8px;
+            background: var(--color-white);
+            margin-bottom: 1rem;
+        }
+
+        .trap h4 {
+            font-size: 1.15rem;
+            font-weight: 500;
+            margin-bottom: 0.4rem;
+        }
+
+        .trap h4 .n {
+            color: var(--color-rose);
+            font-weight: 300;
+            margin-right: 0.6rem;
+        }
+
+        .trap p {
+            font-size: 0.95rem;
+            color: var(--color-gray);
+            line-height: 1.75;
+        }
+
+        .trap p strong {
+            color: var(--color-dark);
+            font-weight: 600;
+        }
+
+        /* SEM RESERVA */
+        .free-list {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 1.2rem;
+        }
+
+        .fitem {
+            padding: 1.4rem;
+            background: var(--color-light-gray);
+            border-radius: 8px;
+        }
+
+        .fitem .loc {
+            font-size: 0.72rem;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            color: var(--color-rose);
+            font-weight: 600;
+            margin-bottom: 0.3rem;
+        }
+
+        .fitem h5 {
+            font-size: 1rem;
+            font-weight: 600;
+            margin-bottom: 0.2rem;
+        }
+
+        .fitem p {
+            font-size: 0.88rem;
+            color: var(--color-gray);
+            line-height: 1.6;
+        }
+
+        /* CTA */
+        .cta-section {
+            text-align: center;
+            padding: 3rem 2rem;
+            margin: 4rem 0;
+            background: var(--color-light-gray);
+            border-radius: 8px;
+            border-left: 4px solid var(--color-rose);
+        }
+
+        .cta-section h2 {
+            font-size: 2rem;
+            font-weight: 400;
+            margin-bottom: 1rem;
+        }
+
+        .cta-section p {
+            color: var(--color-gray);
+            font-size: 1.05rem;
+            margin-bottom: 1rem;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        /* FOOTER */
+        footer {
+            text-align: center;
+            padding: 2.5rem;
+            color: #6f6f6f;
+            font-size: 0.85rem;
+            border-top: 1px solid #e0e0e0;
+            margin-top: 4rem;
+        }
+
+        footer a {
+            color: var(--color-dark);
+            text-decoration: none;
+        }
+
+        .disclaimer {
+            max-width: 700px;
+            margin: 1.5rem auto 0;
+            font-size: 0.78rem;
+            line-height: 1.7;
+            color: #747474;
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        /* RESPONSIVE */
+        @media (max-width: 768px) {
+            header {
+                flex-direction: column;
+                gap: 1.5rem;
+                padding: 1.5rem;
+            }
+
+            nav {
+                flex-wrap: wrap;
+                justify-content: center;
+                gap: 1rem;
+            }
+
+            main {
+                padding: 0 1.5rem;
+            }
+
+            .hero h1 {
+                font-size: 1.8rem;
+            }
+
+            .hero p {
+                font-size: 1rem;
+            }
+
+            .section-title {
+                font-size: 1.5rem;
+            }
+
+            .cards,
+            .free-list {
+                grid-template-columns: 1fr;
+            }
+
+            .calc {
+                padding: 1.5rem;
+            }
+
+            .tl {
+                padding-left: 1.5rem;
+            }
+
+            .tl-item::before {
+                left: -2.06rem;
+            }
+        }
+    
+
+ .nuvem-st{font-size:.85rem;margin:0 0 .8rem;padding:.6rem .9rem;border-radius:8px;background:#f1f6f1;color:var(--color-gray)}.nuvem-st.erro,.nuvem-st.pend,.nuvem-st.sem{background:#fdf1ef;color:#8a3a30}.nuvem-st a.btn-ghost{text-decoration:none;display:inline-block}.nuvem-st .btn-ghost{margin-left:.4rem;padding:.3rem .8rem;border:1px solid #e0e0e0;border-radius:100px;background:#fff;font:inherit;font-size:.8rem;cursor:pointer}
+        .fora-nota{font-size:.85rem;color:var(--color-gray);margin:0 0 .8rem}.fora-nota .btn-ghost{margin-left:.4rem;padding:.3rem .8rem;border:1px solid #e0e0e0;border-radius:100px;background:#fff;font:inherit;font-size:.8rem;cursor:pointer}
+        .fitem .qi{margin-top:.7rem;padding-top:.6rem;border-top:1px dashed #e6d9de}
+        .qi-ac{margin:.8rem 0;padding-top:.7rem;border-top:1px dashed #e6d9de}.qi-ac label{display:block;font-size:.85rem;color:var(--color-gray);margin-bottom:.5rem}.qi-ac textarea{display:block;width:100%;margin:.25rem 0;padding:.6rem .8rem;border:1px solid #ddd;border-radius:8px;font:inherit;resize:vertical}.qi-ac input{display:block;width:100%;margin:.25rem 0;padding:.6rem .8rem;border:1px solid #ddd;border-radius:8px;font:inherit;min-height:44px}
+        .qi-loc{margin:.6rem 0}.qi-loc label{display:block;font-size:.85rem;color:var(--color-gray)}.qi-loc input{display:block;width:100%;margin:.25rem 0;padding:.6rem .8rem;border:1px solid #ddd;border-radius:8px;font:inherit;min-height:44px}.qi-lbtn{display:flex;gap:.5rem;flex-wrap:wrap}.qi-lbtn .btn-ghost{background:#fff;border:1px solid #e0e0e0;border-radius:100px;padding:.5rem 1rem;font:inherit;font-size:.85rem;color:var(--color-gray);cursor:pointer;min-height:44px;text-decoration:none;display:inline-flex;align-items:center}
+        .qi-noCal{margin:.2rem 0 .6rem;font-size:.95rem}.qi-dica{font-size:.85rem;color:var(--color-gray);margin:.3rem 0}
+        .quero-h{font-size:1.1rem;margin:1rem 0 .6rem;color:var(--color-rose)}.quero-h2{margin-top:1.6rem;color:var(--color-gray)}
+        details.card { padding: 0; align-self: start; }
+ details.card > summary { list-style: none; cursor: pointer; display: block; padding: 1.3rem 3rem 1.2rem 1.5rem; position: relative; min-height: 44px; }
+ details.card > summary::-webkit-details-marker { display: none; }
+ details.card > summary::after { content: '▾'; position: absolute; right: 1.2rem; top: 1.2rem; font-size: 1.1rem; color: var(--color-rose); transition: transform .2s; }
+ details.card[open] > summary::after { transform: rotate(180deg); }
+ details.card > summary:focus-visible { outline: 2px solid var(--color-rose); outline-offset: -2px; border-radius: 8px; }
+ .card-top { display: flex; align-items: baseline; gap: 0.6rem; flex-wrap: wrap; }
+ .card summary .where { display: block; font-size: 0.8rem; color: #747474; margin-bottom: 0.6rem; }
+ .card summary .rule { display: block; margin-bottom: 0; }
+ .card-corpo { padding: 0 1.5rem 1.5rem; }
+ .qi-badge { font-size: 0.72rem; font-weight: 700; color: #5f7d62; background: #e9efe9; border-radius: 100px; padding: 0.15rem 0.7rem; white-space: nowrap; }
+ .cards-tools { display: flex; justify-content: space-between; align-items: center; gap: 0.8rem; flex-wrap: wrap; margin: 0 0 1rem; font-size: 0.85rem; color: var(--color-gray); }
+ .cards-tools .btn-ghost { background: #fff; border: 1px solid #e0e0e0; border-radius: 100px; padding: 0.5rem 1rem; font-family: inherit; font-size: 0.85rem; color: var(--color-gray); cursor: pointer; min-height: 44px; }
+ .cards-tools .btn-ghost:hover { border-color: var(--color-rose); color: var(--color-rose); }
+ @media (max-width: 768px) { .cards { grid-template-columns: 1fr; } }
+ .conf { font-size: 0.8rem; line-height: 1.6; margin-top: 0.6rem; color: #5f7d62; }
+ .conf.nao { color: #8a5a00; }
+ .conf a { color: inherit; }
+ .qi { margin-top: 1rem; padding-top: 0.9rem; border-top: 1px dashed #e0d6d6; }
+ .qi-l { display: inline-flex; align-items: center; gap: 0.5rem; font-size: 1rem; cursor: pointer; min-height: 44px; }
+ .qi-l input { width: 22px; height: 22px; accent-color: var(--color-rose); }
+ .qi-d { display: inline-flex; align-items: center; gap: 0.5rem; margin-left: 1rem; font-size: 0.9rem; }
+ .qi-d input { font: inherit; padding: 0.55rem 0.7rem; border: 1px solid #e0e0e0; border-radius: 4px; min-height: 44px; }
+ .qi-quando { font-size: 0.92rem; margin-top: 0.6rem; }
+ .qi-nota { font-size: 0.85rem; color: #8a5a00; margin-top: 0.5rem; }
+ .qi-nota.forte { color: #b04a4a; font-weight: 600; }
+ .qi-av { font-size: 0.85rem; font-weight: 600; margin-top: 0.7rem; }
+ .qi-lista { font-size: 0.85rem; padding-left: 1.2rem; margin: 0.3rem 0 0.8rem; }
+ .qi-btns { display: flex; gap: 0.6rem; flex-wrap: wrap; }
+ .qi-btns button { min-height: 44px; }
+ .qi .btn-ghost { background: #fff; border: 1px solid var(--color-rose); border-radius: 100px; padding: 0.7rem 1.4rem; font-family: inherit; font-size: 0.95rem; color: var(--color-rose); cursor: pointer; }
+ .qi .cta-button { border-radius: 100px; }
+ .qi-btns button { flex: 1 1 220px; }
+ @media (max-width: 520px) { .qi-d { display: flex; flex-wrap: wrap; margin: 0.4rem 0 0; } .qi-d input { flex: 1 1 160px; } }
+ .qi-ok { font-size: 0.85rem; margin-top: 0.7rem; color: #5f7d62; }
+ .qi-ok a { color: var(--color-rose); }
+
+/* ---------- página única de ingressos ---------- */
+.card .quando-l{display:flex;flex-wrap:wrap;align-items:center;gap:.3rem .5rem;margin-top:.6rem;font-size:.9rem;font-weight:700;color:var(--ink,#3a2b38)}
+.card .quando-l .chip{margin:0}
+.st-badge{font-size:.72rem;font-weight:700;border-radius:100px;padding:.15rem .7rem;white-space:nowrap;background:#fbeef0;color:#a8344f}
+.st-badge.st-comprado{background:#e9efe9;color:#3f5c43}
+.st-badge.st-perdi,.st-badge.st-pulei{background:#f1edef;color:#6b5a67}
+.st-badge.st-ganhei{background:#c23f5e;color:#fff}
+.datas-v{margin:.8rem 0;padding:.8rem 1rem;background:#fdf6f4;border-radius:12px}
+.datas-v .dv-t{font-family:var(--f-display);font-weight:800;font-size:.95rem;margin:0 0 .3rem}
+.datas-v ul{list-style:none;margin:0;padding:0}
+.datas-v li{padding:.5rem 0;border-top:1px dashed #ecdadd;font-size:.9rem}
+.datas-v li:first-child{border-top:0}
+.datas-v li b{display:inline;margin-right:.4rem}
+.datas-v li span:not(.chip){display:block;color:var(--color-gray,#6b5a67);font-size:.85rem;margin-top:.15rem}
+.datas-v li.past{opacity:.6}
+.qi-stb{margin:.2rem 0 .6rem;padding:.8rem 1rem;border:1.5px solid #ecdadd;border-radius:12px;background:#fff}
+.qi-stb label{display:block;font-size:.85rem;color:var(--color-gray);margin-bottom:.5rem;font-weight:700}
+.qi-stb select,.qi-stb input{display:block;width:100%;margin:.25rem 0;padding:.6rem .8rem;border:1px solid #ddd;border-radius:8px;font:inherit;min-height:44px;background:#fff;font-weight:400;color:var(--ink,#3a2b38)}
+.qi-stdica{font-size:.85rem;color:#a8344f;margin:.2rem 0 0}
+#acomp{padding-top:1rem}
+.painel{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px;margin:1rem 0}
+.stat{padding:1rem;background:#fff;border:1.5px solid #ecdadd;border-top:5px solid #c23f5e;border-radius:16px;text-align:center}
+.stat.urgente{border-top-color:#8e6a1f;background:#fbf2df}
+.stat .n{font-family:var(--f-display);font-weight:800;font-size:2rem;line-height:1.1;color:#c23f5e}
+.stat.urgente .n{color:#8e6a1f}
+.stat .t{font-size:.75rem;letter-spacing:.12em;text-transform:uppercase;color:#6b5a67;font-weight:700}
+.painel-vazio{background:#e8efe8;border-left:5px solid #517158;border-radius:14px;padding:.9rem 1.1rem;font-size:.95rem;margin:1rem 0}
+.alerta{background:#fbf2df;border:1.5px solid #ecdadd;border-left:5px solid #8e6a1f;border-radius:14px;padding:.9rem 1.1rem;margin-bottom:.7rem}
+.alerta h4{font-family:var(--f-display);font-weight:800;font-size:1rem;margin:0 0 .2rem}
+.alerta p{font-size:.92rem;color:#6b5a67;margin:0}
+.trap{padding:1.2rem 1.4rem;border:1.5px solid #ecdadd;border-left:5px solid #c23f5e;border-radius:16px;background:#fff;margin-bottom:.8rem}
+.trap h4{font-family:var(--f-display);font-weight:800;font-size:1.1rem;margin:0 0 .3rem}
+.trap h4 .n{color:#c23f5e;margin-right:.5rem}
+.trap p{font-size:.95rem;color:#6b5a67;line-height:1.7;margin:0}
+.trap p strong{color:#3a2b38}
+.rodape-acoes{display:flex;flex-wrap:wrap;gap:10px;justify-content:center;margin:2rem auto .5rem}
+.aviso-pdf{text-align:center;font-size:.85rem;color:#6b5a67;max-width:620px;margin:0 auto 2rem}
+@media (max-width:640px){.painel{grid-template-columns:repeat(2,minmax(0,1fr))}}
+
+/* A folha só existe na impressão */
+        #folha { display: none; }
+
+        @media print {
+            @page { size: A4; margin: 18mm 16mm; }
+
+            /* esconde só o cabeçalho/rodapé do site, não os da folha */
+            body > header, body > footer, body > main, body > .sitebar, .aviso-pdf, .uni-chip, .uni-inst { display: none !important; }
+
+            #folha {
+                display: block;
+                color: #000;
+                font-family: Georgia, 'Times New Roman', serif;
+                font-size: 11pt;
+                line-height: 1.55;
+            }
+
+            .f-capa {
+                border-bottom: 2px solid #333;
+                padding-bottom: 14mm;
+                margin-bottom: 10mm;
+            }
+
+            .f-selo {
+                font-family: 'Segoe UI', sans-serif;
+                font-size: 8pt;
+                letter-spacing: 3px;
+                text-transform: uppercase;
+                color: #6f6f6f;
+                margin-bottom: 6mm;
+            }
+
+            .f-titulo {
+                font-size: 30pt;
+                font-weight: normal;
+                line-height: 1.15;
+                margin-bottom: 5mm;
+            }
+
+            .f-sub { font-size: 13pt; color: #333; margin-bottom: 3mm; }
+            .f-nota { font-size: 9.5pt; color: #666; font-style: italic; }
+
+            .f-bloco { margin-bottom: 9mm; }
+            .f-quebra { break-before: page; page-break-before: always; }
+
+            .f-h2 {
+                font-family: 'Segoe UI', sans-serif;
+                font-size: 15pt;
+                font-weight: 600;
+                border-bottom: 1px solid #999;
+                padding-bottom: 2mm;
+                margin-bottom: 4mm;
+            }
+
+            .f-intro { font-size: 10pt; color: #555; margin-bottom: 5mm; }
+
+            .f-linha {
+                border-bottom: 1px dotted #bbb;
+                padding: 3.2mm 0 3.2mm 9mm;
+                position: relative;
+                break-inside: avoid;
+                page-break-inside: avoid;
+            }
+
+            .f-linha::before {
+                content: "☐";
+                position: absolute;
+                left: 0;
+                top: 3mm;
+                font-size: 12pt;
+                color: #555;
+            }
+
+            .f-linha.feito::before { content: "☑"; }
+            .f-linha.feito .f-nome { text-decoration: line-through; color: #6f6f6f; }
+
+            .f-nome { font-size: 11.5pt; font-weight: bold; }
+            .f-onde { font-size: 9pt; color: #6f6f6f; }
+            .f-quando { font-size: 10pt; color: #222; margin-top: 1mm; }
+            .f-marca {
+                font-family: 'Segoe UI', sans-serif;
+                font-size: 8pt;
+                text-transform: uppercase;
+                letter-spacing: 1px;
+                color: #666;
+                border: 1px solid #aaa;
+                padding: 0.4mm 2mm;
+                margin-left: 2mm;
+            }
+
+            .f-dado { font-size: 9.5pt; color: #444; margin-top: 1mm; }
+            .f-dado strong { font-family: 'Segoe UI', sans-serif; }
+
+            .f-vazio { font-size: 10pt; color: #6f6f6f; font-style: italic; }
+
+            .f-orient {
+                break-inside: avoid;
+                page-break-inside: avoid;
+                margin-bottom: 6mm;
+            }
+
+            .f-orient h3 {
+                font-family: 'Segoe UI', sans-serif;
+                font-size: 11pt;
+                margin-bottom: 1.5mm;
+            }
+
+            .f-orient p { font-size: 10pt; }
+
+            .f-rodape {
+                display: block !important;
+                border-top: 1px solid #999;
+                padding-top: 4mm;
+                margin-top: 8mm;
+                font-size: 9pt;
+                color: #555;
+            }
+
+            .f-credito { font-size: 8.5pt; color: #707070; margin-top: 1.5mm; }
+
+            a[href]::after { content: ""; }
+        }
+</style>
+<link rel="stylesheet" href="/tema-unirversos.css?v=1">
+    <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@500;600;700&family=Zen+Maru+Gothic:wght@400;500;700&display=swap">
+<link rel="stylesheet" href="/estilo-celular.css?v=2">
+<script defer src="/menu-ativo.js?v=1"></script>
+<link rel="icon" href="/favicon.svg" type="image/svg+xml"><link rel="icon" href="/favicon.ico" sizes="48x48"><link rel="apple-touch-icon" href="/apple-touch-icon.png"><link rel="manifest" href="/manifest.webmanifest"><meta name="theme-color" content="#3a2b38"><meta name="mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-title" content="Unirversos"><script src="/app.js" defer></script><script>if(/[?&]embed=1/.test(location.search))document.documentElement.classList.add("embed");</script><style>.embed .sitebar,.embed .hero,.embed footer,.embed .calc,.embed #acomp,.embed #armadilhas,.embed .rodape-acoes,.embed .aviso-pdf,.embed .cta-section,.embed #catalogo .section-title,.embed #catalogo .section-subtitle,.embed #livres .section-subtitle{display:none!important}.embed #livres{padding-top:1rem}.embed body{background:#fff}.embed main{padding-top:.5rem}</style></head>
+<body>
+    <!-- HEADER -->
+    <div class="sitebar" role="navigation" aria-label="Site">
+  <a href="/" class="logo">UNI<span>R</span>VERSOS</a>
+  <span class="navlinks"><a href="/idiomas/">idiomas</a><a href="/travessia/" aria-current="page">travessia</a><a href="/paralelos/">paralelos</a><a href="/loja/">tesouros</a><a href="/sobre/">sobre</a></span>
+</div>
+
+    <main>
+        <section class="hero">
+            <h1>Ingressos no Japão<br/><span class="highlight">quando comprar e em que pé está.</span></h1>
+            <p>Muita atração só vende por loteria ou libera o mês inteiro num minuto exato, quase sempre de madrugada no Brasil. Diga quando você viaja: a lista mostra quando comprar cada ingresso, já em horário de Brasília, e guarda o que você fez com cada um.</p>
+            <span class="free-badge">✦ Grátis, sem cadastro</span>
+        </section>
+
+        <div class="calc">
+            <h2>As datas da sua viagem</h2>
+            <p class="sub">Elas definem quando cada venda abre e o que entra na sua lista.</p>
+            <div class="fields">
+                <div class="field">
+                    <label for="ida">Chegada no Japão</label>
+                    <input type="date" id="ida">
+                </div>
+                <div class="field">
+                    <label for="volta">Volta para casa</label>
+                    <input type="date" id="volta">
+                </div>
+                <button class="cta-button small" id="go">Montar minha lista</button>
+            </div>
+            <p class="hint">Nada é enviado para lugar nenhum: a conta acontece no seu próprio navegador.</p>
+        </div>
+
+        <section id="acomp" hidden>
+            <h2 class="section-title">Em que pé está</h2>
+            <div class="painel" id="painel"></div>
+            <p class="painel-vazio" id="painel-vazio" hidden>Marque <b>Quero ir</b> ou o <b>em que pé está</b> nas atrações abaixo: os prazos de cada uma aparecem aqui.</p>
+            <div id="alertas"></div>
+        </section>
+
+        <section id="catalogo">
+            <h2 class="section-title" id="lista-t">As atrações e as regras de venda</h2>
+            <p class="section-subtitle" id="lista-sub">Cada atração com a sua mecânica de venda. Coloque as datas da viagem para ver quando comprar cada uma.</p>
+            <div class="filters" id="filters"></div>
+            <p class="nuvem-st" id="nuvem-st" hidden></p>
+            <p class="fora-nota" id="fora-nota" hidden></p>
+            <div id="quero-box" hidden><h3 class="quero-h">✓ Os que você está acompanhando</h3><div class="cards" id="cards-quero"></div><h3 class="quero-h quero-h2">Outras atrações</h3></div>
+            <div class="cards" id="cards"></div>
+        </section>
+
+        <section id="livres">
+            <h2 class="section-title">E o que não precisa de reserva nenhuma</h2>
+            <p class="section-subtitle">Para equilibrar o roteiro: coisas enormes que são só chegar e entrar.</p>
+            <div class="free-list" id="free-list"></div>
+        </section>
+
+        <section id="armadilhas">
+            <h2 class="section-title">As armadilhas que derrubam brasileiro</h2>
+            <p class="section-subtitle">Coisas que quase nenhum guia menciona e que costumam derrubar quem planeja a primeira viagem.</p>
+
+            <div class="trap">
+                <h4><span class="n">01</span>Você não pode dirigir no Japão</h4>
+                <p>A Permissão Internacional brasileira é emitida sob a Convenção de Viena de 1968, e o Japão só reconhece a de <strong>Genebra de 1949</strong>, da qual o Brasil não é signatário. Nem a CNH, nem a PID, nem tradução juramentada valem. Isso elimina o <strong>kart de rua fantasiado</strong> por Shibuya, que aparece em todo roteiro de Tóquio — não é questão de risco, é ilegal para nós. Vale o mesmo para aluguel de carro.</p>
+            </div>
+
+            <div class="trap">
+                <h4><span class="n">02</span>O Ano Novo fecha o país</h4>
+                <p>De <strong>29 de dezembro a 3 de janeiro</strong>, boa parte dos museus, lojas e restaurantes fecha — vários dos grandes museus têm recesso de fim de ano. Ao mesmo tempo, templos e trens lotam e o hotel dispara. Não deixe nada caro e com reserva nessa faixa: use esses dias para templos, iluminações e eventos de rua.</p>
+            </div>
+
+            <div class="trap">
+                <h4><span class="n">03</span>O cartão vai ser recusado</h4>
+                <p>Sites japoneses de ingresso rejeitam cartão estrangeiro com frequência, principalmente na etapa do 3D Secure. Quem consegue, geralmente consegue <strong>trocando de cartão</strong>. Antes de começar: avise o banco, habilite compra internacional, tenha dois ou três cartões de bandeiras diferentes à mão e teste um numa compra pequena. Numa loteria você tem dias para pagar; numa venda por ordem de chegada, segundos.</p>
+            </div>
+
+            <div class="trap">
+                <h4><span class="n">04</span>Algumas contas exigem telefone japonês</h4>
+                <p>Certos sistemas de ingresso pedem verificação por chamada — você precisa ligar para um número japonês <strong>do mesmo telefone que cadastrou</strong>. Um número, uma conta. Decida qual telefone vai usar antes de criar a conta, confirme que ele faz ligação internacional, e não troque de chip no meio do processo.</p>
+            </div>
+
+            <div class="trap">
+                <h4><span class="n">05</span>Todo mundo é revendedor, quase ninguém é oficial</h4>
+                <p>Isso muda de atração para atração, e errar significa não entrar. Há lugares em que só o canal oficial e uma bilheteria específica valem, e outros em que revendedores grandes <strong>são</strong> canais legítimos. A regra segura: confira sempre na página oficial da atração quais revendedores ela reconhece — e nunca compre de terceiros em marketplaces, leilões ou mensagem direta.</p>
+            </div>
+
+            <div class="trap">
+                <h4><span class="n">06</span>Madrugada de Brasília é horário comercial no Japão</h4>
+                <p>O Japão está <strong>12 horas à frente</strong> de Brasília, e nunca tem horário de verão. Uma venda que abre às 14h no Japão cai às 2h da manhã aqui; às 10h de lá são 22h do dia anterior aqui. Todas as datas que esta página calcula já vêm convertidas — mas vale colocar despertador, porque é literalmente de madrugada.</p>
+            </div>
+        </section>
+
+        <div class="rodape-acoes" id="acoes" hidden>
+            <button class="cta-button small" id="gerarPdf">Gerar meu PDF da viagem</button>
+            <button class="btn-ghost" id="copiar">Copiar resumo</button>
+        </div>
+        <p class="aviso-pdf" id="aviso-pdf" hidden>O PDF leva o seu cronograma, o que você já resolveu e as orientações de cada tipo de venda, para levar na viagem, impresso ou no celular.</p>
+    </main>
+
+    <!-- FOOTER -->
+    <footer>
+        <p>unirversos — tudo conectado</p>
+        <p>
+            <a href="https://instagram.com/unirversos.idiomas">@unirversos.idiomas</a>
+            |
+            <a href="mailto:unirversos.idiomas@gmail.com">unirversos.idiomas@gmail.com</a>
+        </p>
+        <p style="margin-top: 1.5rem;">Aline Kikuti</p>
+        <p class="disclaimer">As regras desta página são as mecânicas fixas de venda de cada atração, não datas de uma temporada específica. Sistemas, preços e janelas mudam sem aviso no Japão: confirme sempre na página oficial antes de pagar — o link de cada atração leva até lá. Em 15 de outubro de 2026, onze das dezenove regras foram conferidas nas fontes oficiais e confirmadas: PokéPark KANTO, Museu Ghibli de Mitaka, Ghibli Park, Museu da Nintendo, Pokémon Café, Kirby Café, Tokyo Disney, Shibuya Sky, Comiket, Jump Festa e sumô. As oito restantes — Doraemon, USJ, Warner Bros, teamLab (ambos), Toyosu, Saihō-ji e Villas Imperiais — não puderam ser confirmadas porque as páginas oficiais não publicam a antecedência ou bloqueiam leitura automática; nessas, confirme no site oficial antes de contar com a data.</p>
+    </footer>
+
+    <!-- FOLHA DE IMPRESSÃO: invisível na tela, é o que vira o PDF -->
+    <div id="folha" aria-hidden="true">
+        <header class="f-capa">
+            <p class="f-selo">unirversos · travessia</p>
+            <h1 class="f-titulo">O seu Japão,<br>com hora marcada</h1>
+            <p class="f-sub" id="f-datas"></p>
+            <p class="f-nota">Todas as datas e horários já convertidos para o horário de Brasília.</p>
+        </header>
+
+        <section class="f-bloco">
+            <h2 class="f-h2">Seu cronograma de compras</h2>
+            <p class="f-intro">Em ordem de quando cada venda abre. Risque conforme resolver.</p>
+            <div id="f-cronograma"></div>
+        </section>
+
+        <section class="f-bloco f-quebra">
+            <h2 class="f-h2">O que você já resolveu</h2>
+            <div id="f-resolvidos"></div>
+        </section>
+
+        <section class="f-bloco f-quebra">
+            <h2 class="f-h2">Orientações</h2>
+
+            <div class="f-orient">
+                <h3>Loteria — o erro que mais derruba brasileiro</h3>
+                <p>A loteria não distribui ingressos: ela <strong>libera a compra</strong>. Você se inscreve, o sorteio acontece, e quem é sorteado ganha o direito de entrar no site e comprar — dentro de um prazo. Quem comemora e deixa o prazo passar não comprou nada, e a vaga volta para o sorteio. O prazo vem no próprio aviso de resultado, e cada atração usa o seu: anote assim que o aviso chegar.</p>
+            </div>
+
+            <div class="f-orient">
+                <h3>Venda por minuto exato</h3>
+                <p>Várias atrações liberam o mês inteiro num horário único, e as mais disputadas acabam rápido. Esteja logado e com o pagamento cadastrado <em>antes</em> da hora. Convertido para Brasília, esse horário quase sempre cai de madrugada — vale despertador.</p>
+            </div>
+
+            <div class="f-orient">
+                <h3>Cartão estrangeiro</h3>
+                <p>Nem todo site japonês aceita cartão emitido fora do Japão, e a verificação 3-D Secure costuma ser onde a compra trava. Teste o seu cartão numa compra pequena antes do dia, e deixe um segundo cartão de outra bandeira à mão.</p>
+            </div>
+
+            <div class="f-orient">
+                <h3>Antes de se inscrever duas vezes, leia as regras</h3>
+                <p>Cada atração define por conta própria quantas inscrições aceita por pessoa, e há sorteios que desclassificam quem duplica. Não existe regra única: confira o regulamento daquele sorteio antes de tentar mais de uma vez, inclusive se outra pessoa da viagem for se inscrever pela conta dela.</p>
+            </div>
+
+            <div class="f-orient">
+                <h3>Antes de pagar, confira na fonte</h3>
+                <p>As regras deste material são as mecânicas fixas de venda de cada atração, não datas de uma temporada específica. Sistemas, preços e janelas mudam sem aviso no Japão: confirme sempre na página oficial.</p>
+            </div>
+        </section>
+
+        <footer class="f-rodape">
+            <p><strong>unirversos.com/travessia</strong> — ingressos, calendário e o mini guia de sobrevivência.</p>
+            <p class="f-credito">Gerado em <span id="f-gerado"></span> · Aline Kikuti</p>
+        </footer>
+    </div>
+
+<script src="/travessia/agendamentos/regras.js?v=3"></script>
+<script src="/travessia/calendario/geo.js?v=6"></script>
+<script src="/travessia/calendario/avisos.js?v=4"></script>
+<script>
+// ---------- catálogo de regras ----------
+const A = window.AGENDA_REGRAS;
+
+const MES = ['janeiro','fevereiro','março','abril','maio','junho','julho','agosto','setembro','outubro','novembro','dezembro'];
+
+// JST = Brasília + 12h
+function jstParaBrasilia(ano, mes, dia, horaStr){
+  const [h,m] = horaStr.split(':').map(Number);
+  const d = new Date(ano, mes, dia, h, m);
+  d.setHours(d.getHours() - 12);
+  return d;
+}
+function fmtData(d){ return d.getDate() + ' de ' + MES[d.getMonth()] + ' de ' + d.getFullYear(); }
+function fmtHora(d){ return String(d.getHours()).padStart(2,'0') + 'h' + String(d.getMinutes()).padStart(2,'0'); }
+function diasEntre(a,b){
+  return Math.round((new Date(b.getFullYear(),b.getMonth(),b.getDate()) - new Date(a.getFullYear(),a.getMonth(),a.getDate()))/86400000);
+}
+function mesesDaViagem(ida, volta){
+  const out=[]; const d=new Date(ida.getFullYear(), ida.getMonth(), 1);
+  while(d <= volta){ out.push({ano:d.getFullYear(), mes:d.getMonth()}); d.setMonth(d.getMonth()+1); }
+  return out;
+}
+
+function montar(ida, volta){
+  const itens=[];
+  const meses = mesesDaViagem(ida, volta);
+
+  for(const a of A){
+    const r = a.regra;
+
+    if(r.t === 'mensal'){
+      for(const mv of meses){
+        const alvo = new Date(mv.ano, mv.mes - r.offset, 1);
+        let quando, label;
+        if(r.variavel){
+          quando = jstParaBrasilia(alvo.getFullYear(), alvo.getMonth(), 15, r.hora);
+          label = 'em ' + MES[alvo.getMonth()] + ' de ' + alvo.getFullYear() + ', data anunciada no site';
+        } else {
+          quando = jstParaBrasilia(alvo.getFullYear(), alvo.getMonth(), r.dia, r.semHora ? '09:00' : r.hora);
+          label = r.semHora ? 'por volta de ' + fmtData(quando) + ' · horário não informado' : fmtData(quando) + ' · ' + fmtHora(quando) + ' de Brasília';
+        }
+        itens.push({quando, label, a,
+          detalhe:'Libera as datas de <strong>'+MES[mv.mes]+'</strong>. No Japão é dia '+(r.dia||'(a anunciar)')+(r.semHora ? ', sem horário divulgado.' : ' às '+r.hora+'.')});
+      }
+    }
+
+    else if(r.t === 'loteria'){
+      for(const mv of meses){
+        const alvo = new Date(mv.ano, mv.mes - r.offset, 1);
+        const quando = new Date(alvo.getFullYear(), alvo.getMonth(), r.mesInteiro ? 1 : r.d1, 9, 0);
+        const janela = r.mesInteiro
+          ? 'inscrições ao longo de ' + MES[alvo.getMonth()] + ' de ' + alvo.getFullYear()
+          : 'inscrições de ' + r.d1 + ' a ' + r.d2 + ' de ' + MES[alvo.getMonth()] + ' de ' + alvo.getFullYear();
+        let det = 'Janela de inscrição para visitar em <strong>'+MES[mv.mes]+'</strong>. O dia em que você se inscreve dentro da janela não muda nada — é sorteio.';
+        if(r.resultadoDia) det += ' Resultado no dia '+r.resultadoDia+' do mês anterior à visita, com pagamento até o dia '+r.pagamentoDia+'.';
+        itens.push({quando, label: janela, a, detalhe:det});
+      }
+    }
+
+    else if(r.t === 'mesesAntes'){
+      const quando = jstParaBrasilia(ida.getFullYear(), ida.getMonth() - r.meses, ida.getDate(), r.hora);
+      itens.push({quando, label: fmtData(quando) + ' · ' + fmtHora(quando) + ' de Brasília', a,
+        detalhe:'Cada dia abre exatamente '+r.meses+' meses antes. Esta é a data do seu primeiro dia — repita a conta para cada dia que quiser visitar.'});
+    }
+
+    else if(r.t === 'antes'){
+      const quando = jstParaBrasilia(ida.getFullYear(), ida.getMonth(), ida.getDate() - r.dias, r.hora);
+      itens.push({quando, label: fmtData(quando) + ' · ' + fmtHora(quando) + ' de Brasília', a,
+        detalhe:'Abre '+r.dias+' dias antes de cada data. Esta é a do seu primeiro dia — repita a conta para os outros dias que quiser.'});
+    }
+
+    else if(r.t === 'antecedencia'){
+      const quando = new Date(ida.getFullYear(), ida.getMonth() - r.meses, ida.getDate(), 9, 0);
+      itens.push({quando, label:'a partir de ' + fmtData(quando), a,
+        detalhe:'A venda abre cerca de '+r.meses+(r.meses>1?' meses':' mês')+' antes, por ordem de chegada. Quanto antes, melhor.'});
+    }
+
+    else if(r.t === 'anual'){
+      const bate = meses.some(mv => r.meses.includes(mv.mes));
+      if(bate){
+        const mv = meses.find(mv => r.meses.includes(mv.mes));
+        const quando = new Date(mv.ano, mv.mes - 1, 15, 9, 0);
+        itens.push({quando, label:'acompanhar a partir de ' + MES[(mv.mes+11)%12], a,
+          detalhe:'Acontece ' + r.desc + ' — e a sua viagem pega essa janela. Confirme a data exata do ano assim que for anunciada.'});
+      }
+    }
+  }
+
+  itens.sort((x,y) => x.quando - y.quando);
+  return itens;
+}
+
+// ---------- datas da viagem ----------
+// Dentro do calendário, as datas vêm do calendário. Fora dele: as que a pessoa pôs aqui (ou na antiga página de status), senão as do calendário.
+const CHS = 'travessiaStatusV1';
+let DT = {ida:'', volta:''};
+let PLANO = {};
+function okIso(x){ return typeof x === 'string' && /^\d{4}-\d{2}-\d{2}$/.test(x); }
+function lerStatus(){ try { const o = JSON.parse(localStorage.getItem(CHS) || 'null'); return o && typeof o === 'object' ? o : null; } catch(e){ return null; } }
+function datasIniciais(){
+  let cal = null;
+  try { const c = JSON.parse(localStorage.getItem('uniCalendario1') || 'null'); if(c && okIso(c.ini) && okIso(c.fim)) cal = {ida:c.ini, volta:c.fim}; } catch(e){}
+  if(document.documentElement.classList.contains('embed')) return cal || {ida:'', volta:''};
+  const st = lerStatus();
+  if(st && okIso(st.ida) && okIso(st.volta)) return {ida:st.ida, volta:st.volta};
+  return cal || {ida:'', volta:''};
+}
+// As datas ficam na mesma chave da antiga página de status, sem mexer no que já estava lá.
+function guardarDatas(){ try { const st = lerStatus() || {}; st.ida = DT.ida; st.volta = DT.volta; if(!st.itens) st.itens = {}; localStorage.setItem(CHS, JSON.stringify(st)); } catch(e){} }
+function calcPlano(){
+  PLANO = {};
+  if(!DT.ida || !DT.volta) return;
+  montar(new Date(DT.ida + 'T12:00:00'), new Date(DT.volta + 'T12:00:00')).forEach(it => { (PLANO[it.a.id] = PLANO[it.a.id] || []).push(it); });
+}
+function aplicarDatas(){
+  const vi = document.getElementById('ida').value, vv = document.getElementById('volta').value;
+  if(!vi || !vv){ alert('Preencha as duas datas da viagem.'); return; }
+  if(new Date(vv) < new Date(vi)){ alert('A volta precisa ser depois da chegada.'); return; }
+  DT = {ida:vi, volta:vv}; guardarDatas(); calcPlano(); renderCards();
+  const c = document.getElementById('acomp').hidden ? document.getElementById('catalogo') : document.getElementById('acomp');
+  if(c && c.scrollIntoView) c.scrollIntoView({behavior:'smooth', block:'start'});
+}
+document.getElementById('go').addEventListener('click', aplicarDatas);
+
+// ---------- quando comprar ----------
+function chipQuando(q){
+  const dd = diasEntre(new Date(), q);
+  if(dd < 0) return '<span class="chip">já passou</span>';
+  if(dd === 0) return '<span class="chip agora">é hoje</span>';
+  if(dd <= 14) return '<span class="chip agora">' + (dd === 1 ? 'falta 1 dia' : 'faltam ' + dd + ' dias') + '</span>';
+  return '';
+}
+// a próxima data que ainda não passou (se todas passaram, a última)
+function proxima(id){ const l = PLANO[id]; if(!l || !l.length) return null; const h = new Date(); return l.find(x => diasEntre(h, x.quando) >= 0) || l[l.length - 1]; }
+function ordemData(x, y){
+  const k = a => { const p = proxima(a.id); if(!p) return 9e15; return (diasEntre(new Date(), p.quando) < 0 ? 5e15 : 0) + p.quando.getTime(); };
+  return k(x) - k(y);
+}
+function quandoLinha(a){ const p = proxima(a.id); if(!p) return ''; return '<span class="quando-l">📅 ' + p.label + chipQuando(p.quando) + '</span>'; }
+function datasBloco(a){
+  const l = PLANO[a.id]; if(!l || !l.length) return '';
+  const h = new Date();
+  return '<div class="datas-v"><p class="dv-t">Para as datas da sua viagem</p><ul>' + l.map(x =>
+    '<li' + (diasEntre(h, x.quando) < 0 ? ' class="past"' : '') + '><b>' + x.label + '</b>' + chipQuando(x.quando) + '<span>' + x.detalhe + '</span></li>').join('') + '</ul></div>';
+}
+function textoLista(){
+  const t = document.getElementById('lista-t'), sb = document.getElementById('lista-sub'); if(!t || !sb) return;
+  if(DT.ida && DT.volta){
+    t.textContent = 'Sua lista de ingressos';
+    sb.innerHTML = 'Viagem de <b>' + fmtData(new Date(DT.ida + 'T12:00:00')) + '</b> a <b>' + fmtData(new Date(DT.volta + 'T12:00:00')) + '</b>. Em ordem de quando cada venda abre, com os horários já em Brasília. Toque numa atração para marcar <b>Quero ir</b> e anotar em que pé está.';
+  } else {
+    t.textContent = 'As atrações e as regras de venda';
+    sb.textContent = 'Cada atração com a sua mecânica de venda. Coloque as datas da viagem para ver quando comprar cada uma.';
+  }
+}
+
+// ---------- em que pé está ----------
+const ST = [
+  {v:'', nome:'Ainda não comecei'},
+  {v:'inscrito', nome:'Na fila · aguardando o sorteio', lot:true},
+  {v:'ganhei', nome:'Sorteado · falta comprar', lot:true},
+  {v:'comprado', nome:'Ingresso em mãos'},
+  {v:'perdi', nome:'Não consegui'},
+  {v:'pulei', nome:'Decidi não ir'}
+];
+const ST_CURTO = {inscrito:'na fila do sorteio', ganhei:'sorteado · falta comprar', comprado:'em mãos ✓', perdi:'não consegui', pulei:'não vou'};
+function stNome(v){ const s = ST.find(x => x.v === (v || '')); return s ? s.nome : ''; }
+function stBadge(a){ const s = (quero[a.id] || {}).st; return s && ST_CURTO[s] ? '<span class="st-badge st-' + s + '">' + ST_CURTO[s] + '</span>' : ''; }
+function stBloco(a){
+  if(!a.regra) return '';
+  const q = quero[a.id] || {}, lot = a.regra.t === 'loteria', st = q.st || '';
+  const ops = ST.filter(s => !s.lot || lot || s.v === st).map(s => '<option value="' + s.v + '"' + (s.v === st ? ' selected' : '') + '>' + s.nome + '</option>').join('');
+  return '<div class="qi-stb"><label>Em que pé está<select class="qi-st">' + ops + '</select></label>' +
+    (st === 'ganhei' ? '<label>Comprar até<input type="date" class="qi-pz" value="' + escAttr(q.prazo) + '"></label><p class="qi-stdica">Ser sorteado não entrega o ingresso: dá o direito de comprar até esse dia. Passou, a vaga volta para o sorteio.</p>' : '') +
+    '</div>';
+}
+const RESOLVIDO = ['comprado','perdi','pulei'];
+function renderTopo(){
+  const box = document.getElementById('acomp'), acoes = document.getElementById('acoes'), avp = document.getElementById('aviso-pdf');
+  if(!box) return;
+  const tem = !!(DT.ida && DT.volta) && !document.documentElement.classList.contains('embed');
+  box.hidden = !tem; acoes.hidden = !tem; avp.hidden = !tem;
+  if(!tem) return;
+  const hoje = new Date();
+  let total = 0, resolvidos = 0, aguardando = 0, acao = 0;
+  const al = [];
+  const dia = iso => new Date(iso + 'T12:00:00');
+  A.forEach(a => {
+    const l = PLANO[a.id]; if(!l || !l.length) return;
+    const q = quero[a.id] || {}, st = q.st || '';
+    if(!q.ir && !st) return; // só o que a pessoa escolheu acompanhar
+    total++;
+    const abre = l[0].quando, p = proxima(a.id);
+    if(RESOLVIDO.includes(st)) resolvidos++;
+    if(st === 'inscrito'){
+      aguardando++;
+      if(!okIso(q.verif)) al.push({t:'Quando sai o resultado? · ' + a.nome, p:'Você está na fila. Anote o dia de conferir o resultado em “Verificar o resultado até”: sem essa data, ninguém te lembra de olhar.'});
+      else {
+        const dc = diasEntre(hoje, dia(q.verif));
+        if(dc < 0){ acao++; al.push({t:'O resultado já saiu · ' + a.nome, p:'Era para conferir em ' + fmtData(dia(q.verif)) + '. Olhe o e-mail da atração: se você foi sorteado, o prazo de compra já está correndo.'}); }
+        else if(dc <= 3){ acao++; al.push({t:(dc === 0 ? 'Confira hoje' : 'Resultado em ' + dc + ' dia' + (dc > 1 ? 's' : '')) + ' · ' + a.nome, p:'Olhe o e-mail da atração nesse dia. Se foi sorteado, volte aqui e mude o em que pé está: o prazo de compra é curto.'}); }
+      }
+    }
+    if(st === 'ganhei'){
+      acao++;
+      if(!okIso(q.prazo)) al.push({t:'Falta anotar o prazo de compra · ' + a.nome, p:'Você foi sorteado. Anote até quando pode comprar, senão o alerta não aparece.'});
+      else {
+        const pz = dia(q.prazo);
+        if(pz < new Date(abre.getFullYear(), abre.getMonth(), abre.getDate())) al.push({t:'Essa data não fecha · ' + a.nome, p:'Você anotou comprar até ' + fmtData(pz) + ', mas as inscrições só abrem em ' + fmtData(abre) + '. O ano pode ter saído errado.'});
+        else {
+          const dd = diasEntre(hoje, pz);
+          if(dd < 0) al.push({t:'Prazo de compra vencido · ' + a.nome, p:'O prazo para comprar era ' + fmtData(pz) + '. Confira se a sua vaga ainda está de pé.'});
+          else if(dd <= 5) al.push({t:'Prazo de compra ' + (dd === 0 ? 'vence hoje' : 'vence em ' + dd + ' dia' + (dd > 1 ? 's' : '')) + ' · ' + a.nome, p:'Ser sorteado não entrega o ingresso: dá o direito de comprar. Se não comprar até ' + fmtData(pz) + ', a vaga volta para o sorteio.'});
+        }
+      }
+    }
+    if(!st && p){
+      const dd = diasEntre(hoje, p.quando);
+      if(dd >= 0 && dd <= 7){ acao++; al.push({t:(dd === 0 ? 'Abre hoje' : 'Faltam ' + dd + ' dia' + (dd > 1 ? 's' : '')) + ' · ' + a.nome, p:p.label}); }
+    }
+  });
+  document.getElementById('painel').hidden = !total;
+  document.getElementById('painel-vazio').hidden = !!total;
+  document.getElementById('painel').innerHTML =
+    '<div class="stat"><div class="n">' + total + '</div><div class="t">acompanhando</div></div>' +
+    '<div class="stat"><div class="n">' + resolvidos + '</div><div class="t">resolvidos</div></div>' +
+    '<div class="stat"><div class="n">' + aguardando + '</div><div class="t">aguardando sorteio</div></div>' +
+    '<div class="stat' + (acao ? ' urgente' : '') + '"><div class="n">' + acao + '</div><div class="t">pedem ação</div></div>';
+  document.getElementById('alertas').innerHTML = al.map(x => '<div class="alerta"><h4>' + escAttr(x.t) + '</h4><p>' + x.p + '</p></div>').join('');
+}
+
+
+// ---------- catálogo ----------
+function regraResumo(a){
+  const r = a.regra;
+  if(r.t === 'mensal'){
+    if(r.semHora) return '<b>Por volta do dia ' + r.dia + '</b>, ' + (r.offset === 1 ? 'para o mês seguinte' : r.offset + ' meses à frente') + '. O site oficial não informa o horário.';
+    if(r.variavel) return '<b>Lote mensal</b>, às ' + r.hora + ' no Japão, com a data anunciada antes no site oficial. Cobre o mês seguinte.';
+    return '<b>Todo dia ' + r.dia + '</b>, às ' + r.hora + ' no Japão, liberando ' + (r.offset === 1 ? 'o mês seguinte' : r.offset + ' meses à frente') + '.';
+  }
+  if(r.t === 'loteria'){
+    const q = r.mesInteiro ? 'ao longo do mês' : 'entre os dias ' + r.d1 + ' e ' + r.d2;
+    return '<b>Loteria</b>: inscrições ' + q + ', para visitar ' + (r.offset === 1 ? 'no mês seguinte' : r.offset + ' meses depois') + '.';
+  }
+  if(r.t === 'mesesAntes') return '<b>Exatamente ' + r.meses + ' meses antes</b> de cada data de visita, às ' + r.hora + ' no Japão.';
+  if(r.t === 'antes') return '<b>' + r.dias + ' dias antes</b> da data da visita, às ' + r.hora + ' no Japão.';
+  if(r.t === 'antecedencia') return '<b>Cerca de ' + r.meses + (r.meses > 1 ? ' meses' : ' mês') + ' antes</b>, por ordem de chegada.';
+  if(r.t === 'anual') return '<b>Evento anual</b> — ' + r.desc + '.';
+  return '';
+}
+
+const LIVRES = [{"id": "livre-electric-town", "onde": "Tóquio · Akihabara", "nome": "Electric Town", "desc": "Games retrô, figures, andares inteiros de gachapon e as lojas de componentes que são o Akihabara original."}, {"id": "livre-nakano", "onde": "Tóquio · Nakano", "nome": "Nakano Broadway", "desc": "Akihabara em miniatura e sem multidão. Colecionador de verdade prefere aqui."}, {"id": "livre-gundam", "onde": "Tóquio · Odaiba", "nome": "Gundam em tamanho real", "desc": "Os quase 20 metros do RX-0 que se transformam em horários marcados, com som e luz. Grátis."}, {"id": "livre-suginami", "onde": "Tóquio · Ogikubo", "nome": "Museu de Animação de Suginami", "desc": "Grátis. Como um anime é feito, do storyboard à dublagem, no bairro dos estúdios de verdade."}, {"id": "livre-manga-kyoto", "onde": "Kyoto · Karasuma Oike", "nome": "Museu Internacional do Mangá", "desc": "Uma escola antiga com 300 metros lineares de prateleira que você pode pegar e ler sentado no chão."}, {"id": "livre-fushimi", "onde": "Kyoto · Fushimi", "nome": "Fushimi Inari", "desc": "Os milhares de torii vermelhos subindo a montanha. Aberto 24 horas, sem bilheteria — vá ao amanhecer."}, {"id": "livre-den-den", "onde": "Osaka · Nipponbashi", "nome": "Den Den Town", "desc": "O Akihabara de Osaka, com clima mais solto e bem menos turista."}, {"id": "livre-iluminacoes", "onde": "Nov → fev", "nome": "Iluminações de inverno", "desc": "Quilômetros de avenida acesos em Tóquio e Osaka, de novembro até fevereiro. Quase tudo gratuito."}, {"id": "livre-konbini", "onde": "Em qualquer cidade", "nome": "Os konbini", "desc": "Abertos 24 horas, com comida de verdade, caixa eletrônico que aceita cartão estrangeiro e banheiro limpo."}];
+// Nomes em japonês (ajudam o Google Maps a achar o lugar certo). Vêm do meu conhecimento, não foram conferidos no Maps: a pessoa confirma.
+const JP = {"pokepark": "ポケパーク カントー", "ghibli-mitaka": "三鷹の森ジブリ美術館", "ghibli-park": "ジブリパーク", "pokemon-cafe": "ポケモンカフェ", "kirby": "カービィカフェ", "disney": "東京ディズニーリゾート", "doraemon": "藤子・F・不二雄ミュージアム", "usj": "ユニバーサル・スタジオ・ジャパン", "harrypotter": "ワーナー ブラザース スタジオツアー東京 メイキング・オブ・ハリー・ポッター", "teamlab-tokyo": "チームラボボーダレス", "nintendo-museum": "任天堂ミュージアム", "biovortex": "チームラボ バイオヴォルテックス 京都", "toyosu": "豊洲市場", "shibuya-sky": "渋谷スカイ", "saihoji": "西芳寺", "katsura": "桂離宮", "comiket": "東京ビッグサイト コミックマーケット", "jumpfesta": "幕張メッセ ジャンプフェスタ", "sumo": "両国国技館", "livre-electric-town": "秋葉原電気街", "livre-nakano": "中野ブロードウェイ", "livre-gundam": "ダイバーシティ東京 プラザ ユニコーンガンダム立像", "livre-suginami": "杉並アニメーションミュージアム", "livre-manga-kyoto": "京都国際マンガミュージアム", "livre-fushimi": "伏見稲荷大社", "livre-den-den": "日本橋 でんでんタウン"};
+let filtroAtivo = 'todos';
+function cardHtml(a){
+  return '<details class="card ' + (a.cat === 'classico' ? 'classico' : '') + '" data-id="' + a.id + '"' + (abertos.has(a.id) ? ' open' : '') + '>' +
+      '<summary><span class="card-top"><h4>' + a.nome + '</h4><span class="qi-badge" hidden></span>' + stBadge(a) + '</span>' +
+      '<span class="where">' + a.onde + '</span>' +
+      '<span class="rule">' + regraResumo(a) + '</span>' + quandoLinha(a) + '</summary>' +
+      '<div class="card-corpo">' +
+      '<p>' + a.desc + '</p>' +
+      '<p>' + a.nota + '</p>' +
+      confLinha(a) +
+      datasBloco(a) +
+      queroIr(a) +
+      (a.url ? '<a href="' + a.url + '" target="_blank" rel="noopener">página oficial →</a>' : '') +
+      '</div></details>';
+}
+// "Meus quero ir": quem tem Quero ir marcado E data escolhida sai da lista grande e sobe para este bloco.
+// No topo: o que tem "Quero ir" no calendário ou um "em que pé está" marcado.
+function acompanha(a){ return ehMeu(a) || !!(quero[a.id] || {}).st; }
+function ehMeu(a){ const q = quero[a.id] || {}; return !!(q.ir && q.data && q.salvo); }
+// Fonte da verdade: o calendário. Se o evento "Quero ir" foi apagado de lá, a atração volta para a lista.
+function noCalendario(id){
+  const pre = 'qi-' + id + '-', tem = x => x && typeof x.id === 'string' && x.id.indexOf(pre) === 0 && /-v$/.test(x.id);
+  try { const c = JSON.parse(localStorage.getItem('uniCalendario1') || 'null'); if(c && Array.isArray(c.ev) && c.ev.some(tem)) return true; } catch(e){}
+  try { const p = JSON.parse(localStorage.getItem('uniCalPend') || '[]'); if(Array.isArray(p) && p.some(tem)) return true; } catch(e){}
+  return false;
+}
+function soAcomp(q){ q = q || {}; const o = {}; ['link','num','obs','local','st','prazo','verif'].forEach(k => { if(q[k]) o[k] = q[k]; }); return o; }
+function sincronizarCal(){
+  let mudou = false;
+  Object.keys(quero).forEach(id => { if(quero[id] && quero[id].salvo && !noCalendario(id)){ quero[id] = soAcomp(quero[id]); mudou = true; } });
+  if(mudou) salvarQuero();
+  return mudou;
+}
+window.addEventListener('storage', e => { if(e.key === 'uniCalendario1' || e.key === 'uniCalPend'){ const a = recarregarQuero(), b = sincronizarCal(); if(a || b) renderCards(); } });
+window.addEventListener('focus', () => { if(sincronizarCal()) renderCards(); });
+// Dentro do calendário: eventos de época (anuais) que não caem em nenhum mês da viagem ficam de fora.
+let mostrarFora = false;
+function mesesViagem(){
+  if(!DT.ida || !DT.volta) return null;
+  const m = new Set(); let [y, mo] = DT.ida.slice(0,7).split('-').map(Number); const [y2, mo2] = DT.volta.slice(0,7).split('-').map(Number);
+  while(y < y2 || (y === y2 && mo <= mo2)){ m.add(mo - 1); mo++; if(mo > 12){ mo = 1; y++; } if(m.size >= 12) break; }
+  return m;
+}
+function foraDaViagem(a){
+  const m = mesesViagem(); if(!m || mostrarFora || !a.regra || a.regra.t !== 'anual' || !Array.isArray(a.regra.meses)) return false;
+  return !a.regra.meses.some(x => m.has(x));
+}
+function livreCard(l){
+  return '<details class="card" data-id="' + l.id + '"' + (abertos.has(l.id) ? ' open' : '') + '><summary><span class="card-top"><h4>' + l.nome + '</h4><span class="qi-badge" hidden></span></span><span class="where">' + l.onde + '</span></summary><div class="card-corpo"><p>' + l.desc + '</p>' + queroIr(l) + '</div></details>';
+}
+function livreItem(l){
+  return '<div class="fitem"><div class="loc">' + l.onde + '</div><h5>' + l.nome + '</h5><p>' + l.desc + '</p>' + queroIr(l) + '</div>';
+}
+function renderCards(){
+  sincronizarCal();
+  const cards = document.getElementById('cards'), meus = document.getElementById('cards-quero');
+  const lista = A.filter(a => !acompanha(a) && !foraDaViagem(a) && (filtroAtivo === 'todos' || a.cat === filtroAtivo || a.tag === filtroAtivo));
+  const mine = A.filter(acompanha), mineL = LIVRES.filter(ehMeu);
+  if(DT.ida && DT.volta){ lista.sort(ordemData); mine.sort(ordemData); }
+  textoLista();
+  cards.innerHTML = lista.map(cardHtml).join('');
+  meus.innerHTML = mine.map(cardHtml).join('') + mineL.map(livreCard).join('');
+  document.getElementById('free-list').innerHTML = LIVRES.filter(l => !ehMeu(l)).map(livreItem).join('');
+  document.getElementById('quero-box').hidden = !(mine.length || mineL.length);
+  document.querySelector('.quero-h2').hidden = !lista.length;
+  document.getElementById('livres').hidden = !LIVRES.some(l => !ehMeu(l));
+  document.querySelectorAll('.qi').forEach(qiAtualizar);
+  atualizarContagem(lista.length);
+  renderTopo();
+  const esc = A.filter(a => !acompanha(a) && foraDaViagem(a)).length, nf = document.getElementById('fora-nota');
+  if(nf){ nf.hidden = !esc && !mostrarFora; nf.innerHTML = mostrarFora ? 'Mostrando também os eventos fora das datas da viagem. <button type="button" class="btn-ghost" data-fora="0">Esconder</button>' : esc + (esc === 1 ? ' evento fora' : ' eventos fora') + ' das datas da sua viagem foi escondido. <button type="button" class="btn-ghost" data-fora="1">Mostrar</button>'; }
+}
+const abertos = new Set();
+function atualizarContagem(n){
+  const t = document.getElementById('cards-tools'); if(!t) return;
+  t.querySelector('.ct-n').textContent = n + (n === 1 ? ' atração' : ' atrações');
+}
+(function(){
+  const t = document.createElement('div'); t.id = 'cards-tools'; t.className = 'cards-tools';
+  t.innerHTML = '<span class="ct-n"></span><span><button type="button" class="btn-ghost" data-ct="abrir">Expandir tudo</button> <button type="button" class="btn-ghost" data-ct="fechar">Recolher tudo</button></span>';
+  const c = document.getElementById('cards'); c.parentNode.insertBefore(t, document.getElementById('quero-box'));
+  t.addEventListener('click', e => {
+    const b = e.target.closest('[data-ct]'); if(!b) return;
+    const abrir = b.dataset.ct === 'abrir';
+    document.querySelectorAll('#cards details.card, #cards-quero details.card').forEach(d => { d.open = abrir; if(abrir) abertos.add(d.dataset.id); else abertos.delete(d.dataset.id); });
+  });
+  [c, document.getElementById('cards-quero')].forEach(x => x.addEventListener('toggle', e => { const d = e.target; if(d.matches && d.matches('details.card')){ if(d.open) abertos.add(d.dataset.id); else abertos.delete(d.dataset.id); } }, true));
+})();
+document.getElementById('fora-nota').addEventListener('click', e => { const b = e.target.closest('[data-fora]'); if(!b) return; mostrarFora = b.dataset.fora === '1'; renderCards(); });
+function fmtConf(iso){ const p = iso.split('-'); return +p[2] + ' de ' + MES[+p[1]-1] + ' de ' + p[0]; }
+function confLinha(a){
+  if(!a.conf) return '<p class="conf nao">⚠ Esta regra ainda não foi conferida no site oficial. Confirme lá antes de depender dela.</p>';
+  return '<p class="conf ok">✓ Conferido no site oficial em ' + fmtConf(a.conf.em) + ': ' + a.conf.ok + (a.conf.fonte ? ' <a href="' + a.conf.fonte + '" target="_blank" rel="noopener">fonte</a>' : '') + '</p>';
+}
+
+// ---------- quero ir + avisos ----------
+const CHQ = 'agQueroIr';
+// As escolhas ficam junto do calendário (e vão para a conta com ele). Dentro do calendário, via janela-mãe; fora dele, direto no armazenamento do calendário.
+function viaPai(){ try { return window.parent !== window && window.parent.UniQI ? window.parent.UniQI : null; } catch(e){ return null; } }
+function calLocal(){ try { const c = JSON.parse(localStorage.getItem('uniCalendario1') || 'null'); return c && c.ini ? c : null; } catch(e){ return null; } }
+function lerQuero(){
+  const pai = viaPai(); if(pai){ const q = pai.get(); if(Object.keys(q).length) return q; }
+  else { const c = calLocal(); if(c && c.qi && Object.keys(c.qi).length) return c.qi; }
+  try { return JSON.parse(localStorage.getItem(CHQ) || '{}') || {}; } catch(e){ return {}; }
+}
+let quero = lerQuero();
+// Dados guardados pela versão antiga (só neste navegador) passam para o calendário assim que a página abre, para irem à conta.
+(function(){ try { const pai = viaPai(), c = pai ? {qi: pai.get()} : calLocal(); if(c && (!c.qi || !Object.keys(c.qi).length) && Object.keys(quero).length) setTimeout(() => { if(typeof salvarQuero === 'function') salvarQuero(); }, 0); } catch(e){} })();
+function salvarQuero(){
+  try { localStorage.setItem(CHQ, JSON.stringify(quero)); } catch(e){}
+  const pai = viaPai(); if(pai){ pai.set(quero); quero = pai.get(); return; }
+  const c = calLocal(); if(!c) return;
+  const ant = c.qi || {}, novo = {};
+  Object.keys(quero).forEach(k => { const q = Object.assign({}, quero[k]); if(!Object.keys(q).filter(x => x !== 't').length) return;
+    q.t = JSON.stringify(Object.assign({}, q, {t: 0})) !== JSON.stringify(Object.assign({}, ant[k] || {}, {t: 0})) ? Date.now() : (q.t || 0); novo[k] = q; });
+  if(JSON.stringify(novo) === JSON.stringify(ant)) return;
+  c.qi = novo; try { localStorage.setItem('uniCalendario1', JSON.stringify(c)); } catch(e){}
+}
+// Situação da conta (só dentro do calendário): mostra se as escolhas estão indo para a conta.
+function atualizarNuvemSt(){ const el = document.getElementById('nuvem-st'), pai = viaPai(); if(!el) return; if(!pai || !pai.estado){ el.hidden = false; el.className = 'nuvem-st sem'; el.innerHTML = 'Aqui as suas escolhas ficam só neste navegador. Para guardá-las na sua conta e ver em todos os seus aparelhos, use a lista pelo calendário. <a class="btn-ghost" href="/travessia/calendario/">Abrir o calendário</a>'; return; }
+  const e = pai.estado(); el.hidden = false; el.className = 'nuvem-st ' + e.t; el.innerHTML = e.txt + (e.bt ? ' <button type="button" class="btn-ghost" data-nst="1">' + e.bt + '</button>' : ''); }
+document.getElementById('nuvem-st').addEventListener('click', e => { if(e.target.closest('[data-nst]')){ const pai = viaPai(); if(pai && pai.agir) pai.agir(); } });
+if(document.documentElement.classList.contains('embed')){ setInterval(atualizarNuvemSt, 1500); setTimeout(atualizarNuvemSt, 300); } else { atualizarNuvemSt(); }
+function recarregarQuero(){ const n = lerQuero(); if(JSON.stringify(n) !== JSON.stringify(quero)){ quero = n; return true; } return false; }
+window.addEventListener('message', e => { if(e.origin === location.origin && e.data && e.data.uniQi){ recarregarQuero(); renderCards(); } });
+function escAttr(v){ return String(v == null ? '' : v).replace(/&/g,'&amp;').replace(/"/g,'&quot;').replace(/</g,'&lt;'); }
+function linkSeguro(u){ u = String(u || '').trim(); return /^https?:\/\/\S+$/i.test(u) ? u : ''; }
+// Acompanhamento da inscrição/compra: link, número e observações (vão com o calendário e nos detalhes do evento).
+function acompBloco(a){
+  const q = quero[a.id] || {}, lot = a.regra && a.regra.t === 'loteria', u = linkSeguro(q.link);
+  return '<div class="qi-ac">' + stBloco(a) + '<label>' + (lot ? 'Link da loteria' : 'Link da inscrição ou da compra') + '<input type="url" class="qi-lk" maxlength="500" value="' + escAttr(q.link) + '" placeholder="Cole aqui o link"></label>' +
+    '<label>' + (lot ? 'Meu número de inscrição' : 'Meu número do pedido') + '<input type="text" class="qi-nm" maxlength="80" value="' + escAttr(q.num) + '" placeholder="Para conferir o resultado depois" autocomplete="off"></label>' +
+    (lot || q.verif || q.st === 'inscrito' ? '<div class="qi-vf-box"><label>Verificar o resultado até<input type="date" class="qi-vf" value="' + escAttr(q.verif) + '"></label><div class="qi-lbtn"><button type="button" class="cta-button small qi-vfb">⏰ Lembrar de verificar</button></div><p class="qi-vf-ok qi-dica" hidden></p></div>' : '') +
+    '<label>Observações<textarea class="qi-ob" rows="2" maxlength="500" placeholder="Anotações suas: horário, quem vai, o que lembrar…">' + escAttr(q.obs).replace(/&quot;/g, '"') + '</textarea></label>' +
+    '<div class="qi-lbtn"><a class="btn-ghost qi-abrir" href="' + escAttr(u) + '" target="_blank" rel="noopener"' + (u ? '' : ' hidden') + '>' + (lot ? 'Abrir a loteria / ver resultado' : 'Abrir o link') + '</a> <button type="button" class="btn-ghost qi-cpnum"' + (q.num ? '' : ' hidden') + '>Copiar meu número</button></div>' +
+    '<p class="qi-dica">Tudo isso é salvo junto com o seu calendário: entrando na sua conta, aparece em todos os seus aparelhos. O link, o número e as observações vão também nos detalhes do evento.</p></div>';
+}
+function localBloco(a){
+  const l = localDe(a.id), url = mapsUrl(l), jp = JP[a.id];
+  return '<div class="qi-loc"><label>Local no mapa<input type="text" class="qi-lc" maxlength="300" value="' + l.replace(/"/g, '&quot;') + '" placeholder="Cole o link do Google Maps, o endereço ou o nome em japonês"></label>' +
+    '<div class="qi-lbtn">' + (url ? '<a class="btn-ghost qi-maps" href="' + url + '" target="_blank" rel="noopener">Conferir no Google Maps</a>' : '') + (jp ? ' <button type="button" class="btn-ghost qi-jp" data-jp="' + jp.replace(/"/g, '&quot;') + '">Copiar nome em japonês</button>' : '') + '</div>' +
+    '<p class="qi-dica">' + (l ? 'Confirme se o Maps achou o lugar certo. Se estiver errado, cole o link do Maps ou o nome em japonês' + (jp ? ' (<span lang="ja">' + jp + '</span>)' : '') + ': isso ajuda o Maps a acertar.' : 'Este item não tem endereço fixo. Se quiser, cole aqui o link do Google Maps ou um endereço.') + '</p></div>';
+}
+function queroIr(a){
+  const q = quero[a.id] || {};
+  if(ehMeu(a)) return '<div class="qi qi-meu" data-id="' + a.id + '"><p class="qi-noCal">✓ <b>No seu calendário</b> em ' + q.data.split('-').reverse().join('/') + '. Para tirar da lista, apague esse evento lá no calendário.</p>' + localBloco(a) + acompBloco(a) + '<div class="qi-out" aria-live="polite"></div></div>';
+  return '<div class="qi" data-id="' + a.id + '">' +
+    '<label class="qi-l"><input type="checkbox" class="qi-ck"' + (q.ir ? ' checked' : '') + '> <b>Quero ir</b></label>' +
+    '<label class="qi-d"' + (q.ir ? '' : ' hidden') + '>Dia do passeio <input type="date" class="qi-dt" value="' + (q.data || '') + '"></label>' +
+    '<p class="qi-dica"' + (q.ir ? '' : ' hidden') + '>Escolha o dia: o passeio e os avisos entram sozinhos no seu calendário.</p>' + acompBloco(a) +
+    '<div class="qi-out" aria-live="polite"></div></div>';
+}
+function qiAtualizar(box){
+  const id = box.dataset.id, q = quero[id] || {}, out = box.querySelector('.qi-out');
+  const bd = box.closest('details.card') && box.closest('details.card').querySelector('.qi-badge');
+  if(bd){ bd.hidden = !q.ir; bd.textContent = q.ir ? '✓ quero ir' + (q.data ? ' · ' + q.data.split('-').reverse().join('/') : '') : ''; }
+  out.innerHTML = '';
+  if(!q.ir || !q.data) return;
+  const alerta = avisoCidade(id, q.data);
+  if(id.indexOf('livre-') === 0){ out.innerHTML = alerta; return; }
+  const pl = window.CalAvisos && CalAvisos.plano(id, q.data);
+  if(!pl){ out.innerHTML = alerta + '<p class="qi-nota">Este é um evento anual, sem horário de venda que o site consiga calcular. Acompanhe a página oficial e anote a data no calendário.</p>'; return; }
+  const sit = CalAvisos.situacao(pl.av), futuros = pl.avisos.filter(x => x.ms > Date.now());
+  let h = alerta + '<p class="qi-quando">' + pl.av.texto + '</p>';
+  if(pl.av.aprox) h += '<p class="qi-nota">⚠ Horário aproximado: confira a data exata no site oficial. Só há aviso de 1 dia antes.</p>';
+  if(sit.est === 'aberto') h += '<p class="qi-nota forte">Essa venda já abriu. Se ainda tem vaga, compre agora na página oficial.</p>';
+  if(sit.est === 'passou'){
+    const jaInsc = q.num || q.link;
+    h += jaInsc ? '<p class="qi-nota">As inscrições dessa data já encerraram, e você já se inscreveu' + (q.num ? ' (nº ' + escAttr(q.num) + ')' : '') + '. Agora é esperar o resultado: use “Verificar o resultado até” mais abaixo para criar o lembrete.</p>'
+      : '<p class="qi-nota forte">As inscrições dessa data já encerraram. Se você já se inscreveu, preencha o número e o link nos campos abaixo e crie o lembrete de verificar o resultado.</p>';
+  }
+  if(futuros.length){
+    h += '<p class="qi-av">Avisos:</p><ul class="qi-lista">' + futuros.map(x => { const b = CalAvisos.brParts(x.ms); return '<li>' + x.titulo.replace(/^⏰ /, '') + ' — <b>' + b.data.split('-').reverse().join('/') + ' às ' + b.hora.replace(':','h') + '</b> (Brasília)</li>'; }).join('') + '</ul>' +
+      '<div class="qi-btns"><button type="button" class="btn-ghost qi-ics">Google Agenda (.ics)</button></div>' +
+      '<p class="qi-ok" hidden></p>';
+  }
+  out.innerHTML = h;
+}
+// Cria o passeio + os avisos no calendário do site (o calendário aplica ao abrir, ou na hora se estiver aberto).
+function cidadeTxt(it){ return it.onde && it.onde.indexOf(' · ') > -1 ? it.onde.replace(/ · /g, ', ') : ''; }
+// Local padrão: nome em japonês + cidade (o Maps acha melhor). A pessoa pode trocar por link do Maps ou endereço.
+function localPadrao(it){ const c = cidadeTxt(it); if(!c) return ''; return (JP[it.id] ? JP[it.id] + ', ' : it.nome + ', ') + c; }
+function localDe(id){ const q = quero[id] || {}; if(typeof q.local === 'string' && q.local.trim()) return q.local.trim(); const it = itemDe(id); return it ? localPadrao(it) : ''; }
+function mapsUrl(l){ if(!l) return ''; const c = window.CalGeo && CalGeo.coordDe(l); return 'https://www.google.com/maps/search/?api=1&query=' + (c ? c.lat + ',' + c.lon : encodeURIComponent(l.replace(/https?:\/\/\S+/g,' ').trim() || l)); }
+function detalhesExtra(q){ return (linkSeguro(q.link) ? '\nLink da inscrição: ' + q.link.trim() : '') + (q.num ? '\nNº de inscrição: ' + q.num : '') + (q.obs ? '\nObs: ' + q.obs : ''); }
+// Lembrete de "verificar o resultado até o dia X": um evento no último dia e outro na véspera.
+function eventosVerif(id){
+  const q = quero[id] || {}, a = itemDe(id); if(!a || !/^\d{4}-\d{2}-\d{2}$/.test(q.verif || '')) return [];
+  const grupo = 'qi-' + id + '-', d = new Date(q.verif + 'T12:00:00Z'); d.setUTCDate(d.getUTCDate() - 1);
+  const vespera = d.toISOString().slice(0, 10), det = 'Verificar o resultado da loteria.' + detalhesExtra(q) + (a.url ? '\n' + a.url : '');
+  const evs = [{id: grupo + 'vf0', titulo: '🎰 Último dia para verificar o resultado: ' + a.nome, tipo: 'outro', data: q.verif, hora: '', fuso: 'jp', detalhes: det, upd: true}];
+  if(vespera >= new Date().toISOString().slice(0, 10)) evs.push({id: grupo + 'vf1', titulo: '🎰 Amanhã é o último dia para verificar: ' + a.nome, tipo: 'outro', data: vespera, hora: '', fuso: 'jp', detalhes: det, upd: true});
+  return evs;
+}
+function enviarVerif(id){
+  const evs = eventosVerif(id); if(!evs.length) return 0;
+  let pend = []; try { pend = JSON.parse(localStorage.getItem('uniCalPend') || '[]') || []; } catch(x){ pend = []; }
+  const ids = {}; evs.forEach(e => ids[e.id] = 1);
+  pend = pend.filter(p => !(p && ids[p.id])).concat(evs);
+  try { localStorage.setItem('uniCalPend', JSON.stringify(pend)); } catch(x){}
+  return evs.length;
+}
+function enviarCal(id, upd){
+  const q = quero[id], livre = id.indexOf('livre-') === 0, a = livre ? LIVRES.find(x => x.id === id) : A.find(x => x.id === id), pl = !livre && window.CalAvisos && CalAvisos.plano(id, q.data);
+  let pend = []; try { pend = JSON.parse(localStorage.getItem('uniCalPend') || '[]') || []; } catch(x){ pend = []; }
+  const grupo = 'qi-' + id + '-', base = grupo + q.data, av = pl && pl.av;
+  const local = localDe(id);
+  const evs = [{id: base + '-v', grupo: grupo, upd: !!upd, local: local, titulo: (livre ? '📍 Quero ir: ' : '🎟️ Quero ir: ') + (av ? av.nome : a.nome), tipo: 'passeio', data: q.data, hora: '', fuso: 'jp', detalhes: (av ? 'Regra de venda: ' + av.texto.replace(/<[^>]+>/g,'') : (livre ? a.desc : (a.nota || '')).replace(/<[^>]+>/g,'')) + (a.url ? '\n' + a.url : '') + detalhesExtra(q)}];
+  if(!upd && pl) pl.avisos.forEach((x, i) => { if(x.ms <= Date.now()) return; const b = CalAvisos.brParts(x.ms); evs.push({id: base + '-a' + i, grupo: grupo, titulo: x.titulo.replace(/^⏰ /, ''), tipo: 'outro', data: b.data, hora: b.hora, fuso: 'br', detalhes: (a.url || '')}); });
+  if(!upd) eventosVerif(id).forEach(e => evs.push(e));
+  pend = pend.filter(p => !(p && typeof p.id === 'string' && (upd ? p.id === evs[0].id : p.id.indexOf(grupo) === 0))).concat(evs);
+  try { localStorage.setItem('uniCalPend', JSON.stringify(pend)); } catch(x){}
+}
+
+// Aviso de deslocamento: compara a região da atração com a hospedagem do dia (só avisa quando consegue identificar as duas).
+const REGIOES = {
+  kanto: ['toquio','tokyo','chiba','kawasaki','yokohama','kanagawa','saitama','inagi','mitaka','maihama','odaiba','makuhari','ogikubo','nakano','akihabara','shinjuku','shibuya','asakusa','ueno','ikebukuro','toyosu','chiyoda','minato','kamakura'],
+  kansai: ['kyoto','quioto','osaka','nara','kobe','fushimi','nipponbashi','arashiyama','kansai','kamigyo','shimogyo'],
+  nagoya: ['nagoya','aichi'],
+  fuji: ['fuji','kawaguchi','hakone'],
+  fukuoka: ['fukuoka'],
+  hokkaido: ['sapporo','hokkaido']
+};
+const REG_NOME = {kanto:'Tóquio e arredores', kansai:'Kyoto/Osaka', nagoya:'Nagoya', fuji:'Monte Fuji/Hakone', fukuoka:'Fukuoka', hokkaido:'Hokkaido'};
+function regioesDe(txt){
+  const t = ' ' + String(txt || '').normalize('NFD').replace(/[̀-ͯ]/g, '').toLowerCase() + ' ', r = new Set();
+  Object.keys(REGIOES).forEach(k => { if(REGIOES[k].some(w => t.indexOf(w) > -1)) r.add(k); });
+  return r;
+}
+const CENTROS = [['kanto',35.68,139.77,70],['kansai',34.8,135.6,50],['nagoya',35.18,136.9,40],['fuji',35.45,138.75,40],['fukuoka',33.59,130.4,50],['hokkaido',43.06,141.35,60]];
+function regioesDeCoord(c){ const r = new Set(); if(!c || !window.CalGeo) return r; CENTROS.forEach(x => { if(CalGeo.km({lat:c.lat, lon:c.lon}, {lat:x[1], lon:x[2]}) <= x[3]) r.add(x[0]); }); return r; }
+function regioesHotel(e){ const c = window.CalGeo && CalGeo.coordDe(e.local || ''); const r = regioesDeCoord(c); if(r.size) return r; return regioesDe((e.titulo || '') + ' ' + (e.local || '')); }
+function itemDe(id){ return A.find(x => x.id === id) || LIVRES.find(x => x.id === id); }
+function avisoCidade(id, data){
+  const it = itemDe(id); if(!it || !data) return '';
+  const ra = regioesDe(it.onde); if(!ra.size) return '';
+  let c; try { c = JSON.parse(localStorage.getItem('uniCalendario1') || 'null'); } catch(e){ c = null; }
+  if(!c || !Array.isArray(c.ev)) return '';
+  const est = c.ev.filter(e => e && e.tipo === 'hosp' && e.data && e.data <= data && data < (e.dataFim || e.data) || (e && e.tipo === 'hosp' && e.data === data && !e.dataFim));
+  if(!est.length) return '';
+  const comReg = est.map(e => ({e, r: regioesHotel(e)})).filter(x => x.r.size);
+  if(!comReg.length) return '';
+  if(comReg.some(x => [...x.r].some(k => ra.has(k)))) return '';
+  const h = comReg[0], donde = [...h.r].map(k => REG_NOME[k]).join(' / '), onde = [...ra].map(k => REG_NOME[k]).join(' / ');
+  const dest = it.onde.indexOf(' · ') > -1 ? it.nome + ', ' + it.onde.replace(/ · /g, ', ') : it.nome;
+  const rota = 'https://www.google.com/maps/dir/?api=1&origin=' + encodeURIComponent(h.e.local || h.e.titulo) + '&destination=' + encodeURIComponent(dest);
+  return '<p class="qi-nota forte">⚠ Nesse dia a sua hospedagem (' + (h.e.titulo || 'estadia').replace(/</g, '&lt;') + ') é em ' + donde + ', e ' + it.nome + ' fica em ' + onde + '. Confira se dá para ir e voltar no mesmo dia, ou escolha outra data. <a href="' + rota + '" target="_blank" rel="noopener">Ver o trajeto no Google Maps →</a></p>';
+}
+function qiItem(box){ const id = box.dataset.id; return {id: id, data: (quero[id] || {}).data, pl: CalAvisos.plano(id, (quero[id] || {}).data)}; }
+['cards','cards-quero','free-list'].forEach(cid => document.getElementById(cid).addEventListener('change', e => {
+  const box = e.target.closest('.qi'); if(!box) return;
+  const id = box.dataset.id; quero[id] = quero[id] || {};
+  if(e.target.classList.contains('qi-lk')){ quero[id].link = linkSeguro(e.target.value) ? e.target.value.trim() : ''; if(e.target.value.trim() && !quero[id].link){ e.target.value = ''; } salvarQuero(); if(ehMeu({id})) enviarCal(id, true); qiAtualizar(box); const ab = box.querySelector('.qi-abrir'); if(ab){ ab.href = quero[id].link || ''; ab.hidden = !quero[id].link; } return; }
+  if(e.target.classList.contains('qi-vf')){ quero[id].verif = /^\d{4}-\d{2}-\d{2}$/.test(e.target.value) ? e.target.value : ''; salvarQuero(); return; }
+  if(e.target.classList.contains('qi-ob')){ quero[id].obs = e.target.value.trim(); salvarQuero(); if(ehMeu({id})) enviarCal(id, true); return; }
+  if(e.target.classList.contains('qi-nm')){ quero[id].num = e.target.value.trim(); salvarQuero(); if(ehMeu({id})) enviarCal(id, true); qiAtualizar(box); const cp = box.querySelector('.qi-cpnum'); if(cp) cp.hidden = !quero[id].num; return; }
+  if(e.target.classList.contains('qi-lc')){ quero[id].local = e.target.value.trim(); salvarQuero(); if(ehMeu({id})) enviarCal(id, true); const a2 = box.querySelector('.qi-maps'), u = mapsUrl(localDe(id)); if(a2 && u) a2.href = u; return; }
+  if(e.target.classList.contains('qi-st')){ if(e.target.value) quero[id].st = e.target.value; else delete quero[id].st; salvarQuero(); const d0 = box.closest('details.card'); if(d0) abertos.add(d0.dataset.id); renderCards(); return; }
+  if(e.target.classList.contains('qi-pz')){ if(/^\d{4}-\d{2}-\d{2}$/.test(e.target.value)) quero[id].prazo = e.target.value; else delete quero[id].prazo; salvarQuero(); renderTopo(); return; }
+  if(e.target.classList.contains('qi-ck')){ quero[id].ir = e.target.checked; if(!e.target.checked) quero[id] = soAcomp(quero[id]); box.querySelector('.qi-d').hidden = !e.target.checked; const dc = box.querySelector('.qi-dica'); if(dc) dc.hidden = !e.target.checked; }
+  if(e.target.classList.contains('qi-dt')){ quero[id].data = e.target.value; }
+  if(quero[id].ir && quero[id].data){ enviarCal(id); quero[id].salvo = true; }
+  salvarQuero(); qiAtualizar(box);
+  if(e.target.classList.contains('qi-dt') || (e.target.classList.contains('qi-ck') && !e.target.checked)){ const d = box.closest('details.card'); if(d) abertos.add(d.dataset.id); renderCards(); }
+}));
+['cards','cards-quero','free-list'].forEach(cid => document.getElementById(cid).addEventListener('click', e => {
+  const box = e.target.closest('.qi'); if(!box) return;
+  const bv = e.target.closest('.qi-vfb');
+  if(bv){ const id2 = box.dataset.id, inp = box.querySelector('.qi-vf'), msg = box.querySelector('.qi-vf-ok'); quero[id2] = quero[id2] || {};
+    quero[id2].verif = /^\d{4}-\d{2}-\d{2}$/.test(inp.value) ? inp.value : ''; salvarQuero();
+    if(!quero[id2].verif){ msg.hidden = false; msg.textContent = 'Escolha primeiro o último dia para verificar.'; return; }
+    const n = enviarVerif(id2); msg.hidden = false; msg.textContent = n ? '✓ Lembrete criado no calendário: no dia ' + quero[id2].verif.split('-').reverse().join('/') + (n > 1 ? ' e na véspera.' : '.') : 'Essa data já passou.'; return; }
+  const bn = e.target.closest('.qi-cpnum');
+  if(bn){ const t = (quero[box.dataset.id] || {}).num || '', ok = () => { bn.textContent = 'Copiado ✓'; setTimeout(() => { bn.textContent = 'Copiar meu número'; }, 2000); };
+    if(t && navigator.clipboard && navigator.clipboard.writeText) navigator.clipboard.writeText(t).then(ok, () => {}); else if(t){ const ta = document.createElement('textarea'); ta.value = t; document.body.appendChild(ta); ta.select(); try { document.execCommand('copy'); ok(); } catch(x){} ta.remove(); }
+    return; }
+  const bj = e.target.closest('.qi-jp');
+  if(bj){ const t = bj.dataset.jp, ok = () => { bj.textContent = 'Copiado ✓'; setTimeout(() => { bj.textContent = 'Copiar nome em japonês'; }, 2000); };
+    if(navigator.clipboard && navigator.clipboard.writeText) navigator.clipboard.writeText(t).then(ok, () => {}); else { const ta = document.createElement('textarea'); ta.value = t; document.body.appendChild(ta); ta.select(); try { document.execCommand('copy'); ok(); } catch(x){} ta.remove(); }
+    return; }
+  const it = qiItem(box); if(!it.pl) return;
+  if(e.target.closest('.qi-ics')){
+    const blob = new Blob([CalAvisos.ics([it])], {type:'text/calendar;charset=utf-8'});
+    const u = URL.createObjectURL(blob), a = document.createElement('a');
+    a.href = u; a.download = 'avisos-' + it.id + '-' + it.data + '.ics'; document.body.appendChild(a); a.click(); a.remove(); setTimeout(() => URL.revokeObjectURL(u), 4000);
+    const ok = box.querySelector('.qi-ok'); ok.hidden = false; ok.textContent = 'Arquivo gerado. Abra-o no celular para adicionar ao Google Agenda ou a outro calendário.';
+  }
+}));
+const FILTROS = [
+  {id:'todos', nome:'tudo'},
+  {id:'nerd', nome:'🎮 nerd'},
+  {id:'classico', nome:'⛩ clássicos'},
+  {id:'loteria', nome:'loteria'},
+  {id:'corrida', nome:'corrida contra o relógio'},
+  {id:'anual', nome:'eventos anuais'}
+];
+document.getElementById('filters').innerHTML = FILTROS.map(f =>
+  '<button class="filt ' + (f.id === 'todos' ? 'on' : '') + '" data-f="' + f.id + '">' + f.nome + '</button>').join('');
+document.getElementById('filters').addEventListener('click', e => {
+  const b = e.target.closest('.filt'); if(!b) return;
+  filtroAtivo = b.getAttribute('data-f');
+  document.querySelectorAll('.filt').forEach(x => x.classList.toggle('on', x === b));
+  renderCards();
+});
+// ---------- dados da antiga página "Meus ingressos" ----------
+// Copiados uma vez para cá (e daqui para a conta, junto com o calendário). Só preenchem o que estiver vazio; a chave antiga não é apagada.
+(function(){
+  try {
+    if(localStorage.getItem('ingMigradoV1')) return;
+    const st = lerStatus(), it = st && st.itens;
+    if(it && typeof it === 'object'){
+      let mudou = false;
+      Object.keys(it).forEach(id => {
+        const o = it[id] || {};
+        if(!A.some(a => a.id === id)) return;
+        const q = Object.assign({}, quero[id] || {}), antes = JSON.stringify(q);
+        if(!q.st && ['inscrito','ganhei','comprado','perdi','pulei'].includes(o.status)) q.st = o.status;
+        if(!q.prazo && okIso(o.prazo)) q.prazo = o.prazo;
+        if(!q.verif && okIso(o.conferir)) q.verif = o.conferir;
+        if(!q.num && typeof o.numero === 'string' && o.numero.trim()) q.num = o.numero.trim().slice(0, 80);
+        if(!q.obs && typeof o.nota === 'string' && o.nota.trim()) q.obs = o.nota.trim().slice(0, 500);
+        if(JSON.stringify(q) !== antes){ quero[id] = q; mudou = true; }
+      });
+      if(mudou) salvarQuero();
+    }
+    localStorage.setItem('ingMigradoV1', '1');
+  } catch(e){}
+})();
+
+// ---------- início ----------
+DT = datasIniciais();
+document.getElementById('ida').value = DT.ida;
+document.getElementById('volta').value = DT.volta;
+calcPlano();
+renderCards();
+
+// ---------- PDF e resumo ----------
+function escH(t){ return String(t == null ? '' : t).replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c])); }
+function paraFolha(){
+  const todos = A.filter(a => PLANO[a.id] && PLANO[a.id].length);
+  const seguidos = todos.filter(a => { const q = quero[a.id] || {}; return q.ir || q.st; });
+  return (seguidos.length ? seguidos : todos).sort(ordemData);
+}
+function montarFolha(){
+  const lista = paraFolha();
+  document.getElementById('f-datas').textContent = 'Viagem de ' + fmtData(new Date(DT.ida + 'T12:00:00')) + ' a ' + fmtData(new Date(DT.volta + 'T12:00:00'));
+  document.getElementById('f-gerado').textContent = fmtData(new Date());
+  const linha = (a, feito) => {
+    const q = quero[a.id] || {}, st = q.st || '', p = proxima(a.id);
+    let extra = '';
+    if(feito) extra = '<div class="f-dado"><strong>' + escH(stNome(st)) + '</strong>' + (q.num ? ' · nº ' + escH(q.num) : '') + '</div>';
+    else if(st === 'inscrito') extra = '<div class="f-dado"><strong>Na fila</strong>' + (q.num ? ' · nº ' + escH(q.num) : '') + (okIso(q.verif) ? ' · conferir o resultado até ' + fmtData(new Date(q.verif + 'T12:00:00')) : ' · anote quando sai o resultado') + '</div>';
+    else if(st === 'ganhei') extra = '<div class="f-dado"><strong>Sorteado!</strong> ' + (okIso(q.prazo) ? 'Comprar até ' + fmtData(new Date(q.prazo + 'T12:00:00')) : 'Confirme até quando pode comprar') + '</div>';
+    else if(q.ir && q.data) extra = '<div class="f-dado">Quero ir em ' + q.data.split('-').reverse().join('/') + '</div>';
+    return '<div class="f-linha' + (feito ? ' feito' : '') + '"><div class="f-nome">' + escH(a.nome) + '<span class="f-marca">' + escH(a.tag) + '</span></div>' +
+      '<div class="f-onde">' + escH(a.onde) + '</div>' + (!feito && p ? '<div class="f-quando">' + escH(p.label) + '</div>' : '') + extra +
+      (q.obs ? '<div class="f-dado">' + escH(q.obs) + '</div>' : '') + '</div>';
+  };
+  const pend = lista.filter(a => !RESOLVIDO.includes((quero[a.id] || {}).st)), feitos = lista.filter(a => RESOLVIDO.includes((quero[a.id] || {}).st));
+  document.getElementById('f-cronograma').innerHTML = pend.length ? pend.map(a => linha(a, false)).join('') : '<p class="f-vazio">Nada pendente: está tudo resolvido.</p>';
+  document.getElementById('f-resolvidos').innerHTML = feitos.length ? feitos.map(a => linha(a, true)).join('') : '<p class="f-vazio">Ainda nada por aqui. Conforme você for marcando no site, esta parte se preenche.</p>';
+}
+document.getElementById('gerarPdf').addEventListener('click', () => { if(!DT.ida || !DT.volta) return; montarFolha(); window.print(); });
+document.getElementById('copiar').addEventListener('click', function(){
+  const btn = this, l = ['INGRESSOS · viagem de ' + DT.ida.split('-').reverse().join('/') + ' a ' + DT.volta.split('-').reverse().join('/'), ''];
+  paraFolha().forEach(a => {
+    const q = quero[a.id] || {}, p = proxima(a.id);
+    let x = '• ' + a.nome + ' · ' + stNome(q.st);
+    if(q.num) x += ' (nº ' + q.num + ')';
+    if(okIso(q.prazo)) x += ' · comprar até ' + q.prazo.split('-').reverse().join('/');
+    if(q.obs) x += ' · ' + q.obs;
+    l.push(x); if(p) l.push('   quando: ' + p.label);
+  });
+  const t = document.createElement('textarea'); t.value = l.join('\n'); t.style.position = 'fixed'; t.style.opacity = '0'; document.body.appendChild(t); t.select();
+  try { document.execCommand('copy'); btn.textContent = 'Copiado!'; } catch(e){ btn.textContent = 'Não consegui copiar'; }
+  t.remove(); setTimeout(() => { btn.textContent = 'Copiar resumo'; }, 2200);
+});
+
+</script>
+<script src="/entrar.js" defer></script>
+</body>
+</html>
