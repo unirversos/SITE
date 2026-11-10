@@ -21,6 +21,10 @@
 window.CATS_ARQUIVADAS = ['consoles','colec','reliquias','gadgets'];
 
 window.ACHADOS = [
+  { id:'kit-zelda-40', cat:'zelda', nome:'Kit Zelda 40 anos · controle Pro com base + estojo para Nintendo Switch 2', novo:true, contem:true, seloTxt:'no kit',
+    kit:['Controle Pro para Nintendo Switch 2, edição Zelda 40 anos, com base de exibição','Estojo de transporte para Nintendo Switch 2, edição Zelda 40 anos, com película de tela'],
+    desc:'Os dois itens da edição de 40 anos de The Legend of Zelda numa encomenda só: o controle Pro dourado e verde com a base de exibição e o estojo com a Triforce dourada. Produtos novos. Comprando o kit, sai 10% mais barato que os dois separados.',
+    de:0, ate:0, total:1319, descPct:10, imposto:0, chegada:'dezembro', foto:'', fotos:['/loja/fotos/pro-controller-zelda-3.jpg','/loja/fotos/zelda-case-switch2-1.jpg','/loja/fotos/pro-controller-zelda-1.jpg'], link:'' },
   { id:'pro-controller-zelda-40', cat:'zelda', nome:'Zelda 40 anos · controle Pro para Nintendo Switch 2 · com base', novo:true, br:{preco:2000,rotulo:'com base'},
     desc:'Controle Pro do Nintendo Switch 2, edição de 40 anos de The Legend of Zelda, novo. Na foto aparece na caixa, com o controle dourado e verde e a base de exibição incluída (a caixa indica “ディスプレイスタンド付き”, com suporte de exibição). Atenção: existe uma versão parecida do controle SEM a base, mais barata; esta é a versão COM base. Só há uma foto no anúncio, então o estado da embalagem e o conteúdo da caixa devem ser confirmados com o vendedor.',
     de:0, ate:0, total:999, descPct:0, imposto:0, custoImposto:649, chegada:'dezembro', foto:'', fotos:['/loja/fotos/pro-controller-zelda-3.jpg','/loja/fotos/pro-controller-zelda-1.jpg'], contem:true, link:'' },
