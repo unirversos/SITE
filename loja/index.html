@@ -53,6 +53,16 @@ h1 .jp rt{font-size:.5em;letter-spacing:.05em}
 
 .cats{display:grid;gap:40px}
 .cats>section{min-width:0}
+.capa{position:relative;display:block;width:100%;padding:0;border:1.5px solid var(--line);border-radius:var(--r);overflow:hidden;background:var(--card);cursor:pointer;font:inherit;color:#fff;text-align:left;box-shadow:0 10px 24px -18px rgba(58,43,56,.35)}
+.capa img{display:block;width:100%;aspect-ratio:1500/560;object-fit:cover}
+.capa-ic{display:grid;place-items:center;aspect-ratio:1500/560;font-size:64px;background:var(--blush)}
+.capa-t{position:absolute;inset:auto 0 0 0;display:grid;gap:2px;padding:44px 18px 14px;background:linear-gradient(to top,rgba(30,20,28,.88) 0%,rgba(30,20,28,.62) 55%,rgba(30,20,28,0) 100%)}
+.capa-n{font-family:var(--f-display);font-weight:800;font-size:clamp(22px,3.4vw,30px);line-height:1.15}
+.capa-s{font-size:14.5px;max-width:62ch;opacity:.95}
+.capa-b{font-size:13.5px;margin-top:4px}.capa-b b{text-decoration:underline;text-underline-offset:3px}
+.capa:hover,.capa:focus-visible{border-color:var(--pink);outline:none;box-shadow:0 0 0 3px color-mix(in srgb,var(--pink) 30%,transparent)}
+.col-c{margin-top:16px}
+@media(max-width:560px){.capa img,.capa-ic{aspect-ratio:4/3}.capa-s{font-size:13.5px}}
 .cat-h{display:grid;gap:2px;margin-bottom:14px}
 .cat-h h2{font-family:var(--f-display);font-size:clamp(24px,3.4vw,30px);line-height:1.15;margin:0}
 .cat-h p{margin:0;color:var(--muted);font-size:15px;max-width:62ch}
@@ -232,13 +242,13 @@ footer a:hover{color:var(--pink)}
 <script>
 (function(){
   const CATS=[
-    {id:'skincare', ic:'🧴', nome:'Skincare', sub:'Beleza japonesa para pele e cabelo, em kits: vários produtos numa encomenda só.'},
-    {id:'pokecafe', ic:'☕', nome:'ITENS EXCLUSIVOS DO POKECAFÉ', sub:'Itens oficiais para você trazer um pouquinho da magia do café para casa.'},
-    {id:'zelda',    ic:'🗡️', nome:'ZELDA · Edição especial', sub:'Itens da série Zelda e da edição de 40 anos. Pré-venda do malote de dezembro: sem taxa de importação na chegada.'},
+    {id:'skincare', capa:'/loja/fotos/capa-skincare.jpg', ic:'🧴', nome:'Skin & Hair Care', sub:'Beleza japonesa para pele e cabelo, em kits: vários produtos numa encomenda só.'},
+    {id:'zelda', capa:'/loja/fotos/capa-zelda.jpg',    ic:'🗡️', nome:'ZELDA · Edição especial', sub:'Itens da série Zelda e da edição de 40 anos. Pré-venda do malote de dezembro: sem taxa de importação na chegada.'},
+    {id:'pokecafe', capa:'/loja/fotos/capa-pokecafe.jpg', ic:'☕', nome:'ITENS EXCLUSIVOS DO POKECAFÉ', sub:'Itens oficiais para você trazer um pouquinho da magia do café para casa.'},
     {id:'consoles', ic:'🎮', nome:'Consoles & Portáteis', sub:'Consoles e portáteis preservados, de edições especiais a clássicos.'},
     {id:'colec',    ic:'🗿', nome:'Colecionáveis & Figures', sub:'Figures, pelúcias e peças colecionáveis garimpadas com cuidado.'},
     {id:'reliquias',ic:'🏮', nome:'Relíquias Vintage', sub:'Achados antigos e raros, cada um com a sua história.'},
-    {id:'didatico', ic:'📚', nome:'Material didático', sub:'Livros e cadernos para estudar japonês.'},
+    {id:'didatico', capa:'/loja/fotos/capa-didatico.jpg', ic:'📚', nome:'Material didático', sub:'Livros e cadernos para estudar japonês.'},
     {id:'gadgets',  ic:'🌸', nome:'Gadgets & Papelaria Japonesa', sub:'Design minimalista, tecnologia portátil e organização para a sua rotina.'}
   ];
   const ARQ=window.CATS_ARQUIVADAS||[];
@@ -249,6 +259,7 @@ footer a:hover{color:var(--pink)}
   const faixa=x=>{ const de=+x.de||0, ate=+x.ate||de; if(!de&&!ate) return ''; return (de===ate? iene(de) : iene(de)+' – '+iene(ate).replace('¥ ','')); };
   const linkOk=u=>/^https?:\/\//i.test(String(u||''));
   let atual='todos';
+  const abertas=new Set(); /* coleções abrem recolhidas; a capa abre e fecha */
   try{ const q=new URLSearchParams(location.search).get('cat'); if(CATS.some(c=>c.id===q)) atual=q; }catch(e){}
 
   function card(x,c){
@@ -299,10 +310,16 @@ footer a:hover{color:var(--pink)}
       .map(c=>`<button type="button" data-f="${c.id}" aria-pressed="${c.id===atual}">${c.ic} ${esc(c.nome)} <span class="n">${c.n}</span></button>`).join('');
     document.getElementById('cats').innerHTML = CATS.filter(c=>atual==='todos'||c.id===atual).map(c=>{
       const lista=ITENS.filter(x=>x.cat===c.id);
-      return `<section aria-labelledby="c-${c.id}">
-        <div class="cat-h"><h2 id="c-${c.id}">${c.ic} ${esc(c.nome)}</h2><p>${esc(c.sub)}</p></div>
+      const ab=abertas.has(c.id)||atual===c.id;
+      return `<section class="col${ab?' ab':''}" aria-labelledby="c-${c.id}">
+        <button type="button" class="capa" data-col="${c.id}" aria-expanded="${ab}" aria-controls="cc-${c.id}">
+          ${c.capa?`<img src="${esc(c.capa)}" alt="" loading="lazy">`:`<span class="capa-ic" aria-hidden="true">${c.ic}</span>`}
+          <span class="capa-t"><span class="capa-n" id="c-${c.id}">${c.ic} ${esc(c.nome)}</span><span class="capa-s">${esc(c.sub)}</span><span class="capa-b">${lista.length} ${lista.length===1?'item':'itens'} · <b>${ab?'Recolher ▴':'Ver coleção ▾'}</b></span></span>
+        </button>
+        <div class="col-c" id="cc-${c.id}"${ab?'':' hidden'}>
         ${c.id==='skincare'?cxBanner():''}
         ${lista.length? `<div class="grid">${lista.map(x=>card(x,c)).join('')}</div>` : `<p class="vazio">Os achados desta categoria chegam em breve.</p>`}
+        </div>
       </section>`;
     }).join('');
   }
@@ -324,6 +341,11 @@ footer a:hover{color:var(--pink)}
   document.addEventListener('click',e=>{ const s=e.target.closest('.seta'); if(!s) return; const g=s.parentNode.querySelector('.gal'); if(!g) return; const d=+s.dataset.dir, w=g.clientWidth, n=Math.round(g.scrollLeft/w)+d, t=g.children.length; g.scrollTo({left:((n%t)+t)%t*w,behavior:'smooth'}); });
   document.addEventListener('keydown',e=>{ const g=e.target&&e.target.classList&&e.target.classList.contains('gal')?e.target:null; if(!g||(e.key!=='ArrowRight'&&e.key!=='ArrowLeft')) return; e.preventDefault(); g.scrollBy({left:(e.key==='ArrowRight'?1:-1)*g.clientWidth,behavior:'smooth'}); });
   document.addEventListener('scroll',e=>{ const g=e.target; if(!g||!g.classList||!g.classList.contains('gal')) return; const n=Math.round(g.scrollLeft/g.clientWidth)+1, t=g.children.length, c=g.parentNode.querySelector('.cont'); if(c) c.textContent=n+'/'+t; },true);
+  document.getElementById('cats').addEventListener('click',e=>{
+    const b=e.target.closest('.capa'); if(!b) return; const id=b.dataset.col;
+    if(abertas.has(id)||atual===id){ abertas.delete(id); if(atual===id) atual='todos'; } else abertas.add(id);
+    render(); const n=document.querySelector('.capa[data-col="'+id+'"]'); if(n){ n.focus({preventScroll:true}); if(n.getBoundingClientRect().top<0) n.scrollIntoView({block:'start'}); }
+  });
   document.getElementById('filtros').addEventListener('click',e=>{
     const b=e.target.closest('button[data-f]'); if(!b) return;
     atual=b.dataset.f; render();
@@ -342,7 +364,8 @@ footer a:hover{color:var(--pink)}
   /* link direto para um item: abre a categoria, rola até o cartão e destaca */
   (function(){ const id=decodeURIComponent((location.hash||'').slice(1)); if(!id) return;
     const it=ITENS.find(x=>x.id===id); if(!it) return;
-    if(atual!=='todos'&&atual!==it.cat){ atual='todos'; render(); }
+    if(atual!=='todos'&&atual!==it.cat) atual='todos';
+    abertas.add(it.cat); render();
     setTimeout(()=>{ const el=document.querySelector('.card[data-id="'+id.replace(/"/g,'')+'"]'); if(!el) return; el.scrollIntoView({block:'center'}); el.classList.add('alvo'); },150);
   })();
 })();
