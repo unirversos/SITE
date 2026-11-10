@@ -117,7 +117,8 @@ footer a{color:var(--pink);text-decoration:none;display:inline-flex;align-items:
   .wrap{gap:var(--s4)}
   .acts .btn{flex:1 1 100%}
   .destaque .btn.big{width:100%}
-  .fixo{display:flex;position:fixed;left:max(12px,env(safe-area-inset-left,0px));right:max(12px,env(safe-area-inset-right,0px));bottom:max(12px,env(safe-area-inset-bottom,0px));z-index:50;gap:8px;padding:8px;background:rgba(255,255,255,.96);border:1.5px solid var(--line);border-radius:999px;box-shadow:0 10px 30px -10px rgba(58,43,56,.5);backdrop-filter:blur(6px)}
+  .fixo.on{display:flex}
+  .fixo{position:fixed;left:max(12px,env(safe-area-inset-left,0px));right:max(12px,env(safe-area-inset-right,0px));bottom:max(12px,env(safe-area-inset-bottom,0px));z-index:50;gap:8px;padding:8px;background:rgba(255,255,255,.96);border:1.5px solid var(--line);border-radius:999px;box-shadow:0 10px 30px -10px rgba(58,43,56,.5);backdrop-filter:blur(6px)}
   .fixo .btn{flex:1 1 0;font-size:15px;padding:8px 10px}
 }
 </style>
@@ -135,10 +136,6 @@ footer a{color:var(--pink);text-decoration:none;display:inline-flex;align-items:
     <h1>Sua viagem <em>já começou!</em></h1>
     <p class="lede">Do começo ao fim, tudo nas suas mãos.</p>
     <p class="lede2">Aqui está o que eu gostaria que alguém tivesse me contado antes de embarcar. Tudo gratuito.</p>
-    <div class="acts">
-      <a class="btn pri" href="/travessia/calendario/">📅 Abrir o calendário da viagem</a>
-      <a class="btn sec" href="#ferramentas">Ver as ferramentas ↓</a>
-    </div>
   </header>
 
   <aside class="onde" id="onde" hidden aria-labelledby="onde-t">
@@ -156,7 +153,7 @@ footer a{color:var(--pink);text-decoration:none;display:inline-flex;align-items:
       <li><span class="vi" aria-hidden="true">📤</span><div><strong>Google Agenda</strong><span>Leve todo o seu roteiro de uma vez, em um arquivo.</span></div></li>
       <li><span class="vi" aria-hidden="true">🎟️</span><div><strong>Cronograma de ingressos</strong><span>Saiba a data exata para comprar antes que esgotem.</span></div></li>
     </ul>
-    <a class="btn pri big" href="/travessia/calendario/">📅 Montar meu calendário</a>
+    <a class="btn pri big" href="/travessia/calendario/">Começar agora →</a>
   </section>
 
   <section aria-labelledby="t-ferr" id="ferramentas">
@@ -213,7 +210,7 @@ footer a{color:var(--pink);text-decoration:none;display:inline-flex;align-items:
     </span>
   </footer>
 </div>
-<nav class="fixo" aria-label="Atalhos">
+<nav class="fixo" id="fixo" aria-label="Atalhos">
   <a class="btn pri" href="/travessia/calendario/">📅 Calendário</a>
   <a class="btn sec" href="/travessia/agendamentos/">🗓️ Cronograma</a>
 </nav>
@@ -250,6 +247,11 @@ footer a{color:var(--pink);text-decoration:none;display:inline-flex;align-items:
   }else pz.hidden=true;
   box.hidden=false;
 })();
+</script>
+<script>
+/* Barra de atalhos do celular: só aparece depois que a pessoa passou do bloco do calendário, para não repetir o botão. */
+(function(){var f=document.getElementById('fixo'),d=document.querySelector('.destaque');if(!f||!d||!('IntersectionObserver' in window))return;
+new IntersectionObserver(function(e){var x=e[0];f.classList.toggle('on',!x.isIntersecting&&x.boundingClientRect.top<0);}).observe(d);})();
 </script>
 <script defer src="/menu-ativo.js?v=1"></script>
 <script src="/entrar.js" defer></script>
