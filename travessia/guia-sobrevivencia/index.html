@@ -94,6 +94,12 @@ h1 em{font-style:normal;color:var(--pink)}
 .dicas b{color:var(--ink);font-weight:700}
 .dicas li.cuidado::before{content:"!";top:14px;width:16px;height:16px;border-radius:50%;background:var(--pink);color:#fff;font-family:var(--f-display);font-size:12px;line-height:16px;text-align:center}
 .dicas li.cuidado b:first-child{color:var(--pink-d)}
+/* "como fazer": a segunda camada da dica, mais leve que a primeira */
+.dicas .como{list-style:none;margin:8px 0 0;padding:10px 14px;background:var(--paper);border-radius:12px;display:grid;gap:6px}
+.dicas .como li{border:0;padding:0 0 0 14px;font-size:14.5px;line-height:1.55}
+.dicas .como li::before{content:"·";top:0;left:2px;color:var(--pink);font-size:18px;line-height:1.2}
+.dicas .como b{color:var(--ink)}
+.dicas .como a{color:var(--pink);font-weight:700}
 .lk{font-family:var(--f-display);font-weight:700;color:var(--pink);text-decoration:none;display:inline-flex;align-items:center;min-height:44px}
 .lk:hover{text-decoration:underline}
 .sub{font-family:var(--f-display);font-weight:800;font-size:16px;margin:14px 0 8px;padding-top:14px;border-top:1px dashed var(--line)}
@@ -218,7 +224,13 @@ footer a{color:var(--pink);text-decoration:none;display:inline-flex;align-items:
       <div class="dentro">
         <ul class="dicas">
           <li class="cuidado"><b>Remédio comum pode ser proibido.</b> Descongestionantes com <b>pseudoefedrina</b> (Sudafed, Vicks Inhaler) são proibidos, mesmo com receita.</li>
-          <li><b>Faça seguro viagem.</b> Pronto-socorro sem cobertura custa centenas de dólares.</li>
+          <li><b>Faça seguro viagem.</b> Não é obrigatório para entrar, mas no Japão o turista paga o atendimento médico inteiro. E conta de hospital não paga pode impedir uma próxima entrada no país.
+            <ul class="como">
+              <li><b>Pelo cartão de crédito:</b> cartões Visa e Mastercard de categoria alta (Platinum, Black, Infinite) costumam dar o seguro grátis se a passagem foi paga com eles (ou as taxas, se foi com milhas). Só vale se você emitir o <b>bilhete de seguro</b> no site da bandeira antes de embarcar. Confira quantos dias de viagem ele cobre (no Mastercard Black, até 60 dias seguidos).</li>
+              <li><b>Comprado à parte:</b> direto numa seguradora (Assist Card, Universal Assistance) ou num site comparador (Seguros Promo, Seguro Viagem.srv), que mostra várias lado a lado. Esqueceu? Dá para contratar depois de chegar, pelo <a href="https://www.japan.travel/en/plan/travel-insurance-in-japan/" rel="noopener">site da JNTO</a>.</li>
+              <li><b>O que conferir:</b> o valor da cobertura médica, se o hospital recebe direto da seguradora (sem você pagar e pedir reembolso) e o telefone da central 24 horas. Salve esse número no celular.</li>
+            </ul>
+          </li>
           <li><b>Resolva a internet antes do voo.</b> eSIM ativa antes de decolar. Chip físico exige celular desbloqueado.</li>
           <li><b>Mala no Shinkansen (Tokaido, Sanyo, Kyushu e Nishi-Kyushu).</b> Mala grande, com soma das três medidas entre <b>161 e 250 cm</b>, exige reservar o assento com área de bagagem (<i>oversized baggage</i>). A reserva não custa nada além do assento reservado, mas embarcar sem ela gera taxa de ¥1.000. Até 160 cm, não precisa reservar; acima de 250 cm, a mala não entra.</li>
           <li><b>Ou mande a mala sozinha (takuhaibin).</b> Yamato e Sagawa levam a mala entre aeroporto e hotel por cerca de ¥2.000–2.500.</li>
