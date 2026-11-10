@@ -96,6 +96,9 @@ h1 em{font-style:normal;color:var(--pink)}
 /* o card inteiro é clicável, sem duplicar links para o leitor de tela */
 .tool .go::after{content:"";position:absolute;inset:0;border-radius:var(--r)}
 .tool .go:hover{text-decoration:underline}
+/* card importante: borda rosa e selo */
+.tool.importante{border-left-color:var(--pink);background:linear-gradient(135deg,#fff 60%,#fbeef0 100%)}
+.selo-imp{margin-left:auto;font-family:var(--f-body);font-size:11px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:#fff;background:var(--pink);border-radius:999px;padding:3px 12px;line-height:1.5}
 .tool.breve{border-left-color:var(--line);border-style:dashed;border-left-style:dashed;background:transparent;box-shadow:none}
 .tool.breve:hover{transform:none;box-shadow:none}
 .tool.breve .n{color:var(--muted)}
@@ -158,23 +161,23 @@ footer a{color:var(--pink);text-decoration:none;display:inline-flex;align-items:
   <section aria-labelledby="t-ferr" id="ferramentas">
     <div class="sec-h"><h2 id="t-ferr">As ferramentas da travessia</h2><p>Antes e durante a viagem, na ordem em que costumam ser úteis.</p></div>
     <div class="grid">
+      <article class="tool importante">
+        <span class="n"><span class="ico" aria-hidden="true">🛂</span>01<span class="selo-imp">Importante</span></span>
+        <h3>Burocracia de entrada</h3>
+        <p>Passaporte e visto, Visit Japan Web, Suica no celular e o que ainda não vale. O que resolver antes de pousar, com os links oficiais.</p>
+        <a class="go" href="/travessia/burocracia/">Ver o checklist →</a>
+      </article>
       <article class="tool">
-        <span class="n"><span class="ico" aria-hidden="true">🗓️</span>01</span>
+        <span class="n"><span class="ico" aria-hidden="true">🗓️</span>02</span>
         <h3>Cronograma de ingressos</h3>
         <p>Muitas atrações só vendem por loteria ou liberam o mês inteiro num minuto exato, quase sempre de madrugada no Brasil. Diga quando você viaja e a página calcula o seu cronograma, já em horário de Brasília.</p>
         <a class="go" href="/travessia/agendamentos/">Calcular meu cronograma →</a>
       </article>
       <article class="tool">
-        <span class="n"><span class="ico" aria-hidden="true">✅</span>02</span>
+        <span class="n"><span class="ico" aria-hidden="true">✅</span>03</span>
         <h3>Meus ingressos</h3>
         <p>O par do cronograma: marque em que pé está cada ingresso (loteria, ganhou, pagou, desistiu) e anote o prazo de pagamento, que é o que derruba quem ganha e esquece.</p>
         <a class="go" href="/travessia/status/">Acompanhar meus ingressos →</a>
-      </article>
-      <article class="tool">
-        <span class="n"><span class="ico" aria-hidden="true">🛂</span>03</span>
-        <h3>Burocracia de entrada</h3>
-        <p>Passaporte e visto, Visit Japan Web, Suica no celular e o que ainda não vale. O que resolver antes de pousar, com os links oficiais.</p>
-        <a class="go" href="/travessia/burocracia/">Ver o checklist →</a>
       </article>
       <article class="tool">
         <span class="n"><span class="ico" aria-hidden="true">🚄</span>04</span>
