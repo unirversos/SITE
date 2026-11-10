@@ -62,7 +62,7 @@ h1 em{font-style:normal;color:var(--pink)}
 
 /* o dia: uma parada por momento, fechada até a pessoa tocar */
 .dia{position:relative;display:grid;gap:12px}
-.dia::before{content:"";position:absolute;z-index:0;top:30px;bottom:30px;left:calc(18px + var(--selo)/2 - 1px);border-left:2px dashed var(--pink);opacity:.45}
+.dia::before{content:"";position:absolute;z-index:0;top:60px;bottom:30px;left:calc(18px + var(--selo)/2 - 1px);border-left:2px dashed var(--pink);opacity:.45}
 .parada{position:relative;z-index:1;background:var(--card);border:1.5px solid var(--line);border-radius:var(--r);
   box-shadow:0 10px 24px -18px rgba(58,43,56,.35);scroll-margin-top:16px}
 .parada summary{list-style:none;cursor:pointer;display:grid;grid-template-columns:var(--selo) minmax(0,1fr) 28px;align-items:center;gap:14px;padding:14px 16px 14px 18px;min-height:76px;border-radius:var(--r)}
@@ -74,7 +74,16 @@ h1 em{font-style:normal;color:var(--pink)}
 .mais::before{content:"+"}
 .parada summary:hover .mais{border-color:var(--pink)}
 .parada[open] .mais{transform:rotate(45deg)}
-.parada[open] .selo{background:var(--pink);color:#fff}
+.parada[open] .selo{background:var(--blush);border-color:var(--pink)}
+.selo.emo{font-size:22px;transform:none;font-family:"Apple Color Emoji","Segoe UI Emoji","Noto Color Emoji",sans-serif}
+
+/* rótulos que separam os blocos: antes de ir / o dia */
+.bloco{font-family:var(--f-display);font-weight:800;font-size:13px;letter-spacing:.18em;text-transform:uppercase;color:var(--muted);
+  margin:10px 0 -2px;display:flex;align-items:center;gap:12px;position:relative;z-index:1}
+.bloco:first-child{margin-top:0}
+/* o rótulo fica alinhado ao texto das paradas, à direita da linha tracejada do dia */
+.bloco{padding-left:calc(18px + var(--selo) + 14px)}
+.bloco::after{content:"";flex:1;border-top:1.5px solid var(--line)}
 .parada[open] .tem{display:none}
 .dentro{padding:2px 18px 18px calc(18px + var(--selo) + 14px)}
 
@@ -102,11 +111,15 @@ h1 em{font-style:normal;color:var(--pink)}
 .precos div+div{border-top:1px dashed var(--line)}
 .precos dt{flex:1}
 .precos dd{margin:0;font-weight:700;color:var(--gold);white-space:nowrap}
+.nota{margin:6px 0 0;font-size:13px;color:var(--muted)}
 
 /* emergência: sempre à vista, nunca atrás de um toque */
 .sos{background:var(--card);border:1.5px solid var(--line);border-left:6px solid var(--pink);border-radius:var(--r);padding:18px 20px;display:grid;gap:12px;scroll-margin-top:16px}
 .sos h2{font-family:var(--f-display);font-weight:800;font-size:clamp(20px,3.4vw,24px);line-height:1.2;margin:0}
 .fones{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+.fone.largo{grid-column:1/-1}
+.fone.largo .num{font-size:26px;letter-spacing:.01em}
+.fone .obs{font-size:13.5px;color:var(--muted);line-height:1.4}
 .fone{display:grid;gap:0;text-decoration:none;background:var(--paper);border:1.5px solid var(--line);border-radius:16px;padding:10px 16px 12px;transition:border-color .15s}
 .fone:hover{border-color:var(--pink)}
 .fone .num{font-family:var(--f-display);font-weight:800;font-size:40px;line-height:1.1;color:var(--pink)}
@@ -127,6 +140,9 @@ h1 em{font-style:normal;color:var(--pink)}
 .btn:hover{filter:brightness(.96)}
 .btn:active{transform:translateY(1px)}
 
+.impresso{display:none;align-items:center;gap:16px;border-top:1.5px solid var(--line);padding-top:14px;font-size:12.5px;color:var(--muted);break-inside:avoid}
+.impresso svg{width:84px;height:84px;flex:none}
+.impresso b{display:block;font-family:var(--f-display);font-size:15px;color:var(--ink)}
 footer{display:flex;flex-wrap:wrap;gap:0 20px;justify-content:space-between;align-items:center;color:var(--muted);font-size:14px;border-top:1.5px solid var(--line);padding-top:var(--s2)}
 footer a{color:var(--pink);text-decoration:none;display:inline-flex;align-items:center;min-height:44px;margin-right:12px}
 
@@ -136,6 +152,7 @@ footer a{color:var(--pink);text-decoration:none;display:inline-flex;align-items:
   .parada summary{gap:12px;padding:12px 12px 12px 14px}
   .dia::before{left:calc(14px + var(--selo)/2 - 1px)}
   .dentro{padding:0 14px 14px}
+  .bloco{padding-left:calc(14px + var(--selo) + 12px)}
   .alerg .kj{font-size:21px}
   .acts .btn{flex:1 1 100%}
   h1{padding-right:0}
@@ -146,15 +163,26 @@ footer a{color:var(--pink);text-decoration:none;display:inline-flex;align-items:
 
 /* o PDF sai desta mesma página: tudo aberto, sem menu nem botões */
 @media print{
-  @page{margin:14mm}
-  body{background:#fff;padding:0;font-size:13px}
+  @page{margin:10mm 12mm}
+  .alerg li{padding:5px 4px}.alerg .kj{font-size:19px}
+  .dicas li{font-size:13.5px}
+  .sub{margin:8px 0 4px;padding-top:8px}
+  .precos div{padding:4px 0;font-size:13.5px}
+  body{background:#fff;padding:0;font-size:12.5px;line-height:1.55}
+  .bloco{padding-left:0;margin:4px 0 -4px}
+  .parada summary{min-height:0;padding-block:8px}
+  .dentro{padding-bottom:10px}
+  .sos,.dizer{padding:14px 18px;gap:8px}
+  .fone .num{font-size:30px}.fone.largo .num{font-size:22px}
   .sitebar,.pular,.mais,.acts,.lk,.tape,.uni-chip,.uni-inst,footer a{display:none!important}
-  .wrap{gap:18px;max-width:none}
+  .wrap{gap:14px;max-width:none}
   .bilhete{transform:none;box-shadow:none}
   .dia{gap:10px}.dia::before{display:none}
   .parada,.sos,.dizer{box-shadow:none}
-  .sos,.dizer,.dicas li,.alerg,.precos,.parada summary{break-inside:avoid}
+  .parada,.sos,.dizer,.impresso{break-inside:avoid}
   .so-tela{display:none}
+  footer{display:none!important}
+  .impresso{display:flex!important}
   .parada .tem{display:none}
   .dicas li{padding-block:7px}
 }
@@ -179,9 +207,11 @@ footer a{color:var(--pink);text-decoration:none;display:inline-flex;align-items:
 
   <main class="dia" id="dia">
 
+    <p class="bloco">Antes de ir</p>
+
     <details class="parada" id="vespera">
       <summary>
-        <span class="selo" aria-hidden="true">備</span>
+        <span class="selo emo" aria-hidden="true">🧳</span>
         <span><span class="hora">Véspera</span><h2>Antes de embarcar</h2><span class="tem">remédios · seguro · internet · mala</span></span>
         <span class="mais" aria-hidden="true"></span>
       </summary>
@@ -190,34 +220,39 @@ footer a{color:var(--pink);text-decoration:none;display:inline-flex;align-items:
           <li class="cuidado"><b>Remédio comum pode ser proibido.</b> Descongestionantes com <b>pseudoefedrina</b> (Sudafed, Vicks Inhaler) são proibidos, mesmo com receita.</li>
           <li><b>Faça seguro viagem.</b> Pronto-socorro sem cobertura custa centenas de dólares.</li>
           <li><b>Resolva a internet antes do voo.</b> eSIM ativa antes de decolar. Chip físico exige celular desbloqueado.</li>
-          <li><b>Mala pequena.</b> No Shinkansen, mala acima de <b>160 cm</b> (soma das três medidas) exige assento na última fileira. Sem isso, multa de ¥1.000.</li>
+          <li><b>Mala grande no Shinkansen.</b> Nas linhas Tokaido, Sanyo e Kyushu (Tóquio, Kyoto, Osaka, Hiroshima, Fukuoka), mala com mais de <b>160 cm</b> (soma das três medidas) exige reservar o assento com espaço para bagagem, sem custo extra. Sem reserva, taxa de ¥1.000.</li>
+          <li><b>Ou mande a mala sozinha (takuhaibin).</b> Yamato e Sagawa levam a mala entre aeroporto e hotel por cerca de ¥2.000–2.500.</li>
         </ul>
       </div>
     </details>
 
+    <p class="bloco">O dia</p>
+
     <details class="parada" id="manha">
       <summary>
-        <span class="selo" aria-hidden="true">金</span>
-        <span><span class="hora">Manhã</span><h2>Bom dia, ienes</h2><span class="tem">dinheiro vivo · Suica</span></span>
+        <span class="selo emo" aria-hidden="true">💴</span>
+        <span><span class="hora">Manhã</span><h2>Bom dia, ienes</h2><span class="tem">dinheiro vivo · Suica · coin locker</span></span>
         <span class="mais" aria-hidden="true"></span>
       </summary>
       <div class="dentro">
         <ul class="dicas">
           <li><b>Leve dinheiro vivo.</b> Muitos lugares só aceitam dinheiro. Saque nos caixas do <b>7-Eleven</b> ou dos <b>Correios</b>, que aceitam cartão estrangeiro.</li>
-          <li class="cuidado"><b>Suica: encoste ao entrar e ao sair.</b> Esquecer a saída pode travar o cartão.<br><a class="lk" href="/travessia/burocracia/">Como ter o Suica →</a></li>
+          <li><b>Suica no celular ou no cartão.</b> Com iPhone, baixe o app <b>Welcome Suica Mobile</b> antes de embarcar. Sem iPhone, compre o cartão Suica na máquina da estação.</li>
+          <li class="cuidado"><b>Encoste o Suica ao entrar e ao sair.</b> Esquecer a saída pode travar o cartão.<br><a class="lk" href="/travessia/burocracia/">Passo a passo do Suica →</a></li>
+          <li><b>Guarde a mochila no coin locker.</b> ¥400–1.000 por dia. Muitos só aceitam moedas de ¥100.</li>
         </ul>
       </div>
     </details>
 
     <details class="parada" id="rua">
       <summary>
-        <span class="selo" aria-hidden="true">道</span>
+        <span class="selo emo" aria-hidden="true">🚶</span>
         <span><span class="hora">10:00</span><h2>Regras invisíveis da rua</h2><span class="tem">lixo · comida · escada rolante · sapatos</span></span>
         <span class="mais" aria-hidden="true"></span>
       </summary>
       <div class="dentro">
         <ul class="dicas">
-          <li><b>Lixo:</b> quase não há lixeiras. Leve o seu de volta.</li>
+          <li><b>Lixo:</b> quase não há lixeiras. Leve o seu de volta. Garrafa e lata vão na lixeira ao lado das máquinas de bebida.</li>
           <li><b>Comida:</b> coma parado, não andando.</li>
           <li><b>Escada rolante:</b> Tóquio à esquerda, Osaka à direita.</li>
           <li><b>Sapatos:</b> tire em casas, ryokan e onsen.</li>
@@ -227,13 +262,14 @@ footer a{color:var(--pink);text-decoration:none;display:inline-flex;align-items:
 
     <details class="parada" id="mesa">
       <summary>
-        <span class="selo" aria-hidden="true">食</span>
-        <span><span class="hora">13:00</span><h2>À mesa, sem sustos</h2><span class="tem">wasabi · alergênicos no rótulo</span></span>
+        <span class="selo emo" aria-hidden="true">🍜</span>
+        <span><span class="hora">13:00</span><h2>À mesa, sem sustos</h2><span class="tem">wasabi · gorjeta · alergênicos no rótulo</span></span>
         <span class="mais" aria-hidden="true"></span>
       </summary>
       <div class="dentro">
         <ul class="dicas">
           <li class="cuidado"><b>Wasabi escondido.</b> Rolinhos, onigiri e alguns sanduíches podem ter wasabi por dentro. Pergunte antes.</li>
+          <li><b>Não dê gorjeta.</b> O preço da conta já é o final. Deixar dinheiro a mais confunde.</li>
         </ul>
         <h3 class="sub">Os 8 alergênicos obrigatórios no rótulo</h3>
         <ul class="alerg">
@@ -252,7 +288,7 @@ footer a{color:var(--pink);text-decoration:none;display:inline-flex;align-items:
 
     <details class="parada" id="aguas">
       <summary>
-        <span class="selo" aria-hidden="true">湯</span>
+        <span class="selo emo" aria-hidden="true">♨️</span>
         <span><span class="hora">16:00</span><h2>A hora das águas</h2><span class="tem">onsen · sentou · quanto custa</span></span>
         <span class="mais" aria-hidden="true"></span>
       </summary>
@@ -268,20 +304,19 @@ footer a{color:var(--pink);text-decoration:none;display:inline-flex;align-items:
           <div><dt>Onsen de dia (higaeri)</dt><dd>¥700–2.000</dd></div>
           <div><dt>Onsen em ryokan</dt><dd>incluso na diária</dd></div>
         </dl>
+        <p class="nota">Valores aproximados. Confira no local.</p>
       </div>
     </details>
 
     <details class="parada" id="noite">
       <summary>
-        <span class="selo" aria-hidden="true">終</span>
-        <span><span class="hora">23:30</span><h2>O último trem</h2><span class="tem">shuuden · coin locker · mala sozinha</span></span>
+        <span class="selo emo" aria-hidden="true">🚃</span>
+        <span><span class="hora">23:30</span><h2>O último trem</h2><span class="tem">shuuden, o último trem da linha</span></span>
         <span class="mais" aria-hidden="true"></span>
       </summary>
       <div class="dentro">
         <ul class="dicas">
           <li class="cuidado"><b>Não perca o shuuden.</b> Muitas linhas param perto da meia-noite. Confira o horário da sua.</li>
-          <li><b>Guarde a mochila no coin locker.</b> ¥400–1.000 por dia. Muitos só aceitam moedas de ¥100.</li>
-          <li><b>Mande a mala sozinha (takuhaibin).</b> Yamato e Sagawa levam a mala entre aeroporto e hotel por cerca de ¥2.000–2.500.</li>
         </ul>
       </div>
     </details>
@@ -294,6 +329,7 @@ footer a{color:var(--pink);text-decoration:none;display:inline-flex;align-items:
     <div class="fones">
       <a class="fone" href="tel:110"><span class="num">110</span><span class="quem">Polícia</span></a>
       <a class="fone" href="tel:119"><span class="num">119</span><span class="quem">Ambulância e bombeiros</span></a>
+      <a class="fone largo" href="tel:+815038162787"><span class="num">050-3816-2787</span><span class="quem">Linha de apoio ao turista (JNTO)</span><span class="obs">24 horas, em inglês. Para acidente, doença ou desastre.</span></a>
     </div>
     <p><b>Depois de um tremor:</b> siga a sinalização até o <b>hinanjo</b> (escola ou parque). Use as escadas, não o elevador.</p>
     <a class="lk" href="/idiomas/mapas/emergencia/">Treinar as frases de emergência →</a>
@@ -308,6 +344,8 @@ footer a{color:var(--pink);text-decoration:none;display:inline-flex;align-items:
       <a class="btn sec" href="guia-sobrevivencia-japao.pdf" download>Baixar o guia em PDF</a>
     </div>
   </section>
+
+  <div class="impresso"><svg viewBox="0 0 33 33" aria-hidden="true" shape-rendering="crispEdges"><path fill="#3a2b38" d="M0 0h1v1h-1zM1 0h1v1h-1zM2 0h1v1h-1zM3 0h1v1h-1zM4 0h1v1h-1zM5 0h1v1h-1zM6 0h1v1h-1zM8 0h1v1h-1zM13 0h1v1h-1zM14 0h1v1h-1zM16 0h1v1h-1zM17 0h1v1h-1zM18 0h1v1h-1zM19 0h1v1h-1zM20 0h1v1h-1zM23 0h1v1h-1zM26 0h1v1h-1zM27 0h1v1h-1zM28 0h1v1h-1zM29 0h1v1h-1zM30 0h1v1h-1zM31 0h1v1h-1zM32 0h1v1h-1zM0 1h1v1h-1zM6 1h1v1h-1zM8 1h1v1h-1zM9 1h1v1h-1zM10 1h1v1h-1zM11 1h1v1h-1zM13 1h1v1h-1zM16 1h1v1h-1zM18 1h1v1h-1zM23 1h1v1h-1zM26 1h1v1h-1zM32 1h1v1h-1zM0 2h1v1h-1zM2 2h1v1h-1zM3 2h1v1h-1zM4 2h1v1h-1zM6 2h1v1h-1zM11 2h1v1h-1zM12 2h1v1h-1zM15 2h1v1h-1zM16 2h1v1h-1zM17 2h1v1h-1zM20 2h1v1h-1zM23 2h1v1h-1zM24 2h1v1h-1zM26 2h1v1h-1zM28 2h1v1h-1zM29 2h1v1h-1zM30 2h1v1h-1zM32 2h1v1h-1zM0 3h1v1h-1zM2 3h1v1h-1zM3 3h1v1h-1zM4 3h1v1h-1zM6 3h1v1h-1zM8 3h1v1h-1zM9 3h1v1h-1zM12 3h1v1h-1zM14 3h1v1h-1zM15 3h1v1h-1zM16 3h1v1h-1zM19 3h1v1h-1zM22 3h1v1h-1zM24 3h1v1h-1zM26 3h1v1h-1zM28 3h1v1h-1zM29 3h1v1h-1zM30 3h1v1h-1zM32 3h1v1h-1zM0 4h1v1h-1zM2 4h1v1h-1zM3 4h1v1h-1zM4 4h1v1h-1zM6 4h1v1h-1zM9 4h1v1h-1zM11 4h1v1h-1zM12 4h1v1h-1zM14 4h1v1h-1zM20 4h1v1h-1zM22 4h1v1h-1zM24 4h1v1h-1zM26 4h1v1h-1zM28 4h1v1h-1zM29 4h1v1h-1zM30 4h1v1h-1zM32 4h1v1h-1zM0 5h1v1h-1zM6 5h1v1h-1zM9 5h1v1h-1zM12 5h1v1h-1zM18 5h1v1h-1zM19 5h1v1h-1zM20 5h1v1h-1zM26 5h1v1h-1zM32 5h1v1h-1zM0 6h1v1h-1zM1 6h1v1h-1zM2 6h1v1h-1zM3 6h1v1h-1zM4 6h1v1h-1zM5 6h1v1h-1zM6 6h1v1h-1zM8 6h1v1h-1zM10 6h1v1h-1zM12 6h1v1h-1zM14 6h1v1h-1zM16 6h1v1h-1zM18 6h1v1h-1zM20 6h1v1h-1zM22 6h1v1h-1zM24 6h1v1h-1zM26 6h1v1h-1zM27 6h1v1h-1zM28 6h1v1h-1zM29 6h1v1h-1zM30 6h1v1h-1zM31 6h1v1h-1zM32 6h1v1h-1zM8 7h1v1h-1zM9 7h1v1h-1zM10 7h1v1h-1zM11 7h1v1h-1zM17 7h1v1h-1zM18 7h1v1h-1zM19 7h1v1h-1zM22 7h1v1h-1zM24 7h1v1h-1zM0 8h1v1h-1zM2 8h1v1h-1zM3 8h1v1h-1zM5 8h1v1h-1zM6 8h1v1h-1zM7 8h1v1h-1zM9 8h1v1h-1zM14 8h1v1h-1zM17 8h1v1h-1zM21 8h1v1h-1zM24 8h1v1h-1zM26 8h1v1h-1zM29 8h1v1h-1zM31 8h1v1h-1zM32 8h1v1h-1zM2 9h1v1h-1zM3 9h1v1h-1zM7 9h1v1h-1zM9 9h1v1h-1zM11 9h1v1h-1zM12 9h1v1h-1zM16 9h1v1h-1zM18 9h1v1h-1zM19 9h1v1h-1zM20 9h1v1h-1zM21 9h1v1h-1zM22 9h1v1h-1zM23 9h1v1h-1zM26 9h1v1h-1zM27 9h1v1h-1zM29 9h1v1h-1zM30 9h1v1h-1zM32 9h1v1h-1zM0 10h1v1h-1zM1 10h1v1h-1zM3 10h1v1h-1zM5 10h1v1h-1zM6 10h1v1h-1zM7 10h1v1h-1zM9 10h1v1h-1zM10 10h1v1h-1zM12 10h1v1h-1zM14 10h1v1h-1zM16 10h1v1h-1zM17 10h1v1h-1zM21 10h1v1h-1zM22 10h1v1h-1zM23 10h1v1h-1zM26 10h1v1h-1zM27 10h1v1h-1zM28 10h1v1h-1zM29 10h1v1h-1zM31 10h1v1h-1zM32 10h1v1h-1zM0 11h1v1h-1zM2 11h1v1h-1zM3 11h1v1h-1zM5 11h1v1h-1zM9 11h1v1h-1zM10 11h1v1h-1zM11 11h1v1h-1zM13 11h1v1h-1zM14 11h1v1h-1zM18 11h1v1h-1zM22 11h1v1h-1zM23 11h1v1h-1zM26 11h1v1h-1zM27 11h1v1h-1zM29 11h1v1h-1zM32 11h1v1h-1zM3 12h1v1h-1zM4 12h1v1h-1zM6 12h1v1h-1zM9 12h1v1h-1zM10 12h1v1h-1zM15 12h1v1h-1zM18 12h1v1h-1zM22 12h1v1h-1zM25 12h1v1h-1zM28 12h1v1h-1zM29 12h1v1h-1zM31 12h1v1h-1zM32 12h1v1h-1zM2 13h1v1h-1zM3 13h1v1h-1zM5 13h1v1h-1zM10 13h1v1h-1zM13 13h1v1h-1zM16 13h1v1h-1zM18 13h1v1h-1zM19 13h1v1h-1zM20 13h1v1h-1zM24 13h1v1h-1zM27 13h1v1h-1zM31 13h1v1h-1zM5 14h1v1h-1zM6 14h1v1h-1zM7 14h1v1h-1zM9 14h1v1h-1zM10 14h1v1h-1zM12 14h1v1h-1zM15 14h1v1h-1zM16 14h1v1h-1zM17 14h1v1h-1zM18 14h1v1h-1zM19 14h1v1h-1zM20 14h1v1h-1zM21 14h1v1h-1zM22 14h1v1h-1zM24 14h1v1h-1zM26 14h1v1h-1zM27 14h1v1h-1zM28 14h1v1h-1zM29 14h1v1h-1zM30 14h1v1h-1zM3 15h1v1h-1zM5 15h1v1h-1zM7 15h1v1h-1zM8 15h1v1h-1zM12 15h1v1h-1zM13 15h1v1h-1zM14 15h1v1h-1zM16 15h1v1h-1zM21 15h1v1h-1zM25 15h1v1h-1zM26 15h1v1h-1zM28 15h1v1h-1zM29 15h1v1h-1zM30 15h1v1h-1zM0 16h1v1h-1zM2 16h1v1h-1zM4 16h1v1h-1zM5 16h1v1h-1zM6 16h1v1h-1zM11 16h1v1h-1zM12 16h1v1h-1zM14 16h1v1h-1zM15 16h1v1h-1zM18 16h1v1h-1zM20 16h1v1h-1zM21 16h1v1h-1zM22 16h1v1h-1zM23 16h1v1h-1zM24 16h1v1h-1zM25 16h1v1h-1zM26 16h1v1h-1zM28 16h1v1h-1zM30 16h1v1h-1zM0 17h1v1h-1zM1 17h1v1h-1zM2 17h1v1h-1zM4 17h1v1h-1zM5 17h1v1h-1zM8 17h1v1h-1zM10 17h1v1h-1zM12 17h1v1h-1zM13 17h1v1h-1zM15 17h1v1h-1zM17 17h1v1h-1zM18 17h1v1h-1zM20 17h1v1h-1zM23 17h1v1h-1zM24 17h1v1h-1zM26 17h1v1h-1zM28 17h1v1h-1zM29 17h1v1h-1zM31 17h1v1h-1zM32 17h1v1h-1zM1 18h1v1h-1zM6 18h1v1h-1zM8 18h1v1h-1zM9 18h1v1h-1zM11 18h1v1h-1zM12 18h1v1h-1zM15 18h1v1h-1zM17 18h1v1h-1zM21 18h1v1h-1zM22 18h1v1h-1zM25 18h1v1h-1zM26 18h1v1h-1zM27 18h1v1h-1zM28 18h1v1h-1zM30 18h1v1h-1zM1 19h1v1h-1zM3 19h1v1h-1zM4 19h1v1h-1zM7 19h1v1h-1zM8 19h1v1h-1zM10 19h1v1h-1zM15 19h1v1h-1zM16 19h1v1h-1zM19 19h1v1h-1zM22 19h1v1h-1zM23 19h1v1h-1zM25 19h1v1h-1zM28 19h1v1h-1zM31 19h1v1h-1zM32 19h1v1h-1zM1 20h1v1h-1zM2 20h1v1h-1zM3 20h1v1h-1zM4 20h1v1h-1zM5 20h1v1h-1zM6 20h1v1h-1zM8 20h1v1h-1zM9 20h1v1h-1zM12 20h1v1h-1zM13 20h1v1h-1zM14 20h1v1h-1zM18 20h1v1h-1zM21 20h1v1h-1zM23 20h1v1h-1zM29 20h1v1h-1zM30 20h1v1h-1zM31 20h1v1h-1zM0 21h1v1h-1zM1 21h1v1h-1zM3 21h1v1h-1zM5 21h1v1h-1zM7 21h1v1h-1zM8 21h1v1h-1zM10 21h1v1h-1zM13 21h1v1h-1zM14 21h1v1h-1zM15 21h1v1h-1zM18 21h1v1h-1zM19 21h1v1h-1zM20 21h1v1h-1zM21 21h1v1h-1zM23 21h1v1h-1zM26 21h1v1h-1zM27 21h1v1h-1zM29 21h1v1h-1zM30 21h1v1h-1zM32 21h1v1h-1zM3 22h1v1h-1zM4 22h1v1h-1zM6 22h1v1h-1zM10 22h1v1h-1zM11 22h1v1h-1zM16 22h1v1h-1zM17 22h1v1h-1zM18 22h1v1h-1zM21 22h1v1h-1zM23 22h1v1h-1zM25 22h1v1h-1zM26 22h1v1h-1zM27 22h1v1h-1zM31 22h1v1h-1zM32 22h1v1h-1zM1 23h1v1h-1zM2 23h1v1h-1zM3 23h1v1h-1zM5 23h1v1h-1zM9 23h1v1h-1zM13 23h1v1h-1zM16 23h1v1h-1zM19 23h1v1h-1zM23 23h1v1h-1zM28 23h1v1h-1zM29 23h1v1h-1zM31 23h1v1h-1zM0 24h1v1h-1zM2 24h1v1h-1zM3 24h1v1h-1zM6 24h1v1h-1zM7 24h1v1h-1zM10 24h1v1h-1zM11 24h1v1h-1zM12 24h1v1h-1zM14 24h1v1h-1zM15 24h1v1h-1zM16 24h1v1h-1zM17 24h1v1h-1zM19 24h1v1h-1zM22 24h1v1h-1zM24 24h1v1h-1zM25 24h1v1h-1zM26 24h1v1h-1zM27 24h1v1h-1zM28 24h1v1h-1zM31 24h1v1h-1zM8 25h1v1h-1zM9 25h1v1h-1zM11 25h1v1h-1zM12 25h1v1h-1zM13 25h1v1h-1zM15 25h1v1h-1zM16 25h1v1h-1zM17 25h1v1h-1zM18 25h1v1h-1zM19 25h1v1h-1zM20 25h1v1h-1zM21 25h1v1h-1zM23 25h1v1h-1zM24 25h1v1h-1zM28 25h1v1h-1zM29 25h1v1h-1zM0 26h1v1h-1zM1 26h1v1h-1zM2 26h1v1h-1zM3 26h1v1h-1zM4 26h1v1h-1zM5 26h1v1h-1zM6 26h1v1h-1zM8 26h1v1h-1zM11 26h1v1h-1zM12 26h1v1h-1zM14 26h1v1h-1zM19 26h1v1h-1zM20 26h1v1h-1zM21 26h1v1h-1zM23 26h1v1h-1zM24 26h1v1h-1zM26 26h1v1h-1zM28 26h1v1h-1zM0 27h1v1h-1zM6 27h1v1h-1zM8 27h1v1h-1zM10 27h1v1h-1zM13 27h1v1h-1zM15 27h1v1h-1zM19 27h1v1h-1zM21 27h1v1h-1zM23 27h1v1h-1zM24 27h1v1h-1zM28 27h1v1h-1zM29 27h1v1h-1zM30 27h1v1h-1zM31 27h1v1h-1zM0 28h1v1h-1zM2 28h1v1h-1zM3 28h1v1h-1zM4 28h1v1h-1zM6 28h1v1h-1zM10 28h1v1h-1zM11 28h1v1h-1zM14 28h1v1h-1zM17 28h1v1h-1zM20 28h1v1h-1zM21 28h1v1h-1zM22 28h1v1h-1zM23 28h1v1h-1zM24 28h1v1h-1zM25 28h1v1h-1zM26 28h1v1h-1zM27 28h1v1h-1zM28 28h1v1h-1zM30 28h1v1h-1zM0 29h1v1h-1zM2 29h1v1h-1zM3 29h1v1h-1zM4 29h1v1h-1zM6 29h1v1h-1zM8 29h1v1h-1zM10 29h1v1h-1zM12 29h1v1h-1zM14 29h1v1h-1zM18 29h1v1h-1zM20 29h1v1h-1zM21 29h1v1h-1zM22 29h1v1h-1zM24 29h1v1h-1zM27 29h1v1h-1zM30 29h1v1h-1zM32 29h1v1h-1zM0 30h1v1h-1zM2 30h1v1h-1zM3 30h1v1h-1zM4 30h1v1h-1zM6 30h1v1h-1zM8 30h1v1h-1zM12 30h1v1h-1zM17 30h1v1h-1zM18 30h1v1h-1zM20 30h1v1h-1zM22 30h1v1h-1zM23 30h1v1h-1zM26 30h1v1h-1zM27 30h1v1h-1zM29 30h1v1h-1zM30 30h1v1h-1zM0 31h1v1h-1zM6 31h1v1h-1zM9 31h1v1h-1zM11 31h1v1h-1zM14 31h1v1h-1zM15 31h1v1h-1zM16 31h1v1h-1zM17 31h1v1h-1zM19 31h1v1h-1zM20 31h1v1h-1zM22 31h1v1h-1zM24 31h1v1h-1zM26 31h1v1h-1zM27 31h1v1h-1zM28 31h1v1h-1zM32 31h1v1h-1zM0 32h1v1h-1zM1 32h1v1h-1zM2 32h1v1h-1zM3 32h1v1h-1zM4 32h1v1h-1zM5 32h1v1h-1zM6 32h1v1h-1zM8 32h1v1h-1zM10 32h1v1h-1zM12 32h1v1h-1zM14 32h1v1h-1zM15 32h1v1h-1zM16 32h1v1h-1zM17 32h1v1h-1zM18 32h1v1h-1zM19 32h1v1h-1zM20 32h1v1h-1zM21 32h1v1h-1zM23 32h1v1h-1zM25 32h1v1h-1zM26 32h1v1h-1zM28 32h1v1h-1zM30 32h1v1h-1z"/></svg><span><b>Versão online, com áudio e links</b>unirversos.com/travessia/guia-sobrevivencia</span></div>
 
   <footer>
     <span>unirversos — tudo conectado · Aline Kikuti</span>
