@@ -171,7 +171,10 @@ h2{font-family:var(--f-display);font-size:22px;line-height:1.2;margin:0}
 .pess.eu{border-color:var(--pink)}
 .vazio{color:var(--muted);font-size:14px}
 /* sentado: a sala continua à vista e a mesa divide a tela */
-.wrap.sentado>header{display:none}
+.wrap.sentado>header,.wrap.sentado>#aulaDupla{display:none}
+.aula-dupla{border-left:6px solid var(--sage);display:flex;flex-wrap:wrap;gap:10px 16px;align-items:center;justify-content:space-between}
+.aula-dupla p{margin:0}
+.aula-dupla b{font-family:var(--f-display);font-size:18px}
 .wrap.sentado #dica,.wrap.sentado #secSala details{display:none}
 @media (min-width:900px){
   .wrap.sentado{max-width:1240px;grid-template-columns:minmax(0,1.1fr) minmax(0,1fr);align-items:start}
@@ -260,6 +263,11 @@ footer{border-top:1.5px dashed var(--line);padding-top:18px;display:flex;flex-wr
     <details><summary style="cursor:pointer;font-weight:700">Regras do salão</summary>
       <ul class="regras"><li>Fale com gentileza: aqui todo mundo está aprendendo.</li><li>Errar faz parte. Corrija com carinho, nunca com deboche.</li><li>Nada de dados pessoais (telefone, endereço, redes).</li><li>Algo errado? Use ⚑ Denunciar na mesa: a professora recebe.</li></ul>
     </details>
+  </section>
+
+  <section class="card aula-dupla" id="aulaDupla" aria-labelledby="h-dupla">
+    <div><h2 id="h-dupla">🎓 Aula em dupla</h2><p class="sub">Do encontro ao café: duas alunas, cada uma na sua tela, se apresentam, descobrem uma à outra numa batalha de perguntas e pedem um café em japonês. Dura cerca de 1 hora.</p></div>
+    <a class="btn pri" href="/idiomas/planeta-utopia/salao/aula-dupla/">Entrar na aula em dupla</a>
   </section>
 
   <section class="card mesa" id="mesa" hidden aria-labelledby="h-mesa">
