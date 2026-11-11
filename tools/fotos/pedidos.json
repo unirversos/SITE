@@ -1,162 +1,84 @@
 [
 {
-"id": "honey-pro",
-"url": "https://www.and-honey.com/img/index/bnr/pro.png",
+"id": "fino-milk2",
+"url": "https://cdn.shopify.com/s/files/1/0908/7818/1679/files/20260521014239E0E5C92297054AE3B82DA1967A7AD97B223.jpg?v=1787893675&width=900",
 "modo": "img"
 },
 {
-"id": "honey-lock",
-"url": "https://www.and-honey.com/img/index/bnr/lock.png",
+"id": "tsu-moist-s",
+"url": "https://cdn.shopify.com/s/files/1/0908/7818/1679/files/4550516485236_POP_040676c7-24f8-4655-b266-29c45c1628c8.jpg?v=1770090940&width=900",
 "modo": "img"
 },
 {
-"id": "honey-deep",
-"url": "https://www.and-honey.com/img/index/bnr/deep.png",
+"id": "tsu-moist-c",
+"url": "https://cdn.shopify.com/s/files/1/0908/7818/1679/files/4550516485250_POP_96ade754-ba13-423e-87f0-3b15d6f5bae3.jpg?v=1770090937&width=900",
 "modo": "img"
 },
 {
-"id": "honey-melty",
-"url": "https://www.and-honey.com/img/index/bnr/melty.png",
+"id": "tsu-vol-s",
+"url": "https://cdn.shopify.com/s/files/1/0908/7818/1679/files/4550516485410_POP_f0c4743e-6cfb-4306-b927-a7cbe2fc56e7.jpg?v=1770090941&width=900",
 "modo": "img"
 },
 {
-"id": "honey-apro",
-"url": "https://www.and-honey.com/img/awards/pro.png",
+"id": "tsu-vol-c",
+"url": "https://cdn.shopify.com/s/files/1/0908/7818/1679/files/4550516485632_POP_ae605456-a758-44c6-b799-22265ceb2d2e.jpg?v=1770090938&width=900",
 "modo": "img"
 },
 {
-"id": "honey-pdeep",
-"url": "https://www.and-honey.com/img/index/popup/img-deep.png",
+"id": "tsu-vol-c-refil",
+"url": "https://cdn.shopify.com/s/files/1/0908/7818/1679/files/4550516488138.jpg?v=1740006234&width=900",
 "modo": "img"
 },
 {
-"id": "ther-1",
-"url": "https://theratis.com/img/top/product-type-1.jpg",
+"id": "diane-1",
+"url": "https://cdn.shopify.com/s/files/1/0648/6422/3485/files/4580632126959_nlc_28216459-03d5-4037-a34e-406b3ac0a874_1785413492.webp?v=1785420809&width=900",
 "modo": "img"
 },
 {
-"id": "ther-2",
-"url": "https://theratis.com/img/top/product-type-2.jpg",
+"id": "diane-2",
+"url": "https://cdn.shopify.com/s/files/1/0648/6422/3485/files/4580632122593_nlc_1785411228.webp?v=1785419867&width=900",
 "modo": "img"
 },
 {
-"id": "ther-3",
-"url": "https://theratis.com/img/top/product-type-3.jpg",
-"modo": "img"
-},
-{
-"id": "ther-hp",
-"url": "https://theratis.com/img/top/bnr-hairpack.png",
-"modo": "img"
-},
-{
-"id": "ther-nr",
-"url": "https://theratis.com/img/icn/nav-nr.png",
-"modo": "img"
-},
-{
-"id": "ther-ion",
-"url": "https://theratis.com/img/icn/nav-ion.png",
-"modo": "img"
-},
-{
-"id": "yolu-calm",
-"url": "https://yolu.jp/wp/wp-content/themes/original_theme/images/product/calm_night/product-bottle.png",
-"modo": "img"
-},
-{
-"id": "yolu-relax",
-"url": "https://yolu.jp/wp/wp-content/themes/original_theme/images/product/relax_night/product-bottle.png",
-"modo": "img"
-},
-{
-"id": "ulu-kira",
-"url": "https://ululis.jp/img/index/link-kirameki.png",
-"modo": "img"
-},
-{
-"id": "ulu-aqua",
-"url": "https://ululis.jp/img/index/link-aqua.png",
-"modo": "img"
-},
-{
-"id": "eli-inj",
-"url": "https://gi.esmplus.com/macill/banner/renewal/cer-100_injection.jpg",
-"modo": "img"
-},
-{
-"id": "eli-treat",
-"url": "https://gi.esmplus.com/macill/banner/renewal/cer-100_treatment.jpg",
-"modo": "img"
-},
-{
-"id": "eli-curl",
-"url": "https://gi.esmplus.com/macill/banner/renewal/cer-100_curl_cream.jpg",
-"modo": "img"
-},
-{
-"id": "eli-rinse",
-"url": "https://gi.esmplus.com/macill/banner/renewal/cer-100_hair_rinse.jpg",
-"modo": "img"
-},
-{
-"id": "eli-shampoo",
-"url": "https://gi.esmplus.com/macill/banner/renewal/hair_muscle_shampoo.jpg",
-"modo": "img"
-},
-{
-"id": "eli-spray",
-"url": "https://gi.esmplus.com/macill/banner/hair_spray_banner_002.jpg",
-"modo": "img"
-},
-{
-"id": "fino-milk",
-"url": "https://brand.finetoday.com/jp/fino/assets/img/top/lineup_milk.jpg",
-"modo": "img"
-},
-{
-"id": "j-finetoday",
-"url": "https://onlineshop.finetoday.com/products.json?limit=250",
-"modo": "shopify"
-},
-{
-"id": "j-naturelab",
-"url": "https://store.naturelab.co.jp/products.json?limit=250",
-"modo": "shopify"
-},
-{
-"id": "j-naturelab2",
-"url": "https://store.naturelab.co.jp/products.json?limit=250&page=2",
-"modo": "shopify"
-},
-{
-"id": "x-biore2",
-"url": "https://www.kao.co.jp/bioreuv/",
+"id": "x-ther-nr",
+"url": "https://theratis.com/nightrepair/",
 "modo": "links",
-"filtro": "\\.(jpg|png|webp)|product|lineup"
+"filtro": "\\.(jpg|jpeg|png|webp)"
 },
 {
-"id": "x-biore3",
-"url": "https://www.kao.com/jp/bioreuv/",
+"id": "x-ther-ion",
+"url": "https://theratis.com/ion/",
 "modo": "links",
-"filtro": "\\.(jpg|png|webp)|product|lineup"
+"filtro": "\\.(jpg|jpeg|png|webp)"
 },
 {
-"id": "x-orbis",
-"url": "https://www.orbis.co.jp/",
+"id": "x-ulu-kira",
+"url": "https://ululis.jp/kirameki/",
 "modo": "links",
-"filtro": "hair|ヘア"
+"filtro": "\\.(jpg|jpeg|png|webp)"
 },
 {
-"id": "x-ther-all",
-"url": "https://theratis.com/",
+"id": "x-ulu-aqua",
+"url": "https://ululis.jp/aqua/",
 "modo": "links",
-"filtro": "^(\\.|/)[a-z/_-]*/?$"
+"filtro": "\\.(jpg|jpeg|png|webp)"
 },
 {
-"id": "x-ulu-all",
-"url": "https://ululis.jp/",
+"id": "x-biore-p",
+"url": "https://www.kao.co.jp/bioreuv/products/",
 "modo": "links",
-"filtro": "^(\\.|/)[a-z/_-]*/?$"
+"filtro": "\\.(jpg|jpeg|png|webp)|products"
+},
+{
+"id": "x-honey-pro",
+"url": "https://www.and-honey.com/professional/",
+"modo": "links",
+"filtro": "\\.(jpg|jpeg|png|webp)"
+},
+{
+"id": "x-honey-lock",
+"url": "https://www.and-honey.com/lock/",
+"modo": "links",
+"filtro": "\\.(jpg|jpeg|png|webp)"
 }
 ]
