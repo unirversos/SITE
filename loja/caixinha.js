@@ -8,6 +8,8 @@
 window.CAIXINHA_MIN = 1000;
 window.CAIXINHA_MAX_QTD = 5;
 /* Lote atual (aparece na capa). vagas e ate são textos fixos: mude aqui quando o lote virar. Deixe ate:'' para não mostrar data. */
+/* Fileira de destaques no topo da coleção (ids dos produtos, na ordem). */
+window.SK_DESTAQUES = ['cx-fino-mask','sk-celimax-booster','cx-anessa-milk','cab-refa-heart-lock-oil','sk-anua-kit-02','cab-refa-heart-brush'];
 window.SK_LOTE = { nome:'Lote 1', vagas:10, ate:'' };
 window.CAIXINHA_TODOS = [
   { id:'cx-anessa-milk', marca:'Anessa', grupo:'Sol', peso:'leve', nome:'Anessa Perfect UV Skincare Milk NA', tam:'60 ml', preco:226, foto:'/loja/fotos/kit-gi-1.jpg', ic:'🧴',
@@ -16,7 +18,7 @@ window.CAIXINHA_TODOS = [
     desc:'Essência (sérum) Melano CC da Rohto, versão premium para manchas (薬用しみ集中対策プレミアム美容液). Produto novo.' },
   { id:'cx-nameraka-olhos', marca:'Nameraka Honpo', grupo:'Pele', nome:'Nameraka Honpo · creme para os olhos antirrugas', tam:'20 g', preco:65, foto:'/loja/fotos/kit-gi-3.jpg', ic:'👁️',
     desc:'Wrinkle Eye Cream N da linha Nameraka Honpo (Sana). Produto novo.' },
-  { id:'cx-fino-mask', marca:'Fino', grupo:'Cabelo', nome:'Fino Premium Touch · máscara capilar', tam:'230 g', preco:72, foto:'/loja/fotos/kit-gi-4.jpg', ic:'💆',
+  { id:'cx-fino-mask', br:{preco:183.99, loja:'Droga Raia', em:'nov/2026'}, marca:'Fino', grupo:'Cabelo', nome:'Fino Premium Touch · máscara capilar', tam:'230 g', preco:72, foto:'/loja/fotos/kit-gi-4.jpg', ic:'💆',
     desc:'Máscara capilar concentrada com sérum, da Fine Today. Produto novo.' },
   { id:'cx-tsubaki-mask', marca:'Tsubaki', grupo:'Cabelo', nome:'Tsubaki Premium EX · máscara de reparação', tam:'180 g', preco:96, foto:'/loja/fotos/kit-gi-5.jpg', ic:'🌸',
     desc:'Máscara de reparação capilar Tsubaki Premium EX, da Fine Today. Produto novo.' },
@@ -44,14 +46,14 @@ window.CAIXINHA_TODOS = [
     desc:'Creme facial hidratante da Curél (Kao), para pele seca e sensível, conforme a embalagem (乾燥性敏感肌を考えた). Produto novo. No máximo 3 por pedido.' },
   { id:'cx-medicube-serum', marca:'Medicube', grupo:'Pele', nome:'Medicube PDRN Pink Peptide Serum', tam:'30 ml', preco:187, foto:'/loja/fotos/cx-medicube-serum.jpg', ic:'🌸',
     desc:'Sérum da Medicube. Na embalagem constam PDRN (sodium DNA) 1% e complexo de 5 tipos de peptídeos. Produto novo.' },
-  /* ===== Importados da planilha loja.xlsx (10 nov 2026): preço = iene tax-free × 0,04 × 1,80. peso: leve (verde), neutro, pesado (vermelho). oculto:true não aparece na vitrine; aprox:true = foto aproximada (asterisco no painel e na vitrine); o painel /loja/admin/ liga e desliga e troca o preço. ===== */
+  /* ===== Importados da planilha loja.xlsx (10 nov 2026): preço = iene tax-free × 0,04 × 1,80. peso: leve (verde), neutro, pesado (vermelho). oculto:true não aparece na vitrine; aprox:true = foto aproximada (asterisco no painel e na vitrine); br:{preco,loja,em} = preço de referência no Brasil, com a loja e o mês da consulta; o painel /loja/admin/ liga e desliga e troca o preço. ===== */
   { id:'sk-celimax-retinal-duo', grupo:'Pele', marca:'Celimax', nome:'Celimax Retinal Shot · toner + booster', tam:'2 itens', iene:4700, preco:338, peso:'leve', oculto:true, foto:'', ic:'🧴',
     desc:'Dupla da linha Retinal Shot da Celimax: 1 toner + 1 booster. Produto novo.' },
   { id:'sk-celimax-retinal-trio', grupo:'Pele', marca:'Celimax', nome:'Celimax Retinal Shot · toner + booster + creme', tam:'3 itens', iene:7600, preco:547, peso:'leve', oculto:true, foto:'', ic:'🧴',
     desc:'Trio da linha Retinal Shot da Celimax: 1 toner + 1 booster + 1 Dual Cream. Produto novo.' },
-  { id:'sk-celimax-booster', grupo:'Pele', marca:'Celimax', nome:'Celimax Retinal Shot Tightening Booster', tam:'15 ml', iene:2300, preco:166, peso:'leve', foto:'/loja/fotos/sk-celimax-booster.jpg', ic:'🧴',
+  { id:'sk-celimax-booster', br:{preco:219, loja:'Droga Raia', em:'nov/2026'}, grupo:'Pele', marca:'Celimax', nome:'Celimax Retinal Shot Tightening Booster', tam:'15 ml', iene:2300, preco:166, peso:'leve', foto:'/loja/fotos/sk-celimax-booster.jpg', ic:'🧴',
     desc:'Booster da linha Retinal Shot da Celimax. Produto novo.' },
-  { id:'sk-celimax-booster-2', grupo:'Pele', marca:'Celimax', nome:'Celimax Retinal Shot Tightening Booster · 2 unidades', tam:'2 × 15 ml', iene:4600, preco:331, peso:'leve', foto:'/loja/fotos/sk-celimax-booster-2.jpg', ic:'🧴',
+  { id:'sk-celimax-booster-2', br:{preco:438, loja:'Droga Raia, 2 un.', em:'nov/2026'}, grupo:'Pele', marca:'Celimax', nome:'Celimax Retinal Shot Tightening Booster · 2 unidades', tam:'2 × 15 ml', iene:4600, preco:331, peso:'leve', foto:'/loja/fotos/sk-celimax-booster-2.jpg', ic:'🧴',
     desc:'Dois boosters da linha Retinal Shot da Celimax. Produto novo.' },
   { id:'sk-celimax-20', grupo:'Pele', marca:'Celimax', nome:'Celimax Noni Ampoule Mask', tam:'', iene:8000, preco:576, peso:'neutro', oculto:true, foto:'/loja/fotos/sk-celimax-20.jpg', ic:'🧴',
     desc:'20x Máscaras Noni (¥440 × 20)' },
