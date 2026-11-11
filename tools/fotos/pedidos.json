@@ -1,84 +1,42 @@
 [
 {
-"id": "fino-milk2",
-"url": "https://cdn.shopify.com/s/files/1/0908/7818/1679/files/20260521014239E0E5C92297054AE3B82DA1967A7AD97B223.jpg?v=1787893675&width=900",
+"id": "th-nr-s",
+"url": "https://theratis.com/img/nightrepair/product/item-shampoo.png",
 "modo": "img"
 },
 {
-"id": "tsu-moist-s",
-"url": "https://cdn.shopify.com/s/files/1/0908/7818/1679/files/4550516485236_POP_040676c7-24f8-4655-b266-29c45c1628c8.jpg?v=1770090940&width=900",
+"id": "th-nr-t",
+"url": "https://theratis.com/img/nightrepair/product/item-treatment.png",
 "modo": "img"
 },
 {
-"id": "tsu-moist-c",
-"url": "https://cdn.shopify.com/s/files/1/0908/7818/1679/files/4550516485250_POP_96ade754-ba13-423e-87f0-3b15d6f5bae3.jpg?v=1770090937&width=900",
+"id": "th-nr-oil",
+"url": "https://theratis.com/img/nightrepair/product/item-oil.png",
 "modo": "img"
 },
 {
-"id": "tsu-vol-s",
-"url": "https://cdn.shopify.com/s/files/1/0908/7818/1679/files/4550516485410_POP_f0c4743e-6cfb-4306-b927-a7cbe2fc56e7.jpg?v=1770090941&width=900",
+"id": "th-ion-cream",
+"url": "https://theratis.com/img/ion/product/item-haircream.png",
 "modo": "img"
 },
 {
-"id": "tsu-vol-c",
-"url": "https://cdn.shopify.com/s/files/1/0908/7818/1679/files/4550516485632_POP_ae605456-a758-44c6-b799-22265ceb2d2e.jpg?v=1770090938&width=900",
+"id": "ul-kira-s",
+"url": "https://ululis.jp/kirameki/img/item-shampoo.png",
 "modo": "img"
 },
 {
-"id": "tsu-vol-c-refil",
-"url": "https://cdn.shopify.com/s/files/1/0908/7818/1679/files/4550516488138.jpg?v=1740006234&width=900",
+"id": "ul-kira-t",
+"url": "https://ululis.jp/kirameki/img/item-treatment.png",
 "modo": "img"
 },
 {
-"id": "diane-1",
-"url": "https://cdn.shopify.com/s/files/1/0648/6422/3485/files/4580632126959_nlc_28216459-03d5-4037-a34e-406b3ac0a874_1785413492.webp?v=1785420809&width=900",
+"id": "ul-aqua-s",
+"url": "https://ululis.jp/aqua/img/product/shampoo.png",
 "modo": "img"
 },
 {
-"id": "diane-2",
-"url": "https://cdn.shopify.com/s/files/1/0648/6422/3485/files/4580632122593_nlc_1785411228.webp?v=1785419867&width=900",
+"id": "ul-aqua-t",
+"url": "https://ululis.jp/aqua/img/product/treatment.png",
 "modo": "img"
-},
-{
-"id": "x-ther-nr",
-"url": "https://theratis.com/nightrepair/",
-"modo": "links",
-"filtro": "\\.(jpg|jpeg|png|webp)"
-},
-{
-"id": "x-ther-ion",
-"url": "https://theratis.com/ion/",
-"modo": "links",
-"filtro": "\\.(jpg|jpeg|png|webp)"
-},
-{
-"id": "x-ulu-kira",
-"url": "https://ululis.jp/kirameki/",
-"modo": "links",
-"filtro": "\\.(jpg|jpeg|png|webp)"
-},
-{
-"id": "x-ulu-aqua",
-"url": "https://ululis.jp/aqua/",
-"modo": "links",
-"filtro": "\\.(jpg|jpeg|png|webp)"
-},
-{
-"id": "x-biore-p",
-"url": "https://www.kao.co.jp/bioreuv/products/",
-"modo": "links",
-"filtro": "\\.(jpg|jpeg|png|webp)|products"
-},
-{
-"id": "x-honey-pro",
-"url": "https://www.and-honey.com/professional/",
-"modo": "links",
-"filtro": "\\.(jpg|jpeg|png|webp)"
-},
-{
-"id": "x-honey-lock",
-"url": "https://www.and-honey.com/lock/",
-"modo": "links",
-"filtro": "\\.(jpg|jpeg|png|webp)"
 }
 ]
