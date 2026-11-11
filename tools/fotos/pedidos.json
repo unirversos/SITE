@@ -1,309 +1,137 @@
 [
 {
-"id": "sk-celimax-20__0",
-"url": "https://cdn.shopify.com/s/files/1/1021/2612/5365/files/1749694223793_46ca4e05bbfd45c2b6d664de4da8fa7b.jpg?v=1790748302&width=900",
+"id": "cab-cab-116",
+"url": "https://yolu.jp/wp/wp-content/themes/original_theme/images/product/calm_night/product-bottle.png",
 "modo": "img"
 },
 {
-"id": "sk-celimax-20__1",
-"url": "https://cdn.shopify.com/s/files/1/1021/2612/5365/files/1748582478063_c71575dc02c44b28bf039968e51a88eb.jpg?v=1790748302&width=900",
+"id": "cab-cab-117",
+"url": "https://yolu.jp/wp/wp-content/themes/original_theme/images/product/relax_night/product-bottle.png",
 "modo": "img"
 },
 {
-"id": "sk-celimax-22__0",
-"url": "https://cdn.shopify.com/s/files/1/1021/2612/5365/files/1770113762432_14c90c704c724459b45f2c8f52714c5f.jpg?v=1790747692&width=900",
+"id": "cab-cab-112",
+"url": "https://ululis.jp/img/index/link-kirameki.png",
 "modo": "img"
 },
 {
-"id": "sk-celimax-22__1",
-"url": "https://cdn.shopify.com/s/files/1/1021/2612/5365/files/1770371898593_df49d31b73894b97bac334d79abc7b0d.jpg?v=1790747692&width=900",
+"id": "cab-cab-113",
+"url": "https://ululis.jp/img/index/link-aqua.png",
 "modo": "img"
 },
 {
-"id": "sk-celimax-24__0",
-"url": "https://cdn.shopify.com/s/files/1/1021/2612/5365/files/1790043152208_fe1956eb22454f529955b8d9ca78f60c.png?v=1790747719&width=900",
+"id": "ther-1",
+"url": "https://theratis.com/img/top/product-type-1.jpg",
 "modo": "img"
 },
 {
-"id": "sk-celimax-24__1",
-"url": "https://cdn.shopify.com/s/files/1/1021/2612/5365/files/1790043476547_cc20be592437403eaec7bdd59ac9a25a.png?v=1790747723&width=900",
+"id": "ther-2",
+"url": "https://theratis.com/img/top/product-type-2.jpg",
 "modo": "img"
 },
 {
-"id": "sk-celimax-26__0",
-"url": "https://cdn.shopify.com/s/files/1/1021/2612/5365/files/1770113994213_2ce8bd1a91734a9fa4aaf947be332d27.jpg?v=1790747786&width=900",
+"id": "ther-3",
+"url": "https://theratis.com/img/top/product-type-3.jpg",
 "modo": "img"
 },
 {
-"id": "sk-celimax-26__1",
-"url": "https://cdn.shopify.com/s/files/1/1021/2612/5365/files/1770114063226_b066fccafdb64f929506d4a767207d6f.jpg?v=1790747786&width=900",
+"id": "cab-cab-039",
+"url": "https://brand.finetoday.com/jp/fino/assets/img/top/lineup_milk.jpg",
 "modo": "img"
 },
 {
-"id": "sk-skin1004-03__0",
-"url": "https://cdn.shopify.com/s/files/1/0590/4538/0253/files/skin1004-cleanser-centella-light-cleansing-oil-1259546240.png?v=1790066830&width=900",
+"id": "fino-hairmilk",
+"url": "https://brand.finetoday.com/jp/fino/assets/img/cmn/hairmilk.png",
 "modo": "img"
 },
 {
-"id": "sk-skin1004-03__1",
-"url": "https://cdn.shopify.com/s/files/1/0590/4538/0253/products/skin1004-cleanser-madagascar-centella-light-cleansing-oil-30259218743453.gif?v=1677151102&width=900",
+"id": "tsu-moist",
+"url": "https://brand.finetoday.com/jp/tsubaki/assets/img/top/pc_top_moist.png",
 "modo": "img"
 },
 {
-"id": "sk-skin1004-03__2",
-"url": "https://cdn.shopify.com/s/files/1/0590/4538/0253/products/skin1004-cleanser-centella-light-cleansing-oil-38409133490422.jpg?v=1677151102&width=900",
+"id": "tsu-volume",
+"url": "https://brand.finetoday.com/jp/tsubaki/assets/img/top/pc_top_volume.png",
 "modo": "img"
 },
 {
-"id": "sk-skin1004-04__0",
-"url": "https://cdn.shopify.com/s/files/1/0590/4538/0253/products/skin1004-mask-pad-70-pads-130ml-centella-quick-calming-pad-38642832474358.png?v=1677149423&width=900",
+"id": "tsu-ex",
+"url": "https://brand.finetoday.com/jp/tsubaki/assets/img/top/pc_top_premium_ex.png",
 "modo": "img"
 },
 {
-"id": "sk-skin1004-04__1",
-"url": "https://cdn.shopify.com/s/files/1/0590/4538/0253/products/skin1004-mask-pad-70-pads-130ml-madagascar-centella-quick-calming-pad-34557688250614.gif?v=1677149128&width=900",
+"id": "tsu-mask",
+"url": "https://brand.finetoday.com/jp/tsubaki/assets/img/top/mask_img.png",
 "modo": "img"
 },
 {
-"id": "sk-skin1004-04__2",
-"url": "https://cdn.shopify.com/s/files/1/0590/4538/0253/products/skin1004-mask-pad-70-pads-130ml-centella-quick-calming-pad-38409144566006.jpg?v=1677149128&width=900",
+"id": "bio-mist",
+"url": "https://kao-h.assetsadobe3.com/is/image/content/dam/sites/kao/www-kao-co-jp/bioreuv/aquaprotectmist/mainpic.png?fmt=png-alpha",
 "modo": "img"
 },
 {
-"id": "sk-skin1004-05__0",
-"url": "https://cdn.shopify.com/s/files/1/0590/4538/0253/files/skin1004-cream-centella-soothing-cream-1259546233.png?v=1790066709&width=900",
+"id": "bio-ath",
+"url": "https://kao-h.assetsadobe3.com/is/image/content/dam/sites/kao/www-kao-co-jp/bioreuv/athlizm/top/mainpic02.png?fmt=png-alpha",
 "modo": "img"
 },
 {
-"id": "sk-skin1004-05__1",
-"url": "https://cdn.shopify.com/s/files/1/0590/4538/0253/products/skin1004-cream-madagascar-centella-soothing-cream-30259271991453.gif?v=1677149146&width=900",
-"modo": "img"
+"id": "y-fine",
+"url": "https://onlineshop.finetoday.com/products.json?limit=250",
+"modo": "shopify",
+"filtro": ""
 },
 {
-"id": "sk-skin1004-05__2",
-"url": "https://cdn.shopify.com/s/files/1/0590/4538/0253/products/skin1004-cream-centella-soothing-cream-38642833588470.png?v=1677149426&width=900",
-"modo": "img"
-},
-{
-"id": "sk-skin1004-06__0",
-"url": "https://cdn.shopify.com/s/files/1/0590/4538/0253/products/skin1004-toner-centella-toning-toner-38642837750006.png?v=1766754925&width=900",
-"modo": "img"
-},
-{
-"id": "sk-skin1004-06__1",
-"url": "https://cdn.shopify.com/s/files/1/0590/4538/0253/products/skin1004-tonner-madagascar-centella-toning-toner-30259313770653.gif?v=1766754953&width=900",
-"modo": "img"
-},
-{
-"id": "sk-skin1004-06__2",
-"url": "https://cdn.shopify.com/s/files/1/0590/4538/0253/files/skin1004-toner-30ml-centella-toning-toner-40739326460150.png?v=1766754953&width=900",
-"modo": "img"
-},
-{
-"id": "sk-skin1004-07__0",
-"url": "https://cdn.shopify.com/s/files/1/0590/4538/0253/files/skin1004-cleanser-centella-ampoule-foam-1259546239.png?v=1790066771&width=900",
-"modo": "img"
-},
-{
-"id": "sk-skin1004-07__1",
-"url": "https://cdn.shopify.com/s/files/1/0590/4538/0253/products/skin1004-cleanser-madagascar-centella-ampoule-foam-30259010502813.gif?v=1717738201&width=900",
-"modo": "img"
-},
-{
-"id": "sk-skin1004-07__2",
-"url": "https://cdn.shopify.com/s/files/1/0590/4538/0253/products/skin1004-cleanser-centella-ampoule-foam-38642819825910.png?v=1677149057&width=900",
-"modo": "img"
-},
-{
-"id": "sk-skin1004-08__0",
-"url": "https://cdn.shopify.com/s/files/1/0590/4538/0253/files/skin1004-ampoule-serum-tone-brightening-capsule-ampoule-1259546237.png?v=1790066649&width=900",
-"modo": "img"
-},
-{
-"id": "sk-skin1004-08__1",
-"url": "https://cdn.shopify.com/s/files/1/0590/4538/0253/products/skin1004-ampoule-serum-100ml-brightening-capsule-ampoule-38642788630774.png?v=1677148702&width=900",
-"modo": "img"
-},
-{
-"id": "sk-skin1004-08__2",
-"url": "https://cdn.shopify.com/s/files/1/0590/4538/0253/products/skin1004-ampoule-serum-100ml-madagascar-centella-tone-brightening-capsule-ampoule-34557561635062.gif?v=1677148510&width=900",
-"modo": "img"
-},
-{
-"id": "sk-anua-01__0",
-"url": "https://cdn.shopify.com/s/files/1/0563/5466/8649/files/anua-set-pdrn-1265126784.png?v=1793249472&width=900",
-"modo": "img"
-},
-{
-"id": "sk-anua-03__0",
-"url": "https://cdn.shopify.com/s/files/1/0563/5466/8649/files/anua-set-black-friday-pdrn-pdrn-1265272178.png?v=1793358069&width=900",
-"modo": "img"
-},
-{
-"id": "sk-anua-04__0",
-"url": "https://cdn.shopify.com/s/files/1/0563/5466/8649/files/anua-set-black-friday-3step-1265272179.png?v=1793358850&width=900",
-"modo": "img"
-},
-{
-"id": "sk-anua-05__0",
-"url": "https://cdn.shopify.com/s/files/1/0563/5466/8649/files/anua-set-black-friday-3step-1265416733.png?v=1793465289&width=900",
-"modo": "img"
-},
-{
-"id": "sk-anua-06__0",
-"url": "https://cdn.shopify.com/s/files/1/0563/5466/8649/files/anua-set-black-friday-pdrn-3step-1265416734.png?v=1793465354&width=900",
-"modo": "img"
-},
-{
-"id": "sk-anua-09__0",
-"url": "https://cdn.shopify.com/s/files/1/0563/5466/8649/files/anua--black-friday-77-7-5-1265272177.png?v=1793357530&width=900",
-"modo": "img"
-},
-{
-"id": "refa-hq-shampoo",
-"url": "https://www.refa.net/item/common/images/pct-refa-honey-queen-shampoo-01.jpg",
-"modo": "img"
-},
-{
-"id": "refa-hq-treatment",
-"url": "https://www.refa.net/item/common/images/pct-refa-honey-queen-treatment-01.jpg",
-"modo": "img"
-},
-{
-"id": "refa-hq-outbath",
-"url": "https://www.refa.net/item/common/images/pct-refa-honey-queen-outbath-treatment-01.jpg",
-"modo": "img"
-},
-{
-"id": "refa-sleep",
-"url": "https://www.refa.net/item/common/images/pct-refa-milk-protein-sleep-line-01.jpg",
-"modo": "img"
-},
-{
-"id": "refa-sleep-t",
-"url": "https://www.refa.net/item/common/images/pct-refa-milk-protein-sleep-line-treatment.jpg",
-"modo": "img"
-},
-{
-"id": "refa-lock-luxe",
-"url": "https://www.refa.net/item/common/images/pct-refa-lock-oil-luxe-01.jpg",
-"modo": "img"
-},
-{
-"id": "anessa-gel-bright",
-"url": "https://www.shiseido.co.jp/anessa/top/img/lineup_daily-uv-gel-brightening_pc.jpg",
-"modo": "img"
-},
-{
-"id": "anessa-gel-moist",
-"url": "https://www.shiseido.co.jp/anessa/top/img/lineup_daily-uv-gel-moisture_pc.jpg",
-"modo": "img"
-},
-{
-"id": "anessa-spray",
-"url": "https://www.shiseido.co.jp/anessa/top/img/lineup_perfect_uv_spray_a_sk_pc.jpg",
-"modo": "img"
-},
-{
-"id": "x-biore",
-"url": "https://www.kao.com/jp/products/bioreuv/",
-"modo": "links",
-"filtro": "product|item|\\.(jpg|png|webp)"
-},
-{
-"id": "x-biore2",
+"id": "y-biore",
 "url": "https://www.kao.co.jp/bioreuv/",
 "modo": "links",
-"filtro": "product|item|\\.(jpg|png|webp)"
+"filtro": "bioreuv/"
 },
 {
-"id": "x-diane",
-"url": "https://www.moist-diane.jp/",
+"id": "y-biore-item",
+"url": "https://www.kao.co.jp/bioreuv/itemcheck/",
 "modo": "links",
-"filtro": "product|item|\\.(jpg|png|webp)"
+"filtro": "."
 },
 {
-"id": "x-diane-shop",
-"url": "https://store.naturelab.co.jp/products.json?limit=250",
-"modo": "shopify",
-"filtro": "product|item|\\.(jpg|png|webp)"
-},
-{
-"id": "x-eliza",
-"url": "https://elizavecca.com/products.json?limit=250",
-"modo": "shopify",
-"filtro": "product|item|\\.(jpg|png|webp)"
-},
-{
-"id": "x-fino",
-"url": "https://brand.finetoday.com/jp/fino/",
-"modo": "links",
-"filtro": "product|item|\\.(jpg|png|webp)"
-},
-{
-"id": "x-tsubaki",
-"url": "https://brand.finetoday.com/jp/tsubaki/",
-"modo": "links",
-"filtro": "product|item|\\.(jpg|png|webp)"
-},
-{
-"id": "x-honey-a",
+"id": "y-honey",
 "url": "https://www.and-honey.com/",
 "modo": "links",
-"filtro": "product|item|\\.(jpg|png|webp)"
+"filtro": "and-honey.com/|^/[a-z]"
 },
 {
-"id": "x-honey-b",
-"url": "https://andhoney.net/",
+"id": "y-honey-p",
+"url": "https://www.and-honey.com/products/",
 "modo": "links",
-"filtro": "product|item|\\.(jpg|png|webp)"
+"filtro": "."
 },
 {
-"id": "x-honey-c",
-"url": "https://vicrea.jp/",
-"modo": "links",
-"filtro": "product|item|\\.(jpg|png|webp)"
-},
-{
-"id": "x-orbis",
-"url": "https://www.orbis.co.jp/",
-"modo": "links",
-"filtro": "product|item|\\.(jpg|png|webp)"
-},
-{
-"id": "x-theratis",
+"id": "y-ther",
 "url": "https://theratis.com/",
 "modo": "links",
-"filtro": "product|item|\\.(jpg|png|webp)"
+"filtro": "^\\./|^/|theratis.com"
 },
 {
-"id": "x-theratis-j",
-"url": "https://theratis.com/products.json?limit=250",
-"modo": "shopify",
-"filtro": "product|item|\\.(jpg|png|webp)"
-},
-{
-"id": "x-yolu",
-"url": "https://yolu.jp/",
+"id": "y-diane",
+"url": "https://www.moist-diane.jp/products/",
 "modo": "links",
-"filtro": "product|item|\\.(jpg|png|webp)"
+"filtro": "."
 },
 {
-"id": "x-yolu-j",
-"url": "https://yolu.jp/products.json?limit=250",
-"modo": "shopify",
-"filtro": "product|item|\\.(jpg|png|webp)"
+"id": "y-eliza",
+"url": "https://www.elizavecca.com/",
+"modo": "links",
+"filtro": "."
 },
 {
-"id": "x-ululis",
+"id": "y-orbis",
+"url": "https://www.orbis.co.jp/category/haircare/",
+"modo": "links",
+"filtro": "."
+},
+{
+"id": "y-ululis",
 "url": "https://ululis.jp/",
 "modo": "links",
-"filtro": "product|item|\\.(jpg|png|webp)"
-},
-{
-"id": "x-ululis-j",
-"url": "https://ululis.jp/products.json?limit=250",
-"modo": "shopify",
-"filtro": "product|item|\\.(jpg|png|webp)"
+"filtro": "^\\./|^/[a-z]|product"
 }
 ]
