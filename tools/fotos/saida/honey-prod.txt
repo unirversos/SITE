@@ -1,0 +1,20 @@
+https://andhoney.jp/product
+#product-bodycare
+#product-décolletécare
+#product-gift
+#product-innercare
+#product-oralcare
+#product-shaving
+#product-skincare
+/assets/images/product/01.jpg
+/product
+/product/#product-bodycare
+/product/#product-décolletécare
+/product/#product-gift
+/product/#product-innercare
+/product/#product-oralcare
+/product/#product-shaving
+/product/#product-skincare
+https://mitsu-apothecary.com/product
+product  のご案内です。はちみつ美容薬局ミツ（HONEY APOTHECARY MITSU）のブランドサイト。
+product | はちみつ美容薬局ミツ
