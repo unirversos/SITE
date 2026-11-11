@@ -118,6 +118,8 @@ h1 em{font-style:normal;color:var(--pink)}
 .precos dt{flex:1}
 .precos dd{margin:0;font-weight:700;color:var(--gold);white-space:nowrap}
 .nota{margin:6px 0 0;font-size:13px;color:var(--muted)}
+.alerg .kj{overflow-wrap:anywhere}
+.dicas .pt{display:block;color:var(--muted)}
 
 /* emergência: sempre à vista, nunca atrás de um toque */
 .sos{background:var(--card);border:1.5px solid var(--line);border-left:6px solid var(--pink);border-radius:var(--r);padding:18px 20px;display:grid;gap:12px;scroll-margin-top:16px}
@@ -240,6 +242,23 @@ footer a{color:var(--pink);text-decoration:none;display:inline-flex;align-items:
       </div>
     </details>
 
+    <details class="parada" id="planejar">
+      <summary>
+        <span class="selo emo" aria-hidden="true">🗓️</span>
+        <span><span class="hora">Planejando</span><h2>Antes de montar o roteiro</h2><span class="tem">dirigir · Ano Novo · fuso · revendedores</span></span>
+        <span class="mais" aria-hidden="true"></span>
+      </summary>
+      <div class="dentro">
+        <ul class="dicas">
+          <li class="cuidado"><b>Você não pode dirigir no Japão com documento brasileiro.</b> O Japão só reconhece a permissão internacional da <b>Convenção de Genebra de 1949</b>; a de Viena, de 1968, que é a que o Brasil emite, não vale. Nem a CNH nem a PID brasileiras valem. Isso elimina o <b>kart de rua fantasiado</b> por Shibuya, que aparece em todo roteiro de Tóquio: não é questão de risco, é ilegal para nós. Vale o mesmo para aluguel de carro. Confira as regras na <a href="https://english.jaf.or.jp/use-jaf-more/drive-in-japan" target="_blank" rel="noopener">página da JAF ↗</a>.</li>
+          <li class="cuidado"><b>O Ano Novo fecha o país.</b> De <b>29 de dezembro a 3 de janeiro</b>, boa parte dos museus, lojas e restaurantes fecha, e vários dos grandes museus têm recesso de fim de ano. Ao mesmo tempo, templos e trens lotam e o hotel dispara. Não deixe nada caro e com reserva nessa faixa: use esses dias para templos, iluminações e eventos de rua.</li>
+          <li><b>Madrugada de Brasília é horário comercial no Japão.</b> O Japão está <b>12 horas à frente</b> de Brasília e nunca tem horário de verão. Uma venda que abre às 14h no Japão cai às 2h da manhã aqui; às 10h de lá são 22h do dia anterior aqui. O calendário e a lista de ingressos já fazem essa conversão, mas vale colocar despertador.
+            <a class="lk" href="/travessia/ingressos/">Ver quando comprar cada ingresso →</a></li>
+          <li><b>Todo mundo é revendedor, quase ninguém é oficial.</b> Isso muda de atração para atração, e errar significa não entrar. Há lugares em que só o canal oficial vale, e outros em que revendedores grandes são canais legítimos. A regra segura: confira sempre na página oficial da atração quais revendedores ela reconhece, e nunca compre de terceiros em marketplaces, leilões ou mensagem direta.</li>
+        </ul>
+      </div>
+    </details>
+
     <p class="bloco">O dia</p>
 
     <details class="parada" id="manha">
@@ -319,6 +338,48 @@ footer a{color:var(--pink);text-decoration:none;display:inline-flex;align-items:
           <div><dt>Onsen em ryokan</dt><dd>incluso na diária</dd></div>
         </dl>
         <p class="nota">Valores aproximados. Confira no local.</p>
+      </div>
+    </details>
+
+    <details class="parada" id="trem-parou">
+      <summary>
+        <span class="selo emo" aria-hidden="true">🚧</span>
+        <span><span class="hora">18:00</span><h2>O trem parou, e agora?</h2><span class="tem">atraso · rota alternativa · reembolso</span></span>
+        <span class="mais" aria-hidden="true"></span>
+      </summary>
+      <div class="dentro">
+        <ul class="dicas">
+          <li><b>Primeiro, entenda o painel.</b> Atraso pequeno se resolve sozinho: espere na plataforma. Se aparecer "circulação suspensa", procure outro caminho.</li>
+          <li><b>Ache a rota alternativa no celular.</b>
+            <ul class="como">
+              <li><b>Google Maps:</b> refaça a rota de transporte público; ele costuma mostrar o aviso da linha parada.</li>
+              <li><b>Navi (Japan Travel by NAVITIME):</b> a busca de rota normal é grátis; a função que desvia sozinha da linha parada é paga. <a href="/travessia/navi/">Como usar o Navi →</a></li>
+            </ul>
+          </li>
+          <li class="cuidado"><b>Com Suica (saldo), o desvio é por sua conta.</b> O "transporte alternativo" gratuito por outra companhia vale para bilhete de papel e passes, não para o saldo do cartão. Com Suica, pegue a outra linha e pague normalmente.</li>
+          <li><b>Já passou a catraca e desistiu?</b> Antes de encostar o cartão para sair, procure um funcionário na catraca e explique que a linha parou. Depois de sair, em geral não dá mais para pedir o transporte alternativo.</li>
+          <li><b>Trem-bala chegou 2 horas ou mais atrasado?</b> A parte "expressa" da passagem é devolvida; a tarifa básica, não.
+            <ul class="como">
+              <li><b>Onde:</b> no guichê da JR (Midori no Madoguchi) ou no balcão de ajuste de tarifa de uma estação JR, no dia da viagem. Guarde o bilhete.</li>
+              <li><b>Comprou pelo SmartEX?</b> O valor volta para o cartão de crédito usado na compra. Se você já retirou o bilhete, o reembolso é no guichê.</li>
+              <li><b>Passagem promocional:</b> a regra muda conforme o bilhete. Pergunte no guichê.</li>
+            </ul>
+          </li>
+        </ul>
+        <h3 class="sub">Palavras para reconhecer no painel</h3>
+        <ul class="alerg pal">
+          <li><span class="kj" lang="ja">遅延</span><span class="nm">Atraso</span><span class="rj">chien</span></li>
+          <li><span class="kj" lang="ja">運転見合わせ</span><span class="nm">Circulação suspensa</span><span class="rj">unten miawase</span></li>
+          <li><span class="kj" lang="ja">運休</span><span class="nm">Cancelado</span><span class="rj">unkyuu</span></li>
+          <li><span class="kj" lang="ja">振替輸送</span><span class="nm">Transporte alternativo</span><span class="rj">furikae yusou</span></li>
+        </ul>
+        <h3 class="sub">O que dizer ao funcionário</h3>
+        <ul class="dicas">
+          <li><b lang="ja">すみません、〇〇まで行きたいです。</b><br>Sumimasen, ___ made ikitai desu. <span class="pt">"Com licença, quero ir até ___."</span> Mostre o destino escrito no celular.</li>
+          <li><b lang="ja">ほかの行き方はありますか。</b><br>Hoka no ikikata wa arimasu ka. <span class="pt">"Tem outro jeito de chegar?"</span></li>
+          <li><b lang="ja">この電車は動いていますか。</b><br>Kono densha wa ugoite imasu ka. <span class="pt">"Este trem está funcionando?"</span></li>
+        </ul>
+        <a class="lk" href="/idiomas/mapas/trens/">Treinar as frases de trem →</a>
       </div>
     </details>
 

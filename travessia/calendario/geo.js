@@ -136,7 +136,10 @@ function crd(p){return (+p.lat).toFixed(5)+','+(+p.lon).toFixed(5);}
 function gmaps(pa,pb,tm){return 'https://www.google.com/maps/dir/?api=1&origin='+crd(pa)+'&destination='+crd(pb)+'&travelmode='+tm;}
 /* o = {de, para, data 'AAAA-MM-DD', pax, estA, estB, buscando} → {links:[{t,u,pri}], nota} */
 var APP={goI:'https://apps.apple.com/us/app/go-taxi-app-for-japan-visit/id1254341709',goA:'https://play.google.com/store/apps/details?id=com.dena.automotive.taxibell',goP:'com.dena.automotive.taxibell',
-  exI:'https://apps.apple.com/us/app/shinkansen-smartex-app/id1253336330',exA:'https://play.google.com/store/apps/details?id=jp.co.jr_central.exreserve.or',exP:'jp.co.jr_central.exreserve.or'};
+  exI:'https://apps.apple.com/us/app/shinkansen-smartex-app/id1253336330',exA:'https://play.google.com/store/apps/details?id=jp.co.jr_central.exreserve.or',exP:'jp.co.jr_central.exreserve.or',
+  nvI:'https://apps.apple.com/us/app/id686373726',nvA:'https://play.google.com/store/apps/details?id=com.navitime.inbound.walk',nvP:'com.navitime.inbound.walk',nvW:'https://japantravel.navitime.com/en/area/jp/route/'};
+/* Navi (Japan Travel by NAVITIME): no celular abre o app; no computador abre a busca de rota do site. Não aceita origem e destino pelo link. */
+function naviLinks(){var ua=(typeof navigator!=='undefined'&&navigator.userAgent)||''; return /Android|iPhone|iPad|iPod/i.test(ua)?appLinks('🧭 Abrir o app Navi (Japan Travel)',APP.nvI,APP.nvA,APP.nvP):[{t:'🧭 Abrir o Navi (Japan Travel)',u:APP.nvW}];}
 /* um botão por app: no Android tenta abrir o app instalado e, se não houver, cai na Play Store; no iPhone abre a página do app na App Store (com "Abrir" se já instalado); no computador mostra os dois links */
 function appLinks(rot,ios,and,pkg){
   var ua=(typeof navigator!=='undefined'&&navigator.userAgent)||'';
@@ -169,9 +172,9 @@ function linksRota(m,pa,pb,o){
   var maps={t:'🗺️ Ver rota de trem no Google Maps'+(temE?': '+o.estA.nome+' → '+o.estB.nome:''),u:temE?gmaps(o.estA,o.estB,'transit'):gmaps(pa,pb,'transit'),pri:1};
   if(o.estA&&o.estB&&o.estA.ja&&o.estB.ja&&o.estA.ja!==o.estB.ja)
     return {links:[maps,{t:'🚆 Ver trem e preço no Jorudan: '+o.estA.nome+' → '+o.estB.nome,u:'https://www.jorudan.co.jp/norikae/cgi/nori.cgi?eki1='+encodeURIComponent(o.estA.ja)+'&eki2='+encodeURIComponent(o.estB.ja)+'&Cway=0'},
-      {t:'🔎 Jorudan em inglês (sem preencher)',u:'https://world.jorudan.co.jp/mln/en/'}].concat(ex),
-      nota:'O Google Maps mostra a rota e os horários dos trens. O Jorudan abre em japonês, com as estações preenchidas e o horário de agora, e mostra o preço; troque a data lá se precisar. A versão em inglês não aceita estações pelo link: use os botões de copiar.'};
-  return {links:[maps,{t:'🔎 Abrir o Jorudan',u:'https://world.jorudan.co.jp/mln/pt/'}].concat(ex),nota:o.buscando?'Procurando as estações mais perto para preencher o Jorudan…':'Não achei estação perto de um dos pontos: no Jorudan, escreva as estações você mesma.'};
+      {t:'🔎 Jorudan em inglês (sem preencher)',u:'https://world.jorudan.co.jp/mln/en/'}].concat(naviLinks(),ex),
+      nota:'O Google Maps mostra a rota e os horários dos trens. O Jorudan abre em japonês, com as estações preenchidas e o horário de agora, e mostra o preço; troque a data lá se precisar. A versão em inglês e o Navi não aceitam estações pelo link: use os botões de copiar. O Navi mostra a plataforma e filtra pelo seu passe.'};
+  return {links:[maps,{t:'🔎 Abrir o Jorudan',u:'https://world.jorudan.co.jp/mln/pt/'}].concat(naviLinks(),ex),nota:o.buscando?'Procurando as estações mais perto para preencher o Jorudan…':'Não achei estação perto de um dos pontos: no Jorudan, escreva as estações você mesma.'};
 }
 /* ---------- rota real por rua (a pé / carro): OpenStreetMap, com cache e plano B ---------- */
 var ROTA_KEY='uniCalRota1', rcache={}, rfalha={}, rpend={};
