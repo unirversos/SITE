@@ -301,7 +301,7 @@ function vezDe() {
 /* o que acontece ao entrar em cada etapa */
 function entra(root) {
   const e = ETAPAS.find(x => x.id === root.etapa);
-  poeLog(root, 's', `— ${ETAPAS.indexOf(e) + 1}. ${e.nome} —`); root.aguarda = null; root.repete = null;
+  poeLog(root, 's', `— ${ETAPAS.indexOf(e) + 1}. ${e.nome} —`); root.aguarda = null; root.ult = null; root.repete = null;
   if (root.etapa === 'batalha') root.bat = { vez: 'b', fase: 'perguntar' };
   if (root.etapa === 'convite') root.cv = { alvo: Math.floor(Math.random() * LUGARES.length) };
   if (root.etapa === 'cafe') { root.cafe = {}; poeLog(root, 'r', 'いらっしゃいませ。メニューを どうぞ。', { pt: 'Bem-vindas! Aqui está o cardápio.' }); }
@@ -385,7 +385,7 @@ function recebe(v) {
 
 function chave() {
   const s = S, b = s.bat || {}, ab = b.ab || {}, c = s.cafe || {}, cv = s.cv || {}, l = s.lemb || {}, f = s.ficha || {};
-  return JSON.stringify([s.etapa, s.p || 0, concluida(), (s.pronto || {})[EU] || 0, b.vez, b.fase, b.casa, conta(ab.a), conta(ab.b), !!(f[EU] && f[EU].ok), (c.beb || {})[EU] || 0, cv.erro || 0, !!l[EU], !!(l.a && l.b), l.ok || 0, c.com2 || 0, s.modo || 'online', (s.aguarda || {}).k || 0, (s.repete || {}).n || 0]);
+  return JSON.stringify([s.etapa, s.p || 0, concluida(), (s.pronto || {})[EU] || 0, b.vez, b.fase, b.casa, conta(ab.a), conta(ab.b), !!(f[EU] && f[EU].ok), (c.beb || {})[EU] || 0, cv.erro || 0, !!l[EU], !!(l.a && l.b), l.ok || 0, c.com2 || 0, s.modo || 'online', (s.ult || {}).k || 0, (s.repete || {}).n || 0]);
 }
 function desenha(forca) {
   const i = iEtapa(), e = ETAPAS[i], P = outro(EU), vz = vezDe();
@@ -409,7 +409,7 @@ function desenha(forca) {
   }
   $('btnRo').textContent = 'Romaji: ' + (ROM ? 'sim' : 'não'); $('btnRo').setAttribute('aria-pressed', String(ROM));
   $('btModo').textContent = modoOn() ? 'modo: 🌐 online' : 'modo: 🤝 juntas';
-  relogio(); vozBar();
+  relogio(); vozBar(); arBar();
 }
 function relogio() { if (!S || !S.t0 || !EU) { $('relogio').textContent = ''; return; } const m = Math.max(0, Math.floor((Date.now() - S.t0) / 60000)); $('relogio').textContent = `⏱ ${m} min de ${TOTAL_MIN}`; }
 setInterval(relogio, 20000);
@@ -547,42 +547,35 @@ function gravaPasso(st, txt, forcado) {
 /* fala dita em áudio (ou ao vivo): se o passo é de conversa entre elas, a parceira precisa validar; se é com o robô, segue direto */
 function gravaPassoAud(st, payload) {
   let erro = null; const de = S.etapa, p = S.p || 0;
-  return sync.tx(root => { if (!root || root.etapa !== de || (root.p || 0) !== p || root.aguarda) return;
-    const k = poeLogK(root, EU, '', payload); root.repete = null;
-    if (st.depois) { erro = st.depois('', root, true) || null; if (erro) return; root.log[k].v = 1; root.p = p + 1; }
-    else root.aguarda = { kind: 'passo', p, de: EU, k };
-    return root; }).then(() => erro);
+  return sync.tx(root => { if (!root || root.etapa !== de || (root.p || 0) !== p) return;
+    const k = poeLogK(root, EU, '', Object.assign({ v: 1 }, payload)); root.repete = null;
+    if (st.depois) { erro = st.depois('', root, true) || null; if (erro) return; root.ult = null; }
+    else root.ult = { kind: 'passo', etapa: de, p, de: EU, k };
+    root.p = p + 1; return root; }).then(() => erro);
 }
-function validaAg(ag) {                                             /* わかりました ✓ */
-  return sync.tx(root => { const g = root && root.aguarda; if (!g || g.k !== ag.k) return;
-    if (g.kind === 'passo') { if ((root.p || 0) !== g.p) return; const st = passos()[g.p]; if (st && st.depois) st.depois('', root, true); root.p = g.p + 1; }
-    else if (g.kind === 'bat') { const bt = root.bat; if (!bt || bt.fase !== g.fase) return;
-      if (g.fase === 'perguntar') { bt.casa = g.casa; bt.fase = 'responder'; }
-      else { bt.ab = bt.ab || {}; bt.ab[g.de] = bt.ab[g.de] || {}; bt.ab[g.de][g.casa] = true; bt.fase = 'reagir'; } }
-    if (root.log && root.log[g.k]) root.log[g.k].v = 1;
-    root.aguarda = null; return root; });
+/* "ar" (すみません、もういちど): a parceira não entendeu; volta a vez para quem falou */
+function arValido() {
+  const u = S && S.ult; if (!u || u.etapa !== S.etapa) return false;
+  if (u.kind === 'passo') return (S.p || 0) === u.p + 1;
+  const b = S.bat || {};
+  return u.fase === 'perguntar' ? (b.fase === 'responder' && b.casa === u.casa) : (b.fase === 'reagir' && b.casa === u.casa);
 }
-function repeteAg(ag) {                                             /* もういちど おねがいします ↺ */
-  const aud = (S.log[ag.k] || {}).aud;
-  return sync.tx(root => { const g = root && root.aguarda; if (!g || g.k !== ag.k) return;
+function pedeAr() {
+  const u = S.ult, aud = (S.log[u.k] || {}).aud;
+  return sync.tx(root => { const g = root && root.ult; if (!g || g.k !== u.k) return;
+    if (g.kind === 'passo') { if ((root.p || 0) !== g.p + 1) return; root.p = g.p; }
+    else { const bt = root.bat; if (!bt || bt.casa !== g.casa) return;
+      if (g.fase === 'perguntar') { if (bt.fase !== 'responder') return; bt.fase = 'perguntar'; bt.casa = null; }
+      else { if (bt.fase !== 'reagir') return; bt.fase = 'responder'; if (bt.ab && bt.ab[g.de]) delete bt.ab[g.de][g.casa]; } }
     if (root.log && root.log[g.k]) root.log[g.k].rep = 1;
-    poeLog(root, 's', `↺ ${nome(outro(g.de))} pediu para ${nome(g.de)} repetir.`);
-    root.aguarda = null; root.repete = { de: g.de, n: ((root.repete || {}).n || 0) + 1 }; return root; })
+    poeLog(root, 's', `🌬️ ${nome(outro(g.de))}: すみません、もういちど おねがいします。`);
+    root.repete = { de: g.de, n: ((root.repete || {}).n || 0) + 1 }; root.ult = null; return root; })
     .then(() => { if (aud) Promise.resolve(sync.setAud(aud, null)).catch(() => {}); });
 }
-function acaoAguarda() {
-  const a = $('acao'), ag = S.aguarda, P = outro(EU), Pn = esc(nome(P)), e = (S.log || {})[ag.k] || {};
-  a.classList.toggle('minha-vez', ag.de !== EU);
-  if (ag.de === EU) {
-    a.innerHTML = `<div class="vez"><b>✓ Enviado!</b><p>${Pn} está ${e.live ? 'ouvindo você ao vivo' : 'ouvindo a sua gravação'}. Se ela não entender, vai pedir para você repetir.</p></div>${e.aud ? `<div class="row"><button class="btn peq" type="button" data-aud="${esc(e.aud)}">▶ Ouvir a minha gravação</button></div>` : ''}${espera(`Esperando ${Pn}…`)}`;
-    return;
-  }
-  const o = ag.kind === 'bat' ? (ag.fase === 'perguntar' ? 'a pergunta' : 'a resposta') : 'a fala';
-  a.innerHTML = `<div class="vez"><b>👂 Ouça ${o} de ${Pn}</b><p>${e.live ? `${Pn} está falando ao vivo. Ouça com atenção.` : 'Toque em ▶ e escute. Pode ouvir mais de uma vez.'}</p></div>
-    ${e.aud ? `<div class="row"><button class="btn pri grande" type="button" data-aud="${esc(e.aud)}">▶ Ouvir ${Pn}</button></div>` : ''}
-    <div class="duplo"><button class="btn pri" type="button" id="vOk" lang="ja">わかりました ✓<small>Entendi</small></button><button class="btn sage" type="button" id="vRe" lang="ja">もういちど おねがいします ↺<small>Não entendi: pedir para repetir</small></button></div><p class="fb" id="fb" aria-live="polite"></p>`;
-  const trava = fn => { $('vOk').disabled = $('vRe').disabled = true; Promise.resolve(fn(ag)).catch(() => { $('fb').textContent = 'Não consegui enviar. Tente de novo.'; $('vOk').disabled = $('vRe').disabled = false; }); };
-  $('vOk').onclick = () => trava(validaAg); $('vRe').onclick = () => trava(repeteAg);
+function arBar() {
+  const b = $('arBar'), ok = S && EU && !concluida() && S.ult && S.ult.de !== EU && arValido();
+  b.hidden = !ok; if (!ok) { b.innerHTML = ''; return; }
+  if (!b.firstChild) { b.innerHTML = '<button class="btn sage peq" type="button" id="btAr" lang="ja">🌬️ すみません、もういちど おねがいします<small>Não entendi: pedir para repetir</small></button>'; $('btAr').onclick = () => { $('btAr').disabled = true; Promise.resolve(pedeAr()).catch(() => { $('btAr').disabled = false; }); }; }
 }
 
 /* ---------- gravar a própria fala ---------- */
@@ -654,7 +647,6 @@ function acao() {
     if (!eu) $('proxima').onclick = () => { $('proxima').disabled = true; sync.update({ ['pronto/' + EU]: s.etapa }); };
     return;
   }
-  if (s.aguarda) return acaoAguarda();
   if (s.etapa === 'ficha') return acaoFicha();
   if (s.etapa === 'batalha') return acaoBatalha();
   if (s.etapa === 'lembranca') return acaoLembranca();
@@ -709,7 +701,10 @@ function acaoBatalha() {
   const a = $('acao'), b = S.bat || {}, P = outro(EU), Pn = nome(P), vez = b.vez || 'b', f = (S.ficha || {})[EU] || {};
   const escreve = (txt, muda) => sync.tx(root => { if (!root || root.etapa !== 'batalha' || !root.bat || root.bat.fase !== b.fase || (root.bat.vez || 'b') !== vez || root.aguarda) return; poeLog(root, EU, txt); muda(root.bat); return root; }).then(() => null);
   const fala_ = (payload, extra) => sync.tx(root => { if (!root || root.etapa !== 'batalha' || !root.bat || root.bat.fase !== b.fase || (root.bat.vez || 'b') !== vez || root.aguarda) return;
-    const k = poeLogK(root, EU, '', payload); root.repete = null; root.aguarda = Object.assign({ kind: 'bat', fase: b.fase, de: EU, k }, extra); return root; }).then(() => null);
+    const k = poeLogK(root, EU, '', Object.assign({ v: 1 }, payload)), bt = root.bat; root.repete = null; root.ult = Object.assign({ kind: 'bat', etapa: 'batalha', fase: b.fase, de: EU, k }, extra);
+    if (b.fase === 'perguntar') { bt.casa = extra.casa; bt.fase = 'responder'; }
+    else { bt.ab = bt.ab || {}; bt.ab[EU] = bt.ab[EU] || {}; bt.ab[EU][extra.casa] = true; bt.fase = 'reagir'; }
+    return root; }).then(() => null);
   if (b.fase === 'perguntar') {
     if (vez !== EU) { a.innerHTML = `<div class="vez"><b>Vez de ${esc(Pn)}</b><p>Ela vai fazer uma pergunta sobre você. A resposta está na sua ficha.</p></div>${espera(`${esc(Pn)} está escolhendo a pergunta…`)}`; return; }
     const c = casaDe(ui.casa);
