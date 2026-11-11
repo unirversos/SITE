@@ -176,15 +176,39 @@ function poeLog(root, q, t, ex) { root.log = root.log || {}; root.log[String(log
 const ja = t => { const r = romaji(t); return `<span class="jp" lang="ja">${esc(t)}</span>` + (r !== String(t) ? `<span class="wro"${ROM ? '' : ' hidden'}>${esc(r)}</span>` : ''); };
 
 /* ---------- voz ---------- */
-function fala(t) {
+/* O nome de cada personagem pode ser gravado pela própria aluna (VOZ.a / VOZ.b = áudio em data:URL).
+   Ao falar uma frase com "ミカさん…" ou "ミカです", toca o nome gravado e o resto com a voz do aparelho. */
+let VOZ = {}, tocandoAudio = null, seqId = 0;
+const reEsc = x => x.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+function segmentos(t) {
+  t = String(t).replace(/＿/g, '');
+  const nomes = ['a', 'b'].filter(r => VOZ[r] && S && S.jog && S.jog[r] && S.jog[r].nome).map(r => ({ r, n: S.jog[r].nome }));
+  if (!nomes.length) return [{ tts: t }];
+  const re = new RegExp('(' + nomes.map(x => reEsc(x.n)).join('|') + ')(?=さん|です)', 'g');
+  return t.split(re).map(p => { const x = nomes.find(y => y.n === p); return x ? { clip: VOZ[x.r] } : { tts: p }; }).filter(g => g.clip || (g.tts && g.tts.trim()));
+}
+function falaTTS(texto, fim) {
   try {
-    if (!window.speechSynthesis) return;
-    const u = new SpeechSynthesisUtterance(String(t).replace(/＿/g, ''));
+    if (!window.speechSynthesis) { fim(); return; }
+    const u = new SpeechSynthesisUtterance(texto);
     u.lang = 'ja-JP'; u.rate = .8 * (window.UniVel ? UniVel.get() : 1);
     const v = speechSynthesis.getVoices().find(x => /^ja/i.test(x.lang)); if (v) u.voice = v;
-    speechSynthesis.speak(u);
-  } catch (e) {}
+    u.onend = fim; u.onerror = fim; speechSynthesis.speak(u);
+  } catch (e) { fim(); }
 }
+function tocaSeq(segs) {
+  const id = ++seqId; let i = 0;
+  try { speechSynthesis.cancel(); } catch (e) {}
+  if (tocandoAudio) { try { tocandoAudio.pause(); } catch (e) {} tocandoAudio = null; }
+  const prox = () => {
+    if (id !== seqId || i >= segs.length) return;
+    const g = segs[i++];
+    if (g.clip) { try { const a = new Audio(g.clip); tocandoAudio = a; a.onended = prox; a.onerror = prox; const pr = a.play(); if (pr && pr.catch) pr.catch(prox); } catch (e) { prox(); } }
+    else falaTTS(g.tts, prox);
+  };
+  prox();
+}
+function fala(t) { tocaSeq(segmentos(t)); }
 
 /* ================= roteiro das etapas com falas em sequência ================= */
 function passos() {
@@ -287,15 +311,20 @@ function ligaLocal() {
   const K = 'aulaDupla:' + SALA, ler = () => { try { return JSON.parse(localStorage.getItem(K) || 'null'); } catch (e) { return null; } }; let cb = null;
   const grava = v => { localStorage.setItem(K, JSON.stringify(v)); if (cb) cb(ler()); };
   window.addEventListener('storage', e => { if (e.key === K && cb) cb(ler()); });
+  const KV = K + ':voz', lerV = () => { try { return JSON.parse(localStorage.getItem(KV) || '{}') || {}; } catch (e) { return {}; } }; let cbV = null;
+  const gravaV = v => { localStorage.setItem(KV, JSON.stringify(v)); if (cbV) cbV(lerV()); };
+  window.addEventListener('storage', e => { if (e.key === KV && cbV) cbV(lerV()); });
   return { uid: Q.get('eu') || 'u1', nomeConta: Q.get('nome') || '', on: f => { cb = f; f(ler()); },
+    onVoz: f => { cbV = f; f(lerV()); }, setVoz: async (r, v) => { const o = lerV(); o[r] = v; gravaV(o); }, limpaVoz: async () => gravaV({}),
     update: async p => { const v = ler() || {}; Object.entries(p).forEach(([k, x]) => poe(v, k, x)); grava(v); },
     tx: async fn => { const r = fn(ler()); if (r !== undefined) grava(r); } };
 }
 async function ligaFirebase() {
   const [{ getApps }, { getAuth, onAuthStateChanged }, D] = await Promise.all([import(FB + 'firebase-app.js'), import(FB + 'firebase-auth.js'), import(FB + 'firebase-database.js')]);
   const user = await new Promise(res => { (function espera() { const a = getApps()[0]; if (!a) { setTimeout(espera, 300); return; } onAuthStateChanged(getAuth(a), u => { if (u) res(u); }); })(); });
-  const r = D.ref(D.getDatabase(getApps()[0], DB_URL), CAMINHO);
+  const bd = D.getDatabase(getApps()[0], DB_URL), r = D.ref(bd, CAMINHO), rv = D.ref(bd, CAMINHO.replace(/\/jogo$/, '/voz'));
   return { uid: user.uid, nomeConta: (user.displayName || '').split(' ')[0],
+    onVoz: f => D.onValue(rv, sn => f(sn.val() || {})), setVoz: (q, v) => D.update(rv, { [q]: v }), limpaVoz: () => D.update(rv, { a: null, b: null }),
     on: (f, err) => D.onValue(r, s => f(s.val()), err), update: p => D.update(r, p), tx: fn => D.runTransaction(r, cur => fn(cur)) };
 }
 const meuJog = () => ({ uid: sync.uid, nome: ((PERFIL.kata || PERFIL.name || '').trim() || sync.nomeConta || 'Viajante').slice(0, 20), sel: MEU_SEL || null });
@@ -324,7 +353,7 @@ function recebe(v) {
     if (!S || !S.etapa || !j.a || !j.b) { sentar(); return; }
     $('aula').hidden = true; $('rodape').hidden = true; $('entrada').hidden = false; document.querySelector('.wrap').classList.remove('em-aula');
     $('entrada').innerHTML = `<h2>Esta aula já tem uma dupla</h2><p class="sub">${esc(j.a.nome)} e ${esc(j.b.nome)} estão (ou estiveram) nesta aula. Se a aula delas já acabou, você pode começar uma nova.</p><div class="row"><button class="btn pri" type="button" id="novaAula">Começar uma aula nova</button></div>`;
-    $('novaAula').onclick = () => sync.tx(() => { const n = novo(); n.jog = { a: meuJog() }; return n; }).catch(semLigacao);
+    $('novaAula').onclick = () => { Promise.resolve(sync.limpaVoz()).catch(() => {}); sync.tx(() => { const n = novo(); n.jog = { a: meuJog() }; return n; }).catch(semLigacao); };
     return;
   }
   $('rodape').hidden = false;
@@ -367,7 +396,7 @@ function desenha(forca) {
       try { (noPainel ? $('painel') : $('acao')).scrollIntoView({ behavior: 'smooth', block: noPainel ? 'start' : 'nearest' }); } catch (e) {} }
   }
   $('btnRo').textContent = 'Romaji: ' + (ROM ? 'sim' : 'não'); $('btnRo').setAttribute('aria-pressed', String(ROM));
-  relogio();
+  relogio(); vozBar();
 }
 function relogio() { if (!S || !S.t0 || !EU) { $('relogio').textContent = ''; return; } const m = Math.max(0, Math.floor((Date.now() - S.t0) / 60000)); $('relogio').textContent = `⏱ ${m} min de ${TOTAL_MIN}`; }
 setInterval(relogio, 20000);
@@ -587,6 +616,39 @@ function acaoLembranca() {
     sync.update({ ['lemb/' + EU]: { f0: v[0].slice(0, 80), f1: v[1].slice(0, 80) } }); };
 }
 
+/* ---------- gravar o nome da personagem ---------- */
+let gravando = null, vozMsg = '';
+function lerComoURL(blob) { return new Promise((ok, no) => { const f = new FileReader(); f.onload = () => ok(f.result); f.onerror = no; f.readAsDataURL(blob); }); }
+async function gravaNome() {
+  if (gravando) { try { gravando.stop(); } catch (e) {} return; }
+  if (!navigator.mediaDevices || !window.MediaRecorder) { vozMsg = 'Este navegador não grava áudio. A voz do aparelho vai ler o seu nome.'; vozBar(); return; }
+  let stream; try { stream = await navigator.mediaDevices.getUserMedia({ audio: true }); } catch (e) { vozMsg = 'Não consegui usar o microfone. Libere o microfone para este site nas configurações do navegador e tente de novo. Sem isso, a voz do aparelho lê o seu nome.'; vozBar(); return; }
+  const tipo = ['audio/webm;codecs=opus', 'audio/mp4', 'audio/webm', 'audio/ogg;codecs=opus'].find(t => MediaRecorder.isTypeSupported(t)) || '';
+  let rec; try { rec = new MediaRecorder(stream, tipo ? { mimeType: tipo, audioBitsPerSecond: 24000 } : {}); } catch (e) { stream.getTracks().forEach(t => t.stop()); vozMsg = 'Não consegui gravar neste aparelho.'; vozBar(); return; }
+  const partes = []; let tm = null; vozMsg = '';
+  rec.ondataavailable = e => { if (e.data && e.data.size) partes.push(e.data); };
+  rec.onstop = async () => {
+    clearTimeout(tm); stream.getTracks().forEach(t => t.stop()); gravando = null;
+    const blob = new Blob(partes, { type: rec.mimeType || tipo || 'audio/webm' });
+    if (blob.size < 800) { vozMsg = 'Não ouvi nada. Tente de novo, falando perto do microfone.'; vozBar(); return; }
+    if (blob.size > 90000) { vozMsg = 'A gravação ficou longa demais. Diga só o nome.'; vozBar(); return; }
+    try { await sync.setVoz(EU, await lerComoURL(blob)); vozMsg = ''; } catch (e) { vozMsg = 'Não consegui enviar a gravação. Tente de novo.'; }
+    vozBar();
+  };
+  gravando = rec; rec.start(); tm = setTimeout(() => { if (rec.state === 'recording') rec.stop(); }, 3500); vozBar();
+}
+function vozBar() {
+  const b = $('vozBar');
+  if (!S || !EU || !S.jog || !S.jog.a || !S.jog.b || !['chegada', 'ficha'].includes(S.etapa)) { b.hidden = true; return; }
+  const meu = VOZ[EU], N = nome(EU);
+  b.hidden = false;
+  b.innerHTML = `<div class="vez"><b>🎤 Grave o nome da sua personagem</b><p>Diga só <b lang="ja">${esc(N)}</b>, em 1 a 3 segundos. Quando a aula falar de você, a sua dupla ouve a sua voz. É opcional.</p></div>
+    <div class="row"><button class="btn${meu || gravando ? '' : ' pri'}" type="button" id="btGrava">${gravando ? '⏹ Parar a gravação' : meu ? '🎤 Gravar de novo' : '🎤 Gravar o meu nome'}</button>${meu && !gravando ? '<button class="btn" type="button" id="btOuve">▶ Ouvir</button><span class="so-voce">✓ gravado</span>' : ''}${gravando ? '<span class="espera"><i></i><span>Gravando… fale agora</span></span>' : ''}</div>
+    ${vozMsg ? `<p class="fb" role="status">${esc(vozMsg)}</p>` : ''}<p class="sub">A gravação fica guardada só até a aula ser recomeçada.</p>`;
+  $('btGrava').onclick = gravaNome;
+  if ($('btOuve')) $('btOuve').onclick = () => tocaSeq([{ clip: meu }]);
+}
+
 /* ---------- rodapé: romaji, pular etapa, recomeçar ---------- */
 $('btnRo').onclick = () => { ROM = !ROM; try { localStorage.setItem('utopiaRomaji', ROM ? '1' : '0'); } catch (e) {} if (S && EU && S.jog && S.jog.a && S.jog.b) desenha(true); else { $('btnRo').textContent = 'Romaji: ' + (ROM ? 'sim' : 'não'); } };
 function doisToques(btn, rotulo, faz) { let armado = false, t = null;
@@ -597,10 +659,11 @@ doisToques($('pular'), 'pular esta etapa', () => { if (!S || !EU) return;
     sync.tx(root => { if (!root) return; root.ficha = root.ficha || {}; ['a', 'b'].forEach(r => { const f = root.ficha[r] = root.ficha[r] || {}; CASAS.forEach(c => { if (!f[c.id]) f[c.id] = c.campo.valor(c.campo.ideias[0][0]); }); f.ok = true; }); return root; }).then(() => avanca(S.etapa));
   } else avanca(S.etapa); });
 doisToques($('reiniciar'), 'recomeçar a aula', () => { if (!S || !EU) return; rasc = {}; rascL = ['', '']; falados = null; logChave = '';
-  sync.tx(root => { const n = novo(); n.jog = (root && root.jog) || {}; return n; }); });
+  Promise.resolve(sync.limpaVoz()).catch(() => {}); sync.tx(root => { const n = novo(); n.jog = (root && root.jog) || {}; return n; }); });
 
 /* ================= começa ================= */
 (async function () {
   try { sync = LOCAL ? ligaLocal() : await ligaFirebase(); } catch (e) { semLigacao(); return; }
   sync.on(recebe, semLigacao);
+  if (sync.onVoz) sync.onVoz(v => { VOZ = v || {}; vozBar(); });
 })();
