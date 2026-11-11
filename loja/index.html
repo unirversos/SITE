@@ -65,10 +65,20 @@ h1 .jp rt{font-size:.5em;letter-spacing:.05em}
 .capa:hover,.capa:focus-visible{border-color:var(--cc);outline:none;box-shadow:0 0 0 3px color-mix(in srgb,var(--pink) 22%,transparent)}
 .novo-t{margin:0 0 -4px;font-size:12px;font-weight:800;letter-spacing:.06em;text-transform:uppercase;color:#2f7d57}
 .col-c{margin-top:16px}
-.sk-h{background:var(--card);border:1.5px solid var(--line);border-left:6px solid var(--pink);border-radius:var(--r);padding:16px 18px;display:grid;gap:10px;box-shadow:0 10px 24px -18px rgba(58,43,56,.35)}
-.sk-top{display:flex;flex-wrap:wrap;justify-content:space-between;align-items:baseline;gap:4px 14px}
-.sk-h .capa-n{margin:0}
-.sk-tg{font:inherit;font-size:13.5px;font-weight:700;background:none;border:0;color:var(--ink);text-decoration:underline;text-underline-offset:3px;cursor:pointer;padding:4px 0}
+.sk-h{position:relative;background:linear-gradient(120deg,var(--blush),var(--card) 62%);border:2px solid var(--pink);border-radius:var(--r);padding:22px 22px 20px;display:grid;grid-template-columns:minmax(0,1fr) auto;gap:14px 26px;align-items:center;box-shadow:0 14px 30px -18px color-mix(in srgb,var(--pink) 60%,transparent)}
+.sk-h.ab{padding:14px 18px;grid-template-columns:1fr}
+.sk-tx{display:grid;gap:8px;min-width:0}
+.sk-eye{margin:0;font-size:12px;letter-spacing:.18em;text-transform:uppercase;font-weight:800;color:var(--pink)}
+.sk-top{display:flex;flex-wrap:wrap;justify-content:space-between;align-items:center;gap:6px 14px}
+.sk-h .capa-n{margin:0;font-size:clamp(26px,4.2vw,36px);line-height:1.08}
+.sk-h.ab .capa-n{font-size:clamp(21px,3vw,27px)}
+.sk-h .capa-p{font-size:16px}
+.sk-tg{font-family:var(--f-display);font-weight:800;font-size:16px;background:var(--pink);border:0;color:#fff;border-radius:999px;cursor:pointer;padding:11px 22px;min-height:46px;justify-self:start;box-shadow:0 8px 18px -10px var(--pink)}
+.sk-h.ab .sk-tg{background:none;color:var(--ink);box-shadow:none;padding:4px 0;min-height:0;font-size:14px;text-decoration:underline;text-underline-offset:3px}
+.sk-th{display:grid;grid-template-columns:repeat(3,104px);gap:10px;padding:0;border:0;background:none;cursor:pointer}
+.sk-th img{width:104px;height:104px;object-fit:contain;background:#fff;border:1.5px solid var(--line);border-radius:16px;padding:6px;box-sizing:border-box;display:block}
+.sk-th img:nth-child(odd){transform:rotate(-2deg)}.sk-th img:nth-child(even){transform:rotate(2deg)}
+@media(max-width:760px){.sk-h{grid-template-columns:1fr;padding:18px 16px}.sk-th{grid-template-columns:repeat(6,1fr);gap:6px;order:-1}.sk-th img{width:100%;height:auto;aspect-ratio:1;border-radius:12px;padding:3px}}
 .sk-ch{display:flex;flex-wrap:wrap;gap:8px}
 .sk-ch button{font:inherit;font-weight:700;font-size:14px;border:1.5px solid var(--line);background:var(--paper);color:var(--ink);padding:6px 13px;border-radius:999px;cursor:pointer;min-height:38px}
 .sk-ch button .n{font-size:12px;font-weight:500;opacity:.7;margin-left:4px}
@@ -394,10 +404,20 @@ footer a:hover{color:var(--pink)}
     return ops.map(o=>`<button type="button" data-skf="${esc(o.id)}" aria-pressed="${o.id===skF}">${esc(o.nome)}<span class="n">${o.n}</span></button>`).join('');
   }
   function skHeader(c,lista,ab){
-    return `<div class="sk-h"><div class="sk-top"><span class="capa-n" id="c-${c.id}">${c.ic} ${esc(c.nome)}</span>
-      <button type="button" class="sk-tg" data-col="${c.id}" aria-expanded="${ab}" aria-controls="cc-${c.id}">${ab?'Recolher ▴':'Ver tudo ▾'}</button></div>
+    /* fotos da capa: as preferidas primeiro; se alguma estiver oculta, completa com outras */
+    const PREF=['cx-fino-mask','cab-refa-heart-lock-oil','cx-anessa-milk','sk-skin1004-duo','cab-refa-heart-brush','sun-celimax-toneup'];
+    const th=PREF.map(id=>CX.find(p=>p.id===id&&p.foto)).filter(Boolean);
+    CX.forEach(p=>{ if(th.length<6&&p.foto&&!th.includes(p)) th.push(p); });
+    const tot=lista.length+CX.length;
+    if(ab) return `<div class="sk-h ab"><div class="sk-top"><span class="capa-n" id="c-${c.id}">${c.ic} ${esc(c.nome)}</span>
+      <button type="button" class="sk-tg" data-col="${c.id}" aria-expanded="true" aria-controls="cc-${c.id}">Recolher ▴</button></div></div>`;
+    return `<div class="sk-h"><div class="sk-tx">
+      <p class="sk-eye">Direto do Japão · ${tot} itens</p>
+      <span class="capa-n" id="c-${c.id}">${c.ic} ${esc(c.nome)}</span>
       ${aPartir(c,lista)?`<span class="capa-p">${aPartir(c,lista)}</span>`:''}
-      ${ab?'':`<div class="sk-ch" role="group" aria-label="Filtrar skin, hair e sun care">${skChips(lista)}</div>`}</div>`;
+      <div class="sk-ch" role="group" aria-label="Filtrar skin, hair e sun care">${skChips(lista)}</div>
+      <button type="button" class="sk-tg" data-col="${c.id}" aria-expanded="false" aria-controls="cc-${c.id}">Ver os produtos ▾</button></div>
+      ${th.length?`<button type="button" class="sk-th" data-skf="tudo" aria-label="Ver os produtos">${th.map(p=>`<img src="${esc(p.foto)}" alt="" loading="lazy">`).join('')}</button>`:''}</div>`;
   }
   const semAc=t=>String(t||'').toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'');
   function skFiltrados(){
