@@ -401,7 +401,7 @@ footer a:hover{color:var(--pink)}
     document.getElementById('cxTot').textContent='R$ '+fmR(t);
     const pr=document.getElementById('cxProg'); pr.classList.toggle('ok',ok); pr.firstElementChild.style.width=Math.min(100,t/CXMIN*100)+'%';
     const f=document.getElementById('cxFalta'); f.classList.toggle('ok',ok);
-    f.textContent=ok?'✓ Pedido mínimo atingido':(n?'Faltam R$ '+fmR(CXMIN-t)+' · chame uma amiga para completar':'Pedido mínimo R$ '+fmR(CXMIN).replace(',00','')+' · escolha com o +');
+    f.textContent=ok?'✓ Pedido mínimo atingido':(n?'Faltam R$ '+fmR(CXMIN-t)+' · chame as amigas para completar':'Pedido mínimo R$ '+fmR(CXMIN).replace(',00','')+' · escolha com o +');
     document.getElementById('cxFim').hidden=!ok;
   }
   document.addEventListener('click',e=>{
