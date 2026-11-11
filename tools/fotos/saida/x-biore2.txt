@@ -72,4 +72,5 @@ https://www.kao.co.jp/bioreuv/
 /content/dam/sites/kao/inc-common/gl_header_logo_global.png
 /content/dam/sites/kao/inc-common/kao_global_header_logo.png
 https://platform-api.sharethis.com/js/sharethis.js#property=6476d6497cccdc001910bc35&amp;product=inline-share-buttons
+https://www.kao.co.jp/bioreuv/itemcheck/
 https://www.kao.co.jp/content/dam/sites/kao/www-kao-co-jp/bioreuv/cmn/share_bioreuv.jpg
