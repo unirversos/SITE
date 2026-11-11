@@ -493,7 +493,7 @@ function painel() {
   }
   if (s.etapa === 'cafe') {
     const bB = item(((s.cafe || {}).beb || {}).b), errado = bB && bB.id === 'ocha' ? item('kohi') : item('ocha');
-    h = ((s.p || 0) === 8 && EU === 'b' && bB ? `<div class="errado">Você pediu <b lang="ja">${bB.ic} ${bB.n}</b>, mas chegou <b lang="ja">${errado.ic} ${errado.n}</b>.</div>` : '') + cardapio(st && st.tipo === 'bebida' && !((s.cafe || {}).beb || {})[EU], !!(st && st.escolhe === 'comida' && st.quem === EU && !TEXTO && !s.aguarda));
+    h = ((s.p || 0) === 8 && EU === 'b' && bB ? `<div class="errado">Você pediu <b lang="ja">${bB.ic} ${bB.n}</b>, mas chegou <b lang="ja">${errado.ic} ${errado.n}</b>.</div>` : '') + cardapio(st && st.tipo === 'bebida' && !((s.cafe || {}).beb || {})[EU], !!(st && st.escolhe === 'comida' && st.quem === EU && !TEXTO && !s.aguarda)) + ((((s.cafe || {}).beb || {})[EU] && (s.p || 0) <= 1) ? `<div class="row"><button class="btn peq" type="button" data-desfaz="beb">↩ Desfazer a minha bebida <small>(para escolher outra)</small></button></div>` : '');
   }
   if (s.etapa === 'papo') h = `<h3>🔥 Peças para usar no passado</h3><div class="pecas">${[['〜と', 'com (alguém)'], ['〜じかん', 'por … horas'], ['たくさん', 'muito'], ['〜ました', 'fiz'], ['〜でした', 'foi'], ['〜じゃなかったです', 'não foi']].map(x => `<span><b lang="ja">${x[0]}</b> ${x[1]}</span>`).join('')}</div>`;
   if (s.etapa === 'conta' && concluida()) { const c = s.cafe || {}, its = [(c.beb || {}).a, (c.beb || {}).b, c.com2].map(item).filter(Boolean);
@@ -504,6 +504,7 @@ function painel() {
 $('painel').addEventListener('click', e => {
   const c = e.target.closest('[data-casa]'); if (c && !c.disabled) { ui.casa = c.dataset.casa; ui.nivel = 0; ui.tent = 0; painel(); acao(); const i = $('inp'); if (i) i.focus(); return; }
   const b = e.target.closest('[data-beb]'); if (b) { sync.update({ ['cafe/beb/' + EU]: b.dataset.beb }); return; }
+  if (e.target.closest('[data-desfaz]')) { sync.tx(root => { if (!root || root.etapa !== 'cafe' || (root.p || 0) > 1 || !root.cafe || !root.cafe.beb || !root.cafe.beb[EU]) return; delete root.cafe.beb[EU]; root.p = 0; return root; }); return; }
   const cm = e.target.closest('[data-com]'); if (cm) { sync.update({ 'cafe/com2': cm.dataset.com }); return; }
   const pr = e.target.closest('[data-pred]'); if (pr && !pr.disabled) { const i = +pr.dataset.pred, cv = S.cv || {};
     if (i === cv.alvo) sync.tx(root => { if (!root || root.etapa !== 'convite' || (root.p || 0) !== 3) return; root.p = 4; poeLog(root, 's', '🚶 Vocês chegaram ao カフェ！'); return root; });
