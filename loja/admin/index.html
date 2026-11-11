@@ -23,6 +23,19 @@ p{margin:0;color:var(--muted)}
 .st.e{background:#f3e3e6;border-color:#e3b6c0;color:#7d2b3a}
 .ped a{color:var(--pink);font-weight:700}
 .ped small{display:block}
+.sk-f{display:flex;flex-wrap:wrap;gap:8px}
+.sk-f input{flex:1 1 200px;font:inherit;border:1.5px solid var(--line);border-radius:999px;padding:8px 16px;min-height:44px;min-width:0}
+.sk-f button{font:inherit;font-weight:700;font-size:14px;border:1.5px solid var(--line);background:#fff;color:var(--ink);padding:6px 13px;border-radius:999px;cursor:pointer;min-height:40px}
+.sk-f button[aria-pressed="true"]{background:var(--ink);border-color:var(--ink);color:#fff}
+.sk{background:var(--card);border:1.5px solid var(--line);border-left:6px solid var(--line);border-radius:16px;padding:12px 14px;display:grid;grid-template-columns:1fr auto;gap:8px 12px;align-items:center}
+.sk.leve{border-left-color:#517158}.sk.pesado{border-left-color:#c23f5e}.sk.oc{opacity:.62}
+.sk b{display:block;line-height:1.3}.sk small{color:var(--muted);display:block}
+.sk-a{display:flex;gap:8px;align-items:center;flex-wrap:wrap;justify-content:flex-end}
+.sk-a label{font-size:13px;color:var(--muted)}
+.sk-a input{font:inherit;font-weight:700;width:92px;border:1.5px solid var(--line);border-radius:12px;padding:8px 10px;min-height:44px;text-align:right}
+.sk-a input.mud{border-color:var(--pink)}
+.sk-a .btn{min-height:44px;padding:0 14px;font-size:14px}
+@media(max-width:520px){.sk{grid-template-columns:1fr}.sk-a{justify-content:flex-start}}
 .aviso{border-left:5px solid #8e6a1f;background:#fbf3df;border-radius:12px;padding:10px 12px;font-size:14px;color:#5b4210}
 [hidden]{display:none!important}
 </style>
@@ -37,9 +50,18 @@ p{margin:0;color:var(--muted)}
   <div id="pedidos" hidden></div>
   <h2 id="hs" hidden style="font-family:'Baloo 2',system-ui,sans-serif;margin:10px 0 0">Status dos itens</h2>
   <div id="lista" hidden></div>
+  <div id="skBox" hidden style="display:grid;gap:10px">
+    <h2 style="font-family:'Baloo 2',system-ui,sans-serif;margin:10px 0 0">Skin, hair e sun care</h2>
+    <p>Mude o preço e aperte Enter (ou saia do campo). Campo vazio volta ao preço da planilha. O botão mostra ou esconde o produto na vitrine. Faixa verde: leve e caro. Faixa vermelha: pesado e barato.</p>
+    <div class="sk-f"><input id="skQ" type="search" placeholder="Buscar produto ou marca" aria-label="Buscar produto ou marca"></div>
+    <div class="sk-f" id="skF"></div>
+    <p id="skN"></p>
+    <div id="skLista" style="display:grid;gap:8px"></div>
+  </div>
   <p id="sair-box" hidden><button class="btn" id="sair" type="button">Sair</button></p>
 </div>
 <script src="/loja/produtos.js?v=20261101h"></script>
+<script src="/loja/caixinha.js?v=11"></script>
 <script type="module">
 import {initializeApp,getApps} from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
 import {getAuth,onAuthStateChanged,GoogleAuthProvider,signInWithPopup,signOut} from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
@@ -73,12 +95,36 @@ $('lista').addEventListener('click',async e=>{
   catch(err){ msg('Não consegui salvar. Confirme que você entrou com o e-mail autorizado e que as regras do Firebase foram publicadas.'); }
   b.disabled=false;
 });
+/* Skin, hair e sun: preço e vitrine (loja/sk/<id> = {preco, oculto}) */
+const SKT=window.CAIXINHA_TODOS||[]; let SKO={}, skV='todos', skG='', skBusca='';
+const semAc=t=>String(t||'').toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'');
+const skOc=p=>{ const o=SKO[p.id]||{}; return typeof o.oculto==='boolean'?o.oculto:!!p.oculto; };
+const skPr=p=>{ const o=SKO[p.id]||{}; return Number(o.preco)>0?Number(o.preco):p.preco; };
+function desenhaSk(){
+  const F=[['todos','Todos'],['vis','Na vitrine'],['oc','Ocultos'],['leve','Leves e caros'],['neutro','Neutros'],['pesado','Pesados e baratos']];
+  const G=['Pele','Cabelo','Sol'];
+  $('skF').innerHTML=F.map(f=>`<button type="button" data-v="${f[0]}" aria-pressed="${skV===f[0]}">${f[1]}</button>`).join('')+G.map(g=>`<button type="button" data-g="${g}" aria-pressed="${skG===g}">${g}</button>`).join('');
+  const q=semAc(skBusca).trim();
+  const L=SKT.filter(p=>(!skG||p.grupo===skG)&&(skV==='todos'||(skV==='vis'&&!skOc(p))||(skV==='oc'&&skOc(p))||skV===(p.peso||'neutro'))&&(!q||semAc(p.nome+' '+(p.marca||'')).includes(q)));
+  $('skN').textContent=L.length+' de '+SKT.length+' produtos · '+SKT.filter(p=>!skOc(p)).length+' na vitrine';
+  $('skLista').innerHTML=L.map(p=>{ const oc=skOc(p), pr=skPr(p), mud=pr!==p.preco;
+    return `<div class="sk ${esc(p.peso||'neutro')}${oc?' oc':''}" data-sk="${esc(p.id)}"><div><b>${esc(p.nome)}</b><small>${esc(p.grupo)}${p.tam?' · '+esc(p.tam):''}${p.iene?' · ¥ '+Number(p.iene).toLocaleString('pt-BR')+' tax-free':''} · planilha R$ ${p.preco}${p.foto?'':' · sem foto'}</small></div>
+      <div class="sk-a"><label>R$ <input type="number" inputmode="numeric" min="1" step="1" value="${pr}" class="${mud?'mud':''}" aria-label="Preço de ${esc(p.nome)}"></label>
+      <button class="btn st ${oc?'e':'d'}" type="button" data-oc="${oc?'0':'1'}">${oc?'Oculto · mostrar':'Na vitrine · ocultar'}</button></div></div>`; }).join('')||'<p>Nenhum produto nesse filtro.</p>';
+}
+const skErro=()=>msg('Não consegui salvar. Falta publicar a regra do Firebase para loja/sk (ou você entrou com outro e-mail).');
+$('skF').addEventListener('click',e=>{ const b=e.target.closest('button'); if(!b) return; if(b.dataset.v) skV=b.dataset.v; else skG=(skG===b.dataset.g?'':b.dataset.g); desenhaSk(); });
+$('skQ').addEventListener('input',e=>{ skBusca=e.target.value; desenhaSk(); });
+$('skLista').addEventListener('click',async e=>{ const b=e.target.closest('button[data-oc]'); if(!b) return; const id=b.closest('[data-sk]').dataset.sk; b.disabled=true; msg('');
+  try{ await set(ref(db,'loja/sk/'+id+'/oculto'),b.dataset.oc==='1'); }catch(err){ skErro(); b.disabled=false; } });
+$('skLista').addEventListener('change',async e=>{ const i=e.target.closest('input[type="number"]'); if(!i) return; const id=i.closest('[data-sk]').dataset.sk, p=SKT.find(x=>x.id===id), v=Math.round(Number(i.value)); msg('');
+  try{ if(!(v>0)||v===p.preco) await remove(ref(db,'loja/sk/'+id+'/preco')); else await set(ref(db,'loja/sk/'+id+'/preco'),v); }catch(err){ skErro(); } });
 $('entrar').onclick=async()=>{ msg(''); try{ await signInWithPopup(auth,new GoogleAuthProvider()); }catch(e){ msg('Não consegui entrar. Tente de novo.'); } };
 $('sair').onclick=()=>signOut(auth);
 onAuthStateChanged(auth,u=>{
   const ok=!!u;
-  $('login').hidden=ok; $('lista').hidden=!ok; $('pedidos').hidden=!ok; $('hp').hidden=!ok; $('hs').hidden=!ok; $('sair-box').hidden=!ok;
-  if(ok){ onValue(ref(db,'loja/status'),s=>{ STATUS=s.val()||{}; desenha(); },()=>{}); onValue(ref(db,'loja/pedidos'),s=>desenhaPedidos(s.val()),()=>{ $('pedidos').innerHTML='<p>Sem permissão para ver os pedidos. Entre com o e-mail autorizado.</p>'; }); }
+  $('login').hidden=ok; $('lista').hidden=!ok; $('pedidos').hidden=!ok; $('hp').hidden=!ok; $('hs').hidden=!ok; $('sair-box').hidden=!ok; $('skBox').hidden=!ok;
+  if(ok){ onValue(ref(db,'loja/sk'),s=>{ SKO=s.val()||{}; const a=document.activeElement; if(!(a&&a.closest&&a.closest('#skLista')&&a.tagName==='INPUT')) desenhaSk(); },()=>desenhaSk()); desenhaSk(); onValue(ref(db,'loja/status'),s=>{ STATUS=s.val()||{}; desenha(); },()=>{}); onValue(ref(db,'loja/pedidos'),s=>desenhaPedidos(s.val()),()=>{ $('pedidos').innerHTML='<p>Sem permissão para ver os pedidos. Entre com o e-mail autorizado.</p>'; }); }
 });
 </script>
 </body>

@@ -65,6 +65,21 @@ h1 .jp rt{font-size:.5em;letter-spacing:.05em}
 .capa:hover,.capa:focus-visible{border-color:var(--cc);outline:none;box-shadow:0 0 0 3px color-mix(in srgb,var(--pink) 22%,transparent)}
 .novo-t{margin:0 0 -4px;font-size:12px;font-weight:800;letter-spacing:.06em;text-transform:uppercase;color:#2f7d57}
 .col-c{margin-top:16px}
+.sk-h{background:var(--card);border:1.5px solid var(--line);border-left:6px solid var(--pink);border-radius:var(--r);padding:16px 18px;display:grid;gap:10px;box-shadow:0 10px 24px -18px rgba(58,43,56,.35)}
+.sk-top{display:flex;flex-wrap:wrap;justify-content:space-between;align-items:baseline;gap:4px 14px}
+.sk-h .capa-n{margin:0}
+.sk-tg{font:inherit;font-size:13.5px;font-weight:700;background:none;border:0;color:var(--ink);text-decoration:underline;text-underline-offset:3px;cursor:pointer;padding:4px 0}
+.sk-ch{display:flex;flex-wrap:wrap;gap:8px}
+.sk-ch button{font:inherit;font-weight:700;font-size:14px;border:1.5px solid var(--line);background:var(--paper);color:var(--ink);padding:6px 13px;border-radius:999px;cursor:pointer;min-height:38px}
+.sk-ch button .n{font-size:12px;font-weight:500;opacity:.7;margin-left:4px}
+.sk-ch button[aria-pressed="true"]{background:var(--pink);border-color:var(--pink);color:#fff}
+.sk-bar{position:sticky;top:0;z-index:5;background:var(--paper);padding:10px 0;display:grid;gap:8px;border-bottom:1.5px solid var(--line)}
+.sk-busca{display:flex;gap:8px}
+.sk-busca input{flex:1;font:inherit;border:1.5px solid var(--line);border-radius:999px;padding:8px 16px;min-height:42px;min-width:0;background:var(--card)}
+.sk-busca select{font:inherit;font-size:14px;border:1.5px solid var(--line);border-radius:999px;padding:6px 12px;background:var(--card);color:var(--ink)}
+.cx-marca{margin:0;font-size:11.5px;letter-spacing:.08em;text-transform:uppercase;color:var(--pink);font-weight:700}
+@media(max-width:560px){.sk-bar .sk-ch{flex-wrap:nowrap;overflow-x:auto;scrollbar-width:none}.sk-bar .sk-ch button{flex:0 0 auto}}
+.sk-vazio{color:var(--muted);font-size:15px;margin:8px 0}
 .cx-bloco{margin-top:30px;display:grid;gap:12px}
 .cx-tit{font-family:var(--f-display);font-size:clamp(22px,3vw,26px);margin:0;display:flex;flex-wrap:wrap;align-items:baseline;gap:4px 12px}
 .cx-tit small{font-family:var(--f-body);font-size:14px;font-weight:600;color:var(--muted)}
@@ -247,11 +262,11 @@ footer a:hover{color:var(--pink)}
 
 <div id="lb" role="dialog" aria-label="Foto ampliada" aria-hidden="true"><button class="fx" type="button" aria-label="Fechar">×</button><button class="pv" type="button" aria-label="Foto anterior">‹</button><img alt=""><button class="nx" type="button" aria-label="Próxima foto">›</button><span class="nn"></span></div>
 <script src="/loja/produtos.js?v=20261110o"></script>
-<script src="/loja/caixinha.js?v=10"></script>
+<script src="/loja/caixinha.js?v=11"></script>
 <script>
 (function(){
   const CATS=[
-    {id:'skincare', capa:'/loja/fotos/capa-skincare.jpg', cor:'var(--pink)', ic:'🧴', nome:'Skin & Hair Care', sub:'Beleza japonesa para pele e cabelo: leve um kit pronto ou monte o seu com produtos soltos (pedido mínimo R$ 600).'},
+    {id:'skincare', capa:'/loja/fotos/capa-skincare.jpg', cor:'var(--pink)', ic:'🧴', nome:'Skin, Hair & Sun Care', sub:'Beleza japonesa para pele e cabelo: leve um kit pronto ou monte o seu com produtos soltos (pedido mínimo R$ 600).'},
     {id:'zelda', capa:'/loja/fotos/capa-zelda.jpg', cor:'var(--sage)', ic:'🗡️', nome:'Zelda · Edição de 40 anos', sub:'Sob encomenda, por lista de espera: você só paga quando eu conseguir comprar o seu. Taxa de importação inclusa.'},
     {id:'pokecafe', capa:'/loja/fotos/capa-pokecafe.jpg', cor:'var(--gold)', ic:'☕', nome:'Pokémon Café · Itens exclusivos', sub:'Itens oficiais para você trazer um pouquinho da magia do café para casa.'},
     {id:'consoles', ic:'🎮', nome:'Consoles & Portáteis', sub:'Consoles e portáteis preservados, de edições especiais a clássicos.'},
@@ -317,21 +332,16 @@ footer a:hover{color:var(--pink)}
       </div></article>`;
   }
   /* MONTE SEU KIT dentro da coleção: mesma cesta da página /loja/caixinha/ (localStorage uniCaixinha1) */
-  const CX=(window.CAIXINHA||[]).slice(), CXMIN=window.CAIXINHA_MIN||600, CXMAX=window.CAIXINHA_MAX_QTD||5;
+  let CX=(window.CAIXINHA||[]).slice(); const CXMIN=window.CAIXINHA_MIN||600, CXMAX=window.CAIXINHA_MAX_QTD||5;
   const fmR=n=>Number(n).toLocaleString('pt-BR',{minimumFractionDigits:2,maximumFractionDigits:2});
   let cesta={}; try{ cesta=JSON.parse(localStorage.getItem('uniCaixinha1')||'{}')||{}; }catch(e){}
-  CX.forEach(p=>{ const q=Number(cesta[p.id]); cesta[p.id]=(q>0&&q<=(p.max||CXMAX))?Math.floor(q):0; });
+  const arrumaCesta=()=>CX.forEach(p=>{ const q=Number(cesta[p.id]); cesta[p.id]=(q>0&&q<=(p.max||CXMAX))?Math.floor(q):0; }); arrumaCesta();
   const guardaCesta=()=>{ try{ localStorage.setItem('uniCaixinha1',JSON.stringify(cesta)); }catch(e){} };
   const cxTotal=()=>CX.reduce((t,p)=>t+p.preco*(cesta[p.id]||0),0);
   function kitSoltos(){
     if(!CX.length) return '';
-    const G=[]; CX.forEach(p=>{ const g=p.grupo||'Produtos'; if(!G.includes(g)) G.push(g); });
-    const cardS=p=>`<article class="cx" data-cx="${esc(p.id)}" id="${esc(p.id)}">
-      <div class="foto cx-f">${p.foto?`<img src="${esc(p.foto)}" alt="${esc(p.nome)}" loading="lazy">`:`<span aria-hidden="true">${esc(p.ic||'🧴')}</span>`}</div>
-      <div class="cx-c"><h4>${esc(p.nome)}</h4><p class="cx-tam">${esc(p.tam||'')}</p><p class="cx-pr">R$ ${fmR(p.preco)}</p>
-      <div class="qtd"><button type="button" data-q="-" aria-label="Tirar um, ${esc(p.nome)}">−</button><output>0</output><button type="button" data-q="+" aria-label="Colocar um, ${esc(p.nome)}">+</button></div></div></article>`;
-    return `<div class="cx-bloco"><h3 class="cx-tit">🧺 Monte seu kit <small>misture skin e hair no mesmo kit · pedido mínimo R$ ${fmR(CXMIN).replace(',00','')}</small></h3>
-      ${G.map(g=>`<h4 class="cx-g">${esc(g)}</h4><div class="cx-grid">${CX.filter(p=>(p.grupo||'Produtos')===g).map(cardS).join('')}</div>`).join('')}
+    return `<div class="cx-bloco" id="skSoltos"><h3 class="cx-tit">🧺 Monte seu kit <small>misture skin, hair e sun no mesmo kit · pedido mínimo R$ ${fmR(CXMIN).replace(',00','')}</small></h3>
+      <div id="cxLista"></div>
       <div class="barra" id="cxBarra" aria-live="polite">
         <div class="lin"><span id="cxN">Seu kit está vazio</span><b id="cxTot">R$ 0,00</b></div>
         <div class="prog" id="cxProg"><i></i></div>
@@ -339,6 +349,10 @@ footer a:hover{color:var(--pink)}
         <div class="fim" id="cxFim" hidden><input id="cxNome" type="text" placeholder="Seu nome" autocomplete="name" aria-label="Seu nome"><button type="button" class="enviar" id="cxEnviar">Enviar pedido pelo WhatsApp →</button></div>
       </div></div>`;
   }
+  const cardS=p=>`<article class="cx" data-cx="${esc(p.id)}" id="${esc(p.id)}">
+      <div class="foto cx-f">${p.foto?`<img src="${esc(p.foto)}" alt="${esc(p.nome)}" loading="lazy">`:`<span aria-hidden="true">${esc(p.ic||'🧴')}</span>`}</div>
+      <div class="cx-c">${p.marca?`<p class="cx-marca">${esc(p.marca)}</p>`:''}<h4>${esc(p.nome)}</h4><p class="cx-tam">${esc(p.tam||'')}</p><p class="cx-pr">R$ ${fmR(p.preco)}</p>
+      <div class="qtd"><button type="button" data-q="-" aria-label="Tirar um, ${esc(p.nome)}">−</button><output>0</output><button type="button" data-q="+" aria-label="Colocar um, ${esc(p.nome)}">+</button></div></div></article>`;
   function desenhaCesta(){
     const bar=document.getElementById('cxBarra'); if(!bar) return;
     const t=cxTotal(), n=CX.reduce((a,p)=>a+(cesta[p.id]||0),0), ok=t>=CXMIN;
@@ -365,6 +379,46 @@ footer a:hover{color:var(--pink)}
       window.open('https://wa.me/5519996390950?text='+encodeURIComponent(msg),'_blank','noopener');
     }
   });
+  let skF='tudo', skQ='', skOrd='';
+  const skGrupos=()=>{ const G=[]; CX.forEach(p=>{ const g=p.grupo||'Produtos'; if(!G.includes(g)) G.push(g); }); return G; };
+  function skChips(lista){
+    const ops=[{id:'tudo',nome:'Tudo',n:lista.length+CX.length}];
+    if(lista.length) ops.push({id:'kits',nome:'Kits prontos',n:lista.length});
+    skGrupos().forEach(g=>ops.push({id:g,nome:g,n:CX.filter(p=>(p.grupo||'Produtos')===g).length}));
+    return ops.map(o=>`<button type="button" data-skf="${esc(o.id)}" aria-pressed="${o.id===skF}">${esc(o.nome)}<span class="n">${o.n}</span></button>`).join('');
+  }
+  function skHeader(c,lista,ab){
+    return `<div class="sk-h"><div class="sk-top"><span class="capa-n" id="c-${c.id}">${c.ic} ${esc(c.nome)}</span>
+      <button type="button" class="sk-tg" data-col="${c.id}" aria-expanded="${ab}" aria-controls="cc-${c.id}">${ab?'Recolher ▴':'Ver tudo ▾'}</button></div>
+      ${aPartir(c,lista)?`<span class="capa-p">${aPartir(c,lista)}</span>`:''}
+      ${ab?'':`<div class="sk-ch" role="group" aria-label="Filtrar skin, hair e sun care">${skChips(lista)}</div>`}</div>`;
+  }
+  const semAc=t=>String(t||'').toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'');
+  function skFiltrados(){
+    const q=semAc(skQ).trim();
+    let L=CX.filter(p=>(skF==='tudo'||skF===(p.grupo||'Produtos'))&&(!q||semAc([p.nome,p.marca,p.grupo,p.desc,p.tam].join(' ')).includes(q)));
+    if(skOrd==='menor') L=L.slice().sort((a,b)=>a.preco-b.preco); else if(skOrd==='maior') L=L.slice().sort((a,b)=>b.preco-a.preco);
+    return L;
+  }
+  function desenhaSk(){
+    const box=document.getElementById('cxLista'); if(!box) return;
+    const kits=document.getElementById('skKits'); if(kits) kits.hidden=!(skF==='tudo'||skF==='kits')||!!skQ.trim();
+    const L=skF==='kits'?[]:skFiltrados();
+    const G=skGrupos().filter(g=>L.some(p=>(p.grupo||'Produtos')===g));
+    box.innerHTML = skF==='kits' ? '' : !L.length ? '<p class="sk-vazio">Nenhum produto encontrado. Tente outra palavra.</p>'
+      : skOrd ? `<div class="cx-grid">${L.map(cardS).join('')}</div>`
+      : G.map(g=>`<h4 class="cx-g">${esc(g)}</h4><div class="cx-grid">${L.filter(p=>(p.grupo||'Produtos')===g).map(cardS).join('')}</div>`).join('');
+    document.querySelectorAll('[data-skf]').forEach(b=>b.setAttribute('aria-pressed',b.dataset.skf===skF));
+    desenhaCesta();
+  }
+  document.addEventListener('click',e=>{
+    const b=e.target.closest('[data-skf]'); if(!b) return;
+    skF=b.dataset.skf; skQ=''; const inp=document.getElementById('skQ'); if(inp) inp.value='';
+    if(!abertas.has('skincare')&&atual!=='skincare'){ abertas.add('skincare'); render(); }
+    desenhaSk(); document.getElementById('cc-skincare').scrollIntoView({behavior:'smooth',block:'start'});
+  });
+  document.addEventListener('input',e=>{ if(e.target.id==='skQ'){ skQ=e.target.value; if(skQ.trim()) skF='tudo'; desenhaSk(); } });
+  document.addEventListener('change',e=>{ if(e.target.id==='skOrd'){ skOrd=e.target.value; desenhaSk(); } });
   function render(){
     document.getElementById('filtros').innerHTML =
       [{id:'todos',ic:'🗾',nome:'Todos',n:ITENS.length}].concat(CATS.map(c=>({...c,n:ITENS.filter(x=>x.cat===c.id).length})))
@@ -372,6 +426,14 @@ footer a:hover{color:var(--pink)}
     document.getElementById('cats').innerHTML = CATS.filter(c=>atual==='todos'||c.id===atual).map(c=>{
       const lista=ITENS.filter(x=>x.cat===c.id);
       const ab=abertas.has(c.id)||atual===c.id;
+      if(c.id==='skincare') return `<section class="col${ab?' ab':''}" aria-labelledby="c-${c.id}">${skHeader(c,lista,ab)}
+        <div class="col-c" id="cc-${c.id}"${ab?'':' hidden'}>
+        <div class="sk-bar"><div class="sk-busca"><input id="skQ" type="search" placeholder="Buscar produto ou marca" aria-label="Buscar produto ou marca" value="${esc(skQ)}">
+          <select id="skOrd" aria-label="Ordenar"><option value="">Por tipo</option><option value="menor"${skOrd==='menor'?' selected':''}>Menor preço</option><option value="maior"${skOrd==='maior'?' selected':''}>Maior preço</option></select></div>
+          <div class="sk-ch" role="group" aria-label="Filtrar">${skChips(lista)}</div></div>
+        ${lista.length?`<div id="skKits"><h3 class="cx-tit">🎁 Kits prontos</h3><div class="grid">${lista.map(x=>card(x,c)).join('')}</div></div>`:''}
+        ${kitSoltos()}
+        </div></section>`;
       return `<section class="col${ab?' ab':''}" aria-labelledby="c-${c.id}">
         <button type="button" class="capa" style="--cc:${c.cor||'var(--pink)'}" data-col="${c.id}" aria-expanded="${ab}" aria-controls="cc-${c.id}">
           ${c.capa?`<img src="${esc(c.capa)}" alt="" loading="lazy">`:`<span class="capa-ic" aria-hidden="true">${c.ic}</span>`}
@@ -383,9 +445,10 @@ footer a:hover{color:var(--pink)}
         </div>
       </section>`;
     }).join('');
-    desenhaCesta();
+    desenhaSk(); desenhaCesta();
   }
   window.__renderVitrine=render;
+  if(window.SK_PRONTO) window.SK_PRONTO.then(ok=>{ if(!ok) return; CX=(window.CAIXINHA||[]).slice(); arrumaCesta(); render(); });
   /* foto grande: clique na foto do card abre ampliada */
   (function(){
     const lb=document.getElementById('lb'), im=lb.querySelector('img'), nn=lb.querySelector('.nn'); let L=[],i=0;
@@ -404,9 +467,9 @@ footer a:hover{color:var(--pink)}
   document.addEventListener('keydown',e=>{ const g=e.target&&e.target.classList&&e.target.classList.contains('gal')?e.target:null; if(!g||(e.key!=='ArrowRight'&&e.key!=='ArrowLeft')) return; e.preventDefault(); g.scrollBy({left:(e.key==='ArrowRight'?1:-1)*g.clientWidth,behavior:'smooth'}); });
   document.addEventListener('scroll',e=>{ const g=e.target; if(!g||!g.classList||!g.classList.contains('gal')) return; const n=Math.round(g.scrollLeft/g.clientWidth)+1, t=g.children.length, c=g.parentNode.querySelector('.cont'); if(c) c.textContent=n+'/'+t; },true);
   document.getElementById('cats').addEventListener('click',e=>{
-    const b=e.target.closest('.capa'); if(!b) return; const id=b.dataset.col;
+    const b=e.target.closest('.capa,.sk-tg'); if(!b) return; const id=b.dataset.col;
     if(abertas.has(id)||atual===id){ abertas.delete(id); if(atual===id) atual='todos'; } else abertas.add(id);
-    render(); const n=document.querySelector('.capa[data-col="'+id+'"]'); if(n){ n.focus({preventScroll:true}); if(n.getBoundingClientRect().top<0) n.scrollIntoView({block:'start'}); }
+    render(); const n=document.querySelector('[data-col="'+id+'"]'); if(n){ n.focus({preventScroll:true}); if(n.getBoundingClientRect().top<0) n.scrollIntoView({block:'start'}); }
   });
   document.getElementById('filtros').addEventListener('click',e=>{
     const b=e.target.closest('button[data-f]'); if(!b) return;
