@@ -1,17 +1,108 @@
 [
-{"id":"celimax-1","url":"https://celimax.com/products.json?limit=250","modo":"shopify"},
-{"id":"celimax-2","url":"https://celimax.co/products.json?limit=250","modo":"shopify"},
-{"id":"celimax-3","url":"https://www.celimax.co.kr/","modo":"links","filtro":"retinal|sun|product"},
-{"id":"anua-1","url":"https://anua.com/products.json?limit=250","modo":"shopify"},
-{"id":"anua-2","url":"https://anua.global/products.json?limit=250","modo":"shopify"},
-{"id":"anua-jp","url":"https://anuashop.jp/","modo":"links","filtro":"product|goods|item|\\.(jpg|png|webp)"},
-{"id":"skin1004-1","url":"https://www.skin1004.com/products.json?limit=250","modo":"shopify"},
-{"id":"skin1004-2","url":"https://skin1004.com/products.json?limit=250","modo":"shopify"},
-{"id":"refa-home","url":"https://www.refa.net/","modo":"links","filtro":"item|product|lock|brush|serum"},
-{"id":"refa-sitemap","url":"https://www.refa.net/sitemap.xml","modo":"links","filtro":"."},
-{"id":"refa-lockoil","url":"https://www.refa.net/item/refa_lock_oil/","modo":"links","filtro":"\\.(jpg|png|webp)|item"},
-{"id":"anessa-home","url":"https://www.shiseido.co.jp/anessa/","modo":"links","filtro":"product|\\.(jpg|png|webp)"},
-{"id":"anessa-products","url":"https://www.shiseido.co.jp/anessa/products/","modo":"links","filtro":"product|\\.(jpg|png|webp)"},
-{"id":"honey-home","url":"https://www.andhoney.jp/","modo":"links","filtro":"product|item|arrange|\\.(jpg|png|webp)"},
-{"id":"cosme-refa","url":"https://www.cosme.net/variations/1075749/","modo":"links","filtro":"\\.(jpg|png|webp)"}
+{
+"id": "sk-celimax-booster",
+"url": "https://cdn.shopify.com/s/files/1/1021/2612/5365/files/celimax-serum-ampoule-15ml-the-vita-a-retinal-shot-tightening-booster-1234217397_d091b9f0-8151-48d3-b937-da55eb7a153c.jpg?v=1792483813&width=900",
+"modo": "img"
+},
+{
+"id": "sk-celimax-booster-2",
+"url": "https://cdn.shopify.com/s/files/1/1021/2612/5365/files/celimax-serum-ampoule-15ml-2ea-the-vita-a-retinal-shot-tightening-booster-1248333963_22823f16-1cd2-4d5c-909f-858457d28f0c.jpg?v=1792484770&width=900",
+"modo": "img"
+},
+{
+"id": "x-celimax-dual-cream",
+"url": "https://cdn.shopify.com/s/files/1/1021/2612/5365/files/celimax-us-the-vita-a-retinal-shot-tightening-dual-cream-1248333966_c9e231a6-d297-4157-821a-ca2fea533e49.jpg?v=1792483945&width=900",
+"modo": "img"
+},
+{
+"id": "sun-celimax-stick",
+"url": "https://cdn.shopify.com/s/files/1/1021/2612/5365/files/1749543276103_f4438f5c55764e20a329247fc4ca424b.jpg?v=1790748058&width=900",
+"modo": "img"
+},
+{
+"id": "sun-celimax-watery",
+"url": "https://cdn.shopify.com/s/files/1/1021/2612/5365/files/1749693843664_3bea1d29e341405b9dcb572226d217f9.jpg?v=1790748122&width=900",
+"modo": "img"
+},
+{
+"id": "sun-celimax-toneup",
+"url": "https://cdn.shopify.com/s/files/1/1021/2612/5365/files/1749708467255_3a690903fb7d4ede82bac6289a16027f.png?v=1790748237&width=900",
+"modo": "img"
+},
+{
+"id": "sun-celimax-light",
+"url": "https://cdn.shopify.com/s/files/1/1021/2612/5365/files/1749708525100_f162fe63637942768c5916a2758c8c38.png?v=1790748383&width=900",
+"modo": "img"
+},
+{
+"id": "sk-skin1004-probio",
+"url": "https://cdn.shopify.com/s/files/1/0590/4538/0253/files/skin1004-ampoule-serum-probio-cica-intensive-ampoule-40032156156150.png?v=1709706726&width=900",
+"modo": "img"
+},
+{
+"id": "sk-skin1004-duo",
+"url": "https://cdn.shopify.com/s/files/1/0590/4538/0253/files/skin1004-ampoule-serum-centella-ampoule-1253199402.jpg?v=1786012992&width=900",
+"modo": "img"
+},
+{
+"id": "sun-skin1004-sun-serum",
+"url": "https://cdn.shopify.com/s/files/1/0590/4538/0253/files/skin1004-hyalu-cica-water-fit-sun-serum-uv-1253199403.jpg?v=1786012930&width=900",
+"modo": "img"
+},
+{
+"id": "sun-anessa-mild-milk",
+"url": "https://www.shiseido.co.jp/anessa/top/img/lineup_perfect_uv_mild_pc.jpg",
+"modo": "img"
+},
+{
+"id": "sun-anessa-day-serum",
+"url": "https://www.shiseido.co.jp/anessa/top/img/lineup_dayserum_pc.jpg",
+"modo": "img"
+},
+{
+"id": "anua-jp-produtos",
+"url": "https://anuashop.jp/products.json?limit=250",
+"modo": "shopify"
+},
+{
+"id": "celimax-qoo10",
+"url": "https://www.qoo10.jp/g/1197211276",
+"modo": "og"
+},
+{
+"id": "refa-itens",
+"url": "https://www.refa.net/item/",
+"modo": "links",
+"filtro": "/item/"
+},
+{
+"id": "refa-lockoil-tudo",
+"url": "https://www.refa.net/item/refa_lock_oil/",
+"modo": "links",
+"filtro": "lock|\\.(jpg|png|webp)"
+},
+{
+"id": "refa-heartlock",
+"url": "https://www.refa.net/item/refa_heart_lock_oil_moist/",
+"modo": "links",
+"filtro": "\\.(jpg|png|webp)"
+},
+{
+"id": "refa-mtgec",
+"url": "https://www.mtgec.jp/shop/c/crefa/",
+"modo": "links",
+"filtro": "/g/|goods|\\.(jpg|png|webp)"
+},
+{
+"id": "honey-1",
+"url": "https://andhoney.jp/",
+"modo": "links",
+"filtro": "product|item|arrange|pro|\\.(jpg|png|webp)"
+},
+{
+"id": "honey-2",
+"url": "https://www.vicrea.co.jp/",
+"modo": "links",
+"filtro": "honey|product|brand"
+}
 ]
