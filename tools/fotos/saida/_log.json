@@ -1,0 +1,99 @@
+[
+[
+"celimax-1",
+"ok",
+109384,
+"application/json; charset=utf-8",
+"https://celimax.com/products.json?limit=250"
+],
+[
+"celimax-2",
+"ERRO",
+"<urlopen error [Errno -3] Temporary failure in name resolution>"
+],
+[
+"celimax-3",
+"ok",
+187717,
+"text/html; charset=utf-8",
+"https://www.celimax.co.kr/"
+],
+[
+"anua-1",
+"ok",
+555124,
+"application/json; charset=utf-8",
+"https://anua.com/products.json?limit=250"
+],
+[
+"anua-2",
+"ok",
+555124,
+"application/json; charset=utf-8",
+"https://anua.global/products.json?limit=250"
+],
+[
+"anua-jp",
+"ok",
+1082147,
+"text/html; charset=utf-8",
+"https://anuashop.jp/"
+],
+[
+"skin1004-1",
+"ok",
+346732,
+"application/json; charset=utf-8",
+"https://www.skin1004.com/products.json?limit=250"
+],
+[
+"skin1004-2",
+"ok",
+346732,
+"application/json; charset=utf-8",
+"https://skin1004.com/products.json?limit=250"
+],
+[
+"refa-home",
+"ok",
+129761,
+"text/html; charset=UTF-8",
+"https://www.refa.net/"
+],
+[
+"refa-sitemap",
+"ok",
+27111,
+"text/xml",
+"https://www.refa.net/sitemap.xml"
+],
+[
+"refa-lockoil",
+"ok",
+322280,
+"text/html; charset=UTF-8",
+"https://www.refa.net/item/refa_lock_oil/"
+],
+[
+"anessa-home",
+"ok",
+22713,
+"text/html",
+"https://www.shiseido.co.jp/anessa/"
+],
+[
+"anessa-products",
+"ERRO",
+"HTTP Error 403: Forbidden"
+],
+[
+"honey-home",
+"ERRO",
+"<urlopen error [SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: Hostname mismatch, certificate is not valid for 'www.andhoney.jp'. (_ssl.c:1081)>"
+],
+[
+"cosme-refa",
+"ERRO",
+"HTTP Error 403: Forbidden"
+]
+]
