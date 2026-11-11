@@ -87,6 +87,14 @@ h1 em{font-style:normal;color:var(--pink)}
 .av-c{display:inline-block;font-size:12px;font-weight:700;border-radius:999px;padding:1px 10px;background:var(--sage-soft);color:var(--sage);margin-left:4px}
 .av-c.agora{background:#fbe3e8;color:var(--red)}
 .av-b{display:flex;gap:8px;flex-wrap:wrap}
+.av-i.cp{padding:0;overflow:hidden}
+.av-i.cp summary{list-style:none;cursor:pointer;display:grid;grid-template-columns:1fr auto;align-items:center;column-gap:10px;row-gap:4px;padding:12px 14px;min-height:48px}
+.av-i.cp summary::-webkit-details-marker{display:none}
+.av-i.cp summary::after{content:"›";grid-column:2;grid-row:1 / span 2;font-size:24px;line-height:1;color:var(--muted);transition:transform .15s}
+.av-i.cp[open] summary::after{transform:rotate(90deg)}
+.av-i.cp .av-c{margin-left:0;justify-self:start}
+.av-i.cp .corpo{padding:0 14px 12px;border-top:1px dashed var(--line)}
+.av-i.cp .corpo .nota{margin:10px 0 0;font-size:13px}
 .av .lkb{font:inherit;font-size:13px;font-weight:700;color:var(--pink-d);background:none;border:0;padding:0;cursor:pointer;text-decoration:underline}
 .lista{display:grid;gap:18px}
 .lista h3{font-family:var(--f-display);font-weight:800;font-size:19px;margin:0 0 6px}
@@ -550,6 +558,8 @@ function desenharAvisos(){
   function chip(st){return st.est==='passou'?'<span class="av-c agora">inscrição encerrada: procure sobras</span>':st.est==='aberto'?'<span class="av-c agora">já abriu: compre agora</span>':st.est==='hoje'?'<span class="av-c agora">abre hoje</span>':st.est==='logo'?'<span class="av-c agora">faltam '+st.dias+(st.dias===1?' dia':' dias')+'</span>':'<span class="av-c">faltam '+st.dias+' dias</span>';}
   function cardAviso(x){return '<div class="av-i'+(x.st.est==='futuro'?'':' urg')+'"><b>'+esc(x.a.nome)+'</b> <span class="nota">· '+esc(x.e.titulo)+' · '+esc(curto(x.e.data))+'</span> '+chip(x.st)+'<p>'+x.a.texto+'</p><div class="av-b">'+
       (x.a.url?'<a class="btn sm" href="'+esc(x.a.url)+'" target="_blank" rel="noopener">Abrir o site de venda</a> ':'')+'<button type="button" class="btn sm" data-ok="'+esc(x.e.id)+'">✓ Já comprei</button></div></div>';}
+  function cardCompacto(x){return '<details class="av-i cp'+(x.st.est==='futuro'?'':' urg')+'"><summary><b>'+esc(x.a.nome)+'</b>'+chip(x.st)+'</summary><div class="corpo"><p class="nota">'+esc(x.e.titulo)+' · '+esc(curto(x.e.data))+'</p><p>'+x.a.texto+'</p><div class="av-b">'+
+      (x.a.url?'<a class="btn sm" href="'+esc(x.a.url)+'" target="_blank" rel="noopener">Abrir o site de venda</a> ':'')+'<button type="button" class="btn sm" data-ok="'+esc(x.e.id)+'">✓ Já comprei</button></div></div></details>';}
   var urg=lista.filter(function(x){return x.st.est!=='futuro';}).length;
   box.innerHTML='<details class="av"'+(window.UNI_ABERTAS.av?' open':'')+'><summary>⏰ Compre com antecedência'+(lista.length+qc.pend.length?' · '+(lista.length+qc.pend.length)+(lista.length+qc.pend.length===1?' aviso':' avisos'):'')+(urg?' · <b style="color:var(--red)">'+urg+(urg===1?' pede atenção':' pedem atenção')+'</b>':'')+'</summary><div class="av-lista">'+
     lista.map(cardAviso).join('')+
@@ -561,7 +571,7 @@ function desenharAvisos(){
   if(u.length&&!VER&&$('#app')&&!$('#app').hidden&&!document.querySelector('dialog[open]')){
     var k=u.map(function(x){return x.e.id+x.st.est;}).join('|');
     if(!urgVisto[k]){urgVisto[k]=1;
-      abrir('<div class="urgPop"><h2 id="dlgT">⏰ '+(u.length===1?'Esta compra pede atenção agora':'Estas compras pedem atenção agora')+'</h2>'+u.map(cardAviso).join('')+'<div class="barra"><button class="btn" type="button" data-urgfecha="1">Fechar</button></div></div>');}
+      abrir('<div class="urgPop"><h2 id="dlgT">⏰ '+(u.length===1?'Esta compra pede atenção agora':'Estas compras pedem atenção agora')+'</h2>'+u.map(cardCompacto).join('')+'<div class="barra"><button class="btn" type="button" data-urgfecha="1">Fechar</button></div></div>');}
   }
 }
 $('#dlgIn').addEventListener('click',function(ev){
