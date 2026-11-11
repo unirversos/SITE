@@ -1,0 +1,17 @@
+[
+{"id":"celimax-1","url":"https://celimax.com/products.json?limit=250","modo":"shopify"},
+{"id":"celimax-2","url":"https://celimax.co/products.json?limit=250","modo":"shopify"},
+{"id":"celimax-3","url":"https://www.celimax.co.kr/","modo":"links","filtro":"retinal|sun|product"},
+{"id":"anua-1","url":"https://anua.com/products.json?limit=250","modo":"shopify"},
+{"id":"anua-2","url":"https://anua.global/products.json?limit=250","modo":"shopify"},
+{"id":"anua-jp","url":"https://anuashop.jp/","modo":"links","filtro":"product|goods|item|\\.(jpg|png|webp)"},
+{"id":"skin1004-1","url":"https://www.skin1004.com/products.json?limit=250","modo":"shopify"},
+{"id":"skin1004-2","url":"https://skin1004.com/products.json?limit=250","modo":"shopify"},
+{"id":"refa-home","url":"https://www.refa.net/","modo":"links","filtro":"item|product|lock|brush|serum"},
+{"id":"refa-sitemap","url":"https://www.refa.net/sitemap.xml","modo":"links","filtro":"."},
+{"id":"refa-lockoil","url":"https://www.refa.net/item/refa_lock_oil/","modo":"links","filtro":"\\.(jpg|png|webp)|item"},
+{"id":"anessa-home","url":"https://www.shiseido.co.jp/anessa/","modo":"links","filtro":"product|\\.(jpg|png|webp)"},
+{"id":"anessa-products","url":"https://www.shiseido.co.jp/anessa/products/","modo":"links","filtro":"product|\\.(jpg|png|webp)"},
+{"id":"honey-home","url":"https://www.andhoney.jp/","modo":"links","filtro":"product|item|arrange|\\.(jpg|png|webp)"},
+{"id":"cosme-refa","url":"https://www.cosme.net/variations/1075749/","modo":"links","filtro":"\\.(jpg|png|webp)"}
+]
