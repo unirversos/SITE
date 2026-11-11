@@ -141,6 +141,15 @@ footer a{color:var(--pink);text-decoration:none;display:inline-flex;align-items:
 .feito{display:inline-flex;align-items:center;gap:10px;min-height:48px;cursor:pointer;font-family:var(--f-display);font-weight:700;color:var(--ink);margin-left:auto}
 .feito input{width:24px;height:24px;accent-color:var(--sage);cursor:pointer}
 .item.ok{opacity:.78}
+/* cartões recolhidos: só número, status, título e "já fiz"; o resto abre ao tocar */
+.item{display:block;padding:0}
+.item>summary{list-style:none;cursor:pointer;display:grid;grid-template-columns:1fr auto;align-items:center;gap:4px 12px;padding:16px 20px;min-height:56px}
+.item>summary::-webkit-details-marker{display:none}
+.item>summary .topo{grid-column:1 / -1}
+.item>summary h2{grid-column:1}
+.item>summary::after{content:"›";grid-column:2;grid-row:2;font-size:28px;line-height:1;color:var(--muted);transition:transform .15s}
+.item[open]>summary::after{transform:rotate(90deg)}
+.item .corpo{display:grid;gap:10px;padding:0 20px 20px}
 .aviso{background:var(--sage-soft);border-left:6px solid var(--sage);border-radius:var(--r);padding:16px 20px;color:var(--ink);font-size:15px}
 .fontes{font-size:14px;color:var(--muted)}
 .fontes ul{margin:6px 0 0;padding-left:20px;display:grid;gap:2px}
@@ -167,62 +176,73 @@ footer a{color:var(--pink);text-decoration:none;display:inline-flex;align-items:
   </header>
 
   <section class="lista" aria-label="Passo a passo">
-    <article class="item ob">
-      <div class="topo"><span class="n">01</span><span class="tag">Antes de viajar</span></div>
-      <h2>Baixe o app certo</h2>
+    <details class="item ob">
+      <summary><div class="topo"><span class="n">01</span><span class="tag">Antes de viajar</span></div>
+      <h2>Baixe o app certo</h2></summary>
+      <div class="corpo">
       <p>A NAVITIME tem vários apps, quase todos para quem mora no Japão. O do turista se chama <strong>Japan Travel by NAVITIME</strong>. É grátis para baixar e funciona em inglês.</p>
       <div class="acoes">
         <a class="btn pri" href="https://apps.apple.com/us/app/id686373726" target="_blank" rel="noopener">iPhone ↗</a>
         <a class="btn pri" href="https://play.google.com/store/apps/details?id=com.navitime.inbound.walk" target="_blank" rel="noopener">Android ↗</a>
         <a class="btn sec" href="https://japantravel.navitime.com/en/area/jp/route/" target="_blank" rel="noopener">Usar no navegador ↗</a>
       </div>
-    </article>
+      </div>
+    </details>
 
-    <article class="item">
-      <div class="topo"><span class="n">02</span><span class="tag">O básico</span></div>
-      <h2>Busque uma rota</h2>
+    <details class="item">
+      <summary><div class="topo"><span class="n">02</span><span class="tag">O básico</span></div>
+      <h2>Busque uma rota</h2></summary>
+      <div class="corpo">
       <p>Na busca de rota, escreva de onde sai e para onde vai, e escolha o dia e a hora.</p>
       <ul>
         <li>Dá para buscar pela hora de <strong>saída</strong>, pela hora de <strong>chegada</strong>, pelo <strong>primeiro trem</strong> ou pelo <strong>último trem</strong> do dia.</li>
         <li>O resultado traz o <strong>número da plataforma</strong>, a lista de estações, os horários e o preço.</li>
         <li>Compare as opções antes de escolher: a mais rápida nem sempre é a mais barata.</li>
       </ul>
-    </article>
+      </div>
+    </details>
 
-    <article class="item rec">
-      <div class="topo"><span class="n">03</span><span class="tag">Se você tem passe</span></div>
-      <h2>Avise qual passe você tem</h2>
+    <details class="item rec">
+      <summary><div class="topo"><span class="n">03</span><span class="tag">Se você tem passe</span></div>
+      <h2>Avise qual passe você tem</h2></summary>
+      <div class="corpo">
       <p>Na busca existe a caixa <strong>Tourist Pass</strong>. Escolha ali o seu passe (JR Pass ou um regional) e o app passa a priorizar os trens que ele cobre.</p>
       <ul>
         <li>Rota coberta ganha uma faixa com o nome do passe.</li>
         <li><strong>Confira se o trecho inteiro está coberto.</strong> Às vezes só uma parte está, e o resto você paga.</li>
         <li>Serve também para decidir se o passe compensa: busque os seus trechos sem passe, some os preços e compare. Para guardar a soma, use o <a class="in" href="/travessia/deslocamento/">Deslocamento</a>.</li>
       </ul>
-    </article>
+      </div>
+    </details>
 
-    <article class="item">
-      <div class="topo"><span class="n">04</span><span class="tag">Sem internet</span></div>
-      <h2>Busque no Wi-Fi do hotel</h2>
+    <details class="item">
+      <summary><div class="topo"><span class="n">04</span><span class="tag">Sem internet</span></div>
+      <h2>Busque no Wi-Fi do hotel</h2></summary>
+      <div class="corpo">
       <p>O app guarda as <strong>últimas 50 rotas</strong> que você buscou, e elas abrem sem internet. De manhã, antes de sair, busque os trajetos do dia.</p>
       <ul>
         <li>Sem internet ele também acha Wi-Fi grátis, caixa eletrônico, casa de câmbio e estação por perto.</li>
       </ul>
-    </article>
+      </div>
+    </details>
 
-    <article class="item">
-      <div class="topo"><span class="n">05</span><span class="tag">Grátis ou pago</span></div>
-      <h2>Comece no grátis</h2>
+    <details class="item">
+      <summary><div class="topo"><span class="n">05</span><span class="tag">Grátis ou pago</span></div>
+      <h2>Comece no grátis</h2></summary>
+      <div class="corpo">
       <p>Busca de rota, plataforma, horários e filtro de passe são grátis.</p>
       <ul>
         <li><strong>Pago:</strong> rota alternativa quando a linha para e navegação por voz. Usuários contam nas avaliações que a lista de todas as paradas também ficou na parte paga.</li>
         <li><strong>Preço na loja dos EUA:</strong> US$ 7,99 por 7 dias, US$ 14,49 por 30 dias, US$ 29,99 por 90 dias. Confira o valor na sua loja.</li>
         <li>A linha parou e você está no grátis? Veja <a class="in" href="/travessia/guia-sobrevivencia/#trem-parou">O trem parou, e agora?</a></li>
       </ul>
-    </article>
+      </div>
+    </details>
 
-    <article class="item">
-      <div class="topo"><span class="n">06</span><span class="tag">Dicionário</span></div>
-      <h2>As palavras do resultado</h2>
+    <details class="item">
+      <summary><div class="topo"><span class="n">06</span><span class="tag">Dicionário</span></div>
+      <h2>As palavras do resultado</h2></summary>
+      <div class="corpo">
       <p>O app está em inglês. Estas são as palavras que mais aparecem numa rota de trem.</p>
       <dl class="gloss">
         <div><dt>Departure / Arrival</dt><dd>Saída / Chegada</dd></div>
@@ -236,13 +256,16 @@ footer a{color:var(--pink);text-decoration:none;display:inline-flex;align-items:
         <div><dt>First train / Last train</dt><dd>Primeiro / último trem do dia</dd></div>
         <div><dt>Walk</dt><dd>Trecho a pé</dd></div>
       </dl>
-    </article>
+      </div>
+    </details>
 
-    <article class="item fut">
-      <div class="topo"><span class="n">07</span><span class="tag">Em breve</span></div>
-      <h2>Vídeo: uma rota de verdade, do começo ao fim</h2>
+    <details class="item fut">
+      <summary><div class="topo"><span class="n">07</span><span class="tag">Em breve</span></div>
+      <h2>Vídeo: uma rota de verdade, do começo ao fim</h2></summary>
+      <div class="corpo">
       <p>Vou gravar a tela mostrando uma busca real, passo a passo.</p>
-    </article>
+      </div>
+    </details>
   </section>
 
   <p class="aviso">O Navi é um app de outra empresa: telas, preços e funções podem mudar. Esta página foi conferida em novembro de 2026.</p>

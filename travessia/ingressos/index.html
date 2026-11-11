@@ -720,6 +720,12 @@
 .trap h4 .n{color:#c23f5e;margin-right:.5rem}
 .trap p{font-size:.95rem;color:#6b5a67;line-height:1.7;margin:0}
 .trap p strong{color:#3a2b38}
+details.trap>summary{list-style:none;cursor:pointer;display:flex;align-items:center;justify-content:space-between;gap:12px;min-height:44px}
+details.trap>summary::-webkit-details-marker{display:none}
+details.trap>summary::after{content:"›";font-size:26px;line-height:1;color:#6b5a67;transition:transform .15s}
+details.trap[open]>summary::after{transform:rotate(90deg)}
+details.trap>summary h4{margin:0}
+details.trap[open]>p{margin-top:.6rem}
 .rodape-acoes{display:flex;flex-wrap:wrap;gap:10px;justify-content:center;margin:2rem auto .5rem}
 .aviso-pdf{text-align:center;font-size:.85rem;color:#6b5a67;max-width:620px;margin:0 auto 2rem}
 @media (max-width:640px){.painel{grid-template-columns:repeat(2,minmax(0,1fr))}}
@@ -913,15 +919,9 @@
 
 
 
-            <div class="trap">
-                <h4><span class="n">01</span>O cartão vai ser recusado</h4>
-                <p>Sites japoneses de ingresso rejeitam cartão estrangeiro com frequência, principalmente na etapa do 3D Secure. Quem consegue, geralmente consegue <strong>trocando de cartão</strong>. Antes de começar: avise o banco, habilite compra internacional, tenha dois ou três cartões de bandeiras diferentes à mão e teste um numa compra pequena. Numa loteria você tem dias para pagar; numa venda por ordem de chegada, segundos.</p>
-            </div>
+            <details class="trap"><summary><h4><span class="n">01</span>O cartão vai ser recusado</h4></summary><p>Sites japoneses de ingresso rejeitam cartão estrangeiro com frequência, principalmente na etapa do 3D Secure. Quem consegue, geralmente consegue <strong>trocando de cartão</strong>. Antes de começar: avise o banco, habilite compra internacional, tenha dois ou três cartões de bandeiras diferentes à mão e teste um numa compra pequena. Numa loteria você tem dias para pagar; numa venda por ordem de chegada, segundos.</p></details>
 
-            <div class="trap">
-                <h4><span class="n">02</span>Algumas contas exigem telefone japonês</h4>
-                <p>Certos sistemas de ingresso pedem verificação por chamada — você precisa ligar para um número japonês <strong>do mesmo telefone que cadastrou</strong>. Um número, uma conta. Decida qual telefone vai usar antes de criar a conta, confirme que ele faz ligação internacional, e não troque de chip no meio do processo.</p>
-            </div>
+            <details class="trap"><summary><h4><span class="n">02</span>Algumas contas exigem telefone japonês</h4></summary><p>Certos sistemas de ingresso pedem verificação por chamada — você precisa ligar para um número japonês <strong>do mesmo telefone que cadastrou</strong>. Um número, uma conta. Decida qual telefone vai usar antes de criar a conta, confirme que ele faz ligação internacional, e não troque de chip no meio do processo.</p></details>
 
 
             <p class="section-subtitle" style="margin-top:1.2rem">Outras armadilhas do planejamento (dirigir, Ano Novo, fuso e revendedores) estão no <a href="/travessia/guia-sobrevivencia/#planejar">mini guia de sobrevivência</a>.</p>

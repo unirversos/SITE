@@ -141,6 +141,15 @@ footer a{color:var(--pink);text-decoration:none;display:inline-flex;align-items:
 .feito{display:inline-flex;align-items:center;gap:10px;min-height:48px;cursor:pointer;font-family:var(--f-display);font-weight:700;color:var(--ink);margin-left:auto}
 .feito input{width:24px;height:24px;accent-color:var(--sage);cursor:pointer}
 .item.ok{opacity:.78}
+/* cartões recolhidos: só número, status, título e "já fiz"; o resto abre ao tocar */
+.item{display:block;padding:0}
+.item>summary{list-style:none;cursor:pointer;display:grid;grid-template-columns:1fr auto;align-items:center;gap:4px 12px;padding:16px 20px;min-height:56px}
+.item>summary::-webkit-details-marker{display:none}
+.item>summary .topo{grid-column:1 / -1}
+.item>summary h2{grid-column:1}
+.item>summary::after{content:"›";grid-column:2;grid-row:2;font-size:28px;line-height:1;color:var(--muted);transition:transform .15s}
+.item[open]>summary::after{transform:rotate(90deg)}
+.item .corpo{display:grid;gap:10px;padding:0 20px 20px}
 .aviso{background:var(--sage-soft);border-left:6px solid var(--sage);border-radius:var(--r);padding:16px 20px;color:var(--ink);font-size:15px}
 .fontes{font-size:14px;color:var(--muted)}
 .fontes ul{margin:6px 0 0;padding-left:20px;display:grid;gap:2px}
@@ -162,21 +171,24 @@ footer a{color:var(--pink);text-decoration:none;display:inline-flex;align-items:
   </header>
 
   <section class="lista" aria-label="Checklist de entrada">
-    <article class="item ob" data-id="passaporte">
-      <div class="topo"><span class="n">01</span><span class="tag">Obrigatório</span>
+    <details class="item ob" data-id="passaporte">
+      <summary><div class="topo"><span class="n">01</span><span class="tag">Obrigatório</span>
         <label class="feito"><input type="checkbox"> Já conferi</label></div>
-      <h2>Passaporte e visto</h2>
+      <h2>Passaporte e visto</h2></summary>
+      <div class="corpo">
       <p>Brasileiros entram no Japão <strong>sem visto por até 90 dias seguidos</strong>, para turismo e visitas curtas, com <strong>passaporte comum eletrônico</strong> (o que tem chip). A isenção foi prorrogada até 29 de setembro de 2029.</p>
       <ul>
         <li>Confira se o seu passaporte tem o símbolo do chip na capa.</li>
         <li>A isenção não vale para trabalho nem para estudo: esses casos pedem visto específico.</li>
       </ul>
-    </article>
+      </div>
+    </details>
 
-    <article class="item rec" data-id="vjw">
-      <div class="topo"><span class="n">02</span><span class="tag">Recomendado</span>
+    <details class="item rec" data-id="vjw">
+      <summary><div class="topo"><span class="n">02</span><span class="tag">Recomendado</span>
         <label class="feito"><input type="checkbox"> Já fiz</label></div>
-      <h2>Visit Japan Web</h2>
+      <h2>Visit Japan Web</h2></summary>
+      <div class="corpo">
       <p>É o serviço <strong>gratuito do governo japonês</strong> para adiantar a imigração e a alfândega: você cadastra os dados e recebe um QR code para mostrar na chegada. Não é obrigatório, porque existe o formulário em papel, mas costuma poupar tempo na fila.</p>
       <ul>
         <li>Tenha à mão o passaporte, o voo e o endereço da primeira hospedagem.</li>
@@ -185,12 +197,14 @@ footer a{color:var(--pink);text-decoration:none;display:inline-flex;align-items:
         <li><strong>Cuidado:</strong> existem sites falsos e apps pagos que se passam por ele. O serviço oficial não cobra nada.</li>
       </ul>
       <div class="acoes"><a class="btn pri" href="https://services.digital.go.jp/en/visit-japan-web/" target="_blank" rel="noopener">Abrir o Visit Japan Web ↗</a></div>
-    </article>
+      </div>
+    </details>
 
-    <article class="item" data-id="suica">
-      <div class="topo"><span class="n">03</span><span class="tag">Opcional</span>
+    <details class="item" data-id="suica">
+      <summary><div class="topo"><span class="n">03</span><span class="tag">Opcional</span>
         <label class="feito"><input type="checkbox"> Já instalei</label></div>
-      <h2>Suica no celular (Welcome Suica Mobile)</h2>
+      <h2>Suica no celular (Welcome Suica Mobile)</h2></summary>
+      <div class="corpo">
       <p>É o app da JR East que emite um cartão de transporte <strong>Suica</strong> direto no iPhone, para usar em trens, ônibus e lojas. Dá para baixar antes da viagem.</p>
       <ul>
         <li>O Suica emitido vale por 180 dias, e o saldo que sobrar não é reembolsado.</li>
@@ -201,14 +215,17 @@ footer a{color:var(--pink);text-decoration:none;display:inline-flex;align-items:
         <a class="btn pri" href="https://www.jreast.co.jp/multi/en/wsmlp/" target="_blank" rel="noopener">Página oficial da JR East ↗</a>
         <a class="btn sec" href="https://apps.apple.com/us/app/welcome-suica-mobile/id6738336566" target="_blank" rel="noopener">App na App Store ↗</a>
       </div>
-    </article>
+      </div>
+    </details>
 
-    <article class="item fut" data-id="jesta">
-      <div class="topo"><span class="n">04</span><span class="tag">Ainda não vale</span></div>
-      <h2>JESTA</h2>
+    <details class="item fut" data-id="jesta">
+      <summary><div class="topo"><span class="n">04</span><span class="tag">Ainda não vale</span></div>
+      <h2>JESTA</h2></summary>
+      <div class="corpo">
       <p>É a autorização eletrônica de viagem que o Japão vai exigir de quem entra sem visto, parecida com o ESTA americano. Está prevista para o ano fiscal de 2028 (abril de 2028 a março de 2029), então <strong>não é preciso para viagens em 2026 e 2027</strong>.</p>
       <p>Enquanto o sistema oficial não existir, desconfie de qualquer site que ofereça emitir a JESTA agora.</p>
-    </article>
+      </div>
+    </details>
   </section>
 
   <p class="aviso"><strong>Última checagem: 10/11/2026.</strong> Regras de entrada mudam. Antes de viajar, confirme nos links oficiais acima. As informações sobre visto e JESTA vêm de reportagens que citam o Itamaraty e o governo japonês.</p>
