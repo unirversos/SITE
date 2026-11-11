@@ -389,7 +389,7 @@ function chave() {
 }
 function desenha(forca) {
   const i = iEtapa(), e = ETAPAS[i], P = outro(EU), vz = vezDe();
-  $('trilho').innerHTML = `<div class="pts" role="img" aria-label="Etapa ${i + 1} de ${ETAPAS.length}">${ETAPAS.map((x, k) => `<i class="${k < i ? 'f' : k === i ? 'a' : ''}"></i>`).join('')}</div><div class="leg"><b>${i + 1}. ${esc(e.nome)}</b><span>etapa ${i + 1} de ${ETAPAS.length} · cerca de ${e.min} min</span></div>`;
+  $('trilho').innerHTML = `<div class="pts" role="img" aria-label="Etapa ${i + 1} de ${ETAPAS.length}">${ETAPAS.map((x, k) => `<i class="${k < i ? 'f' : k === i ? 'a' : ''}"></i>`).join('')}</div><div class="leg"><b>${i + 1}. ${esc(e.nome)}</b><span>etapa ${i + 1} de ${ETAPAS.length} · cerca de ${e.min} min</span></div><button class="btn peq ferrBt" type="button" data-ferr aria-expanded="${!$('ferr').hidden}">🧰 Ferramentas · números</button>`;
   /* cena */
   const c = S.cafe || {}, servido = ['papo', 'conta', 'lembranca'].includes(S.etapa) || (S.etapa === 'cafe' && (S.p || 0) >= 8);
   const av = r => `<div class="c-av${r === EU ? ' eu' : ''}${(vz === r || vz === 'ambas') ? ' vez' : ''}"><div class="face">${avatarHTML(S.jog[r].sel)}</div><b>${esc(nome(r))}${r === EU ? ' (você)' : ''}</b></div>`;
@@ -802,6 +802,27 @@ function vozBar() {
   if ($('btOuve')) $('btOuve').onclick = () => tocaSeq([{ clip: meu }]);
 }
 $('vozBar').addEventListener('toggle', e => { if (e.target.classList && e.target.classList.contains('nomeRec')) nomeAberto = e.target.open; }, true);
+
+/* ---------- ferramentas: os números em japonês ---------- */
+function lerNum(n) {                                                /* 0 a 99999, em hiragana */
+  n = Math.floor(+n); if (!(n >= 0) || n > 99999) return '';
+  if (n === 0) return 'ぜろ';
+  const D = ['', 'いち', 'に', 'さん', 'よん', 'ご', 'ろく', 'なな', 'はち', 'きゅう'];
+  const man = Math.floor(n / 10000), r = n % 10000, t = Math.floor(r / 1000), h = Math.floor((r % 1000) / 100), j = Math.floor((r % 100) / 10), u = r % 10;
+  const C = { 1: 'ひゃく', 3: 'さんびゃく', 6: 'ろっぴゃく', 8: 'はっぴゃく' }, M = { 1: 'せん', 3: 'さんぜん', 8: 'はっせん' };
+  return (man ? D[man] + 'まん' : '') + (t ? (M[t] || D[t] + 'せん') : '') + (h ? (C[h] || D[h] + 'ひゃく') : '') + (j ? (j === 1 ? '' : D[j]) + 'じゅう' : '') + D[u];
+}
+const NUM_LINHAS = [['0–10', [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10]], ['dezenas', [20, 30, 40, 50, 60, 70, 80, 90]], ['centenas', [100, 200, 300, 400, 500, 600, 700, 800, 900]], ['milhares', [1000, 2000, 3000, 4000, 5000, 6000, 7000, 8000, 9000, 10000]]];
+function ferramentas() {
+  const b = $('ferr'); b.hidden = !b.hidden; if (b.hidden) { desenha(true); return; }
+  b.innerHTML = `<div class="row" style="justify-content:space-between"><h3>🧰 Números em japonês</h3><button class="btn peq" type="button" data-ferr>Fechar ✕</button></div>
+    <p class="sub">Toque num número para ouvir. Nas centenas e milhares há sons que mudam (300 = さんびゃく, 600 = ろっぴゃく, 800 = はっぴゃく · 3000 = さんぜん, 8000 = はっせん).</p>
+    ${NUM_LINHAS.map(([t, ns]) => `<div class="numl"><small>${t}</small><div class="numg">${ns.map(n => `<button type="button" class="num" data-fala="${lerNum(n)}"><b>${n}</b>${ja(lerNum(n))}</button>`).join('')}</div></div>`).join('')}
+    <div class="numl"><small>Qualquer número (até 99999)</small><div class="escrever"><input id="numIn" type="text" inputmode="numeric" autocomplete="off" placeholder="Ex.: 480" aria-label="Número"><button class="btn" type="button" id="numOuve">🔊 Ouvir</button></div><div id="numOut" class="dica" hidden></div></div>`;
+  const mostra = () => { const v = soNum($('numIn').value), o = $('numOut'); if (!v) { o.hidden = true; return; } const r = lerNum(v); o.hidden = !r; o.innerHTML = r ? `<small>${esc(String(+v))}</small>${ja(r)}<span class="pt">com preço: ${esc(r)}えん</span>` : ''; };
+  $('numIn').addEventListener('input', mostra); $('numOuve').onclick = () => { const r = lerNum(soNum($('numIn').value)); if (r) fala(r); };
+}
+document.addEventListener('click', e => { if (e.target.closest('[data-ferr]')) ferramentas(); });
 
 /* ---------- rodapé: romaji, pular etapa, recomeçar ---------- */
 $('btnRo').onclick = () => { ROM = !ROM; try { localStorage.setItem('utopiaRomaji', ROM ? '1' : '0'); } catch (e) {} if (S && EU && S.jog && S.jog.a && S.jog.b) desenha(true); else { $('btnRo').textContent = 'Romaji: ' + (ROM ? 'sim' : 'não'); } };
