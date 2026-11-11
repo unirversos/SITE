@@ -7,6 +7,8 @@
    ========================================================= */
 window.CAIXINHA_MIN = 1000;
 window.CAIXINHA_MAX_QTD = 5;
+/* Lote atual (aparece na capa). vagas e ate são textos fixos: mude aqui quando o lote virar. Deixe ate:'' para não mostrar data. */
+window.SK_LOTE = { nome:'Lote 1', vagas:10, ate:'' };
 window.CAIXINHA_TODOS = [
   { id:'cx-anessa-milk', marca:'Anessa', grupo:'Sol', peso:'leve', nome:'Anessa Perfect UV Skincare Milk NA', tam:'60 ml', preco:226, foto:'/loja/fotos/kit-gi-1.jpg', ic:'🧴',
     desc:'Protetor solar da Shiseido, FPS 50+ PA++++ (como na embalagem). Produto novo.' },
