@@ -79,6 +79,10 @@ h1 .jp rt{font-size:.5em;letter-spacing:.05em}
 .sk-busca select{font:inherit;font-size:14px;border:1.5px solid var(--line);border-radius:999px;padding:6px 12px;background:var(--card);color:var(--ink)}
 .cx-marca{margin:0;font-size:11.5px;letter-spacing:.08em;text-transform:uppercase;color:var(--pink);font-weight:700}
 @media(max-width:560px){.sk-bar .sk-ch{flex-wrap:nowrap;overflow-x:auto;scrollbar-width:none}.sk-bar .sk-ch button{flex:0 0 auto}}
+.amigas{background:var(--card);border:1.5px solid var(--line);border-left:6px solid var(--sage);border-radius:var(--r);padding:14px 18px;display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:10px 18px}
+.amigas h4{font-family:var(--f-display);font-size:20px;margin:0;line-height:1.2}
+.amigas p{margin:2px 0 0;font-size:14.5px;color:var(--muted);max-width:56ch}
+.amigas a{flex:0 0 auto;font-family:var(--f-display);font-weight:800;font-size:15px;text-decoration:none;background:var(--sage);color:#fff;border-radius:999px;padding:10px 18px;min-height:44px;display:inline-flex;align-items:center}
 .sk-vazio{color:var(--muted);font-size:15px;margin:8px 0}
 .cx-bloco{margin-top:30px;display:grid;gap:12px}
 .cx-tit{font-family:var(--f-display);font-size:clamp(22px,3vw,26px);margin:0;display:flex;flex-wrap:wrap;align-items:baseline;gap:4px 12px}
@@ -261,12 +265,12 @@ footer a:hover{color:var(--pink)}
 </div>
 
 <div id="lb" role="dialog" aria-label="Foto ampliada" aria-hidden="true"><button class="fx" type="button" aria-label="Fechar">×</button><button class="pv" type="button" aria-label="Foto anterior">‹</button><img alt=""><button class="nx" type="button" aria-label="Próxima foto">›</button><span class="nn"></span></div>
-<script src="/loja/produtos.js?v=20261110o"></script>
-<script src="/loja/caixinha.js?v=11"></script>
+<script src="/loja/produtos.js?v=20261110p"></script>
+<script src="/loja/caixinha.js?v=14"></script>
 <script>
 (function(){
   const CATS=[
-    {id:'skincare', capa:'/loja/fotos/capa-skincare.jpg', cor:'var(--pink)', ic:'🧴', nome:'Skin, Hair & Sun Care', sub:'Beleza japonesa para pele e cabelo: leve um kit pronto ou monte o seu com produtos soltos (pedido mínimo R$ 600).'},
+    {id:'skincare', capa:'/loja/fotos/capa-skincare.jpg', cor:'var(--pink)', ic:'🧴', nome:'Skin, Hair & Sun Care', sub:'Beleza japonesa para pele e cabelo: leve um kit pronto ou monte o seu com produtos soltos (pedido mínimo R$ 1.000).'},
     {id:'zelda', capa:'/loja/fotos/capa-zelda.jpg', cor:'var(--sage)', ic:'🗡️', nome:'Zelda · Edição de 40 anos', sub:'Sob encomenda, por lista de espera: você só paga quando eu conseguir comprar o seu. Taxa de importação inclusa.'},
     {id:'pokecafe', capa:'/loja/fotos/capa-pokecafe.jpg', cor:'var(--gold)', ic:'☕', nome:'Pokémon Café · Itens exclusivos', sub:'Itens oficiais para você trazer um pouquinho da magia do café para casa.'},
     {id:'consoles', ic:'🎮', nome:'Consoles & Portáteis', sub:'Consoles e portáteis preservados, de edições especiais a clássicos.'},
@@ -341,6 +345,8 @@ footer a:hover{color:var(--pink)}
   function kitSoltos(){
     if(!CX.length) return '';
     return `<div class="cx-bloco" id="skSoltos"><h3 class="cx-tit">🧺 Monte seu kit <small>misture skin, hair e sun no mesmo kit · pedido mínimo R$ ${fmR(CXMIN).replace(',00','')}</small></h3>
+      <div class="amigas"><div><h4>👯 Caixinha das Amigas</h4><p>Divida o pedido: cada uma escolhe os seus produtinhos, vocês somam R$ ${fmR(CXMIN).replace(',00','')} juntas e eu trago tudo do Japão.</p></div>
+        <a href="https://wa.me/?text=${encodeURIComponent('Bora montar uma Caixinha das Amigas? 🇯🇵 Skincare, cabelo e protetor solar direto do Japão. Cada uma escolhe os seus e a gente fecha um pedido só: https://unirversos.com/loja/?cat=skincare')}" target="_blank" rel="noopener">Chamar as amigas →</a></div>
       <div id="cxLista"></div>
       <div class="barra" id="cxBarra" aria-live="polite">
         <div class="lin"><span id="cxN">Seu kit está vazio</span><b id="cxTot">R$ 0,00</b></div>
@@ -351,7 +357,7 @@ footer a:hover{color:var(--pink)}
   }
   const cardS=p=>`<article class="cx" data-cx="${esc(p.id)}" id="${esc(p.id)}">
       <div class="foto cx-f">${p.foto?`<img src="${esc(p.foto)}" alt="${esc(p.nome)}" loading="lazy">`:`<span aria-hidden="true">${esc(p.ic||'🧴')}</span>`}</div>
-      <div class="cx-c">${p.marca?`<p class="cx-marca">${esc(p.marca)}</p>`:''}<h4>${esc(p.nome)}</h4><p class="cx-tam">${esc(p.tam||'')}</p><p class="cx-pr">R$ ${fmR(p.preco)}</p>
+      <div class="cx-c">${p.marca?`<p class="cx-marca">${esc(p.marca)}</p>`:''}<h4>${esc(p.nome)}</h4><p class="cx-tam">${esc(p.tam||'')}${p.aprox?(p.tam?' · ':'')+'*foto ilustrativa':''}</p><p class="cx-pr">R$ ${fmR(p.preco)}</p>
       <div class="qtd"><button type="button" data-q="-" aria-label="Tirar um, ${esc(p.nome)}">−</button><output>0</output><button type="button" data-q="+" aria-label="Colocar um, ${esc(p.nome)}">+</button></div></div></article>`;
   function desenhaCesta(){
     const bar=document.getElementById('cxBarra'); if(!bar) return;
@@ -364,7 +370,7 @@ footer a:hover{color:var(--pink)}
     document.getElementById('cxTot').textContent='R$ '+fmR(t);
     const pr=document.getElementById('cxProg'); pr.classList.toggle('ok',ok); pr.firstElementChild.style.width=Math.min(100,t/CXMIN*100)+'%';
     const f=document.getElementById('cxFalta'); f.classList.toggle('ok',ok);
-    f.textContent=ok?'✓ Pedido mínimo atingido':(n?'Faltam R$ '+fmR(CXMIN-t):'Escolha os produtos com o +');
+    f.textContent=ok?'✓ Pedido mínimo atingido':(n?'Faltam R$ '+fmR(CXMIN-t)+' · chame uma amiga para completar':'Escolha os produtos com o +');
     document.getElementById('cxFim').hidden=!ok;
   }
   document.addEventListener('click',e=>{

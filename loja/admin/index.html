@@ -52,7 +52,7 @@ p{margin:0;color:var(--muted)}
   <div id="lista" hidden></div>
   <div id="skBox" hidden style="display:grid;gap:10px">
     <h2 style="font-family:'Baloo 2',system-ui,sans-serif;margin:10px 0 0">Skin, hair e sun care</h2>
-    <p>Mude o preço e aperte Enter (ou saia do campo). Campo vazio volta ao preço da planilha. O botão mostra ou esconde o produto na vitrine. Faixa verde: leve e caro. Faixa vermelha: pesado e barato.</p>
+    <p>Mude o preço e aperte Enter (ou saia do campo). Campo vazio volta ao preço da planilha. O botão mostra ou esconde o produto na vitrine. Faixa verde: leve e caro. Faixa vermelha: pesado e barato. Asterisco (*): a foto é aproximada.</p>
     <div class="sk-f"><input id="skQ" type="search" placeholder="Buscar produto ou marca" aria-label="Buscar produto ou marca"></div>
     <div class="sk-f" id="skF"></div>
     <p id="skN"></p>
@@ -61,7 +61,7 @@ p{margin:0;color:var(--muted)}
   <p id="sair-box" hidden><button class="btn" id="sair" type="button">Sair</button></p>
 </div>
 <script src="/loja/produtos.js?v=20261101h"></script>
-<script src="/loja/caixinha.js?v=11"></script>
+<script src="/loja/caixinha.js?v=14"></script>
 <script type="module">
 import {initializeApp,getApps} from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
 import {getAuth,onAuthStateChanged,GoogleAuthProvider,signInWithPopup,signOut} from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
@@ -105,10 +105,10 @@ function desenhaSk(){
   const G=['Pele','Cabelo','Sol'];
   $('skF').innerHTML=F.map(f=>`<button type="button" data-v="${f[0]}" aria-pressed="${skV===f[0]}">${f[1]}</button>`).join('')+G.map(g=>`<button type="button" data-g="${g}" aria-pressed="${skG===g}">${g}</button>`).join('');
   const q=semAc(skBusca).trim();
-  const L=SKT.filter(p=>(!skG||p.grupo===skG)&&(skV==='todos'||(skV==='vis'&&!skOc(p))||(skV==='oc'&&skOc(p))||skV===(p.peso||'neutro'))&&(!q||semAc(p.nome+' '+(p.marca||'')).includes(q)));
-  $('skN').textContent=L.length+' de '+SKT.length+' produtos · '+SKT.filter(p=>!skOc(p)).length+' na vitrine';
+  const L=SKT.filter(p=>(!skG||p.grupo===skG)&&(skV==='todos'||(skV==='vis'&&!skOc(p)&&p.foto)||(skV==='oc'&&skOc(p))||skV===(p.peso||'neutro'))&&(!q||semAc(p.nome+' '+(p.marca||'')).includes(q)));
+  $('skN').textContent=L.length+' de '+SKT.length+' produtos · '+SKT.filter(p=>!skOc(p)&&p.foto).length+' na vitrine';
   $('skLista').innerHTML=L.map(p=>{ const oc=skOc(p), pr=skPr(p), mud=pr!==p.preco;
-    return `<div class="sk ${esc(p.peso||'neutro')}${oc?' oc':''}" data-sk="${esc(p.id)}"><div><b>${esc(p.nome)}</b><small>${esc(p.grupo)}${p.tam?' · '+esc(p.tam):''}${p.iene?' · ¥ '+Number(p.iene).toLocaleString('pt-BR')+' tax-free':''} · planilha R$ ${p.preco}${p.foto?'':' · sem foto'}</small></div>
+    return `<div class="sk ${esc(p.peso||'neutro')}${oc?' oc':''}" data-sk="${esc(p.id)}"><div><b>${esc(p.nome)}${p.aprox?' <span title="foto aproximada" style="color:#8e6a1f">*</span>':''}</b><small>${esc(p.grupo)}${p.tam?' · '+esc(p.tam):''}${p.iene?' · ¥ '+Number(p.iene).toLocaleString('pt-BR')+' tax-free':''} · planilha R$ ${p.preco}${p.aprox?' · * foto aproximada':''}${p.foto?'':' · <b style="display:inline;color:#7d2b3a">sem foto: não aparece na vitrine</b>'}</small></div>
       <div class="sk-a"><label>R$ <input type="number" inputmode="numeric" min="1" step="1" value="${pr}" class="${mud?'mud':''}" aria-label="Preço de ${esc(p.nome)}"></label>
       <button class="btn st ${oc?'e':'d'}" type="button" data-oc="${oc?'0':'1'}">${oc?'Oculto · mostrar':'Na vitrine · ocultar'}</button></div></div>`; }).join('')||'<p>Nenhum produto nesse filtro.</p>';
 }
