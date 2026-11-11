@@ -1,0 +1,17 @@
+https://www.mtgec.jp/shop/c/crefa/
+/css/goods.css?date=0105
+/css/goods_pc.css
+/img/usr/common/footer/im-footer-fb.png
+/img/usr/common/footer/im-footer-insta.png
+/img/usr/common/footer/im-footer-line.png
+/img/usr/common/footer/im-footer-x.png
+/img/usr/common/footer/im-logo-onlineshop.png
+/img/usr/common/footer_jdma.png
+/img/usr/common/footer_pmark.png
+/img/usr/common/pagetop.png
+/js/goods_ajax_bookmark.js
+/js/goods_ajax_cart.js
+/js/goods_ajax_quickview.js
+/js/goods_history.js
+/lib/goods/jquery.tile.min.js
+goodslist
