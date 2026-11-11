@@ -139,7 +139,7 @@ const REACOES = [
   { t: 'そうですか。', pt: 'Ah, é?' },
   { t: 'いいですね！', pt: 'Que legal!' },
   { t: 'わたしもです！', pt: 'Eu também!' },
-  { t: 'すみません、もういちど おねがいします。', pt: 'Não entendi: pedir para repetir', ar: true }
+  { t: 'すごい！', pt: 'Uau, incrível!' }
 ];
 
 const LUGARES = [
@@ -163,6 +163,9 @@ const K_KUDASAI = 'ください|kudasai|下さい|おねがい|onegai|お願い'
 
 /* ================= estado ================= */
 let S = null, EU = null, sync = null, pedindoLugar = false;
+let TEXTO = Q.get('texto') === '1', AUD = {}, capt = null, tick = null;           /* TEXTO: prefere digitar · AUD: gravações das falas · capt/tick: gravação em curso */
+const REV = new Set();                                              /* falas cuja frase escrita foi mostrada */
+const modoOn = () => ((S && S.modo) || 'online') === 'online';   /* online: grava a voz · juntas: fala ao vivo */
 let ROM = false; try { ROM = localStorage.getItem('utopiaRomaji') === '1'; } catch (e) {}
 const AV = window.UtopiaAvatar && UtopiaAvatar.load();
 const MEU_SEL = AV && AV.sel ? AV.sel : null;
@@ -172,7 +175,8 @@ const nome = r => (S && S.jog && S.jog[r] && S.jog[r].nome) || 'Viajante';
 const iEtapa = () => Math.max(0, ETAPAS.findIndex(e => e.id === S.etapa));
 const novo = () => ({ v: 1, etapa: 'chegada', p: 0, t0: Date.now() });
 const logN = root => conta(root.log);
-function poeLog(root, q, t, ex) { root.log = root.log || {}; root.log[String(logN(root)).padStart(4, '0') + q] = Object.assign({ q, t }, ex || {}); }
+function poeLogK(root, q, t, ex) { root.log = root.log || {}; const k = String(logN(root)).padStart(4, '0') + q; root.log[k] = Object.assign({ q, t }, ex || {}); return k; }
+function poeLog(root, q, t, ex) { poeLogK(root, q, t, ex); }   /* sem retorno: os 'depois' dos passos devolvem texto só quando há erro */
 const ja = t => { const r = romaji(t); return `<span class="jp" lang="ja">${esc(t)}</span>` + (r !== String(t) ? `<span class="wro"${ROM ? '' : ' hidden'}>${esc(r)}</span>` : ''); };
 
 /* ---------- voz ---------- */
@@ -225,7 +229,7 @@ function passos() {
       F('a', `Convide ${esc(B)} para tomar um café com você.`, `${B}さん、いっしょに コーヒーを のみませんか。`, `${B}さん、いっしょに…`, `${B}さん、いっしょに コーヒーを ＿＿＿＿＿か。`, 'Vamos tomar um café juntas?', ['のみませんか|nomimasenka|飲みませんか']),
       F('b', 'Aceite e pergunte onde fica o café.', 'いいですね。カフェは どこですか。', 'いいですね。カフェは…', 'いいですね。カフェは ＿＿ですか。', 'Boa ideia. Onde fica o café?', ['どこ|doko|何処']),
       F('a', `Olhe o mapa (só você vê) e diga para ${esc(B)} onde fica o café.`, `カフェは ${L.n}の となりです。`, 'カフェは…', 'カフェは ＿＿＿＿の となりです。', `O café fica ao lado do(a) ${L.pt}.`, [L.k, 'となり|tonari|隣|よこ|yoko|ちかく|chikaku|近く']),
-      { tipo: 'toque', quem: 'b', instr: `Leia a resposta de ${esc(A)} e toque no mapa: qual desses lugares é o café?` }
+      { tipo: 'toque', quem: 'b', instr: `Ouça (ou leia) a resposta de ${esc(A)} e toque no mapa: qual desses lugares é o café?` }
     ];
   }
   if (s.etapa === 'cafe') {
@@ -242,14 +246,15 @@ function passos() {
       F('b', `Chame o robô e peça as duas bebidas: a sua e a de ${esc(A)}.`, igual ? `すみません。${bB.n}を ください。${A}さんも ${bA.n}です。` : `すみません。${bB.n}と ${bA.n}を ください。`, 'すみません。…', igual ? `すみません。＿＿＿を ください。${A}さんも ＿＿＿です。` : 'すみません。＿＿＿と ＿＿＿を ください。', igual ? `Com licença. Um ${bB.n}, por favor. Para ${A} também.` : `Com licença. ${bB.n} e ${bA.n}, por favor.`,
         igual ? [bB.k, K_KUDASAI] : [bB.k, bA.k, K_KUDASAI],
         { depois: (txt, root) => poeLog(root, 'r', igual ? `はい。${bB.n}を ふたつですね。` : `はい。${bB.n}と ${bA.n}ですね。`, { pt: igual ? `Certo. Dois ${bB.n}, né?` : `Certo. ${bB.n} e ${bA.n}, né?` }) }),
-      F('a', 'Peça também alguma coisa para comer. Escolha no cardápio.', 'ケーキも ください。', '＿＿＿も…', '＿＿＿も ください。', 'Um(a) …, também, por favor.', [kCom, K_KUDASAI],
+      F('a', TEXTO ? 'Peça também alguma coisa para comer. Escolha no cardápio.' : 'Peça também um ケーキ. Diga a frase abaixo.', 'ケーキも ください。', '＿＿＿も…', '＿＿＿も ください。', 'Um(a) …, também, por favor.', [kCom, K_KUDASAI],
         { depois: (txt, root) => { const c = COMIDAS.find(x => tem(txt, x.k)) || COMIDAS[0]; root.cafe = root.cafe || {}; root.cafe.com1 = c.id;
             poeLog(root, 'r', `すみません。${c.n}は ありません。`, { pt: `Desculpe. Não temos ${c.n}.` }); } }),
-      F('a', `Acabou! Peça outra coisa do cardápio (comece com じゃあ: "então…").`, `じゃあ、${c2.n}を ください。`, 'じゃあ、…', 'じゃあ、＿＿＿を ください。', `Então, um(a) ${c2.n}, por favor.`, [COMIDAS.filter(c => c.id !== cf.com1).map(c => c.k).join('|'), K_KUDASAI],
-        { aviso: txt => (c1 && tem(txt, c1.k) && !COMIDAS.some(x => x.id !== c1.id && tem(txt, x.k))) ? `${c1.n} acabou! Peça outra coisa do cardápio.` : null,
+      F('a', TEXTO ? `Acabou! Peça outra coisa do cardápio (comece com じゃあ: "então…").` : `${c1 ? c1.n : 'O ケーキ'} acabou! Toque no cardápio na comida que você quer e peça com じゃあ ("então…").`, `じゃあ、${c2.n}を ください。`, 'じゃあ、…', 'じゃあ、＿＿＿を ください。', `Então, um(a) ${c2.n}, por favor.`, [COMIDAS.filter(c => c.id !== cf.com1).map(c => c.k).join('|'), K_KUDASAI],
+        { escolhe: 'comida', precisa: () => (cf.com2 && cf.com2 !== cf.com1) ? null : '👆 Primeiro toque, no cardápio, na comida que você quer.',
+          aviso: txt => (c1 && tem(txt, c1.k) && !COMIDAS.some(x => x.id !== c1.id && tem(txt, x.k))) ? `${c1.n} acabou! Peça outra coisa do cardápio.` : null,
           depois: (txt, root, forcado) => { let c = COMIDAS.find(x => x.id !== root.cafe.com1 && tem(txt, x.k));
             if (!c && !forcado && c1 && tem(txt, c1.k)) return `${c1.n} acabou! Peça outra coisa do cardápio.`;
-            c = c || COMIDAS.find(x => x.id !== root.cafe.com1); root.cafe.com2 = c.id;
+            c = c || ((root.cafe.com2 && root.cafe.com2 !== root.cafe.com1) ? item(root.cafe.com2) : null) || COMIDAS.find(x => x.id !== root.cafe.com1); root.cafe.com2 = c.id;
             poeLog(root, 'r', 'はい、わかりました。', { pt: 'Certo, entendido.' });
             poeLog(root, 'r', 'おまたせしました。どうぞ。', { pt: 'Desculpem a demora. Aqui está.' });
             poeLog(root, 's', `☕ As bebidas chegaram… mas veio ${errado.n} para ${nome('b')}!`); } }),
@@ -289,13 +294,14 @@ function concluida() {
 function vezDe() {
   const s = S;
   if (concluida() || s.etapa === 'ficha' || s.etapa === 'lembranca') return 'ambas';
+  if (s.aguarda) return outro(s.aguarda.de);                        /* a fala foi enviada: agora é a vez de quem ouve validar */
   if (s.etapa === 'batalha') { const b = s.bat || {}; return b.fase === 'responder' ? outro(b.vez || 'b') : (b.vez || 'b'); }
   const st = passos()[s.p || 0]; return st ? st.quem : 'ambas';
 }
 /* o que acontece ao entrar em cada etapa */
 function entra(root) {
   const e = ETAPAS.find(x => x.id === root.etapa);
-  poeLog(root, 's', `— ${ETAPAS.indexOf(e) + 1}. ${e.nome} —`);
+  poeLog(root, 's', `— ${ETAPAS.indexOf(e) + 1}. ${e.nome} —`); root.aguarda = null; root.repete = null;
   if (root.etapa === 'batalha') root.bat = { vez: 'b', fase: 'perguntar' };
   if (root.etapa === 'convite') root.cv = { alvo: Math.floor(Math.random() * LUGARES.length) };
   if (root.etapa === 'cafe') { root.cafe = {}; poeLog(root, 'r', 'いらっしゃいませ。メニューを どうぞ。', { pt: 'Bem-vindas! Aqui está o cardápio.' }); }
@@ -314,7 +320,11 @@ function ligaLocal() {
   const KV = K + ':voz', lerV = () => { try { return JSON.parse(localStorage.getItem(KV) || '{}') || {}; } catch (e) { return {}; } }; let cbV = null;
   const gravaV = v => { localStorage.setItem(KV, JSON.stringify(v)); if (cbV) cbV(lerV()); };
   window.addEventListener('storage', e => { if (e.key === KV && cbV) cbV(lerV()); });
+  const KA = K + ':aud', lerA = () => { try { return JSON.parse(localStorage.getItem(KA) || '{}') || {}; } catch (e) { return {}; } }; let cbA = null;
+  const gravaA = v => { localStorage.setItem(KA, JSON.stringify(v)); if (cbA) cbA(lerA()); };
+  window.addEventListener('storage', e => { if (e.key === KA && cbA) cbA(lerA()); });
   return { uid: Q.get('eu') || 'u1', nomeConta: Q.get('nome') || '', on: f => { cb = f; f(ler()); },
+    onAud: f => { cbA = f; f(lerA()); }, setAud: async (id, v) => { const o = lerA(); if (v == null) delete o[id]; else o[id] = v; gravaA(o); }, limpaAud: async () => gravaA({}),
     onVoz: f => { cbV = f; f(lerV()); }, setVoz: async (r, v) => { const o = lerV(); o[r] = v; gravaV(o); }, limpaVoz: async () => gravaV({}),
     update: async p => { const v = ler() || {}; Object.entries(p).forEach(([k, x]) => poe(v, k, x)); grava(v); },
     tx: async fn => { const r = fn(ler()); if (r !== undefined) grava(r); } };
@@ -322,8 +332,10 @@ function ligaLocal() {
 async function ligaFirebase() {
   const [{ getApps }, { getAuth, onAuthStateChanged }, D] = await Promise.all([import(FB + 'firebase-app.js'), import(FB + 'firebase-auth.js'), import(FB + 'firebase-database.js')]);
   const user = await new Promise(res => { (function espera() { const a = getApps()[0]; if (!a) { setTimeout(espera, 300); return; } onAuthStateChanged(getAuth(a), u => { if (u) res(u); }); })(); });
-  const bd = D.getDatabase(getApps()[0], DB_URL), r = D.ref(bd, CAMINHO), rv = D.ref(bd, CAMINHO.replace(/\/jogo$/, '/voz'));
+  const bd = D.getDatabase(getApps()[0], DB_URL), r = D.ref(bd, CAMINHO), rv = D.ref(bd, CAMINHO.replace(/\/jogo$/, '/voz')), ra = D.ref(bd, CAMINHO.replace(/\/jogo$/, '/aud'));
   return { uid: user.uid, nomeConta: (user.displayName || '').split(' ')[0],
+    onAud: f => D.onValue(ra, sn => f(sn.val() || {})), setAud: (id, v) => D.update(ra, { [id]: v == null ? null : v }),
+    limpaAud: () => { const ids = Object.keys(AUD); return ids.length ? D.update(ra, Object.fromEntries(ids.map(i => [i, null]))) : Promise.resolve(); },
     onVoz: f => D.onValue(rv, sn => f(sn.val() || {})), setVoz: (q, v) => D.update(rv, { [q]: v }), limpaVoz: () => D.update(rv, { a: null, b: null }),
     on: (f, err) => D.onValue(r, s => f(s.val()), err), update: p => D.update(r, p), tx: fn => D.runTransaction(r, cur => fn(cur)) };
 }
@@ -342,7 +354,7 @@ function semLigacao() {
 }
 
 /* ================= desenho da tela ================= */
-let ui = { chave: '', nivel: 0, tent: 0, casa: null, verPreco: false };
+let ui = { chave: '', nivel: 0, tent: 0, casa: null, verPreco: false, gr: null };
 let falados = null, logChave = '';
 
 function recebe(v) {
@@ -353,7 +365,7 @@ function recebe(v) {
     if (!S || !S.etapa || !j.a || !j.b) { sentar(); return; }
     $('aula').hidden = true; $('rodape').hidden = true; $('entrada').hidden = false; document.querySelector('.wrap').classList.remove('em-aula');
     $('entrada').innerHTML = `<h2>Esta aula já tem uma dupla</h2><p class="sub">${esc(j.a.nome)} e ${esc(j.b.nome)} estão (ou estiveram) nesta aula. Se a aula delas já acabou, você pode começar uma nova.</p><div class="row"><button class="btn pri" type="button" id="novaAula">Começar uma aula nova</button></div>`;
-    $('novaAula').onclick = () => { Promise.resolve(sync.limpaVoz()).catch(() => {}); sync.tx(() => { const n = novo(); n.jog = { a: meuJog() }; return n; }).catch(semLigacao); };
+    $('novaAula').onclick = () => { Promise.resolve(sync.limpaVoz()).catch(() => {}); Promise.resolve(sync.limpaAud()).catch(() => {}); sync.tx(() => { const n = novo(); n.jog = { a: meuJog() }; return n; }).catch(semLigacao); };
     return;
   }
   $('rodape').hidden = false;
@@ -373,7 +385,7 @@ function recebe(v) {
 
 function chave() {
   const s = S, b = s.bat || {}, ab = b.ab || {}, c = s.cafe || {}, cv = s.cv || {}, l = s.lemb || {}, f = s.ficha || {};
-  return JSON.stringify([s.etapa, s.p || 0, concluida(), (s.pronto || {})[EU] || 0, b.vez, b.fase, b.casa, conta(ab.a), conta(ab.b), !!(f[EU] && f[EU].ok), (c.beb || {})[EU] || 0, cv.erro || 0, !!l[EU], !!(l.a && l.b), l.ok || 0]);
+  return JSON.stringify([s.etapa, s.p || 0, concluida(), (s.pronto || {})[EU] || 0, b.vez, b.fase, b.casa, conta(ab.a), conta(ab.b), !!(f[EU] && f[EU].ok), (c.beb || {})[EU] || 0, cv.erro || 0, !!l[EU], !!(l.a && l.b), l.ok || 0, c.com2 || 0, s.modo || 'online', (s.aguarda || {}).k || 0, (s.repete || {}).n || 0]);
 }
 function desenha(forca) {
   const i = iEtapa(), e = ETAPAS[i], P = outro(EU), vz = vezDe();
@@ -388,7 +400,7 @@ function desenha(forca) {
   const k = chave();
   if (forca || k !== ui.chave) {
     const mesma = k === ui.chave, antes = mesma && $('inp') ? $('inp').value : '';
-    if (!mesma) ui = { chave: k, nivel: 0, tent: 0, casa: null, verPreco: false };
+    if (!mesma) { paraCaptura(); ui = { chave: k, nivel: 0, tent: 0, casa: null, verPreco: false, gr: null }; }
     painel(); acao();
     if (antes && $('inp')) $('inp').value = antes;
     if (!mesma && (vz === EU || vz === 'ambas')) { const st = passos()[S.p || 0], b = S.bat || {};
@@ -396,6 +408,7 @@ function desenha(forca) {
       try { (noPainel ? $('painel') : $('acao')).scrollIntoView({ behavior: 'smooth', block: noPainel ? 'start' : 'nearest' }); } catch (e) {} }
   }
   $('btnRo').textContent = 'Romaji: ' + (ROM ? 'sim' : 'não'); $('btnRo').setAttribute('aria-pressed', String(ROM));
+  $('btModo').textContent = modoOn() ? 'modo: 🌐 online' : 'modo: 🤝 juntas';
   relogio(); vozBar();
 }
 function relogio() { if (!S || !S.t0 || !EU) { $('relogio').textContent = ''; return; } const m = Math.max(0, Math.floor((Date.now() - S.t0) / 60000)); $('relogio').textContent = `⏱ ${m} min de ${TOTAL_MIN}`; }
@@ -403,22 +416,49 @@ setInterval(relogio, 20000);
 
 /* ---------- conversa ---------- */
 function precoEscondido() { return S.etapa === 'conta' && (S.p || 0) === 1 && !ui.verPreco; }
+function linha(k) {
+  const m = S.log[k];
+  if (m.q === 's') return `<div class="msg sis">${esc(m.t)}</div>`;
+  if (m.q === 'r') { const oc = m.oc && precoEscondido();
+    return `<div class="msg robo"><span class="quem">🤖 ロボ</span>${oc ? '<span>🔊 Ouça com atenção…</span>' : ja(m.t) + (m.pt ? `<span class="pt">${esc(m.pt)}</span>` : '')}<button class="ou" type="button" data-fala="${esc(m.t)}">🔊 ouvir</button></div>`; }
+  const eu = m.q === EU, quem = `<span class="quem">${esc(nome(m.q))}${eu ? ' (você)' : ''}</span>`;
+  if (m.aud || m.live) {                                           /* fala gravada (ou dita ao vivo): sem texto até a parceira validar */
+    const pend = S.aguarda && S.aguarda.k === k, Pn = esc(nome(outro(m.q)));
+    let h = m.rep ? '<span class="pt">↺ repetida</span>' : m.live ? '<span>🗣️ falou ao vivo</span>' : `<button class="ou aud" type="button" data-aud="${esc(m.aud)}">▶ ${eu ? 'Ouvir a minha fala' : 'Ouvir'}</button>`;
+    if (pend) h += `<span class="pt">⏳ ${eu ? `esperando ${Pn} ouvir` : 'ouça e responda abaixo'}</span>`;
+    else if (m.v && !m.rep && m.m) h += REV.has(k) ? `<span class="rev">${ja(m.m)}${m.pt ? `<span class="pt">${esc(m.pt)}</span>` : ''}</span><button class="ou" type="button" data-rev="${k}">🙈 Esconder a frase</button>` : `<button class="ou" type="button" data-rev="${k}">📝 Mostrar frase escrita</button>`;
+    return `<div class="msg ${eu ? 'meu' : 'dele'}${m.rep ? ' rep' : ''}">${quem}${h}</div>`;
+  }
+  return `<div class="msg ${eu ? 'meu' : 'dele'}">${quem}${ja(m.t)}${eu ? '' : `<button class="ou" type="button" data-fala="${esc(m.t)}">🔊 ouvir</button>`}</div>`;
+}
+function ultimas(ks) {                                              /* só o fim da conversa: a última fala de gente + o que o robô respondeu */
+  const out = [];
+  for (let i = ks.length - 1; i >= 0 && out.length < 4; i--) { const m = S.log[ks[i]];
+    if (m.q === 's' && /^—/.test(m.t)) break;
+    if (m.rep || (m.q === 's' && /^↺/.test(m.t))) continue;
+    out.unshift(ks[i]); if (m.q === 'a' || m.q === 'b') break; }
+  return out;
+}
 function conversa() {
-  const ks = Object.keys(S.log || {}).sort(), k2 = ks.length + '|' + precoEscondido() + '|' + ROM + '|' + EU;
+  const ks = Object.keys(S.log || {}).sort(), hist = $('hist');
+  const k2 = ks.map(k => k + (S.log[k].v ? 'v' : '') + (S.log[k].rep ? 'r' : '')).join() + '|' + precoEscondido() + '|' + ROM + '|' + EU + '|' + REV.size + '|' + ((S.aguarda || {}).k || '') + '|' + hist.open;
   const idf = k => k + '|' + S.log[k].t;
   if (falados === null || ks.length < falados.size) falados = new Set(ks.map(idf));          /* ao abrir a página (ou recomeçar), não repete as falas antigas */
   ks.forEach(k => { const m = S.log[k]; if (!falados.has(idf(k))) { falados.add(idf(k)); if (m.q === 'r') fala(m.t); } });
   if (k2 === logChave) return; logChave = k2;
-  const box = $('conv');
-  box.innerHTML = ks.map(k => { const m = S.log[k];
-    if (m.q === 's') return `<div class="msg sis">${esc(m.t)}</div>`;
-    if (m.q === 'r') { const oc = m.oc && precoEscondido();
-      return `<div class="msg robo"><span class="quem">🤖 ロボ</span>${oc ? '<span>🔊 Ouça com atenção…</span>' : ja(m.t) + (m.pt ? `<span class="pt">${esc(m.pt)}</span>` : '')}<button class="ou" type="button" data-fala="${esc(m.t)}">🔊 ouvir</button></div>`; }
-    return `<div class="msg ${m.q === EU ? 'meu' : 'dele'}"><span class="quem">${esc(nome(m.q))}${m.q === EU ? ' (você)' : ''}</span>${ja(m.t)}${m.q === EU ? '' : `<button class="ou" type="button" data-fala="${esc(m.t)}">🔊 ouvir</button>`}</div>`;
-  }).join('') || '<div class="msg sis">A conversa de vocês aparece aqui.</div>';
-  box.scrollTop = box.scrollHeight;
+  const ul = ultimas(ks), box = $('ultima');
+  box.hidden = !ul.length; box.innerHTML = ul.map(linha).join('');
+  hist.hidden = !ks.length;
+  if (hist.open) { const hc = $('histConv'); hc.innerHTML = ks.map(k => linha(k)).join(''); hc.scrollTop = hc.scrollHeight; }
 }
-document.addEventListener('click', e => { const b = e.target.closest('[data-fala]'); if (b) { try { speechSynthesis.cancel(); } catch (x) {} fala(b.dataset.fala); } });
+$('hist').addEventListener('toggle', () => { logChave = ''; if (S && EU && S.jog && S.jog.a && S.jog.b) conversa(); });
+document.addEventListener('click', e => {
+  const b = e.target.closest('[data-fala]'); if (b) { try { speechSynthesis.cancel(); } catch (x) {} fala(b.dataset.fala); return; }
+  const au = e.target.closest('[data-aud]'); if (au) { const d = AUD[au.dataset.aud];
+    if (!d) { const t0 = au.textContent; au.textContent = '⏳ carregando…'; setTimeout(() => { au.textContent = t0; }, 1500); return; }
+    tocaSeq([{ clip: d }]); return; }
+  const rv = e.target.closest('[data-rev]'); if (rv) { const k = rv.dataset.rev; if (REV.has(k)) REV.delete(k); else REV.add(k); logChave = ''; conversa(); }
+});
 
 /* ---------- painel: o que cada uma vê ---------- */
 function tabuleiro(dono, opt) {
@@ -431,17 +471,17 @@ function minhaFicha(aberta) {
   const f = (S.ficha || {})[EU] || {}, b = S.bat || {}, ab = (b.ab || {})[EU] || {}, ped = S.etapa === 'batalha' && b.fase === 'responder' && outro(b.vez) === EU ? b.casa : null;
   return `<details class="minha"${aberta || ped ? ' open' : ''}><summary>🔒 Minha ficha (só você vê)</summary><ul>${CASAS.map(c => `<li class="${ab[c.id] ? 'ach' : ''}${ped === c.id ? ' ped' : ''}">${c.ic} ${ja(f[c.id] || '')}${ab[c.id] ? ' ✓' : ''}</li>`).join('')}</ul></details>`;
 }
-function cardapio(toca) {
+function cardapio(tocaBeb, tocaCom) {
   const c = S.cafe || {}, meu = (c.beb || {})[EU], fora = c.com1;
-  const lin = (x, bot) => { const cls = 'it' + (x.id === meu ? ' meu' : '') + (x.id === fora ? ' fora' : ''), inner = `<span class="nm">${x.ic} ${ja(x.n)}</span><span class="pr">${x.p}えん</span>`;
-    return bot ? `<button type="button" class="${cls}" data-beb="${x.id}">${inner}</button>` : `<div class="${cls}">${inner}</div>`; };
-  return `<div class="menu"><h3 lang="ja">メニュー</h3><div class="cols"><div><span class="grp">のみもの · bebidas</span>${BEBIDAS.map(x => lin(x, toca)).join('')}</div><div><span class="grp">たべもの · comidas</span>${COMIDAS.map(x => lin(x, false)).join('')}</div></div></div>`;
+  const lin = (x, attr, marca) => { const cls = 'it' + (x.id === meu || marca ? ' meu' : '') + (x.id === fora ? ' fora' : ''), inner = `<span class="nm">${x.ic} ${ja(x.n)}</span><span class="pr">${x.p}えん</span>`;
+    return attr ? `<button type="button" class="${cls}" ${attr}="${x.id}">${inner}</button>` : `<div class="${cls}">${inner}</div>`; };
+  return `<div class="menu"><h3 lang="ja">メニュー</h3><div class="cols"><div><span class="grp">のみもの · bebidas</span>${BEBIDAS.map(x => lin(x, tocaBeb ? 'data-beb' : null)).join('')}</div><div><span class="grp">たべもの · comidas</span>${COMIDAS.map(x => lin(x, tocaCom && x.id !== fora ? 'data-com' : null, tocaCom && x.id === c.com2)).join('')}</div></div></div>`;
 }
 function painel() {
   const p = $('painel'), s = S, P = outro(EU), st = passos()[s.p || 0]; let h = '';
   if (s.etapa === 'ficha' && (s.ficha || {})[EU] && s.ficha[EU].ok) h = minhaFicha(true);
   if (s.etapa === 'batalha') {
-    const b = s.bat || {}, toca = !b.fim && b.fase === 'perguntar' && b.vez === EU;
+    const b = s.bat || {}, toca = !b.fim && b.fase === 'perguntar' && b.vez === EU && !s.aguarda;
     h = `<div class="row" style="justify-content:space-between"><h3>🎯 Tabuleiro de ${esc(nome(P))}</h3><span class="sub">${conta((b.ab || {})[P])} de ${CASAS.length} abertas</span></div>${tabuleiro(P, { toca })}${minhaFicha()}`;
   }
   if (s.etapa === 'convite') {
@@ -453,7 +493,7 @@ function painel() {
   }
   if (s.etapa === 'cafe') {
     const bB = item(((s.cafe || {}).beb || {}).b), errado = bB && bB.id === 'ocha' ? item('kohi') : item('ocha');
-    h = ((s.p || 0) === 8 && EU === 'b' && bB ? `<div class="errado">Você pediu <b lang="ja">${bB.ic} ${bB.n}</b>, mas chegou <b lang="ja">${errado.ic} ${errado.n}</b>.</div>` : '') + cardapio(st && st.tipo === 'bebida' && !((s.cafe || {}).beb || {})[EU]);
+    h = ((s.p || 0) === 8 && EU === 'b' && bB ? `<div class="errado">Você pediu <b lang="ja">${bB.ic} ${bB.n}</b>, mas chegou <b lang="ja">${errado.ic} ${errado.n}</b>.</div>` : '') + cardapio(st && st.tipo === 'bebida' && !((s.cafe || {}).beb || {})[EU], !!(st && st.escolhe === 'comida' && st.quem === EU && !TEXTO && !s.aguarda));
   }
   if (s.etapa === 'papo') h = `<h3>🔥 Peças para usar no passado</h3><div class="pecas">${[['〜と', 'com (alguém)'], ['〜じかん', 'por … horas'], ['たくさん', 'muito'], ['〜ました', 'fiz'], ['〜でした', 'foi'], ['〜じゃなかったです', 'não foi']].map(x => `<span><b lang="ja">${x[0]}</b> ${x[1]}</span>`).join('')}</div>`;
   if (s.etapa === 'conta' && concluida()) { const c = s.cafe || {}, its = [(c.beb || {}).a, (c.beb || {}).b, c.com2].map(item).filter(Boolean);
@@ -464,6 +504,7 @@ function painel() {
 $('painel').addEventListener('click', e => {
   const c = e.target.closest('[data-casa]'); if (c && !c.disabled) { ui.casa = c.dataset.casa; ui.nivel = 0; ui.tent = 0; painel(); acao(); const i = $('inp'); if (i) i.focus(); return; }
   const b = e.target.closest('[data-beb]'); if (b) { sync.update({ ['cafe/beb/' + EU]: b.dataset.beb }); return; }
+  const cm = e.target.closest('[data-com]'); if (cm) { sync.update({ 'cafe/com2': cm.dataset.com }); return; }
   const pr = e.target.closest('[data-pred]'); if (pr && !pr.disabled) { const i = +pr.dataset.pred, cv = S.cv || {};
     if (i === cv.alvo) sync.tx(root => { if (!root || root.etapa !== 'convite' || (root.p || 0) !== 3) return; root.p = 4; poeLog(root, 's', '🚶 Vocês chegaram ao カフェ！'); return root; });
     else sync.update({ 'cv/erro': (cv.erro || 0) + 1, 'cv/ult': i }); }
@@ -471,15 +512,20 @@ $('painel').addEventListener('click', e => {
 
 /* ---------- ação: o que fazer agora ---------- */
 const espera = t => `<div class="espera"><i></i><span>${t}</span></div>`;
+function dicaHTML(cfg, n) {                                          /* dicas em 3 níveis: começo · lacunas · frase inteira com áudio de referência */
+  return n === 1 ? `<div class="dica"><small>COMEÇO DA FRASE</small>${ja(cfg.d1)}</div>` : n === 2 ? `<div class="dica"><small>COMPLETE AS LACUNAS</small>${ja(cfg.d2)}</div>`
+    : n >= 3 ? `<div class="dica"><small>FRASE INTEIRA</small>${ja(cfg.m)}${cfg.pt ? `<span class="pt">${esc(cfg.pt)}</span>` : ''}<button class="btn peq" type="button" data-fala="${esc(cfg.m)}" style="justify-self:start">🔊 Ouvir o modelo</button></div>` : '';
+}
+const uiDizer = cfg => (TEXTO ? uiFala(cfg) : uiAudio(cfg));
 function uiFala(cfg) {
   const a = $('acao');
   a.innerHTML = `<div class="vez"><b>✍️ Sua vez</b><p>${cfg.instr}</p></div><p class="sub">Escreva e diga em voz alta para a sua dupla.</p><div id="dicas"></div>
     <div class="escrever"><input id="inp" type="text" lang="ja" autocomplete="off" autocapitalize="off" autocorrect="off" spellcheck="false" enterkeyhint="send" placeholder="Escreva em japonês (kana ou romaji)" aria-label="Sua frase"><button class="btn pri" type="button" id="envia">Enviar</button></div>
-    <div class="row"><button class="btn peq" type="button" id="btDica">💡 Dica</button><button class="btn peq" type="button" id="forca" hidden>Enviar assim mesmo</button></div><p class="fb" id="fb" aria-live="polite"></p>`;
-  const inp = $('inp'), fb = $('fb');
+    <div class="row"><button class="btn peq" type="button" id="btDica">💡 Dica</button><button class="btn peq" type="button" id="forca" hidden>Enviar assim mesmo</button><button class="lk" type="button" id="btVoz">🎤 Prefiro falar</button></div><p class="fb" id="fb" aria-live="polite"></p>`;
+  const inp = $('inp'), fb = $('fb'); fb.textContent = ui.aviso || ''; ui.aviso = '';
+  $('btVoz').onclick = () => { TEXTO = false; acao(); };
   const dicas = () => { const n = ui.nivel, d = $('dicas');
-    d.innerHTML = n === 1 ? `<div class="dica"><small>COMEÇO DA FRASE</small>${ja(cfg.d1)}</div>` : n === 2 ? `<div class="dica"><small>COMPLETE AS LACUNAS</small>${ja(cfg.d2)}</div>`
-      : n >= 3 ? `<div class="dica"><small>FRASE INTEIRA</small>${ja(cfg.m)}${cfg.pt ? `<span class="pt">${esc(cfg.pt)}</span>` : ''}<button class="btn peq" type="button" data-fala="${esc(cfg.m)}" style="justify-self:start">🔊 Ouvir</button></div>` : '';
+    d.innerHTML = dicaHTML(cfg, n);
     $('btDica').textContent = n === 0 ? '💡 Dica' : n < 3 ? '💡 Mais dica' : '💡 Dica completa'; $('btDica').disabled = n >= 3; $('forca').hidden = ui.tent < 2; };
   dicas();
   $('btDica').onclick = () => { ui.nivel = Math.min(3, ui.nivel + 1); dicas(); inp.focus(); };
@@ -498,6 +544,106 @@ function gravaPasso(st, txt, forcado) {
   return sync.tx(root => { if (!root || root.etapa !== de || (root.p || 0) !== p) return;
     poeLog(root, EU, txt); if (st.depois) { erro = st.depois(txt, root, forcado) || null; if (erro) return; } root.p = p + 1; return root; }).then(() => erro);
 }
+/* fala dita em áudio (ou ao vivo): se o passo é de conversa entre elas, a parceira precisa validar; se é com o robô, segue direto */
+function gravaPassoAud(st, payload) {
+  let erro = null; const de = S.etapa, p = S.p || 0;
+  return sync.tx(root => { if (!root || root.etapa !== de || (root.p || 0) !== p || root.aguarda) return;
+    const k = poeLogK(root, EU, '', payload); root.repete = null;
+    if (st.depois) { erro = st.depois('', root, true) || null; if (erro) return; root.log[k].v = 1; root.p = p + 1; }
+    else root.aguarda = { kind: 'passo', p, de: EU, k };
+    return root; }).then(() => erro);
+}
+function validaAg(ag) {                                             /* わかりました ✓ */
+  return sync.tx(root => { const g = root && root.aguarda; if (!g || g.k !== ag.k) return;
+    if (g.kind === 'passo') { if ((root.p || 0) !== g.p) return; const st = passos()[g.p]; if (st && st.depois) st.depois('', root, true); root.p = g.p + 1; }
+    else if (g.kind === 'bat') { const bt = root.bat; if (!bt || bt.fase !== g.fase) return;
+      if (g.fase === 'perguntar') { bt.casa = g.casa; bt.fase = 'responder'; }
+      else { bt.ab = bt.ab || {}; bt.ab[g.de] = bt.ab[g.de] || {}; bt.ab[g.de][g.casa] = true; bt.fase = 'reagir'; } }
+    if (root.log && root.log[g.k]) root.log[g.k].v = 1;
+    root.aguarda = null; return root; });
+}
+function repeteAg(ag) {                                             /* もういちど おねがいします ↺ */
+  const aud = (S.log[ag.k] || {}).aud;
+  return sync.tx(root => { const g = root && root.aguarda; if (!g || g.k !== ag.k) return;
+    if (root.log && root.log[g.k]) root.log[g.k].rep = 1;
+    poeLog(root, 's', `↺ ${nome(outro(g.de))} pediu para ${nome(g.de)} repetir.`);
+    root.aguarda = null; root.repete = { de: g.de, n: ((root.repete || {}).n || 0) + 1 }; return root; })
+    .then(() => { if (aud) Promise.resolve(sync.setAud(aud, null)).catch(() => {}); });
+}
+function acaoAguarda() {
+  const a = $('acao'), ag = S.aguarda, P = outro(EU), Pn = esc(nome(P)), e = (S.log || {})[ag.k] || {};
+  a.classList.toggle('minha-vez', ag.de !== EU);
+  if (ag.de === EU) {
+    a.innerHTML = `<div class="vez"><b>✓ Enviado!</b><p>${Pn} está ${e.live ? 'ouvindo você ao vivo' : 'ouvindo a sua gravação'}. Se ela não entender, vai pedir para você repetir.</p></div>${e.aud ? `<div class="row"><button class="btn peq" type="button" data-aud="${esc(e.aud)}">▶ Ouvir a minha gravação</button></div>` : ''}${espera(`Esperando ${Pn}…`)}`;
+    return;
+  }
+  const o = ag.kind === 'bat' ? (ag.fase === 'perguntar' ? 'a pergunta' : 'a resposta') : 'a fala';
+  a.innerHTML = `<div class="vez"><b>👂 Ouça ${o} de ${Pn}</b><p>${e.live ? `${Pn} está falando ao vivo. Ouça com atenção.` : 'Toque em ▶ e escute. Pode ouvir mais de uma vez.'}</p></div>
+    ${e.aud ? `<div class="row"><button class="btn pri grande" type="button" data-aud="${esc(e.aud)}">▶ Ouvir ${Pn}</button></div>` : ''}
+    <div class="duplo"><button class="btn pri" type="button" id="vOk" lang="ja">わかりました ✓<small>Entendi</small></button><button class="btn sage" type="button" id="vRe" lang="ja">もういちど おねがいします ↺<small>Não entendi: pedir para repetir</small></button></div><p class="fb" id="fb" aria-live="polite"></p>`;
+  const trava = fn => { $('vOk').disabled = $('vRe').disabled = true; Promise.resolve(fn(ag)).catch(() => { $('fb').textContent = 'Não consegui enviar. Tente de novo.'; $('vOk').disabled = $('vRe').disabled = false; }); };
+  $('vOk').onclick = () => trava(validaAg); $('vRe').onclick = () => trava(repeteAg);
+}
+
+/* ---------- gravar a própria fala ---------- */
+async function capturaVoz(maxMs, bps) {
+  if (!navigator.mediaDevices || !window.MediaRecorder) throw new Error('sem suporte');
+  const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+  const tipo = ['audio/webm;codecs=opus', 'audio/mp4', 'audio/webm', 'audio/ogg;codecs=opus'].find(t => MediaRecorder.isTypeSupported(t)) || '';
+  let rec; try { rec = new MediaRecorder(stream, tipo ? { mimeType: tipo, audioBitsPerSecond: bps } : {}); } catch (e) { stream.getTracks().forEach(t => t.stop()); throw e; }
+  const partes = []; let tm = null;
+  const c = { cancelado: false, stop: () => { if (rec.state === 'recording') rec.stop(); } };
+  c.fim = new Promise(res => { rec.ondataavailable = e => { if (e.data && e.data.size) partes.push(e.data); };
+    rec.onstop = () => { clearTimeout(tm); stream.getTracks().forEach(t => t.stop()); res(new Blob(partes, { type: rec.mimeType || tipo || 'audio/webm' })); }; });
+  rec.start(); tm = setTimeout(c.stop, maxMs);
+  return c;
+}
+function paraCaptura() { clearInterval(tick); tick = null; if (capt) { const c = capt; capt = null; c.cancelado = true; try { c.stop(); } catch (e) {} } }
+function uiAudio(cfg) {
+  const a = $('acao'), Pn = esc(nome(outro(EU))), on = modoOn();
+  const g = ui.gr = ui.gr || { est: 'pronto', blob: null, url: null, msg: '' };
+  const pre = cfg.precisa ? cfg.precisa() : null;
+  const dicas = () => { const n = ui.nivel; $('dicas').innerHTML = dicaHTML(cfg, n); const b = $('btDica'); if (b) { b.textContent = n === 0 ? '💡 Ver modelo' : n < 3 ? '💡 Mais dica' : '💡 Modelo completo'; b.disabled = n >= 3; } };
+  const falha = (m, est) => { g.est = est; g.msg = m; if (ui.gr === g) pinta(); };
+  const pinta = () => {
+    const rep = S.repete && S.repete.de === EU ? `<p class="fb">${Pn} pediu para você repetir. Fale mais devagar e perto do microfone.</p>` : '';
+    const bt = pre ? `<p class="fb">${pre}</p>`
+      : !on ? `<button class="btn pri grande" type="button" id="jaFalei">✓ Já falei</button><p class="sub">Fale em voz alta para ${Pn}. Toque quando terminar.</p>`
+      : g.est === 'gravando' ? `<button class="btn grande gravando" type="button" id="pa">⏹ Parar <span id="tempo">0s</span></button>`
+      : g.est === 'revisar' ? `<div class="row"><button class="btn" type="button" id="ouve">▶ Ouvir</button><button class="btn" type="button" id="outra">🎤 Gravar de novo</button></div><button class="btn pri grande" type="button" id="manda">✓ Enviar para ${Pn}</button>`
+      : g.est === 'enviando' ? espera('Enviando…')
+      : `<button class="btn pri grande" type="button" id="gr">🎤 Gravar</button><p class="sub">Toque, fale em voz alta e toque de novo para parar.</p>`;
+    a.innerHTML = `<div class="vez"><b>🎤 Sua vez de falar</b><p>${cfg.instr}</p></div>${rep}<div id="dicas"></div><div class="gravar">${bt}</div><p class="fb" id="fb" role="status" aria-live="polite">${esc(g.msg || '')}</p>
+      <div class="row">${pre ? '' : '<button class="btn peq" type="button" id="btDica">💡 Ver modelo</button>'}<button class="lk" type="button" id="btTexto">✍️ Prefiro digitar</button></div>`;
+    dicas();
+    if ($('btDica')) $('btDica').onclick = () => { ui.nivel = Math.min(3, ui.nivel + 1); dicas(); };
+    $('btTexto').onclick = () => { paraCaptura(); TEXTO = true; ui.aviso = ''; acao(); };
+    const q = id => $(id);
+    if (q('gr')) q('gr').onclick = inicia;
+    if (q('pa')) q('pa').onclick = () => { if (capt) capt.stop(); };
+    if (q('ouve')) q('ouve').onclick = () => tocaSeq([{ clip: g.url }]);
+    if (q('outra')) q('outra').onclick = () => { g.est = 'pronto'; g.blob = g.url = null; g.msg = ''; pinta(); };
+    if (q('manda')) q('manda').onclick = envia;
+    if (q('jaFalei')) q('jaFalei').onclick = () => manda({ live: 1, m: cfg.m, pt: cfg.pt || '' });
+  };
+  const manda = payload => { g.est = 'enviando'; pinta();
+    return Promise.resolve(cfg.enviaAud(payload)).then(err => { if (err) falha(err, on ? 'revisar' : 'pronto'); }).catch(() => falha('Não consegui enviar. Tente de novo.', on ? 'revisar' : 'pronto')); };
+  const envia = async () => { g.est = 'enviando'; pinta();
+    try { const id = EU + Date.now().toString(36); await sync.setAud(id, g.url); await manda({ aud: id, m: cfg.m, pt: cfg.pt || '' }); }
+    catch (e) { falha('Não consegui enviar a gravação. Tente de novo.', 'revisar'); } };
+  const inicia = async () => {
+    g.msg = '';
+    let c; try { c = await capturaVoz(12000, 24000); }
+    catch (e) { TEXTO = true; ui.aviso = 'Não consegui usar o microfone. Libere o microfone para este site nas configurações do navegador. Por enquanto, escreva a frase.'; acao(); return; }
+    capt = c; g.est = 'gravando'; pinta(); const t0 = Date.now();
+    tick = setInterval(() => { const t = $('tempo'); if (t) t.textContent = Math.round((Date.now() - t0) / 1000) + 's'; }, 500);
+    const blob = await c.fim; clearInterval(tick); tick = null; if (c.cancelado || ui.gr !== g) return; capt = null;
+    if (blob.size < 800) return falha('Não ouvi nada. Tente de novo, falando perto do microfone.', 'pronto');
+    if (blob.size > 150000) return falha('A gravação ficou longa demais. Diga só a frase.', 'pronto');
+    try { g.blob = blob; g.url = await lerComoURL(blob); g.est = 'revisar'; if (ui.gr === g) pinta(); } catch (e) { falha('Não consegui gravar neste aparelho.', 'pronto'); }
+  };
+  pinta();
+}
 function acao() {
   const a = $('acao'), s = S, P = outro(EU), Pn = esc(nome(P)), vz = vezDe();
   a.classList.toggle('minha-vez', vz === EU || vz === 'ambas');
@@ -508,6 +654,7 @@ function acao() {
     if (!eu) $('proxima').onclick = () => { $('proxima').disabled = true; sync.update({ ['pronto/' + EU]: s.etapa }); };
     return;
   }
+  if (s.aguarda) return acaoAguarda();
   if (s.etapa === 'ficha') return acaoFicha();
   if (s.etapa === 'batalha') return acaoBatalha();
   if (s.etapa === 'lembranca') return acaoLembranca();
@@ -534,7 +681,7 @@ function acao() {
     $('verPreco').onclick = () => { ui.verPreco = true; conversa(); };
     return;
   }
-  uiFala(Object.assign({}, st, { envia: (txt, forcado) => gravaPasso(st, txt, forcado) }));
+  uiDizer(Object.assign({}, st, { envia: (txt, forcado) => gravaPasso(st, txt, forcado), enviaAud: p => gravaPassoAud(st, p) }));
 }
 
 /* ---------- etapa 2: ficha ---------- */
@@ -560,28 +707,30 @@ function acaoFicha() {
 /* ---------- etapa 3: batalha naval ---------- */
 function acaoBatalha() {
   const a = $('acao'), b = S.bat || {}, P = outro(EU), Pn = nome(P), vez = b.vez || 'b', f = (S.ficha || {})[EU] || {};
-  const escreve = (txt, muda) => sync.tx(root => { if (!root || root.etapa !== 'batalha' || !root.bat || root.bat.fase !== b.fase || (root.bat.vez || 'b') !== vez) return; poeLog(root, EU, txt); muda(root.bat); return root; }).then(() => null);
+  const escreve = (txt, muda) => sync.tx(root => { if (!root || root.etapa !== 'batalha' || !root.bat || root.bat.fase !== b.fase || (root.bat.vez || 'b') !== vez || root.aguarda) return; poeLog(root, EU, txt); muda(root.bat); return root; }).then(() => null);
+  const fala_ = (payload, extra) => sync.tx(root => { if (!root || root.etapa !== 'batalha' || !root.bat || root.bat.fase !== b.fase || (root.bat.vez || 'b') !== vez || root.aguarda) return;
+    const k = poeLogK(root, EU, '', payload); root.repete = null; root.aguarda = Object.assign({ kind: 'bat', fase: b.fase, de: EU, k }, extra); return root; }).then(() => null);
   if (b.fase === 'perguntar') {
     if (vez !== EU) { a.innerHTML = `<div class="vez"><b>Vez de ${esc(Pn)}</b><p>Ela vai fazer uma pergunta sobre você. A resposta está na sua ficha.</p></div>${espera(`${esc(Pn)} está escolhendo a pergunta…`)}`; return; }
     const c = casaDe(ui.casa);
     if (!c) { a.innerHTML = `<div class="vez"><b>🎯 Sua vez de perguntar</b><p>Toque numa casa fechada (？) do tabuleiro de ${esc(Pn)}.</p></div>`; return; }
-    uiFala({ instr: `Pergunte a ${esc(Pn)}: <b>${esc(c.pt)}</b> ${c.ic}`, m: c.perg.m(Pn), d1: c.perg.d1(Pn), d2: c.perg.d2(Pn), pt: c.perg.pt, k: c.perg.k,
-      envia: txt => escreve(txt, bt => { bt.casa = c.id; bt.fase = 'responder'; }) });
+    uiDizer({ instr: `Pergunte a ${esc(Pn)}: <b>${esc(c.pt)}</b> ${c.ic}`, m: c.perg.m(Pn), d1: c.perg.d1(Pn), d2: c.perg.d2(Pn), pt: c.perg.pt, k: c.perg.k,
+      envia: txt => escreve(txt, bt => { bt.casa = c.id; bt.fase = 'responder'; }), enviaAud: p => fala_(p, { casa: c.id }) });
     return;
   }
   const c = casaDe(b.casa) || CASAS[0];
   if (b.fase === 'responder') {
     if (vez === EU) { a.innerHTML = `<div class="vez"><b>Vez de ${esc(Pn)}</b><p>Ouça a resposta dela. A casa ${c.ic} abre quando ela responder.</p></div>${espera(`${esc(Pn)} está respondendo…`)}`; return; }
     const val = (f[c.id] || '') + '。';
-    uiFala({ instr: `Responda a pergunta de ${esc(Pn)} ${c.ic}. A resposta está na sua ficha.`, m: val, d1: val.slice(0, 2) + '…', d2: c.resp.d2, pt: '', k: c.resp.k,
-      envia: txt => escreve(txt, bt => { bt.ab = bt.ab || {}; bt.ab[EU] = bt.ab[EU] || {}; bt.ab[EU][c.id] = true; bt.fase = 'reagir'; }) });
+    uiDizer({ instr: `Responda a pergunta de ${esc(Pn)} ${c.ic}. A resposta está na sua ficha.`, m: val, d1: val.slice(0, 2) + '…', d2: c.resp.d2, pt: '', k: c.resp.k,
+      envia: txt => escreve(txt, bt => { bt.ab = bt.ab || {}; bt.ab[EU] = bt.ab[EU] || {}; bt.ab[EU][c.id] = true; bt.fase = 'reagir'; }), enviaAud: p => fala_(p, { casa: c.id }) });
     return;
   }
   /* reagir */
   if (vez !== EU) { a.innerHTML = `<div class="vez"><b>Vez de ${esc(Pn)}</b><p>Ela descobriu uma casa da sua ficha ${c.ic} e vai reagir.</p></div>${espera(`Esperando a reação de ${esc(Pn)}…`)}`; return; }
-  a.innerHTML = `<div class="vez"><b>💬 Casa aberta! Reaja à resposta</b><p>Toque numa reação e diga em voz alta.</p></div><div class="pilulas">${REACOES.map((r, i) => `<button type="button" data-re="${i}" class="${r.ar ? 'ar' : ''}">${ja(r.t)}<small>${r.ar ? '🌬️ ' : ''}${esc(r.pt)}</small></button>`).join('')}</div>`;
+  a.innerHTML = `<div class="vez"><b>💬 Casa aberta! Reaja à resposta</b><p>Toque numa reação${modoOn() ? '' : ' e diga em voz alta'}.</p></div><div class="pilulas">${REACOES.map((r, i) => `<button type="button" data-re="${i}">${ja(r.t)}<small>${esc(r.pt)}</small></button>`).join('')}</div>`;
   a.querySelector('.pilulas').onclick = e => { const bt = e.target.closest('[data-re]'); if (!bt) return; const r = REACOES[+bt.dataset.re];
-    escreve(r.t, x => { if (r.ar) { x.fase = 'responder'; return; }
+    escreve(r.t, x => {
       const ab = x.ab || {}, falta_ = q => conta(ab[q]) < CASAS.length;      /* falta_(q): a ficha de q ainda tem casa fechada */
       x.casa = null; x.fase = 'perguntar';
       if (falta_(vez)) x.vez = outro(vez); else if (falta_(outro(vez))) x.vez = vez; else x.fim = true; }); };
@@ -599,7 +748,9 @@ function acaoLembranca() {
     a.innerHTML = `<div class="foto"><div class="duo"><div class="face">${avatarHTML(S.jog[EU].sel)}</div><span>${(item((c.beb || {}).a) || {}).ic || '☕'}${(item(c.com2) || {}).ic || '🍰'}${(item((c.beb || {}).b) || {}).ic || '☕'}</span><div class="face">${avatarHTML(S.jog[P].sel)}</div></div>
       <div class="leg" lang="ja">${esc(nome(EU))} と ${esc(nome(P))} · カフェで<br>${data}</div></div>
       ${bloco(P, EU)}<p class="sub">Está certo o que ${esc(Pn)} escreveu sobre você? Confirme com はい、そうです！</p>${bloco(EU, P)}
+      ${Object.values(S.log || {}).some(m => m.aud && !m.rep) ? '<div class="row" style="justify-content:center"><button class="btn" type="button" id="reouve">🎧 Reouvir as gravações da aula</button></div>' : ''}
       <div class="vez" style="text-align:center"><b lang="ja">おつかれさまでした！</b><p>Aula concluída. Tire um print para guardar a lembrança. 📸</p></div>`;
+    if ($('reouve')) $('reouve').onclick = () => tocaSeq(Object.keys(S.log || {}).sort().map(k => S.log[k]).filter(m => m.aud && !m.rep && AUD[m.aud]).map(m => ({ clip: AUD[m.aud] })));
     a.onclick = e => { const b = e.target.closest('[data-ok]'); if (b) sync.update({ ['lemb/ok/' + b.dataset.ok]: true }); };
     return;
   }
@@ -617,7 +768,7 @@ function acaoLembranca() {
 }
 
 /* ---------- gravar o nome da personagem ---------- */
-let gravando = null, vozMsg = '';
+let gravando = null, vozMsg = '', nomeAberto = false;
 function lerComoURL(blob) { return new Promise((ok, no) => { const f = new FileReader(); f.onload = () => ok(f.result); f.onerror = no; f.readAsDataURL(blob); }); }
 async function gravaNome() {
   if (gravando) { try { gravando.stop(); } catch (e) {} return; }
@@ -640,14 +791,21 @@ async function gravaNome() {
 function vozBar() {
   const b = $('vozBar');
   if (!S || !EU || !S.jog || !S.jog.a || !S.jog.b || !['chegada', 'ficha'].includes(S.etapa)) { b.hidden = true; return; }
+  const on = modoOn(), cheg = S.etapa === 'chegada';
+  if (!on && !cheg) { b.hidden = true; return; }
   const meu = VOZ[EU], N = nome(EU);
   b.hidden = false;
-  b.innerHTML = `<div class="vez"><b>🎤 Grave o nome da sua personagem</b><p>Diga só <b lang="ja">${esc(N)}</b>, em 1 a 3 segundos. Quando a aula falar de você, a sua dupla ouve a sua voz. É opcional.</p></div>
+  const modos = cheg ? `<div class="vez"><b>Como vocês estão hoje?</b></div>
+    <div class="modos"><button type="button" class="modo${on ? ' sel' : ''}" data-modo="online"><b>🌐 Online</b><small>Cada uma na sua casa. Grava a voz.</small></button><button type="button" class="modo${on ? '' : ' sel'}" data-modo="juntas"><b>🤝 Juntas</b><small>Na mesma sala. Fala ao vivo.</small></button></div>` : '';
+  const nomeRec = on ? `<details class="nomeRec"${gravando || meu || nomeAberto ? ' open' : ''}><summary>🎤 Gravar o nome da personagem <small>(opcional)</small></summary><div class="vez"><p>Diga só <b lang="ja">${esc(N)}</b>, em 1 a 3 segundos. Quando a aula falar de você, a sua dupla ouve a sua voz.</p></div>
     <div class="row"><button class="btn${meu || gravando ? '' : ' pri'}" type="button" id="btGrava">${gravando ? '⏹ Parar a gravação' : meu ? '🎤 Gravar de novo' : '🎤 Gravar o meu nome'}</button>${meu && !gravando ? '<button class="btn" type="button" id="btOuve">▶ Ouvir</button><span class="so-voce">✓ gravado</span>' : ''}${gravando ? '<span class="espera"><i></i><span>Gravando… fale agora</span></span>' : ''}</div>
-    ${vozMsg ? `<p class="fb" role="status">${esc(vozMsg)}</p>` : ''}<p class="sub">A gravação fica guardada só até a aula ser recomeçada.</p>`;
-  $('btGrava').onclick = gravaNome;
+    ${vozMsg ? `<p class="fb" role="status">${esc(vozMsg)}</p>` : ''}<p class="sub">A gravação fica guardada só até a aula ser recomeçada.</p></details>` : '';
+  b.innerHTML = modos + nomeRec;
+  b.onclick = e => { const m = e.target.closest('[data-modo]'); if (m && m.dataset.modo !== (on ? 'online' : 'juntas')) sync.update({ modo: m.dataset.modo }); };
+  if ($('btGrava')) $('btGrava').onclick = gravaNome;
   if ($('btOuve')) $('btOuve').onclick = () => tocaSeq([{ clip: meu }]);
 }
+$('vozBar').addEventListener('toggle', e => { if (e.target.classList && e.target.classList.contains('nomeRec')) nomeAberto = e.target.open; }, true);
 
 /* ---------- rodapé: romaji, pular etapa, recomeçar ---------- */
 $('btnRo').onclick = () => { ROM = !ROM; try { localStorage.setItem('utopiaRomaji', ROM ? '1' : '0'); } catch (e) {} if (S && EU && S.jog && S.jog.a && S.jog.b) desenha(true); else { $('btnRo').textContent = 'Romaji: ' + (ROM ? 'sim' : 'não'); } };
@@ -658,12 +816,14 @@ doisToques($('pular'), 'pular esta etapa', () => { if (!S || !EU) return;
   if (S.etapa === 'ficha' || S.etapa === 'batalha') { /* sem ficha não há tabuleiro: completa o que faltar com um exemplo */
     sync.tx(root => { if (!root) return; root.ficha = root.ficha || {}; ['a', 'b'].forEach(r => { const f = root.ficha[r] = root.ficha[r] || {}; CASAS.forEach(c => { if (!f[c.id]) f[c.id] = c.campo.valor(c.campo.ideias[0][0]); }); f.ok = true; }); return root; }).then(() => avanca(S.etapa));
   } else avanca(S.etapa); });
-doisToques($('reiniciar'), 'recomeçar a aula', () => { if (!S || !EU) return; rasc = {}; rascL = ['', '']; falados = null; logChave = '';
-  Promise.resolve(sync.limpaVoz()).catch(() => {}); sync.tx(root => { const n = novo(); n.jog = (root && root.jog) || {}; return n; }); });
+doisToques($('reiniciar'), 'recomeçar a aula', () => { if (!S || !EU) return; rasc = {}; rascL = ['', '']; falados = null; logChave = ''; REV.clear(); paraCaptura();
+  Promise.resolve(sync.limpaVoz()).catch(() => {}); Promise.resolve(sync.limpaAud()).catch(() => {}); sync.tx(root => { const n = novo(); n.jog = (root && root.jog) || {}; if (root && root.modo) n.modo = root.modo; return n; }); });
+$('btModo').onclick = () => { if (S && EU) sync.update({ modo: modoOn() ? 'juntas' : 'online' }); };
 
 /* ================= começa ================= */
 (async function () {
   try { sync = LOCAL ? ligaLocal() : await ligaFirebase(); } catch (e) { semLigacao(); return; }
   sync.on(recebe, semLigacao);
   if (sync.onVoz) sync.onVoz(v => { VOZ = v || {}; vozBar(); });
+  if (sync.onAud) sync.onAud(v => { AUD = v || {}; if (S && EU && S.jog && S.jog.a && S.jog.b) { logChave = ''; conversa(); } });
 })();

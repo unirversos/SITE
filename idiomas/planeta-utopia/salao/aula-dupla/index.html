@@ -118,6 +118,14 @@ button.pred:disabled{cursor:default;box-shadow:none;border-color:var(--line);bac
 .pecas span{border:1.5px solid var(--line);border-radius:12px;padding:3px 10px;font-size:14.5px;background:#fff}
 
 /* conversa */
+.ultima{display:grid;gap:7px}
+.ultima .msg{max-width:94%}
+.hist{border:1.5px dashed var(--line);border-radius:14px;padding:6px 12px}
+.hist summary{cursor:pointer;font-weight:700;font-size:14px;min-height:34px;display:flex;align-items:center}
+.hist .conv{margin-top:6px;max-height:40vh}
+.msg.rep{opacity:.55}
+.msg .rev{display:grid;gap:1px;margin-top:2px}
+.msg .ou.aud{border-color:#cfe0f0;background:#f3f8fd;font-weight:700;min-height:38px}
 .conv{border:1.5px solid var(--line);border-radius:18px;background:#fff;padding:10px;display:grid;gap:7px;max-height:26vh;min-height:72px;overflow:auto;align-content:start}
 .msg{max-width:88%;border-radius:16px;padding:6px 11px;line-height:1.45;font-size:16px;display:grid;gap:1px}
 .msg .quem{font-size:11.5px;font-weight:700;color:var(--muted)}
@@ -127,6 +135,26 @@ button.pred:disabled{cursor:default;box-shadow:none;border-color:var(--line);bac
 .msg.robo{background:var(--gold-soft);border:1.5px solid #ecd9a4;justify-self:start}
 .msg.sis{justify-self:center;background:none;color:var(--muted);font-size:13px;text-align:center;max-width:100%;padding:2px 0}
 .msg .ou{font:inherit;font-size:12px;border:1px solid var(--line);background:#fff;border-radius:999px;padding:1px 10px;cursor:pointer;min-height:30px;justify-self:start;margin-top:2px}
+
+/* áudio */
+.btn.grande{min-height:68px;font-size:19px;width:100%;border-radius:22px}
+.btn.gravando{background:#c0392b;border-color:#c0392b;color:#fff;animation:grava 1.2s infinite ease-in-out}
+@keyframes grava{50%{box-shadow:0 0 0 8px rgba(192,57,43,.25)}}
+@media (prefers-reduced-motion:reduce){.btn.gravando{animation:none}}
+.btn small{display:block;font-size:11.5px;font-weight:500;opacity:.85;line-height:1.2}
+.btn.sage{background:var(--sage-soft);border-color:#bcd2bf}
+.btn:has(small){flex-direction:column;gap:0;padding:6px 14px;line-height:1.25}
+.duplo{display:grid;gap:8px}
+@media (min-width:520px){.duplo{grid-template-columns:1fr 1fr}}
+.gravar{display:grid;gap:6px;justify-items:stretch}
+.modos{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:4px}
+.nomeRec{border-top:1.5px dashed var(--line);margin-top:8px;padding-top:4px}
+.nomeRec summary{cursor:pointer;font-weight:700;font-size:14px;min-height:38px;display:flex;align-items:center;gap:6px}
+.nomeRec summary small{font-weight:500;color:var(--muted)}
+.nomeRec .vez{margin:4px 0 8px}
+.modo{font:inherit;text-align:left;border:2px solid var(--line);background:#fff;border-radius:16px;padding:8px 10px;display:grid;gap:1px;cursor:pointer;color:var(--ink);min-height:64px;align-content:start}
+.modo.sel{border-color:var(--pink);background:#fff7f9;box-shadow:0 0 0 3px rgba(194,63,94,.15)}
+.modo b{font-size:15.5px}.modo small{font-size:12.5px;color:var(--muted);line-height:1.3}
 
 /* ação */
 .acao{border:2px solid var(--line)}
@@ -201,19 +229,20 @@ footer{border-top:1.5px dashed var(--line);padding-top:12px;display:flex;flex-wr
     <div class="trilho" id="trilho"></div>
     <div class="cena" id="cena" data-fundo="salao" aria-hidden="true"></div>
     <section class="card" id="painel" hidden></section>
-    <div class="conv" id="conv" aria-live="polite" aria-label="Conversa"></div>
+    <div class="ultima" id="ultima" aria-live="polite" aria-label="Última fala" hidden></div>
     <section class="card" id="vozBar" hidden></section>
     <section class="card acao" id="acao"></section>
+    <details class="hist" id="hist" hidden><summary>📜 Ver histórico da conversa</summary><div class="conv" id="histConv" aria-label="Histórico"></div></details>
   </div>
 
   <footer>
     <span class="row"><button class="btn peq" type="button" id="btnRo" aria-pressed="false">Romaji: não</button><span id="relogio"></span></span>
-    <span class="row" id="rodape" hidden><button class="lk" type="button" id="pular">pular esta etapa</button><button class="lk" type="button" id="reiniciar">recomeçar a aula</button></span>
+    <span class="row" id="rodape" hidden><button class="lk" type="button" id="btModo">modo: 🌐 online</button><button class="lk" type="button" id="pular">pular esta etapa</button><button class="lk" type="button" id="reiniciar">recomeçar a aula</button></span>
   </footer>
 </div>
 
 <script src="/idiomas/dados/avatar.js?v=20261016b"></script>
 <script src="/idiomas/dados/velocidade-voz.js?v=1"></script>
-<script type="module" src="./aula.js?v=1"></script>
+<script type="module" src="./aula.js?v=2"></script>
 </body>
 </html>
