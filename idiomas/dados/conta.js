@@ -7,7 +7,7 @@
 import { initializeApp, getApps } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
 import { getAuth, onAuthStateChanged, createUserWithEmailAndPassword, signInWithEmailAndPassword,
   GoogleAuthProvider, signInWithPopup, signOut, sendPasswordResetEmail } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
-import { getFirestore, doc, getDoc, setDoc } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+import { getFirestore, doc, getDoc, setDoc, collection, query, limit, getDocs } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
 
 const CFG = {
   apiKey: "AIzaSyCoo0UB5rWjD4ZGE3xKO32zXYPUQFYObmc",
@@ -48,6 +48,7 @@ st.textContent = `
 #uni-gate a{color:#c23f5e}
 #uni-gate .lk{border:0;background:none;color:#c23f5e;font:inherit;font-size:13px;cursor:pointer;padding:0;justify-self:start;text-decoration:underline}
 .uni-chip{display:inline-flex;align-items:center;gap:6px;font-size:13px;color:#6b5a67;white-space:nowrap}
+.uni-prof{display:inline-flex;align-items:center;color:#fff;background:#3a2b38;font-weight:700;text-decoration:none;border-radius:999px;padding:4px 12px;font-size:12.5px}.uni-prof:hover{background:#c23f5e}
 .uni-eu{display:inline-flex;align-items:center;gap:6px;color:#3a2b38;font-weight:700;text-decoration:none;border:1.5px solid #ecdadd;background:#fff;border-radius:999px;padding:2px 12px 2px 3px}.uni-eu:hover{background:#fdf6f4;color:#c23f5e}
 .uni-av{width:22px;height:22px;border-radius:50%;background:#c4405f;color:#fff;display:inline-grid;place-items:center;font-weight:700;font-size:12px;line-height:1}
 .uni-chip.uni-entrar button{background:#c4405f;border-color:#c4405f;color:#fff;font-weight:700;padding:5px 14px}
@@ -121,7 +122,27 @@ function chip(user){
   c.innerHTML = `<a class="uni-eu" href="/aluno/" aria-label="Área do aluno de ${nm}"><span class="uni-av" aria-hidden="true">${(nm[0] || '?').toUpperCase()}</span> Área do aluno</a>`;
   const alvo = document.querySelector('.sitebar .navlinks') || document.querySelector('.nav .links');
   if (alvo) alvo.appendChild(c); else { c.classList.add('solta'); document.body.appendChild(c); }
+  professora(user).then(sim => {
+    if (!sim || !c.isConnected || c.querySelector('.uni-prof')) return;
+    c.insertAdjacentHTML('beforeend', ' <a class="uni-prof" href="/aulas/professora/">Professora</a>');
+  });
 }
+
+/* a professora: quem consegue listar as aulas (decidido pelas regras do Firestore). Lembra a resposta por sessão. */
+let profPromessa = null, profUid = null;
+function professora(user){
+  if (!user || !user.emailVerified) return Promise.resolve(false);
+  if (profPromessa && profUid === user.uid) return profPromessa;
+  profUid = user.uid;
+  const k = 'uniProf:' + user.uid;
+  try { const v = sessionStorage.getItem(k); if (v != null) { profPromessa = Promise.resolve(v === '1'); avisaProf(v === '1'); return profPromessa; } } catch (e) {}
+  profPromessa = getDocs(query(collection(db, 'aulas'), limit(1))).then(() => true, () => false).then(sim => {
+    try { sessionStorage.setItem(k, sim ? '1' : '0'); } catch (e) {}
+    avisaProf(sim); return sim;
+  });
+  return profPromessa;
+}
+function avisaProf(sim){ if (sim) { html.classList.add('uni-professora'); document.dispatchEvent(new CustomEvent('uni-professora')); } }
 
 /* ---------- sincronização do progresso ---------- */
 const parse = v => { if (v == null) return null; try { return JSON.parse(v); } catch (e) { return v; } };
@@ -146,8 +167,16 @@ function agenda(){ if (!uid || !pronto) return; clearTimeout(timer); timer = set
 Storage.prototype.setItem = function(k, v){ setOrig.call(this, k, v); if (this === window.localStorage && KEYS.includes(k)) agenda(); };
 document.addEventListener('visibilitychange', () => { if (document.visibilityState === 'hidden' && timer) enviar(); });
 
+/* lista de quem entra no site (e-mail e nome), para a professora escolher ao cadastrar alunos; só ela consegue ler */
+function anota(user){
+  try {
+    if (!user || !user.email || sessionStorage.getItem('uniPerfil') === user.uid) return;
+    sessionStorage.setItem('uniPerfil', user.uid);
+    setDoc(doc(db, 'perfis', user.uid), { email: user.email.toLowerCase(), nome: (user.displayName || '').slice(0, 80), visto: new Date().toISOString() }, { merge: true }).catch(() => {});
+  } catch (e) {}
+}
 async function puxa(user){
-  uid = user.uid; let mudou = false;
+  uid = user.uid; let mudou = false; anota(user);
   try {
     const snap = await getDoc(doc(db, 'progress', uid));
     const rem = (snap.exists() && snap.data().idiomas) || {};
@@ -169,7 +198,7 @@ async function puxa(user){
 
 /* ---------- estado do login ---------- */
 const entrar = opc => gate(opc || {});
-window.UniConta = { auth, db, entrar, gate, sair: () => signOut(auth), enviar };
+window.UniConta = { auth, db, entrar, gate, sair: () => signOut(auth), enviar, professora: () => professora(auth.currentUser) };
 export { auth, db, entrar };
 onAuthStateChanged(auth, async user => {
   if (user) {

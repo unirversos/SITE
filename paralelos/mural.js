@@ -2,7 +2,7 @@
    Lê os três diários que já existiam (diario/{ja|en|pt}/posts) e mostra tudo junto, em ordem de data.
    Posts novos continuam nessas mesmas coleções ({ texto, nome, uid, criadoEm }), com o idioma escolhido.
    Reações e respostas ficam em mural_reacoes e mural_respostas: só aparecem quando as regras do Firestore as permitem. */
-import { auth, db, entrar } from "/idiomas/dados/conta.js?v=2";
+import { auth, db, entrar } from "/idiomas/dados/conta.js?v=6";
 import { collection, query, orderBy, limit, onSnapshot, addDoc, setDoc, deleteDoc, doc, serverTimestamp }
   from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
 import { onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";

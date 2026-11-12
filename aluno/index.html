@@ -76,6 +76,7 @@ a:focus-visible,button:focus-visible,input:focus-visible,select:focus-visible,te
 .conta-l a{color:var(--pink-deep)}
 .mini-b{font:inherit;font-size:14px;font-weight:700;color:var(--ink);background:#fff;border:1.5px solid var(--line);border-radius:999px;padding:8px 16px;min-height:40px;cursor:pointer}
 #caderno{scroll-margin-top:16px}
+.prof-card{flex-direction:row;align-items:center;justify-content:space-between;gap:12px;text-decoration:none;color:inherit;background:#3a2b38;border-color:#3a2b38;color:#fff}.prof-card .eyebrow{color:#f3b8c6;display:block}.prof-card b{display:block;font-size:18px}.prof-card .mut{color:#d9c9d2}.prof-go{font-weight:700;white-space:nowrap}.prof-card:hover{background:#4a3848}
 .aulas{display:flex;flex-direction:column;gap:18px}.aulas:empty{display:none}#area{scroll-margin-top:16px}
 .lst{list-style:none;display:flex;flex-direction:column;gap:6px}.lst li{padding:6px 0;border-bottom:1px dashed var(--line)}.lst li:last-child{border:0}
 .lst a{color:var(--pink-deep);font-weight:700;text-decoration:none}
@@ -85,7 +86,7 @@ a:focus-visible,button:focus-visible,input:focus-visible,select:focus-visible,te
 </style>
 <link rel="stylesheet" href="/estilo-celular.css?v=3">
 <link rel="icon" href="/favicon.svg" type="image/svg+xml"><link rel="icon" href="/favicon.ico" sizes="48x48"><link rel="apple-touch-icon" href="/apple-touch-icon.png">
-<script type="module" src="/idiomas/dados/conta.js?v=5"></script>
+<script type="module" src="/idiomas/dados/conta.js?v=6"></script>
 <script>setTimeout(function(){var h=document.documentElement;if(!h.classList.contains('uni-ok')&&!document.getElementById('uni-gate'))h.classList.add('uni-ok')},10000)</script>
 </head>
 <body>
@@ -111,6 +112,11 @@ a:focus-visible,button:focus-visible,input:focus-visible,select:focus-visible,te
       <p class="nv" id="nivel"></p>
     </div>
   </header>
+
+  <a class="cx prof-card" id="prof-card" href="/aulas/professora/" hidden>
+    <span><span class="eyebrow">área da professora</span><b>Seus alunos, horários e materiais</b><span class="mut peq">Só você vê este cartão.</span></span>
+    <span class="prof-go">Abrir →</span>
+  </a>
 
   <div id="area" class="aulas" aria-live="polite"></div>
 
@@ -156,7 +162,7 @@ a:focus-visible,button:focus-visible,input:focus-visible,select:focus-visible,te
   };
 })();
 </script>
-<script type="module" src="/aluno/aluno.js?v=2"></script>
+<script type="module" src="/aluno/aluno.js?v=3"></script>
 <script type="module" src="/aulas/aluno.js?v=12"></script>
 </body>
 </html>

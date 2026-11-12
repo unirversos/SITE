@@ -11,7 +11,7 @@
   c.innerHTML='<button type="button">Entrar</button>';
   var pedido=false;
   function carregar(abrir){
-    import('/idiomas/dados/conta.js').then(function(m){ if(abrir&&window.UniConta)window.UniConta.gate&&window.UniConta.gate({titulo:'Entre na sua conta',modo:'entrar'}); }).catch(function(){});
+    import('/idiomas/dados/conta.js?v=6').then(function(m){ if(abrir&&window.UniConta)window.UniConta.gate&&window.UniConta.gate({titulo:'Entre na sua conta',modo:'entrar'}); }).catch(function(){});
   }
   c.querySelector('button').onclick=function(){carregar(true);};
   alvo.appendChild(c);

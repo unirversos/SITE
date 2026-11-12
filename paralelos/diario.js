@@ -2,7 +2,7 @@
    Posts públicos no Firestore: diario/{ja|en|pt}/posts/{id}
    { texto, nome, uid, criadoEm }  — qualquer pessoa lê; para publicar precisa de conta.
    Quem publicou pode apagar o próprio post; a Unirversos também pode (moderação). */
-import { auth, db, entrar } from "/idiomas/dados/conta.js?v=2";
+import { auth, db, entrar } from "/idiomas/dados/conta.js?v=6";
 import { collection, query, orderBy, limit, onSnapshot, addDoc, deleteDoc, doc, serverTimestamp }
   from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
 import { onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";

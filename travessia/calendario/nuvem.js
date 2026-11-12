@@ -1,7 +1,7 @@
 /* Calendário da viagem · guardar na conta (Firebase)
    Usa o mesmo login do resto do site (idiomas/dados/conta.js) e grava no documento da própria pessoa,
    progress/{uid}, no campo "calendario". Se algo falhar, o calendário continua funcionando só no aparelho. */
-import { auth, db, entrar } from "/idiomas/dados/conta.js";
+import { auth, db, entrar } from "/idiomas/dados/conta.js?v=6";
 import { doc, getDoc, setDoc, updateDoc, deleteDoc, deleteField } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
 
 function ref() {

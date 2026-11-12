@@ -1,6 +1,6 @@
 /* Unirversos · Aulas particulares — tela da professora.
    aulas/{email} (o que o aluno vê) e aulas_notas/{email} (anotações só suas). Quem pode abrir é decidido pelas regras do Firestore. */
-import { auth, db } from "/idiomas/dados/conta.js?v=4";
+import { auth, db } from "/idiomas/dados/conta.js?v=6";
 import { collection, getDocs, doc, getDoc, setDoc, deleteDoc } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
 import { onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
 import { proximas, DIAS, chave } from "/aulas/aulas-comum.js?v=2";
@@ -8,7 +8,14 @@ import { proximas, DIAS, chave } from "/aulas/aulas-comum.js?v=2";
 const $ = id => document.getElementById(id), area = $('area');
 const esc = s => String(s == null ? '' : s).replace(/[&<>"']/g, c => ({ '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;' }[c]));
 const quando = d => d.toLocaleString('pt-BR', { weekday: 'short', day: 'numeric', month: 'short', hour: '2-digit', minute: '2-digit', timeZone: 'America/Sao_Paulo' });
-let alunos = [], editando = null;
+let alunos = [], editando = null, perfis = null;
+/* pessoas que já entraram no site (anotadas no login) */
+async function lePerfis(){
+  if (perfis) return perfis;
+  try { const s = await getDocs(collection(db, 'perfis')); perfis = s.docs.map(d => d.data()).filter(p => p && p.email).sort((a, b) => (b.visto || '').localeCompare(a.visto || '')); }
+  catch (e) { console.warn('perfis', e && e.code); perfis = []; }
+  return perfis;
+}
 function avatar(a){ try { if (!a.avatar || !window.UtopiaAvatar) return ''; return window.UtopiaAvatar.svg(JSON.parse(a.avatar), { viewBox: '40 46 160 160', still: true, label: 'Avatar de ' + (a.nome || '') }); } catch (e) { return ''; } }
 
 async function carrega(){
@@ -54,7 +61,7 @@ async function ficha(a){
     <h2>${editando ? esc(a.nome || editando) : 'Novo aluno'}</h2>
     <div class="dois">
       <div><label for="f-nome">Nome</label><input id="f-nome" type="text" required value="${esc(a.nome)}"></div>
-      <div><label for="f-email">E-mail que o aluno usa para entrar</label><input id="f-email" type="email" required value="${esc(editando || '')}" ${editando ? 'readonly' : ''}></div>
+      <div><label for="f-email">E-mail que o aluno usa para entrar</label><input id="f-email" type="email" required value="${esc(editando || '')}" ${editando ? 'readonly' : 'list="f-pessoas" placeholder="Digite ou escolha da lista"'} autocomplete="off"><datalist id="f-pessoas"></datalist>${editando ? '' : '<p class="mut peq" id="f-pdica"></p>'}</div>
     </div>
     <div class="dois">
       <div><label for="f-meet">Link do Google Meet deste aluno</label><input id="f-meet" type="url" placeholder="https://meet.google.com/…" value="${esc(a.meet)}"></div>
@@ -79,6 +86,12 @@ async function ficha(a){
   </form>`;
   const f = $('f');
   $('voltar').onclick = () => lista();
+  if (!editando) lePerfis().then(ps => {
+    const ja = new Set(alunos.map(x => x.id)), livres = ps.filter(p => !ja.has(p.email));
+    $('f-pessoas').innerHTML = livres.map(p => `<option value="${esc(p.email)}">${esc(p.nome || '')}</option>`).join('');
+    $('f-pdica').textContent = livres.length ? livres.length + (livres.length > 1 ? ' pessoas que já entraram no site aparecem na lista ao clicar no campo.' : ' pessoa que já entrou no site aparece na lista ao clicar no campo.') : 'Quando alguém entrar no site com a conta, o e-mail aparece aqui para você escolher.';
+    $('f-email').addEventListener('change', () => { const p = ps.find(x => x.email === $('f-email').value.trim().toLowerCase()); if (p && p.nome && !$('f-nome').value.trim()) $('f-nome').value = p.nome; });
+  });
   f.addEventListener('click', e => {
     const x = e.target.closest('.x'); if (x) { x.parentNode.remove(); return; }
     const ad = e.target.closest('[data-add]'); if (!ad) return;

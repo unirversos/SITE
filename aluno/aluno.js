@@ -1,6 +1,6 @@
 /* Unirversos · Área do aluno: perfil, trilha e conta. As aulas particulares vêm de /aulas/aluno.js.
    O caderno da página é o mesmo de /idiomas/caderno/ (caderno-dados.js + caderno-caneta.js). */
-import { auth, db } from "/idiomas/dados/conta.js?v=5";
+import { auth, db } from "/idiomas/dados/conta.js?v=6";
 import { onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
 
 const $ = id => document.getElementById(id);
@@ -42,8 +42,13 @@ function trilha(){
 try { const t = window.UniTemas.atual(); $('tema').textContent = 'Tema da semana: “' + t.titulo + '”'; } catch (e) {}
 $('sair').onclick = async () => { try { if (window.UniConta && window.UniConta.enviar) await window.UniConta.enviar(); } catch (e) {} await signOut(auth); location.href = '/'; };
 
+function mostraProf(){ $('prof-card').hidden = false; }
+document.addEventListener('uni-professora', mostraProf);
+if (document.documentElement.classList.contains('uni-professora')) mostraProf();
+
 onAuthStateChanged(auth, u => {
   if (!u) return;
+  if (window.UniConta && window.UniConta.professora) window.UniConta.professora().then(sim => { if (sim) mostraProf(); });
   $('email').textContent = 'Você entrou com ' + u.email;
   perfil(u); trilha();
 });

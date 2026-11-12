@@ -1,6 +1,6 @@
 /* Unirversos · Minhas aulas (página do aluno)
    Firestore: aulas/{email em minúsculas} — só o próprio aluno (e-mail confirmado) e a professora conseguem ler. */
-import { auth, db } from "/idiomas/dados/conta.js?v=5";
+import { auth, db } from "/idiomas/dados/conta.js?v=6";
 import { doc, getDoc, updateDoc } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
 import { onAuthStateChanged, sendEmailVerification } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
 import { proximas, DIAS, chave } from "/aulas/aulas-comum.js?v=2";
