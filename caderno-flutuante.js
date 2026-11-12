@@ -2,13 +2,8 @@
    Usa as mesmas anotações da página /idiomas/caderno/ (localStorage "uniCadernoNotas1"). Sempre começa recolhido. */
 (function () {
   if (location.pathname.indexOf('/idiomas/caderno/') === 0) return;
-  var K = 'uniCadernoNotas1', notas = [], atual = null, t = null, pede = false;
-
-  function ler() { try { var v = JSON.parse(localStorage.getItem(K) || '[]'); return Array.isArray(v) ? v : []; } catch (e) { return []; } }
-  function gravar() { try { localStorage.setItem(K, JSON.stringify(notas)); est.textContent = 'Salvo'; } catch (e) { est.textContent = 'Não consegui salvar neste aparelho'; } }
+  var C = null, pad = null, atual = null, ultimoM = 0, tTeclou = 0, modo = 'txt', pede = false, tl = null;
   function esc(s) { return String(s).replace(/[&<>"]/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]; }); }
-  function nome(n) { return (n.t || '').trim() || (n.x || '').trim().split('\n')[0].slice(0, 40) || 'Sem título'; }
-  function achar() { return notas.filter(function (x) { return x.id === atual; })[0]; }
 
   var css = document.createElement('style');
   css.textContent =
@@ -30,7 +25,7 @@
     '#cf-s button::before{content:"";position:absolute;inset:0;border:2.5px solid #c23f5e;border-radius:52% 48% 55% 45%/48% 55% 45% 52%;transform:rotate(-6deg) scale(.6);opacity:0;transition:opacity .15s,transform .15s}' +
     '#cf-s button[aria-pressed="true"]{color:#c23f5e}#cf-s button[aria-pressed="true"]::before{opacity:1;transform:rotate(-6deg) scale(1)}#cf-s button:hover::before{opacity:.35;transform:rotate(-6deg) scale(1)}#cf-s button[aria-pressed="true"]:hover::before{opacity:1}' +
     '#cf-x{flex:1;min-height:120px;width:100%;resize:none;border:0;background:repeating-linear-gradient(transparent 0 29px,#ecdadd 29px 30px);background-attachment:local;font:inherit;font-size:16px;line-height:30px;color:#3a2b38;padding:0}' +
-    '#cf-p .f{display:flex;align-items:center;justify-content:space-between;gap:8px;font-size:12.5px;color:#705f6c}#cf-p .f a{color:#3a2b38;font-weight:700}';
+    '#cf-p .modo{display:inline-flex;gap:4px;padding:3px;border-radius:99px;background:#fdf6f4;border:1.5px solid #ecdadd;align-self:flex-start}#cf-p .modo button{font:inherit;cursor:pointer;border:0;background:transparent;color:#705f6c;font-weight:700;font-size:13px;padding:4px 14px;border-radius:99px;min-height:32px}#cf-p .modo button[aria-pressed="true"]{background:#3a2b38;color:#fff}#cf-pd{flex:1;overflow:auto;min-height:0}#cf-p .f{display:flex;align-items:center;justify-content:space-between;gap:8px;font-size:12.5px;color:#705f6c}#cf-p .f a{color:#3a2b38;font-weight:700}';
   document.head.appendChild(css);
 
   var aba = document.createElement('button');
@@ -50,55 +45,72 @@
     [['月', 'げつ', 'segunda-feira'], ['火', 'か', 'terça-feira'], ['水', 'すい', 'quarta-feira'], ['木', 'もく', 'quinta-feira'], ['金', 'きん', 'sexta-feira'], ['土', 'ど', 'sábado'], ['日', 'にち', 'domingo']]
       .map(function (w, i) { return '<button type="button" data-w="' + i + '" aria-pressed="false" aria-label="' + w[2] + '"><ruby>' + w[0] + '<rt>' + w[1] + '</rt></ruby></button>'; }).join('') +
     '</div></div>' +
+    '<div class="modo" role="group" aria-label="Como escrever"><button type="button" id="cf-mt" aria-pressed="true">Texto</button><button type="button" id="cf-mp" aria-pressed="false">Caneta</button></div>' +
     '<textarea id="cf-x" placeholder="Escreva aqui…" aria-label="Texto da anotação"></textarea>' +
-    '<div class="f"><span id="cf-e" aria-live="polite">Salvo</span><span><button class="b" type="button" id="cf-z">Apagar</button> <a href="/idiomas/caderno/">Abrir no Caderno →</a></span></div>';
+    '<div id="cf-pd" hidden></div>' +
+    '<div class="f"><span><span id="cf-e" aria-live="polite">Salvo neste aparelho</span> <button class="b" type="button" id="cf-en" hidden>Entrar</button></span><span><button class="b" type="button" id="cf-z">Apagar</button> <a href="/idiomas/caderno/">Abrir no Caderno →</a></span></div>';
 
-  var est;
   function $(i) { return document.getElementById(i); }
-
   function lista() {
-    notas.sort(function (a, b) { return b.m - a.m; });
-    $('cf-l').innerHTML = notas.map(function (n) { return '<option value="' + n.id + '"' + (n.id === atual ? ' selected' : '') + '>' + esc(nome(n)) + '</option>'; }).join('');
+    var vs = C.vivas();
+    $('cf-l').innerHTML = vs.map(function (n) { return '<option value="' + n.id + '"' + (n.id === atual ? ' selected' : '') + '>' + esc(C.nome(n)) + ((n.s && n.s.length) ? ' ✎' : '') + '</option>'; }).join('');
   }
+  function listaLogo() { clearTimeout(tl); tl = setTimeout(lista, 250); }
   function pinta(w) { Array.prototype.forEach.call($('cf-s').children, function (b) { b.setAttribute('aria-pressed', String(String(w) === b.dataset.w)); }); }
+  function garantePad() { if (!pad) pad = UniCaneta.montar($('cf-pd'), { aoMudar: function (t) { if (!atual) return; var n = C.atualizar(atual, { s: t.slice() }); if (n) ultimoM = n.m; listaLogo(); } }); return pad; }
+  function setModo(m) {
+    modo = m; $('cf-mt').setAttribute('aria-pressed', String(m === 'txt')); $('cf-mp').setAttribute('aria-pressed', String(m === 'pen'));
+    $('cf-x').hidden = m !== 'txt'; $('cf-pd').hidden = m !== 'pen';
+    if (m === 'pen') { var n = C.obter(atual); garantePad().carregar((n && n.s) || []); }
+  }
   function abre(id) {
-    var n = notas.filter(function (x) { return x.id === id; })[0]; if (!n) return;
-    atual = id; $('cf-x').value = n.x || ''; $('cf-a').value = n.a || ''; $('cf-m').value = n.o || ''; $('cf-d').value = n.d || ''; pinta(n.w); lista();
+    var n = C.obter(id); if (!n) return;
+    atual = id; ultimoM = n.m || 0; $('cf-x').value = n.x || ''; $('cf-a').value = n.a || ''; $('cf-m').value = n.o || ''; $('cf-d').value = n.d || ''; pinta(n.w);
+    if (modo === 'pen') garantePad().carregar(n.s || []);
+    lista();
   }
-  function nova() {
-    var n = { id: 'n' + Date.now().toString(36), t: '', x: '', m: Date.now() }; notas.push(n); gravar(); abre(n.id); $('cf-x').focus();
-  }
-  function salva() {
-    var n = achar(); if (!n) { nova(); n = achar(); }
-    n.x = $('cf-x').value; n.a = $('cf-a').value; n.o = $('cf-m').value; n.d = $('cf-d').value; n.m = Date.now(); est.textContent = 'Salvando…';
-    clearTimeout(t); t = setTimeout(function () { gravar(); lista(); }, 400);
-  }
+  function vazio() { atual = null; $('cf-x').value = ''; $('cf-a').value = $('cf-m').value = $('cf-d').value = ''; pinta(null); $('cf-l').innerHTML = ''; if (pad) pad.carregar([]); }
+  function abreProxima() { var vs = C.vivas(); if (vs.length) abre(vs[0].id); else vazio(); }
+  function nova() { var n = C.nova(); abre(n.id); if (modo === 'txt') $('cf-x').focus(); }
+  function edita(c) { if (!atual) nova(); var n = C.atualizar(atual, c); if (n) ultimoM = n.m; tTeclou = Date.now(); listaLogo(); }
+  function estado() { $('cf-e').textContent = C.texto(); $('cf-en').hidden = C.estado() !== 'sem-login'; }
   function abrir(v) {
-    notas = ler(); p.classList.toggle('on', v); aba.setAttribute('aria-expanded', String(v)); aba.style.display = v ? 'none' : '';
-    if (v) { if (!notas.length) { notas = []; atual = null; $('cf-l').innerHTML = ''; } else abre(atual && achar() ? atual : notas.sort(function (a, b) { return b.m - a.m; })[0].id); $('cf-x').focus(); }
-    else { clearTimeout(t); var n = achar(); if (n) { n.x = $('cf-x').value; n.a = $('cf-a').value; n.o = $('cf-m').value; n.d = $('cf-d').value; gravar(); } aba.focus(); }
+    p.classList.toggle('on', v); aba.setAttribute('aria-expanded', String(v)); aba.style.display = v ? 'none' : '';
+    if (v) { estado(); if (!atual || !C.obter(atual)) abreProxima(); if (modo === 'pen') garantePad().reajustar(); else $('cf-x').focus(); }
+    else { C.agora(); aba.focus(); }
   }
 
   function montar() {
-    document.body.appendChild(aba); document.body.appendChild(p); est = $('cf-e');
+    document.body.appendChild(aba); document.body.appendChild(p);
     aba.onclick = function () { abrir(true); };
     $('cf-f').onclick = function () { abrir(false); };
     p.addEventListener('keydown', function (e) { if (e.key === 'Escape') abrir(false); });
     $('cf-n').onclick = nova;
     $('cf-l').onchange = function () { abre(this.value); };
-    $('cf-x').oninput = $('cf-a').oninput = $('cf-m').oninput = $('cf-d').oninput = salva;
+    $('cf-x').oninput = function () { edita({ x: this.value }); };
+    $('cf-a').oninput = function () { edita({ a: this.value }); }; $('cf-m').oninput = function () { edita({ o: this.value }); }; $('cf-d').oninput = function () { edita({ d: this.value }); };
     $('cf-s').onclick = function (e) {
-      var b = e.target.closest('button'); if (!b) return; var n = achar(); if (!n) { nova(); n = achar(); }
-      n.w = String(n.w) === b.dataset.w ? null : b.dataset.w; pinta(n.w); salva();
+      var b = e.target.closest('button'); if (!b) return; var n = C.obter(atual);
+      if (!n) { nova(); n = C.obter(atual); }
+      var w = String(n.w) === b.dataset.w ? null : b.dataset.w; pinta(w); edita({ w: w });
     };
+    $('cf-mt').onclick = function () { setModo('txt'); }; $('cf-mp').onclick = function () { setModo('pen'); };
+    $('cf-en').onclick = function () { C.entrar(); };
     $('cf-z').onclick = function () {
       if (!atual) return;
       if (!pede) { pede = true; this.textContent = 'Apagar mesmo?'; var b = this; setTimeout(function () { pede = false; b.textContent = 'Apagar'; }, 3000); return; }
-      pede = false; this.textContent = 'Apagar';
-      notas = notas.filter(function (x) { return x.id !== atual; }); gravar(); atual = null;
-      if (notas.length) abre(notas.sort(function (a, b) { return b.m - a.m; })[0].id); else { $('cf-x').value = ''; $('cf-a').value = $('cf-m').value = $('cf-d').value = ''; pinta(null); $('cf-l').innerHTML = ''; }
+      pede = false; this.textContent = 'Apagar'; C.apagar(atual); abreProxima();
     };
-    window.addEventListener('pagehide', function () { var n = achar(); if (n) { n.x = $('cf-x').value; n.a = $('cf-a').value; n.o = $('cf-m').value; n.d = $('cf-d').value; gravar(); } });
+    C.on(function (tipo) {
+      if (tipo === 'estado') estado();
+      if (tipo === 'remoto') { lista(); var n = C.obter(atual); if (atual && !n) abreProxima(); else if (n && (n.m || 0) > ultimoM && Date.now() - tTeclou > 5000) abre(atual); }
+    });
   }
-  if (document.body) montar(); else document.addEventListener('DOMContentLoaded', montar);
+  function carrega(src, fn) { var t = document.createElement('script'); t.src = src; t.onload = fn; document.head.appendChild(t); }
+  function inicia() {
+    function pronto() { C = window.UniCaderno; if (document.body) montar(); else document.addEventListener('DOMContentLoaded', montar); }
+    function com() { if (window.UniCaneta) pronto(); else carrega('/caderno-caneta.js?v=1', pronto); }
+    if (window.UniCaderno) com(); else carrega('/caderno-dados.js?v=1', com);
+  }
+  inicia();
 })();
