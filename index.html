@@ -59,7 +59,9 @@ h1 .split{color:var(--pink)}
 .defs i{color:var(--muted)}
 
 .bilhete{position:relative;background:var(--card);border:1.5px solid var(--line);border-radius:var(--r);padding:34px clamp(20px,5vw,48px) 30px;transform:rotate(-.5deg);box-shadow:0 14px 30px -18px rgba(58,43,56,.35),0 2px 6px -2px rgba(58,43,56,.08)}
-.bilhete .tape.l{left:12%}.bilhete .tape.r{right:12%}
+.bilhete .tape.l{left:12%;transform:rotate(-6deg)}.bilhete .tape.r{right:12%;transform:rotate(5deg)}
+/* hero: subtítulo centralizado e alinhado à largura do título */
+.bilhete .lede{max-width:50ch;margin:0 auto;text-wrap:balance}
 /* universos */
 .sec-h{display:grid;gap:4px;max-width:62ch}
 .sec-h h2{font-family:var(--f-display);font-size:clamp(28px,4vw,38px);line-height:1.1;margin:0;text-wrap:balance}
@@ -80,11 +82,40 @@ h1 .split{color:var(--pink)}
 .dest{list-style:none;margin:0;padding:10px 0 0;align-content:start;border-top:1.5px dashed var(--line);display:grid;gap:8px;font-size:15px}
 .dest li{display:flex;gap:10px;align-items:baseline}
 .dest li::before{content:'';flex:none;width:8px;height:8px;border-radius:50%;background:var(--c);transform:translateY(-1px)}
+.dest .tag{font-style:normal;font-size:10.5px;letter-spacing:.1em;text-transform:uppercase;font-weight:700;color:var(--muted);border:1px solid var(--line);border-radius:999px;padding:0 8px;line-height:1.7;white-space:nowrap;display:inline-block;margin-left:4px;vertical-align:1px}
+.dest li.soon{color:var(--muted)}.dest li.soon::before{background:transparent;box-shadow:inset 0 0 0 1.5px var(--muted)}
+.dest .tag{color:#6b6470;background:#f1eef0;border-color:#ddd7dc}
+.dest .tag.pago{color:#7a5a14;background:#f8efd9;border-color:#e6d3a3}
+.dest li{text-wrap:pretty}
+.u-card h3 .ic{width:26px;height:26px;vertical-align:-5px;margin-right:9px;color:var(--c);stroke:var(--c);fill:none;stroke-width:1.6;stroke-linecap:round;stroke-linejoin:round}
+.u-card{transition:transform .2s ease,box-shadow .2s ease}
+.u-card:hover,.u-card:focus-within{transform:translateY(-3px);box-shadow:0 14px 28px -16px rgba(58,43,56,.35),0 2px 6px -2px rgba(58,43,56,.08)}
+@media (prefers-reduced-motion:reduce){.u-card{transition:none}.u-card:hover,.u-card:focus-within{transform:none}}
 .u-card{grid-template-rows:auto auto 1fr auto}
 .u-go{justify-self:start;display:inline-flex;align-items:center;gap:6px;background:var(--c);color:#fff;text-decoration:none;font-weight:700;font-size:14.5px;padding:9px 18px;border-radius:999px;margin-top:4px}
 .u-go:hover{filter:brightness(.95)}
 .u-go-row{display:flex;flex-wrap:wrap;gap:8px;justify-self:start}.u-go[hidden]{display:none}.u-go-row.tem .u-go#caderno-abrir{background:transparent;color:var(--c);box-shadow:inset 0 0 0 2px var(--c)}
 #utopia-badge:empty{display:none}
+
+/* 4 caminhos: blocos compactos como o Quadrado Elemental, bloco inteiro clicável, sem botões */
+.uni{grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+@media (max-width:560px){.uni{grid-template-columns:minmax(0,1fr)}}
+.u-card{background:var(--paper);border:0;border-radius:14px;padding:16px 16px 14px;gap:8px;box-shadow:none}
+.u-card:hover,.u-card:focus-within{transform:translateY(-3px);box-shadow:0 12px 24px -16px rgba(58,43,56,.35),0 0 0 1.5px color-mix(in srgb,var(--c) 55%,transparent)}
+.u-card .u-tag{font-size:10.5px}
+.u-card h3{font-size:20px}
+.u-card h3 small{font-size:13.5px;margin-top:4px}
+.u-card .dest{font-size:13.5px;gap:6px;padding-top:8px}
+.u-card .dest li::before{width:6px;height:6px}
+.u-go{background:color-mix(in srgb,var(--c) 12%,#fff);color:color-mix(in srgb,var(--c) 78%,#000);padding:7px 15px;margin:4px 0 0;font-size:13.5px;border-radius:999px;box-shadow:inset 0 0 0 1.5px color-mix(in srgb,var(--c) 32%,transparent);transition:background .2s ease,box-shadow .2s ease}
+.u-go:hover{filter:none;text-decoration:none}
+.u-card:hover .u-go:last-child,.u-card:focus-within .u-go:last-child{background:color-mix(in srgb,var(--c) 22%,#fff);box-shadow:inset 0 0 0 1.5px color-mix(in srgb,var(--c) 60%,transparent)}
+.u-go-row{display:grid;gap:6px;justify-self:start}
+.u-go-row.tem .u-go#caderno-abrir{background:color-mix(in srgb,var(--c) 12%,#fff);color:color-mix(in srgb,var(--c) 78%,#000);box-shadow:inset 0 0 0 1.5px color-mix(in srgb,var(--c) 32%,transparent)}
+.u-go-row .u-go:not(:last-child){position:relative;z-index:2}
+.u-go:last-child::after{content:'';position:absolute;inset:0;border-radius:14px}
+.u-go:last-child:focus-visible{outline:none}
+.u-card:has(.u-go:last-child:focus-visible){outline:3px solid var(--lavender);outline-offset:3px}
 
 /* quadrado */
 .quad{background:var(--card);border:1.5px solid var(--line);border-radius:var(--r);padding:24px 22px;display:grid;gap:18px}
@@ -124,34 +155,34 @@ footer a:hover{color:var(--pink)}
       <span class="tape l"></span><span class="tape r"></span>
       <p class="eyebrow">unirversos · tudo conectado</p>
       <h1>Um lugar para aprender japonês<br>com <span class="split">calma</span>, presença e afeto.</h1>
-      <p class="lede">Cadernos de bordo, encontros ao vivo no salão e materiais desenhados para viver o Japão com sensibilidade.</p>
+      <p class="lede">Jornadas guiadas, encontros ao vivo e um espaço pensado para você viver o Japão com sensibilidade e autonomia.</p>
     </div>
   </header>
 
-  <section aria-label="Os quatro caminhos" id="t-uni" style="scroll-margin-top:24px">
+  <section class="quad" aria-label="Os quatro caminhos" id="t-uni" style="scroll-margin-top:24px">
     <div class="uni">
-      <article class="u-card idiomas">
-        <p class="u-tag">planeta utopia</p>
-        <h3>O Salão<small>Sente-se à mesa, pratique no seu tempo e jogue com outros estudantes.</small></h3>
-        <ul class="dest"><li>Mesas para conversar com calma</li><li>Jogos em dupla para treinar o japonês</li><li>Conversa aberta ou em particular</li></ul>
-        <a class="u-go" href="/idiomas/planeta-utopia/salao/">Entrar no Salão →</a>
-      </article>
       <article class="u-card caderno">
-        <p class="u-tag">unirversos idiomas</p>
-        <h3>O Caderno<small>A trilha prática de japonês para a vida real.</small></h3>
-        <ul class="dest"><li>Trilha imersiva de 12 mapas de contexto</li><li>Cenas práticas e diálogos para situações reais</li><li>Hiragana, katakana e ferramentas de estudo</li></ul>
-        <div class="u-go-row"><a class="u-go" id="caderno-cont" href="/idiomas/japones/" hidden></a><a class="u-go" id="caderno-abrir" href="/idiomas/japones/">Abrir o Caderno →</a></div>
+        <p class="u-tag">aprendizado</p>
+        <h3><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 5.5C4 4.7 4.7 4 5.5 4H11v15H5.5c-.8 0-1.5-.7-1.5-1.5z"/><path d="M20 5.5c0-.8-.7-1.5-1.5-1.5H13v15h5.5c.8 0 1.5-.7 1.5-1.5z"/></svg> Idiomas<small>A trilha prática de japonês para a vida real.</small></h3>
+        <ul class="dest"><li>12 mapas de contexto</li><li>Cenas práticas e diálogos para situações reais</li><li>Hiragana, katakana, kanjis e ferramentas de estudo</li></ul>
+        <div class="u-go-row"><a class="u-go" id="caderno-cont" href="/idiomas/japones/" hidden></a><a class="u-go" id="caderno-abrir" href="/idiomas/japones/">Abrir Idiomas →</a></div>
+      </article>
+      <article class="u-card idiomas">
+        <p class="u-tag">comunidade</p>
+        <h3><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="4.5"/><ellipse cx="12" cy="12" rx="10" ry="3.5" transform="rotate(-25 12 12)"/></svg> Planeta Utopia<small>Espaço vivo de prática, jogos e troca cultural.</small></h3>
+        <ul class="dest"><li>Salão de interação</li><li>Jogos para treinar</li><li>Trilha de japonês</li><li class="soon"><span>Trilha de português <em class="tag">em breve</em></span></li></ul>
+        <a class="u-go" href="/idiomas/planeta-utopia/salao/">Entrar no Planeta Utopia →</a>
       </article>
       <article class="u-card travessia">
-        <p class="u-tag">unirversos travessia</p>
-        <h3>Travessia<small>Ferramentas gratuitas para planejar, reservar e viver o Japão com autonomia.</small></h3>
-        <ul class="dest"><li>Cronograma e reservas de ingressos</li><li>Resumo da viagem: hotéis e ingressos na mesma tela</li><li>Mini guia de sobrevivência no Japão</li></ul>
+        <p class="u-tag">viagem</p>
+        <h3><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9.5"/><path d="M12 2.5v2M12 19.5v2M2.5 12h2M19.5 12h2"/><path d="M16 8l-2.3 5.7L8 16l2.3-5.7z" fill="currentColor" fill-opacity=".18"/></svg> Travessia<small>Planejar, reservar e viver o Japão com autonomia.</small></h3>
+        <ul class="dest"><li>Cronograma e reservas de ingressos</li><li>Calendário de viagem: hotéis e ingressos na mesma tela</li><li>Mini guia de sobrevivência no Japão</li><li><span>Revista impressa pós-viagem <em class="tag pago">opcional · pago</em></span></li></ul>
         <a class="u-go" href="/travessia/">Entrar em Travessia →</a>
       </article>
       <article class="u-card tesouros">
-        <p class="u-tag">unirversos tesouros</p>
-        <h3>Tesouros<small>Achados selecionados do Japão, encomendas especiais e itens afetivos.</small></h3>
-        <ul class="dest"><li>Vitrine de achados do Japão</li><li>Encomendas com personal shopper no Japão</li><li>Brechó de peças únicas e Revista Memórias</li></ul>
+        <p class="u-tag">curadoria</p>
+        <h3><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M7 4h10l4 5.5L12 20 3 9.5z"/><path d="M3 9.5h18M9.5 4L8 9.5 12 20l4-10.5L14.5 4"/></svg> Tesouros<small>Achadinhos selecionados do Japão.</small></h3>
+        <ul class="dest"><li>Vitrine: eletrônicos, colecionáveis, skin, hair e suncare</li><li>Encomendas com personal shopper</li><li>Brechó de peças únicas</li></ul>
         <a class="u-go" href="/loja/">Visitar Tesouros →</a>
       </article>
     </div>

@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="pt-BR" data-login="obrigatorio">
+<head>
+<meta charset="UTF-8">
+<style>html[data-login="obrigatorio"]:not(.uni-ok) body>*:not(#uni-gate){visibility:hidden}</style>
+<script type="module" src="/idiomas/dados/conta.js?v=4"></script>
+<script>setTimeout(function(){var h=document.documentElement;if(!h.classList.contains('uni-ok')&&!document.getElementById('uni-gate'))h.classList.add('uni-ok')},10000)</script>
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>Minhas palavras | Unirversos Idiomas</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@500;700;800&family=Zen+Maru+Gothic:wght@400;500;700&display=swap">
+<style>
+:root{
+  --paper:#fdf6f4; --card:#ffffff; --ink:#3a2b38; --muted:#705f6c; --line:#ecdadd;
+  --blush:#f8dde1; --pink:#c23f5e; --sage:#517158; --sage-soft:#e8efe8; --gold:#8e6a1f; --lavender:#b7a6dc;
+  --f-display:"Baloo 2", "Zen Maru Gothic", system-ui, sans-serif;
+  --f-body:"Zen Maru Gothic", "Hiragino Maru Gothic ProN", "Noto Sans JP", system-ui, sans-serif;
+  --r:18px;
+}
+*{box-sizing:border-box}
+[hidden]{display:none!important}
+body{margin:0;background:var(--paper);color:var(--ink);font-family:var(--f-body);font-size:15px;line-height:1.6;
+  background-image:radial-gradient(var(--line) 1.2px,transparent 1.3px);background-size:22px 22px;
+  padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));padding-block:20px 48px}
+.wrap{max-width:760px;margin:0 auto;display:grid;gap:18px}
+a{color:inherit}
+.back{font-size:12px;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);text-decoration:none}
+ruby rt{font-size:.5em;color:var(--muted);font-weight:500}
+.head{background:var(--card);border:1.5px solid var(--line);border-radius:var(--r);padding:16px 18px;display:grid;grid-template-columns:96px minmax(0,1fr);gap:16px;align-items:center}
+.av{width:96px;aspect-ratio:240/300;border-radius:12px;overflow:hidden;box-shadow:0 0 0 1.5px var(--line)}
+h1{font-family:var(--f-display);font-weight:800;font-size:clamp(24px,5vw,32px);line-height:1.15;margin:0;text-wrap:balance}
+h1 .jp{font-family:var(--f-body);font-weight:700;font-size:.6em;color:var(--pink);margin-left:6px}
+.who{font-size:17px;font-weight:700;margin-top:4px;overflow-wrap:anywhere}
+.count{font-size:13px;color:var(--muted);font-variant-numeric:tabular-nums}
+.bar{height:8px;border-radius:99px;background:var(--blush);overflow:hidden;margin-top:6px}
+.bar i{display:block;height:100%;background:linear-gradient(90deg,var(--pink),var(--gold))}
+.grp{background:var(--card);border:1.5px solid var(--line);border-left:5px solid var(--sage);border-radius:var(--r);padding:14px 18px;display:grid;gap:10px}
+.grp h2{font-family:var(--f-display);font-size:18px;margin:0}
+.grp h2 small{font-family:var(--f-body);font-weight:500;color:var(--muted);font-size:12px;margin-left:6px}
+.chips{display:flex;flex-wrap:wrap;gap:8px}
+.chip{font:inherit;color:inherit;cursor:pointer;border:1.5px solid var(--line);background:var(--paper);border-radius:14px;padding:6px 12px 7px;display:grid;justify-items:start;line-height:1.35;text-align:left}
+.chip b{font-size:18px}.chip small{color:var(--muted);font-size:12px}
+.chip:hover{border-color:var(--pink)}
+.chip:focus-visible,.btn:focus-visible{outline:3px solid var(--lavender);outline-offset:2px}
+.empty{background:var(--card);border:1.5px dashed var(--line);border-radius:var(--r);padding:18px;color:var(--muted)}
+.acts{display:flex;flex-wrap:wrap;gap:8px}
+.btn{display:inline-flex;align-items:center;gap:6px;border:1.5px solid var(--line);background:var(--card);border-radius:99px;padding:8px 16px;font-size:14px;font-weight:700;text-decoration:none}
+.btn.primary{background:var(--pink);border-color:var(--pink);color:#fff}
+.note{font-size:12px;color:var(--muted)}
+@media (max-width:420px){.head{grid-template-columns:72px minmax(0,1fr)}.av{width:72px}}
+/* minhas frases */
+.fr-sec{background:var(--card);border:1.5px solid var(--line);border-left:5px solid var(--pink);border-radius:var(--r);padding:14px 18px;display:grid;gap:12px;scroll-margin-top:16px}
+.fr-sec h2{font-family:var(--f-display);font-size:20px;margin:0}
+.fr-sec .sub{margin:0;font-size:13.5px;color:var(--muted)}
+.frs{display:grid;gap:10px}
+.fr{border:1.5px solid var(--line);border-radius:16px;background:var(--paper);padding:12px 14px;display:grid;gap:8px}
+.fr .tag{font-size:12px;letter-spacing:.06em;color:var(--muted);font-weight:700}
+.fr .jp{font-size:clamp(20px,5vw,24px);font-weight:700;line-height:1.45;margin:0}
+.fr .acts .btn{min-height:40px;cursor:pointer;font:inherit;font-weight:700;font-size:13.5px}
+.fr .trad{display:grid;gap:2px;font-size:14.5px;border-top:1.5px dashed var(--line);padding-top:8px}
+.fr .trad .ro{color:var(--pink);font-weight:700;font-size:13.5px}
+.fr .trad small{color:var(--muted)}
+.fr .conf{font-size:14px;border-radius:12px}.fr .conf:not(:empty){padding:8px 12px;background:#fff;border:1.5px solid var(--line)}.fr .conf.ok{background:var(--sage-soft);border-color:#a9c7b0}.fr .conf.quase{background:#fdf1e0;border-color:#e3c98b}.fr .conf.nao{background:#fbe9ec;border-color:#e3a5b2}.fr .conf small{color:var(--muted)}
+.cns{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:8px}
+.cns a{display:flex;align-items:center;gap:8px;border:1.5px solid var(--line);border-radius:14px;background:var(--paper);padding:10px 12px;text-decoration:none;color:inherit;font-weight:700;font-size:14px;min-height:44px}
+.cns a small{display:block;font-weight:500;font-size:12px;color:var(--muted)}
+.cns a.ok{border-color:var(--sage,#9db89d)}
+.pend summary{cursor:pointer;font-weight:700;font-size:14px;color:var(--muted)}
+.pend ul{list-style:none;margin:8px 0 0;padding:0;display:grid;gap:6px}
+.pend li{display:flex;justify-content:space-between;align-items:center;gap:10px;border:1.5px dashed var(--line);border-radius:12px;padding:6px 10px;font-size:14px}
+.pend li .btn{min-height:38px;cursor:pointer;font:inherit;font-weight:700;font-size:13px}
+
+/* navegação do site */
+.sitebar{display:flex;align-items:center;justify-content:space-between;gap:10px 14px;flex-wrap:wrap}
+.sitebar .brand{font-family:"Baloo 2",system-ui,sans-serif;font-size:18px;font-weight:700;text-decoration:none;color:var(--ink)}
+.sitebar .brand span{color:var(--pink)}
+.sitebar .navlinks{display:flex;flex-wrap:wrap;gap:14px;font-size:13px}
+.sitebar .navlinks a{color:var(--muted);text-decoration:none}
+.sitebar .navlinks a:hover{color:var(--pink)}
+.trail{display:flex;gap:8px;overflow-x:auto;padding-bottom:2px;scrollbar-width:thin}
+.trail a{flex:0 0 auto;display:inline-flex;align-items:center;gap:6px;border:1.5px solid var(--line);background:var(--card);border-radius:99px;padding:6px 14px;font-size:13.5px;font-weight:700;text-decoration:none;color:var(--ink)}
+.trail a:hover{border-color:var(--pink)}
+.trail a[aria-current="page"]{background:var(--ink);border-color:var(--ink);color:var(--paper)}
+</style>
+<link rel="stylesheet" href="/estilo-celular.css?v=2">
+<script defer src="/menu-ativo.js?v=1"></script>
+<link rel="icon" href="/favicon.svg" type="image/svg+xml"><link rel="icon" href="/favicon.ico" sizes="48x48"><link rel="apple-touch-icon" href="/apple-touch-icon.png"><link rel="manifest" href="/manifest.webmanifest"><meta name="theme-color" content="#3a2b38"><meta name="mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-title" content="Unirversos"><script src="/app.js" defer></script></head>
+<body>
+<div class="wrap">
+  <nav class="sitebar" aria-label="Site"><a class="brand" href="/">unirversos <span>/ idiomas</span></a><span class="navlinks"><a href="/idiomas/">idiomas</a><a href="/travessia/">travessia</a><a href="/paralelos/">paralelos</a><a href="/loja/">tesouros</a><a href="/sobre/">sobre</a></span></nav>
+  <nav class="trail" aria-label="Trilha"><a href="/idiomas/japones/">← Minha trilha</a><details class="caixa" open><summary>🧰 Ferramentas</summary><span class="caixa-l"><a href="/idiomas/avatar/">🎨 Meu avatar</a><a href="/idiomas/hiragana/">あ Hiragana</a><a href="/idiomas/katakana/">ア Katakana</a><a href="/idiomas/kanji/">漢 Kanji</a><a href="/idiomas/numeros/">🔢 Números</a><a href="/idiomas/calendario/">📅 Calendário</a><a href="/idiomas/palavras/" aria-current="page">📒 Minhas palavras</a><a href="/idiomas/caderno/">📝 Caderno</a><a href="/idiomas/amuleto/">💎 Amuleto</a><a href="/idiomas/ar/">🌬️ Ar</a><a href="/idiomas/planeta-utopia/salao/">🪐 Planeta Utopia</a></span></details></nav>
+  <style>.trail{flex-wrap:wrap;overflow:visible;align-items:center}.trail .caixa{flex:0 0 auto}.trail .caixa[open]{flex:1 1 100%;display:flex;flex-direction:column;gap:8px}.trail .caixa>summary{list-style:none;cursor:pointer;display:inline-flex;align-items:center;gap:6px;width:max-content;border:1.5px solid var(--line,#e7e1da);background:var(--card,#fff);border-radius:99px;padding:6px 14px;font-size:13.5px;font-weight:700}.trail .caixa>summary::-webkit-details-marker{display:none}.trail .caixa[open]>summary{border-color:var(--pink,#d9506f)}.trail .caixa-l{display:flex;flex-wrap:wrap;gap:8px}</style>
+  <header class="head">
+    <div class="av" id="av"></div>
+    <div>
+      <h1>Minhas palavras<span class="jp"><ruby>単語帳<rt>たんごちょう</rt></ruby></span></h1>
+      <div class="who" id="who"></div>
+      <div class="count" id="count"></div>
+      <div class="bar"><i id="bar"></i></div>
+    </div>
+  </header>
+  <section class="fr-sec" id="frases" aria-labelledby="h-fr">
+    <h2 id="h-fr">🌱 Minhas frases</h2>
+    <p class="sub">Uma frase sua por mapa, com a sua voz. Toque em “Ver tradução” para conferir o sentido.</p>
+    <p class="sub" id="avisoSR"></p>
+    <div class="frs" id="frs"></div>
+  </section>
+  <section class="fr-sec cn-sec" id="cenas" aria-labelledby="h-cn">
+    <h2 id="h-cn">🎭 Cenas das aulas</h2>
+    <p class="sub">Quer rever uma conversa? Toque num mapa e a cena abre direto, para jogar de novo a partir daqui.</p>
+    <div class="cns" id="cns"></div>
+  </section>
+  <div id="list" style="display:grid;gap:14px"></div>
+  <div class="acts">
+    <a class="btn primary" href="/idiomas/avatar/">Abrir o Ateliê de Avatar</a>
+    <a class="btn" href="/idiomas/planeta-utopia/salao/">Ir ao Salão do Planeta Utopia</a>
+  </div>
+  <p class="note" id="voiceNote">Toque numa palavra para ouvir. Áudio: por enquanto, a voz japonesa do próprio aparelho.</p>
+</div>
+<script src="/idiomas/dados/avatar.js?v=20261016d"></script>
+<script src="/idiomas/dados/atelie-dados.js?v=20261112a"></script>
+<script src="/idiomas/dados/minha-frase.js?v=20261112a"></script>
+<script>
+const $=id=>document.getElementById(id);
+const AV=UtopiaAvatar; AV.injectCSS();
+const q=new URLSearchParams(location.search);
+let data;
+if(q.has('w')){ data={name:q.get('n')||'',learned:decodeWords(q.get('w')),sel:decodeSel(q.get('a'))}; }
+else { const s=AV.load()||{}; const p=s.profile||{}; data={name:(p.kata||p.name||'').trim(),learned:s.learned||{},sel:s.sel||null}; }
+$('av').innerHTML=AV.svg(data.sel||AV.DEFAULT,{still:true,label:'Avatar'});
+$('who').textContent=data.name?data.name:'';
+const ids=Object.keys(data.learned).filter(id=>WORDS[id]);
+$('count').textContent=`${ids.length} de ${TOTAL} palavras aprendidas`;
+$('bar').style.width=(ids.length/TOTAL*100)+'%';
+if(!ids.length){ $('list').innerHTML='<p class="empty">Ainda não há palavras aqui. Monte seu avatar no Ateliê: cada escolha nova entra aqui.</p>'; }
+else {
+  const groups={}; ids.forEach(id=>{ const w=WORDS[id]; (groups[w.catPt]=groups[w.catPt]||[]).push(w); });
+  $('list').innerHTML=Object.entries(groups).map(([cat,ws])=>`<section class="grp"><h2>${esc(cat)} <i lang="en" style="font-family:var(--f-body);font-weight:500;font-size:13px;color:var(--muted)">${esc(ws[0].catEn||'')}</i><small>${ws.length}</small></h2>
+    <div class="chips">${ws.map(w=>`<button class="chip" type="button" data-id="${w.id}"><b>${ruby(w)}</b><small>${w.ro} · ${w.pt} · <i lang="en">${w.en||''}</i></small></button>`).join('')}</div></section>`).join('');
+}
+$('list').addEventListener('click',e=>{ const b=e.target.closest('.chip'); if(b) speak(WORDS[b.dataset.id].kana); });
+
+/* ---------- minhas frases ---------- */
+const UF=window.UniFrase;
+async function desenhaFrases(){
+  if(!UF){ $('frases').hidden=true; return; }
+  const L=UF.lista(), feitas=UF.ORD.filter(s=>L[s]), falta=UF.ORD.filter(s=>!L[s]);
+  const vozes={}; await Promise.all(feitas.map(async s=>{ vozes[s]=await UF.voz(s); }));
+  const card=s=>{ const f=UF.F[s], x=L[s];
+    return `<article class="fr" data-s="${s}"><div class="tag">📍 Mapa ${f.n} · ${f.e} ${esc(f.t)}</div><p class="jp" lang="ja">${esc(x.k)}</p>
+      <div class="acts">${vozes[s]?'<button class="btn primary" type="button" data-a="minha">▶ Minha voz</button>':''}<button class="btn" type="button" data-a="ref">🔊 Referência</button><button class="btn" type="button" data-a="trad" aria-expanded="false">👁️ Ver tradução</button><button class="btn" type="button" data-a="conf">✅ Conferir pronúncia</button><button class="btn" type="button" data-a="refaz">🎙️ ${vozes[s]?'Regravar':'Gravar minha voz'}</button></div>
+      <div class="conf" aria-live="polite"></div>
+      <div class="trad" hidden><span class="ro">${esc(x.r)}</span><span>🇧🇷 ${esc(x.pt)}</span><small lang="en">🇬🇧 ${esc(x.en)}</small></div></article>`; };
+  $('frs').innerHTML=(feitas.length?feitas.map(card).join(''):'<p class="empty" style="margin:0">Ainda não há frases. No fim de cada mapa, antes da prova, toque em 🌱 Minha frase.</p>')+
+    (falta.length?`<details class="pend"${feitas.length?'':' open'}><summary>Mapas sem frase (${falta.length})</summary><ul>${falta.map(s=>{ const f=UF.F[s]; return `<li><span>${f.e} Mapa ${f.n} · ${esc(f.t)}</span><button class="btn" type="button" data-cria="${s}">🌱 Criar</button></li>`; }).join('')}</ul></details>`:'');
+  $('frs').onclick=e=>{ const b=e.target.closest('button'); if(!b) return;
+    if(b.dataset.cria) return UF.abrir(b.dataset.cria,{aoSalvar:()=>setTimeout(desenhaFrases,50)});
+    const art=b.closest('.fr'), s=art&&art.dataset.s; if(!s) return;
+    if(b.dataset.a==='minha') UF.tocaBlob(vozes[s]);
+    if(b.dataset.a==='ref') UF.fala(L[s].k);
+    if(b.dataset.a==='trad'){ const t=art.querySelector('.trad'), ab=t.hidden; t.hidden=!ab; b.setAttribute('aria-expanded',String(ab)); b.textContent=ab?'🙈 Esconder tradução':'👁️ Ver tradução'; }
+    if(b.dataset.a==='conf'){ const out=art.querySelector('.conf');
+      UF.confere(L[s].k,r=>{ if(r.ouvindo){ out.className='conf'; out.textContent='🎧 Ouvindo… fale a frase inteira.'; return; }
+        if(r.erro){ out.className='conf'; out.textContent=r.erro; return; }
+        const ok=r.p>=.8, quase=r.p>=.5; out.className='conf '+(ok?'ok':quase?'quase':'nao');
+        out.innerHTML=`${ok?'✓ Entendi a sua frase!':quase?'≈ Quase: o navegador entendeu parte da frase.':'✗ Não entendi. Ouça a referência e tente de novo.'}<br><small>O navegador ouviu: <b lang="ja">${esc(r.t||'—')}</b></small>`; }); }
+    if(b.dataset.a==='refaz') UF.abrir(s,{aoSalvar:()=>setTimeout(desenhaFrases,50)}); };
+}
+/* ---------- cenas das aulas (abrem direto na etapa Cena) ---------- */
+(function(){
+  let M={}; try{ M=JSON.parse(localStorage.getItem('utopiaMapas1')||'{}')||{}; }catch(e){}
+  const F=UF&&UF.F; if(!F){ $('cenas').hidden=true; return; }
+  $('cns').innerHTML=UF.ORD.map(s=>{ const f=F[s], ok=M[s]&&M[s].steps&&M[s].steps[4];
+    return `<a class="${ok?'ok':''}" href="/idiomas/mapas/${s}/aula/#cena"><span aria-hidden="true">${f.e}</span><span>${esc(f.t)}<small>${ok?'✓ cena feita':'Mapa '+f.n}</small></span></a>`; }).join('');
+})();
+if(UF) $('avisoSR').textContent='✅ Conferir pronúncia: '+UF.AVISO_SR;
+desenhaFrases();
+document.addEventListener('uni-progresso',desenhaFrases);
+if(location.hash==='#frases') setTimeout(()=>$('frases').scrollIntoView(),50);
+</script>
+</body>
+</html>

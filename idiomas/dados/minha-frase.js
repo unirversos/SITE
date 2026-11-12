@@ -1,5 +1,5 @@
 /* Unirversos · Minha frase: no fim de cada mapa, a pessoa monta uma frase sobre ela mesma
-   com o molde do mapa, grava a própria voz e carimba no Caderno.
+   com o molde do mapa, grava a própria voz e carimba em Minhas palavras.
    Texto: localStorage 'utopiaFrases1' (vai para a conta). Voz: IndexedDB 'uniFrases' (fica neste aparelho).
    Uso: UniFrase.abrir(slug, {aoSalvar}) · UniFrase.lista() · UniFrase.voz(slug) → Promise<Blob|null> */
 (function(){
@@ -124,7 +124,7 @@
     const opcoes=f.op.map(k=>W.find(x=>x.k===k&&f.cats.includes(x.cat))||W.find(x=>x.k===k));
     function desenha(){ const fr=w?monta(f,w):null;
       c.innerHTML=`<div class="uf-h"><b id="ufT">🌱 Minha frase · ${f.e} ${esc(f.t)}</b><button class="uf-b" type="button" data-uf-fecha>Fechar</button></div>
-        <p class="uf-sub">Uma frase sobre você, no molde deste mapa. Ela vai para o seu Caderno, com a sua voz.</p>
+        <p class="uf-sub">Uma frase sobre você, no molde deste mapa. Ela vai para Minhas palavras, com a sua voz.</p>
         <div class="uf-molde"><div class="uf-jp" lang="ja">${esc(f.pre)}<span class="uf-gap">${w?esc(w.k):'？'}</span>${esc(f.pos)}</div>
           <div class="uf-ro">${esc(fr?fr.r:f.rpre+'___'+f.rpos)}</div><div class="uf-pt">${esc(fr?fr.pt:f.pt)}</div>
           ${fr?'<div class="uf-row"><button class="uf-b" type="button" id="ufOuve">🔊 Ouvir o modelo</button></div>':''}</div>
@@ -140,7 +140,7 @@
         <div class="uf-conf" id="ufConfR" aria-live="polite"></div>
         <p class="uf-sub">${esc(AVISO_SR)}</p>
         <p class="uf-sub" id="ufAviso">${fr?'A gravação fica guardada neste aparelho.':'Escolha uma palavra para montar a frase.'}</p>
-        <button class="uf-b p" type="button" id="ufCarimba" ${fr?'':'disabled'} style="width:100%">🌱 Carimbar no meu Caderno</button>`;
+        <button class="uf-b p" type="button" id="ufCarimba" ${fr?'':'disabled'} style="width:100%">🌱 Carimbar em Minhas palavras</button>`;
       c.querySelectorAll('[data-op]').forEach(b=>b.onclick=()=>{ w=opcoes[+b.dataset.op]; desenha(); fala(w.k); });
       const bi=c.querySelector('#ufBusca'), rs=c.querySelector('#ufRes');
       bi.oninput=()=>{ const r=busca(bi.value,f); rs.innerHTML=bi.value.trim().length<2?'':(r.length?r.map((o,i)=>`<button type="button" data-r="${i}"><b lang="ja">${esc(o.k)}</b> <span class="uf-ro">${esc(o.r)}</span> · ${esc(o.pt)}</button>`).join(''):'<p class="uf-sub">Ainda não temos essa palavra no dicionário. Tente outra parecida, ou peça para a professora incluir.</p>');
@@ -166,9 +166,9 @@
       }catch(e){ av.textContent='Não consegui usar o microfone. Confira a permissão do navegador. Você pode carimbar a frase sem a voz.'; } }
     async function carimba(){ const fr=monta(f,w), L=lista(); L[slug]=Object.assign(fr,{w,t:Date.now(),voz:!!voz||!!(L[slug]&&L[slug].voz)}); grava(L);
       if(voz) await poeVoz(slug,voz);
-      c.innerHTML=`<div class="uf-ok"><div class="uf-selo" aria-hidden="true">🌱</div><b style="font-family:'Baloo 2',system-ui,sans-serif;font-size:20px">Carimbada no seu Caderno!</b>
+      c.innerHTML=`<div class="uf-ok"><div class="uf-selo" aria-hidden="true">🌱</div><b style="font-family:'Baloo 2',system-ui,sans-serif;font-size:20px">Carimbada em Minhas palavras!</b>
         <div class="uf-jp" lang="ja">${esc(fr.k)}</div><div class="uf-pt">${esc(fr.pt)}</div>
-        <div class="uf-row" style="justify-content:center"><a class="uf-b" href="/idiomas/caderno/#frases">📒 Ver no Caderno</a><button class="uf-b p" type="button" data-uf-fecha>Continuar</button></div></div>`;
+        <div class="uf-row" style="justify-content:center"><a class="uf-b" href="/idiomas/palavras/#frases">📒 Ver em Minhas palavras</a><button class="uf-b p" type="button" data-uf-fecha>Continuar</button></div></div>`;
       if(typeof opt.aoSalvar==='function') try{ opt.aoSalvar(L[slug]); }catch(e){} }
     desenha(); const b0=c.querySelector('button'); if(b0) b0.focus();
   }

@@ -268,7 +268,7 @@ body.show-ro .opt .ro,body.show-ro .tab .ro,body.show-ro .line .ro,body.show-ro 
 <body>
 <div class="wrap">
   <nav class="sitebar" aria-label="Site"><a class="brand" href="/">unirversos <span>/ idiomas</span></a><span class="navlinks"><a href="/idiomas/">idiomas</a><a href="/travessia/">travessia</a><a href="/paralelos/">paralelos</a><a href="/loja/">tesouros</a><a href="/sobre/">sobre</a></span></nav>
-  <nav class="trail" aria-label="Trilha"><a href="/idiomas/japones/">← Minha trilha</a><details class="caixa" open><summary>🧰 Ferramentas</summary><span class="caixa-l"><a href="/idiomas/avatar/" aria-current="page">🎨 Meu avatar</a><a href="/idiomas/hiragana/">あ Hiragana</a><a href="/idiomas/katakana/">ア Katakana</a><a href="/idiomas/kanji/">漢 Kanji</a><a href="/idiomas/numeros/">🔢 Números</a><a href="/idiomas/calendario/">📅 Calendário</a><a href="/idiomas/caderno/">📒 Caderno</a><a href="/idiomas/amuleto/">💎 Amuleto</a><a href="/idiomas/ar/">🌬️ Ar</a><a href="/idiomas/planeta-utopia/salao/">🪐 Planeta Utopia</a></span></details></nav>
+  <nav class="trail" aria-label="Trilha"><a href="/idiomas/japones/">← Minha trilha</a><details class="caixa" open><summary>🧰 Ferramentas</summary><span class="caixa-l"><a href="/idiomas/avatar/" aria-current="page">🎨 Meu avatar</a><a href="/idiomas/hiragana/">あ Hiragana</a><a href="/idiomas/katakana/">ア Katakana</a><a href="/idiomas/kanji/">漢 Kanji</a><a href="/idiomas/numeros/">🔢 Números</a><a href="/idiomas/calendario/">📅 Calendário</a><a href="/idiomas/palavras/">📒 Minhas palavras</a><a href="/idiomas/caderno/">📝 Caderno</a><a href="/idiomas/amuleto/">💎 Amuleto</a><a href="/idiomas/ar/">🌬️ Ar</a><a href="/idiomas/planeta-utopia/salao/">🪐 Planeta Utopia</a></span></details></nav>
   <style>.trail{flex-wrap:wrap;overflow:visible;align-items:center}.trail .caixa{flex:0 0 auto}.trail .caixa[open]{flex:1 1 100%;display:flex;flex-direction:column;gap:8px}.trail .caixa>summary{list-style:none;cursor:pointer;display:inline-flex;align-items:center;gap:6px;width:max-content;border:1.5px solid var(--line,#e7e1da);background:var(--card,#fff);border-radius:99px;padding:6px 14px;font-size:13.5px;font-weight:700}.trail .caixa>summary::-webkit-details-marker{display:none}.trail .caixa[open]>summary{border-color:var(--pink,#d9506f)}.trail .caixa-l{display:flex;flex-wrap:wrap;gap:8px}</style>
   <header class="top">
     <div>
@@ -350,7 +350,7 @@ body.show-ro .opt .ro,body.show-ro .tab .ro,body.show-ro .line .ro,body.show-ro 
             <footer class="c-foot">
               <div class="qr" id="qr" title="Abre o Planeta Utopia"></div>
               <div class="c-meta">
-                <span class="qr-note">QR: abre o seu <ruby>単語帳<rt>たんごちょう</rt></ruby> (caderno de palavras)</span>
+                <span class="qr-note">QR: abre o seu <ruby>単語帳<rt>たんごちょう</rt></ruby> (Minhas palavras)</span>
               <span><span data-ro="hakkōbi"><ruby>発行日<rt>はっこうび</rt></ruby></span>: <b id="cDate"></b></span>
                 <span id="cXp"></span>
                 <div class="bar"><i id="cBar"></i></div>
@@ -393,7 +393,7 @@ body.show-ro .opt .ro,body.show-ro .tab .ro,body.show-ro .line .ro,body.show-ro 
 
   <section class="caderno">
     <header>
-      <h2>Caderno de palavras <span data-ro="tangochō"><ruby>単語帳<rt>たんごちょう</rt></ruby></span></h2>
+      <h2>Minhas palavras <span data-ro="tangochō"><ruby>単語帳<rt>たんごちょう</rt></ruby></span></h2>
       <button class="btn primary" id="chStart" type="button">Desafio de ouvido · +15 XP</button>
     </header>
     <div class="chips" id="chips"></div>
@@ -407,7 +407,7 @@ body.show-ro .opt .ro,body.show-ro .tab .ro,body.show-ro .line .ro,body.show-ro 
 <script src="/idiomas/dados/avatar.js?v=20261016d"></script>
 <script src="/idiomas/dados/velocidade-voz.js?v=1"></script>
 <script src="/idiomas/dados/audio-mapa.js?v=4a8ffd4b"></script>
-<script src="/idiomas/dados/atelie-dados.js?v=20261027c"></script>
+<script src="/idiomas/dados/atelie-dados.js?v=20261112a"></script>
 <script>
 /* ---------- estado: avatar (utopiaAvatar1) + progresso do jogo (utopiaSave1) ---------- */
 const AV=UtopiaAvatar, GKEY='utopiaSave1'; AV.injectCSS();
@@ -531,7 +531,7 @@ function renderProns(){
 function renderAvatar(changed){ $('avatar').innerHTML=AV.markup(state.sel,{changed}); $('cardAvatar').innerHTML=AV.markup(state.sel,{}); }
 let qr=null, lastQR='';
 function updateQR(){ const url=cadernoURL({name:displayName(),learned:state.learned,sel:state.sel}); if(url===lastQR) return; lastQR=url;
-  try{ if(!qr) qr=new QRCode($('qr'),{text:url,width:160,height:160,colorDark:'#3a2b38',colorLight:'#ffffff',correctLevel:QRCode.CorrectLevel.L}); else qr.makeCode(url); $('qr').title='Abre o seu caderno de palavras'; }catch(e){ $('qr').hidden=true; } }
+  try{ if(!qr) qr=new QRCode($('qr'),{text:url,width:160,height:160,colorDark:'#3a2b38',colorLight:'#ffffff',correctLevel:QRCode.CorrectLevel.L}); else qr.makeCode(url); $('qr').title='Abre as suas palavras'; }catch(e){ $('qr').hidden=true; } }
 function applyRomaji(){ document.body.classList.toggle('show-ro',!!state.profile.romaji); const b=$('roToggle'); if(b) b.setAttribute('aria-pressed',!!state.profile.romaji); }
 document.querySelectorAll('[data-ro]').forEach(el=>el.insertAdjacentHTML('beforeend',` <span class="ro">${el.dataset.ro}</span>`));
 if($('roToggle')) $('roToggle').onclick=()=>{ state.profile.romaji=!state.profile.romaji; applyRomaji(); save(); };

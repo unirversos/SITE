@@ -607,9 +607,9 @@ function wireCena(){
       let provaOk=false; try{ const sv=JSON.parse(localStorage.getItem('utopiaSave1')||'{}'); provaOk=!!(sv&&sv.done&&terr&&sv.done['ja:'+terr]); }catch(_){}
       const provaHref=terr?`/idiomas/planeta-utopia/?lang=ja&terr=${terr}&from=trilha`:'';
       const h=document.createElement('div'); h.className='hall'; h.setAttribute('role','group');
-      /* 🌱 Minha frase: antes da prova, uma frase sobre a pessoa que vai para o Caderno */
+      /* 🌱 Minha frase: antes da prova, uma frase sobre a pessoa que vai para Minhas palavras */
       const temFrase=!!(window.UniFrase&&UniFrase.F[A.slug]), feita=temFrase&&!!UniFrase.lista()[A.slug];
-      const fraseH=temFrase?`<div class="hall-f${feita?' ok':''}"><span>${feita?'✓ Sua frase já está no Caderno.':'Antes da prova: monte uma frase sobre você e grave a sua voz.'}</span><button class="btn" type="button" data-minha-frase>🌱 ${feita?'Refazer minha frase':'Minha frase'}</button></div>`:'';
+      const fraseH=temFrase?`<div class="hall-f${feita?' ok':''}"><span>${feita?'✓ Sua frase já está em Minhas palavras.':'Antes da prova: monte uma frase sobre você e grave a sua voz.'}</span><button class="btn" type="button" data-minha-frase>🌱 ${feita?'Refazer minha frase':'Minha frase'}</button></div>`:'';
       if(terr&&!provaOk){
         /* a prova é obrigatória para concluir o mapa: aqui só ela */
         h.setAttribute('aria-label','Próximo passo');
@@ -619,7 +619,7 @@ function wireCena(){
         h.innerHTML=`<p class="hall-t">✓ Mapa concluído</p>${fraseH}<div class="hall-b"><a class="btn" href="/idiomas/japones/">← Voltar à trilha</a><a class="btn" href="/idiomas/planeta-utopia/salao/">🪐 Ir ao Salão</a></div>`+`<p class="hall-s">${terr?`<a href="${provaHref}">🏅 Refazer a prova</a>`:''}<a href="#" data-refaz-cena>↺ Refazer os exercícios da cena</a></p>`;
       }
       $('btnNext').after(h);
-      const mf=h.querySelector('[data-minha-frase]'); if(mf) mf.onclick=()=>UniFrase.abrir(A.slug,{aoSalvar:()=>{ const bx=h.querySelector('.hall-f'); if(bx){ bx.classList.add('ok'); bx.querySelector('span').textContent='✓ Sua frase já está no Caderno.'; mf.textContent='🌱 Refazer minha frase'; } }});
+      const mf=h.querySelector('[data-minha-frase]'); if(mf) mf.onclick=()=>UniFrase.abrir(A.slug,{aoSalvar:()=>{ const bx=h.querySelector('.hall-f'); if(bx){ bx.classList.add('ok'); bx.querySelector('span').textContent='✓ Sua frase já está em Minhas palavras.'; mf.textContent='🌱 Refazer minha frase'; } }});
       const rz=h.querySelector('[data-refaz-cena]'); if(rz) rz.onclick=ev=>{ ev.preventDefault(); done={}; loadCena(0); }; }
   };
 }
