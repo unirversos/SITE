@@ -3,96 +3,85 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Unirversos Paralelos — diário trilíngue</title>
+<title>Unirversos Paralelos — mural da comunidade</title>
+<meta name="description" content="O mural da comunidade Unirversos: um tema por semana, registros em japonês, inglês e português, reações e respostas gentis.">
 <style>
-@import url('https://fonts.googleapis.com/css2?family=Baloo+2:wght@500;600;700&family=Zen+Maru+Gothic:wght@400;500;700&display=swap');
-:root{
-  --pink:#b5514d; --pink-deep:#b5514d; --pink-soft:rgba(224,140,134,.14);
-  --blush:#FBEBE7; --blush-2:#F0DFDA; --cream:#FDF8F5;
-  --ink:#4A4149; --ink-soft:#71676e;
-  --gold:#C0913F; --gold-soft:#FBF2DF;
-  --sage:#4f7461; --sage-soft:#EAF3EE;
-  --lav:#686eb2; --lav-soft:#EEEFF9;
-}
-*{box-sizing:border-box;margin:0;padding:0;}
-@media (prefers-reduced-motion: reduce){ *{transition:none !important;} }
-body{font-family:'Zen Maru Gothic',sans-serif;color:var(--ink);background:var(--cream);line-height:1.7;font-size:16px;-webkit-font-smoothing:antialiased;}
-.wrap{max-width:840px;margin:0 auto;padding:0 24px;}
-
-.nav{display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap;padding:22px 0;}
-.logo{font-family:'Baloo 2',cursive;font-size:18px;font-weight:700;text-decoration:none;color:inherit;}
-.logo i{font-style:normal;color:var(--pink);}
-.nav .links{display:flex;gap:18px;font-size:13px;}
-.nav .links a{color:var(--ink-soft);text-decoration:none;}
-.nav .links a:hover{color:var(--pink-deep);}
-.nav .links a.on{color:var(--pink);}
-
-.hero{padding:30px 0 40px;text-align:center;}
-.hero .eyebrow{font-size:11px;letter-spacing:4px;text-transform:uppercase;color:var(--pink);margin-bottom:14px;font-weight:600;}
-.hero h1{font-family:'Baloo 2',cursive;font-weight:700;font-size:clamp(26px,4.6vw,40px);line-height:1.25;max-width:600px;margin:0 auto 16px;}
-.hero h1 em{font-style:normal;color:var(--pink);}
-.hero p{color:var(--ink-soft);max-width:520px;margin:0 auto;font-size:16px;}
-
-.section-intro{padding:44px 0 20px;text-align:center;}
-.section-intro .eyebrow{font-size:11px;letter-spacing:4px;text-transform:uppercase;color:var(--pink);margin-bottom:10px;font-weight:600;}
-.section-intro h2{font-family:'Baloo 2',cursive;font-weight:700;font-size:clamp(23px,3.8vw,31px);margin-bottom:10px;}
-.section-intro p{color:var(--ink-soft);max-width:560px;margin:0 auto;}
-
-.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:14px;padding:20px 0 40px;}
-.lang-card{
-  background:linear-gradient(to bottom, transparent 0%, transparent calc(100% - 1px), var(--line-2) calc(100% - 1px), var(--line-2) 100%),
-             repeating-linear-gradient(to bottom, transparent 0%, transparent 26px, var(--blush-2) 26px, var(--blush-2) 27px);
-  background-color:#fafaf8;
-  border:1.5px solid var(--blush-2);
-  border-radius:6px;
-  padding:28px 20px;
-  text-align:center;
-  transition:all .2s ease;
-  text-decoration:none;
-  color:inherit;
-  display:flex;
-  flex-direction:column;
-  justify-content:center;
-  gap:14px;
-  box-shadow:0 2px 8px rgba(74,65,73,.04);
-  position:relative;
-  min-height:180px;
-}
-.lang-card:hover{transform:translateY(-3px);box-shadow:0 6px 16px rgba(224,140,134,.12);border-color:var(--pink);}
-.lang-card h3{font-family:'Baloo 2',cursive;font-weight:600;font-size:19px;margin:0;padding:0;}
-.lang-card p{font-size:13px;color:var(--ink-soft);margin:0;padding:0;line-height:1.5;}
-
-.reflexoes-section{padding:48px 0 40px;text-align:center;border-top:1px solid var(--blush-2);border-bottom:1px solid var(--blush-2);}
-.reflexoes-section .eyebrow{font-size:11px;letter-spacing:4px;text-transform:uppercase;color:var(--pink);margin-bottom:10px;font-weight:600;}
-.reflexoes-section h2{font-family:'Baloo 2',cursive;font-weight:700;font-size:clamp(23px,3.8vw,31px);margin-bottom:20px;}
-.reflexoes-card{
-  background:linear-gradient(135deg, var(--blush) 0%, var(--lav-soft) 100%);
-  border:1.5px solid var(--pink);border-radius:22px;padding:36px 32px;
-  text-align:center;transition:all .2s ease;text-decoration:none;color:inherit;
-  display:inline-block;max-width:500px;box-shadow:0 8px 24px rgba(224,140,134,.12);
-}
-.reflexoes-card:hover{transform:translateY(-4px);box-shadow:0 12px 32px rgba(224,140,134,.2);}
-.reflexoes-card .icon{font-size:42px;margin-bottom:14px;display:block;}
-.reflexoes-card h3{font-family:'Baloo 2',cursive;font-weight:600;font-size:22px;margin-bottom:8px;color:var(--pink-deep);}
-.reflexoes-card .subtitle{font-size:12px;letter-spacing:1.5px;text-transform:uppercase;color:var(--pink);font-weight:600;margin-bottom:12px;}
-.reflexoes-card p{font-size:14.5px;color:var(--ink-soft);margin-bottom:18px;line-height:1.6;}
-.reflexoes-card .btn{display:inline-block;background:var(--pink);color:#fff;border:none;border-radius:40px;padding:12px 28px;font-size:14px;font-family:'Zen Maru Gothic',sans-serif;font-weight:600;cursor:pointer;transition:all .2s ease;text-decoration:none;}
-.reflexoes-card .btn:hover{background:var(--pink-deep);transform:translateY(-2px);}
-
-.quote p{font-family:'Baloo 2',cursive;font-weight:600;font-size:clamp(19px,3.2vw,26px);line-height:1.5;color:var(--ink);max-width:600px;margin:0 auto;}
-.quote span{color:var(--pink);}
-
-.foot{border-top:1px solid var(--blush-2);padding:34px 0 50px;text-align:center;}
-.foot .big{font-family:'Baloo 2',cursive;font-size:17px;margin-bottom:14px;}
-.foot .tags{display:flex;gap:16px;justify-content:center;flex-wrap:wrap;font-size:13px;color:var(--pink-deep);}
-.foot .credit{margin-top:16px;font-size:11.5px;color:var(--ink-soft);opacity:.7;}
-
+@import url('https://fonts.googleapis.com/css2?family=Baloo+2:wght@500;700;800&family=Zen+Maru+Gothic:wght@400;500;700&display=swap');
+:root{--pink:#c23f5e;--pink-deep:#a8324f;--ink:#3a2b38;--muted:#705f6c;--line:#ecdadd;--paper:#fdf6f4;--sage:#517158;--sage-soft:#e8efe8}
+*{box-sizing:border-box;margin:0;padding:0}
+@media (prefers-reduced-motion:reduce){*{transition:none!important}}
+body{font-family:'Zen Maru Gothic',system-ui,sans-serif;color:var(--ink);background:var(--paper);line-height:1.6;font-size:16px;-webkit-font-smoothing:antialiased}
+.wrap{max-width:860px;margin:0 auto;padding:0 22px}
+.nav{display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap;padding:22px 0}
+.logo{font-family:'Baloo 2',cursive;font-size:20px;font-weight:800;text-decoration:none;color:inherit}
+.nav .links{display:flex;flex-wrap:wrap;align-items:center;gap:8px 18px;font-size:13.5px}
+.nav .links a{color:var(--muted);text-decoration:none}.nav .links a:hover{color:var(--pink-deep)}
+.eyebrow{font-size:12px;letter-spacing:.14em;text-transform:uppercase;font-weight:700;color:var(--pink-deep)}
+.hero{padding:26px 0 8px;display:flex;flex-direction:column;gap:10px}
+.hero h1{font-family:'Baloo 2',cursive;font-weight:800;font-size:clamp(32px,6vw,48px);line-height:1.05}
+.hero h1 em{font-style:normal;color:var(--pink)}
+.hero p{color:var(--muted);font-size:17px;max-width:640px}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;font:inherit;font-size:15px;font-weight:700;color:#fff;background:var(--pink);border:0;border-radius:999px;padding:12px 26px;min-height:46px;cursor:pointer;text-decoration:none;transition:transform .2s,box-shadow .2s}
+.btn:hover{transform:translateY(-2px);box-shadow:0 8px 20px -10px rgba(194,63,94,.6)}
+.btn:disabled{opacity:.6;cursor:wait;transform:none}
+.btn.peq{font-size:14px;padding:8px 18px;min-height:40px}
+.btn.claro{background:#fff;color:var(--ink);border:1.5px solid var(--line)}.btn.claro:hover{box-shadow:0 8px 20px -14px rgba(58,43,56,.5)}
+.dois{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:18px;margin:26px 0 22px}
+@media(max-width:700px){.dois{grid-template-columns:1fr}}
+.cx{background:#fff;border:1.5px solid var(--line);border-radius:18px;padding:20px 22px;display:flex;flex-direction:column;gap:10px}
+.cx.tema{border-top:6px solid var(--pink)}
+.cx h2{font-family:'Baloo 2',cursive;font-weight:700;font-size:26px;line-height:1.2}
+.cx p{color:var(--muted);font-size:15px}.cx .peq{font-size:13px;color:var(--muted)}
+.cx ul{list-style:none;display:flex;flex-direction:column;gap:8px;font-size:15px}
+.cx li{display:flex;gap:10px}.cx li::before{content:"";width:7px;height:7px;border-radius:50%;background:var(--sage);margin-top:9px;flex:none}
+.eyebrow.verde{color:var(--sage)}
+.escrever{background:#fff;border:1.5px solid var(--line);border-radius:18px;padding:22px;margin-bottom:30px;display:flex;flex-direction:column;gap:12px}
+.escrever h2{font-family:'Baloo 2',cursive;font-weight:700;font-size:22px}
+.chips{display:flex;gap:8px;flex-wrap:wrap}
+.chip{font:inherit;font-size:14px;font-weight:700;padding:8px 16px;min-height:40px;border-radius:999px;border:1.5px solid var(--line);background:#fff;color:var(--muted);cursor:pointer}
+.chip.on{background:var(--ink);border-color:var(--ink);color:#fff}
+label{font-size:13px;font-weight:700;color:var(--muted)}
+input[type=text],textarea,.resp-form input{width:100%;font:inherit;font-size:16px;padding:12px 14px;border:1.5px solid var(--line);border-radius:14px;background:var(--paper);color:var(--ink)}
+textarea{min-height:84px;resize:vertical;line-height:1.5}
+input:focus,textarea:focus{outline:none;border-color:var(--pink);box-shadow:0 0 0 3px rgba(194,63,94,.14)}
+button:focus-visible,a:focus-visible,.chip:focus-visible{outline:3px solid #b7a6dc;outline-offset:2px}
+.conta{font-size:13px;text-align:right;color:var(--muted)}.conta.alerta{color:#b3261e;font-weight:700}
+#formPost{display:flex;flex-direction:column;gap:12px}#formPost[hidden]{display:none}
+.aviso{font-size:13px;color:#b3261e;min-height:1.2em}
+.nota{font-size:13px;color:var(--muted)}
+.lista-h{display:flex;flex-wrap:wrap;gap:12px;align-items:center;justify-content:space-between;margin-bottom:14px}
+.lista-h h2{font-family:'Baloo 2',cursive;font-weight:700;font-size:22px}
+.mural{display:flex;flex-direction:column;gap:16px;margin-bottom:40px}
+.post{background:#fff;border:1.5px solid var(--line);border-radius:18px;padding:18px 20px;display:flex;flex-direction:column;gap:12px}
+.post-top{display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap}
+.quem{display:flex;gap:12px;align-items:center}
+.av{width:42px;height:42px;border-radius:50%;background:#f3d9de;display:flex;align-items:center;justify-content:center;font-family:'Baloo 2',cursive;font-weight:700;font-size:18px}
+.quem b{display:block;font-size:15px;line-height:1.2}.quando{font-size:13px;color:var(--muted)}
+.etq{font-size:12px;font-weight:700;padding:5px 12px;border-radius:999px;background:var(--paper);color:var(--muted);border:1px solid var(--line)}
+.texto{font-size:19px;line-height:1.6;overflow-wrap:anywhere;white-space:pre-wrap}
+.rodape{display:flex;flex-wrap:wrap;gap:8px;align-items:center;padding-top:10px;border-top:1px dashed var(--line)}
+.esp{flex:1}
+.reacao{display:inline-flex;gap:7px;align-items:center;font:inherit;font-size:14px;color:var(--ink);background:#fff;border:1.5px solid var(--line);border-radius:999px;padding:8px 14px;min-height:40px;cursor:pointer}
+.reacao:hover{border-color:var(--pink)}
+.reacao.on{background:#f7dbe2;border-color:var(--pink);color:#7c2038}
+.mini{font:inherit;font-size:13.5px;color:var(--muted);background:none;border:0;text-decoration:underline;padding:8px 6px;min-height:40px;cursor:pointer}
+.mini.forte{font-weight:700;color:var(--ink);text-decoration:none;border:1.5px solid var(--line);border-radius:999px;padding:8px 16px}
+.resp{margin-left:20px;padding:10px 14px;background:var(--paper);border-radius:14px;display:flex;flex-direction:column;gap:2px}
+.resp-nome{font-size:13px;font-weight:700}.resp-nome span{font-weight:400;color:var(--muted)}
+.resp-txt{font-size:15px;overflow-wrap:anywhere}.resp .mini{align-self:flex-start;padding:4px 0;min-height:32px}
+.resp-form{margin-left:20px;display:flex;gap:8px}
+.sr{position:absolute;left:-9999px}
+.vazio{text-align:center;padding:40px 16px;color:var(--muted)}
+.subs{padding-top:6px}
+.foot{border-top:1px solid var(--line);padding:30px 0 48px;text-align:center}
+.foot .big{font-family:'Baloo 2',cursive;font-size:17px;margin-bottom:12px}
+.foot .tags{display:flex;gap:16px;justify-content:center;flex-wrap:wrap;font-size:13px;color:var(--pink-deep)}
+.foot .credit{margin-top:14px;font-size:12px;color:var(--muted)}
 </style>
 <link rel="stylesheet" href="/estilo-celular.css?v=3">
 <script defer src="/menu-ativo.js?v=1"></script>
 <link rel="icon" href="/favicon.svg" type="image/svg+xml"><link rel="icon" href="/favicon.ico" sizes="48x48"><link rel="apple-touch-icon" href="/apple-touch-icon.png"><link rel="manifest" href="/manifest.webmanifest"><meta name="theme-color" content="#3a2b38"><meta name="mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-title" content="Unirversos"><script src="/app.js" defer></script></head>
 <body>
-
 <div class="wrap">
   <nav class="nav">
     <a href="/" class="logo">UNIRVERSOS</a>
@@ -109,57 +98,56 @@ body{font-family:'Zen Maru Gothic',sans-serif;color:var(--ink);background:var(--
 
   <header class="hero">
     <p class="eyebrow">unirversos paralelos</p>
-    <h1>Diário <em>trilíngue</em>.</h1>
-    <p>Registre um acontecimento ou pensamento por dia, no idioma que você escolher. Escreva uma frase e acompanhe a jornada de outros aprendizes.</p>
+    <h1>Diário da <em>comunidade</em></h1>
+    <p>Uma frase por dia, no idioma que você escolher. Aqui, errar é bem-vindo e cada registro vira conversa.</p>
+    <div class="subs"><a class="btn claro" href="https://substack.com/@unirversosparalelos" target="_blank" rel="noopener">Reflexões em voz alta, no Substack <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17L17 7M9 7h8v8"/></svg></a></div>
   </header>
-</div>
 
-<div class="wrap">
-
-  <div class="quote" style="padding:40px 0;">
-    <p>Todo mundo carrega mundos que ninguém vê.<br>Aqui, você <span>compartilha</span> o seu.</p>
-  </div>
-
-  <div class="grid">
-    <a href="/paralelos/japones/" class="lang-card">
-      <h3>Japonês</h3>
-      <p>日本語で毎日を記録する</p>
-    </a>
-
-    <a href="/paralelos/ingles/" class="lang-card">
-      <h3>English</h3>
-      <p>Record your days in English</p>
-    </a>
-
-    <a href="/paralelos/portugues/" class="lang-card">
-      <h3>Português</h3>
-      <p>Registre seus dias em português</p>
-    </a>
-  </div>
-
-  <p style="text-align:center;margin:28px 0 0;font-size:15px">E para estudar: <a href="/idiomas/" style="color:#b5514d;font-weight:700;text-decoration:none;border-bottom:1px solid #F0DFDA">🗺️ conhecer as trilhas de Idiomas →</a></p>
-
-  <section class="reflexoes-section">
-    <p class="eyebrow">além do diário</p>
-    <h2>Reflexões em voz alta</h2>
-    <a href="https://substack.com/@unirversosparalelos" target="_blank" rel="noopener" class="reflexoes-card">
-      <span class="icon">✦</span>
-      <h3>Reflexões em Voz Alta</h3>
-      <span class="subtitle">Newsletter</span>
-      <p>Um canto para desacelerar e dar lugar à presença, observação e escrita descompromissada. Fragmentos do cotidiano, notas de identidade e pensamentos em voz alta.</p>
-      <span class="btn">Ir para o Substack →</span>
-    </a>
+  <section class="dois" aria-label="Tema e combinados">
+    <div class="cx tema">
+      <p class="eyebrow">tema da semana</p>
+      <h2 id="temaTitulo">…</h2>
+      <p>Escreva sobre o tema quando quiser durante a semana. Pode ser uma palavra, uma frase ou um parágrafo, no idioma que você escolher.</p>
+      <p class="peq" id="temaSemana"></p>
+    </div>
+    <div class="cx">
+      <p class="eyebrow verde">combinados</p>
+      <ul>
+        <li>Errar faz parte. Ninguém corrige sem você pedir.</li>
+        <li>Cuide de quem aparece nas suas histórias: sem nomes ou dados de outras pessoas.</li>
+        <li>Algo te incomodou? Use Denunciar. A Aline recebe e cuida.</li>
+      </ul>
+    </div>
   </section>
+
+  <section class="escrever" aria-labelledby="h-escrever">
+    <h2 id="h-escrever">Escrever no diário</h2>
+    <div id="diarioEntrar"><p class="nota" style="margin-bottom:12px">Para escrever, reagir e responder, entre com a sua conta grátis. Ler é livre.</p><button type="button" class="btn">Entrar para participar →</button></div>
+    <form id="formPost" hidden>
+      <div><span class="nota" style="display:block;margin-bottom:6px;font-weight:700">Idioma deste registro</span><div class="chips" id="escolhaLang"></div></div>
+      <div><label for="author">Seu nome no diário</label><input id="author" type="text" placeholder="Como você quer aparecer?" maxlength="40" autocomplete="nickname"></div>
+      <div><label for="text">Seu registro</label><textarea id="text" maxlength="280" required></textarea></div>
+      <p class="nota">Seu registro fica público, com o nome que você escolher. Não escreva telefone, endereço ou outros dados pessoais.</p>
+      <div><button type="submit" class="btn">Publicar no diário</button></div>
+      <p id="diarioAviso" class="aviso" aria-live="polite"></p>
+    </form>
+  </section>
+
+  <section aria-labelledby="h-reg">
+    <div class="lista-h"><h2 id="h-reg">Registros da comunidade</h2><div class="chips" id="abas"></div></div>
+    <div class="mural" id="mural" aria-live="polite"></div>
+  </section>
+
+  <p style="text-align:center;margin:0 0 8px;font-size:15px">E para estudar: <a href="/idiomas/" style="color:var(--pink-deep);font-weight:700;text-decoration:none;border-bottom:1px solid var(--line)">conhecer as trilhas de Idiomas →</a></p>
 
   <footer class="foot">
     <p class="big">unirversos — tudo conectado</p>
     <div class="tags"><span>@unirversos.idiomas</span><span>unirversos.idiomas@gmail.com</span></div>
-    <p style="margin-top:16px;font-size:13px;"><a href="https://www.instagram.com/unirversos.idiomas" target="_blank" rel="noopener" style="color:var(--pink-deep);text-decoration:none;border-bottom:1px solid var(--blush-2);">💬 acompanhe o diário trilíngue no Instagram →</a></p>
+    <p style="margin-top:14px;font-size:13px"><a href="https://www.instagram.com/unirversos.idiomas" target="_blank" rel="noopener" style="color:var(--pink-deep);text-decoration:none;border-bottom:1px solid var(--line)">acompanhe a comunidade no Instagram →</a></p>
     <p class="credit">Aline Kikuti</p>
   </footer>
-
 </div>
-
+<script type="module" src="/paralelos/mural.js?v=1"></script>
 <script src="/entrar.js" defer></script>
 </body>
 </html>
