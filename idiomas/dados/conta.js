@@ -48,7 +48,7 @@ st.textContent = `
 #uni-gate a{color:#c23f5e}
 #uni-gate .lk{border:0;background:none;color:#c23f5e;font:inherit;font-size:13px;cursor:pointer;padding:0;justify-self:start;text-decoration:underline}
 .uni-chip{display:inline-flex;align-items:center;gap:6px;font-size:13px;color:#6b5a67;white-space:nowrap}
-.uni-eu{display:inline-flex;align-items:center;gap:6px;color:inherit;text-decoration:none;border-radius:999px;padding:2px 8px 2px 2px}.uni-eu:hover{background:#fdf6f4;color:#c23f5e}
+.uni-eu{display:inline-flex;align-items:center;gap:6px;color:#3a2b38;font-weight:700;text-decoration:none;border:1.5px solid #ecdadd;background:#fff;border-radius:999px;padding:2px 12px 2px 3px}.uni-eu:hover{background:#fdf6f4;color:#c23f5e}
 .uni-av{width:22px;height:22px;border-radius:50%;background:#c4405f;color:#fff;display:inline-grid;place-items:center;font-weight:700;font-size:12px;line-height:1}
 .uni-chip.uni-entrar button{background:#c4405f;border-color:#c4405f;color:#fff;font-weight:700;padding:5px 14px}
 .uni-chip button{border:1px solid #ecdadd;background:#fff;border-radius:999px;padding:3px 10px;font:inherit;font-size:12.5px;cursor:pointer;color:#6b5a67}
@@ -118,8 +118,7 @@ function chip(user){
   const c = document.createElement('span'); c.className = 'uni-chip';
   const nome = (user.displayName || user.email || 'você').split(' ')[0].split('@')[0];
   const nm = nome.replace(/[<>&"]/g,'');
-  c.innerHTML = `<a class="uni-eu" href="/aluno/" title="Área do aluno"><span class="uni-av" aria-hidden="true">${(nm[0] || '?').toUpperCase()}</span> ${nm}</a> <button type="button">sair</button>`;
-  c.querySelector('button').onclick = async () => { await enviar(); await signOut(auth); };
+  c.innerHTML = `<a class="uni-eu" href="/aluno/" aria-label="Área do aluno de ${nm}"><span class="uni-av" aria-hidden="true">${(nm[0] || '?').toUpperCase()}</span> Área do aluno</a>`;
   const alvo = document.querySelector('.sitebar .navlinks') || document.querySelector('.nav .links');
   if (alvo) alvo.appendChild(c); else { c.classList.add('solta'); document.body.appendChild(c); }
 }
