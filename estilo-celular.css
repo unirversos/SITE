@@ -17,3 +17,6 @@ a[aria-current="page"] { font-weight: 700; text-decoration: underline; text-deco
   input:not([type=range]):not([type=checkbox]):not([type=radio]):not([type=color]),
   select, textarea { font-size: 16px !important; }
 }
+
+/* menu do topo: o separador entre universos e páginas só aparece onde cabe na mesma linha */
+@media (max-width:640px){.nav-sep{display:none}}
