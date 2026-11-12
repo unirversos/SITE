@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="pt-BR" data-login="obrigatorio">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Aulas · professora — Unirversos</title>
+<meta name="description" content="Tela da professora para cadastrar alunos e horários.">
+<meta name="robots" content="noindex">
+<style>html[data-login="obrigatorio"]:not(.uni-ok) body>*:not(#uni-gate){visibility:hidden}</style>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Baloo+2:wght@500;700;800&family=Zen+Maru+Gothic:wght@400;500;700&display=swap');
+:root{--pink:#c23f5e;--pink-deep:#a8324f;--ink:#3a2b38;--muted:#705f6c;--line:#ecdadd;--paper:#fdf6f4;--sage:#517158;--sage-soft:#e8efe8}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Zen Maru Gothic',system-ui,sans-serif;color:var(--ink);background:var(--paper);line-height:1.6;font-size:16px;-webkit-font-smoothing:antialiased}
+.wrap{max-width:860px;margin:0 auto;padding:0 22px 60px}
+.nav{display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap;padding:22px 0}
+.logo{font-family:'Baloo 2',cursive;font-size:20px;font-weight:800;text-decoration:none;color:inherit}
+.nav .links{display:flex;flex-wrap:wrap;align-items:center;gap:8px 18px;font-size:13.5px}
+.nav .links a{color:var(--muted);text-decoration:none}.nav .links a:hover{color:var(--pink-deep)}
+.eyebrow{font-size:12px;letter-spacing:.14em;text-transform:uppercase;font-weight:700;color:var(--pink-deep)}.eyebrow.verde{color:var(--sage)}
+.hero{padding:22px 0 18px;display:flex;flex-direction:column;gap:8px}
+.hero h1{font-family:'Baloo 2',cursive;font-weight:800;font-size:clamp(32px,6vw,46px);line-height:1.05}
+.hero h1 em{font-style:normal;color:var(--pink)}
+.hero p{color:var(--muted);font-size:17px;max-width:620px}
+#area{display:flex;flex-direction:column;gap:18px}
+.cx{background:#fff;border:1.5px solid var(--line);border-radius:18px;padding:20px 22px;display:flex;flex-direction:column;gap:10px}
+.cx.destaque{border-top:6px solid var(--pink);padding:24px}
+.cx h2,.topo h2{font-family:'Baloo 2',cursive;font-weight:700;font-size:24px;line-height:1.2}
+.cap::first-letter{text-transform:uppercase}
+.dois{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:18px}
+@media(max-width:700px){.dois{grid-template-columns:1fr}}
+.mut{color:var(--muted)}.peq{font-size:13.5px}.pre{white-space:pre-wrap;overflow-wrap:anywhere}
+.lista{list-style:none;display:flex;flex-direction:column;gap:6px}.lista li{padding:6px 0;border-bottom:1px dashed var(--line)}.lista li:last-child{border:0}
+.lista a{color:var(--pink-deep);font-weight:700;text-decoration:none}
+.tag{font-style:normal;font-size:11px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;padding:3px 9px;border-radius:999px;background:var(--sage-soft);color:#3f5c46}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;font:inherit;font-size:15px;font-weight:700;color:#fff;background:var(--pink);border:0;border-radius:999px;padding:12px 24px;min-height:46px;cursor:pointer;text-decoration:none;align-self:flex-start;transition:transform .2s,box-shadow .2s}
+.btn:hover{transform:translateY(-2px);box-shadow:0 8px 20px -10px rgba(194,63,94,.6)}
+.btn.grande{font-size:17px;padding:14px 30px;min-height:54px}
+.btn.off{background:#efe3e6;color:#8a7884;cursor:not-allowed;transform:none;box-shadow:none}
+.btn.claro{background:#fff;color:var(--ink);border:1.5px solid var(--line)}
+.btn.perigo{color:#a32a2a}
+.linha{display:flex;flex-wrap:wrap;gap:10px;align-items:center}
+a:focus-visible,button:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-visible{outline:3px solid #b7a6dc;outline-offset:2px}
+.topo{display:flex;flex-wrap:wrap;gap:12px;align-items:center;justify-content:space-between}
+.alunos{display:flex;flex-direction:column;gap:10px}
+.aluno{display:flex;gap:14px;align-items:center;text-align:left;font:inherit;color:inherit;background:#fff;border:1.5px solid var(--line);border-radius:16px;padding:14px 18px;cursor:pointer;min-height:64px;flex-wrap:wrap}
+.aluno:hover{border-color:var(--pink)}.aluno .av svg{width:100%;height:100%;display:block}
+.aluno .av{width:42px;height:42px;border-radius:50%;background:#f3d9de;display:grid;place-items:center;overflow:hidden;font-family:'Baloo 2',cursive;font-weight:700;font-size:18px;flex:none}
+.aluno .info{display:flex;flex-direction:column;flex:1;min-width:160px}
+.aluno .prox{font-size:14px}
+.voltar{align-self:flex-start;font:inherit;font-size:14px;font-weight:700;color:var(--pink-deep);background:none;border:0;cursor:pointer;padding:6px 0;min-height:40px}
+.ficha{gap:16px}
+label,legend{display:block;font-size:13px;font-weight:700;color:var(--muted);margin-bottom:6px}
+input[type=text],input[type=email],input[type=url],input[type=number],input[type=time],input[type=date],input[type=datetime-local],select,textarea{width:100%;font:inherit;font-size:16px;padding:10px 12px;border:1.5px solid var(--line);border-radius:12px;background:var(--paper);color:var(--ink)}
+input[readonly]{opacity:.7}
+textarea{resize:vertical;line-height:1.5}
+fieldset{border:1.5px dashed var(--line);border-radius:14px;padding:12px 14px;display:flex;flex-direction:column;gap:8px}
+legend{padding:0 6px;margin:0}
+.rep{display:flex;gap:8px;align-items:center}.rep select{max-width:160px}.rep input[type=time]{max-width:140px}.rep input[type=date],.rep input[type=datetime-local]{max-width:240px}
+.rep.mat input{flex:1}
+.x{font:inherit;font-size:20px;line-height:1;width:40px;height:40px;flex:none;border-radius:50%;border:1.5px solid var(--line);background:#fff;color:var(--muted);cursor:pointer}
+.mini{align-self:flex-start;font:inherit;font-size:14px;font-weight:700;color:var(--ink);background:#fff;border:1.5px solid var(--line);border-radius:999px;padding:6px 14px;min-height:40px;cursor:pointer}
+.ck{display:flex;gap:10px;align-items:center;font-weight:500;color:var(--ink);font-size:15px}.ck input{width:20px;height:20px;accent-color:var(--pink)}
+.pedido{background:#f7dbe2;border-left:0;border-radius:14px;padding:12px 14px;color:#7c2038;font-size:15px}.tag.rec{background:#f7dbe2;color:#7c2038}
+.privado{background:var(--sage-soft);border-radius:14px;padding:12px 14px}.privado textarea{background:#fff}
+.sr{position:absolute;left:-9999px}
+</style>
+<link rel="stylesheet" href="/estilo-celular.css?v=3">
+<link rel="icon" href="/favicon.svg" type="image/svg+xml"><link rel="icon" href="/favicon.ico" sizes="48x48"><link rel="apple-touch-icon" href="/apple-touch-icon.png">
+<script type="module" src="/idiomas/dados/conta.js?v=4"></script>
+<script>setTimeout(function(){var h=document.documentElement;if(!h.classList.contains('uni-ok')&&!document.getElementById('uni-gate'))h.classList.add('uni-ok')},10000)</script>
+</head>
+<body>
+<div class="wrap">
+  <nav class="nav">
+    <a href="/" class="logo">UNIRVERSOS</a>
+    <div class="links">
+      <a href="/idiomas/">idiomas</a>
+      <a href="/idiomas/planeta-utopia/salao/">planeta utopia</a>
+      <a href="/travessia/">travessia</a>
+      <a href="/loja/">tesouros</a>
+      <span class="nav-sep" aria-hidden="true" style="opacity:.3">|</span>
+      <a href="/paralelos/">paralelos</a>
+      <a href="/sobre/">sobre</a>
+    </div>
+  </nav>
+  <header class="hero">
+    <p class="eyebrow">aulas particulares · professora</p>
+    <h1>Seus <em>alunos</em></h1>
+    <p>Cadastre cada aluno com o e-mail dele, o link do Meet e os horários. O aluno vê tudo em <a href="/aulas/" style="color:var(--pink-deep)">unirversos.com/aulas</a>.</p>
+  </header>
+  <main id="area" aria-live="polite"></main>
+</div>
+<script src="/idiomas/dados/avatar.js?v=20261016g"></script>
+<script type="module" src="/aulas/professora.js?v=4"></script>
+</body>
+</html>

@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="pt-BR" data-login="obrigatorio">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Minhas aulas — Unirversos</title>
+<meta name="description" content="Área do aluno das aulas particulares com a Aline: próxima aula, link da sala, tarefa e materiais.">
+<style>html[data-login="obrigatorio"]:not(.uni-ok) body>*:not(#uni-gate){visibility:hidden}</style>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Baloo+2:wght@500;700;800&family=Zen+Maru+Gothic:wght@400;500;700&display=swap');
+:root{--pink:#c23f5e;--pink-deep:#a8324f;--ink:#3a2b38;--muted:#705f6c;--line:#ecdadd;--paper:#fdf6f4;--sage:#517158;--sage-soft:#e8efe8}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Zen Maru Gothic',system-ui,sans-serif;color:var(--ink);background:var(--paper);line-height:1.6;font-size:16px;-webkit-font-smoothing:antialiased}
+.wrap{max-width:860px;margin:0 auto;padding:0 22px 60px}
+.nav{display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap;padding:22px 0}
+.logo{font-family:'Baloo 2',cursive;font-size:20px;font-weight:800;text-decoration:none;color:inherit}
+.nav .links{display:flex;flex-wrap:wrap;align-items:center;gap:8px 18px;font-size:13.5px}
+.nav .links a{color:var(--muted);text-decoration:none}.nav .links a:hover{color:var(--pink-deep)}
+.eyebrow{font-size:12px;letter-spacing:.14em;text-transform:uppercase;font-weight:700;color:var(--pink-deep)}.eyebrow.verde{color:var(--sage)}
+.hero{padding:22px 0 18px;display:flex;flex-direction:column;gap:8px}
+.hero h1{font-family:'Baloo 2',cursive;font-weight:800;font-size:clamp(32px,6vw,46px);line-height:1.05}
+.hero h1 em{font-style:normal;color:var(--pink)}
+.hero p{color:var(--muted);font-size:17px;max-width:620px}
+#area{display:flex;flex-direction:column;gap:18px}
+.cx{background:#fff;border:1.5px solid var(--line);border-radius:18px;padding:20px 22px;display:flex;flex-direction:column;gap:10px}
+.cx.destaque{border-top:6px solid var(--pink);padding:24px}
+.cx h2,.topo h2{font-family:'Baloo 2',cursive;font-weight:700;font-size:24px;line-height:1.2}
+.eu{display:flex;gap:18px;align-items:center}.meu-av{width:96px;height:96px;flex:none;border-radius:50%;overflow:hidden;background:#f8dde1;border:3px solid #fff;box-shadow:0 8px 20px -12px rgba(58,43,56,.45)}.meu-av:empty{display:none}.meu-av svg{width:100%;height:100%;display:block}
+#av-link a{color:var(--pink-deep);font-weight:700;text-decoration:none}#av-link a:hover{text-decoration:underline}
+@media(max-width:520px){.meu-av{width:72px;height:72px}}
+.gravar{display:inline-flex;gap:6px;align-items:center;font:inherit;font-size:13px;font-weight:700;color:var(--muted);background:#fff;border:1.5px solid var(--line);border-radius:999px;padding:6px 12px;min-height:36px;cursor:pointer;white-space:nowrap}
+.gravar:hover{border-color:#9c2f4c;color:#9c2f4c}.gravar.on{background:#f7dbe2;border-color:#9c2f4c;color:#7c2038}
+.li-aula{display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap}
+.fmt{display:inline-block;font-size:11px;font-weight:700;letter-spacing:.04em;padding:2px 8px;border-radius:999px;background:var(--paper);border:1px solid var(--line);color:var(--muted);vertical-align:2px}
+.sr{position:absolute;left:-9999px}
+.cap{display:inline-block}.cap::first-letter{text-transform:uppercase}
+.regra{margin-top:8px;padding:12px 14px;background:var(--sage-soft);border-radius:14px;display:flex;flex-wrap:wrap;gap:6px 14px;align-items:center;justify-content:space-between}.regra p{color:#3f5c46}
+.remarcar{font-size:14px;font-weight:700;color:var(--ink);text-decoration:none;background:#fff;border:1.5px solid var(--line);border-radius:999px;padding:8px 16px;min-height:40px;display:inline-flex;align-items:center}.remarcar:hover{border-color:var(--pink);color:var(--pink-deep)}
+.tarefa{display:flex;gap:12px;align-items:flex-start;cursor:pointer}.tarefa input{appearance:none;-webkit-appearance:none;width:24px;height:24px;margin-top:2px;flex:none;border:2px solid #d9c3c9;border-radius:7px;background:#fff;cursor:pointer;display:grid;place-items:center;transition:background .15s,border-color .15s}.tarefa input:hover{border-color:#9c2f4c}.tarefa input:checked{background:#9c2f4c url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='white' stroke-width='3' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M5 12.5l4.5 4.5L19 7.5'/%3E%3C/svg%3E") center/16px no-repeat;border-color:#9c2f4c}.tarefa input:focus-visible{outline:3px solid #b7a6dc;outline-offset:2px}.tarefa.feita .pre{text-decoration:line-through;color:var(--muted)}
+.dois{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:18px}
+@media(max-width:700px){.dois{grid-template-columns:1fr}}
+.mut{color:var(--muted)}.peq{font-size:13.5px}.pre{white-space:pre-wrap;overflow-wrap:anywhere}
+.lista{list-style:none;display:flex;flex-direction:column;gap:6px}.lista li{padding:6px 0;border-bottom:1px dashed var(--line)}.lista li:last-child{border:0}
+.lista a{color:var(--pink-deep);font-weight:700;text-decoration:none}
+.tag{font-style:normal;font-size:11px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;padding:3px 9px;border-radius:999px;background:var(--sage-soft);color:#3f5c46}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;font:inherit;font-size:15px;font-weight:700;color:#fff;background:var(--pink);border:0;border-radius:999px;padding:12px 24px;min-height:46px;cursor:pointer;text-decoration:none;align-self:flex-start;transition:transform .2s,box-shadow .2s}
+.btn:hover{transform:translateY(-2px);box-shadow:0 8px 20px -10px rgba(194,63,94,.6)}
+.btn.grande{font-size:17px;padding:14px 30px;min-height:54px}
+.btn.off{background:#efe3e6;color:#8a7884;cursor:not-allowed;transform:none;box-shadow:none}
+.btn.claro{background:#fff;color:var(--ink);border:1.5px solid var(--line)}
+.btn.perigo{color:#a32a2a}
+.linha{display:flex;flex-wrap:wrap;gap:10px;align-items:center}
+a:focus-visible,button:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-visible{outline:3px solid #b7a6dc;outline-offset:2px}
+</style>
+<link rel="stylesheet" href="/estilo-celular.css?v=3">
+<link rel="icon" href="/favicon.svg" type="image/svg+xml"><link rel="icon" href="/favicon.ico" sizes="48x48"><link rel="apple-touch-icon" href="/apple-touch-icon.png">
+<script type="module" src="/idiomas/dados/conta.js?v=4"></script>
+<script>setTimeout(function(){var h=document.documentElement;if(!h.classList.contains('uni-ok')&&!document.getElementById('uni-gate'))h.classList.add('uni-ok')},10000)</script>
+</head>
+<body>
+<div class="wrap">
+  <nav class="nav">
+    <a href="/" class="logo">UNIRVERSOS</a>
+    <div class="links">
+      <a href="/idiomas/">idiomas</a>
+      <a href="/idiomas/planeta-utopia/salao/">planeta utopia</a>
+      <a href="/travessia/">travessia</a>
+      <a href="/loja/">tesouros</a>
+      <span class="nav-sep" aria-hidden="true" style="opacity:.3">|</span>
+      <a href="/paralelos/">paralelos</a>
+      <a href="/sobre/">sobre</a>
+    </div>
+  </nav>
+  <header class="hero">
+    <p class="eyebrow">aulas particulares</p>
+    <div class="eu">
+      <div id="meu-av" class="meu-av" aria-hidden="true"></div>
+      <div><h1>Minhas <em>aulas</em></h1>
+      <p id="ola">Sua próxima aula, a tarefa e os materiais, num lugar só.</p>
+      <p id="av-link" class="peq"></p></div>
+    </div>
+  </header>
+  <main id="area" aria-live="polite"></main>
+</div>
+<script src="/idiomas/dados/avatar.js?v=20261016g"></script>
+<script type="module" src="/aulas/aluno.js?v=8"></script>
+</body>
+</html>
