@@ -15,7 +15,7 @@
 body{margin:0;background:var(--paper);color:var(--ink);font-family:var(--f-body);font-size:15px;line-height:1.6;
   background-image:radial-gradient(var(--line) 1.2px,transparent 1.3px);background-size:22px 22px;
   padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));padding-block:20px 48px}
-.wrap{max-width:900px;margin:0 auto;display:grid;gap:18px}
+.wrap{max-width:1000px;margin:0 auto;display:grid;gap:18px}
 a{color:inherit}
 h1{font-family:var(--f-display);font-weight:800;font-size:clamp(26px,5vw,34px);line-height:1.15;margin:0}
 .sub{margin:4px 0 0;color:var(--muted);font-size:14px}
@@ -87,97 +87,14 @@ h1{font-family:var(--f-display);font-weight:800;font-size:clamp(26px,5vw,34px);l
   <style>.trail{flex-wrap:wrap;overflow:visible;align-items:center}.trail .caixa{flex:0 0 auto}.trail .caixa[open]{flex:1 1 100%;display:flex;flex-direction:column;gap:8px}.trail .caixa>summary{list-style:none;cursor:pointer;display:inline-flex;align-items:center;gap:6px;width:max-content;border:1.5px solid var(--line,#e7e1da);background:var(--card,#fff);border-radius:99px;padding:6px 14px;font-size:13.5px;font-weight:700}.trail .caixa>summary::-webkit-details-marker{display:none}.trail .caixa[open]>summary{border-color:var(--pink,#d9506f)}.trail .caixa-l{display:flex;flex-wrap:wrap;gap:8px}</style>
   <header>
     <h1>Caderno</h1>
-    <p class="sub">Anotações livres: escreva o que quiser, do seu jeito. Tudo fica guardado neste aparelho.</p>
+    <p class="sub">Anotações livres, em páginas: escreva com o teclado e desenhe com a caneta por cima. Com a conta, tudo vai junto para qualquer aparelho.</p>
   </header>
-  <div class="cad">
-    <aside class="lista" aria-label="Suas anotações">
-      <button class="btn primary" type="button" id="nova">+ Nova anotação</button>
-      <div class="itens" id="itens"></div>
-    </aside>
-    <section class="folha" id="folha" aria-label="Anotação aberta">
-      <div class="dia">
-        <div class="dt" role="group" aria-label="Data">
-          <input id="ano" type="number" inputmode="numeric" min="1" max="9999" aria-label="Ano"><ruby>年<rt>ねん</rt></ruby>
-          <input id="mes" type="number" inputmode="numeric" min="1" max="12" aria-label="Mês"><ruby>月<rt>がつ</rt></ruby>
-          <input id="dia" type="number" inputmode="numeric" min="1" max="31" aria-label="Dia"><ruby>日<rt>にち</rt></ruby>
-        </div>
-        <div class="sem" id="sem" role="group" aria-label="Dia da semana: toque para circular">
-          <button type="button" data-w="0" aria-pressed="false" aria-label="segunda-feira"><ruby>月<rt>げつ</rt></ruby></button>
-          <button type="button" data-w="1" aria-pressed="false" aria-label="terça-feira"><ruby>火<rt>か</rt></ruby></button>
-          <button type="button" data-w="2" aria-pressed="false" aria-label="quarta-feira"><ruby>水<rt>すい</rt></ruby></button>
-          <button type="button" data-w="3" aria-pressed="false" aria-label="quinta-feira"><ruby>木<rt>もく</rt></ruby></button>
-          <button type="button" data-w="4" aria-pressed="false" aria-label="sexta-feira"><ruby>金<rt>きん</rt></ruby></button>
-          <button type="button" data-w="5" aria-pressed="false" aria-label="sábado"><ruby>土<rt>ど</rt></ruby></button>
-          <button type="button" data-w="6" aria-pressed="false" aria-label="domingo"><ruby>日<rt>にち</rt></ruby></button>
-        </div>
-      </div>
-      <input id="tit" type="text" placeholder="Título (opcional)" maxlength="120" aria-label="Título da anotação">
-      <div class="modo" role="group" aria-label="Como escrever"><button type="button" id="m-txt" aria-pressed="true">Texto</button><button type="button" id="m-pen" aria-pressed="false">Caneta</button></div>
-      <textarea id="txt" placeholder="Escreva aqui…" aria-label="Texto da anotação"></textarea>
-      <div id="pad" hidden></div>
-      <div class="rod"><span><span id="estado" aria-live="polite">Salvo neste aparelho</span> <button class="btn sm" type="button" id="entrar" hidden>Entrar</button></span><span class="acts2"><button class="btn sm" type="button" id="apaga">Apagar</button></span></div>
-    </section>
-  </div>
+  <div id="cad"></div>
 </div>
 <script src="/caderno-dados.js?v=1"></script>
-<script src="/caderno-caneta.js?v=1"></script>
-<script>
-(function(){
-  var C=window.UniCaderno, $=function(i){return document.getElementById(i)};
-  var atual=null, ultimoM=0, modo='txt', pad=null, tTeclou=0, tl=null;
-  function esc(s){return String(s).replace(/[&<>"]/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]})}
-  function data(ms){return new Date(ms).toLocaleDateString('pt-BR',{day:'2-digit',month:'short'})}
-  function lista(){
-    var vs=C.vivas();
-    $('itens').innerHTML=vs.length?vs.map(function(n){return '<button class="item" type="button" data-id="'+n.id+'"'+(n.id===atual?' aria-current="true"':'')+'><b>'+esc(C.nome(n))+((n.s&&n.s.length)?' ✎':'')+'</b><small>'+data(n.m)+'</small></button>'}).join(''):'<p class="vazio">Ainda não há anotações.</p>';
-  }
-  function listaLogo(){clearTimeout(tl);tl=setTimeout(lista,200)}
-  function pinta(w){Array.prototype.forEach.call($('sem').children,function(b){b.setAttribute('aria-pressed',String(String(w)===b.dataset.w))})}
-  function garantePad(){ if(!pad) pad=UniCaneta.montar($('pad'),{aoMudar:function(t){ if(!atual) return; var n=C.atualizar(atual,{s:t.slice()}); if(n) ultimoM=n.m; listaLogo(); }}); return pad; }
-  function setModo(m){
-    modo=m; $('m-txt').setAttribute('aria-pressed',String(m==='txt')); $('m-pen').setAttribute('aria-pressed',String(m==='pen'));
-    $('txt').hidden=m!=='txt'; $('pad').hidden=m!=='pen';
-    if(m==='pen'){ var n=C.obter(atual); garantePad().carregar((n&&n.s)||[]); }
-  }
-  function abre(id){
-    var n=C.obter(id); if(!n) return;
-    atual=id; ultimoM=n.m||0; $('folha').hidden=false;
-    $('tit').value=n.t||''; $('txt').value=n.x||''; $('ano').value=n.a||''; $('mes').value=n.o||''; $('dia').value=n.d||''; pinta(n.w);
-    if(modo==='pen') garantePad().carregar(n.s||[]);
-    lista();
-  }
-  function abreProxima(){ var vs=C.vivas(); if(vs.length) abre(vs[0].id); else { atual=null; $('folha').hidden=true; lista(); } }
-  function nova(){ var n=C.nova(); abre(n.id); if(modo==='txt') $('txt').focus(); }
-  function edita(c){ if(!atual) nova(); var n=C.atualizar(atual,c); if(n) ultimoM=n.m; tTeclou=Date.now(); listaLogo(); }
-  function estado(){ $('estado').textContent=C.texto(); $('entrar').hidden=C.estado()!=='sem-login'; }
-
-  $('nova').onclick=nova;
-  $('tit').oninput=function(){edita({t:this.value})};
-  $('txt').oninput=function(){edita({x:this.value})};
-  $('ano').oninput=function(){edita({a:this.value})}; $('mes').oninput=function(){edita({o:this.value})}; $('dia').oninput=function(){edita({d:this.value})};
-  $('sem').onclick=function(e){var b=e.target.closest('button'); if(!b) return; var n=C.obter(atual); if(!n) return;
-    var w=(String(n.w)===b.dataset.w)?null:b.dataset.w; pinta(w); edita({w:w});};
-  $('itens').onclick=function(e){var b=e.target.closest('.item'); if(b) abre(b.dataset.id)};
-  $('m-txt').onclick=function(){setModo('txt')}; $('m-pen').onclick=function(){setModo('pen')};
-  $('entrar').onclick=function(){C.entrar()};
-  var pede=false;
-  $('apaga').onclick=function(){
-    if(!atual) return;
-    if(!pede){pede=true;this.textContent='Apagar mesmo?';var b=this;setTimeout(function(){pede=false;b.textContent='Apagar'},3000);return}
-    pede=false;this.textContent='Apagar'; C.apagar(atual); abreProxima();
-  };
-  C.on(function(tipo){
-    if(tipo==='estado') estado();
-    if(tipo==='remoto'){
-      lista(); var n=C.obter(atual);
-      if(atual&&!n) abreProxima();
-      else if(n&&(n.m||0)>ultimoM&&Date.now()-tTeclou>5000) abre(atual);
-      else if(!atual) abreProxima();
-    }
-  });
-  estado(); abreProxima();
-})();
-</script>
+<script src="/caderno-livro.js?v=1"></script>
+<script src="/caderno-ui.js?v=1"></script>
+<script>window.UniCadernoTela = UniCadernoUI.montar(document.getElementById('cad'));</script>
 <script>
 /* links antigos de "Caderno de palavras" (QR e #frases) agora vivem em Minhas palavras */
 (function(){var q=location.search,h=location.hash;if(/[?&]w=/.test(q)||h==='#frases')location.replace('/idiomas/palavras/'+q+h)})();
