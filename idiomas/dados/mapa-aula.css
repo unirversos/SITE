@@ -322,3 +322,24 @@ body{padding-bottom:190px}
   body{padding-bottom:260px}
 }
 .orient{margin:0;font-size:13.5px;color:#6b5a66;background:#fdf0f3;border-radius:12px;padding:8px 12px}
+
+/* ===== ajustes (12/nov): Ar maior, animação recolhida maior, sem sobra de espaço ===== */
+/* Ar: botão de socorro grande e legível */
+.top .tools>.btn.ar,.btn.ar{min-height:58px;padding:8px 24px;gap:2px;font-size:17px;border-width:2px;border-color:#9dbba2;background:#e1ece2;color:#2f5a3b;box-shadow:0 10px 22px -10px rgba(58,43,56,.45)}
+.btn.ar .ar-sub{font-size:13px;font-weight:600;opacity:1;color:#47684f;letter-spacing:0}
+.btn.ar:hover{background:#d3e4d5}
+/* animação da cena recolhida: maior no celular e no tablet */
+.stage-wrap{width:min(52vw,230px);bottom:90px}
+body{padding-bottom:260px}
+@media (min-width:900px) and (max-width:1099px){
+  .stage-wrap{width:340px}
+  body{padding-bottom:310px}
+}
+/* computador largo: cena grande numa coluna ao lado da lição, com o Ar logo abaixo; sem espaço em branco no fim */
+@media (min-width:1100px){
+  :root{--sw:clamp(380px,34vw,520px)}
+  body{padding-right:calc(var(--sw) + 44px);padding-bottom:40px}
+  .stage-wrap,.stage-wrap.grande{width:var(--sw);top:120px;bottom:auto;right:14px}
+  .top .tools>.btn.ar,.btn.ar{top:calc(120px + var(--sw) * .625 + 14px);bottom:auto;right:14px;width:var(--sw)}
+}
+@media (max-width:520px){.top .tools>.btn.ar,.btn.ar{padding:8px 16px;font-size:16px}.btn.ar .ar-sub{font-size:12.5px}}
