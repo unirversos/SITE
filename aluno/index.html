@@ -76,6 +76,11 @@ a:focus-visible,button:focus-visible,input:focus-visible,select:focus-visible,te
 .conta-l a{color:var(--pink-deep)}
 .mini-b{font:inherit;font-size:14px;font-weight:700;color:var(--ink);background:#fff;border:1.5px solid var(--line);border-radius:999px;padding:8px 16px;min-height:40px;cursor:pointer}
 #caderno{scroll-margin-top:16px}
+.aulas{display:flex;flex-direction:column;gap:18px}.aulas:empty{display:none}#area{scroll-margin-top:16px}
+.lst{list-style:none;display:flex;flex-direction:column;gap:6px}.lst li{padding:6px 0;border-bottom:1px dashed var(--line)}.lst li:last-child{border:0}
+.lst a{color:var(--pink-deep);font-weight:700;text-decoration:none}
+.lk{color:var(--pink-deep);font-weight:700;overflow-wrap:anywhere}
+.remarcar{cursor:pointer;font-family:inherit}
 
 /* ---- caderno (o mesmo de /idiomas/caderno/) ---- */
 /* caderno */
@@ -155,6 +160,8 @@ a:focus-visible,button:focus-visible,input:focus-visible,select:focus-visible,te
     </div>
   </header>
 
+  <div id="area" class="aulas" aria-live="polite"></div>
+
   <section class="cx destaque" id="continuar" aria-labelledby="h-cont">
     <p class="eyebrow">continuar de onde parou</p>
     <h2 id="h-cont">…</h2>
@@ -164,7 +171,6 @@ a:focus-visible,button:focus-visible,input:focus-visible,select:focus-visible,te
     <a class="btn primary" id="cont-btn" href="/idiomas/japones/">Continuar →</a>
   </section>
 
-  <section class="cx" id="aula-part" hidden aria-labelledby="h-aula"></section>
 
   <div class="sec-t" id="caderno"><h2>Caderno</h2><a href="/idiomas/caderno/">abrir em tela cheia →</a></div>
   <div class="cad">
@@ -279,6 +285,7 @@ a:focus-visible,button:focus-visible,input:focus-visible,select:focus-visible,te
   estado(); abreProxima();
 })();
 </script>
-<script type="module" src="/aluno/aluno.js?v=1"></script>
+<script type="module" src="/aluno/aluno.js?v=2"></script>
+<script type="module" src="/aulas/aluno.js?v=11"></script>
 </body>
 </html>

@@ -1,9 +1,7 @@
-/* Unirversos · Área do aluno: perfil, trilha, aula particular (se houver) e conta.
+/* Unirversos · Área do aluno: perfil, trilha e conta. As aulas particulares vêm de /aulas/aluno.js.
    O caderno da página é o mesmo de /idiomas/caderno/ (caderno-dados.js + caderno-caneta.js). */
 import { auth, db } from "/idiomas/dados/conta.js?v=5";
-import { doc, getDoc } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
 import { onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
-import { proximas } from "/aulas/aulas-comum.js?v=2";
 
 const $ = id => document.getElementById(id);
 const esc = s => String(s == null ? '' : s).replace(/[&<>"']/g, c => ({ '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;' }[c]));
@@ -40,28 +38,6 @@ function trilha(){
   $('cont-num').textContent = feitos + ' de ' + E.length + ' mapas da trilha de japonês concluídos (aula + prova)';
 }
 
-/* ---------- aula particular: só aparece para quem é aluno da Aline ---------- */
-const quando = d => d.toLocaleString('pt-BR', { weekday: 'long', day: 'numeric', month: 'long' }) + ', ' + d.toLocaleString('pt-BR', { hour: '2-digit', minute: '2-digit' });
-async function aula(u){
-  const box = $('aula-part'); box.hidden = true;
-  if (!u || !u.emailVerified) return;
-  let a = null;
-  try { const s = await getDoc(doc(db, 'aulas', u.email.toLowerCase())); if (s.exists()) a = s.data(); } catch (e) { return; }
-  if (!a) return;
-  const p = proximas(a, 1)[0], agora = Date.now();
-  const aberta = p && agora >= p.ini - 15 * 60e3 && agora < p.fim && /^https:\/\//.test(a.meet || '');
-  box.innerHTML = `<p class="eyebrow">aula particular</p>
-    <h2 id="h-aula" class="cap">${p ? esc(quando(p.ini)) : 'Nenhuma aula marcada'}</h2>
-    ${a.tarefa && a.tarefaFeita !== a.tarefa ? `<p class="mut">Tarefa: ${esc(a.tarefa)}</p>` : ''}
-    <div class="linha">
-      ${aberta ? `<a class="btn primary" href="${esc(a.meet)}" target="_blank" rel="noopener">Entrar na aula ↗</a>` : ''}
-      <a class="btn" href="/aulas/">Minhas aulas →</a>
-      ${p ? '<button type="button" class="btn" id="anotar">Anotar sobre esta aula</button>' : ''}
-    </div>`;
-  box.hidden = false;
-  if (p) $('anotar').onclick = () => { if (window.CadernoNovaSobre) window.CadernoNovaSobre('Aula de ' + p.ini.toLocaleDateString('pt-BR', { day: 'numeric', month: 'long' }), p.ini); };
-}
-
 /* ---------- comunidade e conta ---------- */
 try { const t = window.UniTemas.atual(); $('tema').textContent = 'Tema da semana: “' + t.titulo + '”'; } catch (e) {}
 $('sair').onclick = async () => { try { if (window.UniConta && window.UniConta.enviar) await window.UniConta.enviar(); } catch (e) {} await signOut(auth); location.href = '/'; };
@@ -69,6 +45,6 @@ $('sair').onclick = async () => { try { if (window.UniConta && window.UniConta.e
 onAuthStateChanged(auth, u => {
   if (!u) return;
   $('email').textContent = 'Você entrou com ' + u.email;
-  perfil(u); trilha(); aula(u);
+  perfil(u); trilha();
 });
 document.addEventListener('uni-progresso', () => { perfil(auth.currentUser); trilha(); });
