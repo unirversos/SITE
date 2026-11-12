@@ -1,0 +1,284 @@
+<!DOCTYPE html>
+<html lang="pt-BR" data-login="obrigatorio">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Área do aluno — Unirversos</title>
+<meta name="description" content="Sua área no Unirversos: avatar, trilha, caderno, aulas e comunidade num lugar só.">
+<meta name="robots" content="noindex">
+<style>html[data-login="obrigatorio"]:not(.uni-ok) body>*:not(#uni-gate){visibility:hidden}</style>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Baloo+2:wght@500;700;800&family=Zen+Maru+Gothic:wght@400;500;700&display=swap');
+:root{--pink:#c23f5e;--pink-deep:#a8324f;--ink:#3a2b38;--muted:#705f6c;--line:#ecdadd;--paper:#fdf6f4;--sage:#517158;--sage-soft:#e8efe8}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Zen Maru Gothic',system-ui,sans-serif;color:var(--ink);background:var(--paper);line-height:1.6;font-size:16px;-webkit-font-smoothing:antialiased}
+.wrap{max-width:860px;margin:0 auto;padding:0 22px 60px}
+.nav{display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap;padding:22px 0}
+.logo{font-family:'Baloo 2',cursive;font-size:20px;font-weight:800;text-decoration:none;color:inherit}
+.nav .links{display:flex;flex-wrap:wrap;align-items:center;gap:8px 18px;font-size:13.5px}
+.nav .links a{color:var(--muted);text-decoration:none}.nav .links a:hover{color:var(--pink-deep)}
+.eyebrow{font-size:12px;letter-spacing:.14em;text-transform:uppercase;font-weight:700;color:var(--pink-deep)}.eyebrow.verde{color:var(--sage)}
+.hero{padding:22px 0 18px;display:flex;flex-direction:column;gap:8px}
+.hero h1{font-family:'Baloo 2',cursive;font-weight:800;font-size:clamp(32px,6vw,46px);line-height:1.05}
+.hero h1 em{font-style:normal;color:var(--pink)}
+.hero p{color:var(--muted);font-size:17px;max-width:620px}
+#area{display:flex;flex-direction:column;gap:18px}
+.cx{background:#fff;border:1.5px solid var(--line);border-radius:18px;padding:20px 22px;display:flex;flex-direction:column;gap:10px}
+.cx.destaque{border-top:6px solid var(--pink);padding:24px}
+.cx h2,.topo h2{font-family:'Baloo 2',cursive;font-weight:700;font-size:24px;line-height:1.2}
+.eu{display:flex;gap:18px;align-items:center}.meu-av{width:96px;height:96px;flex:none;border-radius:50%;overflow:hidden;background:#f8dde1;border:3px solid #fff;box-shadow:0 8px 20px -12px rgba(58,43,56,.45)}.meu-av:empty{display:none}.meu-av svg{width:100%;height:100%;display:block}
+#av-link a{color:var(--pink-deep);font-weight:700;text-decoration:none}#av-link a:hover{text-decoration:underline}
+@media(max-width:520px){.meu-av{width:72px;height:72px}}
+.gravar{display:inline-flex;gap:6px;align-items:center;font:inherit;font-size:13px;font-weight:700;color:var(--muted);background:#fff;border:1.5px solid var(--line);border-radius:999px;padding:6px 12px;min-height:36px;cursor:pointer;white-space:nowrap}
+.gravar:hover{border-color:#9c2f4c;color:#9c2f4c}.gravar.on{background:#f7dbe2;border-color:#9c2f4c;color:#7c2038}
+.li-aula{display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap}
+.fmt{display:inline-block;font-size:11px;font-weight:700;letter-spacing:.04em;padding:2px 8px;border-radius:999px;background:var(--paper);border:1px solid var(--line);color:var(--muted);vertical-align:2px}
+.sr{position:absolute;left:-9999px}
+.cap{display:inline-block}.cap::first-letter{text-transform:uppercase}
+.regra{margin-top:8px;padding:12px 14px;background:var(--sage-soft);border-radius:14px;display:flex;flex-wrap:wrap;gap:6px 14px;align-items:center;justify-content:space-between}.regra p{color:#3f5c46}
+.remarcar{font-size:14px;font-weight:700;color:var(--ink);text-decoration:none;background:#fff;border:1.5px solid var(--line);border-radius:999px;padding:8px 16px;min-height:40px;display:inline-flex;align-items:center}.remarcar:hover{border-color:var(--pink);color:var(--pink-deep)}
+.tarefa{display:flex;gap:12px;align-items:flex-start;cursor:pointer}.tarefa input{appearance:none;-webkit-appearance:none;width:24px;height:24px;margin-top:2px;flex:none;border:2px solid #d9c3c9;border-radius:7px;background:#fff;cursor:pointer;display:grid;place-items:center;transition:background .15s,border-color .15s}.tarefa input:hover{border-color:#9c2f4c}.tarefa input:checked{background:#9c2f4c url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='white' stroke-width='3' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M5 12.5l4.5 4.5L19 7.5'/%3E%3C/svg%3E") center/16px no-repeat;border-color:#9c2f4c}.tarefa input:focus-visible{outline:3px solid #b7a6dc;outline-offset:2px}.tarefa.feita .pre{text-decoration:line-through;color:var(--muted)}
+.dois{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:18px}
+@media(max-width:700px){.dois{grid-template-columns:1fr}}
+.mut{color:var(--muted)}.peq{font-size:13.5px}.pre{white-space:pre-wrap;overflow-wrap:anywhere}
+.tag{font-style:normal;font-size:11px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;padding:3px 9px;border-radius:999px;background:var(--sage-soft);color:#3f5c46}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;font:inherit;font-size:15px;font-weight:700;color:#fff;background:var(--pink);border:0;border-radius:999px;padding:12px 24px;min-height:46px;cursor:pointer;text-decoration:none;align-self:flex-start;transition:transform .2s,box-shadow .2s}
+.btn:hover{transform:translateY(-2px);box-shadow:0 8px 20px -10px rgba(194,63,94,.6)}
+.btn.grande{font-size:17px;padding:14px 30px;min-height:54px}
+.btn.off{background:#efe3e6;color:#8a7884;cursor:not-allowed;transform:none;box-shadow:none}
+.btn.claro{background:#fff;color:var(--ink);border:1.5px solid var(--line)}
+.btn.perigo{color:#a32a2a}
+.linha{display:flex;flex-wrap:wrap;gap:10px;align-items:center}
+a:focus-visible,button:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-visible{outline:3px solid #b7a6dc;outline-offset:2px}
+
+:root{--card:#fff;--blush:#f8dde1;--lavender:#b7a6dc;--f-display:"Baloo 2","Zen Maru Gothic",system-ui,sans-serif;--f-body:"Zen Maru Gothic",system-ui,sans-serif;--r:18px}
+[hidden]{display:none!important}
+.sec-t{display:flex;align-items:baseline;justify-content:space-between;gap:10px;flex-wrap:wrap;margin:6px 0 -6px}
+.sec-t h2{font-family:'Baloo 2',cursive;font-weight:700;font-size:24px}
+.sec-t a{font-size:14px;font-weight:700;color:var(--pink-deep);text-decoration:none}
+.perfil{display:flex;gap:18px;align-items:center;flex-wrap:wrap}
+.perfil .av-g{width:104px;height:104px;border-radius:50%;overflow:hidden;background:#f8dde1;border:3px solid #fff;box-shadow:0 8px 20px -12px rgba(58,43,56,.45);flex:none;display:grid;place-items:center;font-size:40px;text-decoration:none}
+.perfil .av-g svg{width:100%;height:100%;display:block}
+.perfil h1{font-family:'Baloo 2',cursive;font-weight:800;font-size:clamp(30px,6vw,42px);line-height:1.05}
+.perfil h1 em{font-style:normal;color:var(--pink)}
+.perfil .nv{color:var(--muted);font-size:15px}.perfil .nv rt{font-size:.55em}
+.perfil .nv a{color:var(--pink-deep);font-weight:700;text-decoration:none;margin-left:6px}
+.barra{height:10px;border-radius:999px;background:#f3e6e9;overflow:hidden}.barra i{display:block;height:100%;background:var(--sage);border-radius:999px}
+.atalhos{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px}
+@media(max-width:760px){.atalhos{grid-template-columns:1fr}}
+.at{background:#fff;border:1.5px solid var(--line);border-radius:18px;padding:16px 18px;text-decoration:none;color:inherit;display:flex;flex-direction:column;gap:4px;transition:transform .2s,box-shadow .2s}
+.at:hover{transform:translateY(-3px);box-shadow:0 12px 24px -16px rgba(58,43,56,.35)}
+.at b{font-size:16px}.at span{color:var(--muted);font-size:14px}
+.at .ic{width:26px;height:26px;stroke:currentColor;fill:none;stroke-width:1.6;stroke-linecap:round;stroke-linejoin:round;margin-bottom:4px}
+.at.verde{color:#3f5c46}.at.vinho{color:#7c2038}.at.roxo{color:#5b4a96}
+.at.verde b,.at.vinho b,.at.roxo b{color:var(--ink)}
+.conta-l{display:flex;flex-wrap:wrap;gap:10px 18px;align-items:center;font-size:14px;color:var(--muted)}
+.conta-l a{color:var(--pink-deep)}
+.mini-b{font:inherit;font-size:14px;font-weight:700;color:var(--ink);background:#fff;border:1.5px solid var(--line);border-radius:999px;padding:8px 16px;min-height:40px;cursor:pointer}
+#caderno{scroll-margin-top:16px}
+
+/* ---- caderno (o mesmo de /idiomas/caderno/) ---- */
+/* caderno */
+.cad{display:grid;grid-template-columns:260px minmax(0,1fr);gap:16px;align-items:start}
+@media (max-width:720px){.cad{grid-template-columns:minmax(0,1fr)}}
+.lista{background:var(--card);border:1.5px solid var(--line);border-radius:var(--r);padding:12px;display:grid;gap:8px}
+.btn{font:inherit;cursor:pointer;display:inline-flex;align-items:center;justify-content:center;gap:6px;border:1.5px solid var(--line);background:var(--card);color:var(--ink);border-radius:99px;padding:8px 16px;font-size:14px;font-weight:700;min-height:40px}
+.btn.primary{background:var(--pink);border-color:var(--pink);color:#fff}
+.btn.sm{padding:4px 12px;min-height:34px;font-size:13px}
+.btn:focus-visible,.item:focus-visible,#txt:focus-visible,#tit:focus-visible{outline:3px solid var(--lavender);outline-offset:2px}
+.itens{display:grid;gap:6px;max-height:60vh;overflow:auto}
+@media (max-width:720px){.itens{max-height:200px}}
+.item{font:inherit;color:inherit;text-align:left;cursor:pointer;border:1.5px solid var(--line);background:var(--paper);border-radius:14px;padding:8px 12px;display:grid;gap:1px}
+.item b{font-size:14.5px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.item small{color:var(--muted);font-size:12px}
+.item[aria-current="true"]{border-color:var(--pink);background:#fff}
+.vazio{color:var(--muted);font-size:14px;margin:4px 2px}
+/* a página */
+.folha{position:relative;background:var(--card);border:1.5px solid var(--line);border-left:5px solid var(--pink);border-radius:var(--r);padding:16px 18px 12px;display:grid;gap:10px;box-shadow:0 14px 30px -20px rgba(58,43,56,.35)}
+#tit{font-family:var(--f-display);font-weight:800;font-size:22px;border:0;border-bottom:1.5px dashed var(--line);background:transparent;color:var(--ink);padding:2px 0 8px;width:100%}
+#txt{width:100%;min-height:320px;resize:vertical;border:0;background:
+  repeating-linear-gradient(transparent 0 31px,var(--line) 31px 32px);background-attachment:local;
+  font:inherit;font-size:16px;line-height:32px;color:var(--ink);padding:0}
+/* cabeçalho de data em japonês */
+.dia{display:flex;flex-wrap:wrap;align-items:flex-end;justify-content:space-between;gap:10px 22px;padding:2px 0 10px;border-bottom:1.5px dashed var(--line)}
+.dt{display:flex;align-items:flex-end;gap:4px 6px;flex-wrap:wrap}
+.dt input{font:inherit;font-family:var(--f-display);font-weight:700;font-size:20px;text-align:center;color:var(--ink);border:0;border-bottom:2px solid var(--line);background:transparent;border-radius:0;padding:0 2px;height:34px;-moz-appearance:textfield}
+.dt input::-webkit-outer-spin-button,.dt input::-webkit-inner-spin-button{-webkit-appearance:none;margin:0}
+.dt input:focus{outline:none;border-bottom-color:var(--pink)}
+#ano{width:4.2ch}#mes,#dia{width:2.6ch}
+.dt ruby{font-family:var(--f-display);font-weight:700;font-size:20px;color:var(--ink);margin-right:8px}
+.dt rt,.sem rt{font-family:var(--f-body);font-size:9.5px;font-weight:500;color:var(--muted);letter-spacing:.02em}
+.sem{display:flex;gap:4px}
+.sem button{font:inherit;cursor:pointer;position:relative;width:40px;height:40px;border:0;background:transparent;color:var(--ink);font-family:var(--f-display);font-weight:700;font-size:20px;line-height:1;display:grid;place-items:center;padding:0}
+.sem button ruby{display:grid;justify-items:center}
+.sem button::before{content:'';position:absolute;inset:0;border:2.5px solid var(--pink);border-radius:52% 48% 55% 45%/48% 55% 45% 52%;transform:rotate(-6deg) scale(.6);opacity:0;transition:opacity .15s,transform .15s}
+.sem button[aria-pressed="true"]{color:var(--pink)}
+.sem button[aria-pressed="true"]::before{opacity:1;transform:rotate(-6deg) scale(1)}
+.sem button:hover::before{opacity:.35;transform:rotate(-6deg) scale(1)}
+.sem button[aria-pressed="true"]:hover::before{opacity:1}
+.sem button:focus-visible{outline:3px solid var(--lavender);outline-offset:1px;border-radius:50%}
+@media (max-width:420px){.sem button{width:34px;height:36px;font-size:18px}.dt input,.dt ruby{font-size:18px}}
+.modo{display:inline-flex;gap:4px;padding:3px;border-radius:99px;background:#fdf6f4;border:1.5px solid var(--line);justify-self:start}
+.modo button{font:inherit;cursor:pointer;border:0;background:transparent;color:var(--muted);font-weight:700;font-size:13.5px;padding:5px 16px;border-radius:99px;min-height:34px}
+.modo button[aria-pressed="true"]{background:var(--ink);color:#fff}
+.modo button:focus-visible{outline:3px solid var(--lavender);outline-offset:2px}
+.rod .acts2{display:flex;align-items:center;gap:8px}
+.rod{display:flex;flex-wrap:wrap;justify-content:space-between;align-items:center;gap:8px;font-size:12.5px;color:var(--muted)}
+
+</style>
+<link rel="stylesheet" href="/estilo-celular.css?v=3">
+<link rel="icon" href="/favicon.svg" type="image/svg+xml"><link rel="icon" href="/favicon.ico" sizes="48x48"><link rel="apple-touch-icon" href="/apple-touch-icon.png">
+<script type="module" src="/idiomas/dados/conta.js?v=5"></script>
+<script>setTimeout(function(){var h=document.documentElement;if(!h.classList.contains('uni-ok')&&!document.getElementById('uni-gate'))h.classList.add('uni-ok')},10000)</script>
+</head>
+<body>
+<div class="wrap" style="display:flex;flex-direction:column;gap:22px">
+  <nav class="nav">
+    <a href="/" class="logo">UNIRVERSOS</a>
+    <div class="links">
+      <a href="/idiomas/">idiomas</a>
+      <a href="/idiomas/planeta-utopia/salao/">planeta utopia</a>
+      <a href="/travessia/">travessia</a>
+      <a href="/loja/">tesouros</a>
+      <span class="nav-sep" aria-hidden="true" style="opacity:.3">|</span>
+      <a href="/paralelos/">paralelos</a>
+      <a href="/sobre/">sobre</a>
+    </div>
+  </nav>
+
+  <header class="perfil">
+    <a class="av-g" id="av" href="/idiomas/avatar/" aria-label="Editar avatar no Ateliê"></a>
+    <div>
+      <p class="eyebrow">área do aluno</p>
+      <h1>Olá, <em id="nome">você</em>!</h1>
+      <p class="nv" id="nivel"></p>
+    </div>
+  </header>
+
+  <section class="cx destaque" id="continuar" aria-labelledby="h-cont">
+    <p class="eyebrow">continuar de onde parou</p>
+    <h2 id="h-cont">…</h2>
+    <p class="mut" id="cont-desc"></p>
+    <div class="barra" aria-hidden="true"><i id="cont-barra" style="width:0"></i></div>
+    <p class="mut peq" id="cont-num"></p>
+    <a class="btn primary" id="cont-btn" href="/idiomas/japones/">Continuar →</a>
+  </section>
+
+  <section class="cx" id="aula-part" hidden aria-labelledby="h-aula"></section>
+
+  <div class="sec-t" id="caderno"><h2>Caderno</h2><a href="/idiomas/caderno/">abrir em tela cheia →</a></div>
+  <div class="cad">
+    <aside class="lista" aria-label="Suas anotações">
+      <button class="btn primary" type="button" id="nova">+ Nova anotação</button>
+      <div class="itens" id="itens"></div>
+    </aside>
+    <section class="folha" id="folha" aria-label="Anotação aberta">
+      <div class="dia">
+        <div class="dt" role="group" aria-label="Data">
+          <input id="ano" type="number" inputmode="numeric" min="1" max="9999" aria-label="Ano"><ruby>年<rt>ねん</rt></ruby>
+          <input id="mes" type="number" inputmode="numeric" min="1" max="12" aria-label="Mês"><ruby>月<rt>がつ</rt></ruby>
+          <input id="dia" type="number" inputmode="numeric" min="1" max="31" aria-label="Dia"><ruby>日<rt>にち</rt></ruby>
+        </div>
+        <div class="sem" id="sem" role="group" aria-label="Dia da semana: toque para circular">
+          <button type="button" data-w="0" aria-pressed="false" aria-label="segunda-feira"><ruby>月<rt>げつ</rt></ruby></button>
+          <button type="button" data-w="1" aria-pressed="false" aria-label="terça-feira"><ruby>火<rt>か</rt></ruby></button>
+          <button type="button" data-w="2" aria-pressed="false" aria-label="quarta-feira"><ruby>水<rt>すい</rt></ruby></button>
+          <button type="button" data-w="3" aria-pressed="false" aria-label="quinta-feira"><ruby>木<rt>もく</rt></ruby></button>
+          <button type="button" data-w="4" aria-pressed="false" aria-label="sexta-feira"><ruby>金<rt>きん</rt></ruby></button>
+          <button type="button" data-w="5" aria-pressed="false" aria-label="sábado"><ruby>土<rt>ど</rt></ruby></button>
+          <button type="button" data-w="6" aria-pressed="false" aria-label="domingo"><ruby>日<rt>にち</rt></ruby></button>
+        </div>
+      </div>
+      <input id="tit" type="text" placeholder="Título (opcional)" maxlength="120" aria-label="Título da anotação">
+      <div class="modo" role="group" aria-label="Como escrever"><button type="button" id="m-txt" aria-pressed="true">Texto</button><button type="button" id="m-pen" aria-pressed="false">Caneta</button></div>
+      <textarea id="txt" placeholder="Escreva aqui…" aria-label="Texto da anotação"></textarea>
+      <div id="pad" hidden></div>
+      <div class="rod"><span><span id="estado" aria-live="polite">Salvo neste aparelho</span> <button class="btn sm" type="button" id="entrar" hidden>Entrar</button></span><span class="acts2"><button class="btn sm" type="button" id="apaga">Apagar</button></span></div>
+    </section>
+  </div>
+
+  <div class="sec-t"><h2>Atalhos</h2></div>
+  <div class="atalhos">
+    <a class="at verde" href="/idiomas/palavras/"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 4h11a3 3 0 013 3v13H8a3 3 0 01-3-3z"/><path d="M5 17a3 3 0 013-3h11"/></svg><b>Minhas palavras</b><span>As palavras e frases que você guardou nas aulas.</span></a>
+    <a class="at vinho" href="/paralelos/"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 5h16v11H9l-5 4z"/></svg><b>Mural da comunidade</b><span id="tema">Tema da semana</span></a>
+    <a class="at roxo" href="/idiomas/planeta-utopia/salao/"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="4.5"/><ellipse cx="12" cy="12" rx="10" ry="3.5" transform="rotate(-25 12 12)"/></svg><b>Planeta Utopia</b><span>Salão, jogos e prática com outras pessoas.</span></a>
+  </div>
+
+  <section class="cx" aria-labelledby="h-conta">
+    <p class="eyebrow" id="h-conta">sua conta</p>
+    <div class="conta-l"><span id="email"></span><a href="/privacidade/">Como cuidamos dos seus dados</a><button type="button" class="mini-b" id="sair">Sair da conta</button></div>
+  </section>
+</div>
+
+<script src="/idiomas/dados/avatar.js?v=20261016g"></script>
+<script src="/idiomas/dados/trilha-mapas.js?v=1"></script>
+<script src="/paralelos/temas.js?v=1"></script>
+<script src="/caderno-dados.js?v=1"></script>
+<script src="/caderno-caneta.js?v=1"></script>
+<script>
+(function(){
+  var C=window.UniCaderno, $=function(i){return document.getElementById(i)};
+  var atual=null, ultimoM=0, modo='txt', pad=null, tTeclou=0, tl=null;
+  function esc(s){return String(s).replace(/[&<>"]/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]})}
+  function data(ms){return new Date(ms).toLocaleDateString('pt-BR',{day:'2-digit',month:'short'})}
+  function lista(){
+    var vs=C.vivas();
+    $('itens').innerHTML=vs.length?vs.map(function(n){return '<button class="item" type="button" data-id="'+n.id+'"'+(n.id===atual?' aria-current="true"':'')+'><b>'+esc(C.nome(n))+((n.s&&n.s.length)?' ✎':'')+'</b><small>'+data(n.m)+'</small></button>'}).join(''):'<p class="vazio">Ainda não há anotações.</p>';
+  }
+  function listaLogo(){clearTimeout(tl);tl=setTimeout(lista,200)}
+  function pinta(w){Array.prototype.forEach.call($('sem').children,function(b){b.setAttribute('aria-pressed',String(String(w)===b.dataset.w))})}
+  function garantePad(){ if(!pad) pad=UniCaneta.montar($('pad'),{aoMudar:function(t){ if(!atual) return; var n=C.atualizar(atual,{s:t.slice()}); if(n) ultimoM=n.m; listaLogo(); }}); return pad; }
+  function setModo(m){
+    modo=m; $('m-txt').setAttribute('aria-pressed',String(m==='txt')); $('m-pen').setAttribute('aria-pressed',String(m==='pen'));
+    $('txt').hidden=m!=='txt'; $('pad').hidden=m!=='pen';
+    if(m==='pen'){ var n=C.obter(atual); garantePad().carregar((n&&n.s)||[]); }
+  }
+  function abre(id){
+    var n=C.obter(id); if(!n) return;
+    atual=id; ultimoM=n.m||0; $('folha').hidden=false;
+    $('tit').value=n.t||''; $('txt').value=n.x||''; $('ano').value=n.a||''; $('mes').value=n.o||''; $('dia').value=n.d||''; pinta(n.w);
+    if(modo==='pen') garantePad().carregar(n.s||[]);
+    lista();
+  }
+  function abreProxima(){ var vs=C.vivas(); if(vs.length) abre(vs[0].id); else { atual=null; $('folha').hidden=true; lista(); } }
+  function nova(){ var n=C.nova(); abre(n.id); if(modo==='txt') $('txt').focus(); }
+  function edita(c){ if(!atual) nova(); var n=C.atualizar(atual,c); if(n) ultimoM=n.m; tTeclou=Date.now(); listaLogo(); }
+  function estado(){ $('estado').textContent=C.texto(); $('entrar').hidden=C.estado()!=='sem-login'; }
+
+  $('nova').onclick=nova;
+  $('tit').oninput=function(){edita({t:this.value})};
+  $('txt').oninput=function(){edita({x:this.value})};
+  $('ano').oninput=function(){edita({a:this.value})}; $('mes').oninput=function(){edita({o:this.value})}; $('dia').oninput=function(){edita({d:this.value})};
+  $('sem').onclick=function(e){var b=e.target.closest('button'); if(!b) return; var n=C.obter(atual); if(!n) return;
+    var w=(String(n.w)===b.dataset.w)?null:b.dataset.w; pinta(w); edita({w:w});};
+  $('itens').onclick=function(e){var b=e.target.closest('.item'); if(b) abre(b.dataset.id)};
+  $('m-txt').onclick=function(){setModo('txt')}; $('m-pen').onclick=function(){setModo('pen')};
+  $('entrar').onclick=function(){C.entrar()};
+  var pede=false;
+  $('apaga').onclick=function(){
+    if(!atual) return;
+    if(!pede){pede=true;this.textContent='Apagar mesmo?';var b=this;setTimeout(function(){pede=false;b.textContent='Apagar'},3000);return}
+    pede=false;this.textContent='Apagar'; C.apagar(atual); abreProxima();
+  };
+  C.on(function(tipo){
+    if(tipo==='estado') estado();
+    if(tipo==='remoto'){
+      lista(); var n=C.obter(atual);
+      if(atual&&!n) abreProxima();
+      else if(n&&(n.m||0)>ultimoM&&Date.now()-tTeclou>5000) abre(atual);
+      else if(!atual) abreProxima();
+    }
+  });
+  /* "Anotar sobre esta aula": cria uma nota já com título e data */
+  window.CadernoNovaSobre=function(titulo,d){
+    var n=C.nova(); abre(n.id);
+    var c={t:titulo}; if(d){c.a=String(d.getFullYear());c.o=String(d.getMonth()+1);c.d=String(d.getDate());c.w=String((d.getDay()+6)%7);}
+    edita(c); abre(n.id); setModo('txt');
+    document.getElementById('caderno').scrollIntoView({behavior:'smooth',block:'start'}); setTimeout(function(){$('txt').focus()},400);
+  };
+  estado(); abreProxima();
+})();
+</script>
+<script type="module" src="/aluno/aluno.js?v=1"></script>
+</body>
+</html>

@@ -17,13 +17,6 @@ const REACOES = [
   { k: 'frase', t: 'Boa frase', d: 'M12 20s-7-4.5-7-10a4 4 0 017-2.6A4 4 0 0119 10c0 5.5-7 10-7 10z' },
   { k: 'inspirou', t: 'Me inspirou', d: 'M12 3l2.2 5.6L20 9.3l-4.4 3.8L17 19l-5-3-5 3 1.4-5.9L4 9.3l5.8-.7z' }
 ];
-/* um tema por semana, em ciclo; a semana 1 começa na segunda-feira 9/11/2026 */
-const TEMAS = ["Um som que ouvi hoje","O que comi hoje","Uma cor que vi hoje","Um cheiro que me lembrou alguém","Algo macio ou áspero que toquei hoje","O clima de hoje, em uma frase",
-"O caminho que fiz hoje","Uma coisa pequena que me fez sorrir","O que tem na minha mesa agora","Minha manhã em três ações","Uma conversa curta que tive hoje","Algo que eu quase esqueci de fazer",
-"Um lugar onde me sinto bem","Uma lembrança de infância","Uma comida da minha família","A janela de onde escrevo","Uma música que não sai da minha cabeça","Um lugar que quero visitar",
-"Algo pelo qual sou grata hoje","Alguém que me inspira","Um momento em que me senti corajosa","O que me deixou cansada e o que me deu energia","Um conselho que eu daria para mim mesma","Uma palavra que define minha semana",
-"Uma palavra nova que aprendi","Algo que eu ainda não sei dizer no idioma que estudo","O que mais me surpreende no Japão (ou na cultura que estudo)","Uma frase que ouvi e quero guardar","Meu plano para o próximo mês","Algo que mudou desde que comecei a estudar"];
-
 const $ = id => document.getElementById(id);
 const esc = s => String(s == null ? '' : s).replace(/[&<>"']/g, c => ({ '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;' }[c]));
 const lista = $('mural'), form = $('formPost'), porta = $('diarioEntrar'), nomeEl = $('author'), textoEl = $('text'), aviso = $('diarioAviso'), abas = $('abas'), escolha = $('escolhaLang');
@@ -31,14 +24,12 @@ let user = null, filtro = 'todos', langNovo = 'pt';
 const porLang = { ja: [], en: [], pt: [] };
 let reac = [], resp = [], recursos = true, carregou = 0, abertas = {}, rascunho = {};
 
-/* tema da semana */
+/* tema da semana (lista em /paralelos/temas.js) */
 (function(){
-  const ini = new Date(2026, 10, 9), hoje = new Date(); hoje.setHours(0,0,0,0);
-  const sem = Math.floor(Math.round((hoje - ini) / 864e5) / 7);
-  const i = ((sem % TEMAS.length) + TEMAS.length) % TEMAS.length;
-  $('temaTitulo').textContent = TEMAS[i];
-  $('temaSemana').textContent = 'Semana ' + (i + 1) + ' de ' + TEMAS.length + ' · muda toda segunda-feira';
-  textoEl.placeholder = TEMAS[i] + '…';
+  const t = window.UniTemas.atual();
+  $('temaTitulo').textContent = t.titulo;
+  $('temaSemana').textContent = 'Semana ' + t.numero + ' de ' + t.total + ' · muda toda segunda-feira';
+  textoEl.placeholder = t.titulo + '…';
 })();
 
 /* idioma escolhido e filtro (vem de ?l= quando alguém usa os links antigos) */
