@@ -235,7 +235,9 @@ function passos() {
   if (s.etapa === 'cafe') {
     const bA = item(beb.a) || BEBIDAS[0], bB = item(beb.b) || BEBIDAS[0], igual = bA.id === bB.id;
     const errado = bB.id === 'ocha' ? item('kohi') : item('ocha');
-    const cA = item((cf.com || {}).a) || COMIDAS[0], cB = item((cf.com || {}).b) || COMIDAS[1];
+    const cOrig = item(cf.fora) || item((cf.com || {}).a) || COMIDAS[0], cB = item((cf.com || {}).b) || COMIDAS[1];
+    const cA = (cf.fora && (cf.com || {}).a && cf.com.a !== cf.fora) ? item(cf.com.a) : (COMIDAS.find(x => x.id !== cOrig.id && x.id !== cB.id) || COMIDAS.find(x => x.id !== cOrig.id));   /* o que a Ana pede depois que a 1ª acabou */
+    const kCom = COMIDAS.map(x => x.k).join('|');
     return [
       { tipo: 'bebida', quem: 'ambas' },
       F('a', `Pergunte a ${esc(B)} o que ela vai beber.`, `${B}さんは なにを のみますか。`, `${B}さんは なにを…`, `${B}さんは ＿＿を のみますか。`, 'O que você vai beber?', ['なに|nani|何', 'のみ|nomi|飲み']),
@@ -245,8 +247,16 @@ function passos() {
       F('b', `Chame o robô e peça as duas bebidas: a sua e a de ${esc(A)}.`, igual ? `すみません。${bB.n}を ください。${A}さんも ${bA.n}です。` : `すみません。${bB.n}と ${bA.n}を ください。`, 'すみません。…', igual ? `すみません。＿＿＿を ください。${A}さんも ＿＿＿です。` : 'すみません。＿＿＿と ＿＿＿を ください。', igual ? `Com licença. Um ${bB.n}, por favor. Para ${A} também.` : `Com licença. ${bB.n} e ${bA.n}, por favor.`,
         igual ? [bB.k, K_KUDASAI] : [bB.k, bA.k, K_KUDASAI],
         { depois: (txt, root) => poeLog(root, 'r', igual ? `はい。${bB.n}を ふたつですね。` : `はい。${bB.n}と ${bA.n}ですね。`, { pt: igual ? `Certo. Dois ${bB.n}, né?` : `Certo. ${bB.n} e ${bA.n}, né?` }) }),
-      F('a', `Peça também a comida que você escolheu: ${cA.ic} ${cA.n}.`, `${cA.n}も ください。`, `${cA.n}も…`, '＿＿＿も ください。', `Um(a) ${cA.n}, também, por favor.`, [cA.k, K_KUDASAI],
-        { depois: (txt, root) => poeLog(root, 'r', `はい。${cA.n}ですね。`, { pt: `Certo. ${cA.n}, né?` }) }),
+      F('a', `Peça também a comida que você escolheu: ${cOrig.ic} ${cOrig.n}.`, `${cOrig.n}も ください。`, `${cOrig.n}も…`, '＿＿＿も ください。', `Um(a) ${cOrig.n}, também, por favor.`, [cOrig.k, K_KUDASAI],
+        { depois: (txt, root) => { root.cafe = root.cafe || {}; root.cafe.fora = ((root.cafe.com || {}).a) || cOrig.id;
+            poeLog(root, 'r', `すみません。${cOrig.n}は ありません。`, { pt: `Desculpe. Não temos ${cOrig.n}.` }); } }),
+      F('a', TEXTO ? 'Acabou! Peça outra coisa do cardápio (comece com じゃあ: "então…").' : `${cOrig.n} acabou! Toque no cardápio na comida que você quer e peça com じゃあ ("então…").`, `じゃあ、${cA.n}を ください。`, 'じゃあ、…', 'じゃあ、＿＿＿を ください。', `Então, um(a) ${cA.n}, por favor.`, [kCom, K_KUDASAI],
+        { escolhe: 'comida', precisa: () => (cf.fora && (cf.com || {}).a && cf.com.a !== cf.fora) ? null : '👆 Primeiro toque, no cardápio, na comida que você quer.',
+          aviso: txt => (tem(txt, cOrig.k) && !COMIDAS.some(x => x.id !== cOrig.id && tem(txt, x.k))) ? `${cOrig.n} acabou! Peça outra coisa do cardápio.` : null,
+          depois: (txt, root, forcado) => { const fo = root.cafe.fora; let c = COMIDAS.find(x => x.id !== fo && tem(txt, x.k));
+            if (!c && !forcado && tem(txt, cOrig.k)) return `${cOrig.n} acabou! Peça outra coisa do cardápio.`;
+            c = c || ((root.cafe.com || {}).a && root.cafe.com.a !== fo ? item(root.cafe.com.a) : null) || COMIDAS.find(x => x.id !== fo); root.cafe.com = root.cafe.com || {}; root.cafe.com.a = c.id;
+            poeLog(root, 'r', `はい。${c.n}ですね。`, { pt: `Certo. ${c.n}, né?` }); } }),
       F('b', `Agora peça a comida que você escolheu: ${cB.ic} ${cB.n}.`, `${cB.n}も ください。`, `${cB.n}も…`, '＿＿＿も ください。', `Um(a) ${cB.n}, também, por favor.`, [cB.k, K_KUDASAI],
         { depois: (txt, root) => { poeLog(root, 'r', 'はい、わかりました。', { pt: 'Certo, entendido.' });
             poeLog(root, 'r', 'おまたせしました。どうぞ。', { pt: 'Desculpem a demora. Aqui está.' });
@@ -508,10 +518,10 @@ function minhaFicha(aberta) {
   return `<details class="minha"${aberta || ped ? ' open' : ''}><summary>🔒 Minha ficha (só você vê)</summary><ul>${CASAS.map(c => `<li class="${ab[c.id] ? 'ach' : ''}${ped === c.id ? ' ped' : ''}">${c.ic} ${ja(f[c.id] || '')}${ab[c.id] ? ' ✓' : ''}</li>`).join('')}</ul></details>`;
 }
 function cardapio(tocaBeb, tocaCom) {
-  const c = S.cafe || {}, meu = (c.beb || {})[EU], meuC = (c.com || {})[EU];
-  const lin = (x, attr, marca) => { const cls = 'it' + (x.id === meu || x.id === meuC || marca ? ' meu' : ''), inner = `<span class="nm">${x.ic} ${ja(x.n)}</span><span class="pr">${x.p}えん</span>`;
+  const c = S.cafe || {}, meu = (c.beb || {})[EU], meuC = (c.com || {})[EU], fora = c.fora;
+  const lin = (x, attr, marca) => { const cls = 'it' + (x.id === meu || (x.id === meuC && x.id !== fora) || marca ? ' meu' : '') + (x.id === fora ? ' fora' : ''), inner = `<span class="nm">${x.ic} ${ja(x.n)}</span><span class="pr">${x.p}えん</span>`;
     return attr ? `<button type="button" class="${cls}" ${attr}="${x.id}">${inner}</button>` : `<div class="${cls}">${inner}</div>`; };
-  return `<div class="menu"><h3 lang="ja">メニュー</h3><div class="cols"><div><span class="grp">のみもの · bebidas</span>${BEBIDAS.map(x => lin(x, tocaBeb ? 'data-beb' : null)).join('')}</div><div><span class="grp">たべもの · comidas</span>${COMIDAS.map(x => lin(x, tocaCom ? 'data-com' : null)).join('')}</div></div></div>`;
+  return `<div class="menu"><h3 lang="ja">メニュー</h3><div class="cols"><div><span class="grp">のみもの · bebidas</span>${BEBIDAS.map(x => lin(x, tocaBeb ? 'data-beb' : null)).join('')}</div><div><span class="grp">たべもの · comidas</span>${COMIDAS.map(x => lin(x, tocaCom && x.id !== fora ? 'data-com' : null)).join('')}</div></div></div>`;
 }
 function chutesHTML(b, c) {
   const C_ = CHUTE[c.id], sel = ui.chute || C_.padrao;
@@ -535,7 +545,7 @@ function painel() {
   }
   if (s.etapa === 'cafe') {
     const bB = item(((s.cafe || {}).beb || {}).b), errado = bB && bB.id === 'ocha' ? item('kohi') : item('ocha');
-    h = ((s.p || 0) === 8 && EU === 'b' && bB ? `<div class="errado">Você pediu <b lang="ja">${bB.ic} ${bB.n}</b>, mas chegou <b lang="ja">${errado.ic} ${errado.n}</b>.</div>` : '') + cardapio(!!(st && st.tipo === 'bebida' && !((s.cafe || {}).beb || {})[EU]), !!(st && st.tipo === 'bebida' && !((s.cafe || {}).com || {})[EU])) + (((((s.cafe || {}).beb || {})[EU] || ((s.cafe || {}).com || {})[EU]) && (s.p || 0) <= 1) ? `<div class="row"><button class="btn peq" type="button" data-desfaz="beb">↩ Desfazer as minhas escolhas <small>(para escolher outras)</small></button></div>` : '');
+    h = ((s.p || 0) === 9 && EU === 'b' && bB ? `<div class="errado">Você pediu <b lang="ja">${bB.ic} ${bB.n}</b>, mas chegou <b lang="ja">${errado.ic} ${errado.n}</b>.</div>` : '') + cardapio(!!(st && st.tipo === 'bebida' && !((s.cafe || {}).beb || {})[EU]), !!(st && ((st.tipo === 'bebida' && !((s.cafe || {}).com || {})[EU]) || (st.escolhe === 'comida' && st.quem === EU && !TEXTO && !s.aguarda)))) + (((((s.cafe || {}).beb || {})[EU] || ((s.cafe || {}).com || {})[EU]) && (s.p || 0) <= 1) ? `<div class="row"><button class="btn peq" type="button" data-desfaz="beb">↩ Desfazer as minhas escolhas <small>(para escolher outras)</small></button></div>` : '');
   }
   if (s.etapa === 'papo') h = `<h3>🔥 Peças para usar no passado</h3><div class="pecas">${[['〜と', 'com (alguém)'], ['〜じかん', 'por … horas'], ['たくさん', 'muito'], ['〜ました', 'fiz'], ['〜でした', 'foi'], ['〜じゃなかったです', 'não foi']].map(x => `<span><b lang="ja">${x[0]}</b> ${x[1]}</span>`).join('')}</div>`;
   if (s.etapa === 'conta' && concluida()) { const c = s.cafe || {}, its = [(c.beb || {}).a, (c.beb || {}).b, (c.com || {}).a, (c.com || {}).b].map(item).filter(Boolean);
