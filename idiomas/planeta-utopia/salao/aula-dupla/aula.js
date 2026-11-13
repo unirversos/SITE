@@ -354,11 +354,30 @@ function semLigacao() {
 }
 
 /* ---------- fim de semana: chute até acertar ---------- */
-const FDS_PADRAO = 'ほんを よみます';
-const normAtiv = x => romaParaKana(String(x || '').normalize('NFKC')).replace(/[。.?？!！]/g, '').replace(/しゅうまつは|週末は/g, '').replace(/たいてい/g, '').replace(/\s+/g, '').replace(/か$/, '').trim();
-const fdsCards = () => CASAS.find(c => c.id === 'fds').campo.ideias;
-const bonito = g => { const c = fdsCards().find(x => normAtiv(x[0]) === g); return c ? c[0] : g; };
-const fdsNeg = ch => String(ch).replace(/ます$/, 'ません');
+const kana0 = x => romaParaKana(String(x || '').normalize('NFKC')).replace(/[。.?？!！、,]/g, '').replace(/\s+/g, '');
+const semFim = x => x.replace(/か$/, '').replace(/です$/, '');
+const CHUTE = {
+  idade: { padrao: '28さい', cards: [['20さい', '20 anos'], ['25さい', '25 anos'], ['28さい', '28 anos'], ['30さい', '30 anos'], ['35さい', '35 anos'], ['40さい', '40 anos']],
+    frase: (N, g) => `${N}さんは ${g}ですか。`, canon: x => semFim(kana0(x).replace(/^.*さんは/, '')), neg: g => `いいえ、${g}じゃ ありません。`,
+    k: ['さい|sai|歳|才', 'です|desu'] },
+  trab: { padrao: 'せんせい', cards: [['かいしゃいん', 'funcionária de empresa'], ['がくせい', 'estudante'], ['せんせい', 'professora'], ['いしゃ', 'médica'], ['かんごし', 'enfermeira'], ['しゅふ', 'dona de casa'], ['エンジニア', 'engenheira'], ['デザイナー', 'designer']],
+    frase: (N, g) => `${N}さんは ${g}ですか。`, canon: x => semFim(kana0(x).replace(/^.*さんは/, '').replace(/^おしごとは/, '')), neg: g => `いいえ、${g}じゃ ありません。`,
+    k: ['です|desu'] },
+  acorda: { padrao: '7じ', cards: [['6じ', '6h'], ['6じはん', '6h30'], ['7じ', '7h'], ['7じはん', '7h30'], ['8じ', '8h']],
+    frase: (N, g) => `まいにち ${g}に おきますか。`, canon: x => kana0(x).replace(/^まいにち/, '').replace(/か$/, '').replace(/に(おき.*)?$/, ''), neg: g => `いいえ、${g}に おきません。`,
+    k: ['おき|oki|起き'] },
+  fds: { padrao: 'ほんを よみます', cards: [['えいがを みます', 'vejo filme'], ['ほんを よみます', 'leio livro'], ['おんがくを ききます', 'ouço música'], ['スポーツを します', 'faço esporte'], ['かいものを します', 'faço compras'], ['うちで ねます', 'durmo em casa'], ['ともだちと はなします', 'converso com amigos']],
+    frase: (N, g) => `しゅうまつは ${g}か。`, canon: x => kana0(x).replace(/しゅうまつは|週末は/g, '').replace(/たいてい/g, '').replace(/か$/, ''), neg: g => `いいえ、${String(g).replace(/ます$/, 'ません')}。`,
+    k: ['しゅうまつ|shumatsu|週末', 'ます|masu'] },
+  cafe: { padrao: 'よく のみます', cards: [['まいにち のみます', 'todo dia'], ['よく のみます', 'muito'], ['ときどき のみます', 'às vezes'], ['あまり のみません', 'quase não'], ['ぜんぜん のみません', 'nunca']],
+    frase: (N, g) => `コーヒーを ${g}か。`, canon: x => kana0(x).replace(/^コーヒー[をは]/, '').replace(/か$/, ''), neg: g => /ません$/.test(g) ? 'いいえ、のみます。' : 'いいえ、のみません。',
+    k: ['こーひー|kohi|coffee|珈琲', 'のみ|nomi|飲み'] },
+  pet: { padrao: 'いぬが います', cards: [['いぬが います', 'tem cachorro'], ['ねこが います', 'tem gato'], ['いぬと ねこが います', 'tem os dois'], ['いぬも ねこも いません', 'não tem nenhum']],
+    frase: (N, g) => `うちに ${g}か。`, canon: x => kana0(x).replace(/^うちに/, '').replace(/か$/, ''), neg: g => /いません$/.test(g) ? 'いいえ、います。' : `いいえ、${String(g).replace(/が います$/, 'は いません')}。`,
+    k: ['います|imasu|いません|imasen', 'うち|uchi|いぬ|inu|ねこ|neko|犬|猫'] }
+};
+const chuteCards = id => CHUTE[id].cards;
+const bonito = (id, g) => { const c = CHUTE[id].cards.find(x => CHUTE[id].canon(x[0]) === g); return c ? c[0] : g; };
 
 /* ================= desenho da tela ================= */
 let ui = { chave: '', nivel: 0, tent: 0, casa: null, verPreco: false, gr: null };
@@ -492,18 +511,18 @@ function cardapio(tocaBeb, tocaCom) {
     return attr ? `<button type="button" class="${cls}" ${attr}="${x.id}">${inner}</button>` : `<div class="${cls}">${inner}</div>`; };
   return `<div class="menu"><h3 lang="ja">メニュー</h3><div class="cols"><div><span class="grp">のみもの · bebidas</span>${BEBIDAS.map(x => lin(x, tocaBeb ? 'data-beb' : null)).join('')}</div><div><span class="grp">たべもの · comidas</span>${COMIDAS.map(x => lin(x, tocaCom && x.id !== fora ? 'data-com' : null, tocaCom && x.id === c.com2)).join('')}</div></div></div>`;
 }
-function chutesHTML(b) {
-  const sel = ui.chute || FDS_PADRAO;
-  return `<div class="chutes"><div class="row" style="justify-content:space-between;align-items:center"><b>🎯 Chute o que ${esc(nome(outro(EU)))} faz no fim de semana</b><button class="lk" type="button" data-escondecards aria-expanded="${!ui.escCards}">${ui.escCards ? '👀 Mostrar os cards' : '🙈 Esconder os cards'}</button></div>`
+function chutesHTML(b, c) {
+  const C_ = CHUTE[c.id], sel = ui.chute || C_.padrao;
+  return `<div class="chutes"><div class="row" style="justify-content:space-between;align-items:center"><b>🎯 Chute: ${esc(c.pt)} ${c.ic}</b><button class="lk" type="button" data-escondecards aria-expanded="${!ui.escCards}">${ui.escCards ? '👀 Mostrar os cards' : '🙈 Esconder os cards'}</button></div>`
     + (b.re ? `<p class="fb">ちがいます！ Ainda não é isso (${b.err || 1} ${(b.err || 1) === 1 ? 'erro' : 'erros'}). Chute outra coisa!</p>` : '')
-    + (ui.escCards ? '<p class="sub">Cards escondidos: invente o seu chute e escreva ou fale a pergunta.</p>' : `<div class="ideias">${fdsCards().map(([j, pt]) => `<button type="button" class="${j === sel ? 'sel' : ''}" data-chute="${esc(j)}" title="${esc(pt)}" aria-pressed="${j === sel}"><span lang="ja">${esc(j)}</span> · ${esc(pt)}</button>`).join('')}</div>`) + '</div>';
+    + (ui.escCards ? '<p class="sub">Cards escondidos: invente o seu chute e escreva ou fale a pergunta.</p>' : `<div class="ideias">${C_.cards.map(([j, pt]) => `<button type="button" class="${j === sel ? 'sel' : ''}" data-chute="${esc(j)}" title="${esc(pt)}" aria-pressed="${j === sel}"><span lang="ja">${esc(j)}</span> · ${esc(pt)}</button>`).join('')}</div>`) + '</div>';
 }
 function painel() {
   const p = $('painel'), s = S, P = outro(EU), st = passos()[s.p || 0]; let h = '';
   if (s.etapa === 'ficha' && (s.ficha || {})[EU] && s.ficha[EU].ok) h = minhaFicha(true);
   if (s.etapa === 'batalha') {
     const b = s.bat || {}, toca = !b.fim && b.fase === 'perguntar' && b.vez === EU && !s.aguarda;
-    h = `<div class="row" style="justify-content:space-between"><h3>🎯 Tabuleiro de ${esc(nome(P))}</h3><span class="sub">${conta((b.ab || {})[P])} de ${CASAS.length} abertas</span></div>${tabuleiro(P, { toca })}${toca && ui.casa === 'fds' ? chutesHTML(b) : ''}${minhaFicha()}`;
+    h = `<div class="row" style="justify-content:space-between"><h3>🎯 Tabuleiro de ${esc(nome(P))}</h3><span class="sub">${conta((b.ab || {})[P])} de ${CASAS.length} abertas</span></div>${tabuleiro(P, { toca })}${toca && casaDe(ui.casa) ? chutesHTML(b, casaDe(ui.casa)) : ''}${minhaFicha()}`;
   }
   if (s.etapa === 'convite') {
     const cv = s.cv || {}, sabe = EU === 'a', toca = !sabe && st && st.tipo === 'toque', achou = concluida();
@@ -525,7 +544,7 @@ function painel() {
 $('painel').addEventListener('click', e => {
   if (e.target.closest('[data-escondecards]')) { ui.escCards = !ui.escCards; painel(); return; }
   const ch = e.target.closest('[data-chute]'); if (ch) { ui.chute = ch.dataset.chute; ui.nivel = 0; ui.tent = 0; painel(); acao(); return; }
-  const c = e.target.closest('[data-casa]'); if (c && !c.disabled) { ui.casa = c.dataset.casa; ui.nivel = 0; ui.tent = 0; painel(); acao(); const i = $('inp'); if (i) i.focus(); return; }
+  const c = e.target.closest('[data-casa]'); if (c && !c.disabled) { ui.casa = c.dataset.casa; ui.chute = null; ui.nivel = 0; ui.tent = 0; painel(); acao(); const i = $('inp'); if (i) i.focus(); return; }
   const b = e.target.closest('[data-beb]'); if (b) { sync.update({ ['cafe/beb/' + EU]: b.dataset.beb }); return; }
   if (e.target.closest('[data-desfaz]')) { sync.tx(root => { if (!root || root.etapa !== 'cafe' || (root.p || 0) > 1 || !root.cafe || !root.cafe.beb || !root.cafe.beb[EU]) return; delete root.cafe.beb[EU]; root.p = 0; return root; }); return; }
   const cm = e.target.closest('[data-com]'); if (cm) { sync.update({ 'cafe/com2': cm.dataset.com }); return; }
@@ -734,27 +753,23 @@ function acaoBatalha() {
     if (vez !== EU) { a.innerHTML = `<div class="vez"><b>Vez de ${esc(Pn)}</b><p>Ela vai fazer uma pergunta sobre você. A resposta está na sua ficha.</p></div>${espera(`${esc(Pn)} está escolhendo a pergunta…`)}`; return; }
     const c = casaDe(ui.casa);
     if (!c) { a.innerHTML = `<div class="vez"><b>🎯 Sua vez de perguntar</b><p>Toque numa casa fechada (？) do tabuleiro de ${esc(Pn)}.</p></div>`; return; }
-    if (c.id === 'fds') {                                           /* chute: pergunta sim/não, repete até acertar */
-      const ch = ui.chute || FDS_PADRAO, sp = ch.split(' '), obj = sp.slice(0, -1).join(' '), pt = (fdsCards().find(x => x[0] === ch) || [0, ''])[1];
-      uiDizer({ instr: `Chute o que ${esc(Pn)} faz no fim de semana. ${b.re ? 'Errou! Chute de novo.' : 'Escolha um card (ou escreva o seu chute) e pergunte.'}`, m: `しゅうまつは ${ch}か。`, d1: `しゅうまつは ${obj || ch}…`, d2: `しゅうまつは ${obj} ＿＿＿か。`,
-        pt: pt ? `No fim de semana: ${pt}?` : c.perg.pt, k: c.perg.k,
-        envia: txt => { const g = bonito(normAtiv(txt) || normAtiv(ch)); return escreve(txt, bt => { bt.casa = c.id; bt.fase = 'responder'; bt.chute = g; }); }, enviaAud: p => fala_(p, { casa: c.id, chute: bonito(normAtiv(ch)) }) });
+    {                                                                /* chute: pergunta sim/não, repete até acertar */
+      const C_ = CHUTE[c.id], ch = ui.chute || C_.padrao, pt = (C_.cards.find(x => x[0] === ch) || [0, ''])[1], tr = C_.frase(Pn, '\u0001');
+      uiDizer({ instr: `Chute: <b>${esc(c.pt)}</b> ${c.ic}. ${b.re ? 'Errou! Chute de novo.' : 'Escolha um card (ou escreva o seu chute) e pergunte.'}`, m: C_.frase(Pn, ch), d1: tr.split('\u0001')[0] + '…', d2: C_.frase(Pn, '＿＿＿＿'),
+        pt: pt ? `Chute: ${pt}?` : c.perg.pt, k: C_.k,
+        envia: txt => { const g = bonito(c.id, C_.canon(txt) || C_.canon(ch)); return escreve(txt, bt => { bt.casa = c.id; bt.fase = 'responder'; bt.chute = g; }); }, enviaAud: p => fala_(p, { casa: c.id, chute: bonito(c.id, C_.canon(ch)) }) });
       return;
     }
-    uiDizer({ instr: `Pergunte a ${esc(Pn)}: <b>${esc(c.pt)}</b> ${c.ic}`, m: c.perg.m(Pn), d1: c.perg.d1(Pn), d2: c.perg.d2(Pn), pt: c.perg.pt, k: c.perg.k,
-      envia: txt => escreve(txt, bt => { bt.casa = c.id; bt.fase = 'responder'; }), enviaAud: p => fala_(p, { casa: c.id }) });
-    return;
   }
   const c = casaDe(b.casa) || CASAS[0];
   if (b.fase === 'responder') {
     if (vez === EU) { a.innerHTML = `<div class="vez"><b>Vez de ${esc(Pn)}</b><p>Ouça a resposta dela. A casa ${c.ic} abre quando ela responder.</p></div>${espera(`${esc(Pn)} está respondendo…`)}`; return; }
     const val = (f[c.id] || '') + '。';
-    if (c.id === 'fds' && b.chute) {                                /* chute: acertou? senão "いいえ" e ela tenta de novo (na 3ª, revela) */
-      const acertou = normAtiv(b.chute) === normAtiv(f.fds), revela = !acertou && (b.err || 0) >= 2, ativ = String(f.fds || '').replace(/^たいてい\s*/, '');
-      const chV = String(b.chute), neg = fdsNeg(chV), miss = !acertou && !revela;
-      const m = acertou ? `はい、${val}` : revela ? `いいえ、${val}` : `いいえ、${neg}。`;
-      uiDizer({ instr: acertou ? `${esc(Pn)} acertou! Confirme e diga o que você faz.` : revela ? `${esc(Pn)} já errou 3 vezes. Diga a resposta certa da sua ficha.` : `${esc(Pn)} chutou <b lang="ja">${esc(chV)}</b>, mas não é isso. Diga que não.`,
-        m, d1: m.slice(0, 3) + '…', d2: miss ? 'いいえ、＿＿＿ません。' : acertou ? 'はい、たいてい ＿＿＿ます。' : 'いいえ、たいてい ＿＿＿ます。', pt: acertou ? 'Sim! (e diga o que você faz)' : miss ? 'Não.' : 'Não. (e diga o que você faz)', k: miss ? ['いいえ|iie', 'ません|masen'] : ['ます|masu'],
+    if (b.chute && CHUTE[c.id]) {                                   /* chute: acertou? senão "いいえ" e ela tenta de novo (na 3ª, revela) */
+      const C_ = CHUTE[c.id], acertou = C_.canon(b.chute) === C_.canon(f[c.id]), revela = !acertou && (b.err || 0) >= 2, chV = String(b.chute), miss = !acertou && !revela;
+      const m = acertou ? `はい、${val}` : revela ? `いいえ、${val}` : C_.neg(chV);
+      uiDizer({ instr: acertou ? `${esc(Pn)} acertou! Confirme e diga a resposta da sua ficha.` : revela ? `${esc(Pn)} já errou 3 vezes. Diga a resposta certa da sua ficha.` : `${esc(Pn)} chutou <b lang="ja">${esc(chV)}</b>, mas não é isso. Diga que não.`,
+        m, d1: m.slice(0, 3) + '…', d2: acertou ? 'はい、＿＿＿＿。' : revela ? 'いいえ、＿＿＿＿。' : 'いいえ、＿＿＿＿。', pt: acertou ? 'Sim! (e diga a sua resposta)' : miss ? 'Não.' : 'Não. (e diga a sua resposta)', k: [acertou ? 'はい|hai' : 'いいえ|iie'],
         envia: txt => escreve(txt, bt => { if (miss) { bt.fase = 'perguntar'; bt.re = c.id; bt.err = (bt.err || 0) + 1; bt.casa = null; bt.chute = null; }
           else { bt.ab = bt.ab || {}; bt.ab[EU] = bt.ab[EU] || {}; bt.ab[EU][c.id] = true; bt.fase = 'reagir'; bt.re = null; bt.err = 0; bt.chute = null; } }),
         enviaAud: p => fala_(p, { casa: c.id, miss }) });
