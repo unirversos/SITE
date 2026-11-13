@@ -162,7 +162,7 @@ const item = id => BEBIDAS.concat(COMIDAS).find(x => x.id === id);
 const K_KUDASAI = 'ください|kudasai|下さい|おねがい|onegai|お願い';
 
 /* ================= estado ================= */
-let S = null, EU = null, sync = null, pedindoLugar = false;
+let S = null, EU = null, sync = null, pedindoLugar = false, CONVIDADO = false;
 let TEXTO = Q.get('texto') === '1', AUD = {}, capt = null, tick = null;           /* TEXTO: prefere digitar · AUD: gravações das falas · capt/tick: gravação em curso */
 const REV = new Set();                                              /* falas cuja frase escrita foi mostrada */
 const modoOn = () => ((S && S.modo) || 'online') === 'online';   /* online: grava a voz · juntas: fala ao vivo */
@@ -371,7 +371,15 @@ function recebe(v) {
   $('rodape').hidden = false;
   if (!j.a || !j.b) {
     $('aula').hidden = true; $('entrada').hidden = false;
-    $('entrada').innerHTML = `<div class="row"><div class="c-av eu"><div class="face">${avatarHTML(j[EU].sel)}</div></div><div><h2>Você chegou, ${esc(j[EU].nome)}!</h2><p class="sub">A aula começa quando a sua dupla entrar por este mesmo endereço.</p></div></div><div class="espera"><i></i><span>Esperando a outra aluna…</span></div>`;
+    $('entrada').innerHTML = `<div class="row"><div class="c-av eu"><div class="face">${avatarHTML(j[EU].sel)}</div></div><div><h2>Você chegou, ${esc(j[EU].nome)}!</h2><p class="sub">A aula começa quando a sua dupla entrar por este mesmo endereço.</p></div></div><div class="espera"><i></i><span>Esperando a outra aluna…</span></div>
+    <div class="row" style="margin-top:12px"><button class="btn pri" type="button" id="convidar">Convidar outro aluno</button></div>
+    <p class="sub" id="convMsg" aria-live="polite">${CONVIDADO ? 'Link copiado! Cole numa conversa e mande para a pessoa.' : 'Copia o link desta aula para você mandar para alguém.'}</p>
+    <input id="convLink" type="text" readonly hidden style="width:100%;margin-top:6px;padding:10px;border:1.5px solid #ecdadd;border-radius:10px;font:inherit">`;
+    $('convidar').onclick = async () => {
+      const u = new URL(location.href); u.searchParams.set('sala', SALA); u.hash = ''; const link = u.toString();
+      try { await navigator.clipboard.writeText(link); CONVIDADO = true; $('convMsg').textContent = 'Link copiado! Cole numa conversa e mande para a pessoa.'; }
+      catch (e) { const i = $('convLink'); i.value = link; i.hidden = false; i.focus(); i.select(); $('convMsg').textContent = 'Copie este link e mande para a pessoa:'; }
+    };
     return;
   }
   $('entrada').hidden = true; $('aula').hidden = false; document.querySelector('.wrap').classList.add('em-aula');

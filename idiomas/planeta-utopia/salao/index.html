@@ -339,7 +339,7 @@ footer{border-top:1.5px dashed var(--line);padding-top:18px;display:flex;flex-wr
 
   <section class="card aula-dupla" id="aulaDupla" aria-labelledby="h-dupla">
     <div><h2 id="h-dupla">🎓 Aula em dupla</h2><p class="sub">Do encontro ao café: duas alunas, cada uma na sua tela, se apresentam, descobrem uma à outra numa batalha de perguntas e pedem um café em japonês. Dura cerca de 1 hora.</p></div>
-    <a class="btn" href="/idiomas/planeta-utopia/salao/aula-dupla/">Entrar na aula em dupla →</a>
+    <a class="btn" id="irDupla" href="/idiomas/planeta-utopia/salao/aula-dupla/">Entrar na aula em dupla →</a>
   </section>
 
   <section class="card aula-dupla mural" id="muralCom" aria-labelledby="h-mural">
@@ -799,6 +799,9 @@ aplicaRo();
     try{ sec.scrollIntoView({behavior:'smooth',block:'start'}); }catch(e){}
   }
   var b=document.getElementById('entrarSalao'); if(b) b.addEventListener('click',entrar);
+  /* cada aula em dupla nasce numa sala própria: só entra quem receber o link de convite */
+  var d=document.getElementById('irDupla');
+  if(d) d.addEventListener('click',function(){ var c=''; var A='abcdefghjkmnpqrstuvwxyz23456789'; for(var i=0;i<7;i++) c+=A[Math.floor(Math.random()*A.length)]; d.href='/idiomas/planeta-utopia/salao/aula-dupla/?sala=aula-'+c; });
   if(location.hash==='#sala') entrar();
 })();
 </script>
