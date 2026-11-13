@@ -73,6 +73,13 @@
       }
     });
     estado(); abreProxima();
+    /* links da Área do aluno: ?n=<id> abre uma anotação; ?nova=1 começa uma nova */
+    try {
+      var q = new URLSearchParams(location.search), qn = q.get('n');
+      if (qn && C.obter(qn)) { abre(qn); setTimeout(function () { livro.foca(); }, 300); }
+      else if (q.get('nova')) nova();
+      if (qn || q.get('nova')) history.replaceState(null, '', location.pathname);
+    } catch (e) {}
     return {
       novaSobre: function (titulo, dt) { var id = livro.novaSobre(titulo, dt); abre(id); setTimeout(function () { livro.foca(); }, 300); return id; }
     };

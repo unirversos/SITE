@@ -77,6 +77,8 @@
     '.lv-livro.vai .lv-pg:not(.fora){transform-origin:left center;animation:lvFrente .38s ease-out}',
     '.lv-livro.volta .lv-pg:not(.fora){transform-origin:right center;animation:lvTras .38s ease-out}',
     '@media (prefers-reduced-motion:reduce){.lv-livro.vai .lv-pg,.lv-livro.volta .lv-pg{animation:none}}',
+    '.lv-fant{background:#fffdfc;align-items:center;justify-content:center;box-shadow:none}',
+    '.lv-fant button{font:inherit;cursor:pointer;border:1.5px dashed #d9c3c9;background:#fff;color:#705f6c;border-radius:99px;padding:8px 18px;font-weight:700;font-size:14px;min-height:40px}.lv-fant button:hover{border-color:#c23f5e;color:#c23f5e}',
     '.lv-dica{font-size:12px;color:#705f6c;margin:0;text-align:center}'
   ].join('');
   document.head.appendChild(css);
@@ -153,7 +155,7 @@
       });
       mostra(); requestAnimationFrame(function () { ajusta(); });
     }
-    function paginas() { return livro.querySelectorAll('.lv-pg'); }
+    function paginas() { return livro.querySelectorAll('.lv-pg:not(.lv-fant)'); }
     function pg(i) { return livro.querySelector('.lv-pg[data-i="' + i + '"]'); }
     function visiveis() { return dupla ? [ini, ini + 1] : [ini]; }
     function mostra(anim) {
@@ -164,6 +166,12 @@
         p.setAttribute('aria-hidden', String(!on));
         p.style.gridColumn = on && dupla ? (i === v[0] ? '1' : '2') : '';
       });
+      /* no caderno aberto, a página da direita ainda em branco vira um convite para continuar */
+      var fan = livro.querySelector('.lv-fant');
+      if (dupla && pags.length && ini + 1 >= pags.length) {
+        if (!fan) { fan = document.createElement('div'); fan.className = 'lv-pg lv-fant dir'; fan.innerHTML = '<button type="button">+ nova página</button>'; fan.querySelector('button').onclick = function () { maisPagina(true); }; livro.appendChild(fan); }
+        fan.style.gridColumn = '2';
+      } else if (fan) fan.remove();
       var ult = Math.min(pags.length, ini + (dupla ? 2 : 1));
       lbl.textContent = (dupla && ult > ini + 1 ? 'páginas ' + (ini + 1) + '–' + ult : 'página ' + (ini + 1)) + ' de ' + pags.length;
       nav.querySelector('[data-n="-1"]').disabled = ini <= 0;
