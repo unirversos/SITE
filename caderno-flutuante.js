@@ -1,8 +1,11 @@
 /* Unirversos · Caderno flutuante: aba na borda direita que abre o caderno sem sair da página.
    Usa as mesmas anotações de /idiomas/caderno/ e da Área do aluno (caderno em páginas, uma por vez aqui). Sempre começa recolhido. */
 (function () {
-  if (location.pathname.indexOf('/idiomas/caderno/') === 0 || location.pathname.indexOf('/aluno/') === 0) return;
-  var C = null, livro = null, pede = false, tl = null, tTeclou = 0;
+  if (location.pathname.indexOf('/idiomas/caderno/') === 0) return;
+  var C = null, livro = null, pede = false, tl = null, tTeclou = 0, fila = [];
+  /* API para outras páginas (Área do aluno etc.): funciona mesmo antes do caderno terminar de carregar */
+  function quando(fn) { return function () { var a = arguments; if (livro) return fn.apply(null, a); fila.push(function () { fn.apply(null, a); }); }; }
+  window.UniCadernoFlutuante = { abrir: quando(function () { abrir(true); }), nova: quando(function () { abrir(true); nova(); }), abrirNota: quando(function (id) { abrir(true); if (C.obter(id)) abre(id); }), nomear: quando(function (id, c) { C.atualizar(id, c); C.agora(); abrir(true); abre(id); }) };
   function esc(s) { return String(s).replace(/[&<>"]/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]; }); }
 
   var css = document.createElement('style');
@@ -53,7 +56,11 @@
     livro = UniLivro.montar($('cf-lv'), { simples: true, aoMudar: function () { tTeclou = Date.now(); clearTimeout(tl); tl = setTimeout(lista, 250); } });
     aba.onclick = function () { abrir(true); };
     $('cf-f').onclick = function () { abrir(false); };
-    p.addEventListener('keydown', function (e) { if (e.key === 'Escape') abrir(false); });
+    /* teclas digitadas no caderno não chegam aos jogos/atalhos da página */
+    p.addEventListener('keydown', function (e) { e.stopPropagation(); if (e.key === 'Escape') abrir(false); });
+    p.addEventListener('keyup', function (e) { e.stopPropagation(); });
+    p.addEventListener('keypress', function (e) { e.stopPropagation(); });
+    while (fila.length) fila.shift()();
     $('cf-n').onclick = nova;
     $('cf-l').onchange = function () { abre(this.value); };
     $('cf-en').onclick = function () { C.entrar(); };

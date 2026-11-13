@@ -52,12 +52,21 @@ function caderno(){
   }).join('') : `<p class="mut">${t('cadVazio')}</p>`;
 }
 if (C) { C.on(tipo => { if (tipo === 'remoto') caderno(); }); caderno(); }
+/* abre o caderno aqui mesmo (painel flutuante); sem ele, o link leva à tela cheia */
+document.addEventListener('click', e => {
+  const F = window.UniCadernoFlutuante; if (!F) return;
+  const a = e.target.closest && e.target.closest('#cad-lista a.cad-i, a[href="/idiomas/caderno/?nova=1"]'); if (!a) return;
+  e.preventDefault();
+  const m = /[?&]n=([^&]+)/.exec(a.getAttribute('href'));
+  if (m) F.abrirNota(decodeURIComponent(m[1])); else F.nova();
+});
 /* "Anotar sobre esta aula": cria a nota com título e data e abre o caderno nela */
 window.CadernoNovaSobre = (titulo, d) => {
   if (!C) return;
   const n = C.nova(), c = { t: titulo };
   if (d) { c.a = String(d.getFullYear()); c.o = String(d.getMonth() + 1); c.d = String(d.getDate()); c.w = String((d.getDay() + 6) % 7); }
   C.atualizar(n.id, c); C.agora();
+  if (window.UniCadernoFlutuante) { window.UniCadernoFlutuante.abrirNota(n.id); return; }
   location.href = '/idiomas/caderno/?n=' + encodeURIComponent(n.id);
 };
 
