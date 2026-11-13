@@ -70,7 +70,7 @@
   function carrega(src, fn) { var t = document.createElement('script'); t.src = src; t.onload = fn; document.head.appendChild(t); }
   function inicia() {
     function pronto() { C = window.UniCaderno; if (document.body) montar(); else document.addEventListener('DOMContentLoaded', montar); }
-    function com() { if (window.UniLivro) pronto(); else carrega('/caderno-livro.js?v=2', pronto); }
+    function com() { if (window.UniLivro) pronto(); else carrega('/caderno-livro.js?v=3', pronto); }
     if (window.UniCaderno) com(); else carrega('/caderno-dados.js?v=1', com);
   }
   inicia();
