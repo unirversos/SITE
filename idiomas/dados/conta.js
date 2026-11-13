@@ -18,7 +18,7 @@ const CFG = {
   appId: "1:608479693630:web:38240bf82e09d72fd5ba6f"
 };
 /* chaves do progresso de Idiomas que vão para a conta */
-const KEYS = ['utopiaAvatar1','utopiaSave1','utopiaKana1','utopiaMapas1','utopiaPulos1',
+const KEYS = ['uniMapaPessoal1','utopiaAvatar1','utopiaSave1','utopiaKana1','utopiaMapas1','utopiaPulos1',
   'aulaZeroCompleted','aulaZeroPulada','utopiaRomaji','kanjiSRS1','utopiaFrases1'];
 
 const app = getApps()[0] || initializeApp(CFG);

@@ -74,6 +74,7 @@ html{scroll-behavior:smooth}
 .prox .ac .pri{background:var(--pink);border-color:var(--pink)}
 .ac .ok{border-color:#cfe0d3;background:var(--sage-soft);color:#3e6347}
 .ac .lk{border:0;background:none;color:var(--muted);text-decoration:underline;padding:7px 4px;font-weight:500}
+.mpchip{background:#f0edf9 !important;border-color:#cfc6ea !important}
 .sec{font-family:var(--f-display);font-size:24px;margin:10px 0 0}
 .carimbo{font-size:12.5px;font-weight:700;color:var(--gold)}
 /* mapinha: o avatar percorre os 12 mapas */
@@ -154,6 +155,10 @@ footer a{color:var(--ink);text-decoration:none}
     <a href="/idiomas/ar/">🌬️ Ar</a>
   </nav>
 
+  <section id="sec-mp" aria-labelledby="t-mp" hidden>
+    <h2 class="sec" id="t-mp">Minhas ferramentas</h2>
+    <ol class="passos" id="mp"></ol>
+  </section>
   <section aria-labelledby="t-inicio">
     <h2 class="sec" id="t-inicio">Antes dos mapas</h2>
     <ol class="passos" id="antes"></ol>
@@ -180,6 +185,7 @@ footer a{color:var(--ink);text-decoration:none}
   </footer>
 </div>
 <script src="/idiomas/dados/avatar.js?v=20261016b"></script>
+<script src="/idiomas/dados/mapa-pessoal.js?v=1"></script>
 <script>
 (function(){
   const MAPAS=[
@@ -289,6 +295,17 @@ footer a{color:var(--ink);text-decoration:none}
       ac:`<a href="/idiomas/aula-zero/">${E.az?'Rever a Aula Zero':'Fazer a Aula Zero'}</a>`}));
     document.getElementById('antes').innerHTML=antes.join('');
 
+    /* mapa pessoal: ferramentas que o aluno adicionou. ?mp=lado = junto do mapa relacionado; padrão = bloco acima */
+    const MP=window.UniMapaPessoal, mine=MP?MP.lista():[], lado=/[?&]mp=lado/.test(location.search);
+    const secMp=document.getElementById('sec-mp'), listaMp=document.getElementById('mp');
+    const tirar=id=>`<button type="button" class="lk" data-mp-tirar="${id}">tirar do meu mapa</button>`;
+    const cardMp=id=>{ const f=MP.FERR[id]; return card({n:f.e,t:f.t,st:'no meu mapa',d:esc(f.d),ac:`<a class="pri" href="${f.href}">Abrir</a>${tirar(id)}`}); };
+    const chipMp=id=>{ const f=MP.FERR[id]; return `<a class="mpchip" href="${f.href}">${f.e} ${esc(f.t)}</a>`; };
+    window.__mpChip=lado?(mapaId=>mine.filter(i=>MP.FERR[i].perto===mapaId).map(chipMp).join('')):(()=>'');
+    const soltas=lado?mine.filter(i=>!MP.FERR[i].perto):mine;
+    if(lado&&mine.some(i=>MP.FERR[i].perto==='letras')){ document.querySelectorAll('#p-letras .ac a').forEach(a=>{ const k=a.getAttribute('href').split('/')[2]; if(mine.includes(k)) a.classList.add('mpchip'); }); }
+    secMp.hidden=!soltas.length; listaMp.innerHTML=soltas.map(cardMp).join('');
+
     /* mapas */
     document.getElementById('mapas').innerHTML=MAPAS.map((m,i)=>{
       const s=E.mapa[i], id='p-'+m[0], feito=s.aula&&s.prova;
@@ -297,7 +314,7 @@ footer a{color:var(--ink);text-decoration:none}
       return card({id,n,t:`${m[1]} Mapa ${i+1} · ${m[2]}`,st:stTx,cls:feito?'feito':(prox&&prox.id===id?'prox':''),
         d:esc(m[3])+(s.prova?` · <span class="carimbo">🏅 carimbo ganho</span>`:''),
         ac:`<a class="${s.aula?'ok':'pri'}" href="/idiomas/mapas/${m[0]}/aula/">${s.aula?'Aula ✓':'Aula'}</a>`+
-           `<a class="${s.prova?'ok':(s.aula?'pri':'')}" href="/idiomas/planeta-utopia/?lang=ja&terr=${m[4]}&from=trilha">${s.prova?'Prova ✓':'Prova'}</a>`});
+           `<a class="${s.prova?'ok':(s.aula?'pri':'')}" href="/idiomas/planeta-utopia/?lang=ja&terr=${m[4]}&from=trilha">${s.prova?'Prova ✓':'Prova'}</a>`+(window.__mpChip?window.__mpChip(m[0]):'')});
     }).join('');
 
     /* passaporte */
@@ -317,6 +334,8 @@ footer a{color:var(--ink);text-decoration:none}
   }
 
   document.addEventListener('click',e=>{
+    const t=e.target.closest('button[data-mp-tirar]');
+    if(t){ window.UniMapaPessoal.alterna(t.dataset.mpTirar); return; }
     const b=e.target.closest('button[data-acao]'); if(!b) return;
     const pulos=ler('utopiaPulos1')||{};
     if(b.dataset.acao==='pula-letras'){ pulos.letras=true; grava('utopiaPulos1',pulos); }

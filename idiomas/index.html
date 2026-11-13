@@ -32,6 +32,7 @@ body{font-family:'Zen Maru Gothic',sans-serif;color:var(--ink);background:var(--
 .hero h1{font-family:'Baloo 2',cursive;font-weight:700;font-size:clamp(26px,4.6vw,40px);line-height:1.25;max-width:600px;margin:0 auto 16px;}
 .hero h1 em{font-style:normal;color:var(--pink);}
 .hero p{color:var(--ink-soft);max-width:520px;margin:0 auto 26px;font-size:16px;}
+.hero p strong{font-weight:700;font-style:italic;color:var(--ink);}
 .cta{display:inline-block;font-weight:500;font-size:15px;background:var(--pink);color:#fff;border-radius:40px;padding:13px 30px;text-decoration:none;transition:all .2s ease;box-shadow:0 6px 20px rgba(224,140,134,.22);}
 .cta:hover{background:var(--pink-deep);transform:translateY(-2px);}
 .cta.ghost{background:#fff;color:var(--pink-deep);border:1.5px solid var(--pink);box-shadow:none;}
@@ -108,9 +109,9 @@ section.block{padding:40px 0 10px;}
 .trilhas{display:grid;gap:14px;margin-top:22px}
 .tri{display:grid;grid-template-columns:56px minmax(0,1fr) auto;gap:16px;align-items:center;background:#fff;border:1.5px solid var(--blush-2);border-left:6px solid var(--c);border-radius:18px;padding:18px 20px;text-decoration:none;color:inherit;transition:transform .15s ease,box-shadow .15s ease}
 .tri:hover{transform:translateY(-2px);box-shadow:0 12px 26px -18px rgba(74,65,73,.5)}
-.tri.ja{--c:#b5514d}.tri.en{--c:#5176a8}.tri.pt{--c:#537e65}
+.tri.ja{--c:#b5514d}.tri.en{--c:#5176a8}.tri.pt{--c:#537e65}.tri.zero{--c:#8a7568}
 .tri .fl{width:56px;height:56px;border-radius:50%;display:grid;place-items:center;font-family:'Baloo 2',cursive;font-weight:800;font-size:18px;color:#fff;background:var(--c)}
-.tri .tx{display:grid;gap:2px}
+.tri .tx{display:grid;gap:2px;text-align:left}
 .tri b{font-family:'Baloo 2',cursive;font-size:22px;line-height:1.15}
 .tri small{font-size:12px;letter-spacing:1.2px;text-transform:uppercase;color:var(--c);font-weight:700}
 .tri .tx span{font-size:14px;color:var(--ink-soft)}
@@ -141,7 +142,7 @@ section.block{padding:40px 0 10px;}
   <header class="hero">
     <p class="eyebrow">unirversos idiomas</p>
     <h1>Um idioma que começa em <em>você</em>.</h1>
-    <p>Trilhas de japonês, inglês e português com uma metodologia autoral e prática. Escolha o idioma, siga os passos em ordem e pule o que você já sabe.</p>
+    <p>Com uma metodologia autoral e prática, escolha o idioma, siga os passos em ordem, personalize a aprendizagem em <strong>ferramentas</strong>, e use e abuse do seu caderno de anotações que estará sempre à mão.</p>
     <div class="ctas">
       <a href="#trilhas" class="cta">Escolher o meu idioma ↓</a>
       <a href="#ao-vivo" class="live">Ver turmas ao vivo <b>vagas abertas</b></a>
@@ -157,6 +158,7 @@ section.block{padding:40px 0 10px;}
       <p>Cada idioma tem uma trilha só, com os passos em ordem. A conta é grátis e guarda o seu progresso em qualquer aparelho.</p>
     </div>
     <div class="trilhas">
+      <a class="tri zero" href="/idiomas/aula-zero/"><span class="fl">0</span><span class="tx"><b>Aula Zero</b><small>orientação · opcional</small><span>As chaves antes dos mapas: afirmar, negar, perguntar, os verbos e como pedir, com o seu avatar.</span></span><span class="go">Conhecer →</span></a>
       <a class="tri ja" href="/idiomas/japones/"><span class="fl">JA</span><span class="tx"><b>Japonês</b><small>trilha completa</small><span>Seu avatar, 12 mapas de viagem com prova e carimbo, e o Salão do Planeta Utopia. Letras e Aula Zero são opcionais.</span></span><span class="go">Começar →</span></a>
       <!-- inglês e português: ocultos por enquanto (27/10); para mostrar, tire hidden e style="display:none" -->
       <a hidden style="display:none" class="tri en" href="/idiomas/mapas/?explorar=en"><span class="fl">EN</span><span class="tx"><b>Inglês</b><small>trilha inicial · 5 mapas</small><span>As situações essenciais de viagem, com moldes prontos e escuta.</span></span><span class="go">Começar →</span></a>
