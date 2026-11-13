@@ -166,6 +166,11 @@ button.pred:disabled{cursor:default;box-shadow:none;border-color:var(--line);bac
 /* ação */
 .acao{border:2px solid var(--line)}
 .acao.minha-vez{border-color:var(--pink);box-shadow:0 6px 22px -12px rgba(194,63,94,.55)}
+.balao{position:relative;margin:2px 4px 0;padding:10px 14px;background:#fff;border:2px solid var(--pink-d,#c23f5e);border-radius:16px;box-shadow:0 6px 16px -10px rgba(58,43,56,.4);display:grid;gap:2px}
+.balao[hidden]{display:none}
+.balao::before{content:'';position:absolute;top:-10px;left:18%;width:16px;height:16px;background:#fff;border-left:2px solid var(--pink-d,#c23f5e);border-top:2px solid var(--pink-d,#c23f5e);transform:rotate(45deg)}
+.balao b{font-family:var(--f-display);font-size:18px;line-height:1.2;color:var(--pink-d,#c23f5e)}
+.balao p{margin:0;font-size:15.5px}
 .vez{display:grid;gap:2px}
 .vez b{font-family:var(--f-display);font-size:19px;line-height:1.2}
 .acao.minha-vez .vez b{color:var(--pink-d)}
@@ -241,6 +246,7 @@ footer{border-top:1.5px dashed var(--line);padding-top:12px;display:flex;flex-wr
     <div class="trilho" id="trilho"></div>
     <section class="card ferr" id="ferr" hidden aria-label="Ferramentas"></section>
     <div class="cena" id="cena" data-fundo="salao" aria-hidden="true"></div>
+    <div class="balao" id="balao" aria-live="polite" hidden></div>
     <section class="card" id="painel" hidden></section>
     <div class="ultima" id="ultima" aria-live="polite" aria-label="Última fala" hidden></div>
     <section class="card" id="vozBar" hidden></section>
@@ -257,7 +263,7 @@ footer{border-top:1.5px dashed var(--line);padding-top:12px;display:flex;flex-wr
 
 <script src="/idiomas/dados/avatar.js?v=20261016b"></script>
 <script src="/idiomas/dados/velocidade-voz.js?v=1"></script>
-<script type="module" src="./aula.js?v=8"></script>
+<script type="module" src="./aula.js?v=9"></script>
 <script defer src="/caderno-flutuante.js?v=7"></script>
 </body>
 </html>
