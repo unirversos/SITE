@@ -235,8 +235,7 @@ function passos() {
   if (s.etapa === 'cafe') {
     const bA = item(beb.a) || BEBIDAS[0], bB = item(beb.b) || BEBIDAS[0], igual = bA.id === bB.id;
     const errado = bB.id === 'ocha' ? item('kohi') : item('ocha');
-    const c1 = item(cf.com1), c2 = item(cf.com2) || COMIDAS.find(c => c.id !== cf.com1);
-    const kCom = COMIDAS.map(c => c.k).join('|');
+    const cA = item((cf.com || {}).a) || COMIDAS[0], cB = item((cf.com || {}).b) || COMIDAS[1];
     return [
       { tipo: 'bebida', quem: 'ambas' },
       F('a', `Pergunte a ${esc(B)} o que ela vai beber.`, `${B}さんは なにを のみますか。`, `${B}さんは なにを…`, `${B}さんは ＿＿を のみますか。`, 'O que você vai beber?', ['なに|nani|何', 'のみ|nomi|飲み']),
@@ -246,22 +245,16 @@ function passos() {
       F('b', `Chame o robô e peça as duas bebidas: a sua e a de ${esc(A)}.`, igual ? `すみません。${bB.n}を ください。${A}さんも ${bA.n}です。` : `すみません。${bB.n}と ${bA.n}を ください。`, 'すみません。…', igual ? `すみません。＿＿＿を ください。${A}さんも ＿＿＿です。` : 'すみません。＿＿＿と ＿＿＿を ください。', igual ? `Com licença. Um ${bB.n}, por favor. Para ${A} também.` : `Com licença. ${bB.n} e ${bA.n}, por favor.`,
         igual ? [bB.k, K_KUDASAI] : [bB.k, bA.k, K_KUDASAI],
         { depois: (txt, root) => poeLog(root, 'r', igual ? `はい。${bB.n}を ふたつですね。` : `はい。${bB.n}と ${bA.n}ですね。`, { pt: igual ? `Certo. Dois ${bB.n}, né?` : `Certo. ${bB.n} e ${bA.n}, né?` }) }),
-      F('a', TEXTO ? 'Peça também alguma coisa para comer. Escolha no cardápio.' : 'Peça também um ケーキ. Diga a frase abaixo.', 'ケーキも ください。', '＿＿＿も…', '＿＿＿も ください。', 'Um(a) …, também, por favor.', [kCom, K_KUDASAI],
-        { depois: (txt, root) => { const c = COMIDAS.find(x => tem(txt, x.k)) || COMIDAS[0]; root.cafe = root.cafe || {}; root.cafe.com1 = c.id;
-            poeLog(root, 'r', `すみません。${c.n}は ありません。`, { pt: `Desculpe. Não temos ${c.n}.` }); } }),
-      F('a', TEXTO ? `Acabou! Peça outra coisa do cardápio (comece com じゃあ: "então…").` : `${c1 ? c1.n : 'O ケーキ'} acabou! Toque no cardápio na comida que você quer e peça com じゃあ ("então…").`, `じゃあ、${c2.n}を ください。`, 'じゃあ、…', 'じゃあ、＿＿＿を ください。', `Então, um(a) ${c2.n}, por favor.`, [COMIDAS.filter(c => c.id !== cf.com1).map(c => c.k).join('|'), K_KUDASAI],
-        { escolhe: 'comida', precisa: () => (cf.com2 && cf.com2 !== cf.com1) ? null : '👆 Primeiro toque, no cardápio, na comida que você quer.',
-          aviso: txt => (c1 && tem(txt, c1.k) && !COMIDAS.some(x => x.id !== c1.id && tem(txt, x.k))) ? `${c1.n} acabou! Peça outra coisa do cardápio.` : null,
-          depois: (txt, root, forcado) => { let c = COMIDAS.find(x => x.id !== root.cafe.com1 && tem(txt, x.k));
-            if (!c && !forcado && c1 && tem(txt, c1.k)) return `${c1.n} acabou! Peça outra coisa do cardápio.`;
-            c = c || ((root.cafe.com2 && root.cafe.com2 !== root.cafe.com1) ? item(root.cafe.com2) : null) || COMIDAS.find(x => x.id !== root.cafe.com1); root.cafe.com2 = c.id;
-            poeLog(root, 'r', 'はい、わかりました。', { pt: 'Certo, entendido.' });
+      F('a', `Peça também a comida que você escolheu: ${cA.ic} ${cA.n}.`, `${cA.n}も ください。`, `${cA.n}も…`, '＿＿＿も ください。', `Um(a) ${cA.n}, também, por favor.`, [cA.k, K_KUDASAI],
+        { depois: (txt, root) => poeLog(root, 'r', `はい。${cA.n}ですね。`, { pt: `Certo. ${cA.n}, né?` }) }),
+      F('b', `Agora peça a comida que você escolheu: ${cB.ic} ${cB.n}.`, `${cB.n}も ください。`, `${cB.n}も…`, '＿＿＿も ください。', `Um(a) ${cB.n}, também, por favor.`, [cB.k, K_KUDASAI],
+        { depois: (txt, root) => { poeLog(root, 'r', 'はい、わかりました。', { pt: 'Certo, entendido.' });
             poeLog(root, 'r', 'おまたせしました。どうぞ。', { pt: 'Desculpem a demora. Aqui está.' });
             poeLog(root, 's', `☕ As bebidas chegaram… mas veio ${errado.n} para ${nome('b')}!`); } }),
       F('b', `O robô errou a sua bebida: veio ${errado.n}. Avise que isso não é ${bB.n}.`, `すみません。これは ${bB.n}じゃないです。`, 'すみません。これは…', `すみません。これは ${bB.n}＿＿＿＿＿。`, `Com licença. Isto não é ${bB.n}.`, ['じゃない|janai|じゃありません|jaarimasen|ではありません|dewaarimasen|ではない|dewanai'],
         { depois: (txt, root) => { poeLog(root, 'r', `あ、すみません！ ${bB.n}を どうぞ。`, { pt: `Ah, desculpe! Aqui está o ${bB.n}.` });
-            poeLog(root, 'r', `この ${c2.n}は だれのですか。`, { pt: `De quem é este(a) ${c2.n}?` }); } }),
-      F('a', 'O robô quer saber de quem é a comida. É sua!', 'わたしのです。', 'わたし…', '＿＿＿のです。', 'É meu.', ['わたしの|watashino|私の'],
+            poeLog(root, 'r', `この ${cA.n}は だれのですか。`, { pt: `De quem é este(a) ${cA.n}?` }); } }),
+      F('a', `O robô quer saber de quem é ${cA.ic} ${cA.n}. É sua!`, 'わたしのです。', 'わたし…', '＿＿＿のです。', 'É meu.', ['わたしの|watashino|私の'],
         { depois: (txt, root) => poeLog(root, 'r', 'はい、どうぞ。', { pt: 'Aqui está.' }) })
     ];
   }
@@ -282,7 +275,7 @@ function passos() {
   ];
   return [];
 }
-function totalDe(root) { const c = root.cafe || {}, b = c.beb || {}; return [b.a || 'kohi', b.b || 'kohi', c.com2 || 'keki'].map(item).filter(Boolean).reduce((s, x) => s + x.p, 0); }
+function totalDe(root) { const c = root.cafe || {}, b = c.beb || {}; return [b.a || 'kohi', b.b || 'kohi', (c.com || {}).a || 'keki', (c.com || {}).b || 'aisu'].map(item).filter(Boolean).reduce((s, x) => s + x.p, 0); }
 
 function concluida() {
   const s = S, f = s.ficha || {};
@@ -421,14 +414,14 @@ function recebe(v) {
   /* quando as duas tocam em "próxima etapa", a aula avança */
   const pr = S.pronto || {};
   if (pr.a === S.etapa && pr.b === S.etapa) { avanca(S.etapa); }
-  /* café: as duas escolheram a bebida → começa a conversa */
-  if (S.etapa === 'cafe' && (S.p || 0) === 0) { const b = (S.cafe || {}).beb || {}; if (b.a && b.b) sync.tx(root => { if (!root || root.etapa !== 'cafe' || (root.p || 0) !== 0) return; root.p = 1; return root; }); }
+  /* café: as duas escolheram bebida e comida → começa a conversa */
+  if (S.etapa === 'cafe' && (S.p || 0) === 0) { const b = (S.cafe || {}).beb || {}, cm_ = (S.cafe || {}).com || {}; if (b.a && b.b && cm_.a && cm_.b) sync.tx(root => { if (!root || root.etapa !== 'cafe' || (root.p || 0) !== 0) return; root.p = 1; return root; }); }
   desenha();
 }
 
 function chave() {
   const s = S, b = s.bat || {}, ab = b.ab || {}, c = s.cafe || {}, cv = s.cv || {}, l = s.lemb || {}, f = s.ficha || {};
-  return JSON.stringify([s.etapa, s.p || 0, concluida(), (s.pronto || {})[EU] || 0, b.vez, b.fase, b.casa, b.err || 0, b.re || 0, conta(ab.a), conta(ab.b), !!(f[EU] && f[EU].ok), (c.beb || {})[EU] || 0, cv.erro || 0, !!l[EU], !!(l.a && l.b), l.ok || 0, c.com2 || 0, s.modo || 'online', (s.ult || {}).k || 0, (s.repete || {}).n || 0]);
+  return JSON.stringify([s.etapa, s.p || 0, concluida(), (s.pronto || {})[EU] || 0, b.vez, b.fase, b.casa, b.err || 0, b.re || 0, conta(ab.a), conta(ab.b), !!(f[EU] && f[EU].ok), (c.beb || {})[EU] || 0, (c.com || {})[EU] || 0, cv.erro || 0, !!l[EU], !!(l.a && l.b), l.ok || 0, c.com2 || 0, s.modo || 'online', (s.ult || {}).k || 0, (s.repete || {}).n || 0]);
 }
 function desenha(forca) {
   const i = iEtapa(), e = ETAPAS[i], P = outro(EU), vz = vezDe();
@@ -437,7 +430,7 @@ function desenha(forca) {
   const c = S.cafe || {}, servido = ['papo', 'conta', 'lembranca'].includes(S.etapa) || (S.etapa === 'cafe' && (S.p || 0) >= 8);
   const av = r => `<div class="c-av${r === EU ? ' eu' : ''}${(vz === r || vz === 'ambas') ? ' vez' : ''}"><div class="face">${avatarHTML(S.jog[r].sel)}</div><b>${esc(nome(r))}${r === EU ? ' (você)' : ''}</b></div>`;
   const meio = e.fundo === 'salao' ? '<div class="mesa">🪑</div>' : e.fundo === 'rua' ? '<div>🏦🏤📚</div><small>カフェは どこ？</small>'
-    : `<div>🤖</div><div class="mesa">${servido ? ((item((c.beb || {}).a) || {}).ic || '☕') + ((item(c.com2) || {}).ic || '') + ((item((c.beb || {}).b) || {}).ic || '☕') : '📋'}</div>`;
+    : `<div>🤖</div><div class="mesa">${servido ? ((item((c.beb || {}).a) || {}).ic || '☕') + ((item((c.com || {}).a) || {}).ic || '') + ((item((c.com || {}).b) || {}).ic || '') + ((item((c.beb || {}).b) || {}).ic || '☕') : '📋'}</div>`;
   const cn = $('cena'); cn.dataset.fundo = e.fundo; cn.innerHTML = `<span class="placa">${e.placa}</span>${av(EU)}<div class="c-meio">${meio}</div>${av(P)}`;
   conversa();
   const k = chave();
@@ -447,7 +440,7 @@ function desenha(forca) {
     painel(); acao();
     if (antes && $('inp')) $('inp').value = antes;
     if (!mesma && (vz === EU || vz === 'ambas')) { const st = passos()[S.p || 0], b = S.bat || {};
-      const noPainel = !concluida() && ((S.etapa === 'batalha' && b.fase === 'perguntar') || (st && (st.tipo === 'toque' || (st.tipo === 'bebida' && !((S.cafe || {}).beb || {})[EU]))));
+      const noPainel = !concluida() && ((S.etapa === 'batalha' && b.fase === 'perguntar') || (st && (st.tipo === 'toque' || (st.tipo === 'bebida' && !(((S.cafe || {}).beb || {})[EU] && ((S.cafe || {}).com || {})[EU])))));
       try { (noPainel ? $('painel') : $('acao')).scrollIntoView({ behavior: 'smooth', block: noPainel ? 'start' : 'nearest' }); } catch (e) {} }
   }
   $('btnRo').textContent = 'Romaji: ' + (ROM ? 'sim' : 'não'); $('btnRo').setAttribute('aria-pressed', String(ROM));
@@ -515,10 +508,10 @@ function minhaFicha(aberta) {
   return `<details class="minha"${aberta || ped ? ' open' : ''}><summary>🔒 Minha ficha (só você vê)</summary><ul>${CASAS.map(c => `<li class="${ab[c.id] ? 'ach' : ''}${ped === c.id ? ' ped' : ''}">${c.ic} ${ja(f[c.id] || '')}${ab[c.id] ? ' ✓' : ''}</li>`).join('')}</ul></details>`;
 }
 function cardapio(tocaBeb, tocaCom) {
-  const c = S.cafe || {}, meu = (c.beb || {})[EU], fora = c.com1;
-  const lin = (x, attr, marca) => { const cls = 'it' + (x.id === meu || marca ? ' meu' : '') + (x.id === fora ? ' fora' : ''), inner = `<span class="nm">${x.ic} ${ja(x.n)}</span><span class="pr">${x.p}えん</span>`;
+  const c = S.cafe || {}, meu = (c.beb || {})[EU], meuC = (c.com || {})[EU];
+  const lin = (x, attr, marca) => { const cls = 'it' + (x.id === meu || x.id === meuC || marca ? ' meu' : ''), inner = `<span class="nm">${x.ic} ${ja(x.n)}</span><span class="pr">${x.p}えん</span>`;
     return attr ? `<button type="button" class="${cls}" ${attr}="${x.id}">${inner}</button>` : `<div class="${cls}">${inner}</div>`; };
-  return `<div class="menu"><h3 lang="ja">メニュー</h3><div class="cols"><div><span class="grp">のみもの · bebidas</span>${BEBIDAS.map(x => lin(x, tocaBeb ? 'data-beb' : null)).join('')}</div><div><span class="grp">たべもの · comidas</span>${COMIDAS.map(x => lin(x, tocaCom && x.id !== fora ? 'data-com' : null, tocaCom && x.id === c.com2)).join('')}</div></div></div>`;
+  return `<div class="menu"><h3 lang="ja">メニュー</h3><div class="cols"><div><span class="grp">のみもの · bebidas</span>${BEBIDAS.map(x => lin(x, tocaBeb ? 'data-beb' : null)).join('')}</div><div><span class="grp">たべもの · comidas</span>${COMIDAS.map(x => lin(x, tocaCom ? 'data-com' : null)).join('')}</div></div></div>`;
 }
 function chutesHTML(b, c) {
   const C_ = CHUTE[c.id], sel = ui.chute || C_.padrao;
@@ -542,10 +535,10 @@ function painel() {
   }
   if (s.etapa === 'cafe') {
     const bB = item(((s.cafe || {}).beb || {}).b), errado = bB && bB.id === 'ocha' ? item('kohi') : item('ocha');
-    h = ((s.p || 0) === 8 && EU === 'b' && bB ? `<div class="errado">Você pediu <b lang="ja">${bB.ic} ${bB.n}</b>, mas chegou <b lang="ja">${errado.ic} ${errado.n}</b>.</div>` : '') + cardapio(st && st.tipo === 'bebida' && !((s.cafe || {}).beb || {})[EU], !!(st && st.escolhe === 'comida' && st.quem === EU && !TEXTO && !s.aguarda)) + ((((s.cafe || {}).beb || {})[EU] && (s.p || 0) <= 1) ? `<div class="row"><button class="btn peq" type="button" data-desfaz="beb">↩ Desfazer a minha bebida <small>(para escolher outra)</small></button></div>` : '');
+    h = ((s.p || 0) === 8 && EU === 'b' && bB ? `<div class="errado">Você pediu <b lang="ja">${bB.ic} ${bB.n}</b>, mas chegou <b lang="ja">${errado.ic} ${errado.n}</b>.</div>` : '') + cardapio(!!(st && st.tipo === 'bebida' && !((s.cafe || {}).beb || {})[EU]), !!(st && st.tipo === 'bebida' && !((s.cafe || {}).com || {})[EU])) + (((((s.cafe || {}).beb || {})[EU] || ((s.cafe || {}).com || {})[EU]) && (s.p || 0) <= 1) ? `<div class="row"><button class="btn peq" type="button" data-desfaz="beb">↩ Desfazer as minhas escolhas <small>(para escolher outras)</small></button></div>` : '');
   }
   if (s.etapa === 'papo') h = `<h3>🔥 Peças para usar no passado</h3><div class="pecas">${[['〜と', 'com (alguém)'], ['〜じかん', 'por … horas'], ['たくさん', 'muito'], ['〜ました', 'fiz'], ['〜でした', 'foi'], ['〜じゃなかったです', 'não foi']].map(x => `<span><b lang="ja">${x[0]}</b> ${x[1]}</span>`).join('')}</div>`;
-  if (s.etapa === 'conta' && concluida()) { const c = s.cafe || {}, its = [(c.beb || {}).a, (c.beb || {}).b, c.com2].map(item).filter(Boolean);
+  if (s.etapa === 'conta' && concluida()) { const c = s.cafe || {}, its = [(c.beb || {}).a, (c.beb || {}).b, (c.com || {}).a, (c.com || {}).b].map(item).filter(Boolean);
     h = `<div class="menu"><h3 lang="ja">レシート</h3>${its.map(x => `<div class="it"><span class="nm">${x.ic} ${ja(x.n)}</span><span class="pr">${x.p}えん</span></div>`).join('')}<div class="it"><span class="nm"><b lang="ja">ぜんぶで</b></span><span class="pr">${totalDe(s)}えん</span></div></div>`; }
   if (s.etapa === 'lembranca' && !((s.lemb || {}).a && s.lemb.b)) h = `<h3>📒 O que você descobriu sobre ${esc(nome(P))}</h3>${tabuleiro(P, { tudo: true })}`;
   p.innerHTML = h; p.hidden = !h;
@@ -555,8 +548,8 @@ $('painel').addEventListener('click', e => {
   const ch = e.target.closest('[data-chute]'); if (ch) { ui.chute = ch.dataset.chute; ui.nivel = 0; ui.tent = 0; painel(); acao(); return; }
   const c = e.target.closest('[data-casa]'); if (c && !c.disabled) { ui.casa = c.dataset.casa; ui.chute = null; ui.nivel = 0; ui.tent = 0; painel(); acao(); const i = $('inp'); if (i) i.focus(); return; }
   const b = e.target.closest('[data-beb]'); if (b) { sync.update({ ['cafe/beb/' + EU]: b.dataset.beb }); return; }
-  if (e.target.closest('[data-desfaz]')) { sync.tx(root => { if (!root || root.etapa !== 'cafe' || (root.p || 0) > 1 || !root.cafe || !root.cafe.beb || !root.cafe.beb[EU]) return; delete root.cafe.beb[EU]; root.p = 0; return root; }); return; }
-  const cm = e.target.closest('[data-com]'); if (cm) { sync.update({ 'cafe/com2': cm.dataset.com }); return; }
+  if (e.target.closest('[data-desfaz]')) { sync.tx(root => { if (!root || root.etapa !== 'cafe' || (root.p || 0) > 1 || !root.cafe) return; if (root.cafe.beb) delete root.cafe.beb[EU]; if (root.cafe.com) delete root.cafe.com[EU]; root.p = 0; return root; }); return; }
+  const cm = e.target.closest('[data-com]'); if (cm) { sync.update({ ['cafe/com/' + EU]: cm.dataset.com }); return; }
   const pr = e.target.closest('[data-pred]'); if (pr && !pr.disabled) { const i = +pr.dataset.pred, cv = S.cv || {};
     if (i === cv.alvo) sync.tx(root => { if (!root || root.etapa !== 'convite' || (root.p || 0) !== 3) return; root.p = 4; poeLog(root, 's', '🚶 Vocês chegaram ao カフェ！'); return root; });
     else sync.update({ 'cv/erro': (cv.erro || 0) + 1, 'cv/ult': i }); }
@@ -704,9 +697,9 @@ function acao() {
   if (s.etapa === 'lembranca') return acaoLembranca();
   const st = passos()[s.p || 0];
   if (st.tipo === 'bebida') {
-    const meu = item(((s.cafe || {}).beb || {})[EU]);
-    a.innerHTML = meu ? `<div class="vez"><b>Você escolheu ${meu.ic} <span lang="ja">${meu.n}</span></b><p>Guarde segredo: ${Pn} vai ter que perguntar.</p></div>${espera(`Esperando ${Pn} escolher…`)}`
-      : `<div class="vez"><b>👆 Escolha a sua bebida</b><p>Toque no cardápio, em segredo. Depois vocês perguntam uma à outra.</p></div>`;
+    const meu = item(((s.cafe || {}).beb || {})[EU]), meuC = item(((s.cafe || {}).com || {})[EU]);
+    a.innerHTML = meu && meuC ? `<div class="vez"><b>Você escolheu ${meu.ic} <span lang="ja">${meu.n}</span> e ${meuC.ic} <span lang="ja">${meuC.n}</span></b><p>Guarde segredo: ${Pn} vai ter que perguntar.</p></div>${espera(`Esperando ${Pn} escolher…`)}`
+      : `<div class="vez"><b>👆 Escolha ${meu ? 'a sua comida' : meuC ? 'a sua bebida' : 'uma bebida e uma comida'}</b><p>Toque no cardápio, em segredo.${meu ? ` Você já escolheu ${meu.ic} ${meu.n}.` : ''}${meuC ? ` Você já escolheu ${meuC.ic} ${meuC.n}.` : ''}</p></div>`;
     return;
   }
   if (st.quem !== EU) { a.innerHTML = `<div class="vez"><b>Vez de ${Pn}</b><p>${st.tipo === 'toque' ? 'Ela está procurando o café no mapa.' : st.tipo === 'preco' ? 'Ela está ouvindo o preço. Ouça você também!' : 'Ouça o que ela diz e leia aqui na conversa.'}</p></div>${espera(`${Pn} está respondendo…`)}`; return; }
@@ -807,7 +800,7 @@ function acaoLembranca() {
     const bloco = (autor, alvo) => `<h3>${esc(nome(autor))} escreveu sobre ${esc(nome(alvo))}</h3><div class="sobre">${[0, 1].map(i => { const k = autor + i, marcado = ok[k];
       return `<div class="fr${marcado ? ' ok' : ''}"><span>${ja(l[autor]['f' + i] || '')}</span>${marcado ? '<b>✓</b>' : alvo === EU ? `<button class="btn peq" type="button" data-ok="${k}" lang="ja">はい、そうです！</button>` : ''}</div>`; }).join('')}</div>`;
     a.classList.remove('minha-vez');
-    a.innerHTML = `<div class="foto"><div class="duo"><div class="face">${avatarHTML(S.jog[EU].sel)}</div><span>${(item((c.beb || {}).a) || {}).ic || '☕'}${(item(c.com2) || {}).ic || '🍰'}${(item((c.beb || {}).b) || {}).ic || '☕'}</span><div class="face">${avatarHTML(S.jog[P].sel)}</div></div>
+    a.innerHTML = `<div class="foto"><div class="duo"><div class="face">${avatarHTML(S.jog[EU].sel)}</div><span>${(item((c.beb || {}).a) || {}).ic || '☕'}${(item((c.com || {}).a) || {}).ic || '🍰'}${(item((c.com || {}).b) || {}).ic || '🍨'}${(item((c.beb || {}).b) || {}).ic || '☕'}</span><div class="face">${avatarHTML(S.jog[P].sel)}</div></div>
       <div class="leg" lang="ja">${esc(nome(EU))} と ${esc(nome(P))} · カフェで<br>${data}</div></div>
       ${bloco(P, EU)}<p class="sub">Está certo o que ${esc(Pn)} escreveu sobre você? Confirme com はい、そうです！</p>${bloco(EU, P)}
       ${Object.values(S.log || {}).some(m => m.aud && !m.rep) ? '<div class="row" style="justify-content:center"><button class="btn" type="button" id="reouve">🎧 Reouvir as gravações da aula</button></div>' : ''}
