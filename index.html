@@ -171,8 +171,8 @@ footer a:hover{color:var(--pink)}
       <article class="u-card idiomas">
         <p class="u-tag">comunidade</p>
         <h3><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="4.5"/><ellipse cx="12" cy="12" rx="10" ry="3.5" transform="rotate(-25 12 12)"/></svg> Planeta Utopia<small>Espaço vivo de prática, jogos e troca cultural.</small></h3>
-        <ul class="dest"><li>Salão de interação ao vivo</li><li>Jogos para treinar o idioma</li><li><a href="/paralelos/" style="position:relative;z-index:1;color:inherit;text-decoration:none;border-bottom:1px solid var(--line)">Mural da comunidade: relatos e trocas</a></li></ul>
-        <a class="u-go" href="/idiomas/planeta-utopia/salao/">Entrar no Planeta Utopia →</a>
+        <ul class="dest"><li>Salão de interação ao vivo</li><li>Jogos para treinar o idioma</li><li>Seu avatar, para falar de si na primeira pessoa</li><li><a href="/paralelos/" style="position:relative;z-index:1;color:inherit;text-decoration:none;border-bottom:1px solid var(--line)">Mural da comunidade: relatos e trocas</a></li></ul>
+        <div class="u-go-row"><a class="u-go" id="avatar-btn" href="/idiomas/avatar/">Crie seu avatar →</a><a class="u-go" href="/idiomas/planeta-utopia/salao/">Entrar no Planeta Utopia →</a></div>
       </article>
       <article class="u-card travessia">
         <p class="u-tag">viagem</p>
@@ -230,6 +230,11 @@ footer a:hover{color:var(--pink)}
     if(!m.aula){t='Mapa '+(i+1)+' · '+m.titulo;h=m.aulaHref;break}
     if(!m.prova){t='Prova do mapa '+(i+1)+' · '+m.titulo;h=m.testeHref;break}}
   if(t){b.href=h;b.textContent='Continuar: '+t+' →';b.hidden=false;row.classList.add('tem')}
+}catch(e){}})();
+/* Planeta Utopia: "Crie seu avatar" vira "Edite seu avatar" quando já existe um salvo */
+(function(){try{
+  var v=localStorage.getItem('utopiaAvatar1'),av=v==null?null:JSON.parse(v),b=document.getElementById('avatar-btn');
+  if(b&&av&&av.sel){b.textContent='Edite seu avatar →'}
 }catch(e){}})();
 </script>
 <script src="/entrar.js" defer></script>
