@@ -225,7 +225,7 @@ footer a:hover{color:var(--pink)}
 (function(){try{
   var ler=function(k){try{var v=localStorage.getItem(k);return v==null?null:JSON.parse(v)}catch(e){return null}};
   var av=ler('utopiaAvatar1'),E=window.UniTrilha.estado(),b=document.getElementById('caderno-cont'),row=b.parentNode,t=null,h=null;
-  if(!(av&&av.sel)&&!E.some(function(m){return m.aula||m.prova})){t='Crie seu avatar';h='/idiomas/avatar/';}
+  if(!(av&&av.sel)&&!E.some(function(m){return m.aula||m.prova})){b.href='/idiomas/japones/';b.textContent='Mapas →';b.hidden=false;row.classList.add('tem');return}
   else for(var i=0;i<E.length;i++){var m=E[i];
     if(!m.aula){t='Mapa '+(i+1)+' · '+m.titulo;h=m.aulaHref;break}
     if(!m.prova){t='Prova do mapa '+(i+1)+' · '+m.titulo;h=m.testeHref;break}}
