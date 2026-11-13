@@ -36,6 +36,9 @@ body{font-family:'Zen Maru Gothic',sans-serif;color:var(--ink);background:var(--
 .manifesto .lead{font-family:'Baloo 2',cursive;font-weight:600;font-size:clamp(19px,3vw,24px);line-height:1.55;max-width:680px;margin-bottom:22px;}
 .manifesto p{max-width:660px;color:var(--ink-soft);margin-bottom:14px;}
 .manifesto .sign{font-family:'Baloo 2',cursive;font-size:17px;color:var(--pink-deep);margin-top:20px;}
+.manifesto .assinatura{display:flex;align-items:center;gap:18px;margin-top:26px;max-width:660px;}
+.manifesto .assinatura img{width:88px;height:88px;border-radius:50%;object-fit:cover;object-position:center 30%;flex:none;border:3px solid #fff;box-shadow:0 0 0 1.5px rgba(58,43,56,.18),0 6px 16px -8px rgba(58,43,56,.35);}
+.manifesto .assinatura .sign{margin:0;}
 
 .stitle{font-family:'Baloo 2',cursive;font-weight:700;font-size:clamp(23px,3.8vw,30px);line-height:1.2;margin-bottom:12px;}
 .sintro{max-width:640px;color:var(--ink-soft);margin-bottom:30px;}
@@ -57,28 +60,19 @@ body{font-family:'Zen Maru Gothic',sans-serif;color:var(--ink);background:var(--
 .fifth p{font-size:13.5px;color:var(--ink-soft);max-width:520px;margin:0 auto;}
 .elemental .nomapa{font-size:13px;opacity:.85;border-top:1px dashed currentColor;padding-top:8px;margin-top:10px}
 /* práticas do método (vieram da página de idiomas) */
-.pratica{margin-top:16px;background:#fff;border:1px solid var(--blush-2);border-radius:18px;padding:22px;}
-.pratica h3{font-family:'Baloo 2',cursive;font-size:16px;margin-bottom:4px;}
-.pratica .sub{font-size:13px;color:var(--ink-soft);margin-bottom:12px;}
-.prow{display:grid;grid-template-columns:110px 1fr;gap:4px 14px;padding:12px 0;border-top:1px dashed var(--blush-2);}
-.prow:first-of-type{border-top:0;}
-.prow .st{font-size:12px;color:var(--pink);font-weight:600;}
-.prow h4{font-family:'Baloo 2',cursive;font-size:15px;font-weight:600;line-height:1.3;}
-.prow h4 a{color:inherit;text-decoration-color:var(--pink);text-underline-offset:3px;}
-.prow p{font-size:13.5px;color:var(--ink-soft);grid-column:2;}
-@media (max-width:520px){.prow{grid-template-columns:1fr;}.prow p{grid-column:1;}}
 
 /* universos detalhados */
 .udetail{padding:48px 0;border-top:1px solid var(--blush-2);}
-.u{background:#fff;border:1px solid var(--blush-2);border-radius:22px;padding:26px;margin-bottom:16px;}
-.u .tagname{font-size:11px;letter-spacing:2.5px;text-transform:uppercase;color:var(--pink);margin-bottom:8px;}
-.u h3{font-family:'Baloo 2',cursive;font-size:clamp(20px,3.4vw,25px);line-height:1.3;margin-bottom:10px;}
-.u > p{font-size:14.5px;color:var(--ink-soft);margin-bottom:18px;max-width:600px;}
-.items{display:flex;flex-direction:column;gap:10px;}
-.item{border:1px solid var(--blush-2);border-radius:14px;padding:13px 16px;background:var(--cream);}
-.item .st{font-size:11px;letter-spacing:1.5px;text-transform:uppercase;color:var(--pink-deep);}
-.item h4{font-size:14.5px;font-weight:600;margin:2px 0;}
-.item p{font-size:13px;color:var(--ink-soft);}
+.frentes{display:flex;flex-direction:column;gap:14px;}
+.frente{--c:var(--pink);display:grid;grid-template-columns:44px 1fr;gap:2px 14px;background:#fff;border:1px solid var(--blush-2);border-left:4px solid var(--c);border-radius:18px;padding:20px 22px;}
+.frente .num{font-family:'Baloo 2',cursive;font-weight:700;font-size:22px;line-height:1.1;color:var(--c);grid-row:1 / span 4;}
+.frente > :not(.num){grid-column:2;}
+.frente h3{font-family:'Baloo 2',cursive;font-size:clamp(20px,3.4vw,24px);line-height:1.25;margin:0 0 4px;}
+.frente .desc{font-size:14.5px;color:var(--ink-soft);max-width:600px;margin:0 0 14px;}
+.frente .go{justify-self:start;font-size:14px;font-weight:600;color:var(--c);text-decoration:none;border-bottom:1.5px solid var(--c);padding-bottom:1px;}
+.frente .go:hover{opacity:.8;}
+.frente.f-idiomas{--c:#4f7a58;}.frente.f-utopia{--c:#b5514d;}.frente.f-travessia{--c:#8f6b1d;}.frente.f-tesouros{--c:#7360b0;}.frente.f-paralelos{--c:#5b6b8a;}
+@media (max-width:520px){.frente{grid-template-columns:1fr;padding:18px;}.frente .num{grid-row:auto;font-size:18px;}.frente > :not(.num){grid-column:1;}}
 
 .quote{padding:56px 0;text-align:center;border-top:1px solid var(--blush-2);}
 .quote p{font-family:'Baloo 2',cursive;font-weight:600;font-size:clamp(19px,3.2vw,26px);line-height:1.5;color:var(--ink);max-width:600px;margin:0 auto;}
@@ -118,7 +112,10 @@ body{font-family:'Zen Maru Gothic',sans-serif;color:var(--ink);background:var(--
     <p class="lead">Estou muito animada para te contar sobre este projeto, que integra tantas e tantas coisas em uma só.</p>
     <p>O objetivo do que construo aqui é te ajudar, através dos idiomas e das viagens, a realmente se conectar, se expressar, se posicionar, interagir — e comunicar sua essência com segurança. Aprendemos com vivências da vida real, falando de si na primeira pessoa, e só então saímos para conhecer e explorar novos lugares e pessoas.</p>
     <p>Se os nossos caminhos se cruzaram neste tempo e espaço, podemos ser um ponto de transformação no microcosmo um do outro.</p>
-    <p class="sign">Vamos juntos? Unir tempo, espaço e versos. — Aline Kikuti</p>
+    <div class="assinatura">
+      <img src="/sobre/aline.jpg" alt="Aline Kikuti" width="88" height="88" loading="lazy" decoding="async">
+      <p class="sign">Vamos juntos? Unir tempo, espaço e versos. — Aline Kikuti</p>
+    </div>
   </section>
 
   <!-- QUADRADO ELEMENTAL -->
@@ -166,56 +163,49 @@ body{font-family:'Zen Maru Gothic',sans-serif;color:var(--ink);background:var(--
       <h3>✦ E o quinto elemento: o Espírito</h3>
       <p>Não vem pronto — é cocriado. Nasce quando os quatro se encontram numa interação viva, cada pessoa dando corpo ao seu avatar e falando na primeira pessoa.</p>
     </div>
-
-    <div class="pratica">
-      <h3>Como cada elemento vira prática</h3>
-      <p class="sub">As ferramentas do método, do jeito que aparecem nas aulas.</p>
-      <div class="prow"><span class="st">🔥 fogo</span><h4><a href="/idiomas/japones/">Mapas de contexto</a></h4><p>Situações reais viram mapas com peças, moldes e radar de escuta. Aprenda a lógica uma vez e ela abre centenas de frases.</p></div>
-      <div class="prow"><span class="st">💧 água</span><h4>Quebra-cabeça da fluência</h4><p>Toda palavra que faltar na hora de falar vira sua lista. Você sempre busca o que faltou — e avança um pouco por dia.</p></div>
-      <div class="prow"><span class="st">🌱 terra</span><h4><a href="/paralelos/">Desafio do diário</a></h4><p>Três acontecimentos, três pensamentos, todo dia, no idioma alvo. Aos poucos, a língua começa a sair sozinha.</p></div>
-      <div class="prow"><span class="st">🌬 ar</span><h4>As 5 gavetas</h4><p>Quando a conversa aperta: respirar, declarar, pedir ajuste, confirmar e sair com elegância. Ficam no botão Ar · socorro, dentro de cada aula.</p></div>
-      <div class="prow"><span class="st">✦ espírito</span><h4>Prova em cena e troca real</h4><p>No fim de cada mapa, a cena sem ajuda, com o seu avatar, vale um carimbo no passaporte. Depois vem o que nenhuma aula substitui: a conversa de verdade com uma pessoa.</p></div>
-    </div>
   </section>
 
-  <!-- DETALHAMENTO DOS UNIVERSOS -->
+  <!-- AS CINCO FRENTES -->
   <section class="udetail">
-    <p class="eyebrow">o que existe hoje</p>
-    <h2 class="stitle">Dentro de cada universo</h2>
-    <p class="sintro">O mapa completo do que já está de pé, e o que ainda está a caminho.</p>
+    <p class="eyebrow">o que existe aqui</p>
+    <h2 class="stitle">As cinco frentes</h2>
+    <p class="sintro">Cada uma tem um jeito de te ajudar a se comunicar com mais presença.</p>
 
-    <div class="u">
-      <p class="tagname">unirversos idiomas</p>
-      <h3>O mapa está aberto. Você explora.</h3>
-      <p>Trilha digital de idiomas: explore o mapa de contexto e teste suas habilidades num jogo de sobrevivência da vida real. Unir teoria e prática é como se aprende de verdade, e o Quadrado Elemental é a base disso.</p>
-      <div class="items">
-        <div class="item"><span class="st">autoguiado</span><h4><a href="/idiomas/japones/">Mapas de contexto</a></h4><p>Doze mapas em japonês, numa trilha em ordem, e trilhas iniciais em inglês e português. Peças, moldes e radar de escuta.</p></div>
-        <div class="item"><span class="st">autoguiado · carimbos</span><h4><a href="/idiomas/planeta-utopia/">Planeta Utopia</a></h4><p>O passaporte da trilha: cada mapa termina numa prova sem ajuda, e cada prova vale um carimbo. O seu avatar sobe de nível e ganha XP pelo caminho.</p></div>
-        <div class="item"><span class="st">grátis</span><h4><a href="/idiomas/aula-zero/">Aula Zero</a></h4><p>As chaves antes dos mapas: afirmar, negar, perguntar, os verbos e como pedir, com o seu avatar.</p></div>
-        <div class="item"><span class="st">passo zero</span><h4><a href="/idiomas/autoanalise/">Autoanálise sincerona</a></h4><p>Trinta minutos, um copão de água e um coração aberto. Antes de qualquer conteúdo, a gente começa por você.</p></div>
-        <div class="item"><span class="st">vagas abertas</span><h4>Do Caos ao Cosmos</h4><p>Acompanhamento ao vivo, individual, com quests mensais.</p></div>
-      </div>
-    </div>
+    <div class="frentes">
+      <article class="frente f-idiomas">
+        <span class="num">01</span>
+        <h3>Idiomas</h3>
+        <p class="desc">Trilhas de estudo para a vida real.</p>
+        <a class="go" href="/idiomas/">Abrir Idiomas →</a>
+      </article>
 
-    <div class="u">
-      <p class="tagname">unirversos travessia</p>
-      <h3>Eu entrego o guia. Você vive as histórias.</h3>
-      <p>Um guia pessoal para o Japão que se adapta ao seu estilo: o calendário da viagem, o cronograma de agendamento dos ingressos, o acompanhamento das reservas e o mini guia de sobrevivência. Este guia é o que eu gostaria de ter tido.</p>
-      <div class="items">
-        <div class="item"><span class="st">amostra</span><h4>Mini guia de sobrevivência</h4><p>As informações indispensáveis num lugar só, com dicas de quem viveu do lado de dentro.</p></div>
-        <div class="item"><span class="st">em breve</span><h4>App e revista-agenda</h4><p>Roteiro, espaço para carimbos, curiosidades e um cantinho para escrever sua memória de uma frase.</p></div>
-        <div class="item"><span class="st">novo</span><h4><a href="/loja/revista/">Revista Memórias, nos Tesouros</a></h4><p>Depois da viagem: escolha os lugares e receba a revista com o seu nome na capa.</p></div>
-      </div>
-    </div>
+      <article class="frente f-utopia">
+        <span class="num">02</span>
+        <h3>Planeta Utopia</h3>
+        <p class="desc">Espaço vivo de prática, jogos e troca cultural.</p>
+        <a class="go" href="/idiomas/planeta-utopia/salao/">Entrar no Planeta Utopia →</a>
+      </article>
 
-    <div class="u">
-      <p class="tagname">unirversos paralelos</p>
-      <h3>Todo mundo carrega mundos que ninguém vê.</h3>
-      <p>Um diário trilíngue e um canal de escuta para pensar em voz alta sobre aprender, ensinar e recomeçar — o Quadrado Elemental aplicado a mim mesma.</p>
-      <div class="items">
-        <div class="item"><span class="st">diário</span><h4><a href="/paralelos/">Diário trilíngue</a></h4><p>Três acontecimentos, três pensamentos, todo dia, em três línguas. No Instagram.</p></div>
-        <div class="item"><span class="st">reflexões</span><h4><a href="https://substack.com/@unirversosparalelos" target="_blank" rel="noopener" style="color:var(--ink);text-decoration:none;border-bottom:2px solid var(--pink);">Reflexões em Voz Alta</a></h4><p>Um canto para desacelerar e dar lugar à presença, observação e escrita descompromissada. Fragmentos do cotidiano, notas de identidade e pensamentos em voz alta.</p></div>
-      </div>
+      <article class="frente f-travessia">
+        <span class="num">03</span>
+        <h3>Travessia</h3>
+        <p class="desc">Sua ferramenta de planejamento de viagem.</p>
+        <a class="go" href="/travessia/">Conhecer a Travessia →</a>
+      </article>
+
+      <article class="frente f-tesouros">
+        <span class="num">04</span>
+        <h3>Tesouros</h3>
+        <p class="desc">Nossa lojinha de achadinhos selecionados do Japão.</p>
+        <a class="go" href="/loja/">Ver os Tesouros →</a>
+      </article>
+
+      <article class="frente f-paralelos">
+        <span class="num">05</span>
+        <h3>Paralelos</h3>
+        <p class="desc">O feed da comunidade e o Substack.</p>
+        <a class="go" href="/paralelos/">Abrir os Paralelos →</a>
+      </article>
     </div>
   </section>
 
