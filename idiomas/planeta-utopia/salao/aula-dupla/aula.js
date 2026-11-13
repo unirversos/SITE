@@ -119,8 +119,8 @@ const CASAS = [
     campo: { perg: 'O que você costuma fazer no fim de semana?', antes: 'しゅうまつは たいてい', depois: '', ph: 'えいがを みます',
       ideias: [['えいがを みます', 'vejo filme'], ['ほんを よみます', 'leio livro'], ['おんがくを ききます', 'ouço música'], ['スポーツを します', 'faço esporte'], ['かいものを します', 'faço compras'], ['うちで ねます', 'durmo em casa'], ['ともだちと はなします', 'converso com amigos']],
       valor: x => { x = romaParaKana(x).replace(/[。.]$/, '').replace(/^(しゅうまつは\s*)?(たいてい\s*)?/, '').trim(); return x ? 'たいてい ' + x : ''; } },
-    perg: { m: () => 'しゅうまつは たいてい なにを しますか。', d1: () => 'しゅうまつは たいてい…', d2: () => 'しゅうまつは たいてい ＿＿を しますか。', pt: 'O que você costuma fazer no fim de semana?', k: ['しゅうまつ|shumatsu|週末', 'なに|nani|何'] },
-    resp: { d2: 'たいてい ＿＿＿ます。', k: ['ます|masu|ません|masen'] } },
+    perg: { m: () => 'しゅうまつは ほんを よみますか。', d1: () => 'しゅうまつは ほんを…', d2: () => 'しゅうまつは ほんを ＿＿＿か。', pt: 'No fim de semana, você lê livro? (chute até acertar)', k: ['しゅうまつ|shumatsu|週末', 'ます|masu'] },
+    resp: { d2: 'たいてい ＿＿＿ます。', k: ['ます|masu|ません|masen|いいえ|iie'] } },
   { id: 'cafe', ic: '☕', rot: 'コーヒー', pt: 'se ela toma muito café',
     campo: { perg: 'Você toma café com que frequência?', antes: 'コーヒーを', depois: '', ph: 'よく のみます',
       ideias: [['まいにち のみます', 'todo dia'], ['よく のみます', 'muito'], ['ときどき のみます', 'às vezes'], ['あまり のみません', 'quase não tomo'], ['ぜんぜん のみません', 'nunca tomo']],
@@ -353,6 +353,13 @@ function semLigacao() {
   $('entrada').innerHTML = '<h2>Não consegui ligar as duas telas</h2><p class="sub">Confira a internet e recarregue a página. Se continuar, avise a professora: pode ser a permissão do banco para esta aula.</p><div class="row"><button class="btn pri" type="button" onclick="location.reload()">Recarregar</button></div>';
 }
 
+/* ---------- fim de semana: chute até acertar ---------- */
+const FDS_PADRAO = 'ほんを よみます';
+const normAtiv = x => romaParaKana(String(x || '').normalize('NFKC')).replace(/[。.?？!！]/g, '').replace(/しゅうまつは|週末は/g, '').replace(/たいてい/g, '').replace(/\s+/g, '').replace(/か$/, '').trim();
+const fdsCards = () => CASAS.find(c => c.id === 'fds').campo.ideias;
+const bonito = g => { const c = fdsCards().find(x => normAtiv(x[0]) === g); return c ? c[0] : g; };
+const fdsNeg = ch => String(ch).replace(/ます$/, 'ません');
+
 /* ================= desenho da tela ================= */
 let ui = { chave: '', nivel: 0, tent: 0, casa: null, verPreco: false, gr: null };
 let falados = null, logChave = '';
@@ -393,7 +400,7 @@ function recebe(v) {
 
 function chave() {
   const s = S, b = s.bat || {}, ab = b.ab || {}, c = s.cafe || {}, cv = s.cv || {}, l = s.lemb || {}, f = s.ficha || {};
-  return JSON.stringify([s.etapa, s.p || 0, concluida(), (s.pronto || {})[EU] || 0, b.vez, b.fase, b.casa, conta(ab.a), conta(ab.b), !!(f[EU] && f[EU].ok), (c.beb || {})[EU] || 0, cv.erro || 0, !!l[EU], !!(l.a && l.b), l.ok || 0, c.com2 || 0, s.modo || 'online', (s.ult || {}).k || 0, (s.repete || {}).n || 0]);
+  return JSON.stringify([s.etapa, s.p || 0, concluida(), (s.pronto || {})[EU] || 0, b.vez, b.fase, b.casa, b.err || 0, b.re || 0, conta(ab.a), conta(ab.b), !!(f[EU] && f[EU].ok), (c.beb || {})[EU] || 0, cv.erro || 0, !!l[EU], !!(l.a && l.b), l.ok || 0, c.com2 || 0, s.modo || 'online', (s.ult || {}).k || 0, (s.repete || {}).n || 0]);
 }
 function desenha(forca) {
   const i = iEtapa(), e = ETAPAS[i], P = outro(EU), vz = vezDe();
@@ -408,7 +415,7 @@ function desenha(forca) {
   const k = chave();
   if (forca || k !== ui.chave) {
     const mesma = k === ui.chave, antes = mesma && $('inp') ? $('inp').value : '';
-    if (!mesma) { paraCaptura(); ui = { chave: k, nivel: 0, tent: 0, casa: null, verPreco: false, gr: null }; }
+    if (!mesma) { paraCaptura(); ui = { chave: k, nivel: 0, tent: 0, casa: null, verPreco: false, gr: null, chute: null, escCards: ui.escCards }; if (S.etapa === 'batalha' && (S.bat || {}).re) ui.casa = S.bat.re; }
     painel(); acao();
     if (antes && $('inp')) $('inp').value = antes;
     if (!mesma && (vz === EU || vz === 'ambas')) { const st = passos()[S.p || 0], b = S.bat || {};
@@ -485,12 +492,18 @@ function cardapio(tocaBeb, tocaCom) {
     return attr ? `<button type="button" class="${cls}" ${attr}="${x.id}">${inner}</button>` : `<div class="${cls}">${inner}</div>`; };
   return `<div class="menu"><h3 lang="ja">メニュー</h3><div class="cols"><div><span class="grp">のみもの · bebidas</span>${BEBIDAS.map(x => lin(x, tocaBeb ? 'data-beb' : null)).join('')}</div><div><span class="grp">たべもの · comidas</span>${COMIDAS.map(x => lin(x, tocaCom && x.id !== fora ? 'data-com' : null, tocaCom && x.id === c.com2)).join('')}</div></div></div>`;
 }
+function chutesHTML(b) {
+  const sel = ui.chute || FDS_PADRAO;
+  return `<div class="chutes"><div class="row" style="justify-content:space-between;align-items:center"><b>🎯 Chute o que ${esc(nome(outro(EU)))} faz no fim de semana</b><button class="lk" type="button" data-escondecards aria-expanded="${!ui.escCards}">${ui.escCards ? '👀 Mostrar os cards' : '🙈 Esconder os cards'}</button></div>`
+    + (b.re ? `<p class="fb">ちがいます！ Ainda não é isso (${b.err || 1} ${(b.err || 1) === 1 ? 'erro' : 'erros'}). Chute outra coisa!</p>` : '')
+    + (ui.escCards ? '<p class="sub">Cards escondidos: invente o seu chute e escreva ou fale a pergunta.</p>' : `<div class="ideias">${fdsCards().map(([j, pt]) => `<button type="button" class="${j === sel ? 'sel' : ''}" data-chute="${esc(j)}" title="${esc(pt)}" aria-pressed="${j === sel}"><span lang="ja">${esc(j)}</span> · ${esc(pt)}</button>`).join('')}</div>`) + '</div>';
+}
 function painel() {
   const p = $('painel'), s = S, P = outro(EU), st = passos()[s.p || 0]; let h = '';
   if (s.etapa === 'ficha' && (s.ficha || {})[EU] && s.ficha[EU].ok) h = minhaFicha(true);
   if (s.etapa === 'batalha') {
     const b = s.bat || {}, toca = !b.fim && b.fase === 'perguntar' && b.vez === EU && !s.aguarda;
-    h = `<div class="row" style="justify-content:space-between"><h3>🎯 Tabuleiro de ${esc(nome(P))}</h3><span class="sub">${conta((b.ab || {})[P])} de ${CASAS.length} abertas</span></div>${tabuleiro(P, { toca })}${minhaFicha()}`;
+    h = `<div class="row" style="justify-content:space-between"><h3>🎯 Tabuleiro de ${esc(nome(P))}</h3><span class="sub">${conta((b.ab || {})[P])} de ${CASAS.length} abertas</span></div>${tabuleiro(P, { toca })}${toca && ui.casa === 'fds' ? chutesHTML(b) : ''}${minhaFicha()}`;
   }
   if (s.etapa === 'convite') {
     const cv = s.cv || {}, sabe = EU === 'a', toca = !sabe && st && st.tipo === 'toque', achou = concluida();
@@ -510,6 +523,8 @@ function painel() {
   p.innerHTML = h; p.hidden = !h;
 }
 $('painel').addEventListener('click', e => {
+  if (e.target.closest('[data-escondecards]')) { ui.escCards = !ui.escCards; painel(); return; }
+  const ch = e.target.closest('[data-chute]'); if (ch) { ui.chute = ch.dataset.chute; ui.nivel = 0; ui.tent = 0; painel(); acao(); return; }
   const c = e.target.closest('[data-casa]'); if (c && !c.disabled) { ui.casa = c.dataset.casa; ui.nivel = 0; ui.tent = 0; painel(); acao(); const i = $('inp'); if (i) i.focus(); return; }
   const b = e.target.closest('[data-beb]'); if (b) { sync.update({ ['cafe/beb/' + EU]: b.dataset.beb }); return; }
   if (e.target.closest('[data-desfaz]')) { sync.tx(root => { if (!root || root.etapa !== 'cafe' || (root.p || 0) > 1 || !root.cafe || !root.cafe.beb || !root.cafe.beb[EU]) return; delete root.cafe.beb[EU]; root.p = 0; return root; }); return; }
@@ -711,13 +726,21 @@ function acaoBatalha() {
   const escreve = (txt, muda) => sync.tx(root => { if (!root || root.etapa !== 'batalha' || !root.bat || root.bat.fase !== b.fase || (root.bat.vez || 'b') !== vez || root.aguarda) return; poeLog(root, EU, txt); muda(root.bat); return root; }).then(() => null);
   const fala_ = (payload, extra) => sync.tx(root => { if (!root || root.etapa !== 'batalha' || !root.bat || root.bat.fase !== b.fase || (root.bat.vez || 'b') !== vez || root.aguarda) return;
     const k = poeLogK(root, EU, '', Object.assign({ v: 1 }, payload)), bt = root.bat; root.repete = null; root.ult = Object.assign({ kind: 'bat', etapa: 'batalha', fase: b.fase, de: EU, k }, extra);
-    if (b.fase === 'perguntar') { bt.casa = extra.casa; bt.fase = 'responder'; }
-    else { bt.ab = bt.ab || {}; bt.ab[EU] = bt.ab[EU] || {}; bt.ab[EU][extra.casa] = true; bt.fase = 'reagir'; }
+    if (b.fase === 'perguntar') { bt.casa = extra.casa; bt.fase = 'responder'; bt.chute = extra.chute || null; }
+    else if (extra.miss) { bt.fase = 'perguntar'; bt.re = extra.casa; bt.err = (bt.err || 0) + 1; bt.casa = null; bt.chute = null; }
+    else { bt.ab = bt.ab || {}; bt.ab[EU] = bt.ab[EU] || {}; bt.ab[EU][extra.casa] = true; bt.fase = 'reagir'; bt.re = null; bt.err = 0; bt.chute = null; }
     return root; }).then(() => null);
   if (b.fase === 'perguntar') {
     if (vez !== EU) { a.innerHTML = `<div class="vez"><b>Vez de ${esc(Pn)}</b><p>Ela vai fazer uma pergunta sobre você. A resposta está na sua ficha.</p></div>${espera(`${esc(Pn)} está escolhendo a pergunta…`)}`; return; }
     const c = casaDe(ui.casa);
     if (!c) { a.innerHTML = `<div class="vez"><b>🎯 Sua vez de perguntar</b><p>Toque numa casa fechada (？) do tabuleiro de ${esc(Pn)}.</p></div>`; return; }
+    if (c.id === 'fds') {                                           /* chute: pergunta sim/não, repete até acertar */
+      const ch = ui.chute || FDS_PADRAO, sp = ch.split(' '), obj = sp.slice(0, -1).join(' '), pt = (fdsCards().find(x => x[0] === ch) || [0, ''])[1];
+      uiDizer({ instr: `Chute o que ${esc(Pn)} faz no fim de semana. ${b.re ? 'Errou! Chute de novo.' : 'Escolha um card (ou escreva o seu chute) e pergunte.'}`, m: `しゅうまつは ${ch}か。`, d1: `しゅうまつは ${obj || ch}…`, d2: `しゅうまつは ${obj} ＿＿＿か。`,
+        pt: pt ? `No fim de semana: ${pt}?` : c.perg.pt, k: c.perg.k,
+        envia: txt => { const g = bonito(normAtiv(txt) || normAtiv(ch)); return escreve(txt, bt => { bt.casa = c.id; bt.fase = 'responder'; bt.chute = g; }); }, enviaAud: p => fala_(p, { casa: c.id, chute: bonito(normAtiv(ch)) }) });
+      return;
+    }
     uiDizer({ instr: `Pergunte a ${esc(Pn)}: <b>${esc(c.pt)}</b> ${c.ic}`, m: c.perg.m(Pn), d1: c.perg.d1(Pn), d2: c.perg.d2(Pn), pt: c.perg.pt, k: c.perg.k,
       envia: txt => escreve(txt, bt => { bt.casa = c.id; bt.fase = 'responder'; }), enviaAud: p => fala_(p, { casa: c.id }) });
     return;
@@ -726,8 +749,19 @@ function acaoBatalha() {
   if (b.fase === 'responder') {
     if (vez === EU) { a.innerHTML = `<div class="vez"><b>Vez de ${esc(Pn)}</b><p>Ouça a resposta dela. A casa ${c.ic} abre quando ela responder.</p></div>${espera(`${esc(Pn)} está respondendo…`)}`; return; }
     const val = (f[c.id] || '') + '。';
+    if (c.id === 'fds' && b.chute) {                                /* chute: acertou? senão "いいえ" e ela tenta de novo (na 3ª, revela) */
+      const acertou = normAtiv(b.chute) === normAtiv(f.fds), revela = !acertou && (b.err || 0) >= 2, ativ = String(f.fds || '').replace(/^たいてい\s*/, '');
+      const chV = String(b.chute), neg = fdsNeg(chV), miss = !acertou && !revela;
+      const m = acertou ? `はい、${val}` : revela ? `いいえ、${val}` : `いいえ、${neg}。`;
+      uiDizer({ instr: acertou ? `${esc(Pn)} acertou! Confirme e diga o que você faz.` : revela ? `${esc(Pn)} já errou 3 vezes. Diga a resposta certa da sua ficha.` : `${esc(Pn)} chutou <b lang="ja">${esc(chV)}</b>, mas não é isso. Diga que não.`,
+        m, d1: m.slice(0, 3) + '…', d2: miss ? 'いいえ、＿＿＿ません。' : acertou ? 'はい、たいてい ＿＿＿ます。' : 'いいえ、たいてい ＿＿＿ます。', pt: acertou ? 'Sim! (e diga o que você faz)' : miss ? 'Não.' : 'Não. (e diga o que você faz)', k: miss ? ['いいえ|iie', 'ません|masen'] : ['ます|masu'],
+        envia: txt => escreve(txt, bt => { if (miss) { bt.fase = 'perguntar'; bt.re = c.id; bt.err = (bt.err || 0) + 1; bt.casa = null; bt.chute = null; }
+          else { bt.ab = bt.ab || {}; bt.ab[EU] = bt.ab[EU] || {}; bt.ab[EU][c.id] = true; bt.fase = 'reagir'; bt.re = null; bt.err = 0; bt.chute = null; } }),
+        enviaAud: p => fala_(p, { casa: c.id, miss }) });
+      return;
+    }
     uiDizer({ instr: `Responda a pergunta de ${esc(Pn)} ${c.ic}. A resposta está na sua ficha.`, m: val, d1: val.slice(0, 2) + '…', d2: c.resp.d2, pt: '', k: c.resp.k,
-      envia: txt => escreve(txt, bt => { bt.ab = bt.ab || {}; bt.ab[EU] = bt.ab[EU] || {}; bt.ab[EU][c.id] = true; bt.fase = 'reagir'; }), enviaAud: p => fala_(p, { casa: c.id }) });
+      envia: txt => escreve(txt, bt => { bt.ab = bt.ab || {}; bt.ab[EU] = bt.ab[EU] || {}; bt.ab[EU][c.id] = true; bt.fase = 'reagir'; bt.re = null; bt.err = 0; bt.chute = null; }), enviaAud: p => fala_(p, { casa: c.id }) });
     return;
   }
   /* reagir */
