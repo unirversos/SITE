@@ -2,7 +2,7 @@
    Firestore: aulas/{email em minúsculas} — só o próprio aluno (e-mail confirmado) e a professora conseguem ler.
    Quem não é aluno particular não vê nada. Textos em português ou inglês (aluno/i18n.js). */
 import { auth, db } from "/idiomas/dados/conta.js?v=6";
-import { doc, getDoc, updateDoc } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+import { doc, onSnapshot, updateDoc } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
 import { onAuthStateChanged, sendEmailVerification } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
 import { proximas, chave } from "/aulas/aulas-comum.js?v=2";
 
@@ -20,7 +20,7 @@ const quando = d => fmt(d, { weekday: 'long', day: 'numeric', month: 'long' }) +
 const linkOk = u => /^https:\/\//.test(u || '');
 /* texto com links: o que começa com https:// vira link clicável (abre em nova aba) */
 const comLinks = s => esc(s).replace(/https:\/\/[^\s<]+[^\s<.,;:!?)\]'"]/g, u => `<a class="lk" href="${u}" target="_blank" rel="noopener">${u.replace(/^https:\/\/(www\.)?/, '').slice(0, 48)}${u.length > 56 ? '…' : ''} ↗</a>`);
-let aula = null, timer = null, meuEmail = '', aberto = false, novos = { recado: false, tarefa: false, itens: new Set() };
+let parar = null, aula = null, timer = null, meuEmail = '', aberto = false, novos = { recado: false, tarefa: false, itens: new Set() };
 
 /* formato do material + seta "↗" quando abre fora do site */
 function tipo(u){
@@ -55,6 +55,14 @@ function calculaNovos(a){
     const antes = new Set(v.itens || []); novos.itens = new Set(itens.filter(i => !antes.has(i)));
   }
   try { localStorage.setItem(k, JSON.stringify({ recado: a.recado || '', tarefa: a.tarefa || '', itens })); } catch (e) {}
+}
+
+/* mudança que chega com a página aberta: recado, tarefa e materiais novos ganham a etiqueta "novo" */
+function marcaMudancas(antes, agora){
+  if (agora.recado && agora.recado !== antes.recado) novos.recado = true;
+  if (agora.tarefa && agora.tarefa !== antes.tarefa) novos.tarefa = true;
+  const ids = x => new Set([].concat(x.material || [], x.gravacoes || []).filter(m => m && m.t).map(idItem));
+  const vistos = ids(antes); ids(agora).forEach(i => { if (!vistos.has(i)) novos.itens.add(i); });
 }
 
 /* avatar: a professora também vê na lista de alunos */
@@ -140,8 +148,13 @@ onAuthStateChanged(auth, async u => {
   }
   try {
     meuEmail = u.email.toLowerCase();
-    const s = await getDoc(doc(db, 'aulas', meuEmail));
-    if (!s.exists()) { area.innerHTML = ''; return; }
-    aula = s.data(); calculaNovos(aula); pinta(); mandaAvatar();
+    /* escuta o cadastro em tempo real: quando a professora salva, a área do aluno se atualiza sozinha (sem recarregar) */
+    if (parar) parar();
+    parar = onSnapshot(doc(db, 'aulas', meuEmail), s => {
+      if (!s.exists()) { aula = null; clearTimeout(timer); area.innerHTML = ''; return; }
+      const nova = s.data();
+      if (!aula) calculaNovos(nova); else marcaMudancas(aula, nova);
+      aula = nova; pinta(); mandaAvatar();
+    }, e => { console.warn(e); if (!aula) area.innerHTML = ''; });
   } catch (e) { console.warn(e); area.innerHTML = ''; }
 });
