@@ -376,8 +376,17 @@ const CHUTE = {
     frase: (N, g) => `うちに ${g}か。`, canon: x => kana0(x).replace(/^うちに/, '').replace(/か$/, ''), neg: g => /いません$/.test(g) ? 'いいえ、います。' : `いいえ、${String(g).replace(/が います$/, 'は いません')}。`,
     k: ['います|imasu|いません|imasen', 'うち|uchi|いぬ|inu|ねこ|neko|犬|猫'] }
 };
-const chuteCards = id => CHUTE[id].cards;
-const bonito = (id, g) => { const c = CHUTE[id].cards.find(x => CHUTE[id].canon(x[0]) === g); return c ? c[0] : g; };
+/* os cards sempre incluem a resposta real da ficha da outra aluna (misturada às demais), para o chute poder acertar */
+const deFicha = { idade: v => v.replace(/です$/, ''), trab: v => v.replace(/です$/, ''), acorda: v => v.replace(/\s*に\s*おきます$/, ''), fds: v => v.replace(/^たいてい\s*/, '') };
+function cardsDe(id, fichaVal) {
+  const C_ = CHUTE[id], l = C_.cards.slice(); if (!fichaVal) return l;
+  const v = String(fichaVal).trim(), card = (deFicha[id] ? deFicha[id](v) : v).trim();
+  if (!card || l.some(x => C_.canon(x[0]) === C_.canon(v))) return l;
+  let h = 0; for (const ch of card) h = (h * 31 + ch.charCodeAt(0)) >>> 0;
+  l.splice(h % (l.length + 1), 0, [card, '']); return l;
+}
+const cardsDoAlvo = id => cardsDe(id, ((S.ficha || {})[outro(EU)] || {})[id]);
+const bonito = (id, g) => { const c = cardsDoAlvo(id).find(x => CHUTE[id].canon(x[0]) === g); return c ? c[0] : g; };
 
 /* ================= desenho da tela ================= */
 let ui = { chave: '', nivel: 0, tent: 0, casa: null, verPreco: false, gr: null };
@@ -515,7 +524,7 @@ function chutesHTML(b, c) {
   const C_ = CHUTE[c.id], sel = ui.chute || C_.padrao;
   return `<div class="chutes"><div class="row" style="justify-content:space-between;align-items:center"><b>🎯 Chute: ${esc(c.pt)} ${c.ic}</b><button class="lk" type="button" data-escondecards aria-expanded="${!ui.escCards}">${ui.escCards ? '👀 Mostrar os cards' : '🙈 Esconder os cards'}</button></div>`
     + (b.re ? `<p class="fb">ちがいます！ Ainda não é isso (${b.err || 1} ${(b.err || 1) === 1 ? 'erro' : 'erros'}). Chute outra coisa!</p>` : '')
-    + (ui.escCards ? '<p class="sub">Cards escondidos: invente o seu chute e escreva ou fale a pergunta.</p>' : `<div class="ideias">${C_.cards.map(([j, pt]) => `<button type="button" class="${j === sel ? 'sel' : ''}" data-chute="${esc(j)}" title="${esc(pt)}" aria-pressed="${j === sel}"><span lang="ja">${esc(j)}</span> · ${esc(pt)}</button>`).join('')}</div>`) + '</div>';
+    + (ui.escCards ? '<p class="sub">Cards escondidos: invente o seu chute e escreva ou fale a pergunta.</p>' : `<div class="ideias">${cardsDoAlvo(c.id).map(([j, pt]) => `<button type="button" class="${j === sel ? 'sel' : ''}" data-chute="${esc(j)}" title="${esc(pt)}" aria-pressed="${j === sel}"><span lang="ja">${esc(j)}</span>${pt ? ' · ' + esc(pt) : ''}</button>`).join('')}</div>`) + '</div>';
 }
 function painel() {
   const p = $('painel'), s = S, P = outro(EU), st = passos()[s.p || 0]; let h = '';
@@ -754,7 +763,7 @@ function acaoBatalha() {
     const c = casaDe(ui.casa);
     if (!c) { a.innerHTML = `<div class="vez"><b>🎯 Sua vez de perguntar</b><p>Toque numa casa fechada (？) do tabuleiro de ${esc(Pn)}.</p></div>`; return; }
     {                                                                /* chute: pergunta sim/não, repete até acertar */
-      const C_ = CHUTE[c.id], ch = ui.chute || C_.padrao, pt = (C_.cards.find(x => x[0] === ch) || [0, ''])[1], tr = C_.frase(Pn, '\u0001');
+      const C_ = CHUTE[c.id], ch = ui.chute || C_.padrao, pt = (cardsDoAlvo(c.id).find(x => x[0] === ch) || [0, ''])[1], tr = C_.frase(Pn, '\u0001');
       uiDizer({ instr: `Chute: <b>${esc(c.pt)}</b> ${c.ic}. ${b.re ? 'Errou! Chute de novo.' : 'Escolha um card (ou escreva o seu chute) e pergunte.'}`, m: C_.frase(Pn, ch), d1: tr.split('\u0001')[0] + '…', d2: C_.frase(Pn, '＿＿＿＿'),
         pt: pt ? `Chute: ${pt}?` : c.perg.pt, k: C_.k,
         envia: txt => { const g = bonito(c.id, C_.canon(txt) || C_.canon(ch)); return escreve(txt, bt => { bt.casa = c.id; bt.fase = 'responder'; bt.chute = g; }); }, enviaAud: p => fala_(p, { casa: c.id, chute: bonito(c.id, C_.canon(ch)) }) });
