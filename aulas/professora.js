@@ -52,6 +52,34 @@ const pedidos = a => { const hoje = chave(new Date(Date.now() - 3 * 3600e3)).sli
   return l.length ? `<div class="pedido"><b>O aluno pediu gravação:</b> ${l.map(k => esc(new Date(k + ':00-03:00').toLocaleString('pt-BR', { weekday: 'short', day: 'numeric', month: 'short', hour: '2-digit', minute: '2-digit', timeZone: 'America/Sao_Paulo' }))).join(' · ')}<br><span class="peq">Lembre de apertar "Gravar" no Meet. Depois, cole o link em Gravações.</span></div>` : ''; };
 const linhaMat = (m = { t: '', url: '' }) => `<div class="rep mat" data-tipo="m"><label class="sr">Título</label><input type="text" placeholder="Título (ex.: Aula 3 · slides)" value="${esc(m.t)}"><label class="sr">Link</label><input type="url" placeholder="https://…" value="${esc(m.url)}"><button type="button" class="x" aria-label="Tirar este material">×</button></div>`;
 
+/* anotações do Caderno que o aluno escolheu mostrar (aulas_cadernos/{e-mail}); só leitura, no mesmo visual de caderno */
+async function cadernoDoAluno(email){
+  const box = $('cad-al'); if (!box) return;
+  const topo = '<div class="topo"><h2>Anotações que o aluno mostrou</h2><button type="button" class="mini" id="cad-at">↻ Atualizar</button></div>';
+  box.innerHTML = topo + '<p class="mut">Carregando…</p>';
+  $('cad-at').onclick = () => cadernoDoAluno(email);
+  let notas = [];
+  try { const sn = await getDoc(doc(db, 'aulas_cadernos', email)); notas = sn.exists() && Array.isArray(sn.data().notas) ? sn.data().notas : []; }
+  catch (e) {
+    if (!$('cad-al')) return;
+    box.innerHTML = topo + `<p class="mut">${e && e.code === 'permission-denied' ? 'Ainda não foi liberado: publique a regra de <b>aulas_cadernos</b> no Firestore para a professora poder ler.' : 'Não consegui carregar agora. Tente atualizar.'}</p>`;
+    $('cad-at').onclick = () => cadernoDoAluno(email); return;
+  }
+  if (!$('cad-al') || editando !== email) return;
+  notas = notas.filter(n => n && n.id).sort((x, y) => (y.m || 0) - (x.m || 0));
+  if (!notas.length || !window.UniLivro) {
+    box.innerHTML = topo + '<p class="mut">Este aluno ainda não mostrou nenhuma anotação. Ele escolhe, anotação por anotação, no botão “Mostrar para a professora” do Caderno.</p>';
+    $('cad-at').onclick = () => cadernoDoAluno(email); return;
+  }
+  const nome = n => (n.t || '').trim() || (n.x || '').trim().split('\n')[0].slice(0, 50) || 'Sem título';
+  const dt = n => n.m ? new Date(n.m).toLocaleDateString('pt-BR', { day: 'numeric', month: 'short' }) : '';
+  box.innerHTML = topo + `<label class="sr" for="cad-sel">Anotação</label><select id="cad-sel">${notas.map(n => `<option value="${esc(n.id)}">${esc(nome(n))} · ${esc(dt(n))}</option>`).join('')}</select><div id="cad-lv" style="margin-top:12px"></div>`;
+  $('cad-at').onclick = () => cadernoDoAluno(email);
+  const livro = window.UniLivro.montar($('cad-lv'), { leitura: true, C: { obter: id => notas.find(n => n.id === id) || null, atualizar: () => null } });
+  livro.abrir(notas[0].id);
+  $('cad-sel').onchange = e => livro.abrir(e.target.value);
+}
+
 async function ficha(a){
   editando = a ? a.id : null; a = a || { ativo: true, dur: 60, horarios: [], avulsas: [], pular: [], material: [] };
   let notas = '';
@@ -86,6 +114,7 @@ async function ficha(a){
   </form>`;
   const f = $('f');
   $('voltar').onclick = () => lista();
+  if (editando) { area.insertAdjacentHTML('beforeend', '<section class="cx" id="cad-al"></section>'); cadernoDoAluno(editando); }
   if (!editando) lePerfis().then(ps => {
     const ja = new Set(alunos.map(x => x.id)), livres = ps.filter(p => !ja.has(p.email));
     $('f-pessoas').innerHTML = livres.map(p => `<option value="${esc(p.email)}">${esc(p.nome || '')}</option>`).join('');

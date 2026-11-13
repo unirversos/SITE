@@ -79,7 +79,16 @@
     '@media (prefers-reduced-motion:reduce){.lv-livro.vai .lv-pg,.lv-livro.volta .lv-pg{animation:none}}',
     '.lv-fant{background:#fffdfc;align-items:center;justify-content:center;box-shadow:none}',
     '.lv-fant button{font:inherit;cursor:pointer;border:1.5px dashed #d9c3c9;background:#fff;color:#705f6c;border-radius:99px;padding:8px 18px;font-weight:700;font-size:14px;min-height:40px}.lv-fant button:hover{border-color:#c23f5e;color:#c23f5e}',
-    '.lv-dica{font-size:12px;color:#705f6c;margin:0;text-align:center}'
+    '.lv-dica{font-size:12px;color:#705f6c;margin:0;text-align:center}',
+    /* mostrar para a professora */
+    '.lv-prof{display:flex;flex-wrap:wrap;align-items:center;justify-content:center;gap:6px 12px}',
+    '.lv-pf{font:inherit;cursor:pointer;border:1.5px solid #ecdadd;background:#fff;color:#3a2b38;border-radius:99px;padding:6px 16px;font-size:13.5px;font-weight:700;min-height:38px}',
+    '.lv-pf[aria-pressed="true"]{border-color:#517158;background:#e8efe8;color:#2f4a36}',
+    '.lv-pfs{font-size:12px;color:#705f6c}',
+    /* modo leitura (a professora vendo o caderno que o aluno mostrou) */
+    '.lv.leitura .lv-bar,.lv.leitura .lv-nav .mais,.lv.leitura .lv-del,.lv.leitura .lv-fant,.lv.leitura .lv-dica,.lv.leitura .lv-prof{display:none!important}',
+    '.lv.leitura .lv-sem,.lv.leitura canvas{pointer-events:none}',
+    '.lv.leitura .lv-tit,.lv.leitura .lv-dt input{background:transparent!important;color:#3a2b38!important;border-radius:0!important;box-shadow:none!important}',
   ].join('');
   document.head.appendChild(css);
 
@@ -94,10 +103,10 @@
 
   function montar(el, opc) {
     opc = opc || {};
-    var C = window.UniCaderno, id = null, pags = [], ini = 0, dupla = false, modo = 'txt', cor = 0, esp = 1, ferr = 'pen',
+    var C = opc.C || window.UniCaderno, id = null, pags = [], ini = 0, dupla = false, modo = 'txt', cor = 0, esp = 1, ferr = 'pen',
       hist = [], penVisto = 0, ultimoM = 0, tSalva = null, pedeLimpar = false, ro = null;
 
-    el.classList.add('lv');
+    el.classList.add('lv'); if (opc.leitura) el.classList.add('leitura');
     el.innerHTML =
       '<div class="lv-bar">' +
       '<div class="lv-modo" role="group" aria-label="Como escrever"><button type="button" data-m="txt" aria-pressed="true">Texto</button><button type="button" data-m="pen" aria-pressed="false">Caneta</button></div>' +
@@ -111,6 +120,7 @@
       '</div>' +
       '<div class="lv-livro" aria-live="off"></div>' +
       '<div class="lv-nav"><button type="button" data-n="-1" aria-label="Página anterior">' + IC.ant + '</button><span class="lbl" aria-live="polite"></span><button type="button" data-n="1" aria-label="Próxima página">' + IC.prox + '</button><button type="button" class="mais" data-n="mais">+ página</button></div>' +
+      '<div class="lv-prof" hidden><button type="button" class="lv-pf" aria-pressed="false"></button><span class="lv-pfs" aria-live="polite"></span></div>' +
       '<p class="lv-dica" hidden>Com a caneta em uso, a palma da mão não risca a folha. Para virar a página, use as setas.</p>';
     var livro = el.querySelector('.lv-livro'), barra = el.querySelector('.lv-bar'), fer = el.querySelector('.lv-fer'), nav = el.querySelector('.lv-nav'),
       lbl = nav.querySelector('.lbl'), btUnd = fer.querySelector('[data-f="und"]'), dica = el.querySelector('.lv-dica');
@@ -152,6 +162,7 @@
         d.querySelector('textarea').value = pg.x;
         livro.appendChild(d);
         liga(d, i);
+        if (opc.leitura) Array.prototype.forEach.call(d.querySelectorAll('input,textarea'), function (x) { x.readOnly = true; x.tabIndex = -1; });
       });
       mostra(); requestAnimationFrame(function () { ajusta(); });
     }
@@ -168,7 +179,7 @@
       });
       /* no caderno aberto, a página da direita ainda em branco vira um convite para continuar */
       var fan = livro.querySelector('.lv-fant');
-      if (dupla && pags.length && ini + 1 >= pags.length) {
+      if (dupla && !opc.leitura && pags.length && ini + 1 >= pags.length) {
         if (!fan) { fan = document.createElement('div'); fan.className = 'lv-pg lv-fant dir'; fan.innerHTML = '<button type="button">+ nova página</button>'; fan.querySelector('button').onclick = function () { maisPagina(true); }; livro.appendChild(fan); }
         fan.style.gridColumn = '2';
       } else if (fan) fan.remove();
@@ -231,7 +242,7 @@
         d.querySelector('.d').oninput = function () { salva({ d: this.value }); };
         d.querySelector('.lv-tit').oninput = function () { salva({ t: this.value }); };
         d.querySelector('.lv-sem').onclick = function (e) {
-          var b = e.target.closest('button'); if (!b) return; var n = nota(); if (!n) return;
+          var b = e.target.closest('button'); if (!b || opc.leitura) return; var n = nota(); if (!n) return;
           var w = String(n.w) === b.dataset.w ? null : b.dataset.w;
           Array.prototype.forEach.call(this.children, function (x) { x.setAttribute('aria-pressed', String(String(w) === x.dataset.w)); });
           salva({ w: w });
@@ -363,12 +374,25 @@
 
     function esc(s) { return String(s).replace(/[&<>"]/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]; }); }
 
+    /* ---------- mostrar para a professora ---------- */
+    var cxProf = el.querySelector('.lv-prof'), btProf = cxProf.querySelector('button'), stProf = cxProf.querySelector('.lv-pfs');
+    function atualizaProf() {
+      var n = nota(), ok = !opc.leitura && C.prof && C.prof.disponivel() && n;
+      cxProf.hidden = !ok; if (!ok) return;
+      var on = !!n.sp; btProf.setAttribute('aria-pressed', String(on));
+      btProf.textContent = on ? '✓ Mostrando para a professora' : 'Mostrar para a professora';
+      btProf.title = on ? 'Toque para deixar de mostrar esta anotação' : 'Só esta anotação fica visível para a professora';
+      stProf.textContent = on ? C.prof.texto() : 'Só esta anotação. Você pode deixar de mostrar quando quiser.';
+    }
+    btProf.addEventListener('click', function () { var n = nota(); if (!n) return; salva({ sp: !n.sp }); atualizaProf(); });
+    if (!opc.leitura && C.on) C.on(function (tipo) { if (tipo === 'prof') atualizaProf(); });
+
     var api = {
       abrir: function (novoId, manter) {
-        var n = C.obter(novoId); if (!n) { id = null; pags = []; livro.innerHTML = ''; lbl.textContent = ''; return; }
+        var n = C.obter(novoId); if (!n) { id = null; pags = []; livro.innerHTML = ''; lbl.textContent = ''; cxProf.hidden = true; return; }
         var mesmo = novoId === id; id = novoId; ultimoM = n.m || 0; pags = lePags(n); hist = []; btUnd.disabled = true;
         if (!(mesmo && manter)) ini = 0; ini = Math.min(ini, pags.length - 1); if (dupla) ini -= ini % 2;
-        constroi();
+        constroi(); atualizaProf();
       },
       id: function () { return id; },
       ultimoM: function () { return ultimoM; },

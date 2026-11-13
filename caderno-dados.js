@@ -7,6 +7,7 @@
   if (window.UniCaderno) return;
   var K = 'uniCadernoNotas1', LIMITE = 700000, DIAS = 60;
   var notas = [], ouv = [], est = 'local', tLocal = null, tNuvem = null, ocupado = false, de_novo = false;
+  var profOk = null, profBusca = false, estProf = '', ultimoProf = null; /* "Mostrar para a professora": só para quem tem aulas particulares */
 
   /* ---------- servidor (trocável nos testes) ---------- */
   var remoto = {
@@ -37,6 +38,7 @@
   function sincronizar() {
     clearTimeout(tNuvem); tNuvem = null;
     if (!remoto.pronto()) { setEst('sem-login'); return Promise.resolve(); }
+    checaProf();
     if (ocupado) { de_novo = true; return Promise.resolve(); }
     ocupado = true; setEst('sincronizando');
     return remoto.ler().then(function (rem) {
@@ -47,7 +49,45 @@
       return remoto.gravar(j).then(function () { setEst('ok'); });
     }).catch(function (e) {
       setEst((e && e.code === 'permission-denied') ? 'sem-permissao' : (navigator.onLine === false ? 'offline' : 'erro'));
-    }).then(function () { ocupado = false; if (de_novo) { de_novo = false; sincronizar(); } });
+    }).then(function () { ocupado = false; enviaProf(); if (de_novo) { de_novo = false; sincronizar(); } });
+  }
+
+
+  /* ---------- professora (aluno de aulas particulares) ----------
+     O aluno escolhe, anotação por anotação (campo sp), o que a professora pode ver. Só as marcadas vão para
+     aulas_cadernos/{e-mail do aluno} (Firestore); o resto do caderno continua só dele. */
+  function emailUsuario() { var C = window.UniConta, u = C && C.auth && C.auth.currentUser; return (u && u.email) ? u.email.toLowerCase() : ''; }
+  function setProf(e) { if (estProf !== e) { estProf = e; emitir('prof'); } }
+  function checaProf() {
+    if (profOk !== null || profBusca || !remoto.pronto()) return;
+    var u = window.UniConta.auth.currentUser, k = 'uniCadProf:' + u.uid;
+    if (!u.emailVerified) return;
+    try { if (sessionStorage.getItem(k) === '1') { profOk = true; emitir('prof'); return; } } catch (e) {}
+    profBusca = true;
+    remoto.fs().then(function (fs) { return fs.getDoc(fs.doc(window.UniConta.db, 'aulas', emailUsuario())); })
+      .then(function (d) { profOk = !!d.exists(); }, function () { profOk = false; })
+      .then(function () {
+        profBusca = false;
+        if (profOk) { try { sessionStorage.setItem(k, '1'); } catch (e) {} } else profOk = null; /* quem ainda não é aluno é checado de novo na próxima visita */
+        emitir('prof'); enviaProf();
+      });
+  }
+  function enviaProf() {
+    if (!profOk || !remoto.pronto()) return Promise.resolve();
+    var comp = notas.filter(function (n) { return !n.del && n.sp; }).map(function (n) {
+      return { id: n.id, t: n.t || '', x: n.x || '', a: n.a || '', o: n.o || '', d: n.d || '', w: n.w == null ? null : n.w, s: n.s || [], pp: n.pp || [], m: n.m || 0 };
+    });
+    if (!comp.length && !notas.some(function (n) { return n.sp === false; })) return Promise.resolve(); /* nunca compartilhou nada */
+    var ch = chave(comp); if (ch === ultimoProf) return Promise.resolve();
+    if (JSON.stringify(comp).length > LIMITE) { setProf('grande'); return Promise.resolve(); }
+    setProf('enviando');
+    return remoto.fs().then(function (fs) { return fs.setDoc(fs.doc(window.UniConta.db, 'aulas_cadernos', emailUsuario()), { notas: comp, atualizado: new Date().toISOString() }); })
+      .then(function () { ultimoProf = ch; setProf('ok'); },
+        function (e) { setProf(e && e.code === 'permission-denied' ? 'sem-permissao' : 'erro'); });
+  }
+  function textoProf() {
+    return { 'enviando': 'Enviando para a professora…', 'ok': 'A professora já pode ver ✓', 'sem-permissao': 'A professora ainda não consegue ver: falta liberar no Firestore',
+      'erro': 'Não consegui falar com a professora agora; tento de novo daqui a pouco', 'grande': 'Anotação grande demais para mostrar: apague desenhos antigos' }[estProf] || 'Vai ficar visível para a professora em instantes…';
   }
 
   /* ---------- API ---------- */
@@ -67,6 +107,7 @@
   }
   function apagar(id) {
     var n = obter(id); if (!n) return;
+    if (n.sp) n.sp = false; /* some também da vista da professora */
     n.del = true; n.t = ''; n.x = ''; n.s = []; n.a = n.o = n.d = ''; n.w = null; n.m = Date.now(); gravarLocal(); agNuvem();
   }
   function agora() { gravarLocal(); }
@@ -83,7 +124,7 @@
 
   notas = lerLocal();
   window.UniCaderno = { vivas: vivas, obter: obter, nova: nova, atualizar: atualizar, apagar: apagar, nome: nome, agora: agora, sincronizar: sincronizar, entrar: entrar,
-    estado: function () { return est; }, texto: texto, on: function (f) { ouv.push(f); }, _remoto: remoto, _juntar: juntar, _recarregar: function () { notas = lerLocal(); } };
+    estado: function () { return est; }, texto: texto, prof: { disponivel: function () { return !!profOk; }, estado: function () { return estProf; }, texto: textoProf }, on: function (f) { ouv.push(f); }, _remoto: remoto, _juntar: juntar, _recarregar: function () { notas = lerLocal(); } };
 
   document.addEventListener('uni-conta', function (e) { if (e.detail && e.detail.user) sincronizar(); else setEst('sem-login'); });
   document.addEventListener('visibilitychange', function () { if (document.visibilityState === 'visible') sincronizar(); else gravarLocal(); });
