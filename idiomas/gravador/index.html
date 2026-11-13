@@ -217,6 +217,6 @@ if(!navigator.mediaDevices||!window.MediaRecorder){ $('semMic').hidden=false; $(
 try{ const f=JSON.parse(localStorage.getItem('gravFiltro')||'null'); if(f){ $('fAula').value=f.a||'aulazero'; $('fTipo').value=f.t||''; $('fFalta').checked=f.f!==false; } }catch(e){}
 abrirDB().then(()=>filtrar(false));
 </script>
-<script defer src="/caderno-flutuante.js?v=7"></script>
+<script defer src="/caderno-flutuante.js?v=8"></script>
 </body>
 </html>

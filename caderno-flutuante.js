@@ -10,8 +10,8 @@
 
   var css = document.createElement('style');
   css.textContent =
-    '#cf-aba{position:fixed;right:0;top:42%;z-index:9000;display:flex;flex-direction:column;align-items:center;gap:8px;padding:12px 7px;border:1.5px solid #ecdadd;border-right:0;border-left:4px solid #c23f5e;border-radius:14px 0 0 14px;background:#fff;color:#3a2b38;font:700 13px "Zen Maru Gothic",system-ui,sans-serif;cursor:pointer;box-shadow:-6px 8px 20px -12px rgba(58,43,56,.35);min-height:44px}' +
-    '#cf-aba span{writing-mode:vertical-rl;letter-spacing:.08em}#cf-aba svg{width:18px;height:18px;stroke:#c23f5e;fill:none;stroke-width:1.6;stroke-linecap:round;stroke-linejoin:round}' +
+    '#cf-aba{position:fixed;right:0;top:42%;z-index:9000;display:flex;flex-direction:column;align-items:center;gap:10px;padding:18px 11px;border:2px solid #ecdadd;border-right:0;border-left:6px solid #c23f5e;border-radius:18px 0 0 18px;background:#fff;color:#3a2b38;font:800 17px "Zen Maru Gothic",system-ui,sans-serif;cursor:pointer;box-shadow:-6px 8px 20px -12px rgba(58,43,56,.35);min-height:64px}' +
+    '#cf-aba span{writing-mode:vertical-rl;letter-spacing:.1em}#cf-aba svg{width:26px;height:26px;stroke:#c23f5e;fill:none;stroke-width:1.6;stroke-linecap:round;stroke-linejoin:round}' +
     '@media (min-width:1100px){#cf-aba{top:auto;bottom:140px}}#cf-aba:hover{background:#fdf6f4}#cf-aba:focus-visible,#cf-p button:focus-visible,#cf-p select:focus-visible,#cf-p textarea:focus-visible,#cf-p a:focus-visible{outline:3px solid #b7a6dc;outline-offset:2px}' +
     '#cf-p{position:fixed;right:0;top:0;bottom:0;z-index:9001;width:min(440px,96vw);display:flex;flex-direction:column;gap:10px;padding:16px 16px calc(14px + env(safe-area-inset-bottom,0px));background:#fdf6f4;border-left:4px solid #c23f5e;box-shadow:-14px 0 36px -18px rgba(58,43,56,.45);color:#3a2b38;font:15px/1.5 "Zen Maru Gothic",system-ui,sans-serif;transform:translateX(105%);visibility:hidden;overflow-y:auto;overscroll-behavior:contain}' +
     '#cf-p.on{transform:none;visibility:visible;transition:transform .22s ease}' +
