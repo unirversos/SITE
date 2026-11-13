@@ -285,6 +285,21 @@ function passos() {
   ];
   return [];
 }
+/* preço digitado: aceita números (1260), kanji (千二百六十) ou kana/romaji (せんにひゃくろくじゅう, sen nihyaku rokujuu) */
+function valorPreco(txt) {
+  const n = soNum(txt); if (n) return +n;
+  let t = romaParaKana(String(txt || '').normalize('NFKC')).replace(/[\s。.,、]/g, '').replace(/(えん|円)$/, ''); if (!t) return 0;
+  const K = { '一': 1, '二': 2, '三': 3, '四': 4, '五': 5, '六': 6, '七': 7, '八': 8, '九': 9 };
+  if (/^[一二三四五六七八九十百千]+$/.test(t)) { let v = 0, d = 0; for (const c of t) { if (K[c]) d = K[c]; else { const m = { '十': 10, '百': 100, '千': 1000 }[c]; v += (d || 1) * m; d = 0; } } return v + d; }
+  const D = { 'いち': 1, 'に': 2, 'さん': 3, 'よん': 4, 'し': 4, 'よ': 4, 'ご': 5, 'ろく': 6, 'ろっ': 6, 'なな': 7, 'しち': 7, 'はち': 8, 'はっ': 8, 'きゅう': 9, 'く': 9 };
+  const dig = '(いち|に|さん|よん|し|よ|ご|ろく|ろっ|なな|しち|はち|はっ|きゅう|く)?';
+  let v = 0, m;
+  if ((m = new RegExp('^' + dig + '(せん|ぜん)').exec(t))) { v += (m[1] ? D[m[1]] : 1) * 1000; t = t.slice(m[0].length); }
+  if ((m = new RegExp('^' + dig + '(ひゃく|びゃく|ぴゃく)').exec(t))) { v += (m[1] ? D[m[1]] : 1) * 100; t = t.slice(m[0].length); }
+  if ((m = new RegExp('^' + dig + 'じゅう').exec(t)) || (m = new RegExp('^' + dig + 'じゅっ').exec(t))) { v += (m[1] ? D[m[1]] : 1) * 10; t = t.slice(m[0].length); }
+  if (t) { if (D[t]) v += D[t]; else return 0; }
+  return v;
+}
 function totalDe(root) { const c = root.cafe || {}, b = c.beb || {}; return [b.a || 'kohi', b.b || 'kohi', (c.com || {}).a || 'keki', (c.com || {}).b || 'aisu'].map(item).filter(Boolean).reduce((s, x) => s + x.p, 0); }
 
 function concluida() {
@@ -721,12 +736,13 @@ function acao() {
     return; }
   if (st.tipo === 'preco') {
     const linha = Object.values(s.log || {}).filter(m => m.oc).pop();
-    a.innerHTML = `<div class="vez"><b>👂 Sua vez de ouvir</b><p>O robô disse o preço. Ouça e escreva o valor em números.</p></div>
+    a.innerHTML = `<div class="vez"><b>👂 Sua vez de ouvir</b><p>O robô disse o preço. Ouça e escreva o valor (em números ou em kana).</p></div>
       <div class="row"><button class="btn" type="button" data-fala="${esc(linha ? linha.t : '')}">🔊 Ouvir o preço</button><button class="btn peq" type="button" id="verPreco" hidden>Ver o texto</button></div>
-      <div class="escrever"><input id="inp" type="text" inputmode="numeric" autocomplete="off" placeholder="Ex.: 980" aria-label="Preço em números"><button class="btn pri" type="button" id="envia">Enviar</button></div><p class="fb" id="fb" aria-live="polite"></p>`;
-    const manda = () => { const v = soNum($('inp').value); if (!v) return;
-      if (+v !== totalDe(s)) { ui.tent++; $('fb').textContent = 'Ainda não. Ouça de novo com calma.'; $('verPreco').hidden = ui.tent < 2; return; }
-      sync.tx(root => { if (!root || root.etapa !== 'conta' || (root.p || 0) !== 1) return; poeLog(root, EU, `${totalDe(root)}えんですね。`); poeLog(root, 'r', 'ありがとうございました。', { pt: 'Muito obrigado!' }); root.p = 2; return root; }); };
+      <div class="escrever"><input id="inp" type="text" inputmode="numeric" autocomplete="off" placeholder="Ex.: 980 (ou em kana)" aria-label="Preço"><button class="btn pri" type="button" id="envia">Enviar</button></div><p class="fb" id="fb" aria-live="polite"></p>`;
+    const esperado = (linha && +soNum(linha.t)) || totalDe(s);      /* vale o que o robô disse (mesmo se a outra tela estiver numa versão antiga) */
+    const manda = () => { const v = valorPreco($('inp').value); if (!v) return;
+      if (v !== esperado) { ui.tent++; $('fb').textContent = 'Ainda não. Ouça de novo com calma.'; $('verPreco').hidden = ui.tent < 2; return; }
+      sync.tx(root => { if (!root || root.etapa !== 'conta' || (root.p || 0) !== 1) return; poeLog(root, EU, `${esperado}えんですね。`); poeLog(root, 'r', 'ありがとうございました。', { pt: 'Muito obrigado!' }); root.p = 2; return root; }); };
     $('envia').onclick = manda; $('inp').addEventListener('keydown', e => { if (e.key === 'Enter') { e.preventDefault(); manda(); } });
     $('verPreco').onclick = () => { ui.verPreco = true; conversa(); };
     return;
