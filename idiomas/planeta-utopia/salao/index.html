@@ -230,12 +230,14 @@ h2{font-family:var(--f-display);font-size:22px;line-height:1.2;margin:0}
 .pess.eu{border-color:var(--pink)}
 .vazio{color:var(--muted);font-size:14px}
 /* sentado: a sala continua à vista e a mesa divide a tela */
-.wrap.sentado>header,.wrap.sentado>#aulaDupla,.wrap.sentado>#muralCom{display:none}
+.wrap.sentado>header,.wrap.sentado>#aulaDupla,.wrap.sentado>#muralCom,.wrap.sentado>#portaSalao{display:none}
 #proxMapa{display:none!important}
 .quem{margin:0;font-weight:700;color:var(--ink)}.quem:empty{display:none}
 .lede{font-size:15px}
 .aula-dupla{padding:14px 16px;border-left:5px solid var(--sage);display:flex;flex-wrap:wrap;gap:10px 16px;align-items:center;justify-content:space-between}
 .aula-dupla p{margin:0}
+.porta{border-left:6px solid var(--pink);gap:12px}
+.porta .grande{justify-self:start;font-size:17px;padding:12px 26px;min-height:48px}
 .aula-dupla.mural{border-left-color:var(--pink)}
 .aula-dupla h2{font-size:17px;margin:0}
 .aula-dupla .sub{font-size:14px;margin:2px 0 0}
@@ -319,9 +321,14 @@ footer{border-top:1.5px dashed var(--line);padding-top:18px;display:flex;flex-wr
     <p class="lede">Ande pela sala com o seu avatar, sente numa mesa e comece a conversar. Os jogos abrem na hora, mesmo sem ninguém por perto: se alguém sentar, entra no jogo quando quiser.</p>
   </header>
 
-  <section class="card" id="secSala" aria-labelledby="h-sala">
+  <section class="card porta" id="portaSalao" aria-labelledby="h-porta">
+    <div><h2 id="h-porta">🏮 O Salão</h2><p class="sub">Uma sala onde os aventureiros se encontram: ande com o seu avatar, sente no sofá ou na mesa e converse em japonês. Quando você entra, as outras pessoas que estão lá passam a ver o seu avatar.</p></div>
+    <button class="btn pri grande" type="button" id="entrarSalao">Entrar no Salão →</button>
+  </section>
+
+  <section class="card" id="secSala" aria-labelledby="h-sala" hidden>
     <div class="topo-sala"><div><h2 id="h-sala">🏮 O Salão</h2><p class="sub" id="dica">Toque no chão para andar e numa cadeira para sentar. No computador, use também as setas.</p></div>
-      <div class="row"><button class="btn" type="button" id="btnClima" aria-label="Mudar o clima da janela">☀️ Sol</button><button class="btn" type="button" id="btnRo" aria-pressed="false">Romaji: não</button><button class="btn" type="button" id="levantar" hidden>Levantar da mesa</button></div></div>
+      <div class="row"><button class="btn" type="button" id="btnClima" aria-label="Mudar o clima da janela">☀️ 晴れ · Sol</button><button class="btn" type="button" id="btnRo" aria-pressed="false">Romaji: não</button><button class="btn" type="button" id="levantar" hidden>Levantar da mesa</button></div></div>
     <p class="sub quem" id="quem" aria-live="polite"></p>
     <div class="sala" id="sala" tabindex="0" role="application" aria-label="Sala do Salão. Toque no chão para andar, toque numa cadeira para sentar, ou use as setas do teclado."></div>
     <p class="nota" id="semBanco" hidden>As outras pessoas ainda estão sendo ligadas. Você pode andar pela sala, mas só vai ver quem está online quando a conexão voltar.</p>
@@ -375,7 +382,7 @@ footer{border-top:1.5px dashed var(--line);padding-top:18px;display:flex;flex-wr
 <script src="/idiomas/dados/audio-mapa.js?v=jogos1"></script>
 <script src="/idiomas/dados/glossario.js?v=1"></script>
 <script src="/idiomas/planeta-utopia/salao/ilustracoes.js?v=1"></script>
-<script type="module">
+<script type="text/plain" id="salaModulo">
 import { getApps, initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
 import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
 import { getDatabase, ref, set, push, onValue, onDisconnect, remove, runTransaction, serverTimestamp, off, update, get, query, limitToLast } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-database.js";
@@ -420,10 +427,10 @@ const clamp=(v,a,b)=>Math.max(a,Math.min(b,v));
 const nomeDe=p=>(p&&p.nome)||'Viajante';
 const sala=$('sala'); const elAv={}, elCad={};
 const DECOR='<div class="dec" aria-hidden="true"><div class="tapete" style="left:28%;top:62%"></div><div class="genkan" style="left:50%;top:94%"><em>🩴🩴</em><b>entrada</b></div><div class="akari" style="left:43%;top:35%"></div><div class="akari" style="left:93%;top:74%"></div><span class="lant sm" style="left:25.5%;top:6%">🏮</span><span class="lant" style="left:31%;top:9%">🏮</span><span class="lant" style="left:69%;top:9%">🏮</span><span class="lant sm" style="left:74.5%;top:6%">🏮</span><div class="estante" style="left:16%"><b><u style="background:#c2575f;height:62%"></u><u style="background:#8b5e83;height:73%"></u><u style="background:#5e8c6a;height:84%"></u><u style="background:#e07a8e;height:95%"></u><u style="background:#d98a6a;height:72%"></u><u style="background:#e8b04a;height:83%"></u><u style="background:#4f9aa0;height:94%"></u><em>🏺</em></b><b><u style="background:#6a7fb5;height:69%"></u><u style="background:#c2575f;height:80%"></u><u style="background:#8b5e83;height:91%"></u><u style="background:#5e8c6a;height:68%"></u><u style="background:#e07a8e;height:79%"></u><u style="background:#d98a6a;height:90%"></u><u style="background:#e8b04a;height:67%"></u></b><b><u style="background:#4f9aa0;height:76%"></u><u style="background:#6a7fb5;height:87%"></u><u style="background:#c2575f;height:64%"></u><u style="background:#8b5e83;height:75%"></u><u style="background:#5e8c6a;height:86%"></u><u style="background:#e07a8e;height:63%"></u><u style="background:#d98a6a;height:74%"></u><em>🕯️</em></b></div><div class="janela"><i class="sky"></i><i class="astro"></i><i class="nuvem"></i><i class="chuva"></i></div><div class="estante" style="left:84%"><b><u style="background:#e8b04a;height:83%"></u><u style="background:#4f9aa0;height:94%"></u><u style="background:#6a7fb5;height:71%"></u><u style="background:#c2575f;height:82%"></u><u style="background:#8b5e83;height:93%"></u><u style="background:#5e8c6a;height:70%"></u><u style="background:#e07a8e;height:81%"></u><em>🪴</em></b><b><u style="background:#d98a6a;height:90%"></u><u style="background:#e8b04a;height:67%"></u><u style="background:#4f9aa0;height:78%"></u><u style="background:#6a7fb5;height:89%"></u><u style="background:#c2575f;height:66%"></u><u style="background:#8b5e83;height:77%"></u><u style="background:#5e8c6a;height:88%"></u></b><b><u style="background:#e07a8e;height:63%"></u><u style="background:#d98a6a;height:74%"></u><u style="background:#e8b04a;height:85%"></u><u style="background:#4f9aa0;height:62%"></u><u style="background:#6a7fb5;height:73%"></u><u style="background:#c2575f;height:84%"></u><u style="background:#8b5e83;height:95%"></u><em>🍵</em></b></div></div>';
-sala.innerHTML=DECOR+MESAS.map(mz=>mz.linha?`<div class="sofa-d l" style="left:${mz.x}%;top:${mz.y}%"><i class="enc"></i><i class="ass"></i><i class="br e"></i><i class="br d"></i><b>${mz.nome}</b></div><div class="sofa-v" style="left:87.5%;top:45%"><i class="enc"></i><i class="ass"></i><i class="br t"></i><i class="br f"></i></div>`:`<div class="mesa-d peq" style="left:${mz.x}%;top:${mz.y}%"></div>`).join('')+
+sala.innerHTML=DECOR+MESAS.map(mz=>mz.linha?`<div class="sofa-d l" style="left:${mz.x}%;top:${mz.y}%"><i class="enc"></i><i class="ass"></i><i class="br e"></i><i class="br d"></i></div><div class="sofa-v" style="left:87.5%;top:45%"><i class="enc"></i><i class="ass"></i><i class="br t"></i><i class="br f"></i></div>`:`<div class="mesa-d peq" style="left:${mz.x}%;top:${mz.y}%"></div>`).join('')+
   MESAS.map(mz=>Array.from({length:mz.n},(_,k)=>{ const q=lugarPos(mz,k); return `<button type="button" class="cad${mz.linha?' lin':''}" data-m="${mz.id}" data-k="${k}" style="left:${q.x}%;top:${q.y}%;z-index:1" aria-label="Sentar na ${mz.nome}, lugar ${k+1}"></button>`; }).join('')).join('');
 /* clima da janela: segue a hora do dia e o aluno pode mudar (fica guardado neste aparelho) */
-const CLIMAS=[['sol','☀️ Sol'],['chuva','🌧️ Chuva'],['noite','🌙 Noite']];
+const CLIMAS=[['sol','☀️ 晴れ · Sol'],['chuva','🌧️ 雨 · Chuva'],['noite','🌙 夜 · Noite']];
 let CLIMA=(()=>{ try{ const v=localStorage.getItem('utopiaClima'); if(CLIMAS.some(c=>c[0]===v)) return v; }catch(e){} const h=new Date().getHours(); return (h>=6&&h<18)?'sol':'noite'; })();
 function aplicaClima(){ sala.dataset.clima=CLIMA; const c=CLIMAS.find(c=>c[0]===CLIMA); $('btnClima').textContent=c[1]; }
 $('btnClima').onclick=()=>{ CLIMA=CLIMAS[(CLIMAS.findIndex(c=>c[0]===CLIMA)+1)%CLIMAS.length][0]; try{ localStorage.setItem('utopiaClima',CLIMA); }catch(e){} aplicaClima(); };
@@ -778,6 +785,22 @@ function quandoLogar(){ const a=getApps()[0]; if(!a){ setTimeout(quandoLogar,300
 quandoLogar();
 setTimeout(()=>{ if(!bancoOk) semBanco(); }, 6000);
 aplicaRo();
+</script>
+<script>
+/* o Salão só liga (presença, conversa, jogos) depois do clique em "Entrar no Salão" */
+(function(){
+  var ligado=false;
+  function entrar(){
+    if(ligado) return; ligado=true;
+    var porta=document.getElementById('portaSalao'), sec=document.getElementById('secSala');
+    if(porta) porta.hidden=true; if(sec) sec.hidden=false;
+    var m=document.createElement('script'); m.type='module'; m.textContent=document.getElementById('salaModulo').textContent;
+    document.body.appendChild(m);
+    try{ sec.scrollIntoView({behavior:'smooth',block:'start'}); }catch(e){}
+  }
+  var b=document.getElementById('entrarSalao'); if(b) b.addEventListener('click',entrar);
+  if(location.hash==='#sala') entrar();
+})();
 </script>
 </body>
 </html>
