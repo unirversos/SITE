@@ -1,4 +1,4 @@
-/* Vila da trilha: o mapinha em pixel art da trilha do japonês.
+/* Vila da trilha: o mapinha em pixel art da trilha de japonês.
    Uso: VilaTrilha.render(el,{mapas:[{slug,nome,desc,terr,aula,prova}],avatar:{cabelo,pele,roupa}})
    Desenho original, feito em código. Cada carimbo (prova) colore um lugar da vila. */
 (function(){

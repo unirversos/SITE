@@ -1,4 +1,4 @@
-/* Os 12 mapas da trilha do japonês: a mesma lista e o mesmo progresso
+/* Os 12 mapas da trilha de japonês: a mesma lista e o mesmo progresso
    usados em /idiomas/japones/ e no Planeta Utopia.
    [slug da aula, emoji, título, descrição, id da cena no Planeta] */
 (function(){

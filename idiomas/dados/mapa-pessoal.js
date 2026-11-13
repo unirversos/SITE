@@ -1,4 +1,4 @@
-/* Mapa pessoal: o aluno escolhe ferramentas e elas aparecem na trilha do japonês.
+/* Mapa pessoal: o aluno escolhe ferramentas e elas aparecem na trilha de japonês.
    Guarda só a lista de ids em localStorage 'uniMapaPessoal1' (sincroniza com a conta via conta.js). */
 (function(){
   var KEY='uniMapaPessoal1';
@@ -31,7 +31,7 @@
     function pinta(){ var on=tem(id);
       b.classList.toggle('on',on); b.setAttribute('aria-pressed',on);
       b.textContent=on?'✓ No meu mapa · tirar':'＋ Adicionar ao meu mapa';
-      o.textContent=on?'Ela aparece na sua trilha do japonês.':'Ela vai aparecer na sua trilha do japonês.'; }
+      o.textContent=on?'Ela aparece na sua trilha de japonês.':'Ela vai aparecer na sua trilha de japonês.'; }
     b.addEventListener('click',function(){ alterna(id); pinta(); });
     pinta(); h.appendChild(b); h.appendChild(o);
   }
