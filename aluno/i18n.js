@@ -21,6 +21,7 @@
       toda: 'Toda {d} às {h}', horaBr: '(horário de Brasília)', depois: 'Depois da próxima:', avulsa: 'avulsa', semFixo: 'Sem horário fixo: as aulas são marcadas uma a uma.',
       regra: 'Remarcações só com pelo menos <b>12 horas de antecedência</b>. Com menos de 12 horas, a aula conta como cancelada.', remarcar: 'Precisa remarcar?', remarcarMsg: 'Oi, Aline! Preciso remarcar a aula de {q}.',
       novaAba: ' (abre em nova aba)', erroSalvar: 'Não consegui salvar agora. Tente de novo.',
+      semCadastro: 'Nenhuma aula particular ligada a <b>{e}</b>. Se você tem aulas com a Aline, confira se entrou com o mesmo e-mail que passou para ela.', semPermissao: 'Não consegui abrir as suas aulas (sem permissão). Avise a Aline.', erroAulas: 'Não consegui carregar as suas aulas agora. Recarregue a página.',
       confirma: 'Tem aulas particulares com a Aline? Confirme o seu e-mail para elas aparecerem aqui.', mandar: 'Mandar link de confirmação', jaConf: 'Já confirmei',
       mandado: 'Pronto! Confira a sua caixa de entrada (e o spam).', naoMandou: 'Não consegui mandar agora. Tente de novo mais tarde.', aindaNao: 'Ainda não aparece como confirmado. Abra o link do e-mail e tente de novo.',
       semana: ['domingo', 'segunda-feira', 'terça-feira', 'quarta-feira', 'quinta-feira', 'sexta-feira', 'sábado']
@@ -41,6 +42,7 @@
       toda: 'Every {d} at {h}', horaBr: '(Brasília time)', depois: 'After the next one:', avulsa: 'one-off', semFixo: 'No fixed schedule: lessons are booked one at a time.',
       regra: 'Rescheduling needs at least <b>12 hours’ notice</b>. With less than 12 hours, the lesson counts as cancelled.', remarcar: 'Need to reschedule?', remarcarMsg: 'Hi, Aline! I need to reschedule the lesson of {q}.',
       novaAba: ' (opens in a new tab)', erroSalvar: 'Couldn’t save right now. Please try again.',
+      semCadastro: 'No private lessons linked to <b>{e}</b>. If you have lessons with Aline, check that you signed in with the same e-mail you gave her.', semPermissao: 'I couldn’t open your lessons (no permission). Please tell Aline.', erroAulas: 'I couldn’t load your lessons right now. Please reload the page.',
       confirma: 'Do you have private lessons with Aline? Confirm your e-mail to see them here.', mandar: 'Send confirmation link', jaConf: 'I’ve confirmed',
       mandado: 'Done! Check your inbox (and spam).', naoMandou: 'Couldn’t send it right now. Please try again later.', aindaNao: 'It doesn’t show as confirmed yet. Open the link in the e-mail and try again.',
       semana: ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday']

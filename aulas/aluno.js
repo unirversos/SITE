@@ -151,10 +151,10 @@ onAuthStateChanged(auth, async u => {
     /* escuta o cadastro em tempo real: quando a professora salva, a área do aluno se atualiza sozinha (sem recarregar) */
     if (parar) parar();
     parar = onSnapshot(doc(db, 'aulas', meuEmail), s => {
-      if (!s.exists()) { aula = null; clearTimeout(timer); area.innerHTML = ''; return; }
+      if (!s.exists()) { aula = null; clearTimeout(timer); area.innerHTML = `<section class="cx"><p class="eyebrow">${t('aulaPart')}</p><p class="mut peq">${t('semCadastro', { e: esc(meuEmail) })}</p></section>`; return; }
       const nova = s.data();
       if (!aula) calculaNovos(nova); else marcaMudancas(aula, nova);
       aula = nova; pinta(); mandaAvatar();
-    }, e => { console.warn(e); if (!aula) area.innerHTML = ''; });
+    }, e => { console.warn(e); if (!aula) area.innerHTML = `<section class="cx"><p class="eyebrow">${t('aulaPart')}</p><p class="mut peq">${t(e && e.code === 'permission-denied' ? 'semPermissao' : 'erroAulas')}</p></section>`; });
   } catch (e) { console.warn(e); area.innerHTML = ''; }
 });
