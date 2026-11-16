@@ -137,12 +137,12 @@ async function ficha(a){
     const email = $('f-email').value.trim().toLowerCase(), st = $('st');
     if (!editando && alunos.some(x => x.id === email)) { st.textContent = 'Esse e-mail já está cadastrado.'; return; }
     const dados = {
-      nome: $('f-nome').value.trim(), email, meet: $('f-meet').value.trim(), dur: Number($('f-dur').value) || 60, ativo: $('f-ativo').checked,
+      nome: $('f-nome').value.trim(), email, meet: $('f-meet').value.trim().replace(/^(https:\/\/meet\.google\.com\/)meet\//i, '$1'), dur: Number($('f-dur').value) || 60, ativo: $('f-ativo').checked,
       horarios: [...f.querySelectorAll('[data-tipo="h"]')].map(r => ({ dia: Number(r.querySelector('select').value), hora: r.querySelector('input').value })).filter(h => h.hora),
       avulsas: [...f.querySelectorAll('[data-tipo="v"] input')].map(i => i.value).filter(Boolean).sort(),
       pular: [...f.querySelectorAll('[data-tipo="p"] input')].map(i => i.value).filter(Boolean).sort(),
-      material: [...f.querySelectorAll('[data-tipo="m"]')].map(r => { const [t, u] = r.querySelectorAll('input'); return { t: t.value.trim(), url: u.value.trim() }; }).filter(m => m.t),
-      recado: $('f-recado').value.trim(), tarefa: $('f-tarefa').value.trim(), gravacoes: [...f.querySelectorAll('[data-tipo="g"]')].map(r => { const [t, u] = r.querySelectorAll('input'); return { t: t.value.trim(), url: u.value.trim() }; }).filter(m => m.t),
+      material: [...f.querySelectorAll('[data-tipo="m"]')].map(r => { const [t, u] = r.querySelectorAll('input'); const url = u.value.trim(); return { t: t.value.trim() || url, url }; }).filter(m => m.t),
+      recado: $('f-recado').value.trim(), tarefa: $('f-tarefa').value.trim(), gravacoes: [...f.querySelectorAll('[data-tipo="g"]')].map(r => { const [t, u] = r.querySelectorAll('input'); const url = u.value.trim(); return { t: t.value.trim() || url, url }; }).filter(m => m.t),
       gravar: a.gravar || [], avatar: a.avatar || '', tarefaFeita: (a.tarefaFeita && a.tarefaFeita === $('f-tarefa').value.trim()) ? a.tarefaFeita : '', atualizado: new Date().toISOString()
     };
     st.textContent = 'Salvando…';
