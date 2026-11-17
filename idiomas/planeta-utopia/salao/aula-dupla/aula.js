@@ -515,7 +515,9 @@ function conversa() {
   const k2 = ks.map(k => k + (S.log[k].v ? 'v' : '') + (S.log[k].rep ? 'r' : '')).join() + '|' + precoEscondido() + '|' + ROM + '|' + EU + '|' + REV.size + '|' + ((S.aguarda || {}).k || '') + '|' + hist.open;
   const idf = k => k + '|' + S.log[k].t;
   if (falados === null || ks.length < falados.size) falados = new Set(ks.map(idf));          /* ao abrir a página (ou recomeçar), não repete as falas antigas */
-  ks.forEach(k => { const m = S.log[k]; if (!falados.has(idf(k))) { falados.add(idf(k)); if (m.q === 'r') fala(m.t); } });
+  const novas = [];                                                                          /* várias falas do robô chegam juntas: tocar todas em sequência (uma não cancela a outra) */
+  ks.forEach(k => { const m = S.log[k]; if (!falados.has(idf(k))) { falados.add(idf(k)); if (m.q === 'r') novas.push(...segmentos(m.t)); } });
+  if (novas.length) tocaSeq(novas);
   if (k2 === logChave) return; logChave = k2;
   const ul = ultimas(ks), box = $('ultima');
   box.hidden = !ul.length; box.innerHTML = ul.map(linha).join('');
