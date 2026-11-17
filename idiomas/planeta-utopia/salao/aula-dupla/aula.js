@@ -601,8 +601,8 @@ function dicaHTML(cfg, n) {                                          /* dicas em
 const uiDizer = cfg => (TEXTO ? uiFala(cfg) : uiAudio(cfg));
 function balao(titulo, instr) { const b = $('balao'); b.innerHTML = `<b>${titulo}</b><p>${instr}</p>`; b.hidden = false; }   /* a instrução vira um balão de fala na cena, ao lado do seu avatar */
 function uiFala(cfg) {
-  const a = $('acao'); balao('✍️ Sua vez', cfg.instr);
-  a.innerHTML = `<p class="sub">Escreva e diga em voz alta para a sua dupla.</p><div id="dicas"></div>
+  const a = $('acao'); $('balao').hidden = true;
+  a.innerHTML = `<div class="vez"><b>✍️ Sua vez</b><p>${cfg.instr}</p></div><p class="sub">Escreva e diga em voz alta para a sua dupla.</p><div id="dicas"></div>
     <div class="escrever"><input id="inp" type="text" lang="ja" autocomplete="off" autocapitalize="off" autocorrect="off" spellcheck="false" enterkeyhint="send" placeholder="Escreva em japonês (kana ou romaji)" aria-label="Sua frase"><button class="btn pri" type="button" id="envia">Enviar</button></div>
     <div class="row"><button class="btn peq" type="button" id="btDica">💡 Dica</button><button class="btn peq" type="button" id="forca" hidden>Enviar assim mesmo</button><button class="lk" type="button" id="btVoz">🎤 Prefiro falar</button></div><p class="fb" id="fb" aria-live="polite"></p>`;
   const inp = $('inp'), fb = $('fb'); fb.textContent = ui.aviso || ''; ui.aviso = '';
@@ -683,15 +683,17 @@ function uiAudio(cfg) {
   const falha = (m, est) => { g.est = est; g.msg = m; if (ui.gr === g) pinta(); };
   const pinta = () => {
     const rep = S.repete && S.repete.de === EU ? `<p class="fb">${Pn} pediu para você repetir. Fale mais devagar e perto do microfone.</p>` : '';
-    const bt = pre ? `<p class="fb">${pre}</p>`
-      : !on ? `<button class="btn pri grande" type="button" id="jaFalei">${cfg.rot || '✓ Enviar'}</button><p class="sub">${cfg.rotSub || `Fale em voz alta para ${Pn}. Toque em Enviar quando terminar.`}</p>`
-      : g.est === 'gravando' ? `<button class="btn grande gravando" type="button" id="pa">⏹ Parar <span id="tempo">0s</span></button>`
-      : g.est === 'revisar' ? `<div class="row"><button class="btn" type="button" id="ouve">▶ Ouvir</button><button class="btn" type="button" id="outra">🎤 Gravar de novo</button></div><button class="btn pri grande" type="button" id="manda">✓ Enviar para ${Pn}</button>`
-      : g.est === 'enviando' ? espera('Enviando…')
-      : `<button class="btn pri grande" type="button" id="gr">🎤 Gravar</button><p class="sub">Toque, fale em voz alta e toque de novo para parar.</p>`;
-    balao('🎤 Sua vez de falar', cfg.instr);
-    a.innerHTML = `${rep}<div id="dicas"></div><div class="gravar">${bt}</div><p class="fb" id="fb" role="status" aria-live="polite">${esc(g.msg || '')}</p>
-      <div class="row">${pre ? '' : '<button class="btn peq" type="button" id="btDica">💡 Ver modelo</button>'}<button class="lk" type="button" id="btTexto">✍️ Prefiro digitar</button></div>`;
+    let prim = '', dica = '';
+    if (pre) dica = `<p class="fb">${pre}</p>`;
+    else if (!on) { prim = `<button class="btn pri med" type="button" id="jaFalei">${cfg.rot || '✓ Enviar'}</button>`; dica = cfg.rotSub || `Fale em voz alta para ${Pn}. Toque em Enviar quando terminar.`; }
+    else if (g.est === 'gravando') prim = `<button class="btn med gravando" type="button" id="pa">⏹ Parar <span id="tempo">0s</span></button>`;
+    else if (g.est === 'revisar') prim = `<button class="btn med" type="button" id="ouve">▶ Ouvir</button><button class="btn med" type="button" id="outra">🎤 Gravar de novo</button><button class="btn pri med" type="button" id="manda">✓ Enviar para ${Pn}</button>`;
+    else if (g.est === 'enviando') dica = espera('Enviando…');
+    else { prim = `<button class="btn pri med" type="button" id="gr">🎤 Gravar</button>`; dica = 'Toque, fale em voz alta e toque de novo para parar.'; }
+    $('balao').hidden = true;                                       /* a instrução fica dentro do cartão, colada no modelo */
+    a.innerHTML = `${rep}<div class="vez"><b>🎤 Sua vez de falar</b><p>${cfg.instr}</p></div><div id="dicas"></div>
+      <div class="row ctl">${prim}${pre ? '' : '<button class="btn peq" type="button" id="btDica">💡 Ver modelo</button>'}<button class="lk" type="button" id="btTexto">✍️ Prefiro digitar</button></div>
+      ${dica ? (dica.startsWith('<') ? dica : `<p class="sub">${dica}</p>`) : ''}<p class="fb" id="fb" role="status" aria-live="polite">${esc(g.msg || '')}</p>`;
     dicas();
     if ($('btDica')) $('btDica').onclick = () => { ui.nivel = Math.min(3, ui.nivel + 1); dicas(); };
     $('btTexto').onclick = () => { paraCaptura(); TEXTO = true; ui.aviso = ''; acao(); };

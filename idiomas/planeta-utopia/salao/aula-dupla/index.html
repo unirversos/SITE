@@ -145,6 +145,10 @@ button.pred:disabled{cursor:default;box-shadow:none;border-color:var(--line);bac
 .num b{font-size:16px}.num .jp{font-size:13.5px}.num .wro{font-size:11.5px;color:var(--muted)}
 /* áudio */
 .btn.grande{min-height:68px;font-size:19px;width:100%;border-radius:22px}
+.btn.med{min-height:42px;font-size:15px;padding:0 18px;width:auto}
+.row.ctl{gap:8px 10px;align-items:center}
+@media (max-width:520px){.row.ctl .lk{flex-basis:100%;text-align:left}}
+#acao>.vez{margin-bottom:2px}
 .btn.gravando{background:#c0392b;border-color:#c0392b;color:#fff;animation:grava 1.2s infinite ease-in-out}
 @keyframes grava{50%{box-shadow:0 0 0 8px rgba(192,57,43,.25)}}
 @media (prefers-reduced-motion:reduce){.btn.gravando{animation:none}}
@@ -268,7 +272,7 @@ footer{border-top:1.5px dashed var(--line);padding-top:12px;display:flex;flex-wr
 
 <script src="/idiomas/dados/avatar.js?v=20261016b"></script>
 <script src="/idiomas/dados/velocidade-voz.js?v=1"></script>
-<script type="module" src="./aula.js?v=16"></script>
+<script type="module" src="./aula.js?v=17"></script>
 <script defer src="/caderno-flutuante.js?v=8"></script>
 </body>
 </html>
