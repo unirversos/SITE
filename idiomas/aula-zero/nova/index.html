@@ -138,6 +138,29 @@ h1{font-family:var(--f-display);font-weight:800;font-size:clamp(26px,5vw,36px);l
 .moldebox .jpl em{font-style:normal;color:var(--muted);font-weight:500}
 .rotulo-esc{margin:0;font-size:14px;font-weight:700;color:var(--agua)}
 .avise{font-size:13.5px;color:var(--muted)}
+.pt{display:inline-block;border-radius:8px;padding:0 3px;margin:0 1px;font-weight:800;cursor:pointer;border-bottom:3px solid currentColor;line-height:1.15;-webkit-tap-highlight-color:transparent}
+.pt.o{color:#b4540a;background:#fdeedd}.pt.ni{color:#1f66ab;background:#e3f0fb}
+.pt:focus-visible{outline:3px solid var(--gold);outline-offset:2px}
+#ptTip{position:fixed;z-index:60;max-width:260px;background:#fff;border:2px solid var(--line);border-radius:14px;padding:10px 14px;box-shadow:0 8px 24px rgba(58,43,56,.18);font-size:15px;line-height:1.4}
+#ptTip b{font-size:22px}#ptTip.o b{color:#b4540a}#ptTip.ni b{color:#1f66ab}
+.ptdica{font-size:13px;color:var(--muted);margin:6px 0 0}
+.xitem{position:absolute;top:38%;transform:translate(-50%,-50%);font-size:42px;line-height:1;font-weight:900;color:#d11a3a;text-shadow:0 0 3px #fff,0 0 3px #fff,0 0 6px #fff;pointer-events:none;z-index:2;animation:xpop .35s cubic-bezier(.3,1.6,.5,1)}
+.xitem.quieto{animation:none}
+@keyframes xpop{0%{transform:translate(-50%,-50%) scale(.2);opacity:0}100%{transform:translate(-50%,-50%) scale(1);opacity:1}}
+#avatarNao{position:absolute;left:2%;bottom:0;width:21%;pointer-events:none;z-index:3}
+#avatarNao svg{display:block;width:100%;height:auto}
+#avatarNao .balao{position:absolute;left:62%;top:-8%;background:#fff;border:2px solid #d11a3a;color:#d11a3a;font-weight:800;font-size:13px;border-radius:12px;padding:2px 9px;white-space:nowrap}
+#avatarNao .cabeca{transform-origin:50px 62px}
+#avatarNao.vai .cabeca{animation:nao .7s ease-in-out}
+#avatarNao.vai{animation:aparece .25s ease-out}
+@keyframes nao{0%,100%{transform:rotate(0)}15%{transform:rotate(-14deg)}35%{transform:rotate(14deg)}55%{transform:rotate(-12deg)}75%{transform:rotate(10deg)}}
+@keyframes aparece{from{transform:translateY(12px);opacity:0}to{transform:none;opacity:1}}
+@media (prefers-reduced-motion:reduce){#avatarNao.vai .cabeca,#avatarNao.vai,.xitem{animation:none}}
+.gSim{display:none}#avatarNao.sim .gSim{display:inline}#avatarNao.sim .gNao{display:none}
+#avatarNao.sim .balao{border-color:#2f8f5b;color:#2f8f5b}
+#avatarNao.sim.vai .cabeca{animation:sim .7s ease-in-out}
+@keyframes sim{0%,100%{transform:translateY(0)}25%{transform:translateY(7px)}50%{transform:translateY(0)}75%{transform:translateY(6px)}}
+@media (prefers-reduced-motion:reduce){#avatarNao.sim.vai .cabeca{animation:none}}
 </style>
 </head>
 <body>
@@ -212,6 +235,11 @@ h1{font-family:var(--f-display);font-weight:800;font-size:clamp(26px,5vw,36px);l
       </g>
     </svg>
     <div id="hs"></div>
+    <div id="avatarNao" hidden aria-hidden="true"><svg viewBox="0 0 100 110"><g class="corpo"><path d="M8 110 Q10 76 50 74 Q90 76 92 110Z" fill="#c23f5e"/><rect x="40" y="62" width="20" height="16" rx="6" fill="#f2c9a8"/></g>
+      <g class="cabeca"><circle cx="50" cy="42" r="26" fill="#f6d3b8"/><path d="M24 40 Q26 14 52 14 Q76 14 76 40 Q66 26 50 28 Q34 26 24 40Z" fill="#3a2b38"/>
+      <g class="gNao"><path d="M36 40 L45 43M64 40 L55 43" stroke="#3a2b38" stroke-width="3" stroke-linecap="round"/><path d="M42 61 Q50 55 58 61" stroke="#a23a4d" stroke-width="3" fill="none" stroke-linecap="round"/></g><g class="gSim"><path d="M35 41 Q40 37 45 41M55 41 Q60 37 65 41" stroke="#3a2b38" stroke-width="3" fill="none" stroke-linecap="round"/><path d="M40 55 Q50 66 60 55" stroke="#a23a4d" stroke-width="3" fill="none" stroke-linecap="round"/><circle cx="33" cy="54" r="4" fill="#f4a3a8" opacity=".6"/><circle cx="67" cy="54" r="4" fill="#f4a3a8" opacity=".6"/></g><circle class="olho" cx="40" cy="48" r="2.4" fill="#3a2b38"/><circle class="olho" cx="60" cy="48" r="2.4" fill="#3a2b38"/></g>
+      <g class="gNao"><rect x="12" y="84" width="76" height="13" rx="6.5" fill="#f6d3b8" stroke="#c23f5e" stroke-width="2.5" transform="rotate(-24 50 90)"/><rect x="12" y="84" width="76" height="13" rx="6.5" fill="#f6d3b8" stroke="#c23f5e" stroke-width="2.5" transform="rotate(24 50 90)"/></g><g class="gSim"><rect x="52" y="80" width="46" height="13" rx="6.5" fill="#c23f5e" transform="rotate(-18 52 86)"/><circle cx="97" cy="70" r="8" fill="#f6d3b8" stroke="#c23f5e" stroke-width="2"/></g></svg>
+      <span class="balao">Não!</span></div>
     <div class="dica-cena" id="dicaCena">👆 toque nos círculos</div>
   </section>
 
@@ -432,7 +460,7 @@ function trocaCena(){
 }
 function desenhaHot(){
   trocaCena();
-  hsBox.innerHTML='';
+  hsBox.innerHTML='';const av=$('avatarNao');if(av){av.hidden=true;av.classList.remove('vai');}
   if(S.passo==='chegada'||S.passo==='fim'||S.passo==='final'||S.passo==='prontas'){$('dicaCena').hidden=true;return;}
   $('dicaCena').hidden=false;
   const c=CHAVES[S.k];
@@ -441,7 +469,10 @@ function desenhaHot(){
     const b=document.createElement('button');b.type='button';b.className='hs'+(usado?' usado':(S.visto.has(c.n+'-'+i)?' visto':''));
     b.style.left=h.x+'%';b.style.top=h.y+'%';b.setAttribute('aria-label',usado?'Já usado':'Tocar para ouvir: '+h.pt);b.innerHTML='<span>'+(usado?'✓':'♪')+'</span>';
     if(usado)b.disabled=true;
-    b.onclick=()=>{S.visto.add(c.n+'-'+i);b.classList.add('visto');pilula.hidden=false;
+    const riscaNao=(quieto)=>{const x=document.createElement('span');x.className='xitem'+(quieto?' quieto':'');x.textContent='✕';x.style.left=h.x+'%';x.setAttribute('aria-hidden','true');hsBox.appendChild(x);};
+    if(c.n===4&&S.visto.has(c.n+'-'+i)&&S.passo!=='terra')riscaNao(true);
+    b.onclick=()=>{const jaVisto=S.visto.has(c.n+'-'+i);S.visto.add(c.n+'-'+i);b.classList.add('visto');pilula.hidden=false;
+      if(c.n===4||c.n===5){if(c.n===4&&!jaVisto)riscaNao(false);const av=$('avatarNao');if(av){av.classList.toggle('sim',c.n===5);av.querySelector('.balao').textContent=c.n===5?'Quero!':'Não!';av.hidden=false;av.classList.remove('vai');void av.offsetWidth;av.classList.add('vai');}}
       pilula.innerHTML=`<div class="pilula"><div class="jpl" lang="ja">${html(h.t)}</div><div class="ro">${h.ro}</div><p class="pt">${h.pt}</p><p class="en">${h.en}</p><p class="gram">${c.gram}</p>${h.resp?`<p class="gram"><button type="button" class="btn small" id="ouveResp">💬 Resposta: <span lang="ja">${h.resp.ja}</span> · ${h.resp.pt}</button></p>`:''}${h.num?`<p class="gram"><a href="/idiomas/numeros/#${h.num}" target="_blank" rel="noopener"><b>🔢 Aprender os números ↗</b></a> (${h.numTxt||''})</p>`:''}</div>`;
       if(h.resp){const br=$('ouveResp');if(br)br.onclick=()=>fala(h.resp.ja);}
       fala(h.say);};
@@ -657,6 +688,7 @@ function telaTerra(c){
    <h2>${t.pedido}</h2>
    <div class="contagem" id="cont" aria-label="${feitos} de 2">${[0,1].map(i=>`<i class="${i<feitos?'on':''}"></i>`).join('')}</div>
    <div class="moldebox"><div class="jpl" lang="ja">${c.molde}</div><div class="ro">${c.moldeRo}</div></div>
+   ${c.n===3?'<p class="ptdica">👆 Toque no <span class="pt o">を</span> ou no <span class="pt ni">に</span> para ver a diferença.</p>':''}
    <div class="acoes" id="acoes"></div><div class="estado" id="estado"></div><div class="ouvi" id="ouvi"></div>
    <div id="escrita"></div><div id="reforco" class="acoes" style="flex-direction:column;align-items:flex-start"></div>`;
   const JA=/^[぀-ゟ゠-ヿ一-鿿]+$/;
@@ -681,6 +713,26 @@ function telaTerra(c){
   }
   const E=montaEntrada(c,(textos)=>{
     const dito=textos[0]||'';
+    if(c.n===3){
+      /* chave 03: a partícula tem que combinar com o verbo (を: たべ/のみ/かい; に: いき/のり) */
+      const WO=['たべ','食べ','のみ','飲み','かい','買い'],NI=['いき','行き','のり','乗り'];
+      let msg=null;
+      for(const x of textos){
+        let n=norm(x);for(const p of PREF){if(p&&n.startsWith(p)&&n.length>p.length){n=n.slice(p.length);break;}}
+        const st=[...WO,...NI].find(v=>n.endsWith(v+'ます'));
+        if(!st){if(!msg)msg=n.endsWith('ます')?'Use um verbo da cena: たべ, のみ, かい, いき ou のり.':null;continue;}
+        const par=WO.includes(st)?'を':'に',outra=par==='を'?'に':'を';
+        const rest=n.slice(0,n.length-st.length-2);
+        if(!rest){msg='Falta a coisa ou o lugar antes do '+st+'ます.';continue;}
+        if(!rest.endsWith(norm(par))||rest.length<=1){msg=rest.endsWith(norm(outra))?'Com '+st+'ます use '+par+', não '+outra+'. Faltou o '+par+' antes do '+st+'ます.':'Faltou o '+par+' antes do '+st+'ます.';continue;}
+        const id=rest+'|'+st;
+        if(S.feitos.includes(id)){E.aviso('Essa frase você já usou. Escolha outra.',dito);return;}
+        S.feitos.push(id);E.ok(x,'✓ Boa!');
+        if(S.feitos.length>=2){setTimeout(()=>{S.conquista=true;vai('ganho');},1200);}else setTimeout(()=>telaTerra(c),1100);
+        return;
+      }
+      E.falha(dito,msg||'Escreva uma frase inteira e feche com ます.');return;
+    }
     for(const x of textos){const w=palavraDe(x);if(w){
       const id=t.tipos?ultimoTipo:canon(w);
       if(S.feitos.includes(id)){E.aviso(t.tipos?'Essa palavra de pergunta você já usou. Use outra: どこ, なん ou なんじ.':'Essa palavra você já usou. Escolha outra.',dito);return;}
@@ -748,6 +800,44 @@ if(/[?&]lista=1/.test(location.search))window.addEventListener('load',()=>setTim
   btn.onclick=()=>{if(!box.hidden){fecha();return;}box.hidden=false;btn.setAttribute('aria-expanded','true');desenha();box.scrollIntoView({block:'nearest'});};
 })();
 render();
+})();
+</script>
+<script>
+/* を / に coloridos e clicáveis em toda a página */
+(function(){
+  const VERBO=/^(いき|のり|行き|乗り)/;
+  const tip=document.createElement('div');tip.id='ptTip';tip.hidden=true;document.body.appendChild(tip);
+  const TXT={o:'<b>を</b> liga a <b>coisa</b>: o que você come, bebe, compra ou pede.<br><small>おにぎり<b>を</b>たべます</small>',
+             ni:'<b>に</b> liga o <b>lugar</b>: para onde você vai.<br><small>とうきょう<b>に</b>いきます</small>'};
+  function abre(el){const k=el.classList.contains('o')?'o':'ni';tip.className=k;tip.innerHTML=TXT[k];tip.hidden=false;
+    const r=el.getBoundingClientRect();const w=Math.min(260,innerWidth-16);
+    tip.style.left=Math.max(8,Math.min(innerWidth-w-8,r.left+r.width/2-w/2))+'px';
+    const top=r.bottom+10;tip.style.top=(top+tip.offsetHeight>innerHeight?Math.max(8,r.top-tip.offsetHeight-10):top)+'px';}
+  document.addEventListener('click',e=>{const el=e.target.closest&&e.target.closest('.pt');
+    if(el){e.stopPropagation();e.preventDefault();if(!tip.hidden&&tip._el===el){tip.hidden=true;tip._el=null;}else{tip._el=el;abre(el);}}
+    else if(!tip.hidden){tip.hidden=true;tip._el=null;}},true);
+  document.addEventListener('keydown',e=>{if((e.key==='Enter'||e.key===' ')&&e.target.classList&&e.target.classList.contains('pt')){e.preventDefault();e.target.click();}if(e.key==='Escape')tip.hidden=true;});
+  function marca(root){
+    const w=document.createTreeWalker(root,NodeFilter.SHOW_TEXT,{acceptNode:n=>{
+      const pe=n.parentElement;if(!pe||pe.closest('.pt,rt,script,style,textarea,input,#ptTip'))return NodeFilter.FILTER_REJECT;
+      if(!/[をに]/.test(n.nodeValue))return NodeFilter.FILTER_REJECT;
+      if(!pe.closest('[lang="ja"],.jpl,#pilula,.alvo,.ouvi,#estado,.gram'))return NodeFilter.FILTER_REJECT;return NodeFilter.FILTER_ACCEPT;}});
+    const nos=[];while(w.nextNode())nos.push(w.currentNode);
+    nos.forEach(n=>{
+      const t=n.nodeValue,frag=document.createDocumentFragment();let ult=0,mudou=false;
+      for(let i=0;i<t.length;i++){const ch=t[i];let tipo=null;
+        if(ch==='を')tipo='o';
+        else if(ch==='に'){const dep=t.slice(i+1);const ant=t[i-1],pos=t[i+1];
+          if(VERBO.test(dep)||t.trim()==='に'||(/\s|^$/.test(ant||'')&&/\s|^$/.test(pos||'')))tipo='ni';}
+        if(!tipo)continue;
+        if(i>ult)frag.appendChild(document.createTextNode(t.slice(ult,i)));
+        const sp=document.createElement('span');sp.className='pt '+tipo;sp.textContent=ch;sp.tabIndex=0;sp.setAttribute('role','button');
+        sp.setAttribute('aria-label',tipo==='o'?'を: liga a coisa. Toque para ver':'に: liga o lugar. Toque para ver');
+        frag.appendChild(sp);ult=i+1;mudou=true;}
+      if(!mudou)return;if(ult<t.length)frag.appendChild(document.createTextNode(t.slice(ult)));n.parentNode.replaceChild(frag,n);});
+  }
+  let ag=false;const roda=()=>{if(ag)return;ag=true;requestAnimationFrame(()=>{ag=false;obs.disconnect();try{marca(document.body);}finally{obs.observe(document.body,{childList:true,subtree:true,characterData:true});}});};
+  const obs=new MutationObserver(roda);obs.observe(document.body,{childList:true,subtree:true,characterData:true});roda();
 })();
 </script>
 </body>
