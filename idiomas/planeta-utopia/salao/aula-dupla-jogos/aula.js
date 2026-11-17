@@ -454,8 +454,21 @@ function painelMala() {
   const cel = i => { const x = malaItem(i), v = sab[i]; return `<button type="button" class="cel${v === 1 ? ' ig' : v === 0 ? ' df' : ''}${ui.sel === i ? ' sel' : ''}" data-sel="${i}"${toca && v === undefined ? '' : ' disabled'}><span class="ic">${x.ic}</span>${ja(x.n)}<em>${v === 1 ? '🧳 levou' : v === 0 ? '🏠 esqueceu' : '❓'}</em></button>`; };
   return `<div class="row" style="justify-content:space-between"><h3>🧳 A mala de ${Pn}</h3><span class="sub">${its.filter(i => sab[i] !== undefined).length} de ${its.length} descobertas</span></div>
     <div class="grade">${its.map(cel).join('')}</div>${toca ? '<p class="sub">Toque numa coisa e pergunte se ela levou ou esqueceu.</p>' : ''}
+    ${frasesMala(g, sab)}
     <details class="minha"><summary>🔒 Ver a minha mala</summary>${malaDesenho(g, meus, false)}</details>`;
 }
+function frasesMala(g, sab) {
+  const sel = ui.sel && it0(ui.sel), x = sel || it0(arr(g.its).find(i => sab[i] === undefined) || arr(g.its)[0]) || MALA[0], n = x.n;
+  const l = (jp, pt) => `<div class="fr">${ja(jp)}<small>${pt}</small></div>`;
+  const mold = (v, fs) => `<tr class="vb"><th colspan="3">${v}</th></tr>` + fs.map(([f, pt, pas]) => `<tr class="${pas ? 'pas' : ''}"><td>${ja(f)}</td><td>${pt}</td><td>${pas ? '<span class="tag">passado</span>' : ''}</td></tr>`).join('');
+  const molde = `<details class="molde"><summary>＋ Mais detalhes: o molde do verbo</summary>
+    <p class="sub">Para o <b>passado</b> educado: troque <b lang="ja">〜ます</b> por <b lang="ja">〜ました</b>. Para negar o passado: <b lang="ja">〜ませんでした</b>.</p>
+    <table class="tbl">${mold('levar · もって いく', [['もって いく', 'levar (forma do dicionário)'], ['もって いきます', 'levo / vou levar'], ['もって いきません', 'não levo'], ['もって いきました', 'levei', 1], ['もって いきませんでした', 'não levei', 1]])}${mold('esquecer · わすれる', [['わすれる', 'esquecer (forma do dicionário)'], ['わすれます', 'esqueço'], ['わすれません', 'não esqueço'], ['わすれました', 'esqueci', 1], ['わすれませんでした', 'não esqueci', 1]])}</table></details>`;
+  return `<div class="frases"><b>📌 Frases do jogo <span class="tag">passado</span></b>${molde}
+    <div class="fcol"><small class="rot2">PERGUNTAR</small>${l(`${n}を もって いきましたか。`, `Levou ${x.pt}? ${x.ic}`)}${l(`${n}を わすれましたか。`, `Esqueceu ${x.pt}? ${x.ic}`)}</div>
+    <div class="fcol"><small class="rot2">RESPONDER</small><small>Se perguntaram “levou?”</small>${l('はい、もって いきました。', 'Sim, levei.')}${l('いいえ、わすれました。', 'Não, esqueci.')}<small>Se perguntaram “esqueceu?”</small>${l('はい、わすれました。', 'Sim, esqueci.')}${l('いいえ、もって いきました。', 'Não, levei.')}</div></div>`;
+}
+const it0 = id => MALA.find(m => m.id === id);
 function acaoMala() {
   const a = $('acao'), g = S.mala || {}, P = outro(EU), Pn = esc(nome(P)), ok = g.ok || {};
   if (g.fase === 'arrumar') {
@@ -478,7 +491,7 @@ function acaoMala() {
   }
   if (g.vez !== EU && g.fase === 'responder') {
     const it = malaItem(g.q), dentro = arr((g.pack || {})[EU]).includes(g.q), leva = g.tp === 'levou';
-    const R = leva ? (dentro ? { m: 'はい、もって いきました。', k: ['はい|hai', 'もって|motte|持'], pt: 'Sim, levei.' } : { m: 'いいえ、わすれました。', k: ['いいえ|iie', 'わすれ|wasure|忘'], pt: 'Não, esqueci.' })
+    const R = leva ? (dentro ? { m: 'はい、もって いきました。', k: ['はい|hai', 'もって|motte|持'], pt: 'Sim, levei.' } : { m: 'いいえ、わすれました。', k: ['いいえ|iie', 'わすれ|wasure|忘|いきませ|ikimase'], pt: 'Não, esqueci.' })
       : (dentro ? { m: 'いいえ、もって いきました。', k: ['いいえ|iie', 'もって|motte|持'], pt: 'Não, levei.' } : { m: 'はい、わすれました。', k: ['はい|hai', 'わすれ|wasure|忘'], pt: 'Sim, esqueci.' });
     dizerJ('mala', g.vez, 'responder', { instr: `${Pn} perguntou se você ${leva ? 'levou' : 'esqueceu'} ${it.ic} ${it.n}. Olhe a sua mala (em "Ver a minha mala") e responda.`, m: R.m, d1: R.m.split('、')[0] + '、…', d2: R.m.startsWith('はい') ? 'はい、＿＿＿。' : 'いいえ、＿＿＿。', pt: R.pt, k: R.k },
       (g2, root) => { const q = g2.q, asker = g2.vez, din = arr((g2.pack || {})[EU]).includes(q);
