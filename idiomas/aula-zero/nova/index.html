@@ -1,7 +1,10 @@
 <!DOCTYPE html>
-<html lang="pt-BR">
+<html lang="pt-BR" data-login="obrigatorio">
 <head>
 <meta charset="UTF-8">
+<style>html[data-login="obrigatorio"]:not(.uni-ok) body>*:not(#uni-gate){visibility:hidden}</style>
+<script type="module" src="/idiomas/dados/conta.js?v=7"></script>
+<script>setTimeout(function(){var h=document.documentElement;if(!h.classList.contains('uni-ok')&&!document.getElementById('uni-gate'))h.classList.add('uni-ok')},10000)</script>
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="robots" content="noindex,nofollow">
 <title>Aula Zero (teste) · Unirversos Idiomas</title>
@@ -146,6 +149,7 @@ h1{font-family:var(--f-display);font-weight:800;font-size:clamp(26px,5vw,36px);l
     <div class="tools">
       <button class="btn small" type="button" id="btnTeste" aria-expanded="false">🎤 Testar mic</button>
       <button class="btn small" type="button" id="btnRo" aria-pressed="false">Romaji: não</button>
+      <a class="btn small" id="btnNum" href="/idiomas/numeros/#ban" target="_blank" rel="noopener" style="text-decoration:none;display:inline-flex;align-items:center">🔢 Números ↗</a>
     </div>
   </header>
 
@@ -197,7 +201,7 @@ h1{font-family:var(--f-display);font-weight:800;font-size:clamp(26px,5vw,36px);l
 
   <section class="painel" id="painel" aria-live="polite"></section>
 
-  <p class="rodape">Página de teste, fora do menu. Nada daqui vale para a trilha ainda.</p>
+  <p class="rodape">Página de teste, fora do menu. O seu progresso fica guardado na sua conta.</p>
   <div class="lista-voz" id="listaVoz" hidden></div>
 </div>
 
@@ -255,6 +259,7 @@ function diagnostico(texto,g){
   const t=norm(texto),key=g[g.length-1];
   if(!key.some(x=>t.includes(norm(x))))return 'Faltou o '+key[0]+' no final.';
   if(g.length===3&&!key.some(k=>t.includes(norm(g[1][0])+norm(k))))return 'Faltou o '+g[1][0]+' antes do '+key[0]+'.';
+  if(g.length===4&&g[1].includes('わ')){const q=g[2];if(!q.some(x=>t.includes(norm(x))))return 'Faltou a palavra de pergunta ('+q[0]+') depois do は.';}
   if(!g[0].some(x=>t.includes(norm(x))))return 'Confira a palavra: olhe o objeto na cena.';
   return 'Quase. Confira a ordem das peças no molde.';
 }
@@ -289,7 +294,7 @@ const temVoz=t=>!!(window.AUDIO_MAP||{})[chaveAudio(t)];
 const ITEM={
   tokyo:['とうきょう','東京','ときょう'],densha:['でんしゃ','電車'],kippu:['きっぷ','切符'],onigiri:['おにぎり'],mizu:['みず','水','おみず','お水'],ocha:['おちゃ','お茶'],
   osaka:['おおさか','大阪','おさか'],toire:['トイレ','といれ','お手洗い'],basu:['バス'],pasu:['パスポート'],sushi:['すし','寿司'],
-  tabe:['たべ','食べ','おにぎりをたべ','おにぎりを食べ'],nomi:['のみ','飲み','みずをのみ','水を飲み'],iki:['いき','行き','とうきょうにいき','東京に行き'],iki2:['といれにいき','トイレに行き'],mi:['み','見'],nori:['のり','乗り','でんしゃにのり','電車に乗り'],kai:['かい','買い','きっぷをかい','切符を買い']
+  tabe:['たべ','食べ','おにぎりをたべ','おにぎりを食べ'],nomi:['のみ','飲み','みずをのみ','水を飲み'],iki:['いき','行き','とうきょうにいき','東京に行き'],iki2:['といれにいき','トイレに行き'],mi:['み','見'],konbini:['コンビニ','こんびに'],eki:['えき','駅'],nori:['のり','乗り','でんしゃにのり','電車に乗り'],kai:['かい','買い','きっぷをかい','切符を買い']
 };
 const NOMES=['tokyo','densha','kippu','onigiri','mizu','ocha'];
 const html=toks=>toks.map(t=>typeof t==='string'?t:(t.k?`<ruby>${t.k}<rt>${t.f}</rt></ruby>`:(t[1]==='k'?`<b>${t[0]}</b>`:t[0]))).join('');
@@ -344,20 +349,19 @@ const CHAVES=[
   ganho:'Agora você sabe dizer o que faz.'},
 
  {n:4,jp:'か',ico:'❓',
-  gram:'<b>か</b> no fim transforma qualquer frase em pergunta. Sem trocar mais nada. A voz sobe no final.',
-  molde:'<em>coisa</em> <b>ですか</b> &nbsp;/&nbsp; <em>ação</em> <b>ますか</b>',moldeRo:'[coisa] desu ka / [ação]-masu ka',
+  gram:'Troque pela <b>palavra de pergunta</b> e feche com <b>ですか</b>: <b>どこ</b> (onde), <b>なん</b> (o quê), <b>なんじ</b> (que horas). O <b>は</b> aqui lê-se “wa”.',
+  molde:'<em>coisa</em> は <b>pergunta</b> ですか',moldeRo:'[coisa] wa [pergunta] desu ka?',
   hot:[
-   H(P_SIGN,'tokyo','とうきょうですか',[TOK.tokyo,'です',['か','k']],'Tōkyō desu ka?','É Tóquio?','Is it Tokyo?'),
-   H(P_TRAIN,'densha','でんしゃですか',['でんしゃです',['か','k']],'densha desu ka?','É um trem?','Is it a train?'),
-   H(P_TICKET,'kippu','きっぷですか',['きっぷです',['か','k']],'kippu desu ka?','É o bilhete?','Is it the ticket?'),
-   H(P_ONI,'tabe','たべますか',['たべます',['か','k']],'tabemasu ka?','Você come?','Do you eat?'),
-   H(P_TEA,'ocha','おちゃですか',['おちゃです',['か','k']],'ocha desu ka?','É chá?','Is it tea?'),
-   H(P_WATER,'nomi','のみますか',['のみます',['か','k']],'nomimasu ka?','Você bebe?','Do you drink?'),
-   H(P_WC,'toire','トイレですか',['トイレです',['か','k']],'toire desu ka?','É o banheiro?','Is it the restroom?')],
-  agua:{say:'でんしゃですか',t:['でんしゃです',['か','k']],ro:'densha desu ka?',pt:'É um trem?',g:[['でんしゃ','電車'],['ですか']]},
-  fogo:{pedido:'Você olha a placa e quer ter certeza. Pergunte: é Tóquio?',say:'とうきょうですか',t:[TOK.tokyo,'です',['か','k']],ro:'Tōkyō desu ka?',pt:'É Tóquio?',g:[['とうきょう','東京'],['ですか']]},
-  terra:{pedido:'Faça uma pergunta com か. Use qualquer palavra que você quiser. Faça 2 perguntas diferentes.',itens:['tokyo','densha','kippu','onigiri','ocha','mizu','tabe','nomi','iki'],suf:{_:['ですか'],tabe:['ますか'],nomi:['ますか'],iki:['ますか'],mi:['ますか']},exemplo:'きっぷですか',exemploRo:'kippu desu ka?',key:'ですか'},
-  ganho:'Agora você sabe perguntar.'},
+   H(P_WC,'toire','トイレはどこですか',['トイレは',['どこ','k'],'ですか'],'toire wa doko desu ka?','Onde fica o banheiro?','Where is the restroom?'),
+   Object.assign(H(P_TRAIN,'densha','でんしゃはなんじですか',['でんしゃは',['なんじ','k'],'ですか'],'densha wa nanji desu ka?','Que horas é o trem?','What time is the train?'),{num:'ji',numTxt:'a resposta vem em horas: さんじ, ごじ…'}),
+   Object.assign(H(P_SIGN,'sen','なんばんせんですか',[['なんばんせん','k'],'ですか'],'nanban-sen desu ka?','Qual plataforma?','Which platform?'),{num:'ban',numTxt:'a plataforma é sempre um número'}),
+   H(P_TICKET,'kippu','これはなんですか',['これは',['なん','k'],'ですか'],'kore wa nan desu ka?','O que é isto?','What is this?'),
+   H(P_WATER,'mizu','みずです',['みず',['です','k']],'mizu desu','É água. (a resposta)','It is water. (the answer)'),
+   H(P_ONI,'onigiri','おにぎりです',['おにぎり',['です','k']],'onigiri desu','É onigiri. (a resposta)','It is an onigiri. (the answer)')],
+  agua:{say:'トイレはどこですか',t:['トイレは',['どこ','k'],'ですか'],ro:'toire wa doko desu ka?',pt:'Onde fica o banheiro?',g:[['トイレ','といれ'],['は','わ'],['どこ'],['ですか']]},
+  fogo:{pedido:'O bilhete está na sua mão e você não sabe o que é. Pergunte: o que é isto?',say:'これはなんですか',t:['これは',['なん','k'],'ですか'],ro:'kore wa nan desu ka?',pt:'O que é isto?',g:[['これ'],['は','わ'],['なん','なに','何'],['ですか']]},
+  terra:{pedido:'Pergunte onde fica algo, com どこですか. Use qualquer palavra que você quiser. Faça 2 perguntas diferentes.',itens:['toire','tokyo','kippu','densha','onigiri','mizu','ocha','konbini','eki'],suf:{_:['はどこですか','わどこですか','どこですか']},exemplo:'コンビニはどこですか',exemploRo:'konbini wa doko desu ka?',key:'どこですか'},
+  ganho:'Agora você sabe perguntar onde, o quê e que horas.'},
 
  {n:5,jp:'ください',ico:'🤲',
   gram:'<b>を</b> (lido “o”) marca o que você pede e <b>ください</b> é o “por favor, me dê”.',
@@ -378,6 +382,13 @@ const S={f:0,k:0,passo:'chegada',erros:0,semMic:false,micNegado:false,feitos:[],
 try{S.semMic=localStorage.getItem('uniNovaSemMic')==='1';}catch(e){}
 try{const p=JSON.parse(localStorage.getItem('uniNovaAZ')||'null');if(p&&Array.isArray(p.acesas))S.acesas=p.acesas;}catch(e){}
 const salva=()=>{try{localStorage.setItem('uniNovaAZ',JSON.stringify({acesas:S.acesas}));}catch(e){}};
+/* o progresso mora na conta do aluno (conta.js copia 'uniNovaAZ' para o Firestore e traz de volta ao entrar) */
+function relePorConta(){
+  try{const p=JSON.parse(localStorage.getItem('uniNovaAZ')||'null');
+    if(p&&Array.isArray(p.acesas)){const novo=[...new Set([...S.acesas,...p.acesas])];
+      if(novo.length!==S.acesas.length){S.acesas=novo;if(window.__render)window.__render();}}}catch(e){}
+}
+document.addEventListener('uni-progresso',relePorConta);document.addEventListener('uni-conta',relePorConta);
 const $=id=>document.getElementById(id);
 const painel=$('painel'),barra=$('chaves'),pilula=$('pilula'),hsBox=$('hs');
 const SR=window.SpeechRecognition||window.webkitSpeechRecognition;
@@ -405,7 +416,7 @@ function desenhaHot(){
     b.style.left=h.x+'%';b.style.top=h.y+'%';b.setAttribute('aria-label',usado?'Já usado':'Tocar para ouvir: '+h.pt);b.innerHTML='<span>'+(usado?'✓':'♪')+'</span>';
     if(usado)b.disabled=true;
     b.onclick=()=>{S.visto.add(c.n+'-'+i);b.classList.add('visto');pilula.hidden=false;
-      pilula.innerHTML=`<div class="pilula"><div class="jpl" lang="ja">${html(h.t)}</div><div class="ro">${h.ro}</div><p class="pt">${h.pt}</p><p class="en">${h.en}</p><p class="gram">${c.gram}</p></div>`;
+      pilula.innerHTML=`<div class="pilula"><div class="jpl" lang="ja">${html(h.t)}</div><div class="ro">${h.ro}</div><p class="pt">${h.pt}</p><p class="en">${h.en}</p><p class="gram">${c.gram}</p>${h.num?`<p class="gram"><a href="/idiomas/numeros/#${h.num}" target="_blank" rel="noopener"><b>🔢 Aprender os números ↗</b></a> (${h.numTxt||''})</p>`:''}</div>`;
       fala(h.say);};
     hsBox.appendChild(b);
   });
@@ -413,23 +424,27 @@ function desenhaHot(){
 
 /* ---------- fluxo ---------- */
 if(LIVRE){
+  /* navegar é livre (ver qualquer chave, acesa ou apagada); acender continua exigindo a resposta do aluno */
+  const primeiraApagada=()=>{const i=CHAVES.findIndex(c=>!S.acesas.includes(c.n));return i<0?0:i;};
+  S.primeiraApagada=primeiraApagada;
   barra.addEventListener('click',e=>{const b=e.target.closest('[data-i]');if(!b)return;S.k=+b.dataset.i;vai('agua');});
   const lv=document.createElement('div');lv.className='livre';
-  lv.innerHTML='<span>Modo teste:</span><button type="button" id="lvAnt">‹ etapa</button><button type="button" id="lvProx">etapa ›</button>';
+  lv.innerHTML='<button type="button" id="lvAnt">‹ Chave anterior</button><button type="button" id="lvProx">Próxima chave ›</button>';
   barra.insertAdjacentElement('afterend',lv);
   const anda=d=>{
-    if(S.passo==='chegada'){if(d>0){S.k=0;vai('agua');}return;}
+    if(S.passo==='chegada'){if(d>0){S.k=primeiraApagada();vai('agua');}return;}
     if(S.passo==='fim')return;
-    if(S.passo==='final'){if(d>0)vai('fim');else{S.k=CHAVES.length-1;vai('ganho');}return;}
-    let i=ETAPAS.indexOf(S.passo)+d;
-    if(i<0){if(S.k>0){S.k--;vai('ganho');}else vai('chegada');return;}
-    if(i>=ETAPAS.length){if(S.k<CHAVES.length-1){S.k++;vai('agua');}else{S.f=0;vai('final');}return;}
-    vai(ETAPAS[i]);
+    if(S.passo==='final'){if(d<0){S.k=CHAVES.length-1;vai('agua');}return;}
+    const k=S.k+d;
+    if(k<0){vai('chegada');return;}
+    if(k>=CHAVES.length){S.f=0;vai('final');return;}
+    S.k=k;vai('agua');
   };
   $('lvAnt').onclick=()=>anda(-1);$('lvProx').onclick=()=>anda(1);
 }
 function vai(passo){S.passo=passo;S.erros=0;S.feitos=[];pararMic();pilula.hidden=true;render();}
 function render(){
+  window.__render=render;
   desenhaBarra();desenhaHot();
   const c=CHAVES[S.k];
   if(S.passo==='chegada')return telaChegada();
@@ -442,17 +457,18 @@ function render(){
 }
 function telaChegada(){
   painel.innerHTML=`<span class="elem ganho"><i></i>Chegada</span>
-   <h2>Cinco chaves apagadas.</h2>
+   <h2>${S.acesas.length?S.acesas.length+' de 5 chaves acesas.':'Cinco chaves apagadas.'}</h2>
    <p>Em 15 minutos você aprende a perguntar e a pedir em japonês.</p>
-   <div class="acoes"><button class="btn pri" type="button" id="go">Acender a primeira chave →</button></div>`;
-  $('go').onclick=()=>{fala('すみません');S.k=0;vai('agua');};
+   <div class="acoes"><button class="btn pri" type="button" id="go">${S.acesas.length&&S.acesas.length<5?'Continuar →':'Acender a primeira chave →'}</button></div>`;
+  $('go').onclick=()=>{fala('すみません');S.k=S.primeiraApagada?S.primeiraApagada():0;vai('agua');};
 }
 function telaFim(){
   painel.innerHTML=`<div class="fim-bloco"><div class="grande" aria-hidden="true">🗝️🗝️🗝️🗝️🗝️</div>
    <span class="elem ganho"><i></i>Ganho</span><h2>As 5 chaves estão acesas.</h2>
    <div class="acoes"><a class="btn pri" href="/idiomas/japones/" style="text-decoration:none;display:inline-flex;align-items:center">Ir para os mapas →</a>
-   <button class="btn ghost" type="button" id="de-novo">Refazer</button></div></div>`;
-  $('de-novo').onclick=()=>{S.acesas=[];salva();S.k=0;vai('chegada');};
+   <button class="btn ghost" type="button" id="de-novo">Rever do começo</button></div></div>`;
+  try{localStorage.setItem('aulaZeroCompleted','true');}catch(e){}
+  $('de-novo').onclick=()=>{S.k=0;vai('agua');};
 }
 
 /* a chave ganha aparece grande e voa até o símbolo dela na barra */
@@ -492,7 +508,8 @@ function telaGanho(c){
   let acesa=false;
   const acende=()=>{if(acesa)return;acesa=true;if(!S.acesas.includes(c.n)){S.acesas.push(c.n);salva();}
     desenhaBarra();const sl=barra.children[S.k];if(sl&&!ja)sl.classList.add('pop');};
-  const voo=ja?(acende(),null):voaChave(c,acende);
+  const conquistou=S.conquista;S.conquista=false;
+  const voo=(ja||!conquistou)?(conquistou?acende():0,null):voaChave(c,acende);
   $('prox').onclick=()=>{if(voo)voo.cancela();acende();if(ultima){S.f=0;vai('final');}else{S.k++;vai('agua');}};
 }
 
@@ -577,7 +594,7 @@ function telaResposta(c,tipo,titulo,pedido,alvo){
 
 /* ---------- prova final: as 5 chaves de uma vez ---------- */
 const FINAL=[
- {pedido:'Você quer saber se aquilo é um onigiri. Pergunte.',say:'おにぎりですか',t:['おにぎりです',['か','k']],ro:'onigiri desu ka?',pt:'É um onigiri?',g:[['おにぎり'],['ですか']],molde:'<em>coisa</em> <b>ですか</b>',moldeRo:'[coisa] desu ka?'},
+ {pedido:'Você precisa achar o banheiro. Pergunte onde fica.',say:'トイレはどこですか',t:['トイレは',['どこ','k'],'ですか'],ro:'toire wa doko desu ka?',pt:'Onde fica o banheiro?',g:[['トイレ','といれ'],['は','わ'],['どこ'],['ですか']],molde:'<em>coisa</em> は <b>どこ</b>ですか',moldeRo:'[coisa] wa doko desu ka?'},
  {pedido:'A atendente confirma. Peça um onigiri.',say:'おにぎりをください',t:['おにぎりを',['ください','k']],ro:'onigiri o kudasai',pt:'Um onigiri, por favor.',g:[['おにぎり'],['を'],['ください','下さい']],molde:'<em>coisa</em> <b>を ください</b>',moldeRo:'[coisa] o kudasai'},
  {pedido:'Ela aponta a água e pergunta: “のみますか？” (você bebe?). Responda: eu bebo a água.',say:'みずをのみます',t:['みずを','のみ',['ます','k']],ro:'mizu o nomimasu',pt:'Eu bebo água.',g:[['みず','水','おみず','お水'],['を'],['のみ','飲み'],['ます']],molde:'<em>ação</em> <b>ます</b>',moldeRo:'[ação]-masu'},
  {pedido:'Ela mostra a água e pergunta: “おちゃ？” (é chá?). Diga que não é.',say:'おちゃじゃない',t:['おちゃ',['じゃない','k']],ro:'ocha janai',pt:'Não é chá.',g:[['おちゃ','お茶'],['じゃない','じゃないです','じゃありません','ではありません']],molde:'<em>coisa</em> <b>じゃない</b>',moldeRo:'[coisa] janai'}
@@ -603,7 +620,7 @@ function telaTerra(c){
   /* sufixos aceitos (do mais longo para o mais curto); cada um pode pedir um tipo de palavra */
   const sufs=[];
   const add=(lista)=>lista.forEach(x=>sufs.push(norm(x)));
-  if(c.n===4){sufs.push('ですか','ますか');}else add(t.suf._);
+  if(c.n===4){sufs.push('はどこですか','わどこですか','どこですか');}else add(t.suf._);
   sufs.sort((a,b)=>b.length-a.length);
   const canon=w=>{for(const id in ITEM){if(ITEM[id].some(a=>norm(a)===w))return id;}return w;};
   function palavraDe(txt){
@@ -622,7 +639,7 @@ function telaTerra(c){
       const id=canon(w);
       if(S.feitos.includes(id)){E.aviso('Essa palavra você já usou. Escolha outra.',dito);return;}
       S.feitos.push(id);E.ok(x,'✓ Boa!');
-      if(S.feitos.length>=2){setTimeout(()=>vai('ganho'),1200);}else setTimeout(()=>telaTerra(c),1100);
+      if(S.feitos.length>=2){setTimeout(()=>{S.conquista=true;vai('ganho');},1200);}else setTimeout(()=>telaTerra(c),1100);
       return;}}
     const n=norm(dito);
     let msg='Escreva uma palavra em kana ou romaji e feche com '+t.key+'.';

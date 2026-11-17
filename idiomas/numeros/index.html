@@ -296,20 +296,20 @@ function renderC(){
 /* ---------- praticar ---------- */
 let alvo=0, acertos=0, tentativas=0, respondido=false;
 function sorteia(c){ const lim=c.id==='en'?10000:c.max; if(c.id==='en'){ const r=Math.random(); return r<.4?Math.floor(Math.random()*9+1)*100:r<.8?Math.floor(Math.random()*90+10)*100:Math.floor(Math.random()*99)+1; } return Math.floor(Math.random()*lim)+1; }
-function novaPergunta(){
+function novaPergunta(falar){
   const c=cur; alvo=sorteia(c); respondido=false;
   const ops=new Set([alvo]); let guard=0; while(ops.size<4&&guard++<200){ ops.add(sorteia(c)); }
   if(ops.size<4) for(let n=1;ops.size<4&&n<=c.max;n++) ops.add(n);
   const arr=[...ops].sort(()=>Math.random()-.5);
   $('pOpts').innerHTML=arr.map(n=>`<button type="button" data-n="${n}">${fmt(n)}</button>`).join('');
-  $('pRev').innerHTML=''; setTimeout(()=>speak(conta(c,alvo)),200);
+  $('pRev').innerHTML=falar===true?'':'<span style="color:var(--muted)">Toque em 🔊 para ouvir um número desta contagem e escolha a resposta.</span>'; if(falar===true) setTimeout(()=>speak(conta(c,alvo)),200);
 }
 $('pOpts').onclick=e=>{ const b=e.target.closest('button'); if(!b||respondido) return; const n=+b.dataset.n; tentativas++;
   if(n===alvo){ respondido=true; acertos++; b.classList.add('certo'); const k=conta(cur,alvo); $('pRev').innerHTML=`✨ Isso! <b lang="ja">${k}</b> <span class="ro">${romaji(k)}</span> = ${fmt(alvo)}`; }
   else { b.classList.add('errado'); b.disabled=true; }
   $('pPlacar').textContent=`${acertos} acerto${acertos===1?'':'s'} em ${tentativas} tentativa${tentativas===1?'':'s'}`; };
 $('pPlay').onclick=()=>speak(conta(cur,alvo));
-$('pNovo').onclick=novaPergunta;
+$('pNovo').onclick=()=>novaPergunta(true);
 
 /* atalho: /idiomas/numeros/#haku abre direto a contagem pedida (id da contagem) */
 (function(){ const id=(location.hash||'').slice(1), i=C.findIndex(c=>c.id===id); if(i<0) return; cur=C[i]; nC=Math.min(nC,cur.max); $('chips').querySelectorAll('button').forEach((x,j)=>x.setAttribute('aria-selected',String(j===i))); setTimeout(()=>{ const s=$('h-cont'); s&&s.scrollIntoView(); },0); })();

@@ -19,7 +19,7 @@ const CFG = {
 };
 /* chaves do progresso de Idiomas que vão para a conta */
 const KEYS = ['uniMapaPessoal1','utopiaAvatar1','utopiaSave1','utopiaKana1','utopiaMapas1','utopiaPulos1',
-  'aulaZeroCompleted','aulaZeroPulada','utopiaRomaji','kanjiSRS1','utopiaFrases1'];
+  'aulaZeroCompleted','aulaZeroPulada','uniNovaAZ','utopiaRomaji','kanjiSRS1','utopiaFrases1'];
 
 const app = getApps()[0] || initializeApp(CFG);
 const auth = getAuth(app);
