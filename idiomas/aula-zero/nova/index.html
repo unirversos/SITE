@@ -162,6 +162,12 @@ h1{font-family:var(--f-display);font-weight:800;font-size:clamp(26px,5vw,36px);l
 #avatarNao.sim.vai .cabeca{animation:sim .7s ease-in-out}
 @keyframes sim{0%,100%{transform:translateY(0)}25%{transform:translateY(7px)}50%{transform:translateY(0)}75%{transform:translateY(6px)}}
 @media (prefers-reduced-motion:reduce){#avatarNao.sim.vai .cabeca{animation:none}}
+.placa{cursor:pointer}.placa:focus-visible rect{stroke:#8e6a1f}
+#placaTip{position:fixed;z-index:60;max-width:270px;background:#fff;border:2px solid var(--line);border-radius:14px;padding:10px 14px;box-shadow:0 8px 24px rgba(58,43,56,.18);font-size:15px;line-height:1.4}
+#placaTip b{color:var(--pink)}
+.qz-bt{display:flex;flex-wrap:wrap;gap:8px;margin:10px 0}.qz-bt .btn{min-width:30%}
+.qz-bt .btn small{display:block;font-weight:500;color:var(--muted);font-size:12px}
+.verbo b{color:var(--pink)}
 </style>
 </head>
 <body>
@@ -221,8 +227,10 @@ h1{font-family:var(--f-display);font-weight:800;font-size:clamp(26px,5vw,36px);l
     <svg id="svgKon" viewBox="0 0 400 250" role="img" aria-label="Você está num konbini, uma loja de conveniência no Japão. Há uma geladeira com bebidas, uma prateleira com peixe, carne e ovos, e o balcão, com onigiri, chá e água nas suas mãos." style="display:none">
       <rect width="400" height="250" fill="#fbf3ea"/>
       <path d="M0 0h400v30H0z" fill="#f0e6dc"/><rect x="40" y="10" width="320" height="8" rx="4" fill="#fff"/>
-      <rect x="210" y="34" width="160" height="32" rx="8" fill="#2f8f5b" stroke="#fff" stroke-width="3"/><rect x="210" y="58" width="160" height="8" fill="#d9506f"/>
-      <text x="290" y="56" text-anchor="middle" font-family="Zen Maru Gothic, sans-serif" font-size="21" font-weight="700" fill="#fff">コンビニ</text>
+      <rect x="210" y="20" width="160" height="32" rx="8" fill="#2f8f5b" stroke="#fff" stroke-width="3"/><rect x="210" y="44" width="160" height="8" fill="#d9506f"/>
+      <text x="290" y="42" text-anchor="middle" font-family="Zen Maru Gothic, sans-serif" font-size="21" font-weight="700" fill="#fff">コンビニ</text>
+      <g class="placa" data-k="nomi" tabindex="0" role="button" aria-label="Placa: のみもの, bebidas. Toque para ver"><rect x="18" y="52" width="104" height="22" rx="8" fill="#3f7fb0" stroke="#fff" stroke-width="2.5"/><text x="70" y="68" text-anchor="middle" font-family="Zen Maru Gothic, sans-serif" font-size="15" font-weight="800" fill="#fff"><tspan fill="#ffe08a">のみ</tspan>もの</text></g>
+      <g class="placa" data-k="tabe" tabindex="0" role="button" aria-label="Placa: たべもの, comidas. Toque para ver"><rect x="214" y="52" width="104" height="22" rx="8" fill="#c2751f" stroke="#fff" stroke-width="2.5"/><text x="266" y="68" text-anchor="middle" font-family="Zen Maru Gothic, sans-serif" font-size="15" font-weight="800" fill="#fff"><tspan fill="#ffe08a">たべ</tspan>もの</text></g>
       <rect x="10" y="76" width="176" height="104" rx="8" fill="#e8f3fb" stroke="#7aa8d6" stroke-width="3"/><path d="M10 128h176" stroke="#b5ccdc" stroke-width="3"/>
       <rect x="206" y="76" width="184" height="104" rx="8" fill="#f4e8d8" stroke="#c9ab86" stroke-width="3"/><path d="M206 128h184" stroke="#dcc7a8" stroke-width="3"/>
       <g font-size="34" text-anchor="middle"><text x="40" y="106">🥛</text><text x="95" y="106">🍶</text><text x="150" y="106">🍵</text><text x="40" y="174" opacity=".55">🧃</text><text x="95" y="174" opacity=".55">🥤</text><text x="150" y="174" opacity=".55">🧃</text>
@@ -336,6 +344,7 @@ const temVoz=t=>!!(window.AUDIO_MAP||{})[chaveAudio(t)];
 
 /* ---------- itens da cena ---------- */
 const ITEM={
+  juice:['ジュース','じゅーす','じゅうす'],obento:['おべんとう','お弁当','べんとう','おべんとお'],pan:['パン','ぱん'],
   tokyo:['とうきょう','東京','ときょう'],densha:['でんしゃ','電車'],kippu:['きっぷ','切符'],onigiri:['おにぎり'],mizu:['みず','水','おみず','お水'],ocha:['おちゃ','お茶','おちゃをのみ','お茶を飲み'],
   osaka:['おおさか','大阪','おさか'],toire:['トイレ','といれ','お手洗い'],basu:['バス'],pasu:['パスポート'],sushi:['すし','寿司'],
   tabe:['たべ','食べ','おにぎりをたべ','おにぎりを食べ'],nomi:['のみ','飲み','みずをのみ','水を飲み'],iki:['いき','行き','とうきょうにいき','東京に行き'],iki2:['といれにいき','トイレに行き'],mi:['み','見'],tamago:['たまご','卵','玉子','たまごをたべ','卵を食べ','玉子を食べ'],gyunyu:['ぎゅうにゅう','牛乳','ミルク','ぎゅうにゅうをのみ','牛乳を飲み','ミルクを飲み','ミルクをのみ'],sake:['おさけ','お酒','さけ','おさけをのみ','お酒を飲み'],sakana:['さかな','魚','さかなをたべ','魚を食べ'],niku:['にく','肉','にくをたべ','肉を食べ'],konbini:['コンビニ','こんびに'],eki:['えき','駅'],nori:['のり','乗り','でんしゃにのり','電車に乗り'],kai:['かい','買い','きっぷをかい','切符を買い']
@@ -344,6 +353,7 @@ const NOMES=['tokyo','densha','kippu','onigiri','mizu','ocha'];
 const html=toks=>toks.map(t=>typeof t==='string'?t:(t.k?`<ruby>${t.k}<rt>${t.f}</rt></ruby>`:(t[1]==='k'?`<b>${t[0]}</b>`:t[0]))).join('');
 const TOK={tokyo:{k:'東京',f:'とうきょう'}};
 const P_WC={x:8,y:30};
+const K_JUICE={x:37,y:64},K_PAN={x:59,y:64},K_BENTO={x:73,y:64};
 const K_LEITE={x:10,y:53},K_SAKE={x:24,y:53},K_CHA={x:37,y:53},K_SAKANA={x:59,y:53},K_NIKU={x:73,y:53},K_TAMAGO={x:87,y:53};
 const P_SIGN={x:53,y:40},P_TRAIN={x:79,y:38},P_TICKET={x:17,y:84},P_ONI={x:50,y:86},P_TEA={x:68,y:84},P_WATER={x:86,y:84};
 const H=(pos,item,say,t,ro,pt,en)=>Object.assign({item,say,t,ro,pt,en},pos);
@@ -416,10 +426,13 @@ const CHAVES=[
    H(P_ONI,'onigiri','おにぎりをください',['おにぎりを',['ください','k']],'onigiri o kudasai','Um onigiri, por favor.','An onigiri, please.'),
    H(P_WATER,'mizu','みずをください',['みずを',['ください','k']],'mizu o kudasai','Água, por favor.','Water, please.'),
    H(P_TEA,'ocha','おちゃをください',['おちゃを',['ください','k']],'ocha o kudasai','Chá, por favor.','Tea, please.'),
-   H(K_TAMAGO,'tamago','たまごをください',['たまごを',['ください','k']],'tamago o kudasai','Um ovo, por favor.','An egg, please.')],
+   H(K_TAMAGO,'tamago','たまごをください',['たまごを',['ください','k']],'tamago o kudasai','Um ovo, por favor.','An egg, please.'),
+   H(K_JUICE,'juice','ジュースをください',['ジュースを',['ください','k']],'jūsu o kudasai','Um suco, por favor.','A juice, please.'),
+   H(K_BENTO,'obento','おべんとうをください',['おべんとうを',['ください','k']],'obentō o kudasai','Uma marmita, por favor.','A bento box, please.'),
+   H(K_PAN,'pan','パンをください',['パンを',['ください','k']],'pan o kudasai','Um pão, por favor.','Bread, please.')],
   agua:{say:'みずをください',t:['みずを',['ください','k']],ro:'mizu o kudasai',pt:'Água, por favor.',g:[['みず','水'],['を'],['ください','下さい']]},
   fogo:{pedido:'Você está com fome. Peça um onigiri.',say:'おにぎりをください',t:['おにぎりを',['ください','k']],ro:'onigiri o kudasai',pt:'Um onigiri, por favor.',g:[['おにぎり'],['を'],['ください','下さい']]},
-  terra:{pedido:'Peça com ください. Use qualquer palavra que você quiser. Faça 2 pedidos diferentes.',itens:['onigiri','mizu','tamago','ocha'],suf:{_:['をください','を下さい']},exemplo:'おちゃをください',exemploRo:'ocha o kudasai',key:'を ください'},
+  terra:{pedido:'Peça com ください. Use qualquer palavra que você quiser. Faça 2 pedidos diferentes.',itens:['onigiri','mizu','tamago','ocha','juice','obento','pan'],suf:{_:['をください','を下さい']},exemplo:'おちゃをください',exemploRo:'ocha o kudasai',key:'を ください'},
   ganho:'Agora você sabe pedir. As 5 chaves estão acesas.'}
 ];
 
@@ -479,6 +492,7 @@ function desenhaHot(){
       if(c.n===4||c.n===5){if(c.n===4&&!jaVisto)riscaNao(false);const av=$('avatarNao');if(av){av.classList.toggle('sim',c.n===5);{const bl=av.querySelector('.balao');bl.textContent='Quero!';bl.hidden=c.n!==5;}av.hidden=false;av.classList.remove('vai');void av.offsetWidth;av.classList.add('vai');}}
       pilula.innerHTML=`<div class="pilula"><div class="jpl" lang="ja">${html(h.t)}</div><div class="ro">${h.ro}</div><p class="pt">${h.pt}</p><p class="en">${h.en}</p><p class="gram">${c.gram}</p>${h.resp?`<p class="gram"><button type="button" class="btn small" id="ouveResp">💬 Resposta: <span lang="ja">${h.resp.ja}</span> · ${h.resp.pt}</button></p>`:''}${h.num?`<p class="gram"><a href="/idiomas/numeros/#${h.num}" target="_blank" rel="noopener"><b>🔢 Aprender os números ↗</b></a> (${h.numTxt||''})</p>`:''}</div>`;
       if(h.resp){const br=$('ouveResp');if(br)br.onclick=()=>fala(h.resp.ja);}
+      if(c.n===4){const nomi=['gyunyu','sake','ocha'].includes(h.item);const pl=pilula.querySelector('.pilula');if(pl)pl.insertAdjacentHTML('beforeend','<p class="gram verbo">'+(nomi?'のみもの':'たべもの')+' → <b>'+(nomi?'のみ':'たべ')+'</b>ません</p>');}
       fala(h.say);};
     hsBox.appendChild(b);
   });
@@ -515,6 +529,7 @@ function render(){
   if(S.passo==='agua')return telaResposta(c,'agua','Água · ouvir e repetir','Ouça e repita em voz alta.',c.agua);
   if(S.passo==='fogo')return telaResposta(c,'fogo','Fogo · a fechadura',c.fogo.pedido,c.fogo);
   if(S.passo==='terra')return telaTerra(c);
+  if(S.passo==='quiz')return telaQuiz(c);
   if(S.passo==='ganho')return telaGanho(c);
   if(S.passo==='prontas')return telaProntas();
   if(S.passo==='final')return telaFinal();
@@ -560,6 +575,25 @@ function voaChave(c,fim){
   const limpa=()=>{try{a.cancel();l.cancel();}catch(e){}el.remove();leg.remove();};
   a.onfinish=()=>{if(fim1)return;fim1=true;limpa();fim();};
   return {cancela(){if(fim1)return;fim1=true;limpa();fim();}};
+}
+function telaQuiz(c){
+  const Q=[['とうきょう','に','いき','Tōkyō ni'],['トイレ','に','いき','toire ni'],['おにぎり','を','たべ','onigiri o'],['おちゃ','を','のみ','ocha o']];
+  const V=[['いき','iki','ir'],['たべ','tabe','comer'],['のみ','nomi','beber']];
+  let q=0;
+  function mostra(){
+    const [n,pt,v,ro]=Q[q];
+    painel.innerHTML=`<span class="elem terra"><i></i>Chave 03 · brinque com o verbo</span>
+     <h2>Qual verbo fecha a frase?</h2>
+     <div class="contagem" aria-label="${q} de ${Q.length}">${Q.map((_,i)=>`<i class="${i<q?'on':''}"></i>`).join('')}</div>
+     <div class="moldebox"><div class="jpl" lang="ja">${n}<span>${pt}</span> ＿＿ます</div><div class="ro">${ro} ___masu</div></div>
+     <div class="qz-bt" id="qzBt">${V.map(x=>`<button type="button" class="btn" data-v="${x[0]}" lang="ja">${x[0]}ます<small>${x[1]}masu · ${x[2]}</small></button>`).join('')}</div>
+     <div class="estado" id="estado"></div>`;
+    $('qzBt').onclick=e=>{const b=e.target.closest('[data-v]');if(!b)return;const est=$('estado');
+      if(b.dataset.v===v){[...$('qzBt').children].forEach(x=>x.disabled=true);est.className='estado ok';est.textContent='✓ '+n+pt+v+'ます';fala(n+pt+v+'ます');
+        q++;setTimeout(()=>{if(q>=Q.length){S.conquista=true;vai('ganho');}else mostra();},1300);}
+      else{est.className='estado erro';est.textContent=pt==='に'?'Tente de novo: に marca um lugar. Qual verbo leva você até lá?':'Tente de novo: を marca a coisa. É para comer ou para beber?';}};
+  }
+  mostra();
 }
 function telaGanho(c){
   const ja=S.acesas.includes(c.n);
@@ -764,7 +798,7 @@ function telaTerra(c){
         const id=rest+'|'+st;
         if(S.feitos.includes(id)){E.aviso('Essa frase você já usou. Escolha outra.',dito);return;}
         S.feitos.push(id);E.ok(x,'✓ Boa!');
-        if(S.feitos.length>=2){setTimeout(()=>{S.conquista=true;vai('ganho');},1200);}else setTimeout(()=>telaTerra(c),1100);
+        if(S.feitos.length>=2){setTimeout(()=>{S.conquista=true;vai(c.n===3?'quiz':'ganho');},1200);}else setTimeout(()=>telaTerra(c),1100);
         return;
       }
       E.falha(dito,msg||'Escreva uma frase inteira e feche com ます.');return;
@@ -773,7 +807,7 @@ function telaTerra(c){
       const id=t.tipos?ultimoTipo:canon(w);
       if(S.feitos.includes(id)){E.aviso(t.tipos?'Essa palavra de pergunta você já usou. Use outra: どこ, なん ou なんじ.':'Essa palavra você já usou. Escolha outra.',dito);return;}
       S.feitos.push(id);E.ok(x,'✓ Boa!');
-      if(S.feitos.length>=2){setTimeout(()=>{S.conquista=true;vai('ganho');},1200);}else setTimeout(()=>telaTerra(c),1100);
+      if(S.feitos.length>=2){setTimeout(()=>{S.conquista=true;vai(c.n===3?'quiz':'ganho');},1200);}else setTimeout(()=>telaTerra(c),1100);
       return;}}
     const n=norm(dito);
     let msg='Escreva uma palavra em kana ou romaji e feche com '+t.key+'.';
@@ -874,6 +908,17 @@ render();
   }
   let ag=false;const roda=()=>{if(ag)return;ag=true;requestAnimationFrame(()=>{ag=false;obs.disconnect();try{marca(document.body);}finally{obs.observe(document.body,{childList:true,subtree:true,characterData:true});}});};
   const obs=new MutationObserver(roda);obs.observe(document.body,{childList:true,subtree:true,characterData:true});roda();
+})();
+</script>
+<script>
+(function(){const tip=document.createElement('div');tip.id='placaTip';tip.hidden=true;document.body.appendChild(tip);
+  const T={nomi:['のみもの','<b>のみ</b>もの = bebida.<br><small><b>のみ</b>ます (beber) + もの (coisa)</small>'],tabe:['たべもの','<b>たべ</b>もの = comida.<br><small><b>たべ</b>ます (comer) + もの (coisa)</small>']};
+  const k=document.getElementById('svgKon');if(!k)return;
+  const abre=(g,ev)=>{const d=T[g.dataset.k];tip.innerHTML=d[1];tip.hidden=false;try{window.fala&&fala(d[0]);}catch(e){}
+    const r=g.getBoundingClientRect();const w=Math.min(270,innerWidth-16);tip.style.left=Math.max(8,Math.min(innerWidth-w-8,r.left+r.width/2-w/2))+'px';tip.style.top=(r.bottom+10)+'px';tip._g=g;};
+  k.addEventListener('click',e=>{const g=e.target.closest('.placa');if(!g)return;e.stopPropagation();if(!tip.hidden&&tip._g===g){tip.hidden=true;return;}abre(g,e);});
+  k.addEventListener('keydown',e=>{const g=e.target.closest&&e.target.closest('.placa');if(g&&(e.key==='Enter'||e.key===' ')){e.preventDefault();abre(g,e);}});
+  document.addEventListener('click',e=>{if(!tip.hidden&&!(e.target.closest&&e.target.closest('.placa')))tip.hidden=true;});
 })();
 </script>
 </body>
