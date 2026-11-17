@@ -464,7 +464,7 @@ function desenha(forca) {
   /* cena */
   const c = S.cafe || {}, servido = ['papo', 'conta', 'lembranca'].includes(S.etapa) || (S.etapa === 'cafe' && (S.p || 0) >= 8);
   const av = r => `<div class="c-av${r === EU ? ' eu' : ''}${(vz === r || vz === 'ambas') ? ' vez' : ''}"><div class="face">${avatarHTML(S.jog[r].sel)}</div><b>${esc(nome(r))}${r === EU ? ' (você)' : ''}</b></div>`;
-  const meio = e.fundo === 'salao' ? '<div class="mesa">🪑</div>' : e.fundo === 'rua' ? '<div>🏦🏤📚</div><small>カフェは どこ？</small>'
+  const meio = e.fundo === 'salao' ? '<div class="mesa">🪑</div>' : e.fundo === 'rua' ? '<div>🏦🏤📚</div><small>' + ja('カフェは どこ？') + '</small>'
     : `<div>🤖</div><div class="mesa">${servido ? ((item((c.beb || {}).a) || {}).ic || '☕') + ((item((c.com || {}).a) || {}).ic || '') + ((item((c.com || {}).b) || {}).ic || '') + ((item((c.beb || {}).b) || {}).ic || '☕') : '📋'}</div>`;
   const cn = $('cena'); cn.dataset.fundo = e.fundo; cn.innerHTML = `<span class="placa">${e.placa}</span>${av(EU)}<div class="c-meio">${meio}</div>${av(P)}`;
   conversa();
@@ -565,8 +565,8 @@ function painel() {
     const cv = s.cv || {}, sabe = EU === 'a', toca = !sabe && st && st.tipo === 'toque', achou = concluida();
     h = `<div class="row" style="justify-content:space-between"><h3>🗺️ Mapa</h3>${sabe ? '<span class="so-voce">🔒 só você vê onde é o café</span>' : ''}</div><div class="mapa">${LUGARES.map((L, i) => {
       const eCafe = i === cv.alvo, mostra = (sabe || achou) && eCafe;
-      const viz = mostra ? `<div class="pred cafe">☕<small lang="ja">カフェ</small></div>` : (sabe || achou) ? `<div class="pred">🏠</div>` : `<button type="button" class="pred${cv.ult === i && !achou ? ' no' : ''}" data-pred="${i}"${toca ? '' : ' disabled'} aria-label="Prédio ao lado de ${L.pt}">❓</button>`;
-      return `<div class="quadra"><div class="pred">${L.ic}<small lang="ja">${L.n}</small></div>${viz}</div>`; }).join('')}</div>${toca && cv.erro ? '<p class="fb">ちがいます！ Não é esse. Leia de novo a resposta e tente outro.</p>' : ''}`;
+      const viz = mostra ? `<div class="pred cafe">☕<small>${ja('カフェ')}</small></div>` : (sabe || achou) ? `<div class="pred">🏠</div>` : `<button type="button" class="pred${cv.ult === i && !achou ? ' no' : ''}" data-pred="${i}"${toca ? '' : ' disabled'} aria-label="Prédio ao lado de ${L.pt}">❓</button>`;
+      return `<div class="quadra"><div class="pred">${L.ic}<small>${ja(L.n)}</small></div>${viz}</div>`; }).join('')}</div>${toca && cv.erro ? '<p class="fb">ちがいます！ Não é esse. Leia de novo a resposta e tente outro.</p>' : ''}`;
   }
   if (s.etapa === 'cafe') {
     const bB = item(((s.cafe || {}).beb || {}).b), errado = bB && bB.id === 'ocha' ? item('kohi') : item('ocha');
