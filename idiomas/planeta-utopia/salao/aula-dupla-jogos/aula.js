@@ -362,6 +362,20 @@ const JG = { mala: 1, det: 1, dif: 1 };
 const jogoDe = r => (r && r.jogo) || (r && (r.etapa === 'ficha' || r.etapa === 'batalha') ? 'bat' : null);
 function ETP(j) { if (j === undefined) j = jogoDe(S); return ['chegada', 'menu'].concat(j && SEQ_JOGO[j] ? SEQ_JOGO[j] : [], ['convite', 'cafe', 'papo', 'conta', 'lembranca']).map(id => ETAPAS.find(e => e.id === id)); }
 const totalMin = () => ETP().reduce((s, e) => s + e.min, 0);
+const JG_OK = { mala: g => !!(g && g.v === 2 && arr(g.its).length), det: g => !!(g && g.sus && g.sab), dif: g => !!(g && g.a && g.b) };
+let reparaT = 0;
+/* a sala pode ter sobrado de uma versão antiga do jogo (outro formato): reinicia só esse jogo, ou volta ao menu */
+function reparaJogo() {
+  const e = S && S.etapa; if (!e) return false;
+  const velha = !ETAPAS.some(x => x.id === e), mau = JG[e] && !JG_OK[e](S[e]);
+  if (!velha && !mau) return false;
+  if (Date.now() - reparaT > 3000) { reparaT = Date.now();
+    sync.tx(root => { if (!root || root.etapa !== e) return;
+      if (velha) { root.etapa = 'menu'; root.p = 0; root.pronto = null; entra(root); return root; }
+      if (JG_OK[e](root[e])) return; root[e] = e === 'mala' ? novaMala() : e === 'det' ? novoDet() : novoDif(); return root; }); }
+  else setTimeout(() => { if (S && S.etapa === e) desenha(true); }, 3100 - (Date.now() - reparaT));
+  return true;
+}
 const arr = x => Array.isArray(x) ? x : (x && typeof x === 'object' ? Object.values(x) : []);
 function emb(a) { a = a.slice(); for (let i = a.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); const t = a[i]; a[i] = a[j]; a[j] = t; } return a; }
 const esperaJ = (Pn, txt) => `<div class="vez"><b>Vez de ${Pn}</b><p>${txt}</p></div>${espera(`${Pn} está jogando…`)}`;
@@ -412,7 +426,7 @@ const MALA = [
 ];
 const malaItem = id => MALA.find(x => x.id === id) || MALA[0];
 const N_LEVA = 3;
-function novaMala() { return { n: Date.now() % 1e9, fase: 'arrumar', its: emb(MALA.map(x => x.id)).slice(0, 6), pack: { x: 1 }, ok: { x: 1 }, vez: 'a', q: '', tp: 'levou', k: 0, inf: { a: { x: 1 }, b: { x: 1 } } }; }
+function novaMala() { return { v: 2, n: Date.now() % 1e9, fase: 'arrumar', its: emb(MALA.map(x => x.id)).slice(0, 6), pack: { x: 1 }, ok: { x: 1 }, vez: 'a', q: '', tp: 'levou', k: 0, inf: { a: { x: 1 }, b: { x: 1 } } }; }
 let LP = null, DRAG = null;                                   /* LP: a mala que ESTA tela está arrumando (só vira estado quando toca em "Mala pronta") */
 const lp = g => { if (!LP || LP.n !== g.n) LP = { n: g.n, dentro: [], msg: '' }; return LP; };
 /* o que "quem pergunta" já sabe da mala da outra: 1 = levou, 0 = esqueceu; quando já achou as 3 que foram, o resto está deduzido (e vice-versa) */
@@ -720,6 +734,7 @@ function chave() {
   return JSON.stringify([s.etapa, s.p || 0, concluida(), (s.pronto || {})[EU] || 0, b.vez, b.fase, b.casa, b.err || 0, b.re || 0, conta(ab.a), conta(ab.b), !!(f[EU] && f[EU].ok), (c.beb || {})[EU] || 0, (c.com || {})[EU] || 0, cv.erro || 0, !!l[EU], !!(l.a && l.b), l.ok || 0, c.com2 || 0, s.modo || 'online', (s.ult || {}).k || 0, (s.repete || {}).n || 0, s.jogo || 0, JSON.stringify((s.menu || {}).prop || 0), JG[s.etapa] ? JSON.stringify(s[s.etapa] || 0) : 0]);
 }
 function desenha(forca) {
+  if (reparaJogo()) { $('acao').innerHTML = espera('Preparando o jogo…'); return; }
   const LE = ETP(), i = iEtapa(), e = LE[i], P = outro(EU), vz = vezDe();
   if (irArm == null) document.querySelectorAll('#irLista [data-ir]').forEach(b => b.classList.toggle('sel', b.dataset.ir === S.etapa));
   $('trilho').innerHTML = `<div class="pts" role="img" aria-label="Etapa ${i + 1} de ${LE.length}">${LE.map((x, k) => `<i class="${k < i ? 'f' : k === i ? 'a' : ''}"></i>`).join('')}</div><div class="leg"><b>${i + 1}. ${esc(e.nome)}</b><span>etapa ${i + 1} de ${LE.length} · cerca de ${e.min} min</span></div><button class="btn peq ferrBt" type="button" data-ferr aria-expanded="${!$('ferr').hidden}">🧰 Ferramentas · números</button>`;
