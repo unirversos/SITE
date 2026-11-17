@@ -147,17 +147,17 @@ h1{font-family:var(--f-display);font-weight:800;font-size:clamp(26px,5vw,36px);l
 .xitem{position:absolute;top:38%;transform:translate(-50%,-50%);font-size:42px;line-height:1;font-weight:900;color:#d11a3a;text-shadow:0 0 3px #fff,0 0 3px #fff,0 0 6px #fff;pointer-events:none;z-index:2;animation:xpop .35s cubic-bezier(.3,1.6,.5,1)}
 .xitem.quieto{animation:none}
 @keyframes xpop{0%{transform:translate(-50%,-50%) scale(.2);opacity:0}100%{transform:translate(-50%,-50%) scale(1);opacity:1}}
-#avatarNao{position:absolute;left:2%;bottom:0;width:21%;pointer-events:none;z-index:3}
+#avatarNao{position:absolute;left:2%;bottom:2%;width:23%;pointer-events:none;z-index:3}
 #avatarNao svg{display:block;width:100%;height:auto}
 #avatarNao .balao[hidden]{display:none}
+#avatarNao .bracos{position:absolute;left:8%;right:8%;bottom:-6%;pointer-events:none}#avatarNao .bracos svg{display:block;width:100%}#avatarNao.sim .bracos{display:none}
 #avatarNao .balao{position:absolute;left:62%;top:-8%;background:#fff;border:2px solid #d11a3a;color:#d11a3a;font-weight:800;font-size:13px;border-radius:12px;padding:2px 9px;white-space:nowrap}
-#avatarNao .cabeca{transform-origin:50px 62px}
+#avatarNao .cabeca{transform-origin:50% 92%;border-radius:50%;overflow:hidden;border:3px solid #fff;box-shadow:0 2px 8px rgba(58,43,56,.25);aspect-ratio:1}
 #avatarNao.vai .cabeca{animation:nao .7s ease-in-out}
 #avatarNao.vai{animation:aparece .25s ease-out}
 @keyframes nao{0%,100%{transform:rotate(0)}15%{transform:rotate(-14deg)}35%{transform:rotate(14deg)}55%{transform:rotate(-12deg)}75%{transform:rotate(10deg)}}
 @keyframes aparece{from{transform:translateY(12px);opacity:0}to{transform:none;opacity:1}}
 @media (prefers-reduced-motion:reduce){#avatarNao.vai .cabeca,#avatarNao.vai,.xitem{animation:none}}
-.gSim{display:none}#avatarNao.sim .gSim{display:inline}#avatarNao.sim .gNao{display:none}
 #avatarNao.sim .balao{border-color:#2f8f5b;color:#2f8f5b}
 #avatarNao.sim.vai .cabeca{animation:sim .7s ease-in-out}
 @keyframes sim{0%,100%{transform:translateY(0)}25%{transform:translateY(7px)}50%{transform:translateY(0)}75%{transform:translateY(6px)}}
@@ -236,11 +236,7 @@ h1{font-family:var(--f-display);font-weight:800;font-size:clamp(26px,5vw,36px);l
       </g>
     </svg>
     <div id="hs"></div>
-    <div id="avatarNao" hidden aria-hidden="true"><svg viewBox="0 0 100 110"><g class="corpo"><path d="M8 110 Q10 76 50 74 Q90 76 92 110Z" fill="#c23f5e"/><rect x="40" y="62" width="20" height="16" rx="6" fill="#f2c9a8"/></g>
-      <g class="cabeca"><circle cx="50" cy="42" r="26" fill="#f6d3b8"/><path d="M24 40 Q26 14 52 14 Q76 14 76 40 Q66 26 50 28 Q34 26 24 40Z" fill="#3a2b38"/>
-      <g class="gNao"><path d="M35 40 L45 40M55 40 L65 40" stroke="#3a2b38" stroke-width="3" stroke-linecap="round"/><path d="M43 59 L57 59" stroke="#a23a4d" stroke-width="3" fill="none" stroke-linecap="round"/></g><g class="gSim"><path d="M35 41 Q40 37 45 41M55 41 Q60 37 65 41" stroke="#3a2b38" stroke-width="3" fill="none" stroke-linecap="round"/><path d="M40 55 Q50 66 60 55" stroke="#a23a4d" stroke-width="3" fill="none" stroke-linecap="round"/><circle cx="33" cy="54" r="4" fill="#f4a3a8" opacity=".6"/><circle cx="67" cy="54" r="4" fill="#f4a3a8" opacity=".6"/></g><circle class="olho" cx="40" cy="48" r="2.4" fill="#3a2b38"/><circle class="olho" cx="60" cy="48" r="2.4" fill="#3a2b38"/></g>
-      <g class="gNao"><rect x="12" y="84" width="76" height="13" rx="6.5" fill="#f6d3b8" stroke="#c23f5e" stroke-width="2.5" transform="rotate(-24 50 90)"/><rect x="12" y="84" width="76" height="13" rx="6.5" fill="#f6d3b8" stroke="#c23f5e" stroke-width="2.5" transform="rotate(24 50 90)"/></g><g class="gSim"><rect x="52" y="80" width="46" height="13" rx="6.5" fill="#c23f5e" transform="rotate(-18 52 86)"/><circle cx="97" cy="70" r="8" fill="#f6d3b8" stroke="#c23f5e" stroke-width="2"/></g></svg>
-      <span class="balao">Não!</span></div>
+    <div id="avatarNao" hidden aria-hidden="true"><div class="cabeca"></div><div class="bracos"></div><span class="balao">Quero!</span></div>
     <div class="dica-cena" id="dicaCena">👆 toque nos círculos</div>
   </section>
 
@@ -252,6 +248,7 @@ h1{font-family:var(--f-display);font-weight:800;font-size:clamp(26px,5vw,36px);l
   <div class="lista-voz" id="listaVoz" hidden></div>
 </div>
 
+<script src="/idiomas/dados/avatar.js?v=20261016g"></script>
 <script src="/idiomas/dados/audio-mapa.js?v=4a8ffd4b"></script>
 <script>
 (function(){
@@ -440,6 +437,12 @@ function relePorConta(){
 document.addEventListener('uni-progresso',relePorConta);document.addEventListener('uni-conta',relePorConta);
 const $=id=>document.getElementById(id);
 const painel=$('painel'),barra=$('chaves'),pilula=$('pilula'),hsBox=$('hs');
+/* avatar do aluno (Ateliê) no lugar do boneco: usa o que ele criou, ou o padrão */
+(function(){const pinta=()=>{try{const A=window.UtopiaAvatar;if(!A)return;const a=A.load();const sel=(a&&a.sel)||A.DEFAULT;
+  const box=document.querySelector('#avatarNao .cabeca');if(box)box.innerHTML=A.svg(sel,{viewBox:'40 46 160 160',still:true,label:'Seu avatar'});
+  const br=document.querySelector('#avatarNao .bracos');if(br){const c=A.HEX[sel.clothColor]||A.HEX.midori,sk=A.SKINS[sel.skin]||A.SKINS[3];
+    br.innerHTML='<svg viewBox="0 0 100 44"><g stroke="#fff" stroke-width="2.5"><rect x="4" y="14" width="66" height="16" rx="8" fill="'+c+'" transform="rotate(-14 37 22)"/><rect x="30" y="14" width="66" height="16" rx="8" fill="'+c+'" transform="rotate(14 63 22)"/></g><circle cx="76" cy="9" r="7.5" fill="'+sk+'" stroke="#fff" stroke-width="2"/><circle cx="24" cy="9" r="7.5" fill="'+sk+'" stroke="#fff" stroke-width="2"/></svg>';}}catch(e){}};
+  pinta();document.addEventListener('uni-conta',pinta);document.addEventListener('uni-progresso',pinta);})();
 const SR=window.SpeechRecognition||window.webkitSpeechRecognition;
 let rec=null;
 const pararMic=()=>{try{if(rec)rec.abort();}catch(e){}rec=null;};
