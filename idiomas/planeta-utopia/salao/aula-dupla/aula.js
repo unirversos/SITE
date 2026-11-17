@@ -713,6 +713,7 @@ function acao() {
   const a = $('acao'), s = S, P = outro(EU), Pn = esc(nome(P)), vz = vezDe();
   $('balao').hidden = true;
   a.classList.toggle('minha-vez', vz === EU || vz === 'ambas');
+  a.classList.remove('pisca-reagir');
   /* fim de etapa: um único botão para as duas */
   if (concluida()) {
     const prox = ETAPAS[iEtapa() + 1], eu = (s.pronto || {})[EU] === s.etapa;
@@ -813,6 +814,7 @@ function acaoBatalha() {
   }
   /* reagir */
   if (vez !== EU) { a.innerHTML = `<div class="vez"><b>Vez de ${esc(Pn)}</b><p>Ela descobriu uma casa da sua ficha ${c.ic} e vai reagir.</p></div>${espera(`Esperando a reação de ${esc(Pn)}…`)}`; return; }
+  a.classList.add('pisca-reagir');
   a.innerHTML = `<div class="vez"><b>💬 Casa aberta! Reaja à resposta</b><p>Toque numa reação${modoOn() ? '' : ' e diga em voz alta'}.</p></div><div class="pilulas">${REACOES.map((r, i) => `<button type="button" data-re="${i}">${ja(r.t)}<small>${esc(r.pt)}</small></button>`).join('')}</div>`;
   a.querySelector('.pilulas').onclick = e => { const bt = e.target.closest('[data-re]'); if (!bt) return; const r = REACOES[+bt.dataset.re];
     escreve(r.t, x => {
