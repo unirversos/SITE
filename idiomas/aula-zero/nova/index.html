@@ -179,6 +179,21 @@ body[data-etapa="ar"]{background-color:#dde1e5}
 .lacuna{display:inline-block;min-width:2.2em;border-bottom:3px dotted var(--terra);text-align:center;color:var(--terra)}
 .tremeu{animation:nao .45s}
 .btn.pri[data-v]{background:var(--terra);color:#fff}.btn.pri[data-v] small{color:#fff}.qz-bt .btn small.ro{display:none}body.ver-ro .qz-bt .btn small.ro{display:block}
+#clAv{position:absolute;left:5%;bottom:6%;width:15%;z-index:4;pointer-events:none}
+#clAv .cl-cab{width:100%;aspect-ratio:1;border-radius:50%;overflow:hidden;position:relative;z-index:2}
+#clAv .cl-cab svg{display:block;width:100%;height:100%}
+#clAv .cl-corpo{position:relative;width:62%;margin:-8% auto 0;aspect-ratio:.72;background:var(--cl-roupa,#7aa86f);border-radius:40% 40% 18% 18%}
+#clAv .cl-perna{position:absolute;bottom:-34%;width:26%;height:40%;background:#4a4a5a;border-radius:6px;transform-origin:50% 0}
+#clAv .cl-perna.e{left:16%}#clAv .cl-perna.d{right:16%}
+#clAv.anda .cl-perna.e{animation:clpasso .4s ease-in-out infinite alternate}#clAv.anda .cl-perna.d{animation:clpasso .4s ease-in-out infinite alternate-reverse}
+@keyframes clpasso{from{transform:rotate(-18deg)}to{transform:rotate(18deg)}}
+#clAv .cl-braco{position:absolute;z-index:3;left:66%;top:10%;width:30%;height:70%;background:var(--cl-roupa,#7aa86f);border-radius:9px;transform-origin:50% 8%;border:2px solid rgba(255,255,255,.7)}
+#clAv .cl-braco::after{content:"";position:absolute;bottom:-14%;left:-5%;width:110%;aspect-ratio:1;border-radius:50%;background:var(--cl-pele,#f2c9a5)}
+#clAv .cl-prop{position:absolute;bottom:-38%;left:50%;transform:translateX(-50%) rotate(var(--cl-contra,0deg));font-size:clamp(16px,5vw,26px);line-height:1;z-index:3}
+#clAv .cl-som{position:absolute;left:85%;top:-6%;background:#fff;border:2px solid var(--line);border-radius:12px;padding:1px 8px;font-weight:800;font-size:13px;white-space:nowrap;opacity:0}
+.cl-legenda{margin:10px 0 4px;padding:12px 14px;border-left:5px solid var(--agua,#3f7fb0);background:#fff;border-radius:10px}
+.cl-legenda .jpl{font-size:24px}.cl-legenda .jpl b{color:#c0392b}
+#clAv[hidden]{display:none}
 </style>
 </head>
 <body>
@@ -267,6 +282,19 @@ body[data-etapa="ar"]{background-color:#dde1e5}
       <g id="pW" transform="translate(130 20)"><rect x="46" y="0" width="28" height="22" rx="6" fill="#fff" stroke="#9aa89a" stroke-width="3"/><path d="M26 22h68l8 150H18z" fill="#6fb36f" stroke="#4f8f4f" stroke-width="4" stroke-linejoin="round"/><rect x="28" y="62" width="64" height="62" rx="6" fill="#fff"/><text x="60" y="97" text-anchor="middle" font-family="Zen Maru Gothic, sans-serif" font-size="20" font-weight="800" fill="#2f6b2f">ワサビ</text><text class="ro-svg" x="60" y="113" text-anchor="middle" font-family="Zen Maru Gothic, sans-serif" font-size="12" font-weight="700" fill="#2f6b2f">wasabi</text></g>
       <g id="pN" style="display:none"><rect x="90" y="50" width="220" height="110" rx="14" fill="#fff" stroke="#cfc3c9" stroke-width="4"/><text x="200" y="138" text-anchor="middle" font-size="96">🍖</text></g>
     </svg>
+    <svg id="svgClip" viewBox="0 0 400 250" role="img" aria-label="Clipe: o seu avatar faz as ações" style="display:none">
+      <rect width="400" height="250" fill="#fbf3ea"/>
+      <g id="clKai"><path d="M0 0h400v200H0z" fill="#eef3f7"/><path d="M0 200h400v50H0z" fill="#e2d6c8"/>
+        <g transform="translate(250 58)"><rect width="96" height="142" rx="10" fill="#3f7fb0" stroke="#2b5f87" stroke-width="4"/><rect x="12" y="14" width="72" height="40" rx="5" fill="#d8ecfa"/><text x="48" y="40" text-anchor="middle" font-family="Zen Maru Gothic, sans-serif" font-size="17" font-weight="800" fill="#2b5f87">きっぷ</text><text class="ro-svg" x="48" y="51" text-anchor="middle" font-size="9" fill="#2b5f87">kippu</text><rect x="20" y="70" width="56" height="9" rx="4" fill="#1e3f5a"/><circle cx="30" cy="100" r="7" fill="#f3c969"/><circle cx="48" cy="100" r="7" fill="#f3c969"/><circle cx="66" cy="100" r="7" fill="#f3c969"/></g></g>
+      <g id="clBanco" style="display:none"><path d="M0 0h400v200H0z" fill="#f5efe4"/><path d="M0 200h400v50H0z" fill="#e2d6c8"/><rect x="40" y="40" width="120" height="70" rx="8" fill="#fff" stroke="#e0d2c4" stroke-width="3"/><path d="M40 75h120M100 40v70" stroke="#e0d2c4" stroke-width="3"/><rect x="250" y="150" width="130" height="14" rx="5" fill="#b98a5c"/><rect x="262" y="164" width="10" height="36" fill="#8e6a3f"/><rect x="358" y="164" width="10" height="36" fill="#8e6a3f"/></g>
+      <g id="clTrem" style="display:none"><path d="M0 0h400v170H0z" fill="#e7eef4"/><path d="M0 170h400v80H0z" fill="#e2d6c8"/><path d="M0 178h400" stroke="#f3c969" stroke-width="6"/>
+        <g id="clTrain"><rect x="150" y="40" width="250" height="122" rx="16" fill="#f4f7fa" stroke="#9fb3c4" stroke-width="4"/><path d="M150 112h250" stroke="#3f7fb0" stroke-width="8"/><rect x="170" y="56" width="50" height="34" rx="5" fill="#bcd7ec"/><rect x="330" y="56" width="50" height="34" rx="5" fill="#bcd7ec"/>
+          <rect x="236" y="54" width="78" height="108" fill="#5a6a78"/><rect id="clPortaE" x="236" y="54" width="39" height="108" fill="#c7d3dd" stroke="#9fb3c4" stroke-width="2"/><rect id="clPortaD" x="275" y="54" width="39" height="108" fill="#c7d3dd" stroke="#9fb3c4" stroke-width="2"/></g></g>
+      <g id="clWc" style="display:none"><path d="M0 0h400v200H0z" fill="#fbf3ea"/><path d="M0 200h400v50H0z" fill="#e9dccd"/>
+        <rect x="262" y="46" width="104" height="154" rx="6" fill="#5b4632"/><rect id="clPortaWc" x="268" y="52" width="92" height="148" rx="4" fill="#d8bd98" stroke="#a88a64" stroke-width="3"/>
+        <rect x="276" y="12" width="76" height="30" rx="8" fill="#3f7fb0" stroke="#fff" stroke-width="3"/><text x="314" y="30" text-anchor="middle" font-family="Zen Maru Gothic, sans-serif" font-size="16" font-weight="800" fill="#fff">トイレ</text><text class="ro-svg" x="314" y="39" text-anchor="middle" font-size="8" fill="#fff">toire</text></g>
+    </svg>
+    <div id="clAv" hidden aria-hidden="true"><div class="cl-cab"></div><div class="cl-corpo"><i class="cl-perna e"></i><i class="cl-perna d"></i><div class="cl-braco"><span class="cl-prop"></span></div></div><span class="cl-som"></span></div>
     <div id="hs"></div>
     <div id="avatarNao" hidden aria-hidden="true"><div class="cabeca"></div><div class="bracos"></div><span class="balao">Quero!</span></div>
     <div class="dica-cena" id="dicaCena">👆 toque nos círculos</div>
@@ -498,7 +526,9 @@ function desenhaBarra(){
 function trocaCena(){
   const pr=S.passo==='prontas'?(PRONTAS[S.p||0]||{}).scene:null;
   const kon=!pr&&S.passo!=='chegada'&&(S.k>=3||S.passo==='prontas'||S.passo==='final'||S.passo==='fim');
-  const mostra={svgEst:!kon&&!pr,svgKon:kon,svgWc:pr==='wc',svgProd:pr==='wasabi'||pr==='niku'};
+  const cl=S.passo==='clipe';
+  const mostra={svgEst:!cl&&!kon&&!pr,svgKon:!cl&&kon,svgWc:!cl&&pr==='wc',svgProd:!cl&&(pr==='wasabi'||pr==='niku'),svgClip:cl};
+  if(!cl){const av=$('clAv');if(av)av.hidden=true;}
   for(const id in mostra){const el=$(id);if(el)el.style.display=mostra[id]?'':'none';}
   if(pr==='wasabi'||pr==='niku'){const w=$('pW'),n=$('pN');if(w)w.style.display=pr==='wasabi'?'':'none';if(n)n.style.display=pr==='niku'?'':'none';}
   const sc=document.querySelector('.scene');if(sc)sc.setAttribute('aria-label',pr==='wc'?'Corredor com a porta do banheiro':pr?'Um produto na sua mão':kon?'Konbini, vista em primeira pessoa':'Plataforma da estação, vista em primeira pessoa');
@@ -506,7 +536,7 @@ function trocaCena(){
 function desenhaHot(){
   trocaCena();
   hsBox.innerHTML='';const av=$('avatarNao');if(av){av.hidden=true;av.classList.remove('vai');}
-  if(S.passo==='chegada'||S.passo==='fim'||S.passo==='final'||S.passo==='prontas'){$('dicaCena').hidden=true;return;}
+  if(S.passo==='chegada'||S.passo==='fim'||S.passo==='final'||S.passo==='prontas'||S.passo==='clipe'){$('dicaCena').hidden=true;return;}
   $('dicaCena').hidden=false;
   const c=CHAVES[S.k];
   c.hot.forEach((h,i)=>{
@@ -547,14 +577,16 @@ if(LIVRE){
   };
   $('lvAnt').onclick=()=>anda(-1);$('lvProx').onclick=()=>anda(1);
 }
-function vai(passo){S.passo=passo;S.erros=0;S.feitos=[];pararMic();pilula.hidden=true;render();}
+function vai(passo){if(S.__paraClipe){S.__paraClipe();S.__paraClipe=null;}if(passo!=='clipe'&&S.passo==='clipe')S.clipeVisto=true;S.passo=passo;S.erros=0;S.feitos=[];pararMic();pilula.hidden=true;render();}
 function render(){
   window.__render=render;
+  if(S.passo==='agua'&&CHAVES[S.k].n===3&&!S.clipeVisto){S.passo='clipe';S.cl=0;}
   desenhaBarra();desenhaHot();
   { const pr=S.passo==='prontas'?((PRONTAS[S.p||0]||{}).fogo?'fogo':'agua'):null;
-    const et={agua:'agua',fogo:'fogo',terra:'terra',quiz:'terra',fixa:'fogo',falafix:'fogo',ganho:'ar'}[S.passo];
+    const et={agua:'agua',fogo:'fogo',clipe:'agua',terra:'terra',quiz:'terra',fixa:'fogo',falafix:'fogo',ganho:'ar'}[S.passo];
     document.body.dataset.etapa=pr||et||''; }
   const c=CHAVES[S.k];
+  if(S.passo==='clipe')return telaClipe(c);
   if(S.passo==='chegada')return telaChegada();
   if(S.passo==='fim')return telaFim();
   if(S.passo==='agua')return telaResposta(c,'agua','Água · ouvir e repetir','Ouça e repita em voz alta.',c.agua);
@@ -684,6 +716,84 @@ function telaFalaFix(c){
   telaResposta(cc,'fogo','',em+' Diga em japonês: '+pt,alvo);
   const ac=$('acoes');if(ac){const b=document.createElement('button');b.type='button';b.className='btn ghost';b.textContent='Pular →';b.onclick=()=>{pararMic();vai('terra');};painel.appendChild(b);}
 }
+/* ---------- clipe da chave 03: o avatar faz cada ação, um verbo por vez ---------- */
+const CLIP=[
+ {cena:'clKai',prop:'',say:'きっぷをかいます',t:['きっぷを',['かいます','k']],ro:'kippu o kaimasu',pt:'Eu compro o bilhete.'},
+ {cena:'clBanco',prop:'🍙',say:'おにぎりをたべます',t:['おにぎりを',['たべます','k']],ro:'onigiri o tabemasu',pt:'Eu como o onigiri.',som:'もぐもぐ'},
+ {cena:'clBanco',prop:'🍵',say:'おちゃをのみます',t:['おちゃを',['のみます','k']],ro:'ocha o nomimasu',pt:'Eu bebo o chá.',som:'ごくごく'},
+ {cena:'clTrem',prop:'',say:'でんしゃにのります',t:['でんしゃに',['のります','k']],ro:'densha ni norimasu',pt:'Eu pego o trem.'},
+ {cena:'clWc',prop:'',say:'トイレにいきます',t:['トイレに',['いきます','k']],ro:'toire ni ikimasu',pt:'Eu vou ao banheiro.'}
+];
+function telaClipe(c){
+  const i=S.cl||0,k=CLIP[i];
+  hsBox.innerHTML='';
+  painel.innerHTML=`<span class="elem agua"><i></i>Chave 03 · Água · assista e repita</span>
+   <h2>Veja o que você faz. Depois repita em voz alta.</h2>
+   <div class="contagem" aria-label="${i+1} de ${CLIP.length}">${CLIP.map((_,j)=>`<i class="${j<=i?'on':''}"></i>`).join('')}</div>
+   <div class="cl-legenda" id="clLeg" style="visibility:hidden"><div class="jpl" lang="ja">${html(k.t)}</div><div class="ro">${k.ro}</div><div class="pt">${k.pt}</div></div>
+   <div class="acoes"><button class="btn" type="button" id="clDeNovo">🔁 Ver de novo</button><button class="btn pri" type="button" id="clProx">${i+1<CLIP.length?'Próximo verbo →':'Agora é com você →'}</button></div>
+   <div class="acoes"><button class="btn ghost" type="button" id="clPula">Pular clipe</button></div>`;
+  const sai=()=>{S.clipeVisto=true;S.passo='agua';parar();render();};
+  $('clPula').onclick=sai;
+  $('clProx').onclick=()=>{if(i+1<CLIP.length){S.cl=i+1;parar();render();}else sai();};
+  $('clDeNovo').onclick=()=>{parar();roda();};
+  let anims=[],tms=[],vivo=true;
+  function parar(){vivo=false;anims.forEach(a=>{try{a.cancel();}catch(e){}});anims=[];tms.forEach(clearTimeout);tms=[];}
+  const espera=ms=>vivo?new Promise(r=>tms.push(setTimeout(r,ms))):Promise.resolve();
+  const an=(el,kf,o)=>{if(!vivo||!el||!el.animate)return Promise.resolve();const a=el.animate(kf,Object.assign({fill:'forwards',easing:'ease-in-out'},o));anims.push(a);return a.finished.catch(()=>{});};
+  async function roda(){
+    vivo=true;
+    ['clKai','clBanco','clTrem','clWc'].forEach(id=>{const g=$(id);if(g)g.style.display=id===k.cena?'':'none';});
+    const av=$('clAv'),br=av.querySelector('.cl-braco'),pr=av.querySelector('.cl-prop'),som=av.querySelector('.cl-som'),leg=$('clLeg');
+    av.hidden=false;av.style.opacity=1;av.style.transform='';av.classList.remove('anda');
+    pr.textContent=k.prop;pr.style.opacity=1;som.textContent=k.som||'';som.style.opacity=0;leg.style.visibility='hidden';
+    const reduz=window.matchMedia&&matchMedia('(prefers-reduced-motion: reduce)').matches;
+    const mostraLeg=()=>{if(!vivo)return;leg.style.visibility='visible';fala(k.say);};
+    if(reduz){mostraLeg();return;}
+    const anda=async(de,ate,ms)=>{av.classList.add('anda');await an(av,[{left:de+'%'},{left:ate+'%'}],{duration:ms,easing:'linear'});av.classList.remove('anda');};
+    const braco=(g,ms)=>an(br,[{transform:'rotate(0deg)'},{transform:`rotate(${g}deg)`}],{duration:ms});
+    const contra=g=>pr.style.setProperty('--cl-contra',(-g)+'deg');
+    contra(0);br.getAnimations().forEach(a=>a.cancel());
+    const trem=$('clTrain'),pE=$('clPortaE'),pD=$('clPortaD'),pWc=$('clPortaWc');
+    [trem,pE,pD,pWc].forEach(x=>x&&x.getAnimations&&x.getAnimations().forEach(a=>a.cancel()));
+    if(k.cena==='clKai'){
+      await anda(2,44,1600);if(!vivo)return;
+      contra(-80);await braco(-80,450);pr.textContent='🎫';await espera(300);mostraLeg();
+      await braco(-80,10);await espera(500);contra(-20);await an(br,[{transform:'rotate(-80deg)'},{transform:'rotate(-20deg)'}],{duration:500});
+    }else if(k.cena==='clBanco'){
+      av.style.left='34%';await espera(400);if(!vivo)return;
+      contra(155);mostraLeg();
+      for(let r=0;r<2&&vivo;r++){await an(br,[{transform:'rotate(0deg)'},{transform:'rotate(155deg)'}],{duration:500});
+        an(som,[{opacity:0},{opacity:1}],{duration:200});await espera(450);
+        await an(br,[{transform:'rotate(155deg)'},{transform:'rotate(120deg)'},{transform:'rotate(155deg)'}],{duration:400});
+        if(k.prop==='🍙')pr.style.opacity=r?0.25:0.6;}
+      await an(br,[{transform:'rotate(155deg)'},{transform:'rotate(0deg)'}],{duration:500});an(som,[{opacity:1},{opacity:0}],{duration:300});
+    }else if(k.cena==='clTrem'){
+      av.style.left='4%';
+      await an(trem,[{transform:'translateX(420px)'},{transform:'translateX(0)'}],{duration:1500,easing:'ease-out'});if(!vivo)return;
+      an(pE,[{transform:'translateX(0)'},{transform:'translateX(-36px)'}],{duration:500});
+      await an(pD,[{transform:'translateX(0)'},{transform:'translateX(36px)'}],{duration:500});
+      mostraLeg();await anda(4,61,1500);if(!vivo)return;
+      await an(av,[{opacity:1,transform:'scale(1)'},{opacity:0,transform:'scale(.85)'}],{duration:450});
+      an(pE,[{transform:'translateX(-36px)'},{transform:'translateX(0)'}],{duration:450});
+      await an(pD,[{transform:'translateX(36px)'},{transform:'translateX(0)'}],{duration:450});
+      await espera(250);await an(trem,[{transform:'translateX(0)'},{transform:'translateX(-460px)'}],{duration:1500,easing:'ease-in'});
+    }else if(k.cena==='clWc'){
+      mostraLeg();await anda(2,70,2000);if(!vivo)return;
+      await an(pWc,[{transform:'scaleX(1)'},{transform:'scaleX(.08)'}],{duration:500});
+      await an(av,[{opacity:1,transform:'scale(1)'},{opacity:0,transform:'scale(.85)'}],{duration:450});
+      await an(pWc,[{transform:'scaleX(.08)'},{transform:'scaleX(1)'}],{duration:500});
+    }
+  }
+  /* veste o avatar do aluno */
+  try{const A=window.UtopiaAvatar,av=$('clAv');if(A&&av){const a=A.load();const sel=(a&&a.sel)||A.DEFAULT;
+    av.querySelector('.cl-cab').innerHTML=A.svg(sel,{viewBox:'40 46 160 160',still:true,label:'Seu avatar'});
+    av.style.setProperty('--cl-roupa',A.HEX[sel.clothColor]||A.HEX.midori);av.style.setProperty('--cl-pele',A.SKINS[sel.skin]||A.SKINS[3]);}}catch(e){}
+  const pw=$('clPortaWc');if(pw){pw.style.transformBox='fill-box';pw.style.transformOrigin='100% 50%';}
+  S.__paraClipe=parar;
+  try{const sc=document.querySelector('.scene');const r=sc.getBoundingClientRect();if(r.top<0||r.top>innerHeight*.3)window.scrollTo({top:scrollY+r.top-8,behavior:'smooth'});}catch(e){}
+  roda();
+}
 function telaGanho(c){
   const ja=S.acesas.includes(c.n);
   desenhaBarra();
@@ -746,7 +856,7 @@ function montaEntrada(c,trata){
     if(!usaMic)inp.focus({preventScroll:true});
   }
   const E={
-    falha(dito,msg){S.erros++;est.className='estado erro';est.textContent=msg;ouvi.textContent=dito?'Ouvi: “'+dito+'”':'';reforco();},
+    falha(dito,msg){S.erros++;painel.querySelectorAll('.ouvir-alvo[hidden]').forEach(b=>b.hidden=false);est.className='estado erro';est.textContent=msg;ouvi.textContent=dito?'Ouvi: “'+dito+'”':'';reforco();},
     aviso(msg,dito){est.className='estado erro';est.textContent=msg;ouvi.textContent=dito?'Você escreveu: “'+dito+'”':'';},
     ok(dito,msg){pararMic();est.className='estado ok';est.textContent=msg||'✓ Isso!';ouvi.textContent=dito?'Você disse: '+dito:'';ac.innerHTML='';esc.innerHTML='';ref.innerHTML='';}
   };
@@ -775,12 +885,12 @@ function montaEntrada(c,trata){
     });
   }
   if(usaMic){
+    if(c._ouvirAlvo){const ob=document.createElement('button');ob.type='button';ob.className='btn ouvir-alvo';ob.textContent='🔊 Ouvir';ob.onclick=c._ouvirAlvo;if(c._esconde&&S.erros<1)ob.hidden=true;ac.appendChild(ob);}
     micBtn=document.createElement('button');micBtn.type='button';micBtn.className='mic';micBtn.innerHTML='🎤 Falar';micBtn.onclick=ouvir;ac.appendChild(micBtn);
-    if(c._ouvirAlvo){const ob=document.createElement('button');ob.type='button';ob.className='btn';ob.textContent='🔊 Ouvir';ob.onclick=c._ouvirAlvo;ac.appendChild(ob);}
     const sm=document.createElement('button');sm.type='button';sm.className='sem-mic';sm.textContent='Não tenho microfone';
     sm.onclick=()=>{S.semMic=true;try{localStorage.setItem('uniNovaSemMic','1');}catch(e){}pararMic();render();};ac.appendChild(sm);
   }else{
-    if(c._ouvirAlvo){const ob=document.createElement('button');ob.type='button';ob.className='btn';ob.textContent='🔊 Ouvir';ob.onclick=c._ouvirAlvo;ac.appendChild(ob);}
+    if(c._ouvirAlvo){const ob=document.createElement('button');ob.type='button';ob.className='btn ouvir-alvo';ob.textContent='🔊 Ouvir';ob.onclick=c._ouvirAlvo;if(c._esconde&&S.erros<1)ob.hidden=true;ac.appendChild(ob);}
     if(SR){const volta=document.createElement('button');volta.type='button';volta.className='sem-mic';volta.textContent='Usar microfone';
       volta.onclick=()=>{S.semMic=false;S.micNegado=false;try{localStorage.setItem('uniNovaSemMic','0');}catch(e){}render();};ac.appendChild(volta);}
     else est.textContent='Seu navegador não escuta o microfone. Escreva a resposta.';
@@ -800,8 +910,10 @@ function telaResposta(c,tipo,titulo,pedido,alvo){
    <div id="escrita"></div><div id="reforco" class="acoes" style="flex-direction:column;align-items:flex-start"></div>`;
   if(tipo==='agua'&&c.intro)painel.insertAdjacentHTML('afterbegin','<p class="intro-cena">🏪 '+c.intro+'</p>');
   if(tipo==='agua')setTimeout(()=>fala(alvo.say),350);
+  if(tipo==='agua'&&c.n===3)painel.insertAdjacentHTML('beforeend','<div class="acoes"><button class="btn ghost" type="button" id="clRever">🎬 Rever o clipe</button></div>');
+  if($('clRever'))$('clRever').onclick=()=>{pararMic();S.cl=0;S.passo='clipe';render();};
   const prox=alvo.depois||(()=>vai(tipo==='agua'?'fogo':'fixa'));
-  const cc=Object.assign({},c,{_ouvirAlvo:()=>fala(alvo.say)});
+  const cc=Object.assign({},c,{_ouvirAlvo:()=>fala(alvo.say),_esconde:tipo==='fogo'});
   const E=montaEntrada(cc,(textos,via)=>{
     const fal=via==='voz';
     for(const t of textos){if(confere(t,alvo,fal)){E.ok(t,'✓ Isso! Chave destravando…');$('alvo').classList.remove('oculto');setTimeout(prox,1300);return;}}
