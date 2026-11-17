@@ -512,7 +512,7 @@ function renderCard(){
   const nm=(p.kata||'').trim(), lat=(p.name||'').trim();
   $('cName').innerHTML=nm||lat?esc(nm||lat)+(nm&&lat?`<small>${esc(lat)}</small>`:''):'<small>escreva seu nome ao lado</small>';
   $('cAge').innerHTML=`<ruby>${S.age}歳<rt>${ageInfo(S.age).kana}</rt></ruby><span class="ro">${kana2ro(ageInfo(S.age).kana)}</span>`;
-  $('cTitle').innerHTML=`${AV.titleHTML(g.level)} <span class="ro">${kana2ro(AV.title(g.level)[1])}</span><small>${AV.title(g.level)[2]} · <i lang="en">${AV.title(g.level)[3]||''}</i></small>`;
+  $('cTitle').innerHTML=`${AV.titleHTML(g.level)} <span class="ro">${kana2ro(AV.title(g.level)[1])}</span><small>${AV.title(g.level)[2]}</small>`;
   const f=[];
   if(!S.acc.includes('hijabu')) f.push(`かみ: ${find(HAIR,S.hair).kana}・${find(COLORS,S.hairColor).kana}`);
   f.push(`${find(COLORS,S.clothColor).mod} ${find(CLOTHES,S.clothes).kana}`);

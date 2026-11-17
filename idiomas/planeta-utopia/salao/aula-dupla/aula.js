@@ -672,7 +672,7 @@ function uiAudio(cfg) {
   const pinta = () => {
     const rep = S.repete && S.repete.de === EU ? `<p class="fb">${Pn} pediu para você repetir. Fale mais devagar e perto do microfone.</p>` : '';
     const bt = pre ? `<p class="fb">${pre}</p>`
-      : !on ? `<button class="btn pri grande" type="button" id="jaFalei">✓ Já falei</button><p class="sub">Fale em voz alta para ${Pn}. Toque quando terminar.</p>`
+      : !on ? `<button class="btn pri grande" type="button" id="jaFalei">${cfg.rot || '✓ Já falei'}</button><p class="sub">${cfg.rotSub || `Fale em voz alta para ${Pn}. Toque quando terminar.`}</p>`
       : g.est === 'gravando' ? `<button class="btn grande gravando" type="button" id="pa">⏹ Parar <span id="tempo">0s</span></button>`
       : g.est === 'revisar' ? `<div class="row"><button class="btn" type="button" id="ouve">▶ Ouvir</button><button class="btn" type="button" id="outra">🎤 Gravar de novo</button></div><button class="btn pri grande" type="button" id="manda">✓ Enviar para ${Pn}</button>`
       : g.est === 'enviando' ? espera('Enviando…')
@@ -800,6 +800,7 @@ function acaoBatalha() {
       const C_ = CHUTE[c.id], acertou = C_.canon(b.chute) === C_.canon(f[c.id]), revela = !acertou && (b.err || 0) >= 2, chV = String(b.chute), miss = !acertou && !revela;
       const m = acertou ? `はい、${val}` : revela ? `いいえ、${val}` : C_.neg(chV);
       uiDizer({ instr: acertou ? `${esc(Pn)} acertou! Confirme e diga a resposta da sua ficha.` : revela ? `${esc(Pn)} já errou 3 vezes. Diga a resposta certa da sua ficha.` : `${esc(Pn)} chutou <b lang="ja">${esc(chV)}</b>, mas não é isso. Diga que não.`,
+        rot: acertou ? '🎯 Acertou!' : miss ? '✗ Errou' : '', rotSub: acertou ? `Diga はい e a sua resposta em voz alta para ${esc(Pn)}. Depois toque em Acertou!` : miss ? `Diga que não em voz alta para ${esc(Pn)}. Depois toque em Errou.` : '',
         m, d1: m.slice(0, 3) + '…', d2: acertou ? 'はい、＿＿＿＿。' : revela ? 'いいえ、＿＿＿＿。' : 'いいえ、＿＿＿＿。', pt: acertou ? 'Sim! (e diga a sua resposta)' : miss ? 'Não.' : 'Não. (e diga a sua resposta)', k: [acertou ? 'はい|hai' : 'いいえ|iie'],
         envia: txt => escreve(txt, bt => { if (miss) { bt.fase = 'perguntar'; bt.re = c.id; bt.err = (bt.err || 0) + 1; bt.casa = null; bt.chute = null; }
           else { bt.ab = bt.ab || {}; bt.ab[EU] = bt.ab[EU] || {}; bt.ab[EU][c.id] = true; bt.fase = 'reagir'; bt.re = null; bt.err = 0; bt.chute = null; } }),
