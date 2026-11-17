@@ -682,7 +682,7 @@ function uiAudio(cfg) {
   const pinta = () => {
     const rep = S.repete && S.repete.de === EU ? `<p class="fb">${Pn} pediu para você repetir. Fale mais devagar e perto do microfone.</p>` : '';
     const bt = pre ? `<p class="fb">${pre}</p>`
-      : !on ? `<button class="btn pri grande" type="button" id="jaFalei">${cfg.rot || '✓ Já falei'}</button><p class="sub">${cfg.rotSub || `Fale em voz alta para ${Pn}. Toque quando terminar.`}</p>`
+      : !on ? `<button class="btn pri grande" type="button" id="jaFalei">${cfg.rot || '✓ Enviar'}</button><p class="sub">${cfg.rotSub || `Fale em voz alta para ${Pn}. Toque em Enviar quando terminar.`}</p>`
       : g.est === 'gravando' ? `<button class="btn grande gravando" type="button" id="pa">⏹ Parar <span id="tempo">0s</span></button>`
       : g.est === 'revisar' ? `<div class="row"><button class="btn" type="button" id="ouve">▶ Ouvir</button><button class="btn" type="button" id="outra">🎤 Gravar de novo</button></div><button class="btn pri grande" type="button" id="manda">✓ Enviar para ${Pn}</button>`
       : g.est === 'enviando' ? espera('Enviando…')
