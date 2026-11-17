@@ -27,6 +27,13 @@
     '.lv-fer .cor{width:30px;min-width:30px;height:30px;border-radius:50%;padding:0;border-width:2px}.lv-fer .cor i{display:block;width:16px;height:16px;border-radius:50%}',
     '.lv-fer .esp i{display:block;border-radius:50%;background:#3a2b38}.lv-sep{width:1px;height:24px;background:#ecdadd;margin:0 2px}',
     '.lv button:focus-visible,.lv input:focus-visible,.lv textarea:focus-visible{outline:3px solid #b7a6dc;outline-offset:2px}',
+    '.lv-fotoBt{font:inherit;cursor:pointer;border:1.5px solid #ecdadd;background:#fff;color:#3a2b38;font-weight:700;font-size:13.5px;padding:5px 14px;border-radius:99px;min-height:40px}',
+    '.lv-fotoBt:disabled{opacity:.5;cursor:default}',
+    '.lv-img{position:absolute;inset:0;width:100%;height:100%;object-fit:contain;z-index:0;background:#fff}',
+    '.lv-pg.c-foto .lv-tx{position:relative;z-index:1;background:none}',
+    '.lv-fmsg{position:absolute;left:8%;right:8%;top:42%;z-index:1;text-align:center;font-size:13px;color:#705f6c}',
+    '.lv-rf{position:absolute;top:calc(var(--u,4px)*1.6);left:calc(var(--u,4px)*1.6);z-index:4;font:inherit;cursor:pointer;border:1.5px solid #ecdadd;background:#fff;color:#705f6c;border-radius:99px;font-size:12px;font-weight:700;padding:3px 10px;min-height:28px}',
+    '.lv.caneta .lv-rf{display:none}.lv.leitura .lv-rf,.lv.leitura .lv-fotoBt{display:none!important}',
     /* livro aberto */
     '.lv-livro{position:relative;display:grid;grid-template-columns:1fr;gap:0;perspective:1800px;touch-action:pan-y}',
     '.lv.dupla .lv-livro{grid-template-columns:1fr 1fr}',
@@ -101,6 +108,82 @@
     prox: '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 5l7 7-7 7"/></svg>'
   };
 
+  /* ---------- fotos do caderno ----------
+     A foto fica numa página (campo f = id). O arquivo em si NÃO vai dentro da anotação (o documento da conta é pequeno):
+     fica no aparelho (IndexedDB "uniCadernoFotos") e, com login, em progress/{uid}/fotos/{id} (Firestore). */
+  var Fotos = (function () {
+    var DBP = null, subindo = false;
+    function abre() {
+      if (DBP) return DBP;
+      DBP = new Promise(function (res, rej) {
+        try { var q = indexedDB.open('uniCadernoFotos', 1); q.onupgradeneeded = function () { q.result.createObjectStore('f', { keyPath: 'id' }); }; q.onsuccess = function () { res(q.result); }; q.onerror = function () { rej(q.error); }; }
+        catch (e) { rej(e); }
+      });
+      return DBP;
+    }
+    function op(modo, fn) { return abre().then(function (db) { return new Promise(function (res, rej) { var t = db.transaction('f', modo), r = fn(t.objectStore('f')); t.oncomplete = function () { res(r && r.result); }; t.onerror = t.onabort = function () { rej(t.error); }; }); }); }
+    function pega(id) { return op('readonly', function (s) { return s.get(id); }).catch(function () { return null; }); }
+    function poe(rec) { return op('readwrite', function (s) { return s.put(rec); }); }
+    function todas() { return op('readonly', function (s) { return s.getAll(); }).catch(function () { return []; }); }
+    function conta() { var C = window.UniConta; return (C && C.auth && C.auth.currentUser && C.db) ? C : null; }
+    function fsm() { return import('https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js'); }
+    function ref(f, C, id) { return f.doc(C.db, 'progress', C.auth.currentUser.uid, 'fotos', id); }
+    function sobe(rec) {
+      var C = conta(); if (!C) return Promise.resolve(false);
+      return fsm().then(function (f) { return f.setDoc(ref(f, C, rec.id), { d: rec.d, m: rec.m }); })
+        .then(function () { return poe({ id: rec.id, d: rec.d, m: rec.m, up: 1 }); }).then(function () { return true; }, function () { return false; });
+    }
+    function sincroniza() {
+      if (subindo || !conta()) return Promise.resolve();
+      subindo = true;
+      return todas().then(function (l) { return l.filter(function (r) { return !r.up; }).reduce(function (p, r) { return p.then(function () { return sobe(r); }); }, Promise.resolve()); })
+        .then(function () { subindo = false; }, function () { subindo = false; });
+    }
+    function baixa(id) {
+      var C = conta(); if (!C) return Promise.resolve(null);
+      return fsm().then(function (f) { return f.getDoc(ref(f, C, id)); }).then(function (s) { return s.exists() ? s.data().d : null; }).catch(function () { return null; });
+    }
+    function obter(id) {
+      return pega(id).then(function (r) {
+        if (r && r.d) return r.d;
+        return baixa(id).then(function (d) { if (d) poe({ id: id, d: d, m: Date.now(), up: 1 }).catch(function () {}); return d; });
+      });
+    }
+    function apagar(id) {
+      op('readwrite', function (s) { return s.delete(id); }).catch(function () {});
+      var C = conta(); if (C) fsm().then(function (f) { return f.deleteDoc(ref(f, C, id)); }).catch(function () {});
+    }
+    /* reduz a foto (lado maior 1600 px, JPEG) para caber num documento do Firestore (limite de 1 MB) */
+    function reduz(arquivo) {
+      return new Promise(function (res, rej) {
+        var u = URL.createObjectURL(arquivo), im = new Image();
+        im.onload = function () {
+          URL.revokeObjectURL(u);
+          var lado = 1600, q = 0.72, d = '';
+          for (var t = 0; t < 8; t++) {
+            var s = Math.min(1, lado / Math.max(im.naturalWidth, im.naturalHeight)), c = document.createElement('canvas');
+            c.width = Math.max(1, Math.round(im.naturalWidth * s)); c.height = Math.max(1, Math.round(im.naturalHeight * s));
+            var x = c.getContext('2d'); x.fillStyle = '#fff'; x.fillRect(0, 0, c.width, c.height); x.drawImage(im, 0, 0, c.width, c.height);
+            d = c.toDataURL('image/jpeg', q);
+            if (d.length <= 750000) return res(d);
+            if (q > 0.5) q -= 0.1; else lado = Math.round(lado * 0.8);
+          }
+          rej(new Error('grande'));
+        };
+        im.onerror = function () { URL.revokeObjectURL(u); rej(new Error('imagem')); };
+        im.src = u;
+      });
+    }
+    function guardar(arquivo) {
+      return reduz(arquivo).then(function (d) {
+        var rec = { id: 'f' + Date.now().toString(36) + Math.random().toString(36).slice(2, 6), d: d, m: Date.now(), up: 0 };
+        return poe(rec).then(function () { sincroniza(); return rec; });
+      });
+    }
+    return { guardar: guardar, obter: obter, apagar: apagar, sincroniza: sincroniza, reduz: reduz };
+  })();
+  window.UniFotos = Fotos;
+
   function montar(el, opc) {
     opc = opc || {};
     var C = opc.C || window.UniCaderno, id = null, pags = [], ini = 0, dupla = false, modo = 'txt', cor = 0, esp = 1, ferr = 'pen',
@@ -110,6 +193,7 @@
     el.innerHTML =
       '<div class="lv-bar">' +
       '<div class="lv-modo" role="group" aria-label="Como escrever"><button type="button" data-m="txt" aria-pressed="true">Texto</button><button type="button" data-m="pen" aria-pressed="false">Caneta</button></div>' +
+      '<button type="button" class="lv-fotoBt" aria-label="Colocar uma foto numa página">📷 Foto</button><input type="file" class="lv-fotoIn" accept="image/*" hidden>' +
       '<div class="lv-fer" role="toolbar" aria-label="Ferramentas da caneta" hidden>' +
       '<button type="button" data-f="pen" aria-pressed="true" aria-label="Caneta" title="Caneta">' + IC.pen + '</button>' +
       '<button type="button" data-f="bor" aria-pressed="false" aria-label="Borracha: passe sobre o traço para apagar" title="Borracha">' + IC.bor + '</button><span class="lv-sep"></span>' +
@@ -122,22 +206,32 @@
       '<div class="lv-nav"><button type="button" data-n="-1" aria-label="Página anterior">' + IC.ant + '</button><span class="lbl" aria-live="polite"></span><button type="button" data-n="1" aria-label="Próxima página">' + IC.prox + '</button><button type="button" class="mais" data-n="mais">+ página</button></div>' +
       '<div class="lv-prof" hidden><button type="button" class="lv-pf" aria-pressed="false"></button><span class="lv-pfs" aria-live="polite"></span></div>' +
       '<p class="lv-dica" hidden>Com a caneta em uso, a palma da mão não risca a folha. Para virar a página, use as setas.</p>';
+    var fBt = el.querySelector('.lv-fotoBt'), fIn = el.querySelector('.lv-fotoIn');
+    fBt.onclick = function () { if (!id) return; fIn.value = ''; fIn.click(); };
+    fIn.onchange = function () {
+      var f = fIn.files && fIn.files[0]; if (!f || !id) return;
+      fBt.disabled = true; fBt.textContent = 'Salvando a foto…';
+      Fotos.guardar(f).then(function (r) { colocaFoto(r.id); }, function () { fBt.textContent = 'Não consegui usar essa foto'; return new Promise(function (ok) { setTimeout(ok, 2500); }); })
+        .then(function () { fBt.disabled = false; fBt.textContent = '📷 Foto'; });
+    };
+    Fotos.sincroniza();
     var livro = el.querySelector('.lv-livro'), barra = el.querySelector('.lv-bar'), fer = el.querySelector('.lv-fer'), nav = el.querySelector('.lv-nav'),
       lbl = nav.querySelector('.lbl'), btUnd = fer.querySelector('[data-f="und"]'), dica = el.querySelector('.lv-dica');
 
     /* ---------- dados ---------- */
     function nota() { return id ? C.obter(id) : null; }
     function lePags(n) {
-      var p = [{ x: n.x || '', s: Array.isArray(n.s) ? n.s : [] }];
-      (Array.isArray(n.pp) ? n.pp : []).forEach(function (q) { p.push({ x: (q && q.x) || '', s: (q && Array.isArray(q.s)) ? q.s : [] }); });
+      var p = [{ x: n.x || '', s: Array.isArray(n.s) ? n.s : [], f: n.f || null }];
+      (Array.isArray(n.pp) ? n.pp : []).forEach(function (q) { p.push({ x: (q && q.x) || '', s: (q && Array.isArray(q.s)) ? q.s : [], f: (q && q.f) || null }); });
       return p;
     }
     function salva(campos) {
       if (!id) return; var n = C.atualizar(id, campos); if (n) ultimoM = n.m;
       if (opc.aoMudar) opc.aoMudar(n);
     }
-    function salvaPag(i) { if (i === 0) salva({ x: pags[0].x, s: pags[0].s }); else salva({ pp: pags.slice(1).map(function (q) { return { x: q.x, s: q.s }; }) }); }
-    function salvaTudo() { salva({ x: pags[0].x, s: pags[0].s, pp: pags.slice(1).map(function (q) { return { x: q.x, s: q.s }; }) }); }
+    function salvaPag(i) { if (i === 0) salva({ x: pags[0].x, s: pags[0].s }); else salva({ pp: pags.slice(1).map(pp1) }); }
+    function pp1(q) { var o = { x: q.x, s: q.s }; if (q.f) o.f = q.f; return o; }
+    function salvaTudo() { salva({ x: pags[0].x, s: pags[0].s, f: pags[0].f || null, pp: pags.slice(1).map(pp1) }); }
 
     /* ---------- páginas ---------- */
     function cabecalho(n) {
@@ -155,16 +249,32 @@
       pags.forEach(function (pg, i) {
         var d = document.createElement('section');
         d.className = 'lv-pg' + (i === 0 ? ' p1' : ''); d.dataset.i = i; d.setAttribute('aria-label', 'Página ' + (i + 1));
-        d.innerHTML = (i === 0 ? cabecalho(n) : '') +
+        if (pg.f) d.classList.add('c-foto');
+        d.innerHTML = (pg.f ? '<img class="lv-img" alt="Foto da página ' + (i + 1) + '" hidden><span class="lv-fmsg" hidden></span>' : '') + (i === 0 ? cabecalho(n) : '') +
           '<textarea class="lv-tx" aria-label="Texto da página ' + (i + 1) + '" placeholder="' + (i === 0 ? 'Escreva aqui…' : '') + '"></textarea>' +
           '<canvas aria-label="Desenho da página ' + (i + 1) + '"></canvas><span class="lv-num" aria-hidden="true">' + (i + 1) + '</span>' +
-          (i > 0 ? '<button type="button" class="lv-del" aria-label="Apagar a página ' + (i + 1) + '">apagar página</button>' : '');
+          (i > 0 ? '<button type="button" class="lv-del" aria-label="Apagar a página ' + (i + 1) + '">apagar página</button>' : '') +
+          (pg.f ? '<button type="button" class="lv-rf" aria-label="Tirar a foto da página ' + (i + 1) + '">tirar foto</button>' : '');
         d.querySelector('textarea').value = pg.x;
         livro.appendChild(d);
         liga(d, i);
+        if (pg.f) carregaFoto(d, pg.f);
         if (opc.leitura) Array.prototype.forEach.call(d.querySelectorAll('input,textarea'), function (x) { x.readOnly = true; x.tabIndex = -1; });
       });
       mostra(); requestAnimationFrame(function () { ajusta(); });
+    }
+    function carregaFoto(d, fid) {
+      var im = d.querySelector('.lv-img'), msg = d.querySelector('.lv-fmsg');
+      msg.textContent = 'Carregando a foto…'; msg.hidden = false;
+      Fotos.obter(fid).then(function (src) {
+        if (src) { im.src = src; im.hidden = false; msg.hidden = true; }
+        else msg.textContent = opc.leitura ? 'Foto não disponível aqui.' : 'Esta foto ainda não chegou neste aparelho. Abra o caderno com internet e com login para ela carregar.';
+      }, function () { msg.textContent = 'Não consegui abrir a foto.'; });
+    }
+    function colocaFoto(fid) {
+      var i = ini, p = pags[i];
+      if (i > 0 && p && !p.x && !p.s.length && !p.f) { p.f = fid; salvaTudo(); constroi(); return; }   /* página em branco: usa ela */
+      pags.push({ x: '', s: [], f: fid }); salvaTudo(); constroi(); vaiPara(pags.length - 1);
     }
     function paginas() { return livro.querySelectorAll('.lv-pg:not(.lv-fant)'); }
     function pg(i) { return livro.querySelector('.lv-pg[data-i="' + i + '"]'); }
@@ -248,6 +358,11 @@
           salva({ w: w });
         };
       }
+      var rf = d.querySelector('.lv-rf');
+      if (rf) rf.onclick = function () {
+        if (!this.dataset.p) { this.dataset.p = '1'; this.textContent = 'tirar mesmo?'; var b = this; setTimeout(function () { b.dataset.p = ''; b.textContent = 'tirar foto'; }, 3000); return; }
+        var fid = pags[i].f; pags[i].f = null; salvaTudo(); constroi(); if (fid) Fotos.apagar(fid);
+      };
       var del = d.querySelector('.lv-del');
       if (del) del.onclick = function () {
         if (!this.dataset.p) { this.dataset.p = '1'; this.textContent = 'apagar mesmo?'; var b = this; setTimeout(function () { b.dataset.p = ''; b.textContent = 'apagar página'; }, 3000); return; }
