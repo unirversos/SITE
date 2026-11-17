@@ -87,8 +87,8 @@ const ETAPAS = [
   { id: 'menu', nome: 'Escolha o jogo', min: 2, fundo: 'salao', placa: '🏮 Salão' },
   { id: 'ficha', nome: 'Minha ficha', min: 7, fundo: 'salao', placa: '🏮 Salão' },
   { id: 'batalha', nome: 'Batalha naval', min: 18, fundo: 'salao', placa: '🏮 Salão' },
-  { id: 'mala', nome: 'Arrume a mala', min: 12, fundo: 'salao', placa: '🏮 Salão' },
-  { id: 'dia', nome: 'Marque um dia', min: 12, fundo: 'salao', placa: '🏮 Salão' },
+  { id: 'mala', nome: 'Viagem em dupla', min: 10, fundo: 'salao', placa: '🏮 Salão' },
+  { id: 'det', nome: 'Quem pegou o bolo?', min: 12, fundo: 'salao', placa: '🏮 Salão' },
   { id: 'dif', nome: 'Ache as 5 diferenças', min: 12, fundo: 'salao', placa: '🏮 Salão' },
   { id: 'convite', nome: 'Convite', min: 5, fundo: 'rua', placa: '🚶 まち' },
   { id: 'cafe', nome: 'O pedido no café', min: 12, fundo: 'cafe', placa: '☕ カフェ' },
@@ -327,7 +327,7 @@ function entra(root) {
   poeLog(root, 's', `— ${Math.max(0, ETP(jogoDe(root)).indexOf(e)) + 1}. ${e.nome} —`); root.aguarda = null; root.ult = null; root.repete = null;
   if (root.etapa === 'menu') { root.menu = {}; root.jogo = null; }
   if (root.etapa === 'mala') root.mala = novaMala();
-  if (root.etapa === 'dia') root.dia = novoDia();
+  if (root.etapa === 'det') root.det = novoDet();
   if (root.etapa === 'dif') root.dif = novoDif();
   if (root.etapa === 'batalha') root.bat = { vez: 'b', fase: 'perguntar' };
   if (root.etapa === 'convite') root.cv = { alvo: Math.floor(Math.random() * LUGARES.length) };
@@ -352,13 +352,13 @@ function irPara(id) {
 /* ================= menu de jogos e os 3 jogos novos ================= */
 const JOGOS = [
   { id: 'bat', ic: '🎯', nome: 'Batalha naval', min: 18, desc: 'Cada uma escreve uma ficha secreta. Chutem as respostas uma da outra.' },
-  { id: 'mala', ic: '🧳', nome: 'Arrume a mala', min: 12, desc: 'Cada uma precisa de coisas que só a outra tem. Peça com ○○が ありますか。' },
-  { id: 'dia', ic: '📅', nome: 'Marque um dia', min: 12, desc: 'Duas agendas diferentes: descubram o dia e a hora em que as duas estão livres.' },
+  { id: 'mala', ic: '🧳', nome: 'Viagem em dupla', min: 10, desc: 'Vocês vão viajar juntas, mas cada uma esqueceu 2 coisas em casa. Peçam à outra!' },
+  { id: 'det', ic: '🕵️', nome: 'Quem pegou o bolo?', min: 12, desc: 'O bolo da festa sumiu! Cada uma sabe pistas diferentes. Juntem tudo e achem o ladrão.' },
   { id: 'dif', ic: '🔍', nome: 'Ache as 5 diferenças', min: 12, desc: 'Dois quartos quase iguais. Descrevam o seu e achem as 5 diferenças.' }
 ];
 const jogoPor = id => JOGOS.find(g => g.id === id) || JOGOS[0];
-const SEQ_JOGO = { bat: ['ficha', 'batalha'], mala: ['mala'], dia: ['dia'], dif: ['dif'] };
-const JG = { mala: 1, dia: 1, dif: 1 };
+const SEQ_JOGO = { bat: ['ficha', 'batalha'], mala: ['mala'], det: ['det'], dif: ['dif'] };
+const JG = { mala: 1, det: 1, dif: 1 };
 const jogoDe = r => (r && r.jogo) || (r && (r.etapa === 'ficha' || r.etapa === 'batalha') ? 'bat' : null);
 function ETP(j) { if (j === undefined) j = jogoDe(S); return ['chegada', 'menu'].concat(j && SEQ_JOGO[j] ? SEQ_JOGO[j] : [], ['convite', 'cafe', 'papo', 'conta', 'lembranca']).map(id => ETAPAS.find(e => e.id === id)); }
 const totalMin = () => ETP().reduce((s, e) => s + e.min, 0);
@@ -412,8 +412,8 @@ const MALA = [
 ];
 const malaItem = id => MALA.find(x => x.id === id) || MALA[0];
 function novaMala() {
-  const ids = emb(MALA.map(x => x.id)), nA = ids.slice(0, 3), nB = ids.slice(3, 6);
-  return { vez: 'a', fase: 'perguntar', q: null, need: { a: nA, b: nB }, bag: { a: emb(nB.concat(ids.slice(6, 8))), b: emb(nA.concat(ids.slice(8, 10))) }, got: { a: [''], b: [''] }, t: { a: { x: 1 }, b: { x: 1 } } };
+  const ids = emb(MALA.map(x => x.id)), nA = ids.slice(0, 2), nB = ids.slice(2, 4);
+  return { vez: 'a', fase: 'perguntar', q: null, need: { a: nA, b: nB }, bag: { a: emb(nB.concat(ids.slice(4, 6))), b: emb(nA.concat(ids.slice(6, 8))) }, got: { a: [''], b: [''] }, t: { a: { x: 1 }, b: { x: 1 } } };
 }
 const malaPronta = (g, p) => arr((g.need || {})[p]).every(i => arr((g.got || {})[p]).includes(i));
 function painelMala() {
@@ -421,9 +421,9 @@ function painelMala() {
   const chip = (id, cl) => { const x = malaItem(id); return `<span class="chip ${cl || ''}"><span class="ic">${x.ic}</span>${ja(x.n)}${cl === 'ok' ? ' ✓' : ''}</span>`; };
   const feitas = need.filter(i => got.includes(i)).length, outras = arr((g.need || {})[P]).filter(i => arr((g.got || {})[P]).includes(i)).length;
   const toca = !g.fim && g.vez === EU && g.fase === 'perguntar', tri = (g.t || {})[EU] || {};
-  let h = `<div class="row" style="justify-content:space-between"><h3>🧳 Arrume a mala</h3><span class="so-voce">🔒 só você vê</span></div>
-    <div class="blk"><small>O QUE VOCÊ PRECISA · ${feitas} de ${need.length}</small><div class="chips">${need.map(i => chip(i, got.includes(i) ? 'ok' : 'falta')).join('')}</div></div>
-    <div class="blk"><small>NA SUA MOCHILA (a sua dupla precisa de algumas destas coisas)</small><div class="chips">${bag.map(i => chip(i)).join('')}</div></div>
+  let h = `<div class="row" style="justify-content:space-between"><h3>🧳 Viagem em dupla</h3><span class="so-voce">🔒 só você vê</span></div>
+    <div class="blk"><small>O QUE VOCÊ ESQUECEU EM CASA · ${feitas} de ${need.length}</small><div class="chips">${need.map(i => chip(i, got.includes(i) ? 'ok' : 'falta')).join('')}</div></div>
+    <div class="blk"><small>NA SUA MOCHILA (a sua dupla esqueceu algumas destas coisas)</small><div class="chips">${bag.map(i => chip(i)).join('')}</div></div>
     <p class="sub">${esc(nome(P))} já achou ${outras} de ${arr((g.need || {})[P]).length}.</p>`;
   if (toca) h += `<div class="blk"><small>TOQUE NA COISA QUE VOCÊ QUER PEDIR</small><div class="grade">${MALA.map(x => `<button type="button" class="it${ui.sel === x.id ? ' sel' : ''}" data-sel="${x.id}"${(tri[x.id] || got.includes(x.id)) ? ' disabled' : ''}><span class="ic">${x.ic}</span>${ja(x.n)}</button>`).join('')}</div></div>`;
   return h;
@@ -432,7 +432,7 @@ function acaoMala() {
   const a = $('acao'), g = S.mala || {}, P = outro(EU), Pn = esc(nome(P));
   if (g.vez === EU && g.fase === 'perguntar') {
     const it = ui.sel ? malaItem(ui.sel) : null;
-    if (!it) { a.innerHTML = `<div class="vez"><b>🧳 Sua vez de pedir</b><p>Toque, lá em cima, numa coisa que você precisa e pergunte a ${Pn} se ela tem.</p></div>`; return; }
+    if (!it) { a.innerHTML = `<div class="vez"><b>🧳 Sua vez de pedir</b><p>Você esqueceu algo em casa! Toque numa coisa lá em cima e pergunte a ${Pn} se ela tem.</p></div>`; return; }
     dizerJ('mala', EU, 'perguntar', { instr: `Pergunte a ${Pn} se ela tem ${it.ic} ${it.n}.`, m: `${it.n}が ありますか。`, d1: `${it.n}が…`, d2: '＿＿＿が ありますか。', pt: `Você tem ${it.pt}?`, k: [it.k, 'ありま|arima'] },
       g2 => { g2.q = it.id; g2.fase = 'responder'; });
     return;
@@ -444,65 +444,70 @@ function acaoMala() {
         k: tem_ ? ['はい|hai', 'あります|arimasu'] : ['いいえ|iie', 'ありません|arimasen'] },
       (g2, root) => { const q = g2.q, asker = g2.vez, tem2 = arr((g2.bag || {})[EU]).includes(q);
         g2.got = g2.got || {}; g2.t = g2.t || {};
-        if (tem2) g2.got[asker] = arr(g2.got[asker]).concat(q);
+        if (tem2) { g2.got[asker] = arr(g2.got[asker]).concat(q); poeLog(root, 's', `🧳 ${malaItem(q).ic} ${malaItem(q).n}: emprestado!`); }
         g2.t[asker] = Object.assign({}, g2.t[asker] || {}, { [q]: 1 });
         g2.q = null; g2.fase = 'perguntar';
-        if (malaPronta(g2, 'a') && malaPronta(g2, 'b')) { g2.fim = true; poeLog(root, 's', '✓ As duas malas estão prontas!'); return; }
+        if (malaPronta(g2, 'a') && malaPronta(g2, 'b')) { g2.fim = true; poeLog(root, 's', '✓ Mochilas completas. Boa viagem, vocês duas!'); return; }
         let nxt = outro(asker); if (malaPronta(g2, nxt)) nxt = asker; g2.vez = nxt; });
     return;
   }
   a.innerHTML = esperaJ(Pn, g.fase === 'perguntar' ? 'Ela vai perguntar se você tem alguma coisa. Olhe a sua mochila.' : 'Ela está olhando a mochila para responder.');
 }
 
-/* ---------- jogo 2: marque um dia ---------- */
-const DIAS = [
-  { c: '月', n: 'げつようび', pt: 'na segunda', k: 'げつ|getsu|月' }, { c: '火', n: 'かようび', pt: 'na terça', k: 'かよう|kayo|火' },
-  { c: '水', n: 'すいようび', pt: 'na quarta', k: 'すいよう|suiyo|水' }, { c: '木', n: 'もくようび', pt: 'na quinta', k: 'もくよう|mokuyo|木' },
-  { c: '金', n: 'きんようび', pt: 'na sexta', k: 'きんよう|kinyo|金' }, { c: '土', n: 'どようび', pt: 'no sábado', k: 'どよう|doyo|土' }, { c: '日', n: 'にちようび', pt: 'no domingo', k: 'にちよう|nichiyo|日' }
+/* ---------- jogo 2: quem pegou o bolo? (detetive) ---------- */
+const SUSP = [
+  { n: 'やまだ', ic: '👩‍🦰', k: 'やまだ|yamada|山田' }, { n: 'さとう', ic: '👨‍🦱', k: 'さとう|satou|sato|佐藤' }, { n: 'すずき', ic: '👵', k: 'すずき|suzuki|鈴木' },
+  { n: 'たなか', ic: '🧔', k: 'たなか|tanaka|田中' }, { n: 'いのうえ', ic: '👧', k: 'いのうえ|inoue|井上' }, { n: 'きむら', ic: '🧒', k: 'きむら|kimura|木村' }
 ];
-const HORAS = [
-  { n: 'ごぜん10じ', pt: 'às 10h', k: 'じゅうじ|juuji|jyuuji|10|１０' }, { n: 'ごぜん11じ', pt: 'às 11h', k: 'じゅういちじ|juuichiji|11|１１' },
-  { n: 'ごご1じ', pt: 'à 1h da tarde', k: 'いちじ|ichiji|1じ|１じ|1|１' }, { n: 'ごご2じ', pt: 'às 2h da tarde', k: 'にじ|niji|2じ|２じ|2|２' },
-  { n: 'ごご3じ', pt: 'às 3h da tarde', k: 'さんじ|sanji|3じ|３じ|3|３' }, { n: 'ごご4じ', pt: 'às 4h da tarde', k: 'よじ|yoji|4じ|４じ|4|４' }
-];
-const OCUPADO = ['しごと', 'がっこう', 'レッスン', 'かいもの', 'よてい'];
-function novoDia() {
-  const ds = emb([0, 1, 2, 3, 4, 5, 6]), hs = emb([0, 1, 2, 3, 4, 5]);
-  return { rod: 'dia', vez: 'a', fase: 'perguntar', q: -1, livre: { a: { d: [ds[0], ds[1], ds[2]], h: [hs[0], hs[1], hs[2]] }, b: { d: [ds[0], ds[3], ds[4]], h: [hs[0], hs[3], hs[4]] } }, t: { x: 1 } };
+const CORES = [{ n: 'あかい', ic: '🟥', pt: 'vermelha', k: 'あか|aka|赤' }, { n: 'あおい', ic: '🟦', pt: 'azul', k: 'あお|ao|青' }, { n: 'きいろい', ic: '🟨', pt: 'amarela', k: 'きいろ|kiiro|kiro|黄' }];
+const ATRS = {
+  cor: { ic: '👕', q: 'どんな いろの シャツを きて いますか。', pt: 'Que cor é a camisa?', kq: ['いろ|iro|色', 'シャツ|しゃつ|shatsu|syatsu'] },
+  ocu: { ic: '👓', q: 'めがねを かけて いますか。', pt: 'Usa óculos?', kq: ['めがね|megane|眼鏡', 'かけ|kake'], sim: 'はい、かけて います。', nao: 'いいえ、かけて いません。', ks: 'かけ|kake', ts: ['usa óculos', 'não usa óculos'] },
+  cha: { ic: '🧢', q: 'ぼうしを かぶって いますか。', pt: 'Usa boné?', kq: ['ぼうし|boushi|boshi|帽子', 'かぶ|kabu'], sim: 'はい、かぶって います。', nao: 'いいえ、かぶって いません。', ks: 'かぶ|kabu', ts: ['usa boné', 'sem boné'] },
+  bol: { ic: '👜', q: 'かばんを もって いますか。', pt: 'Está com bolsa?', kq: ['かばん|kaban', 'もって|motte|持'], sim: 'はい、もって います。', nao: 'いいえ、もって いません。', ks: 'もって|motte|持', ts: ['com bolsa', 'sem bolsa'] }
+};
+const ATR_IDS = ['cor', 'ocu', 'cha', 'bol'];
+const pistaTxt = (k, v) => k === 'cor' ? `camisa ${CORES[v].pt}` : ATRS[k].ts[v];
+const pistaIc = (k, v) => k === 'cor' ? CORES[v].ic : ATRS[k].ic;
+function novoDet() {
+  const todos = []; for (let c = 0; c < 3; c++) for (let o = 0; o < 2; o++) for (let h = 0; h < 2; h++) for (let b = 0; b < 2; b++) todos.push([c, o, h, b]);
+  const sus = emb(todos).slice(0, 6), par = emb(ATR_IDS);
+  return { vez: 'a', fase: 'perguntar', q: '', sus, lad: Math.floor(Math.random() * 6), sab: { a: par.slice(0, 2), b: par.slice(2, 4) }, rev: { x: 1 } };
 }
-const diaLivre = (g, p) => arr(((g.livre || {})[p] || {})[g.rod === 'hora' ? 'h' : 'd']);
-function painelDia() {
-  const g = S.dia || {}, hora = g.rod === 'hora', livre = diaLivre(g, EU), toca = !g.fim && g.vez === EU && g.fase === 'perguntar', tri = (g.t || {})[EU] || {};
-  const lista = hora ? HORAS : DIAS, pre = hora ? 'h' : 'd';
-  const cel = (x, i) => { const l = livre.includes(i);
-    return `<button type="button" class="dia${l ? ' livre' : ''}${ui.sel === String(i) ? ' sel' : ''}" data-sel="${i}"${(toca && l && !tri[pre + i]) ? '' : ' disabled'}>${hora ? '' : `<b>${x.c}</b>`}<span>${ja(x.n)}</span><small>${l ? 'ひま ✓' : ja(OCUPADO[(i + (EU === 'a' ? 0 : 2)) % OCUPADO.length])}</small></button>`; };
-  return `<div class="row" style="justify-content:space-between"><h3>📅 ${hora ? 'Qual hora?' : 'Marque um dia'}</h3><span class="so-voce">🔒 só você vê a sua agenda</span></div>
-    ${hora ? `<p class="sub">Dia combinado: <b>${ja(DIAS[(g.ach || {}).d || 0].n)}</b>. Agora descubram a hora em que as duas estão livres.</p>` : '<p class="sub">Cada uma tem dias livres e dias ocupados. Descubram o dia em que as duas estão livres (ひま).</p>'}
-    <div class="grade dias">${lista.map(cel).join('')}</div>${toca ? `<p class="sub">Toque num ${hora ? 'horário' : 'dia'} livre seu para perguntar se a outra também está livre.</p>` : ''}`;
+const detRest = g => arr(g.sus).map(arr).map((s, i) => ({ s, i })).filter(o => ATR_IDS.every((k, j) => g.rev[k] === undefined || o.s[j] === g.rev[k])).map(o => o.i);
+function painelDet() {
+  const g = S.det || {}, sus = arr(g.sus).map(arr), rev = g.rev || {}, mine = arr((g.sab || {})[EU]), P = outro(EU), rest = detRest(g), lad = sus[g.lad] || [0, 0, 0, 0];
+  const toca = !g.fim && g.vez === EU && g.fase === 'perguntar', livres = ATR_IDS.filter(k => !mine.includes(k) && rev[k] === undefined);
+  return `<div class="row" style="justify-content:space-between"><h3>🕵️ O bolo sumiu da festa!</h3><span class="so-voce">🔒 pistas só suas</span></div>
+    <div class="blk"><small>O QUE VOCÊ SABE SOBRE O LADRÃO (conte para ${esc(nome(P))} só se ela perguntar)</small><div class="chips">${mine.map(k => `<span class="chip${rev[k] !== undefined ? ' ok' : ''}">${pistaIc(k, lad[ATR_IDS.indexOf(k)])} ${pistaTxt(k, lad[ATR_IDS.indexOf(k)])}${rev[k] !== undefined ? ' ✓' : ''}</span>`).join('')}</div></div>
+    <div class="blk"><small>SUSPEITOS · ${rest.length} restam</small><div class="grade suspeitos">${sus.map((s, i) => `<div class="cel${rest.includes(i) ? '' : ' out'}"><span class="ic">${SUSP[i].ic}</span><b>${ja(SUSP[i].n + 'さん')}</b><small>${CORES[s[0]].ic}${s[1] ? '👓' : ''}${s[2] ? '🧢' : ''}${s[3] ? '👜' : ''}</small></div>`).join('')}</div></div>
+    ${toca ? `<div class="blk"><small>TOQUE NA PISTA QUE VOCÊ QUER DESCOBRIR</small><div class="grade perg">${livres.map(k => `<button type="button" class="it${ui.sel === k ? ' sel' : ''}" data-sel="${k}"><span class="ic">${ATRS[k].ic}</span><small>${ATRS[k].pt}</small></button>`).join('')}</div></div>` : ''}`;
 }
-function acaoDia() {
-  const a = $('acao'), g = S.dia || {}, P = outro(EU), Pn = esc(nome(P)), hora = g.rod === 'hora', L = hora ? HORAS : DIAS, pre = hora ? 'h' : 'd';
+function acaoDet() {
+  const a = $('acao'), g = S.det || {}, P = outro(EU), Pn = esc(nome(P)), sus = arr(g.sus).map(arr), lad = sus[g.lad] || [0, 0, 0, 0];
   if (g.vez === EU && g.fase === 'perguntar') {
-    const i = ui.sel != null && ui.sel !== '' ? +ui.sel : -1, x = L[i];
-    if (!x) { a.innerHTML = `<div class="vez"><b>📅 Sua vez de perguntar</b><p>Toque, lá em cima, num ${hora ? 'horário' : 'dia'} livre seu e pergunte a ${Pn} se ela também está livre.</p></div>`; return; }
-    dizerJ('dia', EU, 'perguntar', { instr: `Pergunte a ${Pn} se ela está livre ${x.pt}.`, m: `${x.n}は ひまですか。`, d1: `${x.n}は…`, d2: '＿＿＿は ひまですか。', pt: `Você está livre ${x.pt}?`, k: [x.k, 'ひま|hima'] },
-      g2 => { g2.q = i; g2.fase = 'responder'; });
+    const A = ATRS[ui.sel];
+    if (!A) { a.innerHTML = `<div class="vez"><b>🕵️ Sua vez de investigar</b><p>Toque, lá em cima, na pista que você quer descobrir e pergunte a ${Pn}.</p></div>`; return; }
+    dizerJ('det', EU, 'perguntar', { instr: `Pergunte a ${Pn}: "${A.pt}"`, m: A.q, d1: A.q.split(' ')[0] + '…', d2: '＿＿＿＿＿ ですか。', pt: A.pt, k: A.kq }, g2 => { g2.q = ui.sel; g2.fase = 'responder'; });
     return;
   }
   if (g.vez !== EU && g.fase === 'responder') {
-    const x = L[g.q] || L[0], livre = diaLivre(g, EU).includes(g.q);
-    dizerJ('dia', g.vez, 'responder', { instr: `${Pn} perguntou se você está livre ${x.pt}. Olhe a sua agenda e responda.`,
-        m: livre ? 'はい、ひまです。' : 'いいえ、ひまじゃ ありません。', d1: livre ? 'はい、…' : 'いいえ、…', d2: livre ? 'はい、＿＿＿。' : 'いいえ、＿＿＿ ありません。', pt: livre ? 'Sim, estou livre.' : 'Não, não estou livre.',
-        k: livre ? ['はい|hai', 'ひま|hima'] : ['いいえ|iie', 'ひまじゃ|himaja|ひまでは|ありません|arimasen'] },
-      (g2, root) => { const q = g2.q, asker = g2.vez, h2 = g2.rod === 'hora', lv = p => arr(((g2.livre || {})[p] || {})[h2 ? 'h' : 'd']).includes(q), achou = lv(EU) && lv(asker);
-        g2.q = -1; g2.fase = 'perguntar'; g2.vez = outro(asker);
-        if (!achou) { g2.t = g2.t || {}; g2.t[asker] = Object.assign({}, g2.t[asker] || {}, { [(h2 ? 'h' : 'd') + q]: 1 }); return; }
-        g2.ach = Object.assign({}, g2.ach || {}, h2 ? { h: q } : { d: q }); g2.t = { x: 1 };
-        if (h2) { g2.fim = true; poeLog(root, 's', `✓ Marcado: ${DIAS[g2.ach.d].n}, ${HORAS[q].n}!`); }
-        else { g2.rod = 'hora'; poeLog(root, 's', `✓ Dia combinado: ${DIAS[q].n}. Agora, a hora.`); } });
+    const k = g.q, A = ATRS[k] || ATRS.ocu, j = ATR_IDS.indexOf(k), v = lad[j] || 0, sim = v === 1;
+    const cfg = k === 'cor' ? { m: `${CORES[v].n} シャツを きて います。`, d1: `${CORES[v].n}…`, d2: '＿＿＿＿ シャツを きて います。', pt: `Camisa ${CORES[v].pt}.`, k: [CORES[v].k, 'シャツ|しゃつ|shatsu|syatsu'] }
+      : { m: sim ? A.sim : A.nao, d1: sim ? 'はい、…' : 'いいえ、…', d2: sim ? 'はい、＿＿＿ います。' : 'いいえ、＿＿＿ いません。', pt: pistaTxt(k, v), k: [sim ? 'はい|hai' : 'いいえ|iie', A.ks] };
+    dizerJ('det', g.vez, 'responder', Object.assign({ instr: `${Pn} perguntou: "${A.pt}". Olhe a sua pista secreta e responda.` }, cfg),
+      (g2, root) => { const q = g2.q, asker = g2.vez, l2 = arr(g2.sus).map(arr)[g2.lad], v2 = l2[ATR_IDS.indexOf(q)];
+        g2.rev = Object.assign({}, g2.rev || {}, { [q]: v2 }); poeLog(root, 's', `🔎 Pista: ${pistaIc(q, v2)} ${pistaTxt(q, v2)}`);
+        g2.q = ''; g2.fase = 'perguntar'; g2.vez = outro(asker);
+        const rest = detRest(g2); if (rest.length === 1) { g2.fase = 'acusar'; g2.sel = rest[0]; } });
     return;
   }
-  a.innerHTML = esperaJ(Pn, g.fase === 'perguntar' ? 'Ela vai perguntar se você está livre. Olhe a sua agenda.' : 'Ela está olhando a agenda para responder.');
+  if (g.fase === 'acusar') {
+    const sp = SUSP[g.sel || 0];
+    if (g.vez === EU) { dizerJ('det', EU, 'acusar', { instr: `Só sobrou um suspeito: ${sp.ic}! Acuse o ladrão em voz alta.`, m: `どろぼうは ${sp.n}さんです。`, d1: 'どろぼうは…', d2: 'どろぼうは ＿＿＿さんです。', pt: `O ladrão é ${sp.n}.`, k: [sp.k, 'どろぼう|dorobo|泥棒'] },
+        (g2, root) => { g2.fim = true; poeLog(root, 's', `🎂 Pegaram o ladrão: ${sp.n}さん! O bolo foi devolvido.`); }); return; }
+  }
+  a.innerHTML = esperaJ(Pn, g.fase === 'perguntar' ? 'Ela vai investigar e perguntar uma pista. Olhe a sua pista secreta.' : g.fase === 'acusar' ? 'Ela vai acusar o ladrão.' : 'Ela está pensando na resposta.');
 }
 
 /* ---------- jogo 3: ache as 5 diferenças ---------- */
@@ -779,7 +784,7 @@ function painel() {
     h = `<div class="row" style="justify-content:space-between"><h3>🎯 Tabuleiro de ${esc(nome(P))}</h3><span class="sub">${conta((b.ab || {})[P])} de ${CASAS.length} abertas</span></div>${tabuleiro(P, { toca })}${toca && casaDe(ui.casa) ? chutesHTML(b, casaDe(ui.casa)) : ''}${minhaFicha()}`;
   }
   if (s.etapa === 'mala') h = painelMala();
-  if (s.etapa === 'dia') h = painelDia();
+  if (s.etapa === 'det') h = painelDet();
   if (s.etapa === 'dif') h = painelDif();
   if (s.etapa === 'convite') {
     const cv = s.cv || {}, sabe = EU === 'a', toca = !sabe && st && st.tipo === 'toque', achou = concluida();
@@ -903,7 +908,7 @@ function uiAudio(cfg) {
     const rep = S.repete && S.repete.de === EU ? `<p class="fb">${Pn} pediu para você repetir. Fale mais devagar e perto do microfone.</p>` : '';
     let prim = '', dica = '';
     if (pre) dica = `<p class="fb">${pre}</p>`;
-    else if (!on) { prim = `<button class="btn pri med" type="button" id="jaFalei">${cfg.rot || '✓ Enviar'}</button>`; dica = cfg.rotSub || `Fale em voz alta para ${Pn}. Toque em Enviar quando terminar.`; }
+    else if (!on) { prim = `<button class="btn pri med" type="button" id="jaFalei">${cfg.rot || '✓ Enviar'}</button>`; dica = cfg.rotSub || ''; }
     else if (g.est === 'gravando') prim = `<button class="btn med gravando" type="button" id="pa">⏹ Parar <span id="tempo">0s</span></button>`;
     else if (g.est === 'revisar') prim = `<button class="btn med" type="button" id="ouve">▶ Ouvir</button><button class="btn med" type="button" id="outra">🎤 Gravar de novo</button><button class="btn pri med" type="button" id="manda">✓ Enviar para ${Pn}</button>`;
     else if (g.est === 'enviando') dica = espera('Enviando…');
@@ -955,7 +960,7 @@ function acao() {
   }
   if (s.etapa === 'menu') return acaoMenu();
   if (s.etapa === 'mala') return acaoMala();
-  if (s.etapa === 'dia') return acaoDia();
+  if (s.etapa === 'det') return acaoDet();
   if (s.etapa === 'dif') return acaoDif();
   if (s.etapa === 'ficha') return acaoFicha();
   if (s.etapa === 'batalha') return acaoBatalha();

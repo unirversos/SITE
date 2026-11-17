@@ -30,6 +30,8 @@ if(/^(localhost|127\.0\.0\.1)$/.test(location.hostname)&&/[?&]local=1/.test(loca
 .it:disabled,.dia:disabled,.cel:disabled{cursor:default}.it:disabled{opacity:.45}
 .dia.livre{background:var(--sage-soft);border-color:var(--sage)}.dia:not(.livre){opacity:.7}.dia small,.cel small{font-size:11px;color:var(--muted)}
 .cel.ig{background:var(--sage-soft);border-color:var(--sage)}.cel.df{background:var(--gold-soft);border-color:var(--gold)}.cel em{font-style:normal;font-size:11.5px;font-weight:700}
+.grade.suspeitos{grid-template-columns:repeat(3,1fr)}.grade.perg{grid-template-columns:repeat(4,1fr)}.cel.out{opacity:.3;filter:grayscale(1)}
+.cel b{font-size:13px}
 .teste-faixa{background:var(--gold-soft);border:1.5px solid var(--gold);color:var(--gold);border-radius:12px;padding:6px 12px;font-size:13px;font-weight:700;text-align:center}
 </style>
 <script type="module" src="/idiomas/dados/conta.js?v=6"></script>
@@ -167,6 +169,7 @@ button.pred:disabled{cursor:default;box-shadow:none;border-color:var(--line);bac
 .btn.grande{min-height:68px;font-size:19px;width:100%;border-radius:22px}
 .btn.med{min-height:42px;font-size:15px;padding:0 18px;width:auto}
 .row.ctl{gap:8px 10px;align-items:center}
+#acao{gap:8px}#acao #dicas:empty,#acao .fb:empty{display:none}#acao>.sub{font-size:13.5px;margin:0}
 @media (max-width:520px){.row.ctl .lk{flex-basis:100%;text-align:left}}
 #acao>.vez{margin-bottom:2px}
 .btn.gravando{background:#c0392b;border-color:#c0392b;color:#fff;animation:grava 1.2s infinite ease-in-out}
@@ -293,7 +296,7 @@ footer{border-top:1.5px dashed var(--line);padding-top:12px;display:flex;flex-wr
 
 <script src="/idiomas/dados/avatar.js?v=20261016b"></script>
 <script src="/idiomas/dados/velocidade-voz.js?v=1"></script>
-<script type="module" src="./aula.js?v=t1"></script>
+<script type="module" src="./aula.js?v=t3"></script>
 <script defer src="/caderno-flutuante.js?v=8"></script>
 </body>
 </html>
