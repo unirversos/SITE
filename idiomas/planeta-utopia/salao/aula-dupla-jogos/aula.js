@@ -87,7 +87,7 @@ const ETAPAS = [
   { id: 'menu', nome: 'Escolha o jogo', min: 2, fundo: 'salao', placa: '🏮 Salão' },
   { id: 'ficha', nome: 'Minha ficha', min: 7, fundo: 'salao', placa: '🏮 Salão' },
   { id: 'batalha', nome: 'Batalha naval', min: 18, fundo: 'salao', placa: '🏮 Salão' },
-  { id: 'mala', nome: 'Viagem em dupla', min: 10, fundo: 'salao', placa: '🏮 Salão' },
+  { id: 'mala', nome: 'Arrume a mala', min: 12, fundo: 'salao', placa: '🏮 Salão' },
   { id: 'det', nome: 'Quem pegou o bolo?', min: 12, fundo: 'salao', placa: '🏮 Salão' },
   { id: 'dif', nome: 'Ache as 5 diferenças', min: 12, fundo: 'salao', placa: '🏮 Salão' },
   { id: 'convite', nome: 'Convite', min: 5, fundo: 'rua', placa: '🚶 まち' },
@@ -317,7 +317,7 @@ function vezDe() {
   const s = S;
   if (concluida() || s.etapa === 'ficha' || s.etapa === 'menu' || s.etapa === 'lembranca') return 'ambas';
   if (s.aguarda) return outro(s.aguarda.de);                        /* a fala foi enviada: agora é a vez de quem ouve validar */
-  if (JG[s.etapa]) { const g = s[s.etapa] || {}; return g.fase === 'responder' ? outro(g.vez || 'a') : (g.vez || 'a'); }
+  if (JG[s.etapa]) { const g = s[s.etapa] || {}; if (g.fase === 'arrumar') return 'ambas'; return g.fase === 'responder' ? outro(g.vez || 'a') : (g.vez || 'a'); }
   if (s.etapa === 'batalha') { const b = s.bat || {}; return b.fase === 'responder' ? outro(b.vez || 'b') : (b.vez || 'b'); }
   const st = passos()[s.p || 0]; return st ? st.quem : 'ambas';
 }
@@ -352,7 +352,7 @@ function irPara(id) {
 /* ================= menu de jogos e os 3 jogos novos ================= */
 const JOGOS = [
   { id: 'bat', ic: '🎯', nome: 'Batalha naval', min: 18, desc: 'Cada uma escreve uma ficha secreta. Chutem as respostas uma da outra.' },
-  { id: 'mala', ic: '🧳', nome: 'Viagem em dupla', min: 10, desc: 'Vocês vão viajar juntas, mas cada uma esqueceu 2 coisas em casa. Peçam à outra!' },
+  { id: 'mala', ic: '🧳', nome: 'Arrume a mala', min: 12, desc: 'Cada uma arruma a própria mala em segredo, arrastando as coisas. Depois, adivinhem o que a outra levou e o que esqueceu!' },
   { id: 'det', ic: '🕵️', nome: 'Quem pegou o bolo?', min: 12, desc: 'O bolo da festa sumiu! Cada uma sabe pistas diferentes. Juntem tudo e achem o ladrão.' },
   { id: 'dif', ic: '🔍', nome: 'Ache as 5 diferenças', min: 12, desc: 'Dois quartos quase iguais. Descrevam o seu e achem as 5 diferenças.' }
 ];
@@ -397,7 +397,7 @@ document.addEventListener('click', e => {
   if (sel && !sel.disabled && JG[S.etapa]) { ui.sel = sel.dataset.sel; painel(); acao(); }
 });
 
-/* ---------- jogo 1: arrume a mala ---------- */
+/* ---------- jogo 1: arrume a mala (arrastar, esconder e adivinhar) ---------- */
 const MALA = [
   { id: 'pas', ic: '🛂', n: 'パスポート', pt: 'passaporte', k: 'パスポート|ぱすぽーと|pasupoto|pasuporto|passport' },
   { id: 'cam', ic: '📷', n: 'カメラ', pt: 'câmera', k: 'カメラ|かめら|kamera|camera' },
@@ -411,48 +411,90 @@ const MALA = [
   { id: 'tok', ic: '⌚', n: 'とけい', pt: 'relógio', k: 'とけい|tokei|時計' }
 ];
 const malaItem = id => MALA.find(x => x.id === id) || MALA[0];
-function novaMala() {
-  const ids = emb(MALA.map(x => x.id)), nA = ids.slice(0, 2), nB = ids.slice(2, 4);
-  return { vez: 'a', fase: 'perguntar', q: null, need: { a: nA, b: nB }, bag: { a: emb(nB.concat(ids.slice(4, 6))), b: emb(nA.concat(ids.slice(6, 8))) }, got: { a: [''], b: [''] }, t: { a: { x: 1 }, b: { x: 1 } } };
+const N_LEVA = 3;
+function novaMala() { return { n: Date.now() % 1e9, fase: 'arrumar', its: emb(MALA.map(x => x.id)).slice(0, 6), pack: { x: 1 }, ok: { x: 1 }, vez: 'a', q: '', tp: 'levou', k: 0, inf: { a: { x: 1 }, b: { x: 1 } } }; }
+let LP = null, DRAG = null;                                   /* LP: a mala que ESTA tela está arrumando (só vira estado quando toca em "Mala pronta") */
+const lp = g => { if (!LP || LP.n !== g.n) LP = { n: g.n, dentro: [], msg: '' }; return LP; };
+/* o que "quem pergunta" já sabe da mala da outra: 1 = levou, 0 = esqueceu; quando já achou as 3 que foram, o resto está deduzido (e vice-versa) */
+function saber(g, asker) {
+  const its = arr(g.its), inf = (g.inf || {})[asker] || {}, m = {}; let sim = 0, nao = 0;
+  its.forEach(i => { if (inf[i] !== undefined) { m[i] = inf[i]; inf[i] ? sim++ : nao++; } });
+  if (sim >= N_LEVA) its.forEach(i => { if (m[i] === undefined) m[i] = 0; });
+  else if (nao >= its.length - N_LEVA) its.forEach(i => { if (m[i] === undefined) m[i] = 1; });
+  return m;
 }
-const malaPronta = (g, p) => arr((g.need || {})[p]).every(i => arr((g.got || {})[p]).includes(i));
+const malaCompleta = (g, asker) => { const m = saber(g, asker); return arr(g.its).every(i => m[i] !== undefined); };
+const miHTML = (id, ex) => { const x = malaItem(id); return `<span class="mi${ex || ''}" data-mi="${id}"><span class="ic">${x.ic}</span>${ja(x.n)}</span>`; };
+function malaDesenho(g, dentro, arrastavel) {
+  const its = arr(g.its), fora = its.filter(i => !dentro.includes(i));
+  return `<div class="mala" data-zona="in"><small class="rot">SUA MALA · ${dentro.length} de ${N_LEVA}</small><div class="chips">${dentro.map(i => miHTML(i, arrastavel ? '' : ' fixo')).join('') || '<span class="vazio">arraste as coisas para cá</span>'}</div></div>
+    <div class="casa" data-zona="out"><small class="rot">🏠 FICARAM EM CASA</small><div class="chips">${fora.map(i => miHTML(i, arrastavel ? '' : ' fixo')).join('') || '<span class="vazio">nada</span>'}</div></div>`;
+}
 function painelMala() {
-  const g = S.mala || {}, need = arr((g.need || {})[EU]), got = arr((g.got || {})[EU]), bag = arr((g.bag || {})[EU]), P = outro(EU);
-  const chip = (id, cl) => { const x = malaItem(id); return `<span class="chip ${cl || ''}"><span class="ic">${x.ic}</span>${ja(x.n)}${cl === 'ok' ? ' ✓' : ''}</span>`; };
-  const feitas = need.filter(i => got.includes(i)).length, outras = arr((g.need || {})[P]).filter(i => arr((g.got || {})[P]).includes(i)).length;
-  const toca = !g.fim && g.vez === EU && g.fase === 'perguntar', tri = (g.t || {})[EU] || {};
-  let h = `<div class="row" style="justify-content:space-between"><h3>🧳 Viagem em dupla</h3><span class="so-voce">🔒 só você vê</span></div>
-    <div class="blk"><small>O QUE VOCÊ ESQUECEU EM CASA · ${feitas} de ${need.length}</small><div class="chips">${need.map(i => chip(i, got.includes(i) ? 'ok' : 'falta')).join('')}</div></div>
-    <div class="blk"><small>NA SUA MOCHILA (a sua dupla esqueceu algumas destas coisas)</small><div class="chips">${bag.map(i => chip(i)).join('')}</div></div>
-    <p class="sub">${esc(nome(P))} já achou ${outras} de ${arr((g.need || {})[P]).length}.</p>`;
-  if (toca) h += `<div class="blk"><small>TOQUE NA COISA QUE VOCÊ QUER PEDIR</small><div class="grade">${MALA.map(x => `<button type="button" class="it${ui.sel === x.id ? ' sel' : ''}" data-sel="${x.id}"${(tri[x.id] || got.includes(x.id)) ? ' disabled' : ''}><span class="ic">${x.ic}</span>${ja(x.n)}</button>`).join('')}</div></div>`;
-  return h;
+  const g = S.mala || {}, P = outro(EU), Pn = esc(nome(P)), its = arr(g.its), ok = g.ok || {}, ja_ = !!ok[EU];
+  if (g.fase === 'arrumar') {
+    const L = lp(g), dentro = ja_ ? arr((g.pack || {})[EU]) : L.dentro;
+    return `<div class="row" style="justify-content:space-between"><h3>🧳 Arrume a sua mala</h3><span class="so-voce">🔒 só você vê</span></div>${malaDesenho(g, dentro, !ja_)}${L.msg && !ja_ ? `<p class="fb">${L.msg}</p>` : ''}`;
+  }
+  const sab = saber(g, EU), toca = !g.fim && g.vez === EU && g.fase === 'perguntar', meus = arr((g.pack || {})[EU]);
+  const cel = i => { const x = malaItem(i), v = sab[i]; return `<button type="button" class="cel${v === 1 ? ' ig' : v === 0 ? ' df' : ''}${ui.sel === i ? ' sel' : ''}" data-sel="${i}"${toca && v === undefined ? '' : ' disabled'}><span class="ic">${x.ic}</span>${ja(x.n)}<em>${v === 1 ? '🧳 levou' : v === 0 ? '🏠 esqueceu' : '❓'}</em></button>`; };
+  return `<div class="row" style="justify-content:space-between"><h3>🧳 A mala de ${Pn}</h3><span class="sub">${its.filter(i => sab[i] !== undefined).length} de ${its.length} descobertas</span></div>
+    <div class="grade">${its.map(cel).join('')}</div>${toca ? '<p class="sub">Toque numa coisa e pergunte se ela levou ou esqueceu.</p>' : ''}
+    <details class="minha"><summary>🔒 Ver a minha mala</summary>${malaDesenho(g, meus, false)}</details>`;
 }
 function acaoMala() {
-  const a = $('acao'), g = S.mala || {}, P = outro(EU), Pn = esc(nome(P));
+  const a = $('acao'), g = S.mala || {}, P = outro(EU), Pn = esc(nome(P)), ok = g.ok || {};
+  if (g.fase === 'arrumar') {
+    if (ok[EU]) { a.innerHTML = `<div class="vez"><b>✓ Mala pronta!</b><p>Guarde o segredo: ${Pn} vai tentar adivinhar.</p></div>${espera(`Esperando ${Pn} arrumar a mala…`)}`; return; }
+    const L = lp(g), pronto = L.dentro.length === N_LEVA;
+    a.innerHTML = `<div class="vez"><b>🧳 Vocês vão viajar!</b><p>Arraste ${N_LEVA} coisas para dentro da mala. O resto fica em casa. ${Pn} não vê a sua mala.</p></div><div class="row"><button class="btn pri med" type="button" id="malaOk"${pronto ? '' : ' disabled'}>✓ Mala pronta</button></div>`;
+    $('malaOk').onclick = () => { const mine = L.dentro.slice(); sync.tx(root => { const m = root && root.mala; if (!root || root.etapa !== 'mala' || !m || m.fase !== 'arrumar' || m.n !== g.n) return;
+      m.pack = Object.assign({}, m.pack || {}, { [EU]: mine }); m.ok = Object.assign({}, m.ok || {}, { [EU]: true });
+      if (m.ok.a && m.ok.b) { m.fase = 'perguntar'; poeLog(root, 's', '🧳 As duas malas estão prontas. Agora, adivinhem!'); } return root; }); };
+    return;
+  }
   if (g.vez === EU && g.fase === 'perguntar') {
-    const it = ui.sel ? malaItem(ui.sel) : null;
-    if (!it) { a.innerHTML = `<div class="vez"><b>🧳 Sua vez de pedir</b><p>Você esqueceu algo em casa! Toque numa coisa lá em cima e pergunte a ${Pn} se ela tem.</p></div>`; return; }
-    dizerJ('mala', EU, 'perguntar', { instr: `Pergunte a ${Pn} se ela tem ${it.ic} ${it.n}.`, m: `${it.n}が ありますか。`, d1: `${it.n}が…`, d2: '＿＿＿が ありますか。', pt: `Você tem ${it.pt}?`, k: [it.k, 'ありま|arima'] },
-      g2 => { g2.q = it.id; g2.fase = 'responder'; });
+    const it = ui.sel ? malaItem(ui.sel) : null, leva = (g.k || 0) % 2 === 0;
+    if (!it) { a.innerHTML = `<div class="vez"><b>🧳 Sua vez de adivinhar</b><p>Toque numa coisa lá em cima e pergunte a ${Pn} se ela ${leva ? 'levou' : 'esqueceu'}.</p></div>`; return; }
+    dizerJ('mala', EU, 'perguntar', leva
+      ? { instr: `Pergunte a ${Pn} se ela levou ${it.ic} ${it.n}.`, m: `${it.n}を もって いきましたか。`, d1: `${it.n}を…`, d2: '＿＿＿を もって いきましたか。', pt: `Você levou ${it.pt}?`, k: [it.k, 'もって|motte|持', 'いきま|ikima'] }
+      : { instr: `Pergunte a ${Pn} se ela esqueceu ${it.ic} ${it.n}.`, m: `${it.n}を わすれましたか。`, d1: `${it.n}を…`, d2: '＿＿＿を わすれましたか。', pt: `Você esqueceu ${it.pt}?`, k: [it.k, 'わすれ|wasure|忘'] },
+      g2 => { g2.q = it.id; g2.tp = leva ? 'levou' : 'esqueceu'; g2.fase = 'responder'; });
     return;
   }
   if (g.vez !== EU && g.fase === 'responder') {
-    const it = malaItem(g.q), tem_ = arr((g.bag || {})[EU]).includes(g.q);
-    dizerJ('mala', g.vez, 'responder', { instr: `${Pn} perguntou se você tem ${it.ic} ${it.n}. Olhe a sua mochila e responda.`,
-        m: tem_ ? 'はい、あります。どうぞ。' : 'いいえ、ありません。', d1: tem_ ? 'はい、…' : 'いいえ、…', d2: tem_ ? 'はい、＿＿＿。どうぞ。' : 'いいえ、＿＿＿。', pt: tem_ ? 'Sim, tenho. Tome.' : 'Não, não tenho.',
-        k: tem_ ? ['はい|hai', 'あります|arimasu'] : ['いいえ|iie', 'ありません|arimasen'] },
-      (g2, root) => { const q = g2.q, asker = g2.vez, tem2 = arr((g2.bag || {})[EU]).includes(q);
-        g2.got = g2.got || {}; g2.t = g2.t || {};
-        if (tem2) { g2.got[asker] = arr(g2.got[asker]).concat(q); poeLog(root, 's', `🧳 ${malaItem(q).ic} ${malaItem(q).n}: emprestado!`); }
-        g2.t[asker] = Object.assign({}, g2.t[asker] || {}, { [q]: 1 });
-        g2.q = null; g2.fase = 'perguntar';
-        if (malaPronta(g2, 'a') && malaPronta(g2, 'b')) { g2.fim = true; poeLog(root, 's', '✓ Mochilas completas. Boa viagem, vocês duas!'); return; }
-        let nxt = outro(asker); if (malaPronta(g2, nxt)) nxt = asker; g2.vez = nxt; });
+    const it = malaItem(g.q), dentro = arr((g.pack || {})[EU]).includes(g.q), leva = g.tp === 'levou';
+    const R = leva ? (dentro ? { m: 'はい、もって いきました。', k: ['はい|hai', 'もって|motte|持'], pt: 'Sim, levei.' } : { m: 'いいえ、わすれました。', k: ['いいえ|iie', 'わすれ|wasure|忘'], pt: 'Não, esqueci.' })
+      : (dentro ? { m: 'いいえ、もって いきました。', k: ['いいえ|iie', 'もって|motte|持'], pt: 'Não, levei.' } : { m: 'はい、わすれました。', k: ['はい|hai', 'わすれ|wasure|忘'], pt: 'Sim, esqueci.' });
+    dizerJ('mala', g.vez, 'responder', { instr: `${Pn} perguntou se você ${leva ? 'levou' : 'esqueceu'} ${it.ic} ${it.n}. Olhe a sua mala (em "Ver a minha mala") e responda.`, m: R.m, d1: R.m.split('、')[0] + '、…', d2: R.m.startsWith('はい') ? 'はい、＿＿＿。' : 'いいえ、＿＿＿。', pt: R.pt, k: R.k },
+      (g2, root) => { const q = g2.q, asker = g2.vez, din = arr((g2.pack || {})[EU]).includes(q);
+        g2.inf = g2.inf || {}; g2.inf[asker] = Object.assign({}, g2.inf[asker] || {}, { [q]: din ? 1 : 0 });
+        poeLog(root, 's', din ? `🧳 ${malaItem(q).ic} ${malaItem(q).n}: estava na mala` : `🏠 ${malaItem(q).ic} ${malaItem(q).n}: ficou em casa`);
+        g2.q = ''; g2.fase = 'perguntar'; g2.k = (g2.k || 0) + 1;
+        const ca = malaCompleta(g2, 'a'), cb = malaCompleta(g2, 'b');
+        if (ca && cb) { g2.fim = true; poeLog(root, 's', '✓ As duas descobriram tudo. Boa viagem!'); return; }
+        let nxt = outro(asker); if (malaCompleta(g2, nxt)) nxt = asker; g2.vez = nxt; });
     return;
   }
-  a.innerHTML = esperaJ(Pn, g.fase === 'perguntar' ? 'Ela vai perguntar se você tem alguma coisa. Olhe a sua mochila.' : 'Ela está olhando a mochila para responder.');
+  a.innerHTML = esperaJ(Pn, g.fase === 'perguntar' ? 'Ela vai perguntar se você levou ou esqueceu alguma coisa. Olhe a sua mala.' : 'Ela está olhando a mala dela para responder.');
 }
+/* arrastar (ou tocar) para arrumar a mala */
+function malaMove(id, para) {
+  const g = S.mala || {}, L = lp(g), i = L.dentro.indexOf(id); L.msg = '';
+  if (para === 'in' && i < 0) { if (L.dentro.length >= N_LEVA) L.msg = `A mala só leva ${N_LEVA} coisas. Tire alguma antes (arraste para "em casa").`; else L.dentro.push(id); }
+  if (para === 'out' && i >= 0) L.dentro.splice(i, 1);
+  painel(); acao();
+}
+function malaPronta_() { return S && EU && S.etapa === 'mala' && (S.mala || {}).fase === 'arrumar' && !((S.mala.ok || {})[EU]); }
+document.addEventListener('pointerdown', e => { const el = e.target.closest('[data-mi]'); if (!el || !malaPronta_() || el.classList.contains('fixo')) return; DRAG = { id: el.dataset.mi, x: e.clientX, y: e.clientY, mov: false, gh: null, de: el.closest('[data-zona]') ? el.closest('[data-zona]').dataset.zona : 'out' }; });
+document.addEventListener('pointermove', e => { if (!DRAG) return;
+  if (!DRAG.mov && Math.hypot(e.clientX - DRAG.x, e.clientY - DRAG.y) > 8) { DRAG.mov = true; const gh = document.createElement('div'); gh.className = 'mi gh'; gh.innerHTML = malaItem(DRAG.id).ic + ' ' + esc(malaItem(DRAG.id).n); document.body.appendChild(gh); DRAG.gh = gh; }
+  if (DRAG.gh) { DRAG.gh.style.left = (e.clientX - 30) + 'px'; DRAG.gh.style.top = (e.clientY - 22) + 'px'; document.querySelectorAll('[data-zona]').forEach(z => z.classList.remove('alvo')); const z = document.elementFromPoint(e.clientX, e.clientY); const zn = z && z.closest('[data-zona]'); if (zn) zn.classList.add('alvo'); } });
+document.addEventListener('pointerup', e => { if (!DRAG) return; const d = DRAG; DRAG = null; if (d.gh) d.gh.remove(); document.querySelectorAll('[data-zona]').forEach(z => z.classList.remove('alvo'));
+  if (!malaPronta_()) return;
+  if (!d.mov) { malaMove(d.id, d.de === 'in' ? 'out' : 'in'); return; }
+  const z = document.elementFromPoint(e.clientX, e.clientY), zn = z && z.closest('[data-zona]'); if (zn) malaMove(d.id, zn.dataset.zona); });
+document.addEventListener('pointercancel', () => { if (DRAG && DRAG.gh) DRAG.gh.remove(); DRAG = null; });
 
 /* ---------- jogo 2: quem pegou o bolo? (detetive) ---------- */
 const SUSP = [
