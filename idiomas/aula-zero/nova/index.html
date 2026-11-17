@@ -176,6 +176,9 @@ body[data-etapa="ar"]{background-color:#dde1e5}
 .ro-svg{display:none}body.ver-ro .ro-svg{display:inline}
 .ro-bar{display:none;font-size:10px;color:var(--muted);line-height:1}body.ver-ro .ro-bar{display:block}
 .ro-in{display:none;color:var(--muted);font-weight:500;font-size:.85em}body.ver-ro .ro-in{display:inline}
+.lacuna{display:inline-block;min-width:2.2em;border-bottom:3px dotted var(--terra);text-align:center;color:var(--terra)}
+.tremeu{animation:nao .45s}
+.btn.pri[data-v]{background:var(--terra);color:#fff}.btn.pri[data-v] small{color:#fff}
 </style>
 </head>
 <body>
@@ -188,6 +191,7 @@ body[data-etapa="ar"]{background-color:#dde1e5}
     <div class="tools">
       <button class="btn small" type="button" id="btnTeste" aria-expanded="false">🎤 Testar mic</button>
       <button class="btn small" type="button" id="btnRo" aria-pressed="false">Romaji: não</button>
+      <button class="btn small" type="button" id="btnRecom">↺ Recomeçar</button>
       <a class="btn small" id="btnNum" href="/idiomas/numeros/#ban" target="_blank" rel="noopener" style="text-decoration:none;display:inline-flex;align-items:center">🔢 Números ↗</a>
     </div>
   </header>
@@ -544,7 +548,7 @@ function render(){
   window.__render=render;
   desenhaBarra();desenhaHot();
   { const pr=S.passo==='prontas'?((PRONTAS[S.p||0]||{}).fogo?'fogo':'agua'):null;
-    const et={agua:'agua',fogo:'fogo',terra:'terra',quiz:'terra',ganho:'ar'}[S.passo];
+    const et={agua:'agua',fogo:'fogo',terra:'terra',quiz:'terra',fixa:'terra',ganho:'ar'}[S.passo];
     document.body.dataset.etapa=pr||et||''; }
   const c=CHAVES[S.k];
   if(S.passo==='chegada')return telaChegada();
@@ -553,6 +557,7 @@ function render(){
   if(S.passo==='fogo')return telaResposta(c,'fogo','Fogo · a fechadura',c.fogo.pedido,c.fogo);
   if(S.passo==='terra')return telaTerra(c);
   if(S.passo==='quiz')return telaQuiz(c);
+  if(S.passo==='fixa')return telaFixa(c);
   if(S.passo==='ganho')return telaGanho(c);
   if(S.passo==='prontas')return telaProntas();
   if(S.passo==='final')return telaFinal();
@@ -613,8 +618,47 @@ function telaQuiz(c){
      <div class="estado" id="estado"></div>`;
     $('qzBt').onclick=e=>{const b=e.target.closest('[data-v]');if(!b)return;const est=$('estado');
       if(b.dataset.v===v){[...$('qzBt').children].forEach(x=>x.disabled=true);est.className='estado ok';est.textContent='✓ '+n+pt+v+'ます';fala(n+pt+v+'ます');
-        q++;setTimeout(()=>{if(q>=Q.length){S.conquista=true;vai('ganho');}else mostra();},1300);}
+        q++;setTimeout(()=>{if(q>=Q.length){S.conquista=true;vai('fixa');}else mostra();},1300);}
       else{est.className='estado erro';est.textContent=pt==='に'?'Tente de novo: に marca um lugar. Qual verbo leva você até lá?':'Tente de novo: を marca a coisa. É para comer ou para beber?';}};
+  }
+  mostra();
+}
+/* ---------- Fixação: ritmo rápido, banco de palavras visível, 1 toque por rodada (não trava a chave) ---------- */
+const FIX={
+ 1:[['🚆','É um trem.','','','でんしゃ','densha','trem','です','desu'],['🍙','É um onigiri.','','','おにぎり','onigiri','bolinho de arroz','です','desu'],['🎫','É o bilhete.','','','きっぷ','kippu','bilhete','です','desu'],['🍵','É chá.','','','おちゃ','ocha','chá','です','desu'],['💧','É água.','','','みず','mizu','água','です','desu']],
+ 2:[['🍙','Não é chá.','','','おちゃ','ocha','chá','じゃない','janai'],['🚆','Não é água.','','','みず','mizu','água','じゃない','janai'],['🍵','Não é onigiri.','','','おにぎり','onigiri','bolinho de arroz','じゃない','janai'],['💧','Não é trem.','','','でんしゃ','densha','trem','じゃない','janai'],['🍙','Não é bilhete.','','','きっぷ','kippu','bilhete','じゃない','janai']],
+ 3:[['🍙','Eu como o onigiri.','','','おにぎり','onigiri','bolinho de arroz','をたべます','o tabemasu'],['🍵','Eu bebo o chá.','','','おちゃ','ocha','chá','をのみます','o nomimasu'],['🚉','Eu vou para Tóquio.','','','とうきょう','Tōkyō','Tóquio','にいきます','ni ikimasu'],['💧','Eu bebo a água.','','','みず','mizu','água','をのみます','o nomimasu'],['🚻','Eu vou ao banheiro.','','','トイレ','toire','banheiro','にいきます','ni ikimasu']],
+ 4:[['🥩','Não como carne.','','','にく','niku','carne','をたべません','o tabemasen'],['🍵','Não bebo chá.','','','おちゃ','ocha','chá','をのみません','o nomimasen'],['🐟','Não como peixe.','','','さかな','sakana','peixe','をたべません','o tabemasen'],['💧','Não bebo água.','','','みず','mizu','água','をのみません','o nomimasen'],['🍙','Não como onigiri.','','','おにぎり','onigiri','bolinho de arroz','をたべません','o tabemasen']],
+ 5:[['🍙','Um onigiri, por favor.','すみません、','sumimasen, ','おにぎり','onigiri','bolinho de arroz','をください','o kudasai'],['💧','Água, por favor.','すみません、','sumimasen, ','みず','mizu','água','をください','o kudasai'],['🍵','Chá, por favor.','すみません、','sumimasen, ','おちゃ','ocha','chá','をください','o kudasai'],['🥚','Um ovo, por favor.','すみません、','sumimasen, ','たまご','tamago','ovo','をください','o kudasai'],['🍙','Onigiri, por favor.','すみません、','sumimasen, ','おにぎり','onigiri','bolinho de arroz','をください','o kudasai']]
+};
+function plim(ok){
+  try{const AC=window.AudioContext||window.webkitAudioContext;if(!AC)return;const a=new AC(),t=a.currentTime;
+    (ok?[[784,0],[1175,.11]]:[[220,0]]).forEach(([f,d])=>{const o=a.createOscillator(),g=a.createGain();o.type=ok?'sine':'triangle';o.frequency.value=f;g.gain.setValueAtTime(.0001,t+d);g.gain.exponentialRampToValueAtTime(.18,t+d+.02);g.gain.exponentialRampToValueAtTime(.0001,t+d+.25);o.connect(g);g.connect(a.destination);o.start(t+d);o.stop(t+d+.3);});
+    setTimeout(()=>{try{a.close();}catch(e){}},700);}catch(e){}
+}
+function telaFixa(c){
+  const R=FIX[c.n];let q=0,trava=false;
+  const banco=[];R.forEach(r=>{if(!banco.find(b=>b[0]===r[4]))banco.push([r[4],r[5],r[6]]);});
+  const emb=a=>{a=a.slice();for(let i=a.length-1;i>0;i--){const j=(i*7+3)%(i+1);[a[i],a[j]]=[a[j],a[i]];}return a;};
+  const bs=emb(banco);
+  const fim=()=>{S.conquista=S.conquista||!S.acesas.includes(c.n);vai('ganho');};
+  function mostra(){
+    const [em,pt,pre,preRo,w,wRo,wpt,pos,posRo]=R[q];
+    painel.innerHTML=`<span class="elem terra"><i></i>Chave ${String(c.n).padStart(2,'0')} · Fixação · modo turbo</span>
+     <h2>${em} ${pt}</h2>
+     <div class="contagem" aria-label="${q} de ${R.length}">${R.map((_,i)=>`<i class="${i<q?'on':''}"></i>`).join('')}</div>
+     <div class="moldebox"><div class="jpl" lang="ja">${pre}<span class="lacuna">＿＿</span>${pos}</div><div class="ro">${preRo}___ ${posRo}</div></div>
+     <p class="nota"><b>Toque e repita em voz alta</b> a frase que o áudio disser. Toque na palavra que completa a frase.</p>
+     <div class="qz-bt" id="fxBt">${bs.map(b=>`<button type="button" class="btn" data-v="${b[0]}" lang="ja">${b[0]}<small>${b[1]} · ${b[2]}</small></button>`).join('')}</div>
+     <div class="estado" id="estado"></div>
+     <div class="acoes"><button class="btn ghost" type="button" id="fxPula">Pular fixação →</button></div>`;
+    $('fxPula').onclick=()=>{pararMic();fim();};
+    $('fxBt').onclick=e=>{const b=e.target.closest('[data-v]');if(!b||trava)return;const est=$('estado');
+      fala(b.dataset.v);
+      if(b.dataset.v===w){trava=true;plim(true);b.classList.add('pri');const lc=painel.querySelector('.lacuna');if(lc){lc.textContent=w;lc.style.borderBottomStyle='solid';}est.className='estado ok';est.textContent='✓ '+pre+w+pos;
+        setTimeout(()=>fala(pre+w+pos),450);
+        q++;setTimeout(()=>{trava=false;if(q>=R.length)fim();else mostra();},2300);}
+      else{plim(false);b.classList.add('tremeu');setTimeout(()=>b.classList.remove('tremeu'),500);est.className='estado erro';est.textContent='Esse é '+b.dataset.v+' ('+b.querySelector('small').textContent.split(' · ')[1]+'). Tente de novo.';}};
   }
   mostra();
 }
@@ -823,7 +867,7 @@ function telaTerra(c){
         const id=rest+'|'+st;
         if(S.feitos.includes(id)){E.aviso('Essa frase você já usou. Escolha outra.',dito);return;}
         S.feitos.push(id);E.ok(x,'✓ Boa!');
-        if(S.feitos.length>=2){setTimeout(()=>{S.conquista=true;vai(c.n===3?'quiz':'ganho');},1200);}else setTimeout(()=>telaTerra(c),1100);
+        if(S.feitos.length>=2){setTimeout(()=>{S.conquista=true;vai(c.n===3?'quiz':'fixa');},1200);}else setTimeout(()=>telaTerra(c),1100);
         return;
       }
       E.falha(dito,msg||'Escreva uma frase inteira e feche com ます.');return;
@@ -832,7 +876,7 @@ function telaTerra(c){
       const id=t.tipos?ultimoTipo:canon(w);
       if(S.feitos.includes(id)){E.aviso(t.tipos?'Essa palavra de pergunta você já usou. Use outra: どこ, なん ou なんじ.':'Essa palavra você já usou. Escolha outra.',dito);return;}
       S.feitos.push(id);E.ok(x,'✓ Boa!');
-      if(S.feitos.length>=2){setTimeout(()=>{S.conquista=true;vai(c.n===3?'quiz':'ganho');},1200);}else setTimeout(()=>telaTerra(c),1100);
+      if(S.feitos.length>=2){setTimeout(()=>{S.conquista=true;vai(c.n===3?'quiz':'fixa');},1200);}else setTimeout(()=>telaTerra(c),1100);
       return;}}
     const n=norm(dito);
     let msg='Escreva uma palavra em kana ou romaji e feche com '+t.key+'.';
@@ -844,6 +888,12 @@ function telaTerra(c){
   });
 }
 
+$('btnRecom').onclick=()=>{
+  if(!confirm('Recomeçar a Aula Zero? Suas chaves acesas serão apagadas.'))return;
+  S.acesas=[];S.k=0;S.conquista=false;salva();
+  try{pararMic();}catch(e){}
+  vai('chegada');window.scrollTo(0,0);
+};
 /* ---------- romaji ---------- */
 $('btnRo').onclick=function(){const on=document.body.classList.toggle('ver-ro');this.setAttribute('aria-pressed',on);this.textContent='Romaji: '+(on?'sim':'não');};
 
@@ -853,6 +903,7 @@ function listaVoz(){
   const add=(say,pt)=>String(say).split('。').map(x=>x.trim()).filter(Boolean).forEach(f=>{if(!set.has(f))set.set(f,pt);});
   CHAVES.forEach(c=>{c.hot.forEach(h=>{add(h.say,h.pt);if(h.resp)add(h.resp.ja,h.resp.pt);});add(c.agua.say,c.agua.pt);add(c.fogo.say,c.fogo.pt);});
   PRONTAS.forEach(f=>add(f.say,f.pt));FINAL.forEach(f=>add(f.say,f.pt));
+  Object.values(FIX).forEach(R=>R.forEach(r=>{add(r[4],r[6]);add(r[2]+r[4]+r[7],r[1]);}));
   add('すみません','abertura');
   const faltam=[...set].filter(([k])=>!temVoz(k));
   const box=$('listaVoz');box.hidden=false;
