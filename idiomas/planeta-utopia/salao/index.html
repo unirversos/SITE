@@ -185,6 +185,7 @@
 
 .j-ilu{width:min(38vw,132px);aspect-ratio:1;margin:0 auto}
 </style>
+<link rel="stylesheet" href="/idiomas/planeta-utopia/salao/jogos-cenas.css?v=1">
 <script type="module" src="/idiomas/dados/conta.js?v=6"></script>
 <script>setTimeout(function(){var h=document.documentElement;if(!h.classList.contains('uni-ok')&&!document.getElementById('uni-gate'))h.classList.add('uni-ok')},10000)</script>
 <style>
@@ -318,7 +319,7 @@ footer{border-top:1.5px dashed var(--line);padding-top:18px;display:flex;flex-wr
   <header>
     <p class="eyebrow">✦ espírito · encontros ao vivo</p>
     <h1>🪐 Planeta Utopia</h1>
-    <p class="lede">Ande pela sala com o seu avatar, sente numa mesa e comece a conversar. Os jogos abrem na hora, mesmo sem ninguém por perto: se alguém sentar, entra no jogo quando quiser.</p>
+    <p class="lede">Ande pela sala com o seu avatar, sente numa mesa e comece a conversar. A estante de jogos está sempre à mão: jogue sozinho(a) ou convide a mesa para jogar junto.</p>
   </header>
 
   <section class="card porta" id="portaSalao" aria-labelledby="h-porta">
@@ -327,8 +328,8 @@ footer{border-top:1.5px dashed var(--line);padding-top:18px;display:flex;flex-wr
   </section>
 
   <section class="card" id="secSala" aria-labelledby="h-sala" hidden>
-    <div class="topo-sala"><div><h2 id="h-sala">🏮 O Salão</h2><p class="sub" id="dica">Toque no chão para andar e numa cadeira para sentar. No computador, use também as setas.</p></div>
-      <div class="row"><button class="btn" type="button" id="btnClima" aria-label="Mudar o clima da janela">☀️ 晴れ · Sol</button><button class="btn" type="button" id="btnRo" aria-pressed="false">Romaji: não</button><button class="btn" type="button" id="levantar" hidden>Levantar da mesa</button></div></div>
+    <div class="topo-sala"><div><h2 id="h-sala">🏮 O Salão</h2><p class="sub" id="dica">Toque no chão para andar e numa cadeira para sentar. A estante de jogos (parede da esquerda) abre sem precisar sentar. No computador, use também as setas.</p></div>
+      <div class="row"><button class="btn pri" type="button" id="btnEstante">📚 Estante de jogos</button><button class="btn" type="button" id="btnClima" aria-label="Mudar o clima da janela">☀️ 晴れ · Sol</button><button class="btn" type="button" id="btnRo" aria-pressed="false">Romaji: não</button><button class="btn" type="button" id="levantar" hidden>Levantar da mesa</button></div></div>
     <p class="sub quem" id="quem" aria-live="polite"></p>
     <div class="sala" id="sala" tabindex="0" role="application" aria-label="Sala do Salão. Toque no chão para andar, toque numa cadeira para sentar, ou use as setas do teclado."></div>
     <p class="nota" id="semBanco" hidden>As outras pessoas ainda estão sendo ligadas. Você pode andar pela sala, mas só vai ver quem está online quando a conexão voltar.</p>
@@ -382,6 +383,7 @@ footer{border-top:1.5px dashed var(--line);padding-top:18px;display:flex;flex-wr
 <script src="/idiomas/dados/audio-mapa.js?v=jogos1"></script>
 <script src="/idiomas/dados/glossario.js?v=1"></script>
 <script src="/idiomas/planeta-utopia/salao/ilustracoes.js?v=1"></script>
+<script src="/idiomas/planeta-utopia/salao/jogos-cenas.js?v=1"></script>
 <script type="text/plain" id="salaModulo">
 import { getApps, initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
 import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
@@ -428,7 +430,7 @@ const nomeDe=p=>(p&&p.nome)||'Viajante';
 const sala=$('sala'); const elAv={}, elCad={};
 const DECOR='<div class="dec" aria-hidden="true"><div class="tapete" style="left:28%;top:62%"></div><div class="genkan" style="left:50%;top:94%"><em>🩴🩴</em><b>entrada</b></div><div class="akari" style="left:43%;top:35%"></div><div class="akari" style="left:93%;top:74%"></div><span class="lant sm" style="left:25.5%;top:6%">🏮</span><span class="lant" style="left:31%;top:9%">🏮</span><span class="lant" style="left:69%;top:9%">🏮</span><span class="lant sm" style="left:74.5%;top:6%">🏮</span><div class="estante" style="left:16%"><b><u style="background:#c2575f;height:62%"></u><u style="background:#8b5e83;height:73%"></u><u style="background:#5e8c6a;height:84%"></u><u style="background:#e07a8e;height:95%"></u><u style="background:#d98a6a;height:72%"></u><u style="background:#e8b04a;height:83%"></u><u style="background:#4f9aa0;height:94%"></u><em>🏺</em></b><b><u style="background:#6a7fb5;height:69%"></u><u style="background:#c2575f;height:80%"></u><u style="background:#8b5e83;height:91%"></u><u style="background:#5e8c6a;height:68%"></u><u style="background:#e07a8e;height:79%"></u><u style="background:#d98a6a;height:90%"></u><u style="background:#e8b04a;height:67%"></u></b><b><u style="background:#4f9aa0;height:76%"></u><u style="background:#6a7fb5;height:87%"></u><u style="background:#c2575f;height:64%"></u><u style="background:#8b5e83;height:75%"></u><u style="background:#5e8c6a;height:86%"></u><u style="background:#e07a8e;height:63%"></u><u style="background:#d98a6a;height:74%"></u><em>🕯️</em></b></div><div class="janela"><i class="sky"></i><i class="astro"></i><i class="nuvem"></i><i class="chuva"></i></div><div class="estante" style="left:84%"><b><u style="background:#e8b04a;height:83%"></u><u style="background:#4f9aa0;height:94%"></u><u style="background:#6a7fb5;height:71%"></u><u style="background:#c2575f;height:82%"></u><u style="background:#8b5e83;height:93%"></u><u style="background:#5e8c6a;height:70%"></u><u style="background:#e07a8e;height:81%"></u><em>🪴</em></b><b><u style="background:#d98a6a;height:90%"></u><u style="background:#e8b04a;height:67%"></u><u style="background:#4f9aa0;height:78%"></u><u style="background:#6a7fb5;height:89%"></u><u style="background:#c2575f;height:66%"></u><u style="background:#8b5e83;height:77%"></u><u style="background:#5e8c6a;height:88%"></u></b><b><u style="background:#e07a8e;height:63%"></u><u style="background:#d98a6a;height:74%"></u><u style="background:#e8b04a;height:85%"></u><u style="background:#4f9aa0;height:62%"></u><u style="background:#6a7fb5;height:73%"></u><u style="background:#c2575f;height:84%"></u><u style="background:#8b5e83;height:95%"></u><em>🍵</em></b></div></div>';
 sala.innerHTML=DECOR+MESAS.map(mz=>mz.linha?`<div class="sofa-d l" style="left:${mz.x}%;top:${mz.y}%"><i class="enc"></i><i class="ass"></i><i class="br e"></i><i class="br d"></i></div><div class="sofa-v" style="left:87.5%;top:45%"><i class="enc"></i><i class="ass"></i><i class="br t"></i><i class="br f"></i></div>`:`<div class="mesa-d peq" style="left:${mz.x}%;top:${mz.y}%"></div>`).join('')+
-  MESAS.map(mz=>Array.from({length:mz.n},(_,k)=>{ const q=lugarPos(mz,k); return `<button type="button" class="cad${mz.linha?' lin':''}" data-m="${mz.id}" data-k="${k}" style="left:${q.x}%;top:${q.y}%;z-index:1" aria-label="Sentar na ${mz.nome}, lugar ${k+1}"></button>`; }).join('')).join('');
+  MESAS.map(mz=>Array.from({length:mz.n},(_,k)=>{ const q=lugarPos(mz,k); return `<button type="button" class="cad${mz.linha?' lin':''}" data-m="${mz.id}" data-k="${k}" style="left:${q.x}%;top:${q.y}%;z-index:1" aria-label="Sentar na ${mz.nome}, lugar ${k+1}"></button>`; }).join('')).join('')+'<button type="button" class="estante-jogos" id="estanteJogos" aria-label="Abrir a estante de jogos"></button>';
 /* clima da janela: segue a hora do dia e o aluno pode mudar (fica guardado neste aparelho) */
 const CLIMAS=[['sol','☀️ 晴れ · Sol'],['chuva','🌧️ 雨 · Chuva'],['noite','🌙 夜 · Noite']];
 let CLIMA=(()=>{ try{ const v=localStorage.getItem('utopiaClima'); if(CLIMAS.some(c=>c[0]===v)) return v; }catch(e){} const h=new Date().getHours(); return (h>=6&&h<18)?'sol':'noite'; })();
@@ -469,6 +471,7 @@ function semBanco(){ bancoOk=false; $('semBanco').hidden=false; renderSala(); }
 function vaiPara(x,y,mesa,lugar){ ME.x=clamp(x,5,95); ME.y=clamp(y,14,93); const mudou=(ME.mesa!==(mesa||null)); ME.mesa=mesa||null; ME.lugar=lugar==null?null:lugar; grava(); renderSala(); if(mudou) mudaMesa(); }
 function levanta(){ if(!ME.mesa) return; vaiPara(ME.x,clamp(ME.y+10,14,93),null,null); }
 sala.addEventListener('click',e=>{
+  if(e.target.closest('.estante-jogos')){ abreEstante(); return; }
   const c=e.target.closest('.cad');
   if(c){ const mz=MESAS.find(m=>m.id===c.dataset.m), k=+c.dataset.k, q=lugarPos(mz,k); vaiPara(q.x,q.y,mz.id,k); return; }
   const r=sala.getBoundingClientRect(), px=(e.clientX-r.left)/r.width*100, py=(e.clientY-r.top)/r.height*100;
@@ -479,10 +482,10 @@ $('levantar').onclick=levanta; $('levantar2').onclick=levanta;
 
 /* ---------- mesa: conversa e jogos (sessão em salao/mesas/sala-<id>/s/<sessão>) ---------- */
 const ramo=id=>'salao/mesas/sala-'+id;
-function soltaMesa(){ document.body.style.overflow=''; limpaAbas(); [sessRef,msgsRef,jogoRef].forEach(r=>{ if(r) try{ off(r); }catch(e){} }); sessRef=msgsRef=jogoRef=null; jogoV=null; jogoAberto=false; falouJ=null; vistos=new Set(); mesaAtual=null; sessAtual=null; }
+function soltaMesa(){ document.body.style.overflow=''; limpaAbas(); [sessRef,msgsRef,jogoRef].forEach(r=>{ if(r) try{ off(r); }catch(e){} }); sessRef=msgsRef=jogoRef=null; jogoV=null; jogoAberto=jogoAberto&&!!solo; falouJ=null; vistos=new Set(); mesaAtual=null; sessAtual=null; }
 async function mudaMesa(){
   soltaMesa(); $('chat').innerHTML=''; anterior={}; renderAbas();
-  if(!ME.mesa){ document.querySelector('.wrap').classList.remove('sentado'); $('mesa').hidden=true; $('secSala').hidden=false; $('levantar').hidden=true; $('jogoBox').hidden=true; return; }
+  if(!ME.mesa){ document.querySelector('.wrap').classList.remove('sentado'); $('mesa').hidden=true; $('secSala').hidden=false; $('levantar').hidden=true; renderJogo(); return; }
   mesaAtual=ME.mesa; const mz=MESAS.find(m=>m.id===ME.mesa);
   $('mesa').hidden=false; $('levantar').hidden=false; $('h-mesa').textContent='🪑 '+mz.nome; renderPilulas(); document.querySelector('.wrap').classList.add('sentado'); $('secSala').hidden=false; window.scrollTo({top:0});
   naMinhaMesa().forEach(([u,p])=>{ anterior[u]=nomeDe(p); }); atualizaMesaPainel(todos());
@@ -596,46 +599,58 @@ const IC={
   part:['movie','restaurant','torii','clock7','friends','price','water','hotel']
 };
 Object.entries(IC).forEach(([k,a])=>{ if(JOGOS[k]) JOGOS[k].qs.forEach((q,i)=>{ q.ic=a[i]; }); });
-const GRUPO={dias:'voc',opos:'voc',verb:'voc',part:'est',te:'te',kud:'te',moii:'te',wa:'te'}, GNOME={voc:'Vocabulário',est:'Estrutura',te:'Forma て'};
+const CENAS=window.CENAS||{}, CENAS_ORDEM=window.CENAS_ORDEM||[];
+const GRUPO={dias:'voc',opos:'voc',verb:'voc',part:'est',te:'te',kud:'te',moii:'te',wa:'te',konbini:'cena',detetive:'cena',izakaya:'cena',quartos:'cena',alfandega:'cena'}, GNOME={voc:'Vocabulário',est:'Estrutura',te:'Forma て',cena:'Cena'};
+const def=id=>JOGOS[id]||CENAS[id];
+/* jogar SOZINHO é o padrão: a partida fica só neste aparelho (solo). Jogar JUNTO (com a mesa) é uma opção: aí a partida vai para o banco. */
+let solo=null, modoJunto=false, cenaSel=null; const cenaUI={};
+const jogoAtual=()=>solo||jogoV;
+function deepSet(o,path,v){ const k=path.split('/'); let t=o; for(let i=0;i<k.length-1;i++){ if(typeof t[k[i]]!=='object'||t[k[i]]===null) t[k[i]]={}; t=t[k[i]]; } if(v===null||v===undefined) delete t[k[k.length-1]]; else t[k[k.length-1]]=v; }
+function jUp(p){ if(solo){ Object.entries(p).forEach(([k,v])=>deepSet(solo,k,v)); setTimeout(renderJogo,0); return Promise.resolve(); } return update(jogoRef,p); }
+function jSet(v){ if(solo){ solo=v; setTimeout(renderJogo,0); return Promise.resolve(); } return set(jogoRef,v); }
+function comecaSolo(k){ const g=def(k); if(!g) return; const id=minhaChave(); const j={id:k,por:id,conv:'todos',estado:'jogando',aceitaram:{[id]:true},i:0,ok:0,vez:id,fb:null,k:Date.now()}; if(CENAS[k]) j.st=CENAS[k].novo(); solo=j; falouJ=null; falouFb=null; cenaSel=null; jogoAberto=true; renderJogo(); }
+function abreEstante(){ modoJunto=false; jogoAberto=true; renderJogo(); }
 let jParaVal='todos'; const dispensados=new Set();
 const aceitou=(j,u)=>!!(j&&j.aceitaram&&j.aceitaram[u]);
-const jogadores=()=>naMinhaMesa().filter(([u])=>!jogoV||aceitou(jogoV,u)).map(([u,p])=>({uid:u,nome:nomeDe(p)}));
+const jogadores=()=>solo?[{uid:minhaChave(),nome:'você'}]:naMinhaMesa().filter(([u])=>!jogoV||aceitou(jogoV,u)).map(([u,p])=>({uid:u,nome:nomeDe(p)}));
 const vezEf=j=>{ const L=jogadores().map(x=>x.uid); return L.includes(j.vez)?j.vez:(L[0]||j.vez); };
 const nomeUid=u=>NOMES[u]||(u===me.uid?'você':'alguém');
-const ativo=j=>!!(j&&JOGOS[j.id]&&j.i<JOGOS[j.id].qs.length);
+const ativo=j=>!!(j&&(JOGOS[j.id]?j.i<JOGOS[j.id].qs.length:(CENAS[j.id]&&!(j.st&&j.st.fim))));
+const terminou=j=>!!(j&&def(j.id)&&!ativo(j));
 function renderConvite(){
   const j=jogoV, bar=$('convBar');
   const conv = ativo(j) && j.por!==me.uid && !aceitou(j,me.uid) && !(j.recusou&&j.recusou[me.uid]) && (j.conv==='todos'||j.conv===me.uid) && !dispensados.has(j.k);
   bar.hidden=!conv; if(!conv) return;
-  bar.innerHTML=`<span>🎲 <b>${esc(nomeUid(j.por))}</b> convidou ${j.conv==='todos'?'a mesa':'você'} para <b>${esc(JOGOS[j.id].nome)}</b></span><div class="row"><button class="btn pri" type="button" data-c="sim">Aceitar</button><button class="btn" type="button" data-c="nao">Agora não</button></div>`;
+  bar.innerHTML=`<span>🎲 <b>${esc(nomeUid(j.por))}</b> convidou ${j.conv==='todos'?'a mesa':'você'} para <b>${esc(def(j.id).nome)}</b></span><div class="row"><button class="btn pri" type="button" data-c="sim">Aceitar</button><button class="btn" type="button" data-c="nao">Agora não</button></div>`;
 }
 $('convBar').onclick=e=>{ const b=e.target.closest('[data-c]'); if(!b||!jogoRef||!jogoV) return; const j=jogoV;
-  if(b.dataset.c==='sim'){ update(jogoRef,{['aceitaram/'+me.uid]:true,estado:'jogando'}).catch(()=>{}); jogoAberto=true; renderJogo(); }
+  if(b.dataset.c==='sim'){ const pa={['aceitaram/'+me.uid]:true,estado:'jogando'}; if(CENAS[j.id]&&j.estado==='convite') pa.st=CENAS[j.id].novo(); solo=null; update(jogoRef,pa).catch(()=>{}); jogoAberto=true; renderJogo(); }
   else{ dispensados.add(j.k); update(jogoRef,{['recusou/'+me.uid]:true}).catch(()=>{}); renderConvite(); } };
 function renderJogo(){ renderJogoCru(); embrulha(); }
 function embrulha(){ const box=$('jogoBox'); if(box.hidden||box.querySelector('.j-grade')||box.querySelector('.j-cartao')) return; const t=box.querySelector('.j-top'); if(!t) return; const c=document.createElement('div'); c.className='j-cartao'; while(t.nextSibling) c.appendChild(t.nextSibling); box.appendChild(c); }
 function renderJogoCru(){
-  const box=$('jogoBox'), j=jogoV, L=jogadores(), eu=aceitou(j,me.uid);
+  const box=$('jogoBox'), j=jogoAtual(), L=jogadores(), eu=aceitou(j,minhaChave()), prev=box._ch; box._ch=null;
   renderConvite();
   $('btnJogar').textContent = ativo(j)&&eu ? (j.estado==='convite'?'🎲 Convite enviado':'🎲 Jogo em andamento') : '🎲 Jogos';
   document.body.style.overflow = jogoAberto ? 'hidden' : '';
   if(!jogoAberto){ box.hidden=true; return; }
   box.hidden=false; const topo=t=>`<div class="j-top"><b>${t}</b><button class="btn" type="button" data-j="fecha">✕ Fechar</button></div>`;
-  if(!ativo(j)&&j&&JOGOS[j.id]&&eu){ /* jogo terminado: tela de resultado, abaixo */ }
-  else if(!ativo(j)||(!eu&&false)){
-    const outros=naMinhaMesa().filter(([u])=>u!==minhaChave());
-    const grade=`<div class="j-grade">${Object.entries(JOGOS).map(([k,g])=>`<button type="button" class="g-${GRUPO[k]}" data-j="ini" data-k="${k}"><span>${g.ic}</span>${g.nome}<small>${GNOME[GRUPO[k]]}</small></button>`).join('')+CRUZ_BTN}</div>`;
-    if(!outros.length){ box.innerHTML=topo('Escolha um jogo')+'<p class="sub">Você está sozinho(a) na mesa: pode jogar sozinho(a). Se alguém sentar, entra no jogo quando quiser.</p>'+grade; return; }
-    if(jParaVal!=='todos'&&!outros.some(([u])=>u===jParaVal)) jParaVal='todos';
-    box.innerHTML=topo('Escolham um jogo')+`<label class="j-para">Convidar: <select id="jPara"><option value="todos">Toda a mesa</option>${outros.map(([u,p])=>`<option value="${esc(u)}"${jParaVal===u?' selected':''}>${esc(nomeDe(p))}</option>`).join('')}</select></label><div class="j-grade">${Object.entries(JOGOS).map(([k,g])=>`<button type="button" class="g-${GRUPO[k]}" data-j="ini" data-k="${k}"><span>${g.ic}</span>${g.nome}<small>${GNOME[GRUPO[k]]}</small></button>`).join('')+CRUZ_BTN}</div>`; return; }
-  if(!eu){ box.innerHTML=topo('🎲 Jogo na mesa')+`<p class="sub">Já tem um jogo rodando na mesa (${esc(L.map(x=>x.nome).join(', '))}). Quando terminar, vocês podem abrir outro.</p>`+(j.conv==='todos'?'<div class="row"><button class="btn pri" type="button" data-j="entra">Entrar no jogo</button></div>':''); return; }
-  const g=JOGOS[j.id]; const N=g.qs.length;
+  if(j&&CENAS[j.id]&&eu&&j.estado!=='convite'){ /* jogos de cena: arrastar e soltar */
+    const d=CENAS[j.id], c=cenaCtx(j), st=j.st||{};
+    const juntos=!solo&&L.length>1?`<p class="sub" style="text-align:center">👥 Jogando juntos: ${esc(L.map(x=>x.uid===minhaChave()?'você':x.nome).join(', '))}. Todos mexem na mesma cena.</p>`:'';
+    const rodape=st.fim?`<div class="row" style="justify-content:center"><button class="btn pri" type="button" data-j="de-novo">Jogar de novo</button><button class="btn" type="button" data-j="fim">Outro jogo</button><button class="btn" type="button" data-j="fecha">Voltar</button></div>`:`<div class="row" style="justify-content:center"><button class="lk" type="button" data-j="sai">sair do jogo</button></div>`;
+    const html=`<div class="j-top"><b>${d.ic} ${esc(d.nome)}</b><span class="row" style="gap:6px;flex-wrap:nowrap"><button class="btn" type="button" data-j="ro">Romaji: ${ROM?'sim':'não'}</button><button class="btn" type="button" data-j="fecha">✕ Fechar</button></span></div><div class="j-cartao j-cena"><p class="sub" style="text-align:center"><b>${esc(d.desc)}</b></p>${juntos}${d.render(st,c)}${rodape}</div>`;
+    if(prev!==html) box.innerHTML=html; box._ch=html; return; }
+  if(terminou(j)&&eu){ /* jogo terminado: tela de resultado, abaixo */ }
+  else if(!ativo(j)||(!eu&&false)){ renderEstante(box,topo); return; }
+    if(!eu){ box.innerHTML=topo('🎲 Jogo na mesa')+`<p class="sub">Já tem um jogo rodando na mesa (${esc(L.map(x=>x.nome).join(', '))}). Quando terminar, vocês podem abrir outro.</p>`+(j.conv==='todos'?'<div class="row"><button class="btn pri" type="button" data-j="entra">Entrar no jogo</button></div>':''); return; }
+  const g=def(j.id); if(!g) return; const N=(g.qs||[]).length;
   if(j.estado==='convite'){
     const rec=Object.keys(j.recusou||{}).map(nomeUid);
     box.innerHTML=topo(g.ic+' '+g.nome)+`<p class="sub">Convite enviado${j.conv==='todos'?' para a mesa':' para '+esc(nomeUid(j.conv))}. Esperando alguém aceitar…${rec.length?' ('+esc(rec.join(', '))+' não pode agora.)':''}</p><div class="row"><button class="lk" type="button" data-j="sai">cancelar convite</button></div>`; return; }
   if(j.i>=N){
     box.innerHTML=topo(g.ic+' '+g.nome)+`<p class="j-q">${(j.ok||0)/N>=.7?'🎉 ':(j.ok||0)/N>=.4?'🌸 ':'💪 '}${j.ok||0} de ${N}</p><p class="sub j-dica">${jogadores().length>1?'Vocês acertaram juntos.':'Você acertou sozinho(a).'} おつかれさま！</p><div class="row" style="justify-content:center">${DUAS.includes(j.id)&&(j.rodada||1)===1?'<button class="btn pri" type="button" data-j="r2">2ª rodada (sem som)</button>':''}<button class="btn${DUAS.includes(j.id)&&(j.rodada||1)===1?'':' pri'}" type="button" data-j="fim">Outro jogo</button><button class="btn" type="button" data-j="fecha">Voltar à conversa</button></div>`; return; }
-  const q=g.qs[j.i], v=vezEf(j), minha=v===me.uid, fb=j.fb;
+  const q=g.qs[j.i], v=vezEf(j), minha=v===minhaChave(), fb=j.fb;
   const jp=esc(q.jp).replace('＿','<span class="vz">&nbsp;</span>');
   const ops=q.ops.map((o,x)=>{ let c=''; if(fb){ if(q.ok.includes(o)) c='ok'; else if(x===fb.esc) c='no'; } return `<button type="button" lang="ja" data-j="resp" data-x="${x}" class="${c}"${(fb||!minha)?' disabled':''}>${esc(o)}</button>`; }).join('');
   let rodape;
@@ -646,28 +661,85 @@ function renderJogoCru(){
   const kf=j.id+j.i; if(falouJ!==kf){ falouJ=kf; if(!(DUAS.includes(j.id)&&j.rodada===2)&&!mudo) speak(falaPerg(q,j.id)); }
   if(fb && falouFb!==kf){ falouFb=kf; speak(q.fala); }  /* só depois de responder, a frase completa */
 }
-$('btnJogar').onclick=()=>{ jogoAberto=true; if(aba!=='mesa') jParaVal=aba; renderJogo(); $('jogoBox').scrollIntoView({behavior:'smooth',block:'nearest'}); };
+$('btnJogar').onclick=()=>{ jogoAberto=true; modoJunto=(aba!=='mesa'); if(aba!=='mesa') jParaVal=aba; renderJogo(); $('jogoBox').scrollIntoView({behavior:'smooth',block:'nearest'}); };
 $('jogoBox').addEventListener('change',e=>{ if(e.target.id==='jPara') jParaVal=e.target.value; });
-$('jogoBox').onclick=e=>{ const b=e.target.closest('[data-j]'); if(!b) return; const a=b.dataset.j, j=jogoV;
+$('jogoBox').onclick=e=>{ const b=e.target.closest('[data-j]'); if(!b) return; const a=b.dataset.j, j=jogoAtual();
   if(a==='fecha'){ jogoAberto=false; renderJogo(); return; }
   if(a==='cruz'){ abreCruz(); czEscolhe(); return; }
-  if(!jogoRef) return;
-  if(a==='ini'){ const sel=$('jPara'); const conv=sel?sel.value:'todos'; jParaVal=conv; const g=JOGOS[b.dataset.k];
-    const solo=naMinhaMesa().filter(([u])=>u!==minhaChave()).length===0;
-    set(jogoRef,{id:b.dataset.k,por:me.uid,conv:solo?'todos':conv,estado:solo?'jogando':'convite',aceitaram:{[me.uid]:true},i:0,ok:0,vez:me.uid,fb:null,k:Date.now()}).catch(()=>sis('Não consegui abrir o jogo. Tente de novo.'));
-    if(solo){ sis('Você começou '+g.nome+' sozinho(a).'); return; }
+  if(a==='modo'){ modoJunto=b.dataset.m==='junto'; renderJogo(); return; }
+  if(a==='ro'){ ROM=!ROM; try{ localStorage.setItem('utopiaRomaji',ROM?'1':'0'); }catch(e){} aplicaRo(); renderJogo(); return; }
+  if(a==='ini'){ const k=b.dataset.k, g=def(k); if(!g) return;
+    const outros=naMinhaMesa().filter(([u])=>u!==minhaChave());
+    if(!(modoJunto&&outros.length&&jogoRef)){ comecaSolo(k); return; }   /* sozinho(a) é o padrão */
+    const sel=$('jPara'); const conv=sel?sel.value:'todos'; jParaVal=conv; solo=null; falouJ=null; falouFb=null; cenaSel=null;
+    const novo={id:k,por:me.uid,conv,estado:'convite',aceitaram:{[me.uid]:true},i:0,ok:0,vez:me.uid,fb:null,k:Date.now()}; if(CENAS[k]) novo.st=CENAS[k].novo();
+    set(jogoRef,novo).catch(()=>sis('Não consegui abrir o jogo. Tente de novo.'));
     sis('Você convidou '+(conv==='todos'?'a mesa':nomeUid(conv))+' para '+g.nome+'.',conv==='todos'?'mesa':conv); return; }
-  if(a==='fim'){ set(jogoRef,null).catch(()=>{}); return; }
+  if(!jogoRef&&!solo) return;
+  if(a==='fim'){ cenaSel=null; falouJ=null; falouFb=null; jSet(null).catch(()=>{}); return; }
   if(!j) return;
+  if(a==='de-novo'){ cenaSel=null; if(solo) comecaSolo(j.id); else if(CENAS[j.id]) update(jogoRef,{st:CENAS[j.id].novo(),k:Date.now()}).catch(()=>{}); return; }
   if(a==='entra'){ update(jogoRef,{['aceitaram/'+me.uid]:true}).catch(()=>{}); return; }
-  if(a==='sai'){ if(jogadores().length<=1||j.estado==='convite') set(jogoRef,null).catch(()=>{}); else update(jogoRef,{['aceitaram/'+me.uid]:null}).catch(()=>{}); jogoAberto=false; renderJogo(); return; }
+  if(a==='sai'){ cenaSel=null; if(jogadores().length<=1||j.estado==='convite') jSet(null).catch(()=>{}); else update(jogoRef,{['aceitaram/'+me.uid]:null}).catch(()=>{}); jogoAberto=false; renderJogo(); return; }
   const g=JOGOS[j.id]; if(!g) return;
   if(a==='ouvir'){ const q=g.qs[j.i]; if(q&&(j.fb||temGrav(falaPerg(q,j.id))||!SEM_RESPOSTA.includes(j.id))) speak(j.fb?q.fala:falaPerg(q,j.id)); return; }
-  if(a==='r2'){ update(jogoRef,{i:0,ok:0,fb:null,vez:me.uid,rodada:2}).catch(()=>{}); return; }
-  if(a==='resp' && !j.fb && vezEf(j)===me.uid){ const q=g.qs[j.i], x=+b.dataset.x, certo=q.ok.includes(q.ops[x]); update(jogoRef,{fb:{por:me.uid,esc:x,certo},ok:(j.ok||0)+(certo?1:0)}).catch(()=>{}); return; }
-  if(a==='prox' && j.fb){ const L=jogadores().map(x=>x.uid); const i=L.indexOf(j.fb.por); const prox=L.length?L[(i+1)%L.length]:me.uid; update(jogoRef,{i:j.i+1,fb:null,vez:prox}).catch(()=>{}); }
+  if(a==='r2'){ jUp({i:0,ok:0,fb:null,vez:minhaChave(),rodada:2}).catch(()=>{}); return; }
+  if(a==='resp' && !j.fb && vezEf(j)===minhaChave()){ const q=g.qs[j.i], x=+b.dataset.x, certo=q.ok.includes(q.ops[x]); jUp({fb:{por:minhaChave(),esc:x,certo},ok:(j.ok||0)+(certo?1:0)}).catch(()=>{}); return; }
+  if(a==='prox' && j.fb){ const L=jogadores().map(x=>x.uid); const i=L.indexOf(j.fb.por); const prox=L.length?L[(i+1)%L.length]:minhaChave(); jUp({i:j.i+1,fb:null,vez:prox}).catch(()=>{}); }
 };
 
+
+/* ---------- a estante de jogos (abre sem precisar sentar; sozinho(a) é o padrão) ---------- */
+function renderEstante(box,topo){
+  const outros=naMinhaMesa().filter(([u])=>u!==minhaChave()), pode=outros.length>0;
+  if(!pode) modoJunto=false;
+  if(jParaVal!=='todos'&&!outros.some(([u])=>u===jParaVal)) jParaVal='todos';
+  const bt=k=>{ const g=def(k); return `<button type="button" class="g-${GRUPO[k]}" data-j="ini" data-k="${k}"><span>${g.ic}</span>${esc(g.nome)}${g.sub?`<small>${esc(g.sub)}</small>`:''}</button>`; };
+  const prat=(t,h)=>`<div class="est-prat"><h3>${t}</h3><div class="est-tabua"><div class="j-grade">${h}</div></div></div>`;
+  const ks=g=>Object.keys(JOGOS).filter(k=>GRUPO[k]===g);
+  const modo=`<div class="est-modo"><span>Jogar:</span><div class="seg"><button type="button" data-j="modo" data-m="solo" aria-pressed="${!modoJunto}">🧍 Sozinho(a)</button><button type="button" data-j="modo" data-m="junto" aria-pressed="${modoJunto}"${pode?'':' disabled'}>👥 Juntos na mesa</button></div></div>`+
+    (modoJunto?`<label class="j-para">Convidar: <select id="jPara"><option value="todos">Toda a mesa</option>${outros.map(([u,p])=>`<option value="${esc(u)}"${jParaVal===u?' selected':''}>${esc(nomeDe(p))}</option>`).join('')}</select></label>`:'')+
+    `<p class="sub">${modoJunto?'Quem aceitar o convite entra na mesma partida.':pode?'Cada pessoa joga a sua partida. Para convidar a mesa, escolha “Juntos na mesa”.':'Para jogar junto, sente numa mesa com alguém e escolha “Juntos na mesa”.'}</p>`;
+  box.innerHTML=topo('📚 Estante de jogos')+modo+
+    prat('Cenas · arraste e solte',CENAS_ORDEM.filter(k=>CENAS[k]).map(bt).join(''))+
+    prat('Vocabulário',ks('voc').map(bt).join(''))+
+    prat('Estrutura e forma て',[...ks('est'),...ks('te')].map(bt).join('')+CRUZ_BTN);
+}
+$('btnEstante').onclick=abreEstante;
+
+/* ---------- jogos de cena: tocar, arrastar e soltar ---------- */
+const cenaCtx=j=>({ro:ROM,now:Date.now(),grav:temGrav,sel:cenaSel,ui:cenaUI,k:j.k});
+function cenaAcao(a){
+  const j=jogoAtual(); if(!j||!CENAS[j.id]||!j.st||j.st.fim||j.estado==='convite'||!aceitou(j,minhaChave())) return;
+  const p=CENAS[j.id].acao(a,j.st,cenaCtx(j)); if(!p) return;
+  const u={}; Object.entries(p).forEach(([k,v])=>{ u['st/'+k]=v; }); jUp(u).catch(()=>{});
+}
+let arrasta=null, supClique=0;
+$('jogoBox').addEventListener('pointerdown',e=>{ const d=e.target.closest('[data-drag]'); if(!d||(e.button&&e.button>0)) return; arrasta={id:d.dataset.drag,el:d,x:e.clientX,y:e.clientY,on:false,g:null}; });
+document.addEventListener('pointermove',e=>{ if(!arrasta) return;
+  if(!arrasta.on){ if(Math.hypot(e.clientX-arrasta.x,e.clientY-arrasta.y)<8) return; arrasta.on=true; const g=arrasta.el.cloneNode(true); g.removeAttribute('data-drag'); g.removeAttribute('data-a'); g.classList.add('cn-ghost'); document.body.appendChild(g); arrasta.g=g; arrasta.el.classList.add('arrastando'); }
+  arrasta.g.style.left=e.clientX+'px'; arrasta.g.style.top=e.clientY+'px'; e.preventDefault(); },{passive:false});
+document.addEventListener('pointerup',e=>{ if(!arrasta) return; const d=arrasta; arrasta=null; if(!d.on) return;
+  d.g.remove(); d.el.classList.remove('arrastando'); supClique=Date.now();
+  const alvo=document.elementFromPoint(e.clientX,e.clientY), z=alvo&&alvo.closest('[data-zona]');
+  cenaSel=null; if(z&&$('jogoBox').contains(z)) cenaAcao({t:'poe',item:d.id,zona:z.dataset.zona}); else renderJogo(); });
+document.addEventListener('pointercancel',()=>{ if(arrasta&&arrasta.g) arrasta.g.remove(); if(arrasta&&arrasta.el) arrasta.el.classList.remove('arrastando'); arrasta=null; });
+$('jogoBox').addEventListener('click',e=>{
+  if(Date.now()-supClique<350) return;
+  const f=e.target.closest('[data-fala]'); if(f){ if(temGrav(f.dataset.fala)) speak(f.dataset.fala); return; }
+  const b=e.target.closest('[data-a]'); if(!b) return; const a=b.dataset.a;
+  if(cenaSel&&a!=='sel'&&a!=='ui'){ const z=e.target.closest('[data-zona]'); if(z){ const it=cenaSel; cenaSel=null; cenaAcao({t:'poe',item:it,zona:z.dataset.zona}); renderJogo(); return; } }
+  if(a==='sel'){ const it=b.dataset.item, z=b.closest('[data-subst]');
+    if(cenaSel&&cenaSel!==it&&z){ const q=cenaSel; cenaSel=null; cenaAcao({t:'poe',item:q,zona:z.dataset.zona}); renderJogo(); return; }  /* trocar a etiqueta que já está na vaga */
+    cenaSel=(cenaSel===it)?null:it; renderJogo(); return; }
+  if(a==='ui'){ cenaUI[b.dataset.k]=b.dataset.v; renderJogo(); return; }
+  if(a==='zona'){ if(cenaSel){ const it=cenaSel; cenaSel=null; cenaAcao({t:'poe',item:it,zona:b.dataset.zona}); renderJogo(); } return; }
+  cenaSel=null; cenaAcao({...b.dataset,t:a}); });
+/* relógio das cenas: paciência do cliente etc. (só quem abriu a partida decide quando o tempo acaba) */
+setInterval(()=>{ const box=$('jogoBox'); if(box.hidden) return; const j=jogoAtual();
+  if(!j||!CENAS[j.id]||!j.st||j.estado==='convite'||j.st.fim) return;
+  const d=CENAS[j.id], c=cenaCtx(j); if(d.vista) d.vista(j.st,c,box);
+  if(d.tick&&j.por===minhaChave()){ const p=d.tick(j.st,c); if(p){ const u={}; Object.entries(p).forEach(([k,v])=>{ u['st/'+k]=v; }); jUp(u).catch(()=>{}); } } },250);
 
 /* ---------- palavras cruzadas (solo) ---------- */
 const CRUZ_BTN='<button type="button" class="g-voc" data-j="cruz"><span>✏️</span>Palavras cruzadas<small>Vocabulário · solo</small></button>';
