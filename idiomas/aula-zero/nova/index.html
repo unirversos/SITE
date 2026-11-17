@@ -168,6 +168,14 @@ h1{font-family:var(--f-display);font-weight:800;font-size:clamp(26px,5vw,36px);l
 .qz-bt{display:flex;flex-wrap:wrap;gap:8px;margin:10px 0}.qz-bt .btn{min-width:30%}
 .qz-bt .btn small{display:block;font-weight:500;color:var(--muted);font-size:12px}
 .verbo b{color:var(--pink)}
+body{transition:background-color .35s ease}
+body[data-etapa="agua"]{background-color:#d6e9f8}
+body[data-etapa="fogo"]{background-color:#fddcc0}
+body[data-etapa="terra"]{background-color:#e2cbb0}
+body[data-etapa="ar"]{background-color:#dde1e5}
+.ro-svg{display:none}body.ver-ro .ro-svg{display:inline}
+.ro-bar{display:none;font-size:10px;color:var(--muted);line-height:1}body.ver-ro .ro-bar{display:block}
+.ro-in{display:none;color:var(--muted);font-weight:500;font-size:.85em}body.ver-ro .ro-in{display:inline}
 </style>
 </head>
 <body>
@@ -208,19 +216,19 @@ h1{font-family:var(--f-display);font-weight:800;font-size:clamp(26px,5vw,36px);l
       <path d="M0 176h400" stroke="#f3c969" stroke-width="5"/>
       <g stroke="#d3c3b4" stroke-width="2"><path d="M60 250l30-74M160 250l22-74M260 250l8-74M360 250l-14-74"/></g>
       <!-- placa do banheiro -->
-      <g><rect x="8" y="52" width="50" height="44" rx="7" fill="#3a6ea5" stroke="#fff" stroke-width="3"/><text x="33" y="79" text-anchor="middle" font-family="Zen Maru Gothic, sans-serif" font-size="15" font-weight="700" fill="#fff">トイレ</text><text x="33" y="91" text-anchor="middle" font-family="Zen Maru Gothic, sans-serif" font-size="8" fill="#cfe6f3">WC</text></g>
+      <g><rect x="8" y="52" width="50" height="44" rx="7" fill="#3a6ea5" stroke="#fff" stroke-width="3"/><text x="33" y="79" text-anchor="middle" font-family="Zen Maru Gothic, sans-serif" font-size="15" font-weight="700" fill="#fff">トイレ</text><text x="33" y="91" text-anchor="middle" font-family="Zen Maru Gothic, sans-serif" font-size="8" fill="#cfe6f3">WC</text><text class="ro-svg" x="33" y="66" text-anchor="middle" font-family="Zen Maru Gothic, sans-serif" font-size="9" font-weight="700" fill="#ffe08a">toire</text></g>
       <!-- placa pendurada -->
       <g>
         <path d="M96 34v14M188 34v14" stroke="#9c8a94" stroke-width="3"/>
         <rect x="64" y="48" width="156" height="58" rx="8" fill="#517158" stroke="#fff" stroke-width="3"/>
         <text x="142" y="82" text-anchor="middle" font-family="Zen Maru Gothic, sans-serif" font-size="25" font-weight="700" fill="#fff">とうきょう</text>
-        <text x="142" y="99" text-anchor="middle" font-family="Zen Maru Gothic, sans-serif" font-size="11" fill="#f3c969">東京 · Tōkyō</text>
+        <text class="ro-svg" x="142" y="99" text-anchor="middle" font-family="Zen Maru Gothic, sans-serif" font-size="12" font-weight="700" fill="#f3c969">Tōkyō</text>
       </g>
       <!-- suas mãos: bilhete, onigiri, água -->
       <g>
-        <g transform="translate(46 190) rotate(-8)"><rect width="64" height="38" rx="6" fill="#fff" stroke="#d9506f" stroke-width="3"/><rect x="0" y="9" width="64" height="9" fill="#f8dde1"/><text x="32" y="32" text-anchor="middle" font-family="Zen Maru Gothic, sans-serif" font-size="11" font-weight="700" fill="#3a2b38">きっぷ</text></g>
+        <g transform="translate(46 190) rotate(-8)"><rect width="64" height="38" rx="6" fill="#fff" stroke="#d9506f" stroke-width="3"/><rect x="0" y="9" width="64" height="9" fill="#f8dde1"/><text x="32" y="27" text-anchor="middle" font-family="Zen Maru Gothic, sans-serif" font-size="11" font-weight="700" fill="#3a2b38">きっぷ</text><text class="ro-svg" x="32" y="35.5" text-anchor="middle" font-family="Zen Maru Gothic, sans-serif" font-size="7.5" font-weight="700" fill="#d9506f">kippu</text></g>
         <g transform="translate(170 192)"><path d="M32 2 L62 40 Q32 52 2 40 Z" fill="#fff" stroke="#cfc3c9" stroke-width="3" stroke-linejoin="round"/><path d="M20 28h24v18H20z" fill="#2f3b33"/></g>
-        <g transform="translate(250 186)"><rect x="12" y="0" width="18" height="8" rx="3" fill="#7fa487"/><rect x="6" y="6" width="30" height="48" rx="7" fill="#eef5ea" stroke="#7fa487" stroke-width="3"/><rect x="6" y="24" width="30" height="16" fill="#7fa487" opacity=".7"/><text x="21" y="36" text-anchor="middle" font-family="Zen Maru Gothic, sans-serif" font-size="9" font-weight="700" fill="#fff">おちゃ</text></g>
+        <g transform="translate(250 186)"><rect x="12" y="0" width="18" height="8" rx="3" fill="#7fa487"/><rect x="6" y="6" width="30" height="48" rx="7" fill="#eef5ea" stroke="#7fa487" stroke-width="3"/><rect x="6" y="20" width="30" height="26" fill="#7fa487" opacity=".85"/><text x="21" y="31" text-anchor="middle" font-family="Zen Maru Gothic, sans-serif" font-size="9" font-weight="700" fill="#fff">おちゃ</text><text class="ro-svg" x="21" y="41" text-anchor="middle" font-family="Zen Maru Gothic, sans-serif" font-size="7.5" font-weight="700" fill="#ffe08a">ocha</text></g>
         <g transform="translate(318 176)"><rect x="8" y="0" width="22" height="10" rx="3" fill="#7aa8d6"/><rect x="4" y="8" width="30" height="52" rx="8" fill="#e8f3fb" stroke="#7aa8d6" stroke-width="3"/><rect x="4" y="26" width="30" height="16" fill="#7aa8d6" opacity=".55"/></g>
       </g>
     </svg>
@@ -228,9 +236,9 @@ h1{font-family:var(--f-display);font-weight:800;font-size:clamp(26px,5vw,36px);l
       <rect width="400" height="250" fill="#fbf3ea"/>
       <path d="M0 0h400v30H0z" fill="#f0e6dc"/><rect x="40" y="10" width="320" height="8" rx="4" fill="#fff"/>
       <rect x="210" y="20" width="160" height="32" rx="8" fill="#2f8f5b" stroke="#fff" stroke-width="3"/><rect x="210" y="44" width="160" height="8" fill="#d9506f"/>
-      <text x="290" y="42" text-anchor="middle" font-family="Zen Maru Gothic, sans-serif" font-size="21" font-weight="700" fill="#fff">コンビニ</text>
-      <g class="placa" data-k="nomi" tabindex="0" role="button" aria-label="Placa: のみもの, bebidas. Toque para ver"><rect x="18" y="52" width="104" height="22" rx="8" fill="#3f7fb0" stroke="#fff" stroke-width="2.5"/><text x="70" y="68" text-anchor="middle" font-family="Zen Maru Gothic, sans-serif" font-size="15" font-weight="800" fill="#fff"><tspan fill="#ffe08a">のみ</tspan>もの</text></g>
-      <g class="placa" data-k="tabe" tabindex="0" role="button" aria-label="Placa: たべもの, comidas. Toque para ver"><rect x="214" y="52" width="104" height="22" rx="8" fill="#c2751f" stroke="#fff" stroke-width="2.5"/><text x="266" y="68" text-anchor="middle" font-family="Zen Maru Gothic, sans-serif" font-size="15" font-weight="800" fill="#fff"><tspan fill="#ffe08a">たべ</tspan>もの</text></g>
+      <text x="290" y="41" text-anchor="middle" font-family="Zen Maru Gothic, sans-serif" font-size="20" font-weight="700" fill="#fff">コンビニ</text><text class="ro-svg" x="290" y="50.5" text-anchor="middle" font-family="Zen Maru Gothic, sans-serif" font-size="8" font-weight="800" fill="#fff">konbini</text>
+      <g class="placa" data-k="nomi" tabindex="0" role="button" aria-label="Placa: のみもの, bebidas. Toque para ver"><rect x="18" y="50" width="104" height="28" rx="8" fill="#3f7fb0" stroke="#fff" stroke-width="2.5"/><text x="70" y="65" text-anchor="middle" font-family="Zen Maru Gothic, sans-serif" font-size="14" font-weight="800" fill="#fff"><tspan fill="#ffe08a">のみ</tspan>もの</text><text class="ro-svg" x="70" y="75" text-anchor="middle" font-family="Zen Maru Gothic, sans-serif" font-size="8.5" font-weight="700" fill="#e7f1fb"><tspan fill="#ffe08a">nomi</tspan>mono</text></g>
+      <g class="placa" data-k="tabe" tabindex="0" role="button" aria-label="Placa: たべもの, comidas. Toque para ver"><rect x="214" y="50" width="104" height="28" rx="8" fill="#c2751f" stroke="#fff" stroke-width="2.5"/><text x="266" y="65" text-anchor="middle" font-family="Zen Maru Gothic, sans-serif" font-size="14" font-weight="800" fill="#fff"><tspan fill="#ffe08a">たべ</tspan>もの</text><text class="ro-svg" x="266" y="75" text-anchor="middle" font-family="Zen Maru Gothic, sans-serif" font-size="8.5" font-weight="700" fill="#fdf0e0"><tspan fill="#ffe08a">tabe</tspan>mono</text></g>
       <rect x="10" y="76" width="176" height="104" rx="8" fill="#e8f3fb" stroke="#7aa8d6" stroke-width="3"/><path d="M10 128h176" stroke="#b5ccdc" stroke-width="3"/>
       <rect x="206" y="76" width="184" height="104" rx="8" fill="#f4e8d8" stroke="#c9ab86" stroke-width="3"/><path d="M206 128h184" stroke="#dcc7a8" stroke-width="3"/>
       <g font-size="34" text-anchor="middle"><text x="40" y="106">🥛</text><text x="95" y="106">🍶</text><text x="150" y="106">🍵</text><text x="40" y="174" opacity=".55">🧃</text><text x="95" y="174" opacity=".55">🥤</text><text x="150" y="174" opacity=".55">🧃</text>
@@ -239,20 +247,20 @@ h1{font-family:var(--f-display);font-weight:800;font-size:clamp(26px,5vw,36px);l
       <!-- suas mãos: onigiri, chá, água -->
       <g>
         <g transform="translate(170 192)"><path d="M32 2 L62 40 Q32 52 2 40 Z" fill="#fff" stroke="#cfc3c9" stroke-width="3" stroke-linejoin="round"/><path d="M20 28h24v18H20z" fill="#2f3b33"/></g>
-        <g transform="translate(250 186)"><rect x="12" y="0" width="18" height="8" rx="3" fill="#7fa487"/><rect x="6" y="6" width="30" height="48" rx="7" fill="#eef5ea" stroke="#7fa487" stroke-width="3"/><rect x="6" y="24" width="30" height="16" fill="#7fa487" opacity=".7"/><text x="21" y="36" text-anchor="middle" font-family="Zen Maru Gothic, sans-serif" font-size="9" font-weight="700" fill="#fff">おちゃ</text></g>
+        <g transform="translate(250 186)"><rect x="12" y="0" width="18" height="8" rx="3" fill="#7fa487"/><rect x="6" y="6" width="30" height="48" rx="7" fill="#eef5ea" stroke="#7fa487" stroke-width="3"/><rect x="6" y="20" width="30" height="26" fill="#7fa487" opacity=".85"/><text x="21" y="31" text-anchor="middle" font-family="Zen Maru Gothic, sans-serif" font-size="9" font-weight="700" fill="#fff">おちゃ</text><text class="ro-svg" x="21" y="41" text-anchor="middle" font-family="Zen Maru Gothic, sans-serif" font-size="7.5" font-weight="700" fill="#ffe08a">ocha</text></g>
         <g transform="translate(318 176)"><rect x="8" y="0" width="22" height="10" rx="3" fill="#7aa8d6"/><rect x="4" y="8" width="30" height="52" rx="8" fill="#e8f3fb" stroke="#7aa8d6" stroke-width="3"/><rect x="4" y="26" width="30" height="16" fill="#7aa8d6" opacity=".55"/></g>
       </g>
     </svg>
     <svg id="svgWc" viewBox="0 0 400 250" role="img" aria-label="Um corredor do konbini com uma seta apontando para a porta do banheiro" style="display:none">
       <rect width="400" height="250" fill="#fbf3ea"/><path d="M0 0h400v36H0z" fill="#f0e6dc"/><path d="M0 188h400v62H0z" fill="#e9dccd"/><path d="M0 188h400" stroke="#d9506f" stroke-width="5"/>
       <rect x="262" y="46" width="104" height="146" rx="6" fill="#c9ab86" stroke="#a88a64" stroke-width="4"/><rect x="274" y="62" width="80" height="120" rx="4" fill="#d8bd98"/><circle cx="276" cy="130" r="5" fill="#8e6a1f"/>
-      <rect x="276" y="14" width="76" height="30" rx="8" fill="#3f7fb0" stroke="#fff" stroke-width="3"/><text x="314" y="36" text-anchor="middle" font-family="Zen Maru Gothic, sans-serif" font-size="18" font-weight="800" fill="#fff">トイレ</text>
+      <rect x="276" y="14" width="76" height="30" rx="8" fill="#3f7fb0" stroke="#fff" stroke-width="3"/><text x="314" y="30" text-anchor="middle" font-family="Zen Maru Gothic, sans-serif" font-size="16" font-weight="800" fill="#fff">トイレ</text><text class="ro-svg" x="314" y="40" text-anchor="middle" font-family="Zen Maru Gothic, sans-serif" font-size="9" font-weight="700" fill="#ffe08a">toire</text>
       <text x="314" y="108" text-anchor="middle" font-size="46">🚻</text>
       <path d="M30 120 H170 V96 L238 138 L170 180 V156 H30 Z" fill="#d9506f" stroke="#fff" stroke-width="4" stroke-linejoin="round"/>
     </svg>
     <svg id="svgProd" viewBox="0 0 400 250" role="img" aria-label="Você segura um produto que não conhece, no balcão do konbini" style="display:none">
       <rect width="400" height="250" fill="#fbf3ea"/><path d="M0 0h400v30H0z" fill="#f0e6dc"/><path d="M0 170h400v80H0z" fill="#e9dccd"/><path d="M0 170h400" stroke="#d9506f" stroke-width="5"/>
-      <g id="pW" transform="translate(130 20)"><rect x="46" y="0" width="28" height="22" rx="6" fill="#fff" stroke="#9aa89a" stroke-width="3"/><path d="M26 22h68l8 150H18z" fill="#6fb36f" stroke="#4f8f4f" stroke-width="4" stroke-linejoin="round"/><rect x="28" y="62" width="64" height="62" rx="6" fill="#fff"/><text x="60" y="100" text-anchor="middle" font-family="Zen Maru Gothic, sans-serif" font-size="20" font-weight="800" fill="#2f6b2f">ワサビ</text></g>
+      <g id="pW" transform="translate(130 20)"><rect x="46" y="0" width="28" height="22" rx="6" fill="#fff" stroke="#9aa89a" stroke-width="3"/><path d="M26 22h68l8 150H18z" fill="#6fb36f" stroke="#4f8f4f" stroke-width="4" stroke-linejoin="round"/><rect x="28" y="62" width="64" height="62" rx="6" fill="#fff"/><text x="60" y="97" text-anchor="middle" font-family="Zen Maru Gothic, sans-serif" font-size="20" font-weight="800" fill="#2f6b2f">ワサビ</text><text class="ro-svg" x="60" y="113" text-anchor="middle" font-family="Zen Maru Gothic, sans-serif" font-size="12" font-weight="700" fill="#2f6b2f">wasabi</text></g>
       <g id="pN" style="display:none"><rect x="90" y="50" width="220" height="110" rx="14" fill="#fff" stroke="#cfc3c9" stroke-width="4"/><text x="200" y="138" text-anchor="middle" font-size="96">🍖</text></g>
     </svg>
     <div id="hs"></div>
@@ -364,10 +372,10 @@ const ITEM={
 const NOMES=['tokyo','densha','kippu','onigiri','mizu','ocha'];
 const html=toks=>toks.map(t=>typeof t==='string'?t:(t.k?`<ruby>${t.k}<rt>${t.f}</rt></ruby>`:(t[1]==='k'?`<b>${t[0]}</b>`:t[0]))).join('');
 const TOK={tokyo:{k:'東京',f:'とうきょう'}};
-const P_WC={x:8,y:30};
+const P_WC={x:14,y:19};
 const K_JUICE={x:37,y:64},K_PAN={x:59,y:64},K_BENTO={x:73,y:64};
 const K_LEITE={x:10,y:53},K_SAKE={x:24,y:53},K_CHA={x:37,y:53},K_SAKANA={x:59,y:53},K_NIKU={x:73,y:53},K_TAMAGO={x:87,y:53};
-const P_SIGN={x:53,y:40},P_TRAIN={x:79,y:38},P_TICKET={x:17,y:84},P_ONI={x:50,y:86},P_TEA={x:68,y:84},P_WATER={x:86,y:84};
+const P_SIGN={x:57,y:23},P_TRAIN={x:79,y:38},P_TICKET={x:17,y:66},P_ONI={x:50,y:86},P_TEA={x:68,y:66},P_WATER={x:86,y:84};
 const H=(pos,item,say,t,ro,pt,en)=>Object.assign({item,say,t,ro,pt,en},pos);
 
 const CHAVES=[
@@ -476,7 +484,7 @@ const ETAPAS=['agua','fogo','terra','ganho'];
 function desenhaBarra(){
   barra.innerHTML=CHAVES.map((c,i)=>{
     const on=S.acesas.includes(c.n),now=(i===S.k&&S.passo!=='chegada'&&S.passo!=='fim'&&S.passo!=='final'&&!on);
-    return `<${LIVRE?'button type="button" data-i="'+i+'"':'div'} class="chave ${on?'on':''} ${now?'now':''}"${LIVRE?' aria-label="Ir para a chave '+c.n+': '+c.jp+'"':''}><span class="ico" aria-hidden="true">${c.ico}</span><span class="jp">${c.jp}</span><small>${String(c.n).padStart(2,'0')}</small></${LIVRE?'button':'div'}>`;
+    return `<${LIVRE?'button type="button" data-i="'+i+'"':'div'} class="chave ${on?'on':''} ${now?'now':''}"${LIVRE?' aria-label="Ir para a chave '+c.n+': '+c.jp+'"':''}><span class="ico" aria-hidden="true">${c.ico}</span><span class="jp">${c.jp}</span><span class="ro-bar">${({'です':'desu','じゃない':'janai','ます':'masu','ません':'masen','ください':'kudasai'})[c.jp]||''}</span><small>${String(c.n).padStart(2,'0')}</small></${LIVRE?'button':'div'}>`;
   }).join('');
 }
 function trocaCena(){
@@ -535,6 +543,9 @@ function vai(passo){S.passo=passo;S.erros=0;S.feitos=[];pararMic();pilula.hidden
 function render(){
   window.__render=render;
   desenhaBarra();desenhaHot();
+  { const pr=S.passo==='prontas'?((PRONTAS[S.p||0]||{}).fogo?'fogo':'agua'):null;
+    const et={agua:'agua',fogo:'fogo',terra:'terra',quiz:'terra',ganho:'ar'}[S.passo];
+    document.body.dataset.etapa=pr||et||''; }
   const c=CHAVES[S.k];
   if(S.passo==='chegada')return telaChegada();
   if(S.passo==='fim')return telaFim();
@@ -897,13 +908,13 @@ render();
     const r=el.getBoundingClientRect();const w=Math.min(260,innerWidth-16);
     tip.style.left=Math.max(8,Math.min(innerWidth-w-8,r.left+r.width/2-w/2))+'px';
     const top=r.bottom+10;tip.style.top=(top+tip.offsetHeight>innerHeight?Math.max(8,r.top-tip.offsetHeight-10):top)+'px';}
-  document.addEventListener('click',e=>{const el=e.target.closest&&e.target.closest('.pt');
+  document.addEventListener('click',e=>{const el=e.target.closest&&e.target.closest('span.pt');
     if(el){e.stopPropagation();e.preventDefault();if(!tip.hidden&&tip._el===el){tip.hidden=true;tip._el=null;}else{tip._el=el;abre(el);}}
     else if(!tip.hidden){tip.hidden=true;tip._el=null;}},true);
-  document.addEventListener('keydown',e=>{if((e.key==='Enter'||e.key===' ')&&e.target.classList&&e.target.classList.contains('pt')){e.preventDefault();e.target.click();}if(e.key==='Escape')tip.hidden=true;});
+  document.addEventListener('keydown',e=>{if((e.key==='Enter'||e.key===' ')&&e.target.classList&&e.target.classList.contains('pt')&&e.target.tagName==='SPAN'){e.preventDefault();e.target.click();}if(e.key==='Escape')tip.hidden=true;});
   function marca(root){
     const w=document.createTreeWalker(root,NodeFilter.SHOW_TEXT,{acceptNode:n=>{
-      const pe=n.parentElement;if(!pe||pe.closest('.pt,rt,script,style,textarea,input,#ptTip'))return NodeFilter.FILTER_REJECT;
+      const pe=n.parentElement;if(!pe||pe.closest('span.pt,rt,script,style,textarea,input,#ptTip'))return NodeFilter.FILTER_REJECT;
       if(!/[をに]/.test(n.nodeValue))return NodeFilter.FILTER_REJECT;
       if(!pe.closest('[lang="ja"],.jpl,#pilula,.alvo,.ouvi,#estado,.gram'))return NodeFilter.FILTER_REJECT;return NodeFilter.FILTER_ACCEPT;}});
     const nos=[];while(w.nextNode())nos.push(w.currentNode);
@@ -933,6 +944,45 @@ render();
   k.addEventListener('click',e=>{const g=e.target.closest('.placa');if(!g)return;e.stopPropagation();if(!tip.hidden&&tip._g===g){tip.hidden=true;return;}abre(g,e);});
   k.addEventListener('keydown',e=>{const g=e.target.closest&&e.target.closest('.placa');if(g&&(e.key==='Enter'||e.key===' ')){e.preventDefault();abre(g,e);}});
   document.addEventListener('click',e=>{if(!tip.hidden&&!(e.target.closest&&e.target.closest('.placa')))tip.hidden=true;});
+})();
+</script>
+<script>
+/* romaji ao lado de todo japonês solto (botão Romaji) */
+(function(){
+  const T={あ:'a',い:'i',う:'u',え:'e',お:'o',か:'ka',き:'ki',く:'ku',け:'ke',こ:'ko',さ:'sa',し:'shi',す:'su',せ:'se',そ:'so',た:'ta',ち:'chi',つ:'tsu',て:'te',と:'to',な:'na',に:'ni',ぬ:'nu',ね:'ne',の:'no',は:'ha',ひ:'hi',ふ:'fu',へ:'he',ほ:'ho',ま:'ma',み:'mi',む:'mu',め:'me',も:'mo',や:'ya',ゆ:'yu',よ:'yo',ら:'ra',り:'ri',る:'ru',れ:'re',ろ:'ro',わ:'wa',を:'o',ん:'n',が:'ga',ぎ:'gi',ぐ:'gu',げ:'ge',ご:'go',ざ:'za',じ:'ji',ず:'zu',ぜ:'ze',ぞ:'zo',だ:'da',ぢ:'ji',づ:'zu',で:'de',ど:'do',ば:'ba',び:'bi',ぶ:'bu',べ:'be',ぼ:'bo',ぱ:'pa',ぴ:'pi',ぷ:'pu',ぺ:'pe',ぽ:'po'};
+  const Y={ゃ:'a',ゅ:'u',ょ:'o'};
+  const kh=t=>t.replace(/[ァ-ヶ]/g,c=>String.fromCharCode(c.charCodeAt(0)-96));
+  function ro(run){
+    const k=kh(run);let out='',dbl=false;
+    for(let i=0;i<k.length;i++){const c=k[i];
+      if(c==='っ'){dbl=true;continue;}
+      if(c==='ー'){out+=out.slice(-1);continue;}
+      let r=T[c];if(r===undefined)return null;
+      const n=k[i+1];
+      if(n&&Y[n]){r=(r.endsWith('i')?r.slice(0,-1):r);if(/^(sh|ch|j)$/.test(r))r=r+Y[n];else r=r+'y'+Y[n];i++;}
+      if(dbl){r=(r[0]==='c'&&r[1]==='h'?'t':r[0])+r;dbl=false;}
+      out+=r;}
+    return out.replace(/ō/g,'ō').replace(/([o])u/g,'ō').replace(/oo/g,'ō').replace(/uu/g,'ū');
+  }
+  const JA=/[぀-ヿー]+/g;
+  function bloco(el){
+    if(el.dataset.roAuto)return;el.dataset.roAuto='1';
+    const w=document.createTreeWalker(el,NodeFilter.SHOW_TEXT,{acceptNode:n=>n.parentElement.closest('rt,.ro,.ro-in,.jpl,.moldebox,.alvo,button,script,style')?NodeFilter.FILTER_REJECT:NodeFilter.FILTER_ACCEPT});
+    const nos=[];while(w.nextNode())nos.push(w.currentNode);
+    const juntos=nos.map(n=>n.nodeValue).join('');let pos=0;const mapa=nos.map(n=>{const a=pos;pos+=n.nodeValue.length;return [a,pos,n];});
+    const runs=[];let m;JA.lastIndex=0;while((m=JA.exec(juntos)))runs.push([m.index,m.index+m[0].length,m[0]]);
+    for(let r=runs.length-1;r>=0;r--){
+      const [a,b,txt]=runs[r];const rom=ro(txt);if(!rom)continue;
+      const seg=mapa.find(x=>x[0]<b&&b<=x[1]);if(!seg)continue;
+      let nd=seg[2];const off=b-seg[0];
+      if(off<nd.nodeValue.length)nd.splitText(off);
+      const sp=document.createElement('span');sp.className='ro-in';sp.textContent=' ('+rom+')';
+      nd.parentNode.insertBefore(sp,nd.nextSibling);
+    }
+  }
+  const SEL='#painel h2,#painel > p,#painel .gram,#pilula .gram,#painel .ptdica,#painel .fim-bloco p';
+  let ag=false;const roda=()=>{if(ag)return;ag=true;requestAnimationFrame(()=>{ag=false;obs.disconnect();try{document.querySelectorAll(SEL).forEach(bloco);}finally{obs.observe(document.body,{childList:true,subtree:true});}});};
+  const obs=new MutationObserver(roda);obs.observe(document.body,{childList:true,subtree:true});roda();
 })();
 </script>
 </body>
