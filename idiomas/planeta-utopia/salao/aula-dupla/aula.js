@@ -329,6 +329,15 @@ function avanca(de) {
     root.etapa = ETAPAS[i + 1].id; root.p = 0; root.pronto = null; entra(root); return root; });
 }
 
+/* pular para qualquer etapa (vale para as duas telas) */
+function irPara(id) {
+  return sync.tx(root => { if (!root || !root.etapa) return; const k = ETAPAS.findIndex(x => x.id === id); if (k < 0) return;
+    const kF = ETAPAS.findIndex(x => x.id === 'ficha'); root.ficha = root.ficha || {};
+    ['a', 'b'].forEach(r => { const f = root.ficha[r] = root.ficha[r] || {};
+      if (k > kF) { CASAS.forEach(c => { if (!f[c.id]) f[c.id] = c.campo.valor(c.campo.ideias[0][0]); }); f.ok = true; }   /* sem ficha não há tabuleiro: completa com um exemplo */
+      else if (k === kF) f.ok = false; });                                                                                   /* voltar à ficha: dá para preencher de novo */
+    root.etapa = id; root.p = 0; root.pronto = null; entra(root); return root; });
+}
 /* ================= ligação entre as duas telas ================= */
 function poe(obj, caminho, val) { const ks = caminho.split('/'); let o = obj; for (let i = 0; i < ks.length - 1; i++) { if (o[ks[i]] == null || typeof o[ks[i]] !== 'object') o[ks[i]] = {}; o = o[ks[i]]; } if (val === null) delete o[ks[ks.length - 1]]; else o[ks[ks.length - 1]] = val; }
 function ligaLocal() {
@@ -450,6 +459,7 @@ function chave() {
 }
 function desenha(forca) {
   const i = iEtapa(), e = ETAPAS[i], P = outro(EU), vz = vezDe();
+  if (irArm == null) document.querySelectorAll('#irLista [data-ir]').forEach(b => b.classList.toggle('sel', b.dataset.ir === S.etapa));
   $('trilho').innerHTML = `<div class="pts" role="img" aria-label="Etapa ${i + 1} de ${ETAPAS.length}">${ETAPAS.map((x, k) => `<i class="${k < i ? 'f' : k === i ? 'a' : ''}"></i>`).join('')}</div><div class="leg"><b>${i + 1}. ${esc(e.nome)}</b><span>etapa ${i + 1} de ${ETAPAS.length} · cerca de ${e.min} min</span></div><button class="btn peq ferrBt" type="button" data-ferr aria-expanded="${!$('ferr').hidden}">🧰 Ferramentas · números</button>`;
   /* cena */
   const c = S.cafe || {}, servido = ['papo', 'conta', 'lembranca'].includes(S.etapa) || (S.etapa === 'cafe' && (S.p || 0) >= 8);
@@ -924,6 +934,12 @@ doisToques($('pular'), 'pular esta etapa', () => { if (!S || !EU) return;
   if (S.etapa === 'ficha' || S.etapa === 'batalha') { /* sem ficha não há tabuleiro: completa o que faltar com um exemplo */
     sync.tx(root => { if (!root) return; root.ficha = root.ficha || {}; ['a', 'b'].forEach(r => { const f = root.ficha[r] = root.ficha[r] || {}; CASAS.forEach(c => { if (!f[c.id]) f[c.id] = c.campo.valor(c.campo.ideias[0][0]); }); f.ok = true; }); return root; }).then(() => avanca(S.etapa));
   } else avanca(S.etapa); });
+const irLista = $('irLista'); let irArm = null, irT = null;
+const irTextos = () => { irLista.innerHTML = ETAPAS.map((e, k) => `<button class="btn peq${S && S.etapa === e.id ? ' sel' : ''}" type="button" data-ir="${e.id}">${k + 1}. ${esc(e.nome)}</button>`).join(''); irArm = null; };
+irTextos();
+irLista.onclick = e => { const b = e.target.closest('[data-ir]'); if (!b || !S || !EU) return; const id = b.dataset.ir; if (id === S.etapa) return;
+  if (irArm !== id) { irTextos(); irArm = id; const nb = irLista.querySelector(`[data-ir="${id}"]`); nb.textContent = 'toque de novo para ir'; clearTimeout(irT); irT = setTimeout(irTextos, 4000); return; }
+  clearTimeout(irT); irTextos(); irPara(id); };
 doisToques($('reiniciar'), 'recomeçar a aula', () => { if (!S || !EU) return; rasc = {}; rascL = ['', '']; falados = null; logChave = ''; REV.clear(); paraCaptura();
   Promise.resolve(sync.limpaVoz()).catch(() => {}); Promise.resolve(sync.limpaAud()).catch(() => {}); sync.tx(root => { const n = novo(); n.jog = (root && root.jog) || {}; if (root && root.modo) n.modo = root.modo; return n; }); });
 $('btModo').onclick = () => { if (S && EU) sync.update({ modo: modoOn() ? 'juntas' : 'online' }); };

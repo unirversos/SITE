@@ -193,6 +193,7 @@ button.pred:disabled{cursor:default;box-shadow:none;border-color:var(--line);bac
 .acao.pisca-reagir{border:2px solid var(--pink);animation:piscaReagir 1.1s ease-in-out infinite}
 .acao.pisca-reagir .pilulas button{border-color:var(--pink)}
 @media (prefers-reduced-motion:reduce){.acao.pisca-reagir{animation:none;border-width:3px}}
+.irPara{flex-basis:100%;font-size:13.5px}.irPara summary{cursor:pointer;color:var(--muted)}.irPara .row{margin-top:6px;flex-wrap:wrap}.irPara .btn.sel{border-color:var(--pink);font-weight:700}
 
 /* ficha */
 .campos{display:grid;gap:12px}
@@ -261,13 +262,13 @@ footer{border-top:1.5px dashed var(--line);padding-top:12px;display:flex;flex-wr
 
   <footer>
     <span class="row"><button class="btn peq" type="button" id="btnRo" aria-pressed="false">Romaji: não</button><span id="relogio"></span></span>
-    <span class="row" id="rodape" hidden><button class="lk" type="button" id="btModo">modo: 🌐 online</button><button class="lk" type="button" id="pular">pular esta etapa</button><button class="lk" type="button" id="reiniciar">recomeçar a aula</button></span>
+    <span class="row" id="rodape" hidden><button class="lk" type="button" id="btModo">modo: 🌐 online</button><button class="lk" type="button" id="pular">pular esta etapa</button><button class="lk" type="button" id="reiniciar">recomeçar a aula</button><details class="irPara" id="irPara"><summary>🧭 pular para outra etapa</summary><p class="sub">A mudança vale para as duas telas. Toque duas vezes na etapa para confirmar.</p><div class="row" id="irLista"></div></details></span>
   </footer>
 </div>
 
 <script src="/idiomas/dados/avatar.js?v=20261016b"></script>
 <script src="/idiomas/dados/velocidade-voz.js?v=1"></script>
-<script type="module" src="./aula.js?v=12"></script>
+<script type="module" src="./aula.js?v=13"></script>
 <script defer src="/caderno-flutuante.js?v=8"></script>
 </body>
 </html>
