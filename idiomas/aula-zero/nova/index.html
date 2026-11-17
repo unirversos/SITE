@@ -136,9 +136,12 @@ h1{font-family:var(--f-display);font-weight:800;font-size:clamp(26px,5vw,36px);l
       <h1>As 5 chaves</h1>
     </div>
     <div class="tools">
+      <button class="btn small" type="button" id="btnTeste" aria-expanded="false">🎤 Testar mic</button>
       <button class="btn small" type="button" id="btnRo" aria-pressed="false">Romaji: não</button>
     </div>
   </header>
+
+  <section class="painel" id="testeMic" hidden aria-live="polite"></section>
 
   <nav class="chaves" id="chaves" aria-label="As cinco chaves"></nav>
 
@@ -248,14 +251,21 @@ function diagnostico(texto,g){
 
 /* ---------- voz ---------- */
 let audioAtual=null;
-function ttsJa(t,rate){try{if(!window.speechSynthesis)return;speechSynthesis.cancel();const u=new SpeechSynthesisUtterance(t);u.lang='ja-JP';u.rate=rate||.85;
-  const v=speechSynthesis.getVoices().find(x=>/^ja/i.test(x.lang));if(v)u.voice=v;speechSynthesis.speak(u);}catch(e){}}
+function ttsJa(t,rate,fim){
+  try{
+    if(!window.speechSynthesis){if(fim)fim();return;}
+    speechSynthesis.cancel();const u=new SpeechSynthesisUtterance(t);u.lang='ja-JP';u.rate=rate||.85;
+    const v=speechSynthesis.getVoices().find(x=>/^ja/i.test(x.lang));if(v)u.voice=v;
+    if(fim){u.onend=fim;u.onerror=fim;}
+    speechSynthesis.speak(u);
+  }catch(e){if(fim)fim();}
+}
 function tocaUma(t,fim){
   const id=(window.AUDIO_MAP||{})[chaveAudio(t)];
-  if(!id){ttsJa(t);return;}
+  if(!id){ttsJa(t,.85,fim);return;}
   try{const a=new Audio('/idiomas/audio/'+id+'.mp3');audioAtual=a;let caiu=false;
-    const cair=()=>{if(caiu||audioAtual!==a)return;caiu=true;audioAtual=null;ttsJa(t);};
-    a.onerror=cair;if(fim)a.onended=fim;const p=a.play();if(p&&p.catch)p.catch(cair);}catch(e){ttsJa(t);}
+    const cair=()=>{if(caiu||audioAtual!==a)return;caiu=true;audioAtual=null;ttsJa(t,.85,fim);};
+    a.onerror=cair;if(fim)a.onended=fim;const p=a.play();if(p&&p.catch)p.catch(cair);}catch(e){ttsJa(t,.85,fim);}
 }
 function fala(t){
   try{if(audioAtual){audioAtual.pause();audioAtual=null;}if(window.speechSynthesis)speechSynthesis.cancel();}catch(e){}
@@ -290,7 +300,7 @@ const CHAVES=[
    H(P_WATER,'mizu','みずです',['みず',['です','k']],'mizu desu','É água.',"It's water.")],
   agua:{say:'でんしゃです',t:['でんしゃ',['です','k']],ro:'densha desu',pt:'É um trem.',g:[['でんしゃ','電車'],['です']]},
   fogo:{pedido:'O bilhete está na sua mão. Diga o que é.',say:'きっぷです',t:['きっぷ',['です','k']],ro:'kippu desu',pt:'É o bilhete.',g:[['きっぷ','切符'],['です']]},
-  terra:{pedido:'Toque num item e diga o que é, com です. Faça 2 itens diferentes.',itens:NOMES,suf:{_:['です']},exemplo:'おにぎりです',exemploRo:'onigiri desu',key:'です'},
+  terra:{pedido:'Diga o que é, com です. Use qualquer palavra que você quiser. Faça 2 frases com palavras diferentes.',itens:NOMES,suf:{_:['です']},exemplo:'おにぎりです',exemploRo:'onigiri desu',key:'です'},
   ganho:'Agora você sabe dizer o que é.'},
 
  {n:2,jp:'じゃない',ico:'🛑',
@@ -303,7 +313,7 @@ const CHAVES=[
    H(P_ONI,'sushi','すしじゃない。おにぎりです',['すし',['じゃない','k'],'. おにぎり',['です','k']],'sushi janai. onigiri desu','Não é sushi. É um onigiri.',"It's not sushi. It's an onigiri.")],
   agua:{say:'パスポートじゃない',t:['パスポート',['じゃない','k']],ro:'pasupōto janai',pt:'Não é o passaporte.',g:[['パスポート'],['じゃない','じゃないです','じゃありません','ではありません']]},
   fogo:{pedido:'Alguém aponta para o seu onigiri e pergunta: “すし？” (é sushi?). Diga que não é.',say:'すしじゃない',t:['すし',['じゃない','k']],ro:'sushi janai',pt:'Não é sushi.',g:[['すし','寿司'],['じゃない','じゃないです','じゃありません','ではありません']]},
-  terra:{pedido:'Toque num item e diga o que ele NÃO é. Faça 2 itens diferentes.',itens:['osaka','basu','pasu','sushi','mizu','densha'],suf:{_:['じゃない','じゃないです','じゃありません','ではありません']},exemplo:'バスじゃない',exemploRo:'basu janai',key:'じゃない'},
+  terra:{pedido:'Diga o que NÃO é, com じゃない. Use qualquer palavra que você quiser. Faça 2 frases com palavras diferentes.',itens:['osaka','basu','pasu','sushi','mizu','densha'],suf:{_:['じゃない','じゃないです','じゃありません','ではありません']},exemplo:'バスじゃない',exemploRo:'basu janai',key:'じゃない'},
   ganho:'Agora você sabe dizer o que não é.'},
 
  {n:3,jp:'ます',ico:'🏃',
@@ -316,7 +326,7 @@ const CHAVES=[
    H(P_TRAIN,'mi','みます',['み',['ます','k']],'mimasu','Eu vejo.','I see.')],
   agua:{say:'たべます',t:['たべ',['ます','k']],ro:'tabemasu',pt:'Eu como.',g:[['たべ','食べ'],['ます']]},
   fogo:{pedido:'A garrafa de água está na sua mão. O que você faz com ela? Diga: eu bebo.',say:'のみます',t:['のみ',['ます','k']],ro:'nomimasu',pt:'Eu bebo.',g:[['のみ','飲み'],['ます']]},
-  terra:{pedido:'Toque num item e diga o que você faz, com ます. Faça 2 ações diferentes.',itens:['tabe','nomi','iki','mi'],suf:{_:['ます','ません']},exemplo:'いきます',exemploRo:'ikimasu',key:'ます'},
+  terra:{pedido:'Diga o que você faz, com ます. Use qualquer verbo que você conhecer. Faça 2 frases com verbos diferentes.',itens:['tabe','nomi','iki','mi'],suf:{_:['ます','ません']},exemplo:'いきます',exemploRo:'ikimasu',key:'ます'},
   ganho:'Agora você sabe dizer o que faz.'},
 
  {n:4,jp:'か',ico:'❓',
@@ -331,7 +341,7 @@ const CHAVES=[
    H(P_WATER,'nomi','のみますか',['のみます',['か','k']],'nomimasu ka?','Você bebe?','Do you drink?')],
   agua:{say:'でんしゃですか',t:['でんしゃです',['か','k']],ro:'densha desu ka?',pt:'É um trem?',g:[['でんしゃ','電車'],['ですか']]},
   fogo:{pedido:'Você olha a placa e quer ter certeza. Pergunte: é Tóquio?',say:'とうきょうですか',t:[TOK.tokyo,'です',['か','k']],ro:'Tōkyō desu ka?',pt:'É Tóquio?',g:[['とうきょう','東京'],['ですか']]},
-  terra:{pedido:'Toque num item e faça uma pergunta com か. Faça 2 perguntas diferentes.',itens:['tokyo','densha','kippu','onigiri','ocha','mizu','tabe','nomi','iki'],suf:{_:['ですか'],tabe:['ますか'],nomi:['ますか'],iki:['ますか'],mi:['ますか']},exemplo:'きっぷですか',exemploRo:'kippu desu ka?',key:'ですか'},
+  terra:{pedido:'Faça uma pergunta com か. Use qualquer palavra que você quiser. Faça 2 perguntas diferentes.',itens:['tokyo','densha','kippu','onigiri','ocha','mizu','tabe','nomi','iki'],suf:{_:['ですか'],tabe:['ますか'],nomi:['ますか'],iki:['ますか'],mi:['ますか']},exemplo:'きっぷですか',exemploRo:'kippu desu ka?',key:'ですか'},
   ganho:'Agora você sabe perguntar.'},
 
  {n:5,jp:'ください',ico:'🤲',
@@ -344,7 +354,7 @@ const CHAVES=[
    H(P_TEA,'ocha','おちゃをください',['おちゃを',['ください','k']],'ocha o kudasai','Chá, por favor.','Tea, please.')],
   agua:{say:'みずをください',t:['みずを',['ください','k']],ro:'mizu o kudasai',pt:'Água, por favor.',g:[['みず','水'],['を'],['ください','下さい']]},
   fogo:{pedido:'Você está com fome. Peça um onigiri.',say:'おにぎりをください',t:['おにぎりを',['ください','k']],ro:'onigiri o kudasai',pt:'Um onigiri, por favor.',g:[['おにぎり'],['を'],['ください','下さい']]},
-  terra:{pedido:'Toque num item e peça com ください. Faça 2 pedidos diferentes.',itens:['onigiri','mizu','kippu','ocha'],suf:{_:['をください','を下さい']},exemplo:'おちゃをください',exemploRo:'ocha o kudasai',key:'を ください'},
+  terra:{pedido:'Peça com ください. Use qualquer palavra que você quiser. Faça 2 pedidos diferentes.',itens:['onigiri','mizu','kippu','ocha'],suf:{_:['をください','を下さい']},exemplo:'おちゃをください',exemploRo:'ocha o kudasai',key:'を ください'},
   ganho:'Agora você sabe pedir. As 5 chaves estão acesas.'}
 ];
 
@@ -495,33 +505,47 @@ function telaResposta(c,tipo,titulo,pedido,alvo){
   });
 }
 
-/* Terra: 2 frases completas, com 2 itens diferentes */
+/* Terra: 2 frases completas, com qualquer palavra, mas 2 palavras diferentes */
 function telaTerra(c){
   const t=c.terra,feitos=S.feitos.length;
   desenhaHot();
   painel.innerHTML=`<span class="elem terra"><i></i>Chave ${String(c.n).padStart(2,'0')} · Terra · gravar</span>
    <h2>${t.pedido}</h2>
    <div class="contagem" id="cont" aria-label="${feitos} de 2">${[0,1].map(i=>`<i class="${i<feitos?'on':''}"></i>`).join('')}</div>
-   <p class="nota">Exemplo (esse não vale): <b lang="ja">${t.exemplo}</b> <span class="ro" style="display:inline">${t.exemploRo}</span></p>
+   <div class="moldebox"><div class="jpl" lang="ja">${c.molde}</div><div class="ro">${c.moldeRo}</div></div>
    <div class="acoes" id="acoes"></div><div class="estado" id="estado"></div><div class="ouvi" id="ouvi"></div>
    <div id="escrita"></div><div id="reforco" class="acoes" style="flex-direction:column;align-items:flex-start"></div>`;
-  const formasDoItem=id=>{const suf=t.suf[id]||t.suf._;const out=[];ITEM[id].forEach(a=>suf.forEach(s=>out.push(norm(a)+norm(s))));return out;};
-  const acha=txt=>{const n=norm(txt);if(!n)return null;for(const id of t.itens){if(formasDoItem(id).some(f=>PREF.some(p=>n===p+f)))return id;}return null;};
+  const JA=/^[぀-ゟ゠-ヿ一-鿿]+$/;
+  /* sufixos aceitos (do mais longo para o mais curto); cada um pode pedir um tipo de palavra */
+  const sufs=[];
+  const add=(lista)=>lista.forEach(x=>sufs.push(norm(x)));
+  if(c.n===4){sufs.push('ですか','ますか');}else add(t.suf._);
+  sufs.sort((a,b)=>b.length-a.length);
+  const canon=w=>{for(const id in ITEM){if(ITEM[id].some(a=>norm(a)===w))return id;}return w;};
+  function palavraDe(txt){
+    const n=norm(txt);if(!n)return null;
+    for(const sf of sufs){
+      if(!n.endsWith(sf))continue;
+      let rest=n.slice(0,n.length-sf.length);
+      for(const p of PREF){if(p&&rest.startsWith(p)&&rest.length>p.length){rest=rest.slice(p.length);break;}}
+      if(rest&&JA.test(rest)&&!sufs.includes(rest)&&rest!=='です'&&rest!=='ます')return rest;
+    }
+    return null;
+  }
   const E=montaEntrada(c,(textos)=>{
     const dito=textos[0]||'';
-    if(textos.some(x=>norm(x)===norm(t.exemplo))){E.aviso('Eeeei, assim não vale! Esse é o exemplo. Escolha outro item da cena.',dito);return;}
-    for(const x of textos){const id=acha(x);if(id){
-      if(S.feitos.includes(id)){E.aviso('Esse item você já usou. Escolha outro.',dito);return;}
+    for(const x of textos){const w=palavraDe(x);if(w){
+      const id=canon(w);
+      if(S.feitos.includes(id)){E.aviso('Essa palavra você já usou. Escolha outra.',dito);return;}
       S.feitos.push(id);E.ok(x,'✓ Boa!');
       if(S.feitos.length>=2){setTimeout(()=>vai('ganho'),1200);}else setTimeout(()=>telaTerra(c),1100);
       return;}}
-    /* nenhuma frase completa: diz o que falta */
-    let msg='Use um item da cena e a chave '+t.key+'.';
     const n=norm(dito);
-    if(t.itens.some(id=>ITEM[id].some(a=>n.includes(norm(a))))){
-      if(c.n===5&&!/お(ください|下さい)/.test(n))msg='Faltou o を antes do ください.';
-      else msg='Faltou o '+t.key+' no final.';
-    }
+    let msg='Escreva uma palavra em kana ou romaji e feche com '+t.key+'.';
+    if(sufs.some(sf=>n.endsWith(sf))){msg='Falta uma palavra antes do '+t.key+'.';}
+    else if(c.n===5&&(n==='ください'||n==='下さい')){msg='Falta uma palavra e o を antes do ください.';}
+    else if(c.n===5&&n.endsWith('ください')&&!/お(ください|下さい)$/.test(n)){msg='Faltou o を antes do ください.';}
+    else if(n.length>1){msg='Faltou o '+t.key+' no final.';}
     E.falha(dito,msg);
   });
 }
@@ -533,13 +557,50 @@ $('btnRo').onclick=function(){const on=document.body.classList.toggle('ver-ro');
 function listaVoz(){
   const set=new Map();
   const add=(say,pt)=>String(say).split('。').map(x=>x.trim()).filter(Boolean).forEach(f=>{if(!set.has(f))set.set(f,pt);});
-  CHAVES.forEach(c=>{c.hot.forEach(h=>add(h.say,h.pt));add(c.agua.say,c.agua.pt);add(c.fogo.say,c.fogo.pt);add(c.terra.exemplo,'exemplo da Terra');});
+  CHAVES.forEach(c=>{c.hot.forEach(h=>add(h.say,h.pt));add(c.agua.say,c.agua.pt);add(c.fogo.say,c.fogo.pt);});
   add('すみません','abertura');
   const faltam=[...set].filter(([k])=>!temVoz(k));
   const box=$('listaVoz');box.hidden=false;
   box.innerHTML='<b>Frases sem gravação ('+faltam.length+' de '+set.size+')</b><br>'+faltam.map(([k,v])=>`<code lang="ja">${k}</code> ${v}`).join('<br>');
 }
 if(/[?&]lista=1/.test(location.search))window.addEventListener('load',()=>setTimeout(listaVoz,300));
+
+/* ---------- teste do microfone ---------- */
+(function(){
+  const box=$('testeMic'),btn=$('btnTeste');let r=null;
+  function para(){try{if(r)r.abort();}catch(e){}r=null;}
+  function desenha(){
+    box.innerHTML=`<span class="elem agua"><i></i>Teste do microfone</span>
+      <h2>Toque em Falar e diga: こんにちは</h2><p class="nota">(konnichiwa, “olá”)</p>
+      <div class="acoes"><button class="mic" type="button" id="tmFalar">🎤 Falar</button><button class="btn" type="button" id="tmFechar">Fechar</button></div>
+      <div class="estado" id="tmEst"></div><div class="ouvi" id="tmOuvi"></div><div id="tmUsar"></div>`;
+    $('tmFechar').onclick=fecha;
+    const est=$('tmEst'),ouvi=$('tmOuvi'),mic=$('tmFalar');
+    if(!SR){est.className='estado erro';est.textContent='Este navegador não escuta o microfone (é comum no Firefox). Use o Chrome ou o Safari, ou digite as respostas.';mic.disabled=true;return;}
+    mic.onclick=()=>{
+      para();try{speechSynthesis.cancel();if(audioAtual)audioAtual.pause();}catch(e){}
+      r=new SR();r.lang='ja-JP';r.interimResults=false;r.maxAlternatives=3;
+      est.className='estado';est.textContent='🎧 Estou ouvindo…';ouvi.textContent='';mic.disabled=true;let recebeu=false;
+      r.onresult=ev=>{recebeu=true;mic.disabled=false;const alts=[];for(let i=0;i<ev.results[0].length;i++)alts.push(ev.results[0][i].transcript);
+        ouvi.textContent='Ouvi: “'+alts[0]+'”';
+        if(alts.some(a=>/こんにちは|こんにちわ|今日は|konnichiwa/i.test(String(a).replace(/\s/g,'')))){
+          est.className='estado ok';est.textContent='✓ Funciona! Seu microfone entende japonês.';
+          if(S.semMic){$('tmUsar').innerHTML='<button class="btn pri" type="button" id="tmLiga">Usar o microfone nas aulas</button>';
+            $('tmLiga').onclick=()=>{S.semMic=false;S.micNegado=false;try{localStorage.setItem('uniNovaSemMic','0');}catch(e){}$('tmUsar').textContent='Pronto: o microfone volta a ser o caminho principal.';render();};}
+        }else{est.className='estado erro';est.textContent='O microfone funciona, mas eu não entendi. Fale perto e devagar e tente de novo.';}};
+      r.onerror=ev=>{recebeu=true;mic.disabled=false;est.className='estado erro';const e=(ev&&ev.error)||'';
+        est.textContent=/not-allowed|service-not-allowed/.test(e)?'O navegador bloqueou o microfone. Libere nas permissões do site (ícone de cadeado ao lado do endereço) e tente de novo.'
+          :/audio-capture/.test(e)?'Não achei nenhum microfone neste aparelho.'
+          :/no-speech/.test(e)?'Não ouvi nada. Fale perto do microfone.'
+          :/network/.test(e)?'O reconhecimento de voz precisa de internet. Confira a conexão.'
+          :'Não consegui usar o microfone ('+(e||'erro')+').';};
+      r.onend=()=>{mic.disabled=false;if(!recebeu&&est.textContent.indexOf('ouvindo')>-1){est.className='estado erro';est.textContent='Não ouvi nada. Fale perto do microfone.';}};
+      try{r.start();}catch(e){mic.disabled=false;est.className='estado erro';est.textContent='Não consegui iniciar o microfone.';}
+    };
+  }
+  function fecha(){para();box.hidden=true;btn.setAttribute('aria-expanded','false');}
+  btn.onclick=()=>{if(!box.hidden){fecha();return;}box.hidden=false;btn.setAttribute('aria-expanded','true');desenha();box.scrollIntoView({block:'nearest'});};
+})();
 render();
 })();
 </script>
