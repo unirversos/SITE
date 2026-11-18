@@ -33,14 +33,33 @@ h1.q{font-family:'Baloo 2',cursive;font-weight:700;font-size:clamp(30px,5vw,44px
 .breve i{font-style:normal;width:40px;height:40px;border-radius:50%;display:grid;place-items:center;font-family:'Baloo 2',cursive;font-weight:700}
 .breve b{font-family:'Baloo 2',cursive;font-size:18px;display:block;line-height:1.2}.breve span{font-size:13.5px;color:var(--ink-soft)}
 .quiz{margin-top:22px;color:var(--ink-soft);font-size:15px}.quiz a{color:var(--pink-deep);font-weight:700;border-bottom:1.5px solid var(--blush-2);text-decoration:none}
-.bau{padding:56px 0 60px}
-.bau-cab{display:flex;flex-direction:column;align-items:center;text-align:center;gap:12px;margin-bottom:12px}
-.bau.on .bau-cab{flex-direction:row;flex-wrap:wrap;text-align:left;gap:20px 40px;margin-bottom:28px}
-.bau-cab>div:first-child{text-align:center}
-.bau-txt{max-width:520px}.bau.on .bau-txt{flex:1 1 380px;max-width:none}
-.bau h2{font-family:'Baloo 2',cursive;font-weight:700;font-size:clamp(28px,4.5vw,38px);line-height:1.15;margin-bottom:8px}
-.bau-txt p{color:var(--ink-soft);font-size:17px}
-.bau-btn{display:block;border:0;background:transparent;padding:0;cursor:pointer;font:inherit;width:300px;max-width:100%;text-align:center}
+.vivo{text-align:center;padding:10px 0 56px}
+.vivo .eyebrow{font-size:12px;letter-spacing:4px;text-transform:uppercase;color:var(--pink-deep);font-weight:700;margin-bottom:12px}
+.vagas{display:inline-block;background:var(--gold-soft);color:#7A5B21;border:1.5px solid var(--gold);border-radius:999px;padding:11px 30px;font-family:'Baloo 2',cursive;font-weight:700;font-size:21px;text-decoration:none;transition:transform .15s}
+.vagas:hover{transform:translateY(-2px)}
+.vivo p.n{margin-top:12px;font-size:14px;color:var(--ink-soft)}
+.foot{border-top:1px solid var(--blush-2);padding:26px 0 56px;text-align:center;font-size:14px;color:var(--ink-soft);line-height:2}
+.foot a{color:var(--pink-deep);font-weight:700;text-decoration:none}.foot .cr{font-size:12.5px;margin-top:6px}
+
+.cadsec{padding:44px 0 0}
+.cad{position:relative;display:flex;flex-wrap:wrap;align-items:center;gap:12px 24px;max-width:680px;margin:0 auto;padding:26px 30px 26px 74px;border:1.5px solid #eadfd6;border-radius:10px 22px 22px 10px;color:var(--ink);text-decoration:none;background-color:#fffdf9;background-image:repeating-linear-gradient(#fffdf9 0 31px,#f4eae1 31px 32px);box-shadow:0 18px 30px -22px rgba(74,65,73,.5);transition:transform .15s}
+.cad:hover{transform:translateY(-3px) rotate(-.4deg)}
+.cad .sp{position:absolute;left:18px;top:14px;bottom:14px;display:flex;flex-direction:column;justify-content:space-around}
+.cad .sp i{display:block;width:16px;height:16px;border-radius:50%;border:2.5px solid var(--pink);background:var(--cream)}
+.cad .fita{position:absolute;top:-11px;right:46px;width:96px;height:24px;background:var(--gold-soft);border:1px solid #ead9b0;transform:rotate(3deg)}
+.cad .tx{flex:1 1 300px;min-width:0}
+.cad small{font-size:11.5px;letter-spacing:1.5px;text-transform:uppercase;font-weight:700;color:var(--pink-deep);display:block}
+.cad b{display:inline-block;margin:6px 0 8px;background:#fff;border:2px solid var(--pink);border-radius:6px;padding:6px 18px;transform:rotate(-1deg);font-family:'Baloo 2',cursive;font-size:clamp(26px,6.5vw,38px);line-height:1.15;box-shadow:3px 3px 0 var(--blush-2)}
+.cad .d{display:block;font-size:14px;color:#5d535b}
+.cad .go{background:var(--pink);color:#fff;font-weight:700;border-radius:40px;padding:10px 24px;box-shadow:0 8px 18px rgba(181,81,77,.25)}
+.bau{padding:20px 0 60px}
+.bau-card{position:relative;background:#fff;border:1.5px solid var(--blush-2);border-radius:28px;padding:40px 28px 34px;text-align:center;overflow:hidden}
+.glow{position:absolute;left:50%;top:150px;width:520px;height:520px;margin-left:-260px;border-radius:50%;background:radial-gradient(circle,rgba(192,145,63,.28),rgba(192,145,63,0) 62%);opacity:0;transition:opacity .6s ease;pointer-events:none}
+.bau.on .glow{opacity:1}
+.bau-in{position:relative}
+.bau h2{font-family:'Baloo 2',cursive;font-weight:700;font-size:clamp(28px,4.5vw,38px);line-height:1.15;margin-bottom:6px}
+.bau-sub{color:var(--ink-soft);font-size:17px;max-width:520px;margin:0 auto 6px}
+.bau-btn{display:block;margin:0 auto;border:0;background:transparent;padding:0;cursor:pointer;font:inherit;width:300px;max-width:100%}
 .cofre{display:block;position:relative;width:300px;height:250px;max-width:100%}
 .cofre svg{position:absolute;inset:0;width:100%;height:100%;display:block;transition:opacity .45s ease}
 .c-aberto{opacity:0}.bau.on .c-aberto{opacity:1}.bau.on .c-fechado{opacity:0}
@@ -49,28 +68,24 @@ h1.q{font-family:'Baloo 2',cursive;font-weight:700;font-size:clamp(30px,5vw,44px
 .brilho{animation:brilho 2.8s ease-in-out infinite}
 @keyframes respira{0%,100%{transform:scale(1)}50%{transform:scale(1.035)}}
 @keyframes brilho{0%,100%{opacity:0}50%{opacity:.55}}
-@keyframes subir{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:none}}
 @keyframes pulso{0%,100%{opacity:.55}50%{opacity:1}}
-.dica{display:inline-block;margin-top:8px;font-size:14px;font-weight:700;color:var(--pink-deep);animation:pulso 2.8s ease-in-out infinite}
-.bau-c{animation:subir .5s ease .1s both}.bau-c[hidden]{display:none}
-.dif{display:flex;flex-wrap:wrap;align-items:center;gap:10px 24px;background:#fff;border:1.5px solid var(--blush-2);border-left:6px solid var(--pink);border-radius:20px;padding:20px 26px;margin-bottom:30px;text-decoration:none;color:inherit;transition:transform .15s}
-.dif:hover{transform:translateY(-2px)}.dif .t{flex:1 1 360px;min-width:0}
-.dif small{font-size:11.5px;letter-spacing:1.5px;text-transform:uppercase;font-weight:700;color:var(--pink-deep);display:block}
-.dif b{font-family:'Baloo 2',cursive;font-size:25px;line-height:1.2;display:block}.dif span.d{font-size:15px;color:var(--ink-soft)}.dif .go{font-weight:700;color:var(--pink-deep)}
-.grupos{display:flex;flex-wrap:wrap;gap:24px 48px;animation:subir .5s ease .35s both}
-.grupo{flex:1 1 260px;min-width:0}
-.grupo h3{font-size:12px;letter-spacing:3px;text-transform:uppercase;color:var(--taupe);font-weight:700;margin-bottom:4px}
-.row{display:block;position:relative;padding:10px 26px 10px 0;border-bottom:1px solid #eadfd6;color:var(--ink);text-decoration:none;transition:background .15s}
-.row b{font-family:'Baloo 2',cursive;font-size:17px;display:block;line-height:1.3}.row span{display:block;font-size:13.5px;color:var(--ink-soft);line-height:1.45}
-.row::after{content:"›";position:absolute;right:4px;top:50%;transform:translateY(-50%);font-size:24px;line-height:1;color:#b9a99d;transition:transform .15s,color .15s}
-.row:hover{background:#f8efe9}.row:hover b{color:var(--pink-deep)}.row:hover::after{color:var(--pink-deep);transform:translate(3px,-50%)}
-.vivo{text-align:center;padding:10px 0 56px}
-.vivo .eyebrow{font-size:12px;letter-spacing:4px;text-transform:uppercase;color:var(--pink-deep);font-weight:700;margin-bottom:12px}
-.vagas{display:inline-block;background:var(--gold-soft);color:#7A5B21;border:1.5px solid var(--gold);border-radius:999px;padding:11px 30px;font-family:'Baloo 2',cursive;font-weight:700;font-size:21px;text-decoration:none;transition:transform .15s}
-.vagas:hover{transform:translateY(-2px)}
-.vivo p.n{margin-top:12px;font-size:14px;color:var(--ink-soft)}
-.foot{border-top:1px solid var(--blush-2);padding:26px 0 56px;text-align:center;font-size:14px;color:var(--ink-soft);line-height:2}
-.foot a{color:var(--pink-deep);font-weight:700;text-decoration:none}.foot .cr{font-size:12.5px;margin-top:6px}
+@keyframes subir{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:none}}
+@keyframes sair{0%{opacity:0;transform:translateY(-150px) scale(.4) rotate(-8deg)}60%{opacity:1;transform:translateY(10px) scale(1.05) rotate(2deg)}100%{opacity:1;transform:none}}
+.dica{display:inline-block;font-size:14px;font-weight:700;color:var(--pink-deep);animation:pulso 2.8s ease-in-out infinite}
+.peek{display:flex;flex-wrap:wrap;justify-content:center;gap:8px;margin-top:14px}.peek[hidden]{display:none}
+.peek span{background:#fff;border:1.5px solid #e6d3a3;color:#7A5B21;border-radius:999px;padding:3px 14px;font-size:13.5px;font-weight:700}
+.peek em{font-style:normal;font-size:14px;color:var(--ink-soft);align-self:center}
+.bau-c{text-align:left;margin-top:30px}.bau-c[hidden]{display:none}
+.bau-c h3{font-size:12px;letter-spacing:3px;text-transform:uppercase;color:var(--taupe);font-weight:700;margin:0 0 10px;animation:subir .5s ease .3s both}
+.bau-c h3.b{margin-top:26px;animation-delay:.45s}
+.grade{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:12px}
+.art{display:flex;flex-direction:column;gap:2px;background:var(--cream);border:1.5px solid #eadfd6;border-radius:18px;padding:16px 18px;color:var(--ink);text-decoration:none;transition:transform .15s,box-shadow .15s,border-color .15s;animation:sair .7s cubic-bezier(.2,.8,.3,1) both}
+.art:hover{transform:translateY(-3px);box-shadow:0 14px 26px -18px rgba(74,65,73,.55);border-color:var(--gold)}
+.art .gl{width:44px;height:44px;border-radius:50%;display:grid;place-items:center;font-size:21px;font-weight:700;margin-bottom:8px}
+.art.v .gl{background:#E8EFE8;color:#3d6050}.art.p .gl{background:var(--gold-soft);color:#7A5B21}
+.art b{font-family:'Baloo 2',cursive;font-size:18px;line-height:1.25}
+.art .d{font-size:13.5px;color:var(--ink-soft);line-height:1.45}
+.grade .art:nth-child(1){animation-delay:.05s}.grade .art:nth-child(2){animation-delay:.12s}.grade .art:nth-child(3){animation-delay:.19s}.grade .art:nth-child(4){animation-delay:.26s}.grade .art:nth-child(5){animation-delay:.33s}.grade .art:nth-child(6){animation-delay:.4s}.grade .art:nth-child(7){animation-delay:.47s}.grade .art:nth-child(8){animation-delay:.54s}
 
 </style>
 <link rel="stylesheet" href="/estilo-celular.css?v=3">
@@ -104,9 +119,20 @@ h1.q{font-family:'Baloo 2',cursive;font-weight:700;font-size:clamp(30px,5vw,44px
   </div>
   <p class="quiz">Não sabe por onde começar? <a href="/idiomas/autoanalise/">Faça o quiz de 5 minutos</a> e descubra o seu caminho.</p>
 
+  <section class="cadsec">
+    <a class="cad" href="/idiomas/caderno/">
+      <span class="sp" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i></span><span class="fita" aria-hidden="true"></span>
+      <span class="tx"><small>sempre à mão</small><b>Caderno de Unir Versos</b><span class="d">Suas anotações e palavras, em qualquer página.</span></span>
+      <span class="go">Abrir o caderno</span>
+    </a>
+  </section>
+
   <section class="bau" id="bau" aria-labelledby="bau-t">
-    <div class="bau-cab">
-      <div>
+    <div class="bau-card">
+      <div class="glow" aria-hidden="true"></div>
+      <div class="bau-in">
+        <h2 id="bau-t">O baú de ferramentas</h2>
+        <p class="bau-sub">Explore, complete mini desafios e desbloqueie novas skills.</p>
         <button type="button" class="bau-btn" id="bau-btn" aria-expanded="false" aria-controls="bau-c" aria-label="Abrir o baú de ferramentas">
           <span class="cofre"><svg viewBox="0 0 300 250" class="c-fechado respira" aria-hidden="true">
 <ellipse cx="150" cy="232" rx="118" ry="11" fill="#4A4149" opacity=".12"/>
@@ -138,17 +164,13 @@ h1.q{font-family:'Baloo 2',cursive;font-weight:700;font-size:clamp(30px,5vw,44px
 </svg></span>
         </button>
         <span class="dica" id="bau-dica">Clique no baú para abrir</span>
-      </div>
-      <div class="bau-txt">
-        <h2 id="bau-t">O baú de ferramentas</h2>
-        <p>Explore, complete mini desafios e desbloqueie novas skills.</p>
-      </div>
-    </div>
-    <div class="bau-c" id="bau-c" hidden>
-      <a class="dif" href="/idiomas/caderno/"><span class="t"><small>o diferencial</small><b>Caderno de Unir Versos</b><span class="d">Suas anotações, sempre à mão, em qualquer página.</span></span><span class="go">Abrir o caderno →</span></a>
-      <div class="grupos">
-        <div class="grupo"><h3>praticar</h3><a class="row" href="/idiomas/avatar/"><b>Meu avatar</b><span>Seu personagem, criado no Ateliê.</span></a><a class="row" href="/idiomas/palavras/"><b>Minhas palavras</b><span>As palavras das aulas, com áudio.</span></a><a class="row" href="/idiomas/hiragana/"><b>Hiragana</b><span>Letras com ordem dos traços.</span></a><a class="row" href="/idiomas/katakana/"><b>Katakana</b><span>Letras com ordem dos traços.</span></a><a class="row" href="/idiomas/kanji/"><b>Kanji</b><span>Estante e baralhos por tema.</span></a><a class="row" href="/idiomas/numeros/"><b>Números</b><span>Contagem e horas.</span></a><a class="row" href="/idiomas/calendario/"><b>Calendário</b><span>Dias da semana e datas.</span></a><a class="row" href="/idiomas/gravador/"><b>Gravador</b><span>Grave a sua voz e ouça.</span></a></div>
-        <div class="grupo"><h3>consultar</h3><a class="row" href="/idiomas/amuleto/"><b>Amuleto de bolso</b><span>52 frases prontas em 3 idiomas.</span></a><a class="row" href="/idiomas/ar/"><b>Ar</b><span>Às vezes precisamos de um ar: 5 gavetas para a conversa apertar.</span></a><a class="row" href="/idiomas/guia/"><b>Mini guia</b><span>Sobrevivência no Japão.</span></a></div>
+        <div class="peek" id="bau-peek"><span>Kanji</span><span>Hiragana</span><span>Amuleto de bolso</span><span>Números</span><em>e mais…</em></div>
+        <div class="bau-c" id="bau-c" hidden>
+          <h3>praticar</h3>
+          <div class="grade"><a class="art p" href="/idiomas/avatar/"><span class="gl">絵</span><b>Meu avatar</b><span class="d">Seu personagem, criado no Ateliê.</span></a><a class="art p" href="/idiomas/palavras/"><span class="gl">言</span><b>Minhas palavras</b><span class="d">As palavras das aulas, com áudio.</span></a><a class="art p" href="/idiomas/hiragana/"><span class="gl">あ</span><b>Hiragana</b><span class="d">Letras com ordem dos traços.</span></a><a class="art p" href="/idiomas/katakana/"><span class="gl">ア</span><b>Katakana</b><span class="d">Letras com ordem dos traços.</span></a><a class="art p" href="/idiomas/kanji/"><span class="gl">漢</span><b>Kanji</b><span class="d">Estante e baralhos por tema.</span></a><a class="art p" href="/idiomas/numeros/"><span class="gl">数</span><b>Números</b><span class="d">Contagem e horas.</span></a><a class="art p" href="/idiomas/calendario/"><span class="gl">暦</span><b>Calendário</b><span class="d">Dias da semana e datas.</span></a><a class="art p" href="/idiomas/gravador/"><span class="gl">声</span><b>Gravador</b><span class="d">Grave a sua voz e ouça.</span></a></div>
+          <h3 class="b">consultar</h3>
+          <div class="grade"><a class="art v" href="/idiomas/amuleto/"><span class="gl">守</span><b>Amuleto de bolso</b><span class="d">52 frases prontas em 3 idiomas.</span></a><a class="art v" href="/idiomas/ar/"><span class="gl">風</span><b>Ar</b><span class="d">Às vezes precisamos de um ar.</span></a><a class="art v" href="/idiomas/guia/"><span class="gl">道</span><b>Mini guia</b><span class="d">Sobrevivência no Japão.</span></a></div>
+        </div>
       </div>
     </div>
   </section>
@@ -168,12 +190,12 @@ h1.q{font-family:'Baloo 2',cursive;font-weight:700;font-size:clamp(30px,5vw,44px
 </div>
 <script>
 (function(){
-  var box=document.getElementById('bau'),b=document.getElementById('bau-btn'),c=document.getElementById('bau-c'),d=document.getElementById('bau-dica');
-  function set(o){box.classList.toggle('on',o);b.setAttribute('aria-expanded',String(o));b.setAttribute('aria-label',o?'Fechar o baú de ferramentas':'Abrir o baú de ferramentas');d.textContent=o?'Clique no baú para fechar':'Clique no baú para abrir';c.hidden=!o}
+  var box=document.getElementById('bau'),b=document.getElementById('bau-btn'),c=document.getElementById('bau-c'),d=document.getElementById('bau-dica'),pk=document.getElementById('bau-peek');
+  function set(o){box.classList.toggle('on',o);b.setAttribute('aria-expanded',String(o));b.setAttribute('aria-label',o?'Fechar o baú de ferramentas':'Abrir o baú de ferramentas');d.textContent=o?'Clique no baú para fechar':'Clique no baú para abrir';c.hidden=!o;pk.hidden=o}
   b.addEventListener('click',function(){set(!box.classList.contains('on'))});
 })();
 </script>
 <script src="/entrar.js" defer></script>
-<script defer src="/caderno-flutuante.js?v=9"></script>
+<script defer src="/caderno-flutuante.js?v=10"></script>
 </body>
 </html>
