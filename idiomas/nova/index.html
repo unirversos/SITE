@@ -41,17 +41,18 @@ h1.q{font-family:'Baloo 2',cursive;font-weight:700;font-size:clamp(30px,5vw,44px
 .foot{border-top:1px solid var(--blush-2);padding:26px 0 56px;text-align:center;font-size:14px;color:var(--ink-soft);line-height:2}
 .foot a{color:var(--pink-deep);font-weight:700;text-decoration:none}.foot .cr{font-size:12.5px;margin-top:6px}
 
-.cadsec{padding:44px 0 0}
-.cad{position:relative;display:flex;flex-wrap:wrap;align-items:center;gap:12px 24px;max-width:680px;margin:0 auto;padding:26px 30px 26px 74px;border:1.5px solid #eadfd6;border-radius:10px 22px 22px 10px;color:var(--ink);text-decoration:none;background-color:#fffdf9;background-image:repeating-linear-gradient(#fffdf9 0 31px,#f4eae1 31px 32px);box-shadow:0 18px 30px -22px rgba(74,65,73,.5);transition:transform .15s}
-.cad:hover{transform:translateY(-3px) rotate(-.4deg)}
-.cad .sp{position:absolute;left:18px;top:14px;bottom:14px;display:flex;flex-direction:column;justify-content:space-around}
-.cad .sp i{display:block;width:16px;height:16px;border-radius:50%;border:2.5px solid var(--pink);background:var(--cream)}
-.cad .fita{position:absolute;top:-11px;right:46px;width:96px;height:24px;background:var(--gold-soft);border:1px solid #ead9b0;transform:rotate(3deg)}
-.cad .tx{flex:1 1 300px;min-width:0}
-.cad small{font-size:11.5px;letter-spacing:1.5px;text-transform:uppercase;font-weight:700;color:var(--pink-deep);display:block}
-.cad b{display:inline-block;margin:6px 0 8px;background:#fff;border:2px solid var(--pink);border-radius:6px;padding:6px 18px;transform:rotate(-1deg);font-family:'Baloo 2',cursive;font-size:clamp(26px,6.5vw,38px);line-height:1.15;box-shadow:3px 3px 0 var(--blush-2)}
-.cad .d{display:block;font-size:14px;color:#5d535b}
-.cad .go{background:var(--pink);color:#fff;font-weight:700;border-radius:40px;padding:10px 24px;box-shadow:0 8px 18px rgba(181,81,77,.25)}
+.cadsec{padding:44px 0 20px}
+.cad{display:flex;align-items:center;justify-content:center;gap:30px;flex-wrap:wrap;max-width:680px;margin:0 auto;color:var(--ink);text-decoration:none}
+.capa{position:relative;display:block;width:196px;height:246px;flex:none;border-radius:6px 16px 16px 6px;background:var(--pink,#B5514D);box-shadow:inset 10px 0 0 rgba(0,0,0,.12),0 18px 28px -16px rgba(74,40,40,.6);transition:transform .2s ease}
+.capa:before{content:"";position:absolute;right:26px;top:-4px;bottom:-4px;width:11px;background:#3a2b38;border-radius:3px;opacity:.85}
+.capa .et{position:absolute;left:24px;right:50px;top:64px;background:#fffdf9;border-radius:6px;padding:14px 8px;text-align:center;font-family:'Baloo 2',cursive;font-weight:800;font-size:23px;line-height:1.05;color:#3a2b38;box-shadow:0 2px 0 rgba(0,0,0,.08)}
+.capa .fit{position:absolute;bottom:-14px;left:54px;width:10px;height:40px;background:var(--gold,#C0913F);clip-path:polygon(0 0,100% 0,100% 100%,50% 80%,0 100%)}
+.cad:hover .capa{transform:translateY(-4px) rotate(-2deg)}
+.cad .tx{flex:0 1 260px}
+.cad .tx b{display:block;font-family:'Baloo 2',cursive;font-weight:800;font-size:clamp(24px,4vw,30px);line-height:1.15;margin-bottom:6px}
+.cad .d{display:block;font-size:15px;color:#5d535b;margin-bottom:16px}
+.cad .go{display:inline-block;background:var(--pink);color:#fff;font-weight:700;border-radius:40px;padding:11px 24px;box-shadow:0 8px 18px rgba(181,81,77,.25)}
+@media (max-width:600px){.cad{text-align:center}}
 .bau{padding:20px 0 60px}
 .bau-card{position:relative;background:#fff;border:1.5px solid var(--blush-2);border-radius:28px;padding:40px 28px 34px;text-align:center;overflow:hidden}
 .glow{position:absolute;left:50%;top:42%;width:460px;height:460px;transform:translate(-50%,-50%);border-radius:50%;background:radial-gradient(circle,rgba(192,145,63,.28),rgba(192,145,63,0) 62%);opacity:0;transition:opacity .6s ease;pointer-events:none}
@@ -127,10 +128,9 @@ h1.q{font-family:'Baloo 2',cursive;font-weight:700;font-size:clamp(30px,5vw,44px
   <p class="quiz">Não sabe por onde começar? <a href="/idiomas/autoanalise/">Faça o quiz de 5 minutos</a> e descubra o seu caminho.</p>
 
   <section class="cadsec">
-    <a class="cad" href="/idiomas/caderno/">
-      <span class="sp" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i></span><span class="fita" aria-hidden="true"></span>
-      <span class="tx"><small>sempre à mão</small><b>Caderno de Unir Versos</b><span class="d">Suas anotações e palavras, em qualquer página.</span></span>
-      <span class="go">Abrir o caderno</span>
+    <a class="cad" href="/idiomas/caderno/" aria-label="Abrir o Caderno de Unir Versos">
+      <span class="capa" aria-hidden="true"><span class="et">Caderno de Unir Versos</span><span class="fit"></span></span>
+      <span class="tx"><span class="d">Suas anotações e palavras, sempre à mão em qualquer página.</span><span class="go">Abrir o caderno</span></span>
     </a>
   </section>
 
