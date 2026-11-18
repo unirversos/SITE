@@ -1,17 +1,11 @@
 /* Unirversos · Baú flutuante: aba na borda direita (acima da aba do Caderno) que abre a lista de ferramentas
    sem sair da página. Tem botão "Recolher", e ao escolher uma ferramenta guarda de onde a pessoa veio:
    na página da ferramenta aparece "← Voltar para ..." que leva de volta ao mesmo lugar (e à mesma rolagem).
-   Sempre começa recolhido. FASE DE TESTE: só liga com ?bau=1 (fica salvo no navegador); ?bau=0 desliga. */
+   Sempre começa recolhido. */
 (function () {
   if (window.top !== window) return;
   var KEY = 'uni-bau', VK = 'uni-bau-volta', RK = 'uni-bau-ret', TTL = 6 * 3600 * 1000;
-  try {
-    var m = location.search.match(/[?&]bau=([01])/);
-    if (m) { if (m[1] === '1') localStorage.setItem(KEY, '1'); else localStorage.removeItem(KEY); }
-  } catch (e) {}
-  var ligado = false;
-  try { ligado = localStorage.getItem(KEY) === '1'; } catch (e) {}
-  if (!ligado) return;
+  try { localStorage.removeItem(KEY); } catch (e) {}
 
   var path = location.pathname, atual = path + location.search;
   /* nestas páginas o baú já está na tela (/idiomas/) ou o foco é o jogo (Planeta Utopia) */
