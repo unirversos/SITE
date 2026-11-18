@@ -1,0 +1,11 @@
+<!DOCTYPE html><html lang="pt-BR"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="robots" content="noindex">
+<title>Vila compacta (teste)</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=DotGothic16&family=Zen+Maru+Gothic:wght@400;700&display=swap">
+<style>body{margin:0;background:#fdf6f4;font-family:"Zen Maru Gothic",system-ui,sans-serif;padding:16px}</style></head><body>
+<p>Vila compacta (teste). Toque nos lugares.</p><div id="mapinha"></div>
+<script src="/idiomas/japones/vila-compacta.js"></script>
+<script>
+const N=[['aeroporto','Aeroporto'],['sinalizacao','Sinalização'],['trens','Trens'],['hotel','Hotel'],['kombini','Konbini'],['restaurante','Restaurante'],['horas','Horas'],['compras','Compras'],['roupas','Roupas'],['apresentacao','Apresentação'],['planos','Planos'],['emergencia','Emergência']];
+const feitos=+(new URLSearchParams(location.search).get('n')||0);
+VilaTrilha.render(document.getElementById('mapinha'),{mapas:N.map((m,i)=>({slug:m[0],nome:m[1],desc:'Descrição do mapa.',terr:m[0],aula:i<feitos,prova:i<feitos}))});
+</script></body></html>
