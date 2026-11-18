@@ -261,6 +261,20 @@ h1{font-size:clamp(28px,5vw,40px)}
 #svgEst text{font-family:"DotGothic16","Zen Maru Gothic",sans-serif;shape-rendering:auto}
 
 /* a cena acende objeto por objeto, uma chave de cada vez */
+
+/* magia ao tocar: anel, faíscas e clarão final */
+.fx{position:absolute;pointer-events:none;width:0;height:0;z-index:6}
+.fx .anel{position:absolute;left:-14px;top:-14px;width:28px;height:28px;border-radius:50%;border:3px solid #ffe08a;box-shadow:0 0 14px 4px rgba(255,214,102,.8);animation:fxanel .9s ease-out forwards}
+.fx .fa{position:absolute;left:-7px;top:-9px;font-size:16px;line-height:1;color:#ffd24d;text-shadow:0 0 8px #fff4c2,0 0 14px #ffb300;animation:fxfaisca var(--d,.9s) cubic-bezier(.15,.7,.3,1) forwards;opacity:0}
+@keyframes fxanel{0%{transform:scale(.3);opacity:1}100%{transform:scale(3.4);opacity:0}}
+@keyframes fxfaisca{0%{transform:translate(0,0) scale(.3) rotate(0);opacity:1}70%{opacity:1}100%{transform:translate(var(--dx),var(--dy)) scale(1.1) rotate(160deg);opacity:0}}
+.scene.clarao::after{content:"";position:absolute;inset:0;pointer-events:none;z-index:5;background:radial-gradient(circle at 50% 50%,rgba(255,244,200,.85),rgba(255,230,150,0) 70%);animation:fxclarao 1.4s ease-out forwards}
+@keyframes fxclarao{0%{opacity:0}25%{opacity:1}100%{opacity:0}}
+.contagem i{transition:transform .25s,background .25s}.contagem i.on{animation:bolinha .5s ease-out}
+@keyframes bolinha{0%{transform:scale(.4)}60%{transform:scale(1.7);box-shadow:0 0 10px 3px #ffd24d}100%{transform:scale(1)}}
+#abreEx.libera{animation:libera 1.2s ease-in-out 3}
+@keyframes libera{0%,100%{box-shadow:4px 4px 0 var(--tinta)}50%{box-shadow:0 0 0 4px #ffe08a,0 0 22px 6px #ffd24d}}
+@media (prefers-reduced-motion:reduce){.fx,.scene.clarao::after,#abreEx.libera,.contagem i.on{animation:none}}
 [data-luz]{opacity:.5;transition:opacity .9s ease}
 [data-luz].on{opacity:1}
 [data-luz].luz-pisca{animation:luzpisca 1.3s ease-out}
@@ -536,7 +550,7 @@ const CHAVES=[
 ];
 
 /* ---------- estado ---------- */
-const S={ditas:{},retomado:{},f:0,k:0,passo:'chegada',erros:0,semMic:false,micNegado:false,feitos:[],visto:new Set(),acesas:[]};
+const S={ditas:{},retomado:{},f:0,k:0,passo:'chegada',erros:0,semMic:false,micNegado:false,feitos:[],visto:new Set(),toqueOk:{},acesas:[]};
 try{S.semMic=localStorage.getItem('uniNovaSemMic')==='1';}catch(e){}
 try{const p=JSON.parse(localStorage.getItem('uniNovaAZ')||'null');if(p&&Array.isArray(p.acesas))S.acesas=p.acesas;}catch(e){}
 const salva=()=>{try{localStorage.setItem('uniNovaAZ',JSON.stringify({acesas:S.acesas}));}catch(e){}};
@@ -597,7 +611,7 @@ function desenhaHot(){
       pilula.innerHTML=`<div class="pilula"><div class="jpl" lang="ja">${html(h.t)}</div><div class="ro">${h.ro}</div><p class="pt">${h.pt}</p><p class="en">${h.en}</p><p class="gram">${c.gram}</p>${h.resp?`<p class="gram"><button type="button" class="btn small" id="ouveResp">💬 Resposta: <span lang="ja">${h.resp.ja}</span> · ${h.resp.pt}</button></p>`:''}${h.num?`<p class="gram"><a href="/idiomas/numeros/#${h.num}" target="_blank" rel="noopener"><b>🔢 Aprender os números ↗</b></a> (${h.numTxt||''})</p>`:''}</div>`;
       if(h.resp){const br=$('ouveResp');if(br)br.onclick=()=>fala(h.resp.ja);}
       if(c.n===4){const nomi=['gyunyu','sake','ocha'].includes(h.item);const pl=pilula.querySelector('.pilula');if(pl)pl.insertAdjacentHTML('beforeend','<p class="gram verbo">'+(nomi?'のみもの':'たべもの')+' → <b>'+(nomi?'のみ':'たべ')+'</b>ません</p>');}
-      fala(h.say);};
+      fala(h.say);if(!jaVisto)magia(h);luzToque(jaVisto?null:c.n+'-'+i);if(S.passo==='toque')atualizaToque(!jaVisto);};
     hsBox.appendChild(b);
   });
 }
@@ -627,13 +641,15 @@ function vai(passo){if(S.__paraClipe){S.__paraClipe();S.__paraClipe=null;}if(pas
 function render(){
   window.__render=render;
   if(S.passo==='retoma'&&S.k<1)S.passo='agua';
+  if(S.passo==='agua'&&!toqueCompleto(CHAVES[S.k])&&!S.toqueOk[S.k])S.passo='toque';
   if(S.passo==='agua'&&CHAVES[S.k].n===3&&!S.clipeVisto){S.passo='clipe';S.cl=0;}
   desenhaBarra();desenhaHot();
-  luzCena();
+  luzCena();luzToque();
   { const pr=S.passo==='prontas'?((PRONTAS[S.p||0]||{}).fogo?'fogo':'agua'):null;
-    const et={agua:'agua',fogo:'fogo',clipe:'agua',terra:'terra',quiz:'terra',fixa:'fogo',falafix:'fogo',ganho:'ar',retoma:'fogo'}[S.passo];
+    const et={toque:'agua',agua:'agua',fogo:'fogo',clipe:'agua',terra:'terra',quiz:'terra',fixa:'fogo',falafix:'fogo',ganho:'ar',retoma:'fogo'}[S.passo];
     document.body.dataset.etapa=pr||et||''; }
   const c=CHAVES[S.k];
+  if(S.passo==='toque')return telaToque(c);
   if(S.passo==='retoma')return telaRetoma();
   if(S.passo==='clipe')return telaClipe(c);
   if(S.passo==='chegada')return telaChegada();
@@ -656,6 +672,28 @@ function telaRetoma(){
   const alvo=Object.assign({},prev.fogo,{depois:()=>vai('agua')});
   telaResposta(c,'fogo','',prev.fogo.pedido,alvo);
 }
+
+/* cada círculo tocado acende, em cor, o objeto que está embaixo dele (mesmo antes da chave inteira acender) */
+function luzToque(novo){
+  const NS='http://www.w3.org/2000/svg';
+  ['svgEst','svgKon'].forEach(id=>{
+    const svg=$(id);if(!svg)return;
+    const grupos=[...svg.querySelectorAll('[data-luz]:not(.luz-clone)')];if(!grupos.length)return;
+    let cor=svg.querySelector('.luz-cor'),mk;
+    if(!cor){
+      const defs=document.createElementNS(NS,'defs');
+      defs.innerHTML='<filter id="bl-'+id+'" x="-50%" y="-50%" width="200%" height="200%"><feGaussianBlur stdDeviation="5"/></filter><mask id="mk-'+id+'" maskUnits="userSpaceOnUse" x="0" y="0" width="400" height="250"><g class="mk-spots" filter="url(#bl-'+id+')"></g></mask>';
+      svg.insertBefore(defs,svg.firstChild);
+      cor=document.createElementNS(NS,'g');cor.setAttribute('class','luz-cor');cor.setAttribute('mask','url(#mk-'+id+')');cor.setAttribute('pointer-events','none');
+      grupos.forEach(g=>{const c=g.cloneNode(true);c.removeAttribute('data-luz');c.removeAttribute('filter');c.classList.remove('on','luz-pisca');c.classList.add('luz-clone');c.style.opacity='1';c.querySelectorAll('[id]').forEach(e=>e.removeAttribute('id'));cor.appendChild(c);});
+      grupos[grupos.length-1].insertAdjacentElement('afterend',cor);
+    }
+    mk=svg.querySelector('.mk-spots');
+    const kon=id==='svgKon';let h='';
+    CHAVES.forEach(c=>{if((c.n>=4)!==kon)return;c.hot.forEach((o,i)=>{if(S.visto.has(c.n+'-'+i))h+='<circle cx="'+(o.x*4)+'" cy="'+(o.y*2.5)+'" r="'+(novo===c.n+'-'+i?0:38)+'" fill="#fff">'+(novo===c.n+'-'+i?'<animate attributeName="r" from="0" to="38" dur=".9s" fill="freeze" calcMode="spline" keyTimes="0;1" keySplines=".2 .8 .3 1"/>':'')+'</circle>';});});
+    mk.innerHTML=h;
+  });
+}
 /* acende os objetos da cena que pertencem às chaves já acesas; o fundo ganha cor aos poucos */
 function luzCena(novo){
   const n=Math.min(S.acesas.length,5);
@@ -666,6 +704,39 @@ function luzCena(novo){
     if(on)g.removeAttribute('filter');else g.setAttribute('filter','url(#cinza)');
     if(novo===k&&on){g.classList.add('luz-pisca');setTimeout(()=>g.classList.remove('luz-pisca'),1400);}
   });
+}
+
+
+function magia(h){
+  if(matchMedia('(prefers-reduced-motion:reduce)').matches)return;
+  const f=document.createElement('span');f.className='fx';f.style.left=h.x+'%';f.style.top=h.y+'%';
+  let t='<i class="anel"></i>';
+  for(let i=0;i<9;i++){const a=(i/9)*6.283+Math.random()*.6,d=26+Math.random()*30;t+='<i class="fa" style="--dx:'+Math.round(Math.cos(a)*d)+'px;--dy:'+Math.round(Math.sin(a)*d)+'px;--d:'+(.7+Math.random()*.5).toFixed(2)+'s">✦</i>';}
+  f.innerHTML=t;hsBox.appendChild(f);setTimeout(()=>f.remove(),1500);
+}
+function claraoFinal(){
+  const sc=document.querySelector('.scene');if(!sc||matchMedia('(prefers-reduced-motion:reduce)').matches)return;
+  sc.classList.remove('clarao');void sc.offsetWidth;sc.classList.add('clarao');setTimeout(()=>sc.classList.remove('clarao'),1500);
+}
+/* fase 0 de cada chave: tocar e ouvir todos os círculos da cena; só então abre o exercício */
+function toqueCompleto(c){return S.acesas.includes(c.n)||c.hot.every((h,i)=>S.visto.has(c.n+'-'+i));}
+function telaToque(c){
+  const M=c.hot.length;
+  painel.innerHTML=`<span class="elem agua"><i></i>Chave ${String(c.n).padStart(2,'0')} · Toque e ouça</span>
+   <h2>Toque em cada círculo da cena e ouça.</h2>
+   <p>Cada um que você toca acende a cena. Quando todos estiverem acesos, o exercício abre.</p>
+   <div class="contagem" id="ctg"></div><p class="gram" id="ctgTxt"></p>
+   <div class="acoes"><button class="btn pri" type="button" id="abreEx" disabled>Abrir o exercício →</button></div>`;
+  $('abreEx').onclick=()=>{S.toqueOk[S.k]=true;vai('agua');};
+  atualizaToque();
+}
+function atualizaToque(novo){
+  const c=CHAVES[S.k],M=c.hot.length,n=c.hot.filter((h,i)=>S.visto.has(c.n+'-'+i)).length;
+  const ctg=$('ctg');if(!ctg)return;
+  ctg.setAttribute('aria-label',n+' de '+M);
+  ctg.innerHTML=c.hot.map((h,i)=>`<i class="${S.visto.has(c.n+'-'+i)?'on':''}"></i>`).join('');
+  $('ctgTxt').textContent=n<M?n+' de '+M+' acesos':'Tudo aceso! ✨';
+  const b=$('abreEx');b.disabled=n<M;if(n>=M&&novo){b.classList.add('libera');claraoFinal();}
 }
 function telaChegada(){
   painel.innerHTML=`<span class="elem ganho"><i></i>Chegada</span>
@@ -1098,7 +1169,7 @@ function telaTerra(c){
 
 $('btnRecom').onclick=()=>{
   if(!confirm('Recomeçar a Aula Zero? Suas chaves acesas serão apagadas.'))return;
-  S.acesas=[];S.k=0;S.conquista=false;salva();
+  S.acesas=[];S.k=0;S.conquista=false;S.visto=new Set();S.toqueOk={};salva();
   try{pararMic();}catch(e){}
   vai('chegada');window.scrollTo(0,0);
 };
