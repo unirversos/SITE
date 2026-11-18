@@ -83,8 +83,8 @@ h1.q{font-family:'Baloo 2',cursive;font-weight:700;font-size:clamp(30px,5vw,44px
 .bau-lado{position:relative;display:flex;flex-direction:column;align-items:center}.bau-lado>*:not(.glow){position:relative}
 .bau-btn{transition:width .45s ease}
 @media (min-width:760px){
- .bau.on .bau-corpo{flex-direction:row;align-items:center;gap:34px;justify-content:center}
- .bau.on .bau-btn{width:220px}
+ .bau.on .bau-corpo{flex-direction:row;align-items:flex-start;gap:34px;justify-content:center}
+ .bau.on .bau-btn{width:220px;margin-top:-34px}
  .bau.on .bau-c{flex:0 1 560px}
 }
 .pils{display:flex;flex-wrap:wrap;gap:8px}
@@ -94,6 +94,8 @@ h1.q{font-family:'Baloo 2',cursive;font-weight:700;font-size:clamp(30px,5vw,44px
 .pil.p .gl{background:var(--gold-soft);color:#7A5B21}.pil.v{border-color:#cfe0d2}.pil.v .gl{background:#E8EFE8;color:#3d6050}
 .pils .pil:nth-child(2){animation-delay:.06s}.pils .pil:nth-child(3){animation-delay:.12s}.pils .pil:nth-child(4){animation-delay:.18s}.pils .pil:nth-child(5){animation-delay:.24s}.pils .pil:nth-child(6){animation-delay:.3s}.pils .pil:nth-child(7){animation-delay:.36s}.pils .pil:nth-child(8){animation-delay:.42s}
 @media (max-width:759px){.pils{justify-content:center}.bau-c h3{text-align:center}}
+.pdica{margin:18px 0 0;min-height:22px;font-size:14px;color:var(--ink-soft);transition:color .2s;animation:subir .5s ease .6s both}.pdica.on{color:var(--ink)}.pdica b{color:#7A5B21}
+@media (hover:none),(max-width:759px){.pdica{display:none}}
 
 </style>
 <link rel="stylesheet" href="/estilo-celular.css?v=3">
@@ -178,6 +180,7 @@ h1.q{font-family:'Baloo 2',cursive;font-weight:700;font-size:clamp(30px,5vw,44px
           <div class="pils"><a class="pil p" href="/idiomas/avatar/" title="Seu personagem, criado no Ateliê."><span class="gl" aria-hidden="true">絵</span>Meu avatar</a><a class="pil p" href="/idiomas/palavras/" title="As palavras das aulas, com áudio."><span class="gl" aria-hidden="true">言</span>Minhas palavras</a><a class="pil p" href="/idiomas/hiragana/" title="Letras com ordem dos traços."><span class="gl" aria-hidden="true">あ</span>Hiragana</a><a class="pil p" href="/idiomas/katakana/" title="Letras com ordem dos traços."><span class="gl" aria-hidden="true">ア</span>Katakana</a><a class="pil p" href="/idiomas/kanji/" title="Estante e baralhos por tema."><span class="gl" aria-hidden="true">漢</span>Kanji</a><a class="pil p" href="/idiomas/numeros/" title="Contagem e horas."><span class="gl" aria-hidden="true">数</span>Números</a><a class="pil p" href="/idiomas/calendario/" title="Dias da semana e datas."><span class="gl" aria-hidden="true">暦</span>Calendário</a><a class="pil p" href="/idiomas/gravador/" title="Grave a sua voz e ouça."><span class="gl" aria-hidden="true">声</span>Gravador</a></div>
           <h3 class="b">consultar</h3>
           <div class="pils"><a class="pil v" href="/idiomas/amuleto/" title="52 frases prontas em 3 idiomas."><span class="gl" aria-hidden="true">守</span>Amuleto de bolso</a><a class="pil v" href="/idiomas/ar/" title="Às vezes precisamos de um ar."><span class="gl" aria-hidden="true">風</span>Ar</a><a class="pil v" href="/idiomas/guia/" title="Sobrevivência no Japão."><span class="gl" aria-hidden="true">道</span>Mini guia</a></div>
+          <p class="pdica" id="bau-pd" aria-hidden="true">Passe o mouse num botão para ver o que é.</p>
         </div>
         </div>
       </div>
@@ -200,6 +203,10 @@ h1.q{font-family:'Baloo 2',cursive;font-weight:700;font-size:clamp(30px,5vw,44px
 <script>
 (function(){
   var box=document.getElementById('bau'),b=document.getElementById('bau-btn'),c=document.getElementById('bau-c'),d=document.getElementById('bau-dica'),pk=document.getElementById('bau-peek');
+  var pd=document.getElementById('bau-pd'),pd0=pd.textContent;
+  function mostra(e){var a=e.target.closest&&e.target.closest('.pil');if(a){pd.innerHTML='<b>'+a.textContent.replace(/^./,'').trim()+'</b> · '+a.title;pd.classList.add('on')}}
+  function some(){pd.textContent=pd0;pd.classList.remove('on')}
+  c.addEventListener('mouseover',mostra);c.addEventListener('focusin',mostra);c.addEventListener('mouseleave',some);c.addEventListener('focusout',some);
   function set(o){box.classList.toggle('on',o);b.setAttribute('aria-expanded',String(o));b.setAttribute('aria-label',o?'Fechar o baú de ferramentas':'Abrir o baú de ferramentas');d.textContent=o?'Clique no baú para fechar':'Clique no baú para abrir';c.hidden=!o;pk.hidden=o}
   b.addEventListener('click',function(){set(!box.classList.contains('on'))});
 })();
