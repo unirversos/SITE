@@ -1,0 +1,6 @@
+# Backups e pacotes antigos nunca sobem para o site (o GitHub Pages publica tudo do repositório)
+*.zip
+*backup*
+*.bak
+*.old
+*.orig
