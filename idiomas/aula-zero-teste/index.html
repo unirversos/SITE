@@ -306,6 +306,7 @@ body.ver-ro .ro-svg{paint-order:stroke;stroke:#3a2b38;stroke-width:3px;stroke-li
 #clTit .cw.v{color:#c0392b}
 #clTit .cw.fala{transform:translateY(-3px) scale(1.13);text-shadow:0 0 14px rgba(243,201,105,.95)}
 @media (prefers-reduced-motion:reduce){#clAv.anda .cl-cab,#clAv.anda .cl-corpo,#clAv.anda .cl-sombra{animation:none}#clTit .cw{transition:none}}
+#clTit .cro{display:none;margin:5px 0 0 4px;width:max-content;max-width:100%;background:#fff1c9;border:2px solid var(--tinta);border-radius:8px;padding:1px 8px;font-size:max(11px,.45em);font-weight:700;color:var(--tinta);line-height:1.4}body.ver-ro #clTit .cro{display:block}
 </style>
 </head>
 <body>
@@ -1003,7 +1004,7 @@ function telaClipe(c){
     pr.textContent=k.prop;pr.style.opacity=1;som.textContent=k.som||'';som.style.opacity=0;leg.style.visibility='hidden';
     /* o título da cena é a frase inteira; cada pedaço salta com mola, e acende na hora da fala */
     const tws=k.t.map(t=>typeof t==='string'?{s:t,v:false}:{s:t[0],v:t[1]==='k'});
-    tit.hidden=false;tit.innerHTML='<div class="cpill" lang="ja">'+tws.map(w=>'<span class="cw'+(w.v?' v':'')+'">'+w.s+'</span>').join('')+'</div>';
+    tit.hidden=false;tit.innerHTML='<div class="cpill" lang="ja">'+tws.map(w=>'<span class="cw'+(w.v?' v':'')+'">'+w.s+'</span>').join('')+'</div><div class="cro">'+k.ro+'</div>';
     const wsc=sc?sc.clientWidth:340;tit.style.fontSize=Math.max(14,Math.min(30,(wsc*.62-30)/Math.max(6,k.say.length)))+'px';
     const spans=[...tit.querySelectorAll('.cw')];
     if(!reduz)spans.forEach((x,n)=>an(x,[{opacity:0,transform:'translateY(18px) scale(.7)'},{opacity:1,transform:'translateY(0) scale(1)'}],{duration:560,delay:n*130,easing:MOLA,fill:'backwards'}));
