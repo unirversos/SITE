@@ -65,6 +65,8 @@
     /* folha pautada */
     '.lv-tx{flex:1;min-height:0;width:100%;resize:none;overflow:hidden;border:0;padding:0;color:#3a2b38;font:inherit;font-size:max(14px,calc(var(--u,4px)*3.7));line-height:max(27px,calc(var(--u,4px)*6.6));background:repeating-linear-gradient(transparent 0 calc(max(27px,calc(var(--u,4px)*6.6)) - 1px),#ecdadd calc(max(27px,calc(var(--u,4px)*6.6)) - 1px) max(27px,calc(var(--u,4px)*6.6)));background-attachment:local}',
     '.lv-tx:focus{outline:none}',
+    /* a dica some ao tocar (teclado) e também ao tocar com a caneta */
+    '.lv-tit:focus::placeholder,.lv-tx:focus::placeholder,.lv-pg.tocou .lv-tit::placeholder,.lv-pg.tocou .lv-tx::placeholder{color:transparent}',
     '.lv-num{position:absolute;bottom:calc(var(--u,4px)*1.6);font-size:max(11px,calc(var(--u,4px)*2.4));color:#a8969f;pointer-events:none}',
     '.lv-pg .lv-num{right:calc(var(--u,4px)*4)}.lv.dupla .lv-pg.esq .lv-num{right:auto;left:calc(var(--u,4px)*4)}',
     '.lv-del{position:absolute;top:calc(var(--u,4px)*1.6);right:calc(var(--u,4px)*1.6);z-index:4;font:inherit;cursor:pointer;border:1.5px solid #ecdadd;background:#fff;color:#705f6c;border-radius:99px;font-size:12px;font-weight:700;padding:3px 10px;min-height:30px;opacity:.75}',
@@ -389,6 +391,7 @@
       }
     }
     function desenha(i, extra) {
+      { var pe0 = pg(i); if (pe0 && pags[i] && pags[i].s && pags[i].s.length) pe0.classList.add('tocou'); }
       var p = pg(i); if (!p || p.classList.contains('fora')) return;
       var c = p.querySelector('canvas'), r = c.getBoundingClientRect(); if (!r.width) return;
       var dpr = Math.min(window.devicePixelRatio || 1, 3), w = Math.round(r.width * dpr), h = Math.round(r.height * dpr);
@@ -420,6 +423,7 @@
         if (e.pointerType === 'touch' && Date.now() - penVisto < 4000) return;
         if (e.pointerType === 'mouse' && e.button !== 0) return;
         e.preventDefault(); try { c.setPointerCapture(e.pointerId); } catch (x) {}
+        { var pgEl = pg(i); if (pgEl) pgEl.classList.add('tocou'); }
         if (ferr === 'bor' || (e.pointerType === 'pen' && (e.buttons & 32))) { apagando = true; borrou = false; apaga(e); return; }
         atual = { k: cor, w: esp, d: [] }; adiciona(e); desenha(i, atual);
       });

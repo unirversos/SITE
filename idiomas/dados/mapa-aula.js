@@ -618,6 +618,19 @@ function wireCena(){
         h.setAttribute('aria-label','Mapa concluído');
         h.innerHTML=`<p class="hall-t">✓ Mapa concluído</p>${fraseH}<div class="hall-b"><a class="btn" href="/idiomas/japones/">← Voltar à trilha</a><a class="btn" href="/idiomas/planeta-utopia/salao/">🪐 Ir ao Salão</a></div>`+`<p class="hall-s">${terr?`<a href="${provaHref}">🏅 Refazer a prova</a>`:''}<a href="#" data-refaz-cena>↺ Refazer os exercícios da cena</a></p>`;
       }
+      { /* 📓 anotação opcional no Caderno: cria uma vez e depois só reabre (não sobrescreve o que a pessoa escreveu) */
+        const hb=h.querySelector('.hall-b'); if(hb) hb.insertAdjacentHTML('beforebegin','<div class="hall-f"><span>Quer guardar este mapa no seu caderno?</span><button class="btn" type="button" data-caderno>📓 Anotar no caderno <small>(opcional)</small></button> <button class="btn" type="button" data-licao>📝 Lição de casa <small>(escrever)</small></button></div>');
+        const lc=h.querySelector('[data-licao]'); if(lc) lc.onclick=()=>{ const go=()=>window.UniLicao&&UniLicao.abrir(A.slug,A); if(window.UniLicao) return go(); const sc=document.createElement('script'); sc.src='/idiomas/dados/licao-casa.js?v=1'; sc.onload=go; sc.onerror=()=>{ location.href='/idiomas/licao/?m='+A.slug; }; document.head.appendChild(sc); };
+        const cb=h.querySelector('[data-caderno]'); if(cb) cb.onclick=()=>{
+          const CF=window.UniCadernoFlutuante, CD=window.UniCaderno, K='uniNotaMapa_'+A.slug;
+          if(!CF||!CD){ location.href='/idiomas/caderno/'; return; }
+          let id=null; try{ id=localStorage.getItem(K); }catch(_){}
+          if(id&&CD.obter(id)){ CF.abrirNota(id); return; }
+          const n=CD.nova(); id=n.id; try{ localStorage.setItem(K,id); }catch(_){}
+          const fr=(window.UniFrase&&UniFrase.lista()[A.slug])||null;
+          const x='Mapa · '+(A.titulo||A.slug)+'\n\n'+(fr?('Minha frase:\n'+fr.k+'\n'+(fr.r||'')+'\n'+(fr.pt||'')+'\n\n'):'')+'O que eu aprendi neste mapa:\n\n\nFrases que quero treinar:\n\n';
+          CF.nomear(id,{t:'Mapa · '+(A.titulo||A.slug),x:x});
+        }; }
       $('btnNext').after(h);
       const mf=h.querySelector('[data-minha-frase]'); if(mf) mf.onclick=()=>UniFrase.abrir(A.slug,{aoSalvar:()=>{ const bx=h.querySelector('.hall-f'); if(bx){ bx.classList.add('ok'); bx.querySelector('span').textContent='✓ Sua frase já está em Minhas palavras.'; mf.textContent='🌱 Refazer minha frase'; } }});
       const rz=h.querySelector('[data-refaz-cena]'); if(rz) rz.onclick=ev=>{ ev.preventDefault(); done={}; loadCena(0); }; }
