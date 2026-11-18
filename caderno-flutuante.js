@@ -1,5 +1,6 @@
 /* Baú flutuante (em teste: só aparece com ?bau=1) */
-(function(){if(window.top!==window||document.getElementById('bz-js'))return;var s=document.createElement('script');s.id='bz-js';s.src='/bau-flutuante.js?v=1';s.defer=true;document.head.appendChild(s);})();
+(function(){if(window.top!==window||document.getElementById('bz-js'))return;var s=document.createElement('script');s.id='bz-js';s.src='/bau-flutuante.js?v=2';s.defer=true;document.head.appendChild(s);})();
+(function(){if(document.getElementById('volta-js'))return;var s=document.createElement('script');s.id='volta-js';s.src='/voltar.js?v=1';document.head.appendChild(s);})();
 /* Unirversos · Caderno flutuante: aba na borda direita que abre o caderno sem sair da página.
    Usa as mesmas anotações de /idiomas/caderno/ e da Área do aluno (caderno em páginas, uma por vez aqui). Sempre começa recolhido. */
 (function () {

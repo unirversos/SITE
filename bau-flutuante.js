@@ -102,13 +102,15 @@
       if (a.getAttribute('aria-current') === 'page') { e.preventDefault(); abrir(false); return; }
       if (!lerJSON(VK)) gravar(VK, { u: atual, y: window.scrollY || 0, n: nome(document.title) });
     });
-    chip();
+    setTimeout(chip, 60);
   }
 
   /* "← Voltar para ..." no topo da ferramenta escolhida */
   function chip() {
     var v = lerJSON(VK);
     if (!v || v.u === atual) return;
+    /* o link do topo já virou "← Voltar para ..." (voltar.js): não precisa de outro */
+    if (document.querySelector('a[data-volta]')) { apagar(VK); return; }
     var c = document.createElement('div');
     c.id = 'bz-chip'; c.setAttribute('role', 'region'); c.setAttribute('aria-label', 'Voltar');
     c.innerHTML = '<button class="v" type="button">← Voltar para ' + esc(v.n) + '</button><button class="x" type="button" aria-label="Dispensar">×</button>';
