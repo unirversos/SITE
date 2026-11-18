@@ -18,9 +18,10 @@ function F(jp,ro,pt){ FALAS.push(jp); return {jp:jp,ro:ro,pt:pt}; }
 /* uma linha: japonês + romaji (só aparece com o botão) + tradução */
 function T(x,c){
   var som=(c.grav&&c.grav(x.jp))?'<button type="button" class="cn-som" data-fala="'+E(x.jp)+'" aria-label="Ouvir">🔊</button>':'';
-  return '<span class="cn-lin"><span class="cn-jp" lang="ja">'+E(x.jp)+'</span>'+som+'<span class="wro cn-ro"'+(c.ro?'':' hidden')+'>'+E(x.ro)+'</span><span class="cn-pt">'+E(x.pt)+'</span></span>';
+  return '<span class="cn-lin"><span class="cn-jp" lang="ja">'+E(x.jp)+'</span>'+som+'<span class="wro cn-ro"'+(c.ro?'':' hidden')+'>'+E(x.ro)+'</span>'+(c.pt?'<span class="cn-pt">'+E(x.pt)+'</span>':'')+'</span>';
 }
-function rot(jp,ro,pt,c){ return '<span class="cn-lin cn-rot"><span lang="ja">'+E(jp)+'</span><span class="wro cn-ro"'+(c.ro?'':' hidden')+'> · '+E(ro)+'</span><small>'+E(pt)+'</small></span>'; }
+function rot(jp,ro,pt,c){ return '<span class="cn-lin cn-rot"><span lang="ja">'+E(jp)+'</span><span class="wro cn-ro"'+(c.ro?'':' hidden')+'> · '+E(ro)+'</span>'+(c.pt?'<small>'+E(pt)+'</small>':'')+'</span>'; }
+function Tf(x,c){ return T(x,{ro:c.ro,grav:c.grav,pt:true}); }
 function estrelas(n){ n=Math.max(0,Math.min(3,n)); return '⭐'.repeat(n)+'☆'.repeat(3-n); }
 
 var CENAS={};
@@ -60,19 +61,19 @@ CENAS.konbini={
     var estr='<div class="cn-estr" aria-label="Reputação da loja">'+estrelas(st.estrelas==null?3:num(st.estrelas))+' <small>reputação</small></div>';
     var bal='<div class="cn-cliente"><span class="cn-av">🧑‍💼</span><div class="cn-balao">'+T(K.cliente,c)+'</div></div>';
     if(st.fim){
-      var ok=st.res==='ok', motivo={itens:'Os itens não batiam com o pedido (o cliente trocou um onigiri no meio da frase!).',tempo:'A paciência do cliente acabou.',pergunta:'A pergunta de atendimento não era a certa para esse pedido.','tempo-pergunta':'Demorou para perguntar e o cliente foi embora.'}[st.motivo]||'';
-      return estr+bal+'<div class="cn-res '+(ok?'ok':'no')+'"><b>'+(ok?'🎉 Cliente atendido! +100 pontos':'😮‍💨 Cliente perdido (−1 estrela)')+'</b><p>'+T(ok?K.ok:K.no,c)+'</p>'+(ok?'<p class="sub">O cliente pediu dois onigiris, mas trocou um de salmão por um de atum: no fim, <b>1 salmão + 1 atum + 1 café gelado</b>. Depois dos itens, a pergunta certa era se ele precisa de sacola (<span lang="ja">ふくろ</span>).</p>':'<p class="sub">'+E(motivo)+' Resposta certa: <b>1 salmão + 1 atum + 1 café gelado</b>, e perguntar se precisa de sacola.</p>')+'</div>';
+      var ok=st.res==='ok', motivo={itens:'Itens errados.',tempo:'Acabou a paciência.',pergunta:'Pergunta errada.','tempo-pergunta':'Demorou para perguntar.'}[st.motivo]||'';
+      return estr+bal+'<div class="cn-res '+(ok?'ok':'no')+'"><b>'+(ok?'🎉 Cliente atendido! +100 pontos':'😮‍💨 Cliente perdido (−1 estrela)')+'</b><p>'+Tf(ok?K.ok:K.no,c)+'</p>'+(ok?'<p class="sub">Pedido final: <b>1 salmão + 1 atum + 1 café gelado</b>. Pergunta certa: sacola (<span lang="ja">ふくろ</span>).</p>':'<p class="sub">'+E(motivo)+' Era: <b>1 salmão + 1 atum + 1 café gelado</b> + sacola.</p>')+'</div>';
     }
     var barra='<div class="cn-pac" role="img" aria-label="Paciência do cliente"><i data-barra></i></div><p class="sub cn-seg" data-seg></p>';
     var prat='<div class="cn-prat" role="group" aria-label="Prateleira">'+KI.map(function(it){ return '<button type="button" class="cn-peca'+(c.sel===it[0]?' sel':'')+'" data-drag="'+it[0]+'" data-a="sel" data-item="'+it[0]+'">'+kBotao(it,c)+'</button>'; }).join('')+'</div>';
     var chips=Object.keys(sac).filter(function(k){ return num(sac[k])>0; }).map(function(k){ var it=kItem(k); var n=num(sac[k]); return Array(n+1).join('<button type="button" class="cn-chip" data-a="tira" data-item="'+k+'" title="Tirar da sacola">'+it[1]+' '+E(it[5]||it[2])+' ✕</button>'); }).join('');
-    var bolsa='<div class="cn-sacola" data-a="zona" data-zona="sacola"><b>🛍️ <span lang="ja">ふくろ</span> <small>('+tot+' de 3)</small></b><div class="cn-chips">'+(chips||'<span class="sub">Arraste os itens do pedido até aqui, ou toque no item e depois na sacola.</span>')+'</div></div>';
+    var bolsa='<div class="cn-sacola" data-a="zona" data-zona="sacola"><b>🛍️ <span lang="ja">ふくろ</span> <small>('+tot+' de 3)</small></b><div class="cn-chips">'+(chips||'<span class="sub">Arraste os itens até aqui.</span>')+'</div></div>';
     if(st.fase==='pergunta'){
       var ord=(st.ord||'ABC').split('');
       var bal3='<div class="cn-opts" role="group" aria-label="O que você pergunta ao cliente?">'+ord.map(function(o){ return '<button type="button" class="cn-fala" data-a="resp" data-op="'+o+'">'+T(K[o],c)+'</button>'; }).join('')+'</div><div class="cn-pac q" role="img" aria-label="Tempo para perguntar"><i data-qbarra></i></div>';
-      return estr+bal+barra+bolsa+'<p class="cn-dica"><b>Pergunte ao cliente</b> (5 segundos, o relógio do pedido está parado):</p>'+bal3;
+      return estr+bal+barra+bolsa+'<p class="cn-dica"><b>Pergunte ao cliente:</b></p>'+bal3;
     }
-    return estr+bal+barra+'<p class="cn-dica">Monte o pedido <b>já corrigido</b> (leia com atenção até o fim!).</p>'+bolsa+prat;
+    return estr+bal+barra+'<p class="cn-dica">Monte o pedido final.</p>'+bolsa+prat;
   },
   acao:function(a,st,c){
     var sac=st.sacola||{};
@@ -106,7 +107,7 @@ CENAS.konbini={
     var gasto=st.fase==='pergunta'?num(st.gasto):c.now-num(st.t0);
     var pct=Math.max(0,Math.min(100,100-gasto/300));
     if(b){ b.style.width=pct+'%'; b.parentNode.classList.toggle('pouco',pct<30); }
-    if(s) s.textContent=(st.fase==='pergunta'?'⏸ relógio parado · ':'⏱ ')+'paciência do cliente: '+Math.max(0,Math.ceil((30000-gasto)/1000))+' s';
+    if(s) s.textContent=(st.fase==='pergunta'?'⏸ ':'⏱ ')+Math.max(0,Math.ceil((30000-gasto)/1000))+' s';
     if(q) q.style.width=Math.max(0,Math.min(100,100-(c.now-num(st.qt0))/50))+'%';
   }
 };
@@ -157,12 +158,12 @@ CENAS.detetive={
       return '<div class="cn-slot'+(it?' cheio':'')+(bad?' err':'')+(st.fim?' certo':'')+'" data-a="zona" data-subst="1" data-zona="s:'+s[0]+'"><span class="cn-slot-t">'+rot(s[1],s[2],s[3],c)+'</span>'+(it?'<button type="button" class="cn-etq" data-drag="'+it[0]+'" data-a="sel" data-item="'+it[0]+'">'+it[5]+' <span lang="ja">'+E(it[1])+'</span><small>'+E(it[3])+'</small></button>'+(st.fim?'':'<button type="button" class="cn-x" data-a="tira" data-slot="'+s[0]+'" aria-label="Tirar do quadro">✕</button>'):'<em>solte aqui</em>')+'</div>';
     }).join('')+'</div>';
     var usados={}; for(var k in sl) usados[sl[k]]=1;
-    var pool='<div class="cn-pool" data-a="zona" data-zona="barra"><b>Pistas</b> <small>arraste para o quadro (ou toque na pista e depois no quadro)</small><div class="cn-etqs">'+DI.filter(function(it){ return !usados[it[0]]; }).map(function(it){ return '<button type="button" class="cn-etq'+(c.sel===it[0]?' sel':'')+'" data-drag="'+it[0]+'" data-a="sel" data-item="'+it[0]+'">'+it[5]+' <span lang="ja">'+E(it[1])+'</span><span class="wro cn-ro"'+(c.ro?'':' hidden')+'> '+E(it[2])+'</span><small>'+E(it[3])+'</small></button>'; }).join('')+'</div></div>';
+    var pool='<div class="cn-pool" data-a="zona" data-zona="barra"><b>Pistas</b><div class="cn-etqs">'+DI.filter(function(it){ return !usados[it[0]]; }).map(function(it){ return '<button type="button" class="cn-etq'+(c.sel===it[0]?' sel':'')+'" data-drag="'+it[0]+'" data-a="sel" data-item="'+it[0]+'">'+it[5]+' <span lang="ja">'+E(it[1])+'</span><span class="wro cn-ro"'+(c.ro?'':' hidden')+'> '+E(it[2])+'</span><small>'+E(it[3])+'</small></button>'; }).join('')+'</div></div>';
     var cheio=DS.every(function(s){ return sl[s[0]]; });
     var alerta='';
     if(st.chk && !st.fim){
       var usouFalso=['cafe','verm'].some(function(id){ return ['onde','quem','hora'].some(function(s){ return sl[s]===id; }); });
-      alerta='<div class="cn-alerta">'+(usouFalso?'Ops! Esse guarda-chuva não é o do Kenji. Leia a última mensagem da Mari com atenção!':'Hmm, alguma pista não bate com o que foi dito no chat. Releia as mensagens, principalmente a da Mari às 14:16.')+'</div>';
+      alerta='<div class="cn-alerta">'+(usouFalso?'Ops! Esse guarda-chuva não é o do Kenji. Leia a última mensagem da Mari!':'Algo não bate. Releia o chat.')+'</div>';
     }
     if(st.fim) return '<div class="cn-celular">'+tabs+corpo+'</div>'+quadro+'<div class="cn-carimbo">CASO ENCERRADO <small lang="ja">かいけつ！</small></div><div class="cn-res ok"><p>☂️ O Kenji pegou o guarda-chuva azul, secinho, na recepção da biblioteca, antes de a chuva cair.</p><p class="sub">A pista da Mari (<span lang="ja">うけつけに あずけて おくね</span>) mudou o lugar do guarda-chuva: antes era a máquina de bebidas, depois virou a recepção. E o café é só às 17h, então ele precisa buscar <b>antes</b> (<span lang="ja">まえ</span>).</p></div>';
     return '<div class="cn-celular">'+tabs+corpo+'</div>'+quadro+pool+alerta+'<div class="row" style="justify-content:center"><button type="button" class="btn pri" data-a="resolve"'+(cheio?'':' disabled')+'>🔎 Resolver o caso</button></div>';
@@ -212,20 +213,20 @@ CENAS.izakaya={
     var peca=st.mesa&&ZI.filter(function(i){ return i[0]===st.mesa; })[0];
     var cena='<div class="cn-izk"><div class="cn-pess"><span class="cn-av">👴</span><b>'+rot('たなか ぶちょう','Tanaka buchō','Sr. Tanaka (chefe)',c)+'</b></div>'+
       '<div class="cn-pess"><span class="cn-av">👩</span><b>'+rot('ゆき','Yuki','colega',c)+'</b></div>'+
-      '<button type="button" class="cn-pess cn-gar" data-a="garcom"><span class="cn-av">🧑‍🍳</span><b>'+rot('てんいん','ten\'in','garçom',c)+'</b><small>toque para chamar</small></button></div>';
-    var mesaT='<div class="cn-mesaT" data-a="zona" data-zona="tanaka"><b>🍽️ Na frente do Sr. Tanaka</b><div>'+(peca?'<span class="cn-em">'+peca[1]+'</span> <span lang="ja">'+E(peca[2])+'</span>':'<span class="sub">arraste um petisco até aqui</span>')+'</div></div>';
+      '<button type="button" class="cn-pess cn-gar" data-a="garcom"><span class="cn-av">🧑‍🍳</span><b>'+rot('てんいん','ten\'in','garçom',c)+'</b><small>chamar</small></button></div>';
+    var mesaT='<div class="cn-mesaT" data-a="zona" data-zona="tanaka"><b>🍽️ Para o Sr. Tanaka</b><div>'+(peca?'<span class="cn-em">'+peca[1]+'</span> <span lang="ja">'+E(peca[2])+'</span>':'<span class="sub">arraste aqui</span>')+'</div></div>';
     var bal='<div class="cn-balao chefe">'+T(Z.chefe,c)+'</div>';
     if(st.fim){
-      return medidor+bal+'<div class="cn-brinde">🍻 <span lang="ja">かんぱい！</span></div><div class="cn-res ok"><p>'+T(Z.okf,c)+'</p><p class="sub">Você usou a linguagem polida (<span lang="ja">おねがいします</span>, <span lang="ja">ごちそうに なります</span>) e agradeceu o chefe. '+(num(st.tent)?'Tentativas erradas: '+num(st.tent)+'.':'De primeira!')+'</p></div>';
+      return medidor+bal+'<div class="cn-brinde">🍻 <span lang="ja">かんぱい！</span></div><div class="cn-res ok"><p>'+Tf(Z.okf,c)+'</p><p class="sub">Linguagem polida: <span lang="ja">おねがいします</span>, <span lang="ja">ごちそうに なります</span>. '+(num(st.tent)?'Erros: '+num(st.tent)+'.':'De primeira!')+'</p></div>';
     }
     var bandeja='<div class="cn-bandeja"><b>Bandeja</b><div class="cn-prat">'+ZI.map(function(i){ return '<button type="button" class="cn-peca'+(c.sel===i[0]?' sel':'')+'" data-drag="'+i[0]+'" data-a="sel" data-item="'+i[0]+'"><span class="cn-em">'+i[1]+'</span><b lang="ja">'+E(i[2])+'</b><span class="wro cn-ro"'+(c.ro?'':' hidden')+'>'+E(i[3])+'</span><small>'+E(i[4])+'</small></button>'; }).join('')+'</div></div>';
     if(st.fase==='pedido'){
-      var dica=st.dica==='errado'?'<p class="cn-alerta">O chefe pediu algo <b>leve</b> (<span lang="ja">かるい</span>) para acompanhar a bebida. Qual petisco combina?</p>':st.dica==='vazio'?'<p class="cn-alerta">Primeiro escolha o que vai para a frente do Sr. Tanaka.</p>':'';
-      return medidor+cena+bal+'<p class="cn-dica"><b>1.</b> Leve à frente do chefe o petisco que ele pediu. <b>2.</b> Chame o garçom.</p>'+mesaT+bandeja+dica;
+      var dica=st.dica==='errado'?'<p class="cn-alerta">O chefe quer algo <b>leve</b> (<span lang="ja">かるい</span>).</p>':st.dica==='vazio'?'<p class="cn-alerta">Escolha um petisco primeiro.</p>':'';
+      return medidor+cena+bal+'<p class="cn-dica">Leve o petisco certo ao chefe e chame o garçom.</p>'+mesaT+bandeja+dica;
     }
     var ord=(st.ord||'ABC').split(''), er=st.errados||{};
-    var yuki=st.ult==='A'?'<div class="cn-balao yuki">👩 '+T(Z.nA,c)+'</div>':st.ult==='C'?'<div class="cn-balao yuki">👩 '+T(Z.nC,c)+'</div>':'';
-    return medidor+cena+mesaT+'<p class="cn-dica"><b>Como você fala com o garçom (e com o chefe)?</b></p><div class="cn-opts">'+ord.map(function(o){ return '<button type="button" class="cn-fala'+(er[o]?' errado':'')+'" data-a="resp" data-op="'+o+'"'+(er[o]?' disabled':'')+'>'+T(Z[o],c)+'</button>'; }).join('')+'</div>'+yuki;
+    var yuki=st.ult==='A'?'<div class="cn-balao yuki">👩 '+Tf(Z.nA,c)+'</div>':st.ult==='C'?'<div class="cn-balao yuki">👩 '+Tf(Z.nC,c)+'</div>':'';
+    return medidor+cena+mesaT+'<p class="cn-dica"><b>O que você diz?</b></p><div class="cn-opts">'+ord.map(function(o){ return '<button type="button" class="cn-fala'+(er[o]?' errado':'')+'" data-a="resp" data-op="'+o+'"'+(er[o]?' disabled':'')+'>'+T(Z[o],c)+'</button>'; }).join('')+'</div>'+yuki;
   },
   acao:function(a,st,c){
     if(st.fim) return null;
@@ -306,17 +307,17 @@ CENAS.quartos={
     };
     var grade='';
     for(var r=0;r<QROW;r++) for(var cc=0;cc<QCOL;cc++) grade+=cell(cc,r);
-    var planta='<div class="cn-sala"><div class="cn-parede"><span lang="ja">おくの かべ</span> <small>parede do fundo</small></div><div class="cn-planta">'+grade+'</div><div class="cn-porta"><span lang="ja">ひだり</span> ← &nbsp; → <span lang="ja">みぎ</span> <small>(esquerda · direita)</small> &nbsp;·&nbsp; 🚪 <span lang="ja">ドア</span></div></div>';
+    var planta='<div class="cn-sala"><div class="cn-parede"><span lang="ja">おくの かべ</span> <small>fundo</small></div><div class="cn-planta">'+grade+'</div><div class="cn-porta"><span lang="ja">ひだり</span> ← &nbsp; → <span lang="ja">みぎ</span> <small>(esquerda · direita)</small> &nbsp;·&nbsp; 🚪 <span lang="ja">ドア</span></div></div>';
     var fora=QI.filter(function(it){ return !qLugar(st,it[0]); });
-    var barra='<div class="cn-prat cn-barra" data-a="zona" data-zona="barra" role="group" aria-label="Móveis e objetos">'+(fora.length?fora.map(function(it){ return '<button type="button" class="cn-peca'+(c.sel===it[0]?' sel':'')+'" data-drag="'+it[0]+'" data-a="sel" data-item="'+it[0]+'"><span class="cn-em">'+it[1]+'</span><b lang="ja">'+E(it[2])+'</b><span class="wro cn-ro"'+(c.ro?'':' hidden')+'>'+E(it[3])+'</span><small>'+E(it[4])+'</small></button>'; }).join(''):'<span class="sub">Tudo no quarto. Dá para arrastar de novo se quiser mudar algo.</span>')+'</div>';
-    if(st.fim) return bilhete+planta+'<div class="cn-res ok"><p>🧑‍🔧 '+T(Q.ok,c)+'</p><p class="sub">O morador levantou o tapete, pegou a chave e acendeu o abajur. '+(num(st.tent)?'Chamadas antes de acertar: '+num(st.tent)+'.':'De primeira!')+'</p></div>';
+    var barra='<div class="cn-prat cn-barra" data-a="zona" data-zona="barra" role="group" aria-label="Móveis e objetos">'+(fora.length?fora.map(function(it){ return '<button type="button" class="cn-peca'+(c.sel===it[0]?' sel':'')+'" data-drag="'+it[0]+'" data-a="sel" data-item="'+it[0]+'"><span class="cn-em">'+it[1]+'</span><b lang="ja">'+E(it[2])+'</b><span class="wro cn-ro"'+(c.ro?'':' hidden')+'>'+E(it[3])+'</span><small>'+E(it[4])+'</small></button>'; }).join(''):'<span class="sub">Tudo no quarto.</span>')+'</div>';
+    if(st.fim) return bilhete+planta+'<div class="cn-res ok"><p>🧑‍🔧 '+Tf(Q.ok,c)+'</p><p class="sub">'+(num(st.tent)?'Erros: '+num(st.tent)+'.':'De primeira!')+'</p></div>';
     var msg='';
     if(st.chk){
       var ch=qLugar(st,'chave');
-      if(errs.chave && ch && ch.t==='on') msg='<div class="cn-alerta">🧑‍🔧 '+T(Q.chave,c)+'</div>';
+      if(errs.chave && ch && ch.t==='on') msg='<div class="cn-alerta">🧑‍🔧 '+Tf(Q.chave,c)+'</div>';
       else{ var primeiro=['cama','mesa','abajur','tapete','chave','mochila'].filter(function(k){ return errs[k]; })[0];
         var map={cama:Q.e_cama,mesa:Q.e_mesa,abajur:Q.e_abajur,tapete:Q.e_tapete,mochila:Q.e_mochila,chave:Q.chave};
-        if(primeiro) msg='<div class="cn-alerta">🧑‍🔧 '+T(map[primeiro],c)+'<small>O item que está errado pisca em vermelho.</small></div>'; }
+        if(primeiro) msg='<div class="cn-alerta">🧑‍🔧 '+Tf(map[primeiro],c)+'</div>'; }
     }
     if(st.aviso) msg+='<p class="cn-alerta">'+E(st.aviso)+'</p>';
     return bilhete+barra+planta+msg+'<div class="row" style="justify-content:center"><button type="button" class="btn pri" data-a="chama" '+(fora.length?'disabled':'')+'>🔔 Pronto! Chamar morador</button></div>';
@@ -330,13 +331,13 @@ CENAS.quartos={
       if(z.indexOf('c:')===0){
         var rc=z.slice(2).split(','); var cc=+rc[0], rr=+rc[1];
         var ocupado=QI.some(function(it){ var l=qLugar(st,it[0]); return it[0]!==a.item&&l&&l.t==='c'&&l.c===cc&&l.r===rr; });
-        if(ocupado) return {aviso:'Já tem um móvel nesse lugar. Para pôr algo em cima ou embaixo, use o うえ / した do móvel.'};
+        if(ocupado) return {aviso:'Já tem um móvel aí. Para pôr em cima/embaixo, use うえ / した.'};
         p['pos/'+a.item]='c:'+cc+','+rr; p['errs/'+a.item]=null; return p;
       }
       var m=/^(on|under):(mesa|tapete)$/.exec(z);
       if(m){
-        if(QANC[a.item]||a.item==='cama') return {aviso:'Móveis grandes ficam no chão; só objetos pequenos vão em cima ou embaixo.'};
-        if(!qLugar(st,m[2])||qLugar(st,m[2]).t!=='c') return {aviso:'Primeiro ponha esse móvel no quarto.'};
+        if(QANC[a.item]||a.item==='cama') return {aviso:'Móveis grandes ficam no chão.'};
+        if(!qLugar(st,m[2])||qLugar(st,m[2]).t!=='c') return {aviso:'Ponha o móvel no quarto primeiro.'};
         p['pos/'+a.item]=m[1]+':'+m[2]; p['errs/'+a.item]=null; return p;
       }
       return null;
@@ -380,7 +381,7 @@ CENAS.alfandega={
   novo:function(){ return {r:0,pts:0,ord:embaralha([0,1,2,3],Date.now()).join('')}; },
   render:function(st,c){
     var ord=(st.ord||'0123').split('').map(Number), r=num(st.r), N=ord.length;
-    if(st.fim) return '<div class="cn-res '+(num(st.pts)>=3?'ok':'no')+'"><b>'+(num(st.pts)>=3?'🎉':'🌸')+' '+num(st.pts)+' de '+N+' decisões certas</b><p class="sub">Dica: leia as datas e conte os dias, depois compare a profissão do cartão com o que o viajante diz.</p></div>';
+    if(st.fim) return '<div class="cn-res '+(num(st.pts)>=3?'ok':'no')+'"><b>'+(num(st.pts)>=3?'🎉':'🌸')+' '+num(st.pts)+' de '+N+' decisões certas</b></div>';
     var v=VIAJANTES[ord[r]], car=st.c;
     var campoErr=function(f){ return (car&&!v.ok&&v.campo===f)?' err':''; };
     var cartao='<div class="cn-cartao" data-a="zona" data-zona="cartao"><b>📇 <span lang="ja">にゅうこくカード</span> <small>cartão de imigração</small></b>'+
@@ -397,7 +398,7 @@ CENAS.alfandega={
       return cab+cena+'<div class="cn-res '+(acertou?'ok':'no')+'"><b>'+(acertou?'✅ Decisão certa':'❌ Não era essa')+'</b><p class="sub">'+E(v.por)+'</p></div><div class="row" style="justify-content:center"><button type="button" class="btn pri" data-a="prox">'+(r+1>=N?'Ver resultado':'Próximo viajante →')+'</button></div>';
     }
     var carimbos='<div class="cn-carimbos"><button type="button" class="cn-carimbo-b verde" data-drag="ok" data-a="carimba" data-v="ok"><span lang="ja">どうぞ</span><small>VERDE · Aprovado</small></button><button type="button" class="cn-carimbo-b verm" data-drag="no" data-a="carimba" data-v="no"><span lang="ja">ストップ</span><small>VERMELHO · Recusado</small></button></div>';
-    return cab+cena+'<p class="cn-dica">Compare o que ele <b>diz</b> com o que está no cartão: datas, dias de estadia e profissão. Carimbe (toque ou arraste o carimbo até o cartão).</p>'+carimbos;
+    return cab+cena+'<p class="cn-dica">Compare o que ele diz com o cartão e carimbe.</p>'+carimbos;
   },
   acao:function(a,st,c){
     if(st.fim) return null;
