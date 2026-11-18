@@ -281,6 +281,13 @@ h1{font-size:clamp(28px,5vw,40px)}
 @keyframes luzpisca{0%{opacity:.5}25%{opacity:1}40%{opacity:.6}60%,100%{opacity:1}}
 .fundo{transition:opacity .9s}
 @media (prefers-reduced-motion:reduce){[data-luz]{transition:none}[data-luz].luz-pisca{animation:none}}
+
+/* romaji legível: chip com fundo e tamanho mínimo */
+body.ver-ro .ro{display:block;width:fit-content;max-width:100%;background:#fff1c9;color:var(--tinta);border:2px solid var(--tinta);border-radius:4px;padding:1px 7px;font-size:max(14px,1em);line-height:1.35}
+body.ver-ro .ro-bar{display:block;background:#fff1c9;color:var(--tinta);border:2px solid var(--tinta);border-radius:3px;padding:1px 4px;font-size:12px;line-height:1.2;font-family:var(--px);white-space:nowrap;margin-top:2px}
+body.ver-ro .ro-in{background:#fff1c9;color:var(--tinta);border-radius:3px;padding:0 4px;font-size:.9em}
+body.ver-ro .chave .ro-bar{color:var(--tinta)}
+body.ver-ro .ro-svg{paint-order:stroke;stroke:#3a2b38;stroke-width:3px;stroke-linejoin:round}
 </style>
 </head>
 <body>
@@ -616,6 +623,7 @@ function desenhaHot(){
   });
 }
 
+document.querySelectorAll('.ro-svg').forEach(t=>{const f=parseFloat(t.getAttribute('font-size'))||0;if(f<10)t.setAttribute('font-size','10');});
 /* ---------- fluxo ---------- */
 if(LIVRE){
   /* navegar é livre (ver qualquer chave, acesa ou apagada); acender continua exigindo a resposta do aluno */
@@ -637,7 +645,7 @@ if(LIVRE){
   };
   $('lvAnt').onclick=()=>anda(-1);$('lvProx').onclick=()=>anda(1);
 }
-function vai(passo){if(S.__paraClipe){S.__paraClipe();S.__paraClipe=null;}if(passo!=='clipe'&&S.passo==='clipe')S.clipeVisto=true;S.passo=passo;S.erros=0;S.feitos=[];pararMic();pilula.hidden=true;render();}
+function vai(passo){if(passo==='agua'&&S.passo!=='agua')S.ai=0;if(S.__paraClipe){S.__paraClipe();S.__paraClipe=null;}if(passo!=='clipe'&&S.passo==='clipe')S.clipeVisto=true;S.passo=passo;S.erros=0;S.feitos=[];pararMic();pilula.hidden=true;render();}
 function render(){
   window.__render=render;
   if(S.passo==='retoma'&&S.k<1)S.passo='agua';
@@ -654,7 +662,7 @@ function render(){
   if(S.passo==='clipe')return telaClipe(c);
   if(S.passo==='chegada')return telaChegada();
   if(S.passo==='fim')return telaFim();
-  if(S.passo==='agua')return telaResposta(c,'agua','Água · ouvir e repetir','Ouça e repita em voz alta.',c.agua);
+  if(S.passo==='agua')return telaAgua(c);
   if(S.passo==='fogo')return telaResposta(c,'fogo','Fogo · a fechadura',c.fogo.pedido,c.fogo);
   if(S.passo==='terra')return telaTerra(c);
   if(S.passo==='quiz')return telaQuiz(c);
@@ -718,6 +726,21 @@ function claraoFinal(){
   const sc=document.querySelector('.scene');if(!sc||matchMedia('(prefers-reduced-motion:reduce)').matches)return;
   sc.classList.remove('clarao');void sc.offsetWidth;sc.classList.add('clarao');setTimeout(()=>sc.classList.remove('clarao'),1500);
 }
+
+/* Água: ouvir e repetir TODAS as frases que acabaram de ser tocadas na cena, uma por vez; depois vem o "toque na palavra" */
+function telaAgua(c){
+  const M=c.hot.length;
+  if(S.aiK!==S.k){S.ai=0;S.aiK=S.k;}
+  const i=Math.min(S.ai||0,M-1),h=c.hot[i];
+  const alvo={say:h.say,t:h.t,ro:h.ro,pt:h.pt,g:[[h.say]],diag:()=>'Quase. Toque em 🔊 Ouvir e repita a frase inteira.',
+    depois:()=>{if(i+1<M){S.ai=i+1;vai('agua');}else{S.ai=0;vai('fixa');}}};
+  const cc=Object.assign({},c,{intro:i===0?c.intro:undefined});
+  telaResposta(cc,'agua','Água · ouvir e repetir · '+(i+1)+' de '+M,'Ouça e repita em voz alta.',alvo);
+  const h2=painel.querySelector('h2');
+  if(h2)h2.insertAdjacentHTML('afterend','<div class="contagem" aria-label="'+(i+1)+' de '+M+'">'+c.hot.map((_,j)=>'<i class="'+(j<i?'on':'')+'"></i>').join('')+'</div>');
+  const b=document.createElement('button');b.type='button';b.className='btn ghost';b.textContent='Pular a repetição →';
+  b.onclick=()=>{pararMic();S.ai=0;vai('fixa');};painel.appendChild(b);
+}
 /* fase 0 de cada chave: tocar e ouvir todos os círculos da cena; só então abre o exercício */
 function toqueCompleto(c){return S.acesas.includes(c.n)||c.hot.every((h,i)=>S.visto.has(c.n+'-'+i));}
 function telaToque(c){
@@ -745,6 +768,18 @@ function telaChegada(){
    <div class="acoes"><button class="btn pri" type="button" id="go">${S.acesas.length&&S.acesas.length<5?'Continuar →':'Acender a primeira chave →'}</button></div>`;
   $('go').onclick=()=>{fala('すみません');S.k=S.primeiraApagada?S.primeiraApagada():0;vai('agua');};
 }
+
+/* anotação opcional no Caderno: cria uma vez, depois só reabre (para não sobrescrever o que ela escreveu) */
+function anotaNoCaderno(){
+  const CF=window.UniCadernoFlutuante,C=window.UniCaderno,K='uniNotaAulaZero';
+  if(!CF||!C){location.href='/idiomas/caderno/';return;}
+  let id=null;try{id=localStorage.getItem(K);}catch(e){}
+  if(id&&C.obter(id)){CF.abrirNota(id);return;}
+  const n=C.nova();id=n.id;try{localStorage.setItem(K,id);}catch(e){}
+  const x=CHAVES.map(k=>'• '+(S.ditas[k.n]||k.terra.exemplo)+'\n   '+k.jp+' · '+k.dia).join('\n')
+    +'\n\nPara treinar: diga cada frase em voz alta e troque uma palavra por uma sua.\n\n';
+  CF.nomear(id,{t:'Aula Zero · as minhas 5 chaves',x:x});
+}
 function telaFim(){
   painel.innerHTML=`<div class="fim-bloco"><div class="grande" aria-hidden="true">🗝️🗝️🗝️🗝️🗝️</div>
    <span class="elem ganho"><i></i>Ganho</span><h2>As 5 chaves estão acesas.</h2>
@@ -753,7 +788,9 @@ function telaFim(){
    <p>No primeiro mapa, o Aeroporto, você usa tudo isso de verdade.</p>
    <div class="acoes"><a class="btn pri" href="/idiomas/mapas/aeroporto/aula/" style="text-decoration:none;display:inline-flex;align-items:center">Ir para o Aeroporto →</a>
    <a class="btn" href="/idiomas/japones/" style="text-decoration:none;display:inline-flex;align-items:center">Ver a trilha</a>
+   <button class="btn" type="button" id="anota">📓 Anotar no caderno <small>(opcional)</small></button>
    <button class="btn ghost" type="button" id="de-novo">Rever do começo</button></div></div>`;
+  $('anota').onclick=anotaNoCaderno;
   try{localStorage.setItem('aulaZeroCompleted','true');}catch(e){}
   $('de-novo').onclick=()=>{S.k=0;vai('agua');};
 }
@@ -832,7 +869,7 @@ function telaFixa(c){
      <div class="qz-bt" id="fxBt">${bs.map(b=>`<button type="button" class="btn" data-v="${b[0]}" lang="ja">${b[0]}<small class="ro">${b[1]}</small></button>`).join('')}</div>
      <div class="estado" id="estado"></div>
      <div class="acoes"><button class="btn ghost" type="button" id="fxPula">Pular fixação →</button></div>`;
-    $('fxPula').onclick=()=>{pararMic();vai('terra');};
+    $('fxPula').onclick=()=>{pararMic();vai('fogo');};
     $('fxBt').onclick=e=>{const b=e.target.closest('[data-v]');if(!b||trava)return;const est=$('estado');
       if(b.dataset.v!==w)fala(b.dataset.v);
       if(b.dataset.v===w){trava=true;plim(true);b.classList.add('pri');const lc=painel.querySelector('.lacuna');if(lc){lc.textContent=w;lc.style.borderBottomStyle='solid';}est.className='estado ok';est.textContent='✓ '+pre+w+pos;
@@ -854,10 +891,10 @@ function telaFalaFix(c){
   if(m[1])g.push([m[1]]);if(m[2])g.push(STEM[m[2]]);
   g.push(m[3]==='じゃない'?['じゃない','じゃないです','じゃありません','ではありません']:[m[3]]);
   const alvo={say:pre+w+pos,t:[pre+w+(m[1]||''),m[2]||'',[m[3],'k']].filter(x=>x!==''),ro:(preRo+wRo+' '+posRo).replace(/\s+/g,' ').trim(),pt,g,
-    depois:()=>{if(i+1<R.length){S.ff=i+1;vai('falafix');}else vai('terra');}};
+    depois:()=>{if(i+1<R.length){S.ff=i+1;vai('falafix');}else vai('fogo');}};
   const cc={n:c.n,rotulo:'Chave '+String(c.n).padStart(2,'0')+' · Fixação · agora você fala ('+(i+1)+' de '+R.length+')',molde:c.molde,moldeRo:c.moldeRo,jp:c.jp};
   telaResposta(cc,'fogo','',em+' Diga em japonês: '+pt,alvo);
-  const ac=$('acoes');if(ac){const b=document.createElement('button');b.type='button';b.className='btn ghost';b.textContent='Pular →';b.onclick=()=>{pararMic();vai('terra');};painel.appendChild(b);}
+  const ac=$('acoes');if(ac){const b=document.createElement('button');b.type='button';b.className='btn ghost';b.textContent='Pular →';b.onclick=()=>{pararMic();vai('fogo');};painel.appendChild(b);}
 }
 /* ---------- clipe da chave 03: o avatar faz cada ação, um verbo por vez ---------- */
 const CLIP=[
@@ -1057,14 +1094,14 @@ function telaResposta(c,tipo,titulo,pedido,alvo){
   if(tipo==='agua')setTimeout(()=>fala(alvo.say),350);
   if(tipo==='agua'&&c.n===3)painel.insertAdjacentHTML('beforeend','<div class="acoes"><button class="btn ghost" type="button" id="clRever">🎬 Rever o clipe</button></div>');
   if($('clRever'))$('clRever').onclick=()=>{pararMic();S.cl=0;S.passo='clipe';render();};
-  const prox=alvo.depois||(()=>vai(tipo==='agua'?'fogo':'fixa'));
+  const prox=alvo.depois||(()=>vai(tipo==='fogo'?'terra':'fixa'));
   const cc=Object.assign({},c,{_ouvirAlvo:()=>fala(alvo.say),_esconde:tipo==='fogo'});
   const E=montaEntrada(cc,(textos,via)=>{
     const fal=via==='voz';
     for(const t of textos){if(confere(t,alvo,fal)){E.ok(t,'✓ Isso! Chave destravando…');$('alvo').classList.remove('oculto');setTimeout(prox,1300);return;}}
     const dito=textos[0]||'';
     if(S.erros+1>=2&&(tipo==='fogo'||tipo==='terra'))$('alvo').classList.remove('oculto');
-    E.falha(dito,diagnostico(dito,alvo.g));
+    E.falha(dito,alvo.diag?alvo.diag(dito):diagnostico(dito,alvo.g));
   });
 }
 
