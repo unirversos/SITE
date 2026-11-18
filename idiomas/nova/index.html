@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="robots" content="noindex">
+<title>Unirversos Idiomas — por onde você quer começar?</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Baloo+2:wght@500;600;700&family=Zen+Maru+Gothic:wght@400;500;700&display=swap');
+:root{--pink:#b5514d;--pink-deep:#9c3f3b;--blush:#FBEBE7;--blush-2:#F0DFDA;--cream:#FDF8F5;--ink:#4A4149;--ink-soft:#71676e;--gold:#C0913F;--gold-soft:#FBF2DF;--taupe:#8a7568}
+*{box-sizing:border-box;margin:0;padding:0}
+@media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
+body{font-family:'Zen Maru Gothic',sans-serif;color:var(--ink);background:var(--cream);line-height:1.7;font-size:16px;-webkit-font-smoothing:antialiased}
+.wrap{max-width:980px;margin:0 auto;padding:0 24px}
+.nav{display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap;padding:22px 0}
+.logo{font-family:'Baloo 2',cursive;font-size:18px;font-weight:700;text-decoration:none;color:inherit}
+.nav .links{display:flex;flex-wrap:wrap;align-items:center;gap:8px 18px;font-size:13px}
+.nav .links a{color:var(--ink-soft);text-decoration:none}.nav .links a:hover{color:var(--pink-deep)}.nav .links a.on{color:var(--pink)}
+a:focus-visible,button:focus-visible{outline:3px solid #686eb2;outline-offset:3px}
+h1.q{font-family:'Baloo 2',cursive;font-weight:700;font-size:clamp(30px,5vw,44px);line-height:1.15;margin:34px 0 8px}
+.sub{color:var(--ink-soft);margin-bottom:26px}
+.trilhas{display:grid;gap:14px}
+.tri{display:grid;grid-template-columns:56px minmax(0,1fr) auto;gap:16px;align-items:center;background:#fff;border:1.5px solid var(--blush-2);border-left:6px solid var(--c);border-radius:20px;padding:20px 24px;text-decoration:none;color:inherit;transition:transform .15s ease,box-shadow .15s ease}
+.tri:hover{transform:translateY(-2px);box-shadow:0 12px 26px -18px rgba(74,65,73,.5)}
+.tri.zero{--c:#8a7568}.tri.ja{--c:#b5514d}
+.tri .fl{width:56px;height:56px;border-radius:50%;display:grid;place-items:center;font-family:'Baloo 2',cursive;font-weight:700;font-size:19px;color:#fff;background:var(--c)}
+.tri b{font-family:'Baloo 2',cursive;font-size:24px;line-height:1.2;display:block}
+.tri small{font-size:12px;letter-spacing:1.5px;text-transform:uppercase;color:var(--c);font-weight:700;display:block}
+.tri .tx span{font-size:15px;color:var(--ink-soft)}.tri .go{font-weight:700;color:var(--c);white-space:nowrap}
+@media (max-width:560px){.tri{grid-template-columns:44px minmax(0,1fr)}.tri .fl{width:44px;height:44px;font-size:15px}.tri .go{grid-column:2}}
+.breve{display:flex;flex-wrap:wrap;gap:14px}
+.breve div{flex:1 1 260px;background:#fff;border:1.5px dashed var(--blush-2);border-radius:20px;padding:14px 22px;display:flex;align-items:center;gap:14px}
+.breve i{font-style:normal;width:40px;height:40px;border-radius:50%;display:grid;place-items:center;font-family:'Baloo 2',cursive;font-weight:700}
+.breve b{font-family:'Baloo 2',cursive;font-size:18px;display:block;line-height:1.2}.breve span{font-size:13.5px;color:var(--ink-soft)}
+.quiz{margin-top:22px;color:var(--ink-soft);font-size:15px}.quiz a{color:var(--pink-deep);font-weight:700;border-bottom:1.5px solid var(--blush-2);text-decoration:none}
+.bau{padding:56px 0 60px}
+.bau-cab{display:flex;flex-direction:column;align-items:center;text-align:center;gap:12px;margin-bottom:12px}
+.bau.on .bau-cab{flex-direction:row;flex-wrap:wrap;text-align:left;gap:20px 40px;margin-bottom:28px}
+.bau-cab>div:first-child{text-align:center}
+.bau-txt{max-width:520px}.bau.on .bau-txt{flex:1 1 380px;max-width:none}
+.bau h2{font-family:'Baloo 2',cursive;font-weight:700;font-size:clamp(28px,4.5vw,38px);line-height:1.15;margin-bottom:8px}
+.bau-txt p{color:var(--ink-soft);font-size:17px}
+.bau-btn{display:block;border:0;background:transparent;padding:0;cursor:pointer;font:inherit;width:300px;max-width:100%;text-align:center}
+.cofre{display:block;position:relative;width:300px;height:250px;max-width:100%}
+.cofre svg{position:absolute;inset:0;width:100%;height:100%;display:block;transition:opacity .45s ease}
+.c-aberto{opacity:0}.bau.on .c-aberto{opacity:1}.bau.on .c-fechado{opacity:0}
+.estrelas{opacity:0;transition:opacity .5s ease 0s}.bau.on .estrelas{opacity:1;transition-delay:.4s}
+.respira{animation:respira 3.4s ease-in-out infinite;transform-origin:50% 90%}
+.brilho{animation:brilho 2.8s ease-in-out infinite}
+@keyframes respira{0%,100%{transform:scale(1)}50%{transform:scale(1.035)}}
+@keyframes brilho{0%,100%{opacity:0}50%{opacity:.55}}
+@keyframes subir{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:none}}
+@keyframes pulso{0%,100%{opacity:.55}50%{opacity:1}}
+.dica{display:inline-block;margin-top:8px;font-size:14px;font-weight:700;color:var(--pink-deep);animation:pulso 2.8s ease-in-out infinite}
+.bau-c{animation:subir .5s ease .1s both}.bau-c[hidden]{display:none}
+.dif{display:flex;flex-wrap:wrap;align-items:center;gap:10px 24px;background:#fff;border:1.5px solid var(--blush-2);border-left:6px solid var(--pink);border-radius:20px;padding:20px 26px;margin-bottom:30px;text-decoration:none;color:inherit;transition:transform .15s}
+.dif:hover{transform:translateY(-2px)}.dif .t{flex:1 1 360px;min-width:0}
+.dif small{font-size:11.5px;letter-spacing:1.5px;text-transform:uppercase;font-weight:700;color:var(--pink-deep);display:block}
+.dif b{font-family:'Baloo 2',cursive;font-size:25px;line-height:1.2;display:block}.dif span.d{font-size:15px;color:var(--ink-soft)}.dif .go{font-weight:700;color:var(--pink-deep)}
+.grupos{display:flex;flex-wrap:wrap;gap:24px 48px;animation:subir .5s ease .35s both}
+.grupo{flex:1 1 260px;min-width:0}
+.grupo h3{font-size:12px;letter-spacing:3px;text-transform:uppercase;color:var(--taupe);font-weight:700;margin-bottom:4px}
+.row{display:block;position:relative;padding:10px 26px 10px 0;border-bottom:1px solid #eadfd6;color:var(--ink);text-decoration:none;transition:background .15s}
+.row b{font-family:'Baloo 2',cursive;font-size:17px;display:block;line-height:1.3}.row span{display:block;font-size:13.5px;color:var(--ink-soft);line-height:1.45}
+.row::after{content:"›";position:absolute;right:4px;top:50%;transform:translateY(-50%);font-size:24px;line-height:1;color:#b9a99d;transition:transform .15s,color .15s}
+.row:hover{background:#f8efe9}.row:hover b{color:var(--pink-deep)}.row:hover::after{color:var(--pink-deep);transform:translate(3px,-50%)}
+.vivo{text-align:center;padding:10px 0 56px}
+.vivo .eyebrow{font-size:12px;letter-spacing:4px;text-transform:uppercase;color:var(--pink-deep);font-weight:700;margin-bottom:12px}
+.vagas{display:inline-block;background:var(--gold-soft);color:#7A5B21;border:1.5px solid var(--gold);border-radius:999px;padding:11px 30px;font-family:'Baloo 2',cursive;font-weight:700;font-size:21px;text-decoration:none;transition:transform .15s}
+.vagas:hover{transform:translateY(-2px)}
+.vivo p.n{margin-top:12px;font-size:14px;color:var(--ink-soft)}
+.foot{border-top:1px solid var(--blush-2);padding:26px 0 56px;text-align:center;font-size:14px;color:var(--ink-soft);line-height:2}
+.foot a{color:var(--pink-deep);font-weight:700;text-decoration:none}.foot .cr{font-size:12.5px;margin-top:6px}
+
+</style>
+<link rel="stylesheet" href="/estilo-celular.css?v=3">
+<script defer src="/menu-ativo.js?v=1"></script>
+<link rel="icon" href="/favicon.svg" type="image/svg+xml"><link rel="icon" href="/favicon.ico" sizes="48x48"><link rel="apple-touch-icon" href="/apple-touch-icon.png"><link rel="manifest" href="/manifest.webmanifest"><meta name="theme-color" content="#3a2b38"><meta name="mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-title" content="Unirversos"><script src="/app.js" defer></script></head>
+<body>
+<div class="wrap">
+  <nav class="nav">
+    <a href="/" class="logo">UNIRVERSOS</a>
+    <div class="links">
+      <a href="/idiomas/" class="on">idiomas</a>
+      <a href="/idiomas/planeta-utopia/salao/">planeta utopia</a>
+      <a href="/travessia/">travessia</a>
+      <a href="/loja/">tesouros</a>
+      <span class="nav-sep" aria-hidden="true" style="opacity:.3">|</span>
+      <a href="/paralelos/">paralelos</a>
+      <a href="/sobre/">sobre</a>
+      
+    </div>
+  </nav>
+  <main>
+  <h1 class="q">Por onde você quer começar?</h1>
+  <p class="sub">A conta é grátis e guarda o seu progresso em qualquer aparelho.</p>
+  <div class="trilhas">
+    <a class="tri zero" href="/idiomas/aula-zero/"><span class="fl">0</span><span class="tx"><b>Aula Zero</b><small>opcional</small><span>As 5 chaves antes dos mapas, com o seu avatar.</span></span><span class="go">Conhecer →</span></a>
+    <a class="tri ja" href="/idiomas/japones/"><span class="fl">JA</span><span class="tx"><b>Japonês</b><small>trilha completa</small><span>12 mapas de viagem com prova e carimbo, e o Salão do Planeta Utopia.</span></span><span class="go">Começar →</span></a>
+    <div class="breve">
+      <div><i style="background:#E4E8F1;color:#4c5a7a">EN</i><span><b>Inglês</b>Em breve</span></div>
+      <div><i style="background:#E1EDE5;color:#3d6050">PT</i><span><b>Português</b>Em breve</span></div>
+    </div>
+  </div>
+  <p class="quiz">Não sabe por onde começar? <a href="/idiomas/autoanalise/">Faça o quiz de 5 minutos</a> e descubra o seu caminho.</p>
+
+  <section class="bau" id="bau" aria-labelledby="bau-t">
+    <div class="bau-cab">
+      <div>
+        <button type="button" class="bau-btn" id="bau-btn" aria-expanded="false" aria-controls="bau-c" aria-label="Abrir o baú de ferramentas">
+          <span class="cofre"><svg viewBox="0 0 300 250" class="c-fechado respira" aria-hidden="true">
+<ellipse cx="150" cy="232" rx="118" ry="11" fill="#4A4149" opacity=".12"/>
+<rect x="44" y="118" width="212" height="102" rx="10" fill="#a58b7b" stroke="#5d4c42" stroke-width="3"/>
+<path d="M44 150 H256 M44 184 H256" stroke="#8a7568" stroke-width="2.5"/>
+<path d="M44 124 V92 Q44 52 150 52 Q256 52 256 92 V124 Z" fill="#7a6659" stroke="#5d4c42" stroke-width="3" stroke-linejoin="round"/>
+<path d="M62 84 Q150 40 238 84" fill="none" stroke="#9a8576" stroke-width="3" stroke-linecap="round"/>
+<rect x="84" y="52" width="16" height="168" fill="#C0913F"/><rect x="200" y="52" width="16" height="168" fill="#C0913F"/>
+<rect x="132" y="104" width="36" height="44" rx="7" fill="#C0913F" stroke="#8f6a25" stroke-width="2.5"/>
+<circle class="brilho" cx="150" cy="126" r="17" fill="#FBF2DF"/><circle cx="150" cy="123" r="5.5" fill="#FBF2DF"/><path d="M150 127 v10" stroke="#FBF2DF" stroke-width="4" stroke-linecap="round"/>
+</svg><svg viewBox="0 0 300 250" class="c-aberto" aria-hidden="true">
+<ellipse cx="150" cy="232" rx="118" ry="11" fill="#4A4149" opacity=".12"/>
+<!-- tampa aberta (atrás) -->
+<path d="M52 118 L66 46 Q150 22 234 46 L248 118 Z" fill="#7a6659" stroke="#5d4c42" stroke-width="3" stroke-linejoin="round"/>
+<path d="M70 52 Q150 32 230 52" fill="none" stroke="#9a8576" stroke-width="3" stroke-linecap="round"/>
+<rect x="84" y="46" width="16" height="72" fill="#C0913F" opacity=".95"/><rect x="200" y="46" width="16" height="72" fill="#C0913F" opacity=".95"/>
+<!-- brilho -->
+<path d="M62 124 L238 124 L226 100 L74 100 Z" fill="#FBF2DF"/>
+<path d="M150 22 L150 -2" stroke="#C0913F" stroke-width="0"/>
+<g fill="#C0913F" class="estrelas"><path d="M120 86 l4 -14 l4 14 l14 4 l-14 4 l-4 14 l-4 -14 l-14 -4z" transform="translate(0,-18) scale(.9)"/><path d="M196 74 l3 -10 l3 10 l10 3 l-10 3 l-3 10 l-3 -10 l-10 -3z" transform="translate(-6,-10)"/><circle cx="160" cy="64" r="3"/><circle cx="104" cy="88" r="2.5"/></g>
+<!-- corpo -->
+<rect x="44" y="118" width="212" height="102" rx="10" fill="#a58b7b" stroke="#5d4c42" stroke-width="3"/>
+<path d="M44 150 H256 M44 184 H256" stroke="#8a7568" stroke-width="2.5"/>
+<rect x="84" y="118" width="16" height="102" fill="#C0913F"/><rect x="200" y="118" width="16" height="102" fill="#C0913F"/>
+<rect x="44" y="118" width="212" height="12" fill="#8a7568" opacity=".55"/>
+<!-- fecho -->
+<rect x="132" y="132" width="36" height="42" rx="7" fill="#C0913F" stroke="#8f6a25" stroke-width="2.5"/>
+<circle cx="150" cy="150" r="5.5" fill="#FBF2DF"/><path d="M150 154 v10" stroke="#FBF2DF" stroke-width="4" stroke-linecap="round"/>
+</svg></span>
+        </button>
+        <span class="dica" id="bau-dica">Clique no baú para abrir</span>
+      </div>
+      <div class="bau-txt">
+        <h2 id="bau-t">O baú de ferramentas</h2>
+        <p>Explore, complete mini desafios e desbloqueie novas skills.</p>
+      </div>
+    </div>
+    <div class="bau-c" id="bau-c" hidden>
+      <a class="dif" href="/idiomas/caderno/"><span class="t"><small>o diferencial</small><b>Caderno de Unir Versos</b><span class="d">Suas anotações, sempre à mão, em qualquer página.</span></span><span class="go">Abrir o caderno →</span></a>
+      <div class="grupos">
+        <div class="grupo"><h3>praticar</h3><a class="row" href="/idiomas/avatar/"><b>Meu avatar</b><span>Seu personagem, criado no Ateliê.</span></a><a class="row" href="/idiomas/palavras/"><b>Minhas palavras</b><span>As palavras das aulas, com áudio.</span></a><a class="row" href="/idiomas/hiragana/"><b>Hiragana</b><span>Letras com ordem dos traços.</span></a><a class="row" href="/idiomas/katakana/"><b>Katakana</b><span>Letras com ordem dos traços.</span></a><a class="row" href="/idiomas/kanji/"><b>Kanji</b><span>Estante e baralhos por tema.</span></a><a class="row" href="/idiomas/numeros/"><b>Números</b><span>Contagem e horas.</span></a><a class="row" href="/idiomas/calendario/"><b>Calendário</b><span>Dias da semana e datas.</span></a><a class="row" href="/idiomas/gravador/"><b>Gravador</b><span>Grave a sua voz e ouça.</span></a></div>
+        <div class="grupo"><h3>consultar</h3><a class="row" href="/idiomas/amuleto/"><b>Amuleto de bolso</b><span>52 frases prontas em 3 idiomas.</span></a><a class="row" href="/idiomas/ar/"><b>Ar</b><span>Às vezes precisamos de um ar: 5 gavetas para a conversa apertar.</span></a><a class="row" href="/idiomas/guia/"><b>Mini guia</b><span>Sobrevivência no Japão.</span></a></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="vivo" id="ao-vivo">
+    <p class="eyebrow">ao vivo com a sensei</p>
+    <a class="vagas" href="https://wa.me/5519996390950?text=Oi%21%20Vim%20pelo%20site%20da%20Unirversos%20e%20quero%20saber%20das%20vagas%20abertas%20%28aula%20individual%20ou%20em%20grupo%29." target="_blank" rel="noopener">vagas abertas <span aria-hidden="true">→</span></a>
+    <p class="n">Aulas individuais e em grupo · 20% das vagas são bolsas para alunos da rede pública.</p>
+  </section>
+  </main>
+
+  <footer class="foot">
+    <div><b>Reflexões em Voz Alta</b> no Substack · <a href="https://substack.com/@unirversosparalelos">Assinar</a></div>
+    <div>Instagram <a href="https://instagram.com/unirversos.idiomas">@unirversos.idiomas</a> · <a href="mailto:unirversos.idiomas@gmail.com">unirversos.idiomas@gmail.com</a></div>
+    <div class="cr">unirversos — tudo conectado · Aline Kikuti</div>
+  </footer>
+</div>
+<script>
+(function(){
+  var box=document.getElementById('bau'),b=document.getElementById('bau-btn'),c=document.getElementById('bau-c'),d=document.getElementById('bau-dica');
+  function set(o){box.classList.toggle('on',o);b.setAttribute('aria-expanded',String(o));b.setAttribute('aria-label',o?'Fechar o baú de ferramentas':'Abrir o baú de ferramentas');d.textContent=o?'Clique no baú para fechar':'Clique no baú para abrir';c.hidden=!o}
+  b.addEventListener('click',function(){set(!box.classList.contains('on'))});
+})();
+</script>
+<script src="/entrar.js" defer></script>
+<script defer src="/caderno-flutuante.js?v=9"></script>
+</body>
+</html>
