@@ -8,7 +8,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Aula Zero · Unirversos Idiomas</title>
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@500;700;800&family=Zen+Maru+Gothic:wght@400;500;700&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@500;700;800&family=DotGothic16&family=Zen+Maru+Gothic:wght@400;500;700&display=swap">
 <link rel="icon" href="/favicon.svg" type="image/svg+xml">
 <style>
 :root{
@@ -25,7 +25,7 @@ html{-webkit-text-size-adjust:100%}
 body{margin:0;background:var(--paper);color:var(--ink);font-family:var(--f-body);font-size:16px;line-height:1.6;
   background-image:radial-gradient(var(--line) 1.2px,transparent 1.3px);background-size:22px 22px;
   padding:16px max(14px,env(safe-area-inset-right)) 48px max(14px,env(safe-area-inset-left))}
-.wrap{max-width:780px;margin:0 auto;display:grid;gap:14px}
+.wrap{max-width:860px;margin:0 auto;display:grid;gap:18px}
 button{font:inherit;color:inherit;cursor:pointer}
 button:focus-visible{outline:3px solid var(--lavender);outline-offset:2px}
 ruby rt{font-size:.5em;color:var(--muted);font-weight:500}
@@ -35,8 +35,8 @@ body.ver-ro ruby rt.rr{display:none}
 
 /* topo */
 .top{display:flex;flex-wrap:wrap;align-items:flex-end;justify-content:space-between;gap:10px}
-.eyebrow{margin:0;font-size:12px;letter-spacing:.14em;text-transform:uppercase;color:var(--muted)}
-h1{font-family:var(--f-display);font-weight:800;font-size:clamp(26px,5vw,36px);line-height:1.1;margin:2px 0 0}
+.eyebrow{margin:0;font-size:12px;letter-spacing:.2em;text-transform:uppercase;color:#b23a57;font-weight:700}
+h1{font-family:var(--f-display);font-weight:800;font-size:clamp(30px,5.2vw,46px);line-height:1.05;margin:2px 0 0}
 .tools{display:flex;gap:8px;align-items:center}
 .btn{border:1.5px solid var(--line);background:var(--card);border-radius:999px;padding:8px 16px;font-weight:700;min-height:44px}
 .btn.small{padding:4px 12px;min-height:34px;font-size:13px}
@@ -87,7 +87,7 @@ h1{font-family:var(--f-display);font-weight:800;font-size:clamp(26px,5vw,36px);l
 .pilula .gram{margin:6px 0 0;font-size:14px;background:var(--sage-soft);border-radius:12px;padding:8px 12px}
 
 /* painel do passo */
-.painel{background:var(--card);border:1.5px solid var(--line);border-radius:var(--r);padding:18px;display:grid;gap:12px}
+.painel{background:var(--card);border:1.5px solid var(--line);border-left:6px solid var(--el,var(--line));border-radius:18px;padding:18px 20px;display:grid;gap:12px}
 .elem{display:inline-flex;align-items:center;gap:8px;font-size:13px;font-weight:800;letter-spacing:.08em;text-transform:uppercase}
 .elem i{width:10px;height:10px;border-radius:50%;display:inline-block}
 .elem.agua{color:var(--agua)}.elem.agua i{background:var(--agua)}
@@ -167,11 +167,31 @@ h1{font-family:var(--f-display);font-weight:800;font-size:clamp(26px,5vw,36px);l
 .qz-bt{display:flex;flex-wrap:wrap;gap:8px;margin:10px 0}.qz-bt .btn{min-width:30%}
 .qz-bt .btn small{display:block;font-weight:500;color:var(--muted);font-size:12px}
 .verbo b{color:var(--pink)}
-body{transition:background-color .35s ease}
-body[data-etapa="agua"]{background-color:#d6e9f8}
-body[data-etapa="fogo"]{background-color:#fddcc0}
-body[data-etapa="terra"]{background-color:#e2cbb0}
-body[data-etapa="ar"]{background-color:#dde1e5}
+/* barra do site, migalha e rodapé iguais aos da trilha */
+.sitebar{display:flex;flex-wrap:wrap;justify-content:space-between;align-items:center;gap:10px 18px}
+.logo{font-family:var(--f-display);font-weight:800;font-size:19px;letter-spacing:.14em;text-decoration:none;color:inherit}
+.logo span{color:var(--pink)}
+.navlinks{display:flex;flex-wrap:wrap;align-items:center;gap:6px 20px;font-size:14px}
+.navlinks a{text-decoration:none;color:var(--muted)}
+.navlinks a:hover,.navlinks a[aria-current]{color:var(--pink)}
+.voltar{justify-self:start;display:inline-flex;align-items:center;gap:6px;background:#fff;border:1.5px solid var(--line);border-radius:999px;padding:6px 16px;min-height:40px;font-weight:700;font-size:14px;text-decoration:none;color:var(--ink)}
+.voltar:hover{border-color:var(--pink);color:var(--pink)}
+.fecho-lista{list-style:none;margin:4px 0 0;padding:0;display:grid;gap:8px;width:100%;max-width:520px;text-align:left}
+.fecho-lista li{background:#fffaf0;border-left:5px solid var(--gold);border-radius:0 14px 14px 0;padding:8px 14px;display:grid;gap:0}
+.fecho-lista .jpl{font-size:22px;font-weight:700;line-height:1.4}
+.fecho-lista small{color:var(--muted)}
+.voce-disse{margin:0;background:#fffaf0;border-left:5px solid var(--gold);border-radius:0 14px 14px 0;padding:8px 16px;text-align:left;justify-self:stretch}
+.voce-disse .jpl{font-size:24px;font-weight:700;line-height:1.4;display:block}
+.voce-disse small{color:var(--muted)}
+.dia{max-width:46ch;margin:0}
+footer.rodape-site{border-top:1.5px dashed var(--line);padding-top:16px;display:flex;flex-wrap:wrap;justify-content:space-between;gap:10px 24px;font-size:14px;color:var(--muted)}
+footer.rodape-site a{color:var(--ink);text-decoration:none}
+/* cor do elemento vira só a borda lateral do cartão, como na trilha */
+.painel{--el:var(--line)}
+body[data-etapa="agua"] .painel{--el:var(--agua)}
+body[data-etapa="fogo"] .painel{--el:var(--fogo)}
+body[data-etapa="terra"] .painel{--el:var(--terra)}
+body[data-etapa="ar"] .painel{--el:var(--gold)}
 .ro-svg{display:none}body.ver-ro .ro-svg{display:inline}
 .ro-bar{display:none;font-size:10px;color:var(--muted);line-height:1}body.ver-ro .ro-bar{display:block}
 .ro-in{display:none;color:var(--muted);font-weight:500;font-size:.85em}body.ver-ro .ro-in{display:inline}
@@ -193,20 +213,82 @@ body[data-etapa="ar"]{background-color:#dde1e5}
 .cl-legenda{margin:10px 0 4px;padding:12px 14px;border-left:5px solid var(--agua,#3f7fb0);background:#fff;border-radius:10px}
 .cl-legenda .jpl{font-size:24px}.cl-legenda .jpl b{color:#c0392b}
 #clAv[hidden]{display:none}
+
+/* ===== estética pixel da vila da trilha ===== */
+:root{--px:"DotGothic16","Zen Maru Gothic",system-ui,sans-serif;--tinta:#3a2b38;--vila:#e3ecdf;--rotulo:#fffaf3}
+.eyebrow,.elem,.chave .jp,.chave small,.btn,.mic,.voltar,.dica-cena,.rotulo-esc{font-family:var(--px)}
+.eyebrow{letter-spacing:.1em;color:#c23f5e;font-weight:400}
+h1,.painel h2{font-family:var(--px);font-weight:400}
+h1{font-size:clamp(28px,5vw,40px)}
+.painel h2{font-size:23px}
+.elem{font-weight:400;letter-spacing:.06em}
+.scene,.painel,.pilula,.chave,.btn,.mic,.voltar,.moldebox,.alvo,.fecho-lista li,.voce-disse,.lista-voz,.dica-cena,#ptTip,#placaTip{border-radius:6px}
+.scene{border:3px solid var(--tinta);box-shadow:4px 4px 0 var(--tinta);background:var(--vila)}
+.painel{background:var(--rotulo);border:3px solid var(--tinta);border-left:3px solid var(--tinta);box-shadow:4px 4px 0 var(--tinta);position:relative}
+.painel::before{content:"";position:absolute;left:-3px;top:-3px;bottom:-3px;width:10px;background:var(--el,var(--line));border:3px solid var(--tinta);border-right:0;border-radius:6px 0 0 6px}
+.painel{padding-left:26px}
+.pilula{background:var(--rotulo);border:3px solid var(--tinta);border-left-width:3px;box-shadow:3px 3px 0 var(--tinta)}
+.chave{border:3px solid var(--tinta);border-style:solid;background:#fff;box-shadow:2px 2px 0 var(--tinta);padding:6px 4px}
+.chave.now{background:#c23f5e}.chave.now .jp{color:#fff}.chave.now .ico{filter:none;opacity:1}
+.chave.on{background:#4f7a58;border:3px solid var(--tinta)}.chave.on .jp{color:#fff}
+.chave small{order:-1;justify-self:start;margin-left:2px;border:2px solid var(--tinta);border-radius:3px;background:#fff;color:var(--tinta);min-width:22px;padding:0 3px;font-size:11px}
+.btn,.voltar,.mic{border:3px solid var(--tinta);box-shadow:2px 2px 0 var(--tinta);background:#fff;color:var(--tinta);font-weight:400}
+.btn.pri,.mic{background:#c23f5e;color:#fff}
+.btn.ghost{background:transparent;box-shadow:none;border-width:2px}
+.btn.small{box-shadow:2px 2px 0 var(--tinta);border-width:2px}
+.btn:active,.mic:active,.voltar:active{transform:translate(2px,2px);box-shadow:none}
+.voltar{font-size:15px}.voltar:hover{background:#fff;color:var(--tinta);border-color:var(--tinta);filter:brightness(.97)}
+.alvo,.moldebox,.voce-disse,.fecho-lista li{border:2px solid var(--tinta);border-left-width:6px}
+.dica-cena{border:2px solid var(--tinta);box-shadow:2px 2px 0 var(--tinta);background:var(--rotulo);color:var(--tinta)}
+.hs::before{border-color:var(--tinta)}
+.escrita input{border:3px solid var(--tinta);border-radius:6px;box-shadow:2px 2px 0 var(--tinta)}
+.tools{flex-wrap:wrap}.tools .btn.small{white-space:nowrap;padding:2px 10px}
+.livre button{border:2px solid var(--tinta);border-radius:6px;font-family:var(--px)}
+
+/* topo enxuto */
+.top{display:flex;flex-wrap:wrap;align-items:center;gap:8px 12px}
+.top .eyebrow{flex:1 1 auto;margin:0;text-align:center}
+.top .voltar{min-height:36px;padding:2px 12px;font-size:14px}
+.tools{display:flex;gap:8px;align-items:center;position:relative}
+.mais{position:relative}.mais summary{list-style:none;cursor:pointer;display:inline-flex;align-items:center}.mais summary::-webkit-details-marker{display:none}
+.mais-box{position:absolute;right:0;top:calc(100% + 8px);z-index:30;display:grid;gap:8px;background:var(--rotulo);border:3px solid var(--tinta);border-radius:6px;box-shadow:4px 4px 0 var(--tinta);padding:10px;min-width:210px}
+.mais-box .btn{justify-content:flex-start;text-align:left;text-decoration:none;display:inline-flex;align-items:center}
+.livre{display:none!important}
+.top{flex-wrap:nowrap;justify-content:space-between}@media (max-width:520px){.top .eyebrow{display:none}}
+
+/* cenas em pixel art */
+#svgEst{shape-rendering:crispEdges}
+#svgEst text{font-family:"DotGothic16","Zen Maru Gothic",sans-serif;shape-rendering:auto}
+
+/* a cena acende objeto por objeto, uma chave de cada vez */
+[data-luz]{opacity:.5;transition:opacity .9s ease}
+[data-luz].on{opacity:1}
+[data-luz].luz-pisca{animation:luzpisca 1.3s ease-out}
+@keyframes luzpisca{0%{opacity:.5}25%{opacity:1}40%{opacity:.6}60%,100%{opacity:1}}
+.fundo{transition:opacity .9s}
+@media (prefers-reduced-motion:reduce){[data-luz]{transition:none}[data-luz].luz-pisca{animation:none}}
 </style>
 </head>
 <body>
+<svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false"><defs>
+  <filter id="cinza"><feColorMatrix type="saturate" values="0"/></filter>
+  <filter id="sat0"><feColorMatrix type="saturate" values=".18"/></filter><filter id="sat1"><feColorMatrix type="saturate" values=".34"/></filter>
+  <filter id="sat2"><feColorMatrix type="saturate" values=".51"/></filter><filter id="sat3"><feColorMatrix type="saturate" values=".67"/></filter>
+  <filter id="sat4"><feColorMatrix type="saturate" values=".84"/></filter>
+</defs></svg>
 <div class="wrap">
   <header class="top">
-    <div>
-      <p class="eyebrow">Aula Zero · 5 chaves</p>
-      <h1>As 5 chaves</h1>
-    </div>
+    <a class="voltar" href="/idiomas/">← Idiomas</a>
+    <p class="eyebrow">Aula Zero · 5 chaves</p>
     <div class="tools">
-      <button class="btn small" type="button" id="btnTeste" aria-expanded="false">🎤 Testar mic</button>
       <button class="btn small" type="button" id="btnRo" aria-pressed="false">Romaji: não</button>
-      <button class="btn small" type="button" id="btnRecom">↺ Recomeçar</button>
-      <a class="btn small" id="btnNum" href="/idiomas/numeros/#ban" target="_blank" rel="noopener" style="text-decoration:none;display:inline-flex;align-items:center">🔢 Números ↗</a>
+      <details class="mais"><summary class="btn small" aria-label="Mais opções">⋯</summary>
+        <div class="mais-box">
+          <button class="btn small" type="button" id="btnTeste" aria-expanded="false">🎤 Testar microfone</button>
+          <a class="btn small" id="btnNum" href="/idiomas/numeros/#ban" target="_blank" rel="noopener">🔢 Números ↗</a>
+          <button class="btn small" type="button" id="btnRecom">↺ Recomeçar</button>
+        </div>
+      </details>
     </div>
   </header>
 
@@ -215,59 +297,24 @@ body[data-etapa="ar"]{background-color:#dde1e5}
   <nav class="chaves" id="chaves" aria-label="As cinco chaves"></nav>
 
   <section class="scene" aria-label="Plataforma da estação, vista em primeira pessoa">
-    <svg id="svgEst" viewBox="0 0 400 250" role="img" aria-label="Você está na plataforma de uma estação em Tóquio. Há uma placa, um relógio e um trem. Nas suas mãos, um bilhete, um onigiri e uma garrafa de água.">
-      <defs><linearGradient id="ceu" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#e9f3fa"/><stop offset="1" stop-color="#cfe6f3"/></linearGradient></defs>
-      <rect width="400" height="250" fill="url(#ceu)"/>
-      <!-- teto da plataforma -->
-      <path d="M0 0h400v34H0z" fill="#e6dbe0"/><path d="M0 34h400" stroke="#d4c5cc" stroke-width="3"/>
-      <!-- trem à direita -->
-      <g>
-        <rect x="236" y="62" width="164" height="104" rx="10" fill="#f4f1f2" stroke="#cfc3c9" stroke-width="3"/>
-        <rect x="236" y="104" width="164" height="12" fill="#7aa8d6"/>
-        <rect x="250" y="74" width="56" height="26" rx="5" fill="#cfe6f3" stroke="#b5ccdc" stroke-width="2"/>
-        <rect x="318" y="74" width="56" height="26" rx="5" fill="#cfe6f3" stroke="#b5ccdc" stroke-width="2"/>
-        <rect x="262" y="124" width="52" height="42" fill="#d9d2d6" stroke="#c4bac0" stroke-width="2"/><path d="M288 124v42" stroke="#c4bac0" stroke-width="2"/>
-        <circle cx="388" cy="150" r="6" fill="#f3c969"/>
-      </g>
-      <!-- chão da plataforma em perspectiva -->
-      <path d="M0 166h400v84H0z" fill="#e5d8cb"/>
-      <path d="M0 176h400" stroke="#f3c969" stroke-width="5"/>
-      <g stroke="#d3c3b4" stroke-width="2"><path d="M60 250l30-74M160 250l22-74M260 250l8-74M360 250l-14-74"/></g>
-      <!-- placa do banheiro -->
-      <g><rect x="8" y="52" width="50" height="44" rx="7" fill="#3a6ea5" stroke="#fff" stroke-width="3"/><text x="33" y="79" text-anchor="middle" font-family="Zen Maru Gothic, sans-serif" font-size="15" font-weight="700" fill="#fff">トイレ</text><text x="33" y="91" text-anchor="middle" font-family="Zen Maru Gothic, sans-serif" font-size="8" fill="#cfe6f3">WC</text><text class="ro-svg" x="33" y="66" text-anchor="middle" font-family="Zen Maru Gothic, sans-serif" font-size="9" font-weight="700" fill="#ffe08a">toire</text></g>
-      <!-- placa pendurada -->
-      <g>
-        <path d="M96 34v14M188 34v14" stroke="#9c8a94" stroke-width="3"/>
-        <rect x="64" y="48" width="156" height="58" rx="8" fill="#517158" stroke="#fff" stroke-width="3"/>
-        <text x="142" y="82" text-anchor="middle" font-family="Zen Maru Gothic, sans-serif" font-size="25" font-weight="700" fill="#fff">とうきょう</text>
-        <text class="ro-svg" x="142" y="99" text-anchor="middle" font-family="Zen Maru Gothic, sans-serif" font-size="12" font-weight="700" fill="#f3c969">Tōkyō</text>
-      </g>
-      <!-- suas mãos: bilhete, onigiri, água -->
-      <g>
-        <g transform="translate(46 190) rotate(-8)"><rect width="64" height="38" rx="6" fill="#fff" stroke="#d9506f" stroke-width="3"/><rect x="0" y="9" width="64" height="9" fill="#f8dde1"/><text x="32" y="27" text-anchor="middle" font-family="Zen Maru Gothic, sans-serif" font-size="11" font-weight="700" fill="#3a2b38">きっぷ</text><text class="ro-svg" x="32" y="35.5" text-anchor="middle" font-family="Zen Maru Gothic, sans-serif" font-size="7.5" font-weight="700" fill="#d9506f">kippu</text></g>
-        <g transform="translate(170 192)"><path d="M32 2 L62 40 Q32 52 2 40 Z" fill="#fff" stroke="#cfc3c9" stroke-width="3" stroke-linejoin="round"/><path d="M20 28h24v18H20z" fill="#2f3b33"/></g>
-        <g transform="translate(250 186)"><rect x="12" y="0" width="18" height="8" rx="3" fill="#7fa487"/><rect x="6" y="6" width="30" height="48" rx="7" fill="#eef5ea" stroke="#7fa487" stroke-width="3"/><rect x="6" y="20" width="30" height="26" fill="#7fa487" opacity=".85"/><text x="21" y="31" text-anchor="middle" font-family="Zen Maru Gothic, sans-serif" font-size="9" font-weight="700" fill="#fff">おちゃ</text><text class="ro-svg" x="21" y="41" text-anchor="middle" font-family="Zen Maru Gothic, sans-serif" font-size="7.5" font-weight="700" fill="#ffe08a">ocha</text></g>
-        <g transform="translate(318 176)"><rect x="8" y="0" width="22" height="10" rx="3" fill="#7aa8d6"/><rect x="4" y="8" width="30" height="52" rx="8" fill="#e8f3fb" stroke="#7aa8d6" stroke-width="3"/><rect x="4" y="26" width="30" height="16" fill="#7aa8d6" opacity=".55"/></g>
-      </g>
-    </svg>
+    <svg id="svgEst" viewBox="0 0 400 250" role="img" aria-label="Você está na plataforma de uma estação em Tóquio. Há uma placa, um relógio e um trem. Nas suas mãos, um bilhete, um onigiri e uma garrafa de água."><g class="fundo"><rect x="0" y="0" width="400" height="34" fill="#e6dbe0"/><rect x="0" y="34" width="400" height="40" fill="#e9f3fa"/><rect x="0" y="74" width="400" height="48" fill="#dcecf5"/><rect x="0" y="122" width="400" height="46" fill="#cfe6f3"/><rect x="0" y="30" width="400" height="4" fill="#3a2b38"/><rect x="18" y="6" width="4" height="18" fill="#d4c5cc"/><rect x="58" y="6" width="4" height="18" fill="#d4c5cc"/><rect x="98" y="6" width="4" height="18" fill="#d4c5cc"/><rect x="138" y="6" width="4" height="18" fill="#d4c5cc"/><rect x="178" y="6" width="4" height="18" fill="#d4c5cc"/><rect x="218" y="6" width="4" height="18" fill="#d4c5cc"/><rect x="258" y="6" width="4" height="18" fill="#d4c5cc"/><rect x="298" y="6" width="4" height="18" fill="#d4c5cc"/><rect x="338" y="6" width="4" height="18" fill="#d4c5cc"/><rect x="378" y="6" width="4" height="18" fill="#d4c5cc"/><rect x="24" y="100" width="40" height="8" fill="#fff"/><rect x="32" y="92" width="24" height="8" fill="#fff"/><rect x="150" y="122" width="40" height="8" fill="#fff"/><rect x="158" y="114" width="24" height="8" fill="#fff"/><rect x="0" y="168" width="400" height="82" fill="#e5d8cb"/><rect x="0" y="168" width="400" height="4" fill="#3a2b38"/><rect x="60" y="250" width="3" height="3" fill="#d3c3b4"/><rect x="62" y="244" width="3" height="3" fill="#d3c3b4"/><rect x="65" y="238" width="3" height="3" fill="#d3c3b4"/><rect x="67" y="232" width="3" height="3" fill="#d3c3b4"/><rect x="70" y="226" width="3" height="3" fill="#d3c3b4"/><rect x="72" y="220" width="3" height="3" fill="#d3c3b4"/><rect x="75" y="214" width="3" height="3" fill="#d3c3b4"/><rect x="78" y="208" width="3" height="3" fill="#d3c3b4"/><rect x="80" y="202" width="3" height="3" fill="#d3c3b4"/><rect x="83" y="196" width="3" height="3" fill="#d3c3b4"/><rect x="85" y="190" width="3" height="3" fill="#d3c3b4"/><rect x="88" y="184" width="3" height="3" fill="#d3c3b4"/><rect x="160" y="250" width="3" height="3" fill="#d3c3b4"/><rect x="161" y="244" width="3" height="3" fill="#d3c3b4"/><rect x="163" y="238" width="3" height="3" fill="#d3c3b4"/><rect x="165" y="232" width="3" height="3" fill="#d3c3b4"/><rect x="167" y="226" width="3" height="3" fill="#d3c3b4"/><rect x="169" y="220" width="3" height="3" fill="#d3c3b4"/><rect x="171" y="214" width="3" height="3" fill="#d3c3b4"/><rect x="173" y="208" width="3" height="3" fill="#d3c3b4"/><rect x="175" y="202" width="3" height="3" fill="#d3c3b4"/><rect x="176" y="196" width="3" height="3" fill="#d3c3b4"/><rect x="178" y="190" width="3" height="3" fill="#d3c3b4"/><rect x="180" y="184" width="3" height="3" fill="#d3c3b4"/><rect x="260" y="250" width="3" height="3" fill="#d3c3b4"/><rect x="260" y="244" width="3" height="3" fill="#d3c3b4"/><rect x="261" y="238" width="3" height="3" fill="#d3c3b4"/><rect x="262" y="232" width="3" height="3" fill="#d3c3b4"/><rect x="262" y="226" width="3" height="3" fill="#d3c3b4"/><rect x="263" y="220" width="3" height="3" fill="#d3c3b4"/><rect x="264" y="214" width="3" height="3" fill="#d3c3b4"/><rect x="264" y="208" width="3" height="3" fill="#d3c3b4"/><rect x="265" y="202" width="3" height="3" fill="#d3c3b4"/><rect x="266" y="196" width="3" height="3" fill="#d3c3b4"/><rect x="266" y="190" width="3" height="3" fill="#d3c3b4"/><rect x="267" y="184" width="3" height="3" fill="#d3c3b4"/><rect x="360" y="250" width="3" height="3" fill="#d3c3b4"/><rect x="358" y="244" width="3" height="3" fill="#d3c3b4"/><rect x="357" y="238" width="3" height="3" fill="#d3c3b4"/><rect x="356" y="232" width="3" height="3" fill="#d3c3b4"/><rect x="355" y="226" width="3" height="3" fill="#d3c3b4"/><rect x="354" y="220" width="3" height="3" fill="#d3c3b4"/><rect x="352" y="214" width="3" height="3" fill="#d3c3b4"/><rect x="351" y="208" width="3" height="3" fill="#d3c3b4"/><rect x="350" y="202" width="3" height="3" fill="#d3c3b4"/><rect x="349" y="196" width="3" height="3" fill="#d3c3b4"/><rect x="348" y="190" width="3" height="3" fill="#d3c3b4"/><rect x="346" y="184" width="3" height="3" fill="#d3c3b4"/><rect x="0" y="176" width="400" height="9" fill="#f3c969"/><rect x="4" y="179" width="4" height="4" fill="#d9a93c"/><rect x="18" y="179" width="4" height="4" fill="#d9a93c"/><rect x="32" y="179" width="4" height="4" fill="#d9a93c"/><rect x="46" y="179" width="4" height="4" fill="#d9a93c"/><rect x="60" y="179" width="4" height="4" fill="#d9a93c"/><rect x="74" y="179" width="4" height="4" fill="#d9a93c"/><rect x="88" y="179" width="4" height="4" fill="#d9a93c"/><rect x="102" y="179" width="4" height="4" fill="#d9a93c"/><rect x="116" y="179" width="4" height="4" fill="#d9a93c"/><rect x="130" y="179" width="4" height="4" fill="#d9a93c"/><rect x="144" y="179" width="4" height="4" fill="#d9a93c"/><rect x="158" y="179" width="4" height="4" fill="#d9a93c"/><rect x="172" y="179" width="4" height="4" fill="#d9a93c"/><rect x="186" y="179" width="4" height="4" fill="#d9a93c"/><rect x="200" y="179" width="4" height="4" fill="#d9a93c"/><rect x="214" y="179" width="4" height="4" fill="#d9a93c"/><rect x="228" y="179" width="4" height="4" fill="#d9a93c"/><rect x="242" y="179" width="4" height="4" fill="#d9a93c"/><rect x="256" y="179" width="4" height="4" fill="#d9a93c"/><rect x="270" y="179" width="4" height="4" fill="#d9a93c"/><rect x="284" y="179" width="4" height="4" fill="#d9a93c"/><rect x="298" y="179" width="4" height="4" fill="#d9a93c"/><rect x="312" y="179" width="4" height="4" fill="#d9a93c"/><rect x="326" y="179" width="4" height="4" fill="#d9a93c"/><rect x="340" y="179" width="4" height="4" fill="#d9a93c"/><rect x="354" y="179" width="4" height="4" fill="#d9a93c"/><rect x="368" y="179" width="4" height="4" fill="#d9a93c"/><rect x="382" y="179" width="4" height="4" fill="#d9a93c"/><rect x="396" y="179" width="4" height="4" fill="#d9a93c"/></g><g data-luz="1"><rect x="94" y="34" width="4" height="14" fill="#3a2b38"/><rect x="186" y="34" width="4" height="14" fill="#3a2b38"/><g><rect x="12" y="52" width="42" height="44" fill="#3a2b38"/><rect x="8" y="56" width="50" height="36" fill="#3a2b38"/><rect x="12" y="56" width="42" height="36" fill="#3a6ea5"/><rect x="16" y="56" width="34" height="36" fill="#3a6ea5"/><rect x="12" y="60" width="42" height="28" fill="#3a6ea5"/><text x="33" y="79" text-anchor="middle" font-family="Zen Maru Gothic, sans-serif" font-size="15" font-weight="700" fill="#fff">トイレ</text><text x="33" y="91" text-anchor="middle" font-family="Zen Maru Gothic, sans-serif" font-size="8" fill="#cfe6f3">WC</text><text class="ro-svg" x="33" y="66" text-anchor="middle" font-family="Zen Maru Gothic, sans-serif" font-size="9" font-weight="700" fill="#ffe08a">toire</text></g><g><rect x="68" y="48" width="148" height="58" fill="#3a2b38"/><rect x="64" y="52" width="156" height="50" fill="#3a2b38"/><rect x="68" y="52" width="148" height="50" fill="#4f7a58"/><rect x="72" y="52" width="140" height="50" fill="#4f7a58"/><rect x="68" y="56" width="148" height="42" fill="#4f7a58"/><rect x="72" y="54" width="140" height="2" fill="#a9c4a4"/><text x="142" y="82" text-anchor="middle" font-family="Zen Maru Gothic, sans-serif" font-size="25" font-weight="700" fill="#fff">とうきょう</text><text class="ro-svg" x="142" y="99" text-anchor="middle" font-family="Zen Maru Gothic, sans-serif" font-size="12" font-weight="700" fill="#f3c969">Tōkyō</text></g></g><g data-luz="2"><g><rect x="240" y="62" width="168" height="106" fill="#3a2b38"/><rect x="236" y="66" width="176" height="98" fill="#3a2b38"/><rect x="240" y="66" width="168" height="98" fill="#f4f1f2"/><rect x="244" y="66" width="160" height="98" fill="#f4f1f2"/><rect x="240" y="70" width="168" height="90" fill="#f4f1f2"/><rect x="240" y="104" width="168" height="12" fill="#4a7fa8"/><rect x="240" y="116" width="168" height="3" fill="#3a2b38"/><rect x="254" y="72" width="48" height="28" fill="#3a2b38"/><rect x="250" y="76" width="56" height="20" fill="#3a2b38"/><rect x="254" y="76" width="48" height="20" fill="#cfe6f3"/><rect x="258" y="76" width="40" height="20" fill="#cfe6f3"/><rect x="254" y="80" width="48" height="12" fill="#cfe6f3"/><rect x="322" y="72" width="48" height="28" fill="#3a2b38"/><rect x="318" y="76" width="56" height="20" fill="#3a2b38"/><rect x="322" y="76" width="48" height="20" fill="#cfe6f3"/><rect x="326" y="76" width="40" height="20" fill="#cfe6f3"/><rect x="322" y="80" width="48" height="12" fill="#cfe6f3"/><rect x="256" y="78" width="10" height="3" fill="#fff"/><rect x="324" y="78" width="10" height="3" fill="#fff"/><rect x="266" y="122" width="44" height="46" fill="#3a2b38"/><rect x="262" y="126" width="52" height="38" fill="#3a2b38"/><rect x="266" y="126" width="44" height="38" fill="#d9d2d6"/><rect x="270" y="126" width="36" height="38" fill="#d9d2d6"/><rect x="266" y="130" width="44" height="30" fill="#d9d2d6"/><rect x="286" y="126" width="4" height="42" fill="#3a2b38"/><rect x="386" y="142" width="8" height="16" fill="#3a2b38"/><rect x="382" y="146" width="16" height="8" fill="#3a2b38"/><rect x="386" y="146" width="8" height="8" fill="#f3c969"/><rect x="390" y="146" width="0" height="8" fill="#f3c969"/><rect x="386" y="150" width="8" height="0" fill="#f3c969"/></g><g transform="translate(46 190)"><rect x="4" y="0" width="56" height="40" fill="#3a2b38"/><rect x="0" y="4" width="64" height="32" fill="#3a2b38"/><rect x="4" y="4" width="56" height="32" fill="#ffffff"/><rect x="8" y="4" width="48" height="32" fill="#ffffff"/><rect x="4" y="8" width="56" height="24" fill="#ffffff"/><rect x="4" y="9" width="56" height="9" fill="#f8dde1"/><text x="32" y="29" text-anchor="middle" font-family="Zen Maru Gothic, sans-serif" font-size="11" font-weight="700" fill="#3a2b38">きっぷ</text><text class="ro-svg" x="32" y="37" text-anchor="middle" font-family="Zen Maru Gothic, sans-serif" font-size="7.5" font-weight="700" fill="#d9506f">kippu</text></g></g><g data-luz="3"><g transform="translate(0 192)"><rect x="198" y="0" width="5" height="5" fill="#3a2b38"/><rect x="193" y="5" width="5" height="5" fill="#3a2b38"/><rect x="198" y="5" width="5" height="5" fill="#ffffff"/><rect x="203" y="5" width="5" height="5" fill="#3a2b38"/><rect x="188" y="10" width="5" height="5" fill="#3a2b38"/><rect x="193" y="10" width="5" height="5" fill="#ffffff"/><rect x="198" y="10" width="5" height="5" fill="#ffffff"/><rect x="203" y="10" width="5" height="5" fill="#ffffff"/><rect x="208" y="10" width="5" height="5" fill="#3a2b38"/><rect x="183" y="15" width="5" height="5" fill="#3a2b38"/><rect x="188" y="15" width="5" height="5" fill="#ffffff"/><rect x="193" y="15" width="5" height="5" fill="#ffffff"/><rect x="198" y="15" width="5" height="5" fill="#ffffff"/><rect x="203" y="15" width="5" height="5" fill="#ffffff"/><rect x="208" y="15" width="5" height="5" fill="#ffffff"/><rect x="213" y="15" width="5" height="5" fill="#3a2b38"/><rect x="178" y="20" width="5" height="5" fill="#3a2b38"/><rect x="183" y="20" width="5" height="5" fill="#ffffff"/><rect x="188" y="20" width="5" height="5" fill="#ffffff"/><rect x="193" y="20" width="5" height="5" fill="#ffffff"/><rect x="198" y="20" width="5" height="5" fill="#ffffff"/><rect x="203" y="20" width="5" height="5" fill="#ffffff"/><rect x="208" y="20" width="5" height="5" fill="#ffffff"/><rect x="213" y="20" width="5" height="5" fill="#ffffff"/><rect x="218" y="20" width="5" height="5" fill="#3a2b38"/><rect x="173" y="25" width="5" height="5" fill="#3a2b38"/><rect x="178" y="25" width="5" height="5" fill="#ffffff"/><rect x="183" y="25" width="5" height="5" fill="#ffffff"/><rect x="188" y="25" width="5" height="5" fill="#ffffff"/><rect x="193" y="25" width="5" height="5" fill="#3a2b38"/><rect x="198" y="25" width="5" height="5" fill="#3a2b38"/><rect x="203" y="25" width="5" height="5" fill="#3a2b38"/><rect x="208" y="25" width="5" height="5" fill="#ffffff"/><rect x="213" y="25" width="5" height="5" fill="#ffffff"/><rect x="218" y="25" width="5" height="5" fill="#ffffff"/><rect x="223" y="25" width="5" height="5" fill="#3a2b38"/><rect x="173" y="30" width="5" height="5" fill="#3a2b38"/><rect x="178" y="30" width="5" height="5" fill="#ffffff"/><rect x="183" y="30" width="5" height="5" fill="#ffffff"/><rect x="188" y="30" width="5" height="5" fill="#ffffff"/><rect x="193" y="30" width="5" height="5" fill="#3a2b38"/><rect x="198" y="30" width="5" height="5" fill="#2f3b33"/><rect x="203" y="30" width="5" height="5" fill="#3a2b38"/><rect x="208" y="30" width="5" height="5" fill="#ffffff"/><rect x="213" y="30" width="5" height="5" fill="#ffffff"/><rect x="218" y="30" width="5" height="5" fill="#ffffff"/><rect x="223" y="30" width="5" height="5" fill="#3a2b38"/><rect x="173" y="35" width="5" height="5" fill="#3a2b38"/><rect x="178" y="35" width="5" height="5" fill="#ffffff"/><rect x="183" y="35" width="5" height="5" fill="#ffffff"/><rect x="188" y="35" width="5" height="5" fill="#ffffff"/><rect x="193" y="35" width="5" height="5" fill="#3a2b38"/><rect x="198" y="35" width="5" height="5" fill="#2f3b33"/><rect x="203" y="35" width="5" height="5" fill="#3a2b38"/><rect x="208" y="35" width="5" height="5" fill="#ffffff"/><rect x="213" y="35" width="5" height="5" fill="#ffffff"/><rect x="218" y="35" width="5" height="5" fill="#ffffff"/><rect x="223" y="35" width="5" height="5" fill="#3a2b38"/><rect x="173" y="40" width="5" height="5" fill="#3a2b38"/><rect x="178" y="40" width="5" height="5" fill="#ffffff"/><rect x="183" y="40" width="5" height="5" fill="#ffffff"/><rect x="188" y="40" width="5" height="5" fill="#ffffff"/><rect x="193" y="40" width="5" height="5" fill="#3a2b38"/><rect x="198" y="40" width="5" height="5" fill="#3a2b38"/><rect x="203" y="40" width="5" height="5" fill="#3a2b38"/><rect x="208" y="40" width="5" height="5" fill="#ffffff"/><rect x="213" y="40" width="5" height="5" fill="#ffffff"/><rect x="218" y="40" width="5" height="5" fill="#ffffff"/><rect x="223" y="40" width="5" height="5" fill="#3a2b38"/><rect x="178" y="45" width="5" height="5" fill="#3a2b38"/><rect x="183" y="45" width="5" height="5" fill="#3a2b38"/><rect x="188" y="45" width="5" height="5" fill="#3a2b38"/><rect x="193" y="45" width="5" height="5" fill="#3a2b38"/><rect x="198" y="45" width="5" height="5" fill="#3a2b38"/><rect x="203" y="45" width="5" height="5" fill="#3a2b38"/><rect x="208" y="45" width="5" height="5" fill="#3a2b38"/><rect x="213" y="45" width="5" height="5" fill="#3a2b38"/><rect x="218" y="45" width="5" height="5" fill="#3a2b38"/></g><g transform="translate(250 186)"><rect x="14" y="0" width="14" height="12" fill="#3a2b38"/><rect x="10" y="4" width="22" height="4" fill="#3a2b38"/><rect x="14" y="4" width="14" height="4" fill="#7fa487"/><rect x="18" y="4" width="6" height="4" fill="#7fa487"/><rect x="14" y="8" width="14" height="-4" fill="#7fa487"/><rect x="10" y="8" width="22" height="48" fill="#3a2b38"/><rect x="6" y="12" width="30" height="40" fill="#3a2b38"/><rect x="10" y="12" width="22" height="40" fill="#eef5ea"/><rect x="14" y="12" width="14" height="40" fill="#eef5ea"/><rect x="10" y="16" width="22" height="32" fill="#eef5ea"/><rect x="10" y="20" width="22" height="28" fill="#7fa487"/><text x="21" y="31" text-anchor="middle" font-family="Zen Maru Gothic, sans-serif" font-size="9" font-weight="700" fill="#fff">おちゃ</text><text class="ro-svg" x="21" y="41" text-anchor="middle" font-family="Zen Maru Gothic, sans-serif" font-size="7.5" font-weight="700" fill="#ffe08a">ocha</text></g><g transform="translate(318 176)"><rect x="12" y="0" width="14" height="12" fill="#3a2b38"/><rect x="8" y="4" width="22" height="4" fill="#3a2b38"/><rect x="12" y="4" width="14" height="4" fill="#7aa8d6"/><rect x="16" y="4" width="6" height="4" fill="#7aa8d6"/><rect x="12" y="8" width="14" height="-4" fill="#7aa8d6"/><rect x="8" y="8" width="22" height="56" fill="#3a2b38"/><rect x="4" y="12" width="30" height="48" fill="#3a2b38"/><rect x="8" y="12" width="22" height="48" fill="#e8f3fb"/><rect x="12" y="12" width="14" height="48" fill="#e8f3fb"/><rect x="8" y="16" width="22" height="40" fill="#e8f3fb"/><rect x="8" y="28" width="22" height="16" fill="#7aa8d6"/><rect x="10" y="32" width="6" height="3" fill="#fff"/></g></g></svg>
     <svg id="svgKon" viewBox="0 0 400 250" role="img" aria-label="Você está num konbini, uma loja de conveniência no Japão. Há uma geladeira com bebidas, uma prateleira com peixe, carne e ovos, e o balcão, com onigiri, chá e água nas suas mãos." style="display:none">
-      <rect width="400" height="250" fill="#fbf3ea"/>
+<g class="fundo">      <rect width="400" height="250" fill="#fbf3ea"/>
       <path d="M0 0h400v30H0z" fill="#f0e6dc"/><rect x="40" y="10" width="320" height="8" rx="4" fill="#fff"/>
-      <rect x="210" y="20" width="160" height="32" rx="8" fill="#2f8f5b" stroke="#fff" stroke-width="3"/><rect x="210" y="44" width="160" height="8" fill="#d9506f"/>
+      <path d="M0 184h400v66H0z" fill="#e9dccd"/><path d="M0 184h400" stroke="#d9506f" stroke-width="5"/></g>
+<g data-luz="4">      <rect x="210" y="20" width="160" height="32" rx="8" fill="#2f8f5b" stroke="#fff" stroke-width="3"/><rect x="210" y="44" width="160" height="8" fill="#d9506f"/>
       <text x="290" y="41" text-anchor="middle" font-family="Zen Maru Gothic, sans-serif" font-size="20" font-weight="700" fill="#fff">コンビニ</text><text class="ro-svg" x="290" y="50.5" text-anchor="middle" font-family="Zen Maru Gothic, sans-serif" font-size="8" font-weight="800" fill="#fff">konbini</text>
       <g class="placa" data-k="nomi" tabindex="0" role="button" aria-label="Placa: のみもの, bebidas. Toque para ver"><rect x="18" y="50" width="104" height="28" rx="8" fill="#3f7fb0" stroke="#fff" stroke-width="2.5"/><text x="70" y="65" text-anchor="middle" font-family="Zen Maru Gothic, sans-serif" font-size="14" font-weight="800" fill="#fff"><tspan fill="#ffe08a">のみ</tspan>もの</text><text class="ro-svg" x="70" y="75" text-anchor="middle" font-family="Zen Maru Gothic, sans-serif" font-size="8.5" font-weight="700" fill="#e7f1fb"><tspan fill="#ffe08a">nomi</tspan>mono</text></g>
       <g class="placa" data-k="tabe" tabindex="0" role="button" aria-label="Placa: たべもの, comidas. Toque para ver"><rect x="214" y="50" width="104" height="28" rx="8" fill="#c2751f" stroke="#fff" stroke-width="2.5"/><text x="266" y="65" text-anchor="middle" font-family="Zen Maru Gothic, sans-serif" font-size="14" font-weight="800" fill="#fff"><tspan fill="#ffe08a">たべ</tspan>もの</text><text class="ro-svg" x="266" y="75" text-anchor="middle" font-family="Zen Maru Gothic, sans-serif" font-size="8.5" font-weight="700" fill="#fdf0e0"><tspan fill="#ffe08a">tabe</tspan>mono</text></g>
       <rect x="10" y="76" width="176" height="104" rx="8" fill="#e8f3fb" stroke="#7aa8d6" stroke-width="3"/><path d="M10 128h176" stroke="#b5ccdc" stroke-width="3"/>
       <rect x="206" y="76" width="184" height="104" rx="8" fill="#f4e8d8" stroke="#c9ab86" stroke-width="3"/><path d="M206 128h184" stroke="#dcc7a8" stroke-width="3"/>
       <g font-size="34" text-anchor="middle"><text x="40" y="106">🥛</text><text x="95" y="106">🍶</text><text x="150" y="106">🍵</text><text x="40" y="174" opacity=".55">🧃</text><text x="95" y="174" opacity=".55">🥤</text><text x="150" y="174" opacity=".55">🧃</text>
-        <text x="236" y="106">🐟</text><text x="292" y="106">🍖</text><text x="348" y="106">🥚</text><text x="236" y="174" opacity=".55">🍞</text><text x="292" y="174" opacity=".55">🍱</text><text x="348" y="174" opacity=".55">🍙</text></g>
-      <path d="M0 184h400v66H0z" fill="#e9dccd"/><path d="M0 184h400" stroke="#d9506f" stroke-width="5"/>
-      <!-- suas mãos: onigiri, chá, água -->
-      <g>
+        <text x="236" y="106">🐟</text><text x="292" y="106">🍖</text><text x="348" y="106">🥚</text><text x="236" y="174" opacity=".55">🍞</text><text x="292" y="174" opacity=".55">🍱</text><text x="348" y="174" opacity=".55">🍙</text></g></g>
+<g data-luz="5">      <g>
         <g transform="translate(170 192)"><path d="M32 2 L62 40 Q32 52 2 40 Z" fill="#fff" stroke="#cfc3c9" stroke-width="3" stroke-linejoin="round"/><path d="M20 28h24v18H20z" fill="#2f3b33"/></g>
         <g transform="translate(250 186)"><rect x="12" y="0" width="18" height="8" rx="3" fill="#7fa487"/><rect x="6" y="6" width="30" height="48" rx="7" fill="#eef5ea" stroke="#7fa487" stroke-width="3"/><rect x="6" y="20" width="30" height="26" fill="#7fa487" opacity=".85"/><text x="21" y="31" text-anchor="middle" font-family="Zen Maru Gothic, sans-serif" font-size="9" font-weight="700" fill="#fff">おちゃ</text><text class="ro-svg" x="21" y="41" text-anchor="middle" font-family="Zen Maru Gothic, sans-serif" font-size="7.5" font-weight="700" fill="#ffe08a">ocha</text></g>
         <g transform="translate(318 176)"><rect x="8" y="0" width="22" height="10" rx="3" fill="#7aa8d6"/><rect x="4" y="8" width="30" height="52" rx="8" fill="#e8f3fb" stroke="#7aa8d6" stroke-width="3"/><rect x="4" y="26" width="30" height="16" fill="#7aa8d6" opacity=".55"/></g>
-      </g>
+      </g></g>
     </svg>
     <svg id="svgWc" viewBox="0 0 400 250" role="img" aria-label="Um corredor do konbini com uma seta apontando para a porta do banheiro" style="display:none">
       <rect width="400" height="250" fill="#fbf3ea"/><path d="M0 0h400v36H0z" fill="#f0e6dc"/><path d="M0 188h400v62H0z" fill="#e9dccd"/><path d="M0 188h400" stroke="#d9506f" stroke-width="5"/>
@@ -303,7 +350,7 @@ body[data-etapa="ar"]{background-color:#dde1e5}
 
   <section class="painel" id="painel" aria-live="polite"></section>
 
-  <p class="rodape">O seu progresso fica guardado na sua conta.</p>
+  
   <div class="lista-voz" id="listaVoz" hidden></div>
 </div>
 
@@ -428,7 +475,7 @@ const CHAVES=[
   agua:{say:'でんしゃです',t:['でんしゃ',['です','k']],ro:'densha desu',pt:'É um trem.',g:[['でんしゃ','電車'],['です']]},
   fogo:{pedido:'O bilhete está na sua mão. Diga o que é.',say:'きっぷです',t:['きっぷ',['です','k']],ro:'kippu desu',pt:'É o bilhete.',g:[['きっぷ','切符'],['です']]},
   terra:{pedido:'Diga o que é, com です. Use qualquer palavra que você quiser. Faça 1 frase com a palavra que você quiser.',itens:NOMES.concat(['toire']),suf:{_:['です']},exemplo:'おにぎりです',exemploRo:'onigiri desu',key:'です'},
-  ganho:'Agora você sabe dizer o que é.'},
+  ganho:'Agora você sabe dizer o que é.',dia:'Com です você já responde “o que é isso?” em qualquer lugar do Japão.'},
 
  {n:2,jp:'じゃない',ico:'🛑',
   gram:'<b>じゃない</b> é o “não é” do dia a dia. Com <b>です</b> no fim (じゃないです) continua educado.',
@@ -441,7 +488,7 @@ const CHAVES=[
   agua:{say:'パスポートじゃない',t:['パスポート',['じゃない','k']],ro:'pasupōto janai',pt:'Não é o passaporte.',g:[['パスポート'],['じゃない','じゃないです','じゃありません','ではありません']]},
   fogo:{pedido:'Alguém aponta para o seu onigiri e pergunta: “すし？” (é sushi?). Diga que não é.',say:'すしじゃない',t:['すし',['じゃない','k']],ro:'sushi janai',pt:'Não é sushi.',g:[['すし','寿司'],['じゃない','じゃないです','じゃありません','ではありません']]},
   terra:{pedido:'Diga o que NÃO é, com じゃない. Use qualquer palavra que você quiser. Faça 1 frase com a palavra que você quiser.',itens:['osaka','basu','pasu','sushi','mizu','densha'],suf:{_:['じゃない','じゃないです','じゃありません','ではありません']},exemplo:'バスじゃない',exemploRo:'basu janai',key:'じゃない'},
-  ganho:'Agora você sabe dizer o que não é.'},
+  ganho:'Agora você sabe dizer o que não é.',dia:'Com じゃない você corrige: “não é isso, é aquilo”.'},
 
  {n:3,jp:'ます',ico:'🏃',
   gram:'<b>ます</b> fecha o verbo educado: たべ<b>ます</b> (como). <b>を</b> liga a coisa (おにぎり<b>を</b>たべます) e <b>に</b> liga o lugar (とうきょう<b>に</b>いきます).',
@@ -456,7 +503,7 @@ const CHAVES=[
   agua:{say:'おにぎりをたべます',t:['おにぎりを','たべ',['ます','k']],ro:'onigiri o tabemasu',pt:'Eu como o onigiri.',g:[['おにぎり'],['を'],['たべ','食べ'],['ます']]},
   fogo:{pedido:'A garrafa de água está na sua mão. O que você faz com ela? Diga: eu bebo a água.',say:'みずをのみます',t:['みずを','のみ',['ます','k']],ro:'mizu o nomimasu',pt:'Eu bebo água.',g:[['みず','水','おみず','お水'],['を'],['のみ','飲み'],['ます']]},
   terra:{pedido:'Diga o que você faz, com ます. Use uma frase inteira: coisa を ação ou lugar に ação. Faça 1 frase sua.',itens:['iki','nori','tabe','nomi','iki2','kai'],suf:{_:['ます']},exemplo:'とうきょうにいきます',exemploRo:'Tōkyō ni ikimasu',key:'ます'},
-  ganho:'Agora você sabe dizer o que faz.'},
+  ganho:'Agora você sabe dizer o que faz.',dia:'Com ます você diz o que faz: vou, como, bebo, compro.'},
 
  {n:4,jp:'ません',ico:'🙅',
   gram:'<b>ません</b> é o “não” do ます: たべ<b>ます</b> → たべ<b>ません</b>. Útil para dizer o que você <b>não</b> come ou não bebe.',
@@ -472,7 +519,7 @@ const CHAVES=[
   agua:{say:'さかなをたべません',t:['さかなを','たべ',['ません','k']],ro:'sakana o tabemasen',pt:'Eu não como peixe.',g:[['さかな','魚'],['を'],['たべ','食べ'],['ません']]},
   fogo:{pedido:'Ela oferece carne. Você não come carne. Diga: eu não como carne.',say:'にくをたべません',t:['にくを','たべ',['ません','k']],ro:'niku o tabemasen',pt:'Eu não como carne.',g:[['にく','肉'],['を'],['たべ','食べ'],['ません']]},
   terra:{pedido:'Diga o que você NÃO come ou NÃO bebe, com ません. Faça 1 frase sua.',itens:['sakana','niku','tamago','gyunyu','sake','ocha'],suf:{_:['ません']},exemplo:'さかなをたべません',exemploRo:'sakana o tabemasen',key:'ません'},
-  ganho:'Agora você sabe dizer o que não faz.'},
+  ganho:'Agora você sabe dizer o que não faz.',dia:'Com ません você diz o que não come nem bebe, e evita um susto no restaurante.'},
 
  {n:5,jp:'ください',ico:'🤲',
   gram:'Chame com <b>すみません</b>. Depois, <b>を</b> (lido “o”) marca o que você pede e <b>ください</b> é o “por favor, me dê”.',
@@ -485,11 +532,11 @@ const CHAVES=[
   agua:{say:'すみません、みずをください',t:['すみません、','みずを',['ください','k']],ro:'sumimasen, mizu o kudasai',pt:'Com licença, água por favor.',g:[['すみません'],['みず','水'],['を'],['ください','下さい']]},
   fogo:{pedido:'A atendente oferece peixe. Você não come peixe. Recuse e peça um onigiri.',say:'さかなをたべません。おにぎりをください',t:['さかなを','たべ',['ません','k'],'。おにぎりを',['ください','k']],ro:'sakana o tabemasen. onigiri o kudasai',pt:'Não como peixe. Um onigiri, por favor.',g:[['さかな','魚'],['を'],['たべ','食べ'],['ません'],['おにぎり'],['を'],['ください','下さい']]},
   terra:{pedido:'Peça com ください. Pode começar com すみません. Use qualquer palavra que você quiser. Faça 1 pedido seu.',itens:['onigiri','mizu','tamago','ocha'],suf:{_:['をください','を下さい']},exemplo:'おちゃをください',exemploRo:'ocha o kudasai',key:'を ください'},
-  ganho:'Agora você sabe pedir. As 5 chaves estão acesas.'}
+  ganho:'Agora você sabe pedir. As 5 chaves estão acesas.',dia:'Com ください você pede. É a chave que abre os balcões.'}
 ];
 
 /* ---------- estado ---------- */
-const S={f:0,k:0,passo:'chegada',erros:0,semMic:false,micNegado:false,feitos:[],visto:new Set(),acesas:[]};
+const S={ditas:{},retomado:{},f:0,k:0,passo:'chegada',erros:0,semMic:false,micNegado:false,feitos:[],visto:new Set(),acesas:[]};
 try{S.semMic=localStorage.getItem('uniNovaSemMic')==='1';}catch(e){}
 try{const p=JSON.parse(localStorage.getItem('uniNovaAZ')||'null');if(p&&Array.isArray(p.acesas))S.acesas=p.acesas;}catch(e){}
 const salva=()=>{try{localStorage.setItem('uniNovaAZ',JSON.stringify({acesas:S.acesas}));}catch(e){}};
@@ -535,7 +582,7 @@ function trocaCena(){
 function desenhaHot(){
   trocaCena();
   hsBox.innerHTML='';const av=$('avatarNao');if(av){av.hidden=true;av.classList.remove('vai');}
-  if(S.passo==='chegada'||S.passo==='fim'||S.passo==='final'||S.passo==='prontas'||S.passo==='clipe'){$('dicaCena').hidden=true;return;}
+  if(S.passo==='chegada'||S.passo==='fim'||S.passo==='final'||S.passo==='prontas'||S.passo==='clipe'||S.passo==='retoma'){$('dicaCena').hidden=true;return;}
   $('dicaCena').hidden=false;
   const c=CHAVES[S.k];
   c.hot.forEach((h,i)=>{
@@ -579,12 +626,15 @@ if(LIVRE){
 function vai(passo){if(S.__paraClipe){S.__paraClipe();S.__paraClipe=null;}if(passo!=='clipe'&&S.passo==='clipe')S.clipeVisto=true;S.passo=passo;S.erros=0;S.feitos=[];pararMic();pilula.hidden=true;render();}
 function render(){
   window.__render=render;
+  if(S.passo==='retoma'&&S.k<1)S.passo='agua';
   if(S.passo==='agua'&&CHAVES[S.k].n===3&&!S.clipeVisto){S.passo='clipe';S.cl=0;}
   desenhaBarra();desenhaHot();
+  luzCena();
   { const pr=S.passo==='prontas'?((PRONTAS[S.p||0]||{}).fogo?'fogo':'agua'):null;
-    const et={agua:'agua',fogo:'fogo',clipe:'agua',terra:'terra',quiz:'terra',fixa:'fogo',falafix:'fogo',ganho:'ar'}[S.passo];
+    const et={agua:'agua',fogo:'fogo',clipe:'agua',terra:'terra',quiz:'terra',fixa:'fogo',falafix:'fogo',ganho:'ar',retoma:'fogo'}[S.passo];
     document.body.dataset.etapa=pr||et||''; }
   const c=CHAVES[S.k];
+  if(S.passo==='retoma')return telaRetoma();
   if(S.passo==='clipe')return telaClipe(c);
   if(S.passo==='chegada')return telaChegada();
   if(S.passo==='fim')return telaFim();
@@ -598,6 +648,25 @@ function render(){
   if(S.passo==='prontas')return telaProntas();
   if(S.passo==='final')return telaFinal();
 }
+/* retomada: antes de abrir a chave nova, a pessoa refaz de memória a anterior */
+function telaRetoma(){
+  const prev=CHAVES[S.k-1];
+  S.retomado[S.k]=true;
+  const c={n:prev.n,rotulo:'Antes da chave '+String(CHAVES[S.k].n).padStart(2,'0')+' · lembra da chave '+String(prev.n).padStart(2,'0')+' ('+prev.jp+')?',molde:prev.molde,moldeRo:prev.moldeRo,jp:prev.jp};
+  const alvo=Object.assign({},prev.fogo,{depois:()=>vai('agua')});
+  telaResposta(c,'fogo','',prev.fogo.pedido,alvo);
+}
+/* acende os objetos da cena que pertencem às chaves já acesas; o fundo ganha cor aos poucos */
+function luzCena(novo){
+  const n=Math.min(S.acesas.length,5);
+  document.querySelectorAll('.fundo').forEach(g=>{if(n>=5)g.removeAttribute('filter');else g.setAttribute('filter','url(#sat'+n+')');});
+  document.querySelectorAll('[data-luz]').forEach(g=>{
+    const k=+g.dataset.luz,on=S.acesas.includes(k);
+    g.classList.toggle('on',on);
+    if(on)g.removeAttribute('filter');else g.setAttribute('filter','url(#cinza)');
+    if(novo===k&&on){g.classList.add('luz-pisca');setTimeout(()=>g.classList.remove('luz-pisca'),1400);}
+  });
+}
 function telaChegada(){
   painel.innerHTML=`<span class="elem ganho"><i></i>Chegada</span>
    <h2>${S.acesas.length?S.acesas.length+' de 5 chaves acesas.':'Cinco chaves apagadas.'}</h2>
@@ -608,7 +677,11 @@ function telaChegada(){
 function telaFim(){
   painel.innerHTML=`<div class="fim-bloco"><div class="grande" aria-hidden="true">🗝️🗝️🗝️🗝️🗝️</div>
    <span class="elem ganho"><i></i>Ganho</span><h2>As 5 chaves estão acesas.</h2>
-   <div class="acoes"><a class="btn pri" href="/idiomas/japones/" style="text-decoration:none;display:inline-flex;align-items:center">Ir para os mapas →</a>
+   <p>Veja o que você já consegue dizer no Japão. Cada frase abaixo é sua.</p>
+   <ul class="fecho-lista">${CHAVES.map(k=>`<li><span class="jpl" lang="ja">${S.ditas[k.n]||k.terra.exemplo}</span><small>${k.jp} · ${k.dia}</small></li>`).join('')}</ul>
+   <p>No primeiro mapa, o Aeroporto, você usa tudo isso de verdade.</p>
+   <div class="acoes"><a class="btn pri" href="/idiomas/mapas/aeroporto/aula/" style="text-decoration:none;display:inline-flex;align-items:center">Ir para o Aeroporto →</a>
+   <a class="btn" href="/idiomas/japones/" style="text-decoration:none;display:inline-flex;align-items:center">Ver a trilha</a>
    <button class="btn ghost" type="button" id="de-novo">Rever do começo</button></div></div>`;
   try{localStorage.setItem('aulaZeroCompleted','true');}catch(e){}
   $('de-novo').onclick=()=>{S.k=0;vai('agua');};
@@ -800,13 +873,15 @@ function telaGanho(c){
   painel.innerHTML=`<div class="fim-bloco"><div class="grande" aria-hidden="true">${c.ico}</div>
     <span class="elem ganho"><i></i>Ganho · chave ${String(c.n).padStart(2,'0')}</span>
     <h2>${c.jp}</h2><p>${c.ganho}</p>
+    ${S.ditas[c.n]?`<p class="voce-disse"><small>Você disse</small><span class="jpl" lang="ja">${S.ditas[c.n]}</span></p>`:''}
+    <p class="dia">${c.dia||''}</p>
     <div class="acoes"><button class="btn pri" type="button" id="prox">${ultima?'Perguntas prontas →':'Próxima chave →'}</button></div></div>`;
   let acesa=false;
   const acende=()=>{if(acesa)return;acesa=true;if(!S.acesas.includes(c.n)){S.acesas.push(c.n);salva();}
-    desenhaBarra();const sl=barra.children[S.k];if(sl&&!ja)sl.classList.add('pop');};
+    desenhaBarra();luzCena(c.n);const sl=barra.children[S.k];if(sl&&!ja)sl.classList.add('pop');};
   const conquistou=S.conquista;S.conquista=false;
   const voo=(ja||!conquistou)?(conquistou?acende():0,null):voaChave(c,acende);
-  $('prox').onclick=()=>{if(voo)voo.cancela();acende();if(ultima){S.p=0;vai('prontas');}else{S.k++;vai('agua');}};
+  $('prox').onclick=()=>{if(voo)voo.cancela();acende();if(ultima){S.p=0;vai('prontas');}else{S.k++;vai(S.retomado[S.k]?'agua':'retoma');}};
 }
 
 /* ---------- reconhecimento de voz com diagnóstico (não fica parado em silêncio) ---------- */
@@ -999,7 +1074,7 @@ function telaTerra(c){
         if(!rest.endsWith(norm(par))||rest.length<=1){msg=rest.endsWith(norm(outra))?'Com '+st+'ます use '+par+', não '+outra+'. Faltou o '+par+' antes do '+st+'ます.':'Faltou o '+par+' antes do '+st+'ます.';continue;}
         const id=rest+'|'+st;
         if(S.feitos.includes(id)){E.aviso('Essa frase você já usou. Escolha outra.',dito);return;}
-        S.feitos.push(id);E.ok(x,'✓ Boa!');
+        S.feitos.push(id);S.ditas[c.n]=x;E.ok(x,'✓ Boa!');
         if(S.feitos.length>=1){setTimeout(()=>{S.conquista=true;vai(c.n===3?'quiz':'ganho');},1200);}else setTimeout(()=>telaTerra(c),1100);
         return;
       }
@@ -1008,7 +1083,7 @@ function telaTerra(c){
     for(const x of textos){const w=palavraDe(x);if(w){
       const id=t.tipos?ultimoTipo:canon(w);
       if(S.feitos.includes(id)){E.aviso(t.tipos?'Essa palavra de pergunta você já usou. Use outra: どこ, なん ou なんじ.':'Essa palavra você já usou. Escolha outra.',dito);return;}
-      S.feitos.push(id);E.ok(x,'✓ Boa!');
+      S.feitos.push(id);S.ditas[c.n]=x;E.ok(x,'✓ Boa!');
       if(S.feitos.length>=1){setTimeout(()=>{S.conquista=true;vai(c.n===3?'quiz':'ganho');},1200);}else setTimeout(()=>telaTerra(c),1100);
       return;}}
     const n=norm(dito);
