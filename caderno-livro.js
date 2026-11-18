@@ -81,8 +81,14 @@
     /* virar a página */
     '@keyframes lvFrente{from{transform:rotateY(-28deg);opacity:.25}to{transform:none;opacity:1}}',
     '@keyframes lvTras{from{transform:rotateY(28deg);opacity:.25}to{transform:none;opacity:1}}',
-    '.lv-livro.vai .lv-pg:not(.fora){transform-origin:left center;animation:lvFrente .38s ease-out}',
-    '.lv-livro.volta .lv-pg:not(.fora){transform-origin:right center;animation:lvTras .38s ease-out}',
+    '.lv:not(.dupla) .lv-livro.vai .lv-pg:not(.fora){transform-origin:left center;animation:lvFrente .38s ease-out}',
+    '.lv:not(.dupla) .lv-livro.volta .lv-pg:not(.fora){transform-origin:right center;animation:lvTras .38s ease-out}',
+    /* caderno aberto (2 páginas): vira só UMA folha, presa na lombada, como num livro de verdade */
+    '@keyframes lvFolhaE{from{transform:rotateY(90deg)}to{transform:none}}',
+    '@keyframes lvFolhaD{from{transform:rotateY(-90deg)}to{transform:none}}',
+    '.lv.dupla .lv-livro.vai,.lv.dupla .lv-livro.volta{perspective:2200px}',
+    '.lv.dupla .lv-livro.vai .lv-pg.esq{transform-origin:right center;animation:lvFolhaE .45s cubic-bezier(.2,.7,.3,1);backface-visibility:hidden;z-index:2}',
+    '.lv.dupla .lv-livro.volta .lv-pg.dir{transform-origin:left center;animation:lvFolhaD .45s cubic-bezier(.2,.7,.3,1);backface-visibility:hidden;z-index:2}',
     '@media (prefers-reduced-motion:reduce){.lv-livro.vai .lv-pg,.lv-livro.volta .lv-pg{animation:none}}',
     '.lv-fant{background:#fffdfc;align-items:center;justify-content:center;box-shadow:none}',
     '.lv-fant button{font:inherit;cursor:pointer;border:1.5px dashed #d9c3c9;background:#fff;color:#705f6c;border-radius:99px;padding:8px 18px;font-weight:700;font-size:14px;min-height:40px}.lv-fant button:hover{border-color:#c23f5e;color:#c23f5e}',
