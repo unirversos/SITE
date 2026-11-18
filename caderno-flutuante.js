@@ -28,13 +28,13 @@
   document.head.appendChild(css);
 
   var aba = document.createElement('button');
-  aba.id = 'cf-aba'; aba.type = 'button'; aba.setAttribute('aria-expanded', 'false'); aba.setAttribute('aria-controls', 'cf-p'); aba.setAttribute('aria-label', 'Abrir o Caderno');
+  aba.id = 'cf-aba'; aba.type = 'button'; aba.setAttribute('aria-expanded', 'false'); aba.setAttribute('aria-controls', 'cf-p'); aba.setAttribute('aria-label', 'Abrir o Caderno de Unir Versos');
   aba.innerHTML = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 4h12a2 2 0 0 1 2 2v14H7a2 2 0 0 1-2-2z"/><path d="M9 4v16M12 9h4M12 13h4"/></svg><span>Caderno</span>';
 
   var p = document.createElement('aside');
-  p.id = 'cf-p'; p.setAttribute('aria-label', 'Caderno de anotações');
+  p.id = 'cf-p'; p.setAttribute('aria-label', 'Caderno de Unir Versos');
   p.innerHTML =
-    '<div class="h"><h2>Caderno</h2><button class="x" type="button" id="cf-f" aria-label="Fechar o Caderno">×</button></div>' +
+    '<div class="h"><h2>Caderno de Unir Versos</h2><button class="x" type="button" id="cf-f" aria-label="Fechar o Caderno de Unir Versos">×</button></div>' +
     '<div class="r"><select id="cf-l" aria-label="Anotação"></select><button class="b p" type="button" id="cf-n">+ Nova</button></div>' +
     '<div id="cf-lv"></div><div class="vz" id="cf-vz" hidden>Ainda não há anotações. Toque em <b>+ Nova</b>.</div>' +
     '<div class="f"><span><span id="cf-e" aria-live="polite">Salvo neste aparelho</span> <button class="b" type="button" id="cf-en" hidden>Entrar</button></span><span><button class="b" type="button" id="cf-z">Apagar</button> <a href="/idiomas/caderno/" id="cf-tc">Abrir em tela cheia →</a></span></div>';
