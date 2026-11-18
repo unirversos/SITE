@@ -67,11 +67,13 @@ async function cadernoDoAluno(email){
   }
   if (!$('cad-al') || editando !== email) return;
   notas = notas.filter(n => n && n.id).sort((x, y) => (y.m || 0) - (x.m || 0));
+  const ehLicao = n => /^Lição de casa/.test((n.t || '').trim());
+  notas = notas.filter(ehLicao).concat(notas.filter(n => !ehLicao(n))); /* lições de casa primeiro */
   if (!notas.length || !window.UniLivro) {
     box.innerHTML = topo + '<p class="mut">Este aluno ainda não mostrou nenhuma anotação. Ele escolhe, anotação por anotação, no botão “Mostrar para a professora” do Caderno.</p>';
     $('cad-at').onclick = () => cadernoDoAluno(email); return;
   }
-  const nome = n => (n.t || '').trim() || (n.x || '').trim().split('\n')[0].slice(0, 50) || 'Sem título';
+  const nome = n => (ehLicao(n) ? '📝 ' : '') + ((n.t || '').trim() || (n.x || '').trim().split('\n')[0].slice(0, 50) || 'Sem título');
   const dt = n => n.m ? new Date(n.m).toLocaleDateString('pt-BR', { day: 'numeric', month: 'short' }) : '';
   box.innerHTML = topo + `<label class="sr" for="cad-sel">Anotação</label><select id="cad-sel">${notas.map(n => `<option value="${esc(n.id)}">${esc(nome(n))} · ${esc(dt(n))}</option>`).join('')}</select><div id="cad-lv" style="margin-top:12px"></div>`;
   $('cad-at').onclick = () => cadernoDoAluno(email);

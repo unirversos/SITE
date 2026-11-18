@@ -620,7 +620,7 @@ function wireCena(){
       }
       { /* 📓 anotação opcional no Caderno: cria uma vez e depois só reabre (não sobrescreve o que a pessoa escreveu) */
         const hb=h.querySelector('.hall-b'); if(hb) hb.insertAdjacentHTML('beforebegin','<div class="hall-f"><span>Quer guardar este mapa no seu caderno?</span><button class="btn" type="button" data-caderno>📓 Anotar no caderno <small>(opcional)</small></button> <button class="btn" type="button" data-licao>📝 Lição de casa <small>(escrever)</small></button></div>');
-        const lc=h.querySelector('[data-licao]'); if(lc) lc.onclick=()=>{ const go=()=>window.UniLicao&&UniLicao.abrir(A.slug,A); if(window.UniLicao) return go(); const sc=document.createElement('script'); sc.src='/idiomas/dados/licao-casa.js?v=1'; sc.onload=go; sc.onerror=()=>{ location.href='/idiomas/licao/?m='+A.slug; }; document.head.appendChild(sc); };
+        const lc=h.querySelector('[data-licao]'); if(lc) lc.onclick=()=>{ const go=()=>window.UniLicao&&UniLicao.abrir(A.slug,A); if(window.UniLicao) return go(); const sc=document.createElement('script'); sc.src='/idiomas/dados/licao-casa.js?v=2'; sc.onload=go; sc.onerror=()=>{ location.href='/idiomas/licao/?m='+A.slug; }; document.head.appendChild(sc); };
         const cb=h.querySelector('[data-caderno]'); if(cb) cb.onclick=()=>{
           const CF=window.UniCadernoFlutuante, CD=window.UniCaderno, K='uniNotaMapa_'+A.slug;
           if(!CF||!CD){ location.href='/idiomas/caderno/'; return; }

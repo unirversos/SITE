@@ -812,7 +812,7 @@ function telaFim(){
    <button class="btn" type="button" id="anota">📓 Anotar no caderno <small>(opcional)</small></button>
    <button class="btn ghost" type="button" id="de-novo">Rever do começo</button></div></div>`;
   $('anota').onclick=anotaNoCaderno;
-  $('licaoCasa').onclick=()=>{const go=()=>window.UniLicao&&UniLicao.abrir('aulazero');if(window.UniLicao)return go();const sc=document.createElement('script');sc.src='/idiomas/dados/licao-casa.js?v=1';sc.onload=go;sc.onerror=()=>{location.href='/idiomas/licao/?m=aulazero';};document.head.appendChild(sc);};
+  $('licaoCasa').onclick=()=>{const go=()=>window.UniLicao&&UniLicao.abrir('aulazero');if(window.UniLicao)return go();const sc=document.createElement('script');sc.src='/idiomas/dados/licao-casa.js?v=2';sc.onload=go;sc.onerror=()=>{location.href='/idiomas/licao/?m=aulazero';};document.head.appendChild(sc);};
   try{localStorage.setItem('aulaZeroCompleted','true');}catch(e){}
   $('de-novo').onclick=()=>{S.k=0;vai('agua');};
 }

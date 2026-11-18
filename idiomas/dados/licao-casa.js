@@ -8,7 +8,7 @@
   function limpa(s) { return String(s == null ? '' : s).replace(/<rt>.*?<\/rt>/g, '').replace(/<[^>]+>/g, '').replace(/&nbsp;/g, ' ').trim(); }
   function kana(s) { return limpa(String(s).split('|')[0]); }
   var LINHA = '________________________';
-  var COMO = 'Escreva em kana ou romaji. Pode usar o teclado ou a caneta (botão Caneta, em cima).';
+  var COMO = 'Escreva em kana ou romaji. Pode usar o teclado ou a caneta (botão Caneta, em cima).\nSe você tem aulas com a professora, ela vê esta lição de casa. Para esconder, use o botão “Mostrar para a professora”, embaixo.';
 
   function secoesAulaZero() {
     var S = [], t = 'COPIADO DA AULA · as 5 chaves';
@@ -67,7 +67,8 @@
       var sc = secoes(slug, aula); if (!sc.length) { location.href = '/idiomas/caderno/'; return; }
       var n = C.nova(); id = n.id; try { localStorage.setItem(K, id); } catch (e) {}
       var pgs = paginas(sc);
-      CF.nomear(id, { t: titulo(slug, aula), x: pgs[0], pp: pgs.slice(1).map(function (x) { return { x: x, s: [] }; }) });
+      /* sp: aparece em “Anotações que o aluno mostrou” na página da professora (só vai se a pessoa for aluna dela; dá para desligar no caderno) */
+      CF.nomear(id, { t: titulo(slug, aula), x: pgs[0], pp: pgs.slice(1).map(function (x) { return { x: x, s: [] }; }), sp: true });
     }
     vai();
   }
