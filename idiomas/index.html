@@ -20,7 +20,7 @@ h1.q{font-family:'Baloo 2',cursive;font-weight:700;font-size:clamp(30px,5vw,44px
 .sub{color:var(--ink-soft);margin-bottom:26px}
 .trilhas{display:grid;gap:14px}
 .tri{display:grid;grid-template-columns:56px minmax(0,1fr) auto;gap:16px;align-items:center;background:#fff;border:1.5px solid var(--blush-2);border-left:6px solid var(--c);border-radius:20px;padding:20px 24px;text-decoration:none;color:inherit;transition:transform .15s ease,box-shadow .15s ease}
-.tri:hover{transform:translateY(-2px);box-shadow:0 12px 26px -18px rgba(74,65,73,.5)}
+.tri{box-shadow:0 10px 24px -20px rgba(150,90,70,.55)}.tri:hover{transform:translateY(-3px);box-shadow:0 18px 30px -18px rgba(150,90,70,.55)}
 .tri.zero{--c:#8a7568}.tri.ja{--c:#b5514d}
 .tri .fl{width:56px;height:56px;border-radius:50%;display:grid;place-items:center;font-family:'Baloo 2',cursive;font-weight:700;font-size:19px;color:#fff;background:var(--c)}
 .tri b{font-family:'Baloo 2',cursive;font-size:24px;line-height:1.2;display:block}
@@ -31,7 +31,6 @@ h1.q{font-family:'Baloo 2',cursive;font-weight:700;font-size:clamp(30px,5vw,44px
 .breve div{flex:1 1 260px;background:#fff;border:1.5px dashed var(--blush-2);border-radius:20px;padding:14px 22px;display:flex;align-items:center;gap:14px}
 .breve i{font-style:normal;width:40px;height:40px;border-radius:50%;display:grid;place-items:center;font-family:'Baloo 2',cursive;font-weight:700}
 .breve b{font-family:'Baloo 2',cursive;font-size:18px;display:block;line-height:1.2}.breve span{font-size:13.5px;color:var(--ink-soft)}
-.quiz{margin-top:22px;color:var(--ink-soft);font-size:15px}.quiz a{color:var(--pink-deep);font-weight:700;border-bottom:1.5px solid var(--blush-2);text-decoration:none}
 .vivo{text-align:center;padding:10px 0 56px}
 .vivo .eyebrow{font-size:12px;letter-spacing:4px;text-transform:uppercase;color:var(--pink-deep);font-weight:700;margin-bottom:12px}
 .vagas{display:inline-block;background:var(--gold-soft);color:#7A5B21;border:1.5px solid var(--gold);border-radius:999px;padding:11px 30px;font-family:'Baloo 2',cursive;font-weight:700;font-size:21px;text-decoration:none;transition:transform .15s}
@@ -118,6 +117,27 @@ h1.q{font-family:'Baloo 2',cursive;font-weight:700;font-size:clamp(30px,5vw,44px
 .bau:not(.on) .bau-btn:hover+.dica{animation:none;opacity:1}
 .bau.on .bau-btn:hover .cofre{transform:scale(1.03)}
 .bau.arco .pil{animation:none!important}.bau.arco .pil:hover{transform:none}
+/* Japonês = ação principal da página */
+.tri.ja{padding:26px 26px;border-width:1.5px 1.5px 1.5px 7px}
+.tri.ja b{font-size:28px}
+.tri .tx strong{color:var(--ink);font-weight:700}
+.tri.ja .go{background:var(--pink);color:#fff;border-radius:40px;padding:12px 26px;box-shadow:0 8px 18px rgba(181,81,77,.25);transition:background .15s}
+.tri.ja:hover .go{background:var(--pink-deep)}
+/* Aula Zero = bilhete de entrada: compacto, papel creme, picote antes do botão */
+.tri.zero{position:relative;background:#FBF4E6;border:1.5px dashed #dccbaa;border-left:6px solid var(--c);padding:14px 22px;grid-template-columns:44px minmax(0,1fr) auto;box-shadow:none}
+.tri.zero .fl{width:44px;height:44px;font-size:17px}
+.tri.zero b{font-size:20px}
+.tri.zero .tx span{font-size:14px}
+.tri.zero .go{border-left:2px dashed #dccbaa;padding:6px 0 6px 20px;font-size:14.5px}
+.tri.zero:before,.tri.zero:after{content:"";position:absolute;right:118px;width:16px;height:16px;border-radius:50%;background:var(--cream,#FDF8F5);border:1.5px dashed #dccbaa}
+.tri.zero:before{top:-9px}.tri.zero:after{bottom:-9px}
+@media (max-width:560px){.tri.zero:before,.tri.zero:after{display:none}.tri.zero .go{border-left:0;padding:0}.tri.ja .go{justify-self:start}}
+/* quiz em pílula com bússola */
+.quiz{margin-top:22px;text-align:center}
+.quiz a{display:inline-flex;align-items:center;gap:10px;background:#fff;border:1.5px solid var(--blush-2);border-radius:999px;padding:10px 20px 10px 12px;color:var(--ink-soft);font-size:15px;text-decoration:none;box-shadow:0 8px 20px -16px rgba(150,90,70,.5);transition:transform .15s,border-color .15s}
+.quiz a:hover{transform:translateY(-2px);border-color:var(--pink)}
+.quiz a b{color:var(--pink-deep)}
+.quiz .bs{width:32px;height:32px;border-radius:50%;background:var(--blush);display:grid;place-items:center;font-size:17px;flex:none}
 
 </style>
 <link rel="stylesheet" href="/estilo-celular.css?v=3">
@@ -142,14 +162,14 @@ h1.q{font-family:'Baloo 2',cursive;font-weight:700;font-size:clamp(30px,5vw,44px
   <h1 class="q" id="trilhas">Por onde você quer começar?</h1>
   <p class="sub">A conta é grátis e guarda o seu progresso em qualquer aparelho.</p>
   <div class="trilhas">
-    <a class="tri zero" href="/idiomas/aula-zero/"><span class="fl">0</span><span class="tx"><b>Aula Zero</b><small>opcional</small><span>As 5 chaves antes dos mapas, com o seu avatar.</span></span><span class="go">Conhecer →</span></a>
-    <a class="tri ja" href="/idiomas/japones/"><span class="fl">JA</span><span class="tx"><b>Japonês</b><small>trilha completa</small><span>12 mapas de viagem com prova e carimbo, e o Salão do Planeta Utopia.</span></span><span class="go">Começar →</span></a>
+    <a class="tri zero" href="/idiomas/aula-zero/"><span class="fl">0</span><span class="tx"><small>bilhete de entrada · opcional</small><b>Aula Zero</b><span>Nunca estudou japonês? As 5 chaves em 15 minutos, antes dos mapas.</span></span><span class="go">Conhecer →</span></a>
+    <a class="tri ja" href="/idiomas/japones/"><span class="fl">JA</span><span class="tx"><b>Japonês</b><small>trilha completa</small><span><strong>12 mapas de viagem</strong> com prova e carimbo, e o <strong>Salão do Planeta Utopia</strong>.</span></span><span class="go">Começar →</span></a>
     <div class="breve">
       <div><i style="background:#E4E8F1;color:#4c5a7a">EN</i><span><b>Inglês</b>Em breve</span></div>
       <div><i style="background:#E1EDE5;color:#3d6050">PT</i><span><b>Português</b>Em breve</span></div>
     </div>
   </div>
-  <p class="quiz">Não sabe por onde começar? <a href="/idiomas/autoanalise/">Faça o quiz de 5 minutos</a> e descubra o seu caminho.</p>
+  <p class="quiz"><a href="/idiomas/autoanalise/"><span class="bs" aria-hidden="true">🧭</span><span>Não sabe por onde começar? <b>Faça o quiz de 5 minutos</b> e descubra o seu caminho</span><span aria-hidden="true">→</span></a></p>
 
   <section class="cadsec">
     <a class="cad" href="/idiomas/caderno/" aria-label="Abrir o Caderno de Unir Versos">
