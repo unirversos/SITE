@@ -81,6 +81,7 @@
       if (qn || q.get('nova')) history.replaceState(null, '', location.pathname);
     } catch (e) {}
     return {
+      id: function () { return livro.id(); },
       novaSobre: function (titulo, dt) { var id = livro.novaSobre(titulo, dt); abre(id); setTimeout(function () { livro.foca(); }, 300); return id; }
     };
   }

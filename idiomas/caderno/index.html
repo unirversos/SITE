@@ -86,6 +86,7 @@ h1{font-family:var(--f-display);font-weight:800;font-size:clamp(26px,5vw,34px);l
   <nav class="trail" aria-label="Trilha"><a href="/idiomas/japones/">← Minha trilha</a><details class="caixa" open><summary>🧰 Ferramentas</summary><span class="caixa-l"><a href="/idiomas/avatar/">🎨 Meu avatar</a><a href="/idiomas/hiragana/">あ Hiragana</a><a href="/idiomas/katakana/">ア Katakana</a><a href="/idiomas/kanji/">漢 Kanji</a><a href="/idiomas/numeros/">🔢 Números</a><a href="/idiomas/calendario/">📅 Calendário</a><a href="/idiomas/palavras/">📒 Minhas palavras</a><a href="/idiomas/caderno/" aria-current="page">📝 Caderno</a><a href="/idiomas/amuleto/">💎 Amuleto</a><a href="/idiomas/ar/">🌬️ Ar</a><a href="/idiomas/planeta-utopia/salao/">🪐 Planeta Utopia</a></span></details></nav>
   <style>.trail{flex-wrap:wrap;overflow:visible;align-items:center}.trail .caixa{flex:0 0 auto}.trail .caixa[open]{flex:1 1 100%;display:flex;flex-direction:column;gap:8px}.trail .caixa>summary{list-style:none;cursor:pointer;display:inline-flex;align-items:center;gap:6px;width:max-content;border:1.5px solid var(--line,#e7e1da);background:var(--card,#fff);border-radius:99px;padding:6px 14px;font-size:13.5px;font-weight:700}.trail .caixa>summary::-webkit-details-marker{display:none}.trail .caixa[open]>summary{border-color:var(--pink,#d9506f)}.trail .caixa-l{display:flex;flex-wrap:wrap;gap:8px}</style>
   <header>
+    <button type="button" id="recolher" style="float:right;margin:2px 0 8px 12px;font:inherit;font-size:14px;font-weight:700;border:1.5px solid var(--line,#e7e1da);background:var(--card,#fff);color:inherit;border-radius:99px;padding:8px 18px;min-height:40px;cursor:pointer">Recolher ↘</button>
     <h1>Caderno</h1>
     <p class="sub">Anotações livres, em páginas: escreva com o teclado e desenhe com a caneta por cima. Com a conta, tudo vai junto para qualquer aparelho.</p>
   </header>
@@ -93,8 +94,18 @@ h1{font-family:var(--f-display);font-weight:800;font-size:clamp(26px,5vw,34px);l
 </div>
 <script src="/caderno-dados.js?v=2"></script>
 <script src="/caderno-livro.js?v=6"></script>
-<script src="/caderno-ui.js?v=2"></script>
+<script src="/caderno-ui.js?v=3"></script>
 <script>window.UniCadernoTela = UniCadernoUI.montar(document.getElementById('cad'));</script>
+<script>
+/* Recolher: volta para a página de onde o caderno foi aberto (ou a anterior do site) e reabre o painel na mesma anotação */
+document.getElementById('recolher').onclick=function(){
+  var id=null,v=null;
+  try{id=window.UniCadernoTela.id();window.UniCaderno&&window.UniCaderno.agora&&window.UniCaderno.agora();v=JSON.parse(sessionStorage.getItem('uni-cf-volta')||'null');}catch(e){}
+  if(v&&v.u){try{sessionStorage.setItem('uni-cf-volta',JSON.stringify({u:v.u,id:id,r:1}));}catch(e){} location.href=v.u;return;}
+  try{if(document.referrer&&new URL(document.referrer).origin===location.origin&&history.length>1){history.back();return;}}catch(e){}
+  location.href='/idiomas/';
+};
+</script>
 <script>
 /* links antigos de "Caderno de palavras" (QR e #frases) agora vivem em Minhas palavras */
 (function(){var q=location.search,h=location.hash;if(/[?&]w=/.test(q)||h==='#frases')location.replace('/idiomas/palavras/'+q+h)})();

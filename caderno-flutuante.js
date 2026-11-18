@@ -34,7 +34,7 @@
     '<div class="h"><h2>Caderno</h2><button class="x" type="button" id="cf-f" aria-label="Fechar o Caderno">×</button></div>' +
     '<div class="r"><select id="cf-l" aria-label="Anotação"></select><button class="b p" type="button" id="cf-n">+ Nova</button></div>' +
     '<div id="cf-lv"></div><div class="vz" id="cf-vz" hidden>Ainda não há anotações. Toque em <b>+ Nova</b>.</div>' +
-    '<div class="f"><span><span id="cf-e" aria-live="polite">Salvo neste aparelho</span> <button class="b" type="button" id="cf-en" hidden>Entrar</button></span><span><button class="b" type="button" id="cf-z">Apagar</button> <a href="/idiomas/caderno/">Abrir em tela cheia →</a></span></div>';
+    '<div class="f"><span><span id="cf-e" aria-live="polite">Salvo neste aparelho</span> <button class="b" type="button" id="cf-en" hidden>Entrar</button></span><span><button class="b" type="button" id="cf-z">Apagar</button> <a href="/idiomas/caderno/" id="cf-tc">Abrir em tela cheia →</a></span></div>';
 
   function $(i) { return document.getElementById(i); }
   function lista() {
@@ -61,6 +61,21 @@
     p.addEventListener('keyup', function (e) { e.stopPropagation(); });
     p.addEventListener('keypress', function (e) { e.stopPropagation(); });
     while (fila.length) fila.shift()();
+    /* tela cheia: guarda de onde veio e qual anotação estava aberta, para o botão "Recolher" voltar e continuar de onde parou */
+    $('cf-tc').onclick = function (e) {
+      e.preventDefault();
+      var id = livro.id();
+      try { C.agora(); sessionStorage.setItem('uni-cf-volta', JSON.stringify({ u: location.pathname + location.search + location.hash, id: id || null })); } catch (x) {}
+      location.href = '/idiomas/caderno/' + (id ? '?n=' + encodeURIComponent(id) : '');
+    };
+    /* voltou da tela cheia com "Recolher": reabre o painel na mesma anotação */
+    try {
+      var v = JSON.parse(sessionStorage.getItem('uni-cf-volta') || 'null');
+      if (v && v.r && v.u === location.pathname + location.search + location.hash) {
+        sessionStorage.removeItem('uni-cf-volta');
+        abrir(true); if (v.id && C.obter(v.id)) abre(v.id);
+      }
+    } catch (x) {}
     $('cf-n').onclick = nova;
     $('cf-l').onchange = function () { abre(this.value); };
     $('cf-en').onclick = function () { C.entrar(); };
