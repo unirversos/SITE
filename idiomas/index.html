@@ -139,6 +139,8 @@ h1.q{font-family:'Baloo 2',cursive;font-weight:700;font-size:clamp(30px,5vw,44px
 .quiz a b{color:var(--pink-deep)}
 .quiz .bs{width:32px;height:32px;border-radius:50%;background:var(--blush);display:grid;place-items:center;font-size:17px;flex:none}
 
+.tri.avatar{--c:#4f7a58}.tri-par{display:grid;gap:14px}
+@media (min-width:760px){.tri-par{grid-template-columns:1fr 1fr}.tri-par .tri{grid-template-columns:1fr;justify-items:start;align-content:start;gap:10px}.tri-par .tri .fl{width:52px;height:52px;font-size:24px}.tri-par .tri.zero .fl{font-size:22px}}
 .pu-sec{padding:30px 0 6px;scroll-margin-top:70px}.pu-sec h2{font-family:'Baloo 2',cursive;font-weight:700;font-size:clamp(24px,4vw,32px);line-height:1.2;margin:0 0 4px}
 .pu-sec .sub{margin:0 0 14px}
 .pu-eb{margin:0 0 6px;font-size:12px;letter-spacing:3px;text-transform:uppercase;color:var(--pink-deep);font-weight:700}
@@ -168,7 +170,10 @@ h1.q{font-family:'Baloo 2',cursive;font-weight:700;font-size:clamp(30px,5vw,44px
   <h1 class="q" id="trilhas">Por onde você quer começar?</h1>
   <p class="sub">A conta é grátis e guarda o seu progresso em qualquer aparelho.</p>
   <div class="trilhas">
+    <div class="tri-par">
+    <a class="tri avatar" id="cardAvatar" href="/idiomas/avatar/"><span class="fl">🎨</span><span class="tx"><small>seu personagem</small><b>Meu avatar</b><span>Monte o seu personagem: ele acompanha você nas aulas e entra com você no Salão.</span></span><span class="go" id="avGo">Criar meu avatar →</span></a>
     <a class="tri zero" href="/idiomas/aula-zero/"><span class="fl">0</span><span class="tx"><small>bilhete de entrada · opcional</small><b>Aula Zero</b><span>Nunca estudou japonês? As 5 chaves em 15 minutos, antes dos mapas.</span></span><span class="go">Conhecer →</span></a>
+    </div>
     <a class="tri ja" href="/idiomas/japones/"><span class="fl">JA</span><span class="tx"><b>Japonês</b><small>trilha completa</small><span><strong>12 mapas de viagem</strong> com prova e carimbo, e o <strong>Salão do Planeta Utopia</strong>.</span></span><span class="go">Começar →</span></a>
     <div class="breve">
       <div><i style="background:#E4E8F1;color:#4c5a7a">EN</i><span><b>Inglês</b>Em breve</span></div>
@@ -290,5 +295,9 @@ h1.q{font-family:'Baloo 2',cursive;font-weight:700;font-size:clamp(30px,5vw,44px
 </script>
 <script src="/entrar.js" defer></script>
 <script defer src="/caderno-flutuante.js?v=12"></script>
+<script>
+/* se o avatar já existe, o card muda para "Editar" */
+(function(){try{var v=JSON.parse(localStorage.getItem('utopiaAvatar1')||'null');if(v&&v.sel){var g=document.getElementById('avGo');if(g)g.textContent='Editar meu avatar →';}}catch(e){}})();
+</script>
 </body>
 </html>
