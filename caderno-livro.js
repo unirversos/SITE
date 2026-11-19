@@ -55,8 +55,8 @@
     '.lv-dt ruby,.lv-sem ruby{font-family:"Baloo 2",system-ui,sans-serif;font-weight:700;font-size:max(15px,calc(var(--u,4px)*4.4));margin-right:calc(var(--u,4px)*1.2)}',
     '.lv-dt rt,.lv-sem rt{font-family:"Zen Maru Gothic",system-ui,sans-serif;font-size:max(8px,calc(var(--u,4px)*1.9));font-weight:500;color:#705f6c}',
     '.lv-sem{display:flex;gap:.calc(var(--u,4px)*4)}',
-    '.lv-sem button{font:inherit;cursor:pointer;position:relative;width:max(30px,calc(var(--u,4px)*7.6));height:max(32px,calc(var(--u,4px)*7.6));border:0;background:transparent;color:#3a2b38;display:grid;place-items:center;padding:0}',
-    '.lv-sem button ruby{margin:0;display:grid;justify-items:center;font-size:max(14px,calc(var(--u,4px)*4))}',
+    '.lv-sem button{font:inherit;cursor:pointer;position:relative;min-width:0;flex:0 1 auto;width:max(22px,calc(var(--u,4px)*7.6));height:max(32px,calc(var(--u,4px)*7.6));border:0;background:transparent;color:#3a2b38;display:grid;place-items:center;padding:0}',
+    '.lv-sem button ruby{margin:0;display:grid;justify-items:center;font-size:max(12px,calc(var(--u,4px)*4))}',
     '.lv-sem button::before{content:"";position:absolute;inset:0;border:2.5px solid #c23f5e;border-radius:52% 48% 55% 45%/48% 55% 45% 52%;transform:rotate(-6deg) scale(.6);opacity:0;transition:opacity .15s,transform .15s}',
     '.lv-sem button[aria-pressed="true"]{color:#c23f5e}.lv-sem button[aria-pressed="true"]::before{opacity:1;transform:rotate(-6deg) scale(1)}',
     '.lv-sem button:hover::before{opacity:.35;transform:rotate(-6deg) scale(1)}.lv-sem button[aria-pressed="true"]:hover::before{opacity:1}',
@@ -79,7 +79,7 @@
     /* navegação */
     '.lv-nav{display:flex;align-items:center;justify-content:center;gap:10px;flex-wrap:wrap}',
     '.lv-nav .lbl{font-size:13.5px;color:#705f6c;min-width:9em;text-align:center}',
-    '.lv-nav .mais{padding:0 14px}',
+    '.lv-nav .mais{padding:0 14px}.lv-nav .vst{padding:0 12px;gap:6px;display:inline-flex;align-items:center}.lv-nav .vst svg{width:20px;height:20px}',
     /* virar a página */
     '@keyframes lvFrente{from{transform:rotateY(-28deg);opacity:.25}to{transform:none;opacity:1}}',
     '@keyframes lvTras{from{transform:rotateY(28deg);opacity:.25}to{transform:none;opacity:1}}',
@@ -194,7 +194,7 @@
 
   function montar(el, opc) {
     opc = opc || {};
-    var C = opc.C || window.UniCaderno, id = null, pags = [], ini = 0, dupla = false, modo = 'txt', cor = 0, esp = 1, ferr = 'pen',
+    var C = opc.C || window.UniCaderno, id = null, pags = [], ini = 0, dupla = false, pref = (function () { try { return localStorage.getItem('uniCadernoVista'); } catch (x) { return null; } })(), modo = 'txt', cor = 0, esp = 1, ferr = 'pen',
       hist = [], penVisto = 0, ultimoM = 0, tSalva = null, pedeLimpar = false, ro = null;
 
     el.classList.add('lv'); if (opc.leitura) el.classList.add('leitura');
@@ -211,7 +211,7 @@
       '<button type="button" data-f="cl" aria-label="Limpar os desenhos desta página" title="Limpar os desenhos desta página">' + IC.cl + '</button></div>' +
       '</div>' +
       '<div class="lv-livro" aria-live="off"></div>' +
-      '<div class="lv-nav"><button type="button" data-n="-1" aria-label="Página anterior">' + IC.ant + '</button><span class="lbl" aria-live="polite"></span><button type="button" data-n="1" aria-label="Próxima página">' + IC.prox + '</button><button type="button" class="mais" data-n="mais">+ página</button></div>' +
+      '<div class="lv-nav"><button type="button" data-n="-1" aria-label="Página anterior">' + IC.ant + '</button><span class="lbl" aria-live="polite"></span><button type="button" data-n="1" aria-label="Próxima página">' + IC.prox + '</button><button type="button" class="mais" data-n="mais">+ página</button><button type="button" class="vst" data-n="vista" aria-label="Mudar entre uma página e duas páginas"></button></div>' +
       '<div class="lv-prof" hidden><button type="button" class="lv-pf" aria-pressed="false"></button><span class="lv-pfs" aria-live="polite"></span></div>' +
       '<p class="lv-dica" hidden>Com a caneta em uso, a palma da mão não risca a folha. Para virar a página, use as setas.</p>';
     var fBt = el.querySelector('.lv-fotoBt'), fIn = el.querySelector('.lv-fotoIn');
@@ -471,7 +471,7 @@
     });
     nav.addEventListener('click', function (e) {
       var b = e.target.closest('button'); if (!b || b.disabled) return;
-      if (b.dataset.n === 'mais') maisPagina(true); else anda(+b.dataset.n);
+      if (b.dataset.n === 'mais') maisPagina(true); else if (b.dataset.n === 'vista') { pref = dupla ? '1' : '2'; try { localStorage.setItem('uniCadernoVista', pref); } catch (x) {} ajusta(); } else anda(+b.dataset.n);
     });
     /* arrastar para o lado (no modo Texto) e setas do teclado */
     var x0 = null, y0 = null;
@@ -489,7 +489,8 @@
 
     /* ---------- tamanho ---------- */
     function ajusta() {
-      var w = el.clientWidth, d = !opc.simples && w >= 760;
+      var w = el.clientWidth, d = pref === '2' ? true : pref === '1' ? false : (!opc.simples && w >= 760);
+      var vb = nav.querySelector('.vst'); if (vb) { vb.innerHTML = d ? '<svg viewBox="0 0 20 20" aria-hidden="true"><rect x="4.500" y="2.500" width="11" height="15" rx="1.500"/></svg>1 pág.' : '<svg viewBox="0 0 20 20" aria-hidden="true"><rect x="1.500" y="3.500" width="7.500" height="13" rx="1.200"/><rect x="11" y="3.500" width="7.500" height="13" rx="1.200"/></svg>2 pág.'; vb.title = d ? 'Ver uma página por vez' : 'Ver duas páginas lado a lado'; }
       /* 1% da largura da folha, em px (no lugar de unidades de container: elas deixavam cada tecla lenta, ~1 s) */
       if (w) el.style.setProperty('--u', ((d ? w / 2 : w) / 100).toFixed(3) + 'px');
       if (d !== dupla) { dupla = d; el.classList.toggle('dupla', d); ini = dupla ? ini - (ini % 2) : ini; mostra(); }

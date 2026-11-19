@@ -121,7 +121,7 @@
   function carrega(src, fn) { var t = document.createElement('script'); t.src = src; t.onload = fn; document.head.appendChild(t); }
   function inicia() {
     function pronto() { C = window.UniCaderno; if (document.body) montar(); else document.addEventListener('DOMContentLoaded', montar); }
-    function com() { if (window.UniLivro) pronto(); else carrega('/caderno-livro.js?v=8', pronto); }
+    function com() { if (window.UniLivro) pronto(); else carrega('/caderno-livro.js?v=10', pronto); }
     if (window.UniCaderno) com(); else carrega('/caderno-dados.js?v=2', com);
   }
   inicia();
