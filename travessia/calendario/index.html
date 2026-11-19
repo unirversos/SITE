@@ -499,6 +499,7 @@ function mostrarSetup(edit){
   $('#sBtn').textContent=edit?'Salvar datas':'Criar meu calendário';
   $('#sCancel').hidden=!edit;
   $('#sTitulo').value=S.titulo;$('#sIni').value=S.ini;$('#sFim').value=S.fim;$('#sFuso').value=S.fuso;$('#sErr').textContent='';
+  if(!edit&&!S.ini){try{var pd=JSON.parse(localStorage.getItem('uniViagemDatas1')||'null');if(pd&&okData(pd.ini)&&okData(pd.fim)&&pd.fim>=pd.ini){$('#sIni').value=pd.ini;$('#sFim').value=pd.fim;}}catch(e){}}
   if(edit)$('#sIni').focus();
 }
 $('#fSetup').addEventListener('submit',function(ev){
