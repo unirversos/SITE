@@ -69,7 +69,11 @@
 
   function nome(t) { return String(t || '').split(/\s[—·|]\s/)[0].trim() || 'a página anterior'; }
   function abrir(v) {
-    p.classList.toggle('on', v); aba.setAttribute('aria-expanded', String(v)); aba.style.display = v ? 'none' : '';
+    p.classList.toggle('on', v); aba.setAttribute('aria-expanded', String(v));
+    aba.setAttribute('aria-label', v ? 'Recolher o Baú de ferramentas' : 'Abrir o Baú de ferramentas');
+    /* a aba continua visível: com o painel aberto ela gruda na borda dele, e clicar nela recolhe */
+    aba.style.right = v ? (p.offsetWidth || 380) + 'px' : '';
+    aba.style.zIndex = v ? '9002' : '';
     if (v) setTimeout(function () { var r = document.getElementById('bz-rec'); r && r.focus(); }, 60);
     else { aba.focus(); posicionar(); }
   }
@@ -85,7 +89,7 @@
     posicionar();
     var n = 0, iv = setInterval(function () { posicionar(); if (++n > 15) clearInterval(iv); }, 400);
     window.addEventListener('resize', posicionar);
-    aba.onclick = function () { abrir(true); };
+    aba.onclick = function () { abrir(!p.classList.contains('on')); };
     document.getElementById('bz-rec').onclick = function () { abrir(false); };
     p.addEventListener('keydown', function (e) { e.stopPropagation(); if (e.key === 'Escape') abrir(false); });
     p.addEventListener('keyup', function (e) { e.stopPropagation(); });
