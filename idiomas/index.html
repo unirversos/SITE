@@ -139,8 +139,13 @@ h1.q{font-family:'Baloo 2',cursive;font-weight:700;font-size:clamp(30px,5vw,44px
 .quiz a b{color:var(--pink-deep)}
 .quiz .bs{width:32px;height:32px;border-radius:50%;background:var(--blush);display:grid;place-items:center;font-size:17px;flex:none}
 
-.pu-sec{padding:30px 0 6px}.pu-sec h2{font-family:'Baloo 2',cursive;font-weight:700;font-size:clamp(24px,4vw,32px);line-height:1.2;margin:0 0 4px}
-.pu-sec .sub{margin:0 0 14px}.pu-sec .tri{padding:16px 20px}.pu-sec .tri b{font-size:21px}.pu-sec .tri .fl{font-size:26px}.pu-sec .tri+.tri{margin-top:12px}
+.pu-sec{padding:30px 0 6px;scroll-margin-top:70px}.pu-sec h2{font-family:'Baloo 2',cursive;font-weight:700;font-size:clamp(24px,4vw,32px);line-height:1.2;margin:0 0 4px}
+.pu-sec .sub{margin:0 0 14px}
+.pu-eb{margin:0 0 6px;font-size:12px;letter-spacing:3px;text-transform:uppercase;color:var(--pink-deep);font-weight:700}
+.pu-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}
+.pu-sec .tri{grid-template-columns:1fr;justify-items:start;align-content:start;gap:8px;padding:16px 18px}
+.pu-sec .tri b{font-size:20px}.pu-sec .tri .fl{width:46px;height:46px;font-size:22px}.pu-sec .tri .tx span{font-size:14px;line-height:1.45}.pu-sec .tri .go{font-size:14px}
+@media (max-width:560px){.pu-grid{gap:8px}.pu-sec .tri{padding:12px 10px;gap:6px;justify-items:center;text-align:center;border-left-width:1.5px;border-top:5px solid var(--c)}.pu-sec .tri .fl{width:40px;height:40px;font-size:20px}.pu-sec .tri b{font-size:15px}.pu-sec .tri .tx>span,.pu-sec .tri .go{display:none}}
 </style>
 <link rel="stylesheet" href="/estilo-celular.css?v=3">
 <script defer src="/menu-ativo.js?v=1"></script>
@@ -173,12 +178,15 @@ h1.q{font-family:'Baloo 2',cursive;font-weight:700;font-size:clamp(30px,5vw,44px
   </div>
   <p class="quiz"><a href="/idiomas/autoanalise/"><span class="bs" aria-hidden="true">🧭</span><span>Não sabe por onde começar? <b>Faça o quiz de 5 minutos</b> e descubra o seu caminho</span><span aria-hidden="true">→</span></a></p>
 
-  <section class="pu-sec" aria-labelledby="pu-t">
+  <section class="pu-sec" id="planeta-utopia" aria-labelledby="pu-t">
+    <p class="pu-eb">✦ Espírito · Encontros ao vivo</p>
     <h2 id="pu-t">🪐 Praticar com a turma · Planeta Utopia</h2>
     <p class="sub">Depois de aprender, converse de verdade: com o seu avatar, em dupla ou escrevendo para a turma.</p>
+    <div class="pu-grid">
     <a class="tri" style="--c:#b5514d" href="/idiomas/planeta-utopia/salao/"><span class="fl">🏮</span><span class="tx"><b>O Salão</b><span>Ande com o seu avatar, sente no sofá ou na mesa e converse em japonês. Os jogos abrem na hora, mesmo sem ninguém por perto.</span></span><span class="go">Entrar no Salão →</span></a>
     <a class="tri" style="--c:#4f7a58" href="/idiomas/planeta-utopia/salao/aula-dupla/"><span class="fl">🎓</span><span class="tx"><b>Aula em dupla</b><span>Duas alunas, cada uma na sua tela, se apresentam e pedem um café em japonês. Dura cerca de 1 hora.</span></span><span class="go">Entrar na aula →</span></a>
     <a class="tri" style="--c:#b5514d" href="/paralelos/"><span class="fl">💬</span><span class="tx"><b>Mural da comunidade</b><span>Para praticar escrevendo, deixar um recado e ler o que a turma está compartilhando.</span></span><span class="go">Abrir o mural →</span></a>
+    </div>
   </section>
 
   <section class="cadsec">
