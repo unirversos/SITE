@@ -30,16 +30,31 @@
     '#cf-p .vz{background:#fff;border:1.5px dashed #ecdadd;border-radius:16px;padding:28px 16px;text-align:center;color:#705f6c}';
   document.head.appendChild(css);
 
+  /* painel e aba do Dicionário: mesma família do Caderno e do Baú */
+  var cssD = document.createElement('style');
+  cssD.textContent = css.textContent.replace(/#cf-p/g, '#cf-dp').replace(/#cf-aba/g, '#cf-dab').replace(/#C23F5E|#c23f5e/g, '#7d6bb5').replace(/#ecdadd/g, '#dcd3ee') +
+    '@media (min-width:701px){#cf-dab{left:0;right:auto;top:42%;border:2px solid #dcd3ee;border-left:0;border-right:6px solid #7d6bb5;border-radius:0 18px 18px 0;box-shadow:6px 8px 20px -12px rgba(58,43,56,.35)}#cf-dp{right:auto;left:0;border-left:0;border-right:4px solid #7d6bb5;transform:translateX(-105%);box-shadow:14px 0 36px -18px rgba(58,43,56,.45)}#cf-dp.on{transform:none}}' +
+    '@media (min-width:1100px){#cf-dab{top:auto;bottom:140px}}' +
+    '#cf-dp .dm{flex:1;min-height:0}' +
+    '@media (max-width:700px){#cf-dab{top:auto!important;bottom:max(10px,env(safe-area-inset-bottom,0px))!important;left:50%!important;right:auto!important;transform:translateX(-50%)}}' +
+    '@media (max-width:430px){#cf-dab,#cf-aba,#bz-aba{padding:8px 11px!important;gap:5px!important;font-size:14px!important}}';
+  document.head.appendChild(cssD);
+
   var aba = document.createElement('button');
   aba.id = 'cf-aba'; aba.type = 'button'; aba.setAttribute('aria-expanded', 'false'); aba.setAttribute('aria-controls', 'cf-p'); aba.setAttribute('aria-label', 'Abrir o Caderno de Unir Versos');
   aba.innerHTML = '<svg viewBox="0 0 28 28" aria-hidden="true"><rect x="5" y="2.500" width="17.500" height="22" rx="1.600" fill="#B5514D" stroke="#8a3a37" stroke-width="1.200"/><rect x="5" y="2.500" width="3" height="22" rx="1" fill="#8a3a37" stroke="none"/><rect x="17" y="1.800" width="2.200" height="23.400" rx="1" fill="#3a2b38" stroke="none"/><rect x="9.500" y="8" width="6.600" height="7" rx="1" fill="#fffdf9" stroke="none"/><path d="M10.800 10.400h4M10.800 12.600h4" stroke="#3a2b38" stroke-width="1" fill="none"/><path d="M11.500 24.500v3.200l1.500-1.100 1.500 1.100v-3.200Z" fill="#C0913F" stroke="none"/></svg><span>Caderno</span>';
+
+  var dab = document.createElement('button');
+  dab.id = 'cf-dab'; dab.type = 'button'; dab.setAttribute('aria-expanded', 'false'); dab.setAttribute('aria-controls', 'cf-dp'); dab.setAttribute('aria-label', 'Abrir o Dicionário');
+  dab.innerHTML = '<svg viewBox="0 0 28 28" aria-hidden="true"><path d="M3.500 6c3.500-1.500 7-1 10.500 1.200 3.500-2.200 7-2.700 10.500-1.200v16.500c-3.500-1.500-7-1-10.500 1.200-3.500-2.200-7-2.700-10.500-1.200Z" fill="#fff" stroke="#5d4c97" stroke-width="1.500"/><path d="M14 7.200v16.500" stroke="#5d4c97" stroke-width="1.500"/><path d="M7 10.500h4.500M7 14h4.500M16.500 10.500H21M16.500 14H21" stroke="#7d6bb5" stroke-width="1.300" stroke-linecap="round"/></svg><span>Dicionário</span>';
+  var dp = document.createElement('aside');
+  dp.id = 'cf-dp'; dp.setAttribute('aria-label', 'Dicionário');
+  dp.innerHTML = '<div class="h"><h2>Dicionário</h2><button class="x" type="button" id="cf-df" aria-label="Fechar o Dicionário">×</button></div><div class="dm" id="cf-dm"></div>';
 
   var p = document.createElement('aside');
   p.id = 'cf-p'; p.setAttribute('aria-label', 'Caderno de Unir Versos');
   p.innerHTML =
     '<div class="h"><h2>Caderno de Unir Versos</h2><button class="x" type="button" id="cf-f" aria-label="Fechar o Caderno de Unir Versos">×</button></div>' +
-    '<div class="ab" role="tablist"><button type="button" id="cf-ta" class="on" role="tab" aria-selected="true"><svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="4" y="2.500" width="11" height="15" rx="1.500"/><path d="M7 7h5M7 10h5"/></svg>Caderno</button><button type="button" id="cf-td" role="tab" aria-selected="false"><svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 4.500c2.500-1 4.500-.8 7 .8 2.500-1.600 4.500-1.800 7-.8v11c-2.500-1-4.500-.8-7 .8-2.500-1.600-4.500-1.800-7-.8Z"/><path d="M10 5.300v11"/></svg>Dicionário</button></div>' +
-    '<div id="cf-dc" hidden></div>' +
     '<div class="r" id="cf-r"><select id="cf-l" aria-label="Anotação"></select><button class="b p" type="button" id="cf-n">+ Nova</button></div>' +
     '<div id="cf-nb"><div id="cf-lv"></div><div class="vz" id="cf-vz" hidden>Ainda não há anotações. Toque em <b>+ Nova</b>.</div></div>' +
     '<div class="f"><span><span id="cf-e" aria-live="polite">Salvo neste aparelho</span> <button class="b" type="button" id="cf-en" hidden>Entrar</button></span><span><button class="b" type="button" id="cf-z">Apagar</button> <a href="/idiomas/caderno/" id="cf-tc">Abrir em tela cheia →</a></span></div>';
@@ -54,13 +69,14 @@
   function nova() { var n = C.nova(); abre(n.id); livro.foca(); }
   function estado() { $('cf-e').textContent = C.texto(); $('cf-en').hidden = C.estado() !== 'sem-login'; }
   function abrir(v) {
+    if (v && window.innerWidth < 1100 && dp.classList.contains('on')) { dp.classList.remove('on'); dab.style.display = ''; dab.setAttribute('aria-expanded', 'false'); }
     p.classList.toggle('on', v); aba.setAttribute('aria-expanded', String(v)); aba.style.display = v ? 'none' : '';
     if (v) { estado(); if (!livro.id() || !C.obter(livro.id())) abreProxima(); livro.reajustar(); setTimeout(function () { livro.reajustar(); livro.foca(); }, 250); }
     else { C.agora(); aba.focus(); }
   }
 
   function montar() {
-    document.body.appendChild(aba); document.body.appendChild(p);
+    document.body.appendChild(aba); document.body.appendChild(dab); document.body.appendChild(p); document.body.appendChild(dp);
     livro = UniLivro.montar($('cf-lv'), { simples: true, aoMudar: function () { tTeclou = Date.now(); clearTimeout(tl); tl = setTimeout(lista, 250); } });
     aba.onclick = function () { abrir(true); };
     $('cf-f').onclick = function () { abrir(false); };
@@ -85,17 +101,6 @@
       }
     } catch (x) {}
     $('cf-n').onclick = nova;
-    var dic = null;
-    function vista(d) {
-      $('cf-ta').classList.toggle('on', !d); $('cf-td').classList.toggle('on', d); $('cf-ta').setAttribute('aria-selected', String(!d)); $('cf-td').setAttribute('aria-selected', String(d));
-      $('cf-r').hidden = d; $('cf-nb').hidden = d; $('cf-dc').hidden = !d;
-      if (d) {
-        if (!dic) {
-          var fazer = function () { dic = UniDic.montar($('cf-dc'), { salvar: salvaPalavra }); dic.foca(); };
-          if (window.UniDic) fazer(); else carrega('/caderno-dic.js?v=3', fazer);
-        } else dic.foca();
-      } else { livro.reajustar(); }
-    }
     /* "Salvar no caderno": acrescenta a palavra no fim da anotação aberta (ou cria uma anotação nova) */
     function salvaPalavra(linha) {
       var id = livro.id(), n = id && C.obter(id);
@@ -103,9 +108,21 @@
       C.atualizar(id, { x: (n.x ? n.x.replace(/\s+$/, '') + '\n' : '') + linha });
       abre(id);
     }
-    $('cf-ta').onclick = function () { vista(false); };
-    $('cf-td').onclick = function () { vista(true); };
-    window.UniCadernoFlutuante.dicionario = function () { abrir(true); vista(true); };
+    var dic = null;
+    dp.addEventListener('keydown', function (e) { e.stopPropagation(); if (e.key === 'Escape') abrirDic(false); });
+    dp.addEventListener('keyup', function (e) { e.stopPropagation(); });
+    dp.addEventListener('keypress', function (e) { e.stopPropagation(); });
+    dab.onclick = function () { abrirDic(true); };
+    $('cf-df').onclick = function () { abrirDic(false); };
+    function abrirDic(v) {
+      if (v && window.innerWidth < 1100 && p.classList.contains('on')) abrir(false);
+      dp.classList.toggle('on', v); dab.setAttribute('aria-expanded', String(v)); dab.style.display = v ? 'none' : '';
+      if (v) {
+        if (!dic) { var fazer = function () { dic = UniDic.montar($('cf-dm'), { salvar: salvaPalavra }); dic.foca(); }; if (window.UniDic) fazer(); else carrega('/caderno-dic.js?v=3', fazer); }
+        else dic.foca();
+      } else dab.focus();
+    }
+    window.UniCadernoFlutuante.dicionario = function () { abrirDic(true); };
     $('cf-l').onchange = function () { abre(this.value); };
     $('cf-en').onclick = function () { C.entrar(); };
     $('cf-z').onclick = function () {
