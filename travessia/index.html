@@ -137,6 +137,9 @@ h1 em{font-style:normal;color:var(--pink)}
 .verr{margin:0;color:var(--pink-d);font-size:14px;min-height:0}
 .verr:empty{display:none}.vf[hidden],.vok[hidden]{display:none}
 @media (max-width:640px){.vf{width:100%;gap:6px 10px;padding:10px 12px;border-radius:16px}.vf .vq{flex:1 1 100%;font-size:15px}.vf label{flex:1 1 0;min-width:0;flex-direction:column;align-items:stretch;gap:2px;font-size:12px}.vf input{min-width:0;width:100%;min-height:40px;padding:4px 8px;font-size:14px}.vf .btn{flex:1 1 100%;min-height:40px;font-size:14px;padding:6px 14px}}
+.vprazo{margin:0;font-size:14.5px;color:var(--muted)}.vprazo[hidden]{display:none}.vprazo a{color:var(--pink);font-weight:700;text-decoration:none;margin-left:4px}.vprazo a:hover{text-decoration:underline}
+.tool .bd{font-style:normal;font-size:12px;font-weight:700;color:var(--sage);background:var(--sage-soft);border-radius:999px;padding:1px 10px;line-height:1.6;margin-bottom:6px}
+.tool.depois{border-style:dashed;border-color:var(--line);border-top:5px dashed var(--line);background:transparent;box-shadow:none}.tool.depois .tico{opacity:.8}
 /* pontes */
 .pontes{display:grid;gap:12px;grid-template-columns:repeat(auto-fit,minmax(min(100%,320px),1fr))}
 .ponte{display:grid;gap:4px;background:var(--card);border:1.5px solid var(--line);border-radius:16px;padding:16px 18px;align-content:start}
@@ -174,16 +177,10 @@ footer a{color:var(--pink);text-decoration:none;display:inline-flex;align-items:
     <form class="viagem" id="viagem" novalidate aria-label="Datas da viagem">
       <div class="vf" id="vForm"><span class="vq">Quando você viaja?</span><label>De<input type="date" id="vIni"></label><label>até<input type="date" id="vFim"></label><button type="submit" class="btn pri">Montar calendário →</button></div>
       <p class="vok" id="vOk" hidden></p>
+      <p class="vprazo" id="onde-prazo" hidden></p>
       <p class="verr" id="vErr" role="alert"></p>
     </form>
   </header>
-
-  <aside class="onde" id="onde" hidden aria-labelledby="onde-t">
-    <strong class="t" id="onde-t">Onde você está</strong>
-    <p id="onde-resumo"></p>
-    <p id="onde-prazo"></p>
-    <a id="onde-ir" href="/travessia/calendario/">Continuar →</a>
-  </aside>
 
   <section aria-label="Ferramentas da travessia" id="ferramentas">
     <div class="grid">
@@ -192,7 +189,7 @@ footer a{color:var(--pink);text-decoration:none;display:inline-flex;align-items:
       <article class="tool"><span class="tico"><svg viewBox="0 0 28 28" aria-hidden="true"><ellipse cx="14" cy="26" rx="10" ry="1.3" fill="#4A4149" opacity=".15"/><rect x="4.500" y="5.500" width="19" height="18" rx="2.500" fill="#fffdf9" stroke="#a08a5a" stroke-width="1.200"/><path d="M4.500 8a2.500 2.500 0 0 1 2.500-2.500h14A2.500 2.500 0 0 1 23.500 8v3h-19Z" fill="#8e6a1f"/><path d="M9.500 3.500v4M18.500 3.500v4" stroke="#5d4c42" stroke-width="1.500" stroke-linecap="round"/><g fill="#d9c9a0"><circle cx="9" cy="15" r="1.200"/><circle cx="14" cy="15" r="1.200"/><circle cx="19" cy="15" r="1.200"/><circle cx="9" cy="19.500" r="1.200"/><circle cx="19" cy="19.500" r="1.200"/></g><circle cx="14" cy="19.500" r="2.200" fill="#b5514d"/></svg></span><h3><a class="go" href="/travessia/calendario/">Calendário de viagem</a></h3><p>Adicione seus endereços e eventos.</p></article>
       <article class="tool"><span class="tico"><svg viewBox="0 0 28 28" aria-hidden="true"><ellipse cx="14" cy="26" rx="10" ry="1.3" fill="#4A4149" opacity=".15"/><rect x="5" y="4" width="18" height="16" rx="6" fill="#fffdf9" stroke="#517158" stroke-width="1.300"/><rect x="8" y="7.500" width="12" height="6" rx="2" fill="#E1EDE5" stroke="#517158" stroke-width="1"/><path d="M5 16.500h18" stroke="#b5514d" stroke-width="1.500"/><circle cx="9.500" cy="18" r="1.100" fill="#8e6a1f"/><circle cx="18.500" cy="18" r="1.100" fill="#8e6a1f"/><path d="M8 24l2-4M20 24l-2-4M8 24h12" stroke="#517158" stroke-width="1.300" stroke-linecap="round" fill="none"/></svg></span><h3><a class="go" href="/travessia/deslocamento/">Deslocamentos e aplicativos</a></h3><p>Trens, passagens e passo a passo.</p></article>
       <article class="tool"><span class="tico"><svg viewBox="0 0 28 28" aria-hidden="true"><ellipse cx="14" cy="26" rx="10" ry="1.3" fill="#4A4149" opacity=".15"/><g transform="rotate(4 14 14)"><rect x="6.500" y="3.500" width="15.500" height="21" rx="1.800" fill="#6b8f72" stroke="#44614b" stroke-width="1.200"/><rect x="6.500" y="3.500" width="3" height="21" rx="1.200" fill="#44614b"/><circle cx="15.500" cy="11.500" r="4" fill="#F6EBCB" stroke="#44614b" stroke-width="1"/><path d="M15.500 8.500l1.300 3-3 1.300 1.700-4.300Z" fill="#b5514d"/><path d="M11.500 19.500h8" stroke="#F6EBCB" stroke-width="1.300" stroke-linecap="round"/></g></svg></span><h3><a class="go" href="/travessia/guia-sobrevivencia/">Guia de sobrevivência</a></h3><p>Coisas que você precisa saber<br>e coisas que você precisa saber falar.</p></article>
-      <article class="tool"><span class="tico"><svg viewBox="0 0 28 28" aria-hidden="true"><ellipse cx="14" cy="26" rx="10" ry="1.3" fill="#4A4149" opacity=".15"/><g transform="rotate(-4 14 14)"><rect x="6" y="3.500" width="16" height="21" rx="1.500" fill="#fffdf9" stroke="#a08a5a" stroke-width="1.200"/><rect x="8" y="5.500" width="12" height="3.200" rx=".8" fill="#b5514d"/><rect x="8" y="10.500" width="12" height="7" rx=".8" fill="#E1EDE5"/><path d="M8 17.500l3.500-3.500 2.500 2.500 2-2 4 3Z" fill="#8fb59a"/><path d="M8 20.500h12M8 22.500h7" stroke="#d9c9a0" stroke-width="1.100" stroke-linecap="round"/></g></svg></span><h3><a class="go" href="/loja/revista/">Revista Memórias</a></h3><p>Para guardar depois da viagem.</p></article>
+      <article class="tool depois"><span class="tico"><svg viewBox="0 0 28 28" aria-hidden="true"><ellipse cx="14" cy="26" rx="10" ry="1.3" fill="#4A4149" opacity=".15"/><g transform="rotate(-4 14 14)"><rect x="6" y="3.500" width="16" height="21" rx="1.500" fill="#fffdf9" stroke="#a08a5a" stroke-width="1.200"/><rect x="8" y="5.500" width="12" height="3.200" rx=".8" fill="#b5514d"/><rect x="8" y="10.500" width="12" height="7" rx=".8" fill="#E1EDE5"/><path d="M8 17.500l3.500-3.500 2.500 2.500 2-2 4 3Z" fill="#8fb59a"/><path d="M8 20.500h12M8 22.500h7" stroke="#d9c9a0" stroke-width="1.100" stroke-linecap="round"/></g></svg></span><h3><a class="go" href="/loja/revista/">Revista Memórias</a></h3><p>Para guardar depois da viagem.</p></article>
     </div>
   </section>
 
@@ -222,7 +219,10 @@ footer a{color:var(--pink);text-decoration:none;display:inline-flex;align-items:
   var cal=ler('uniCalendario1'),pd=ler('uniViagemDatas1');
   if(cal&&ok(cal.ini)&&ok(cal.fim)&&cal.fim>=cal.ini){
     form.hidden=true;vok.hidden=false;
-    vok.appendChild(document.createTextNode('📅 '+br(cal.ini)+' a '+br(cal.fim)+' · '+dias(cal.ini,cal.fim)+' dias'));
+    var hj=new Date(),hs=hj.getFullYear()+'-'+String(hj.getMonth()+1).padStart(2,'0')+'-'+String(hj.getDate()).padStart(2,'0');
+    var st=hs<cal.ini?'faltam '+(dias(hs,cal.ini)-1)+(dias(hs,cal.ini)-1===1?' dia':' dias'):(hs<=cal.fim?'viagem em andamento':'viagem concluída');
+    var nev=Array.isArray(cal.ev)?cal.ev.length:0;
+    vok.appendChild(document.createTextNode('📅 '+br(cal.ini)+' a '+br(cal.fim)+' · '+st+(nev?' · '+nev+(nev===1?' evento':' eventos'):'')));
     var a=document.createElement('a');a.href='/travessia/calendario/';a.textContent='Abrir calendário →';vok.appendChild(a);
     return;
   }
@@ -239,39 +239,40 @@ footer a{color:var(--pink);text-decoration:none;display:inline-flex;align-items:
 })();
 </script>
 <script>
-/* Só leitura: lê o que o calendário e a página de ingressos já guardaram NESTE aparelho (uniCalendario1, agQueroIr e, dos dados antigos, travessiaStatusV1).
-   Não grava nem altera nada. Tudo entra na tela com textContent. */
+/* Só leitura: lê o que o calendário, os ingressos e a burocracia já guardaram NESTE aparelho. Não grava nada. Tudo entra na tela com textContent. */
 (function(){
   function ler(k){try{return JSON.parse(localStorage.getItem(k)||'null');}catch(e){return null;}}
-  var cal=ler('uniCalendario1'), st=ler('travessiaStatusV1');
-  var ev=cal&&Array.isArray(cal.ev)?cal.ev.filter(function(e){return e&&/^\d{4}-\d{2}-\d{2}$/.test(e.data);}):[];
+  var D=/^\d{4}-\d{2}-\d{2}$/;
+  var cal=ler('uniCalendario1'),st=ler('travessiaStatusV1'),bur=ler('travessiaBurocracia1');
+  var ev=cal&&Array.isArray(cal.ev)?cal.ev.filter(function(e){return e&&D.test(e.data);}):[];
   var itens=st&&st.itens&&typeof st.itens==='object'?st.itens:{};
-  var hoje=new Date();var hojeS=hoje.getFullYear()+'-'+String(hoje.getMonth()+1).padStart(2,'0')+'-'+String(hoje.getDate()).padStart(2,'0');
+  var h=new Date(),hojeS=h.getFullYear()+'-'+String(h.getMonth()+1).padStart(2,'0')+'-'+String(h.getDate()).padStart(2,'0');
   var qi=cal&&cal.qi&&typeof cal.qi==='object'&&Object.keys(cal.qi).length?cal.qi:(ler('agQueroIr')||{});
   var pz={};
-  Object.keys(itens).forEach(function(id){var i=itens[id];if(i&&i.status==='ganhei'&&/^\d{4}-\d{2}-\d{2}$/.test(i.prazo||''))pz[id]=i.prazo;});
-  Object.keys(qi).forEach(function(id){var q=qi[id];if(!q)return;if(q.st==='ganhei'&&/^\d{4}-\d{2}-\d{2}$/.test(q.prazo||''))pz[id]=q.prazo;else if(q.st)delete pz[id];});
+  Object.keys(itens).forEach(function(id){var i=itens[id];if(i&&i.status==='ganhei'&&D.test(i.prazo||''))pz[id]=i.prazo;});
+  Object.keys(qi).forEach(function(id){var q=qi[id];if(!q)return;if(q.st==='ganhei'&&D.test(q.prazo||''))pz[id]=q.prazo;else if(q.st)delete pz[id];});
   var prazos=Object.keys(pz).filter(function(id){return pz[id]>=hojeS;}).map(function(id){return {id:id,prazo:pz[id]};}).sort(function(a,b){return a.prazo<b.prazo?-1:1;});
-  if(!ev.length&&!prazos.length)return;
   function br(d){var p=d.split('-');return p[2]+'/'+p[1];}
-  var dias={};ev.forEach(function(e){dias[e.data]=1;});var nd=Object.keys(dias).length;
-  var box=document.getElementById('onde');
-  var r=document.getElementById('onde-resumo'),pz=document.getElementById('onde-prazo'),ir=document.getElementById('onde-ir');
-  if(ev.length){
-    r.textContent='Seu calendário tem '+ev.length+(ev.length===1?' evento':' eventos')+' em '+nd+(nd===1?' dia.':' dias.');
-  }else r.hidden=true;
-  function mostrar(nome){
-    var q=prazos[0];
-    pz.textContent='Prazo de pagamento mais próximo: '+(nome?nome+' · ':'')+br(q.prazo)+(prazos.length>1?' (+'+(prazos.length-1)+' depois)':'')+'.';
-    ir.textContent='Abrir meus ingressos →';ir.href='/travessia/ingressos/';
-  }
+  function selo(card,txt){var c=document.querySelector('.tool a[href="'+card+'"]');if(!c||!txt)return;var t=c.closest('.tool'),e=document.createElement('em');e.className='bd';e.textContent=txt;t.appendChild(e);}
+  /* selos nos cards */
+  if(ev.length)selo('/travessia/calendario/',ev.length+(ev.length===1?' evento':' eventos'));
+  var nb=bur?Object.keys(bur).filter(function(k){return bur[k];}).length:0;
+  if(nb)selo('/travessia/burocracia/',nb+(nb===1?' item feito':' itens feitos'));
+  var nq=Object.keys(qi).filter(function(k){return qi[k]&&qi[k].st;}).length;
+  if(prazos.length)selo('/travessia/ingressos/',prazos.length===1?'prazo em '+br(prazos[0].prazo):prazos.length+' prazos · o 1º em '+br(prazos[0].prazo));
+  else if(nq)selo('/travessia/ingressos/',nq+(nq===1?' na sua lista':' na sua lista'));
+  /* linha do prazo mais próximo, perto das datas */
   if(prazos.length){
+    var pe=document.getElementById('onde-prazo');
+    function mostrar(nome){
+      pe.textContent='🎟️ Prazo de pagamento mais próximo: '+(nome?nome+' · ':'')+br(prazos[0].prazo)+(prazos.length>1?' (+'+(prazos.length-1)+' depois) ':' ');
+      var a=document.createElement('a');a.href='/travessia/ingressos/';a.textContent='Abrir meus ingressos →';pe.appendChild(a);pe.hidden=false;
+    }
     mostrar('');
     var s=document.createElement('script');s.src='/travessia/agendamentos/regras.js?v=3';
     s.onload=function(){var a=(window.AGENDA_REGRAS||[]).filter(function(x){return x.id===prazos[0].id;})[0];if(a&&a.nome)mostrar(a.nome);};
     document.head.appendChild(s);
-  }else pz.hidden=true;
-  box.hidden=false;
+  }
 })();
 </script>
 <script>
