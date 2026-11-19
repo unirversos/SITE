@@ -86,6 +86,33 @@ body{font-family:'Zen Maru Gothic',sans-serif;color:var(--ink);background:var(--
 .foot .tags{display:flex;gap:16px;justify-content:center;flex-wrap:wrap;font-size:13px;color:var(--pink-deep);}
 .foot .credit{margin-top:18px;font-size:11.5px;color:var(--ink-soft);opacity:.7;}
 
+
+/* enxuto */
+.el .icon svg{width:44px;height:44px;display:block}
+.el{text-align:center;padding:18px 16px}.el .icon{display:grid;place-items:center;margin-bottom:4px}
+.el p{border-top:0;padding-top:4px}
+.el .mais{margin-top:8px;text-align:left}.el .mais summary{cursor:pointer;font-size:12.5px;color:var(--pink);font-weight:600;text-align:center;list-style:none;min-height:30px;display:flex;align-items:center;justify-content:center}.el .mais summary::-webkit-details-marker{display:none}.el .mais ul{margin-top:8px}
+.elemental,.udetail{padding:36px 0}
+.frentes{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:12px}
+a.frente{display:grid;justify-items:center;text-align:center;gap:2px;grid-template-columns:none;padding:16px 8px;border-left:1px solid var(--blush-2);border-top:4px solid var(--c);text-decoration:none;color:inherit;transition:transform .18s}
+a.frente:hover{transform:translateY(-2px)}
+a.frente > :not(.num){grid-column:auto}
+.frente .fi svg{width:50px;height:50px;display:block}
+a.frente h3{font-size:16px;margin:2px 0 0}
+a.frente .desc{font-size:12.5px;line-height:1.4;margin:0}
+@media (max-width:640px){.frentes{grid-template-columns:repeat(2,minmax(0,1fr))}}
+.quote{padding:40px 0}
+
+/* quadrado igual ao da home */
+.els{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:10px}
+@media (max-width:820px){.els{grid-template-columns:repeat(2,minmax(0,1fr))}.els .esp{grid-column:1/-1}}
+.els .el{align-content:start;border:0;border-radius:16px;padding:14px 14px 12px;background:#fff;text-align:left;display:grid;gap:2px;justify-items:start;transition:none}
+.els .el:hover{transform:none;box-shadow:none}
+.els .el .icon{display:block;margin:0}
+.els .el .icon svg{width:36px;height:36px}
+.els .el b{font-family:'Baloo 2',cursive;font-size:17px;font-weight:600}
+.els .el small{color:var(--ink-soft);font-size:13px;line-height:1.45}
+.els .el.esp{background:var(--lav-soft)}
 </style>
 <link rel="stylesheet" href="/estilo-celular.css?v=3">
 <script defer src="/menu-ativo.js?v=2"></script><script defer src="/voltar-global.js?v=4"></script>
@@ -106,14 +133,12 @@ body{font-family:'Zen Maru Gothic',sans-serif;color:var(--ink);background:var(--
   </nav>
 
   <header class="hero">
-    <p class="eyebrow">o convite</p>
     <h1>Aprenda a se comunicar<br>a partir da sua <em>essência</em>.</h1>
   </header>
 
   <section class="manifesto">
     <p class="lead">Estou muito animada para te contar sobre este projeto, que integra tantas e tantas coisas em uma só.</p>
     <p>O objetivo do que construo aqui é te ajudar a realmente se conectar, se expressar, se posicionar, interagir, comunicar e <strong>viver</strong> a sua essência com segurança.</p>
-    <p>Por isso o projeto tem mais de um caminho: estudar <a href="/idiomas/">idiomas</a>, praticar com outras pessoas, <a href="/travessia/">planejar a viagem</a> e <a href="/paralelos/">pensar em voz alta</a>. Em todos, a gente começa pela vida real e pela primeira pessoa: você cria o seu <a href="/idiomas/avatar/">avatar</a>, dá voz a ele falando de si, e só então sai para conhecer e explorar novos lugares nos <a href="/idiomas/japones/">mapas</a> e pessoas da <a href="/idiomas/planeta-utopia/salao/">comunidade utopia</a>.</p>
     <p>Se os nossos caminhos se cruzaram neste tempo e espaço, podemos ser um ponto de transformação no microcosmo um do outro.</p>
     <div class="assinatura">
       <img src="/sobre/aline.jpg" alt="Aline Kikuti" width="88" height="88" loading="lazy" decoding="async">
@@ -122,93 +147,26 @@ body{font-family:'Zen Maru Gothic',sans-serif;color:var(--ink);background:var(--
   </section>
 
   <!-- QUADRADO ELEMENTAL -->
-  <section class="elemental">
-    <p class="eyebrow">a metodologia</p>
-    <h2 class="stitle">O Quadrado Elemental</h2>
-    <p class="sintro">A espinha dorsal de tudo que crio — não só das aulas de idioma, mas do diário, do guia de viagem e do canal de escuta. Quatro elementos que cobrem o ciclo inteiro de aprender e se expressar.</p>
-
-    <div class="quad">
-      <div class="el">
-        <span class="icon">🔥</span>
-        <h3>Fogo</h3>
-        <p class="tag">início</p>
-        <ul><li>a busca do conhecimento</li><li>exploração do exterior</li><li>exposição e assimilação</li><li>momentos a-há!</li></ul>
-        <p>O brilho no olhar, o impulso que faz a gente realizar as coisas. Começamos por ele.</p>
-        <p class="nomapa"><b>No mapa:</b> Palavras e Moldes, as peças que você descobre e toca.</p>
-      </div>
-      <div class="el">
-        <span class="icon">💧</span>
-        <h3>Água</h3>
-        <p class="tag">fluidez</p>
-        <ul><li>mergulho no contexto</li><li>leitura</li><li>escuta profunda</li><li>perguntas geradoras</li></ul>
-        <p>O mergulho nas profundezas da psique, como o oceano — em busca do que ainda nos falta para lidar com a superfície.</p>
-        <p class="nomapa"><b>No mapa:</b> Ouvir, a escuta pura e o fluxo do som.</p>
-      </div>
-      <div class="el">
-        <span class="icon">🌱</span>
-        <h3>Terra</h3>
-        <p class="tag">materialidade</p>
-        <ul><li>objetividade</li><li>escrita criativa</li><li>estabilidade e segurança</li><li>expressão livre do ser</li></ul>
-        <p>O palco da vida: materializar o que foi adquirido no mergulho. Colher os frutos e se expressar com liberdade.</p>
-        <p class="nomapa"><b>No mapa:</b> Consulta e Cena. Tudo fica em <a href="/idiomas/palavras/">Minhas palavras</a>: suas palavras, a sua frase com a sua voz e as cenas das aulas para rever.</p>
-      </div>
-      <div class="el">
-        <span class="icon">🌬️</span>
-        <h3>Ar</h3>
-        <p class="tag">transmissão</p>
-        <ul><li>a fala</li><li>a memória</li><li>a interação e integração</li><li>a conversação</li></ul>
-        <p>A troca. O momento de refinar e internalizar o que se aprendeu. Ar é integrar para conectar.</p>
-        <p class="nomapa"><b>No mapa:</b> a troca e o movimento, a conversa com pessoas reais no <a href="/idiomas/planeta-utopia/salao/">Salão</a>.</p>
-      </div>
-    </div>
-
-    <div class="fifth">
-      <h3>✦ E o quinto elemento: o Espírito</h3>
-      <p>Não vem pronto — é cocriado. Nasce quando os quatro se encontram numa interação viva, cada pessoa dando corpo ao seu avatar e falando na primeira pessoa.</p>
+  <section class="elemental" aria-labelledby="t-quad">
+    <h2 class="stitle" id="t-quad">O Quadrado Elemental</h2>
+    <p class="sintro">A espinha dorsal de tudo que crio: quatro elementos que cobrem o ciclo inteiro de aprender e se expressar, e um quinto que nasce do encontro.</p>
+    <div class="els">
+      <div class="el"><span class="icon"><svg viewBox="0 0 28 28" aria-hidden="true"><ellipse cx="14" cy="26" rx="10" ry="1.3" fill="#4A4149" opacity=".13"/><path d="M14 2.500c.8 4.200 6 6.200 6 12a6 6 0 0 1-12 0c0-2.600 1.200-4.200 2.600-5.500.2 2 1 3 2 3.200C12 8.500 12.200 5.500 14 2.500Z" fill="#f4b27a" stroke="#b5514d" stroke-width="1.300" stroke-linejoin="round"/><path d="M14 14c1.800 1.600 2.600 2.800 2.600 4.200a2.600 2.600 0 0 1-5.200 0c0-1.200.8-2.400 2.600-4.200Z" fill="#fde7b8"/></svg></span><b>Fogo</b><small>caixa de peças: tocar, ouvir e encaixar nos moldes</small></div>
+      <div class="el"><span class="icon"><svg viewBox="0 0 28 28" aria-hidden="true"><ellipse cx="14" cy="26" rx="10" ry="1.3" fill="#4A4149" opacity=".13"/><path d="M14 3.500c4.200 5 7.500 8.500 7.500 12.500a7.500 7.500 0 0 1-15 0c0-4 3.300-7.500 7.500-12.500Z" fill="#d3e6f3" stroke="#4f7aa0" stroke-width="1.300" stroke-linejoin="round"/><path d="M10 17a4 4 0 0 0 3 3.600" fill="none" stroke="#fff" stroke-width="1.500" stroke-linecap="round"/></svg></span><b>Água</b><small>radar de escuta: capturar a palavra-chave, sem precisar entender tudo</small></div>
+      <div class="el"><span class="icon"><svg viewBox="0 0 28 28" aria-hidden="true"><ellipse cx="14" cy="26" rx="10" ry="1.3" fill="#4A4149" opacity=".13"/><path d="M14 24.500V12" stroke="#4f7461" stroke-width="1.600" stroke-linecap="round"/><path d="M14 14C14 8.500 9.500 6 5 6c0 5.500 3.500 8.500 9 8Z" fill="#9cc2a8" stroke="#4f7461" stroke-width="1.300" stroke-linejoin="round"/><path d="M14 11c0-4.500 3.500-7 8.500-7 0 5-3 7.500-8.500 7Z" fill="#b9d7c2" stroke="#4f7461" stroke-width="1.300" stroke-linejoin="round"/></svg></span><b>Terra</b><small>materializar: levar o que aprendeu para fora da tela</small></div>
+      <div class="el"><span class="icon"><svg viewBox="0 0 28 28" aria-hidden="true"><ellipse cx="14" cy="26" rx="10" ry="1.3" fill="#4A4149" opacity=".13"/><path d="M4 10h13a3.500 3.500 0 1 0-3.500-3.500M4 15.500h18a3.500 3.500 0 1 1-3.500 3.500M4 21h9a2.500 2.500 0 1 1-2.500 2.500" fill="none" stroke="#7a8fb0" stroke-width="1.700" stroke-linecap="round"/></svg></span><b>Ar</b><small>às vezes precisamos de um ar: as 5 gavetas para respirar, pedir ajuste e não travar</small></div>
+      <div class="el esp"><span class="icon"><svg viewBox="0 0 28 28" aria-hidden="true"><ellipse cx="14" cy="26" rx="10" ry="1.3" fill="#4A4149" opacity=".13"/><path d="M14 3l2.800 7.200L24 13l-7.200 2.800L14 23l-2.800-7.200L4 13l7.200-2.800Z" fill="#d9ccf0" stroke="#7360b0" stroke-width="1.300" stroke-linejoin="round"/><circle cx="22" cy="5.500" r="1.500" fill="#e8b7ae"/><circle cx="5.500" cy="22" r="1.200" fill="#e8b7ae"/></svg></span><b>Espírito</b><small>nasce quando os quatro se encontram com alguém de verdade</small></div>
     </div>
   </section>
 
   <!-- AS CINCO FRENTES -->
-  <section class="udetail">
-    <p class="eyebrow">o que existe aqui</p>
-    <h2 class="stitle">As cinco frentes</h2>
-    <p class="sintro">Cada uma tem um jeito de te ajudar a se comunicar com mais presença.</p>
-
+  <section class="udetail" aria-label="As cinco frentes">
     <div class="frentes">
-      <article class="frente f-idiomas">
-        <span class="num">01</span>
-        <h3>Idiomas</h3>
-        <p class="desc">Trilhas de estudo para a vida real.</p>
-        <a class="go" href="/idiomas/">Abrir Idiomas →</a>
-      </article>
-
-      <article class="frente f-utopia">
-        <span class="num">02</span>
-        <h3>Planeta Utopia</h3>
-        <p class="desc">Espaço vivo de prática, jogos e troca cultural.</p>
-        <a class="go" href="/idiomas/planeta-utopia/salao/">Entrar no Planeta Utopia →</a>
-      </article>
-
-      <article class="frente f-travessia">
-        <span class="num">03</span>
-        <h3>Travessia</h3>
-        <p class="desc">Sua ferramenta de planejamento de viagem.</p>
-        <a class="go" href="/travessia/">Conhecer a Travessia →</a>
-      </article>
-
-      <article class="frente f-tesouros">
-        <span class="num">04</span>
-        <h3>Tesouros</h3>
-        <p class="desc">Nossa lojinha de achadinhos selecionados do Japão.</p>
-        <a class="go" href="/loja/">Ver os Tesouros →</a>
-      </article>
-
-      <article class="frente f-paralelos">
-        <span class="num">05</span>
-        <h3>Paralelos</h3>
-        <p class="desc">O feed da comunidade e o Substack.</p>
-        <a class="go" href="/paralelos/">Abrir os Paralelos →</a>
-      </article>
+      <a class="frente f-idiomas" href="/idiomas/"><span class="fi"><svg viewBox="0 0 28 28" aria-hidden="true"><ellipse cx="14" cy="26" rx="10" ry="1.3" fill="#4A4149" opacity=".13"/><path d="M14 7C11.500 5 7.500 4.500 4 5.500v15c3.500-1 7.500-.5 10 1.500 2.500-2 6.500-2.500 10-1.500v-15C20.500 4.500 16.500 5 14 7Z" fill="#fffdf9" stroke="#4f7a58" stroke-width="1.300" stroke-linejoin="round"/><path d="M14 7v15" stroke="#4f7a58" stroke-width="1.100"/><text x="9" y="16.500" text-anchor="middle" font-size="7.500" font-weight="800" fill="#4f7a58" font-family="sans-serif">あ</text><path d="M17 11h4.500M17 14h4.500M17 17h3" stroke="#9cc2a8" stroke-width="1.200" stroke-linecap="round"/></svg></span><h3>Idiomas</h3><p class="desc">Trilhas de estudo para a vida real</p></a>
+      <a class="frente f-utopia" href="/idiomas/planeta-utopia/salao/"><span class="fi"><svg viewBox="0 0 28 28" aria-hidden="true"><ellipse cx="14" cy="26" rx="10" ry="1.3" fill="#4A4149" opacity=".13"/><circle cx="14" cy="13.500" r="7" fill="#f2c6c1" stroke="#b5514d" stroke-width="1.300"/><path d="M7.500 12c3-1.500 6 0 9 .5M10 18c2 .5 4.500-.5 6-2" fill="none" stroke="#fff" stroke-width="1.300" stroke-linecap="round"/><ellipse cx="14" cy="14" rx="11.500" ry="3.200" transform="rotate(-18 14 14)" fill="none" stroke="#b5514d" stroke-width="1.300"/></svg></span><h3>Planeta Utopia</h3><p class="desc">Prática, jogos e troca cultural</p></a>
+      <a class="frente f-travessia" href="/travessia/"><span class="fi"><svg viewBox="0 0 28 28" aria-hidden="true"><ellipse cx="14" cy="26" rx="10" ry="1.3" fill="#4A4149" opacity=".13"/><circle cx="14" cy="13.500" r="9.500" fill="#fffdf9" stroke="#8f6b1d" stroke-width="1.400"/><path d="M14 7l2.600 7.500L14 13.200 11.400 14.500Z" fill="#b5514d"/><path d="M14 20l-2.600-5.500L14 15.800l2.600-1.300Z" fill="#c9b27a"/><circle cx="14" cy="13.500" r="1" fill="#8f6b1d"/></svg></span><h3>Travessia</h3><p class="desc">Planejamento de viagem</p></a>
+      <a class="frente f-tesouros" href="/loja/"><span class="fi"><svg viewBox="0 0 28 28" aria-hidden="true"><ellipse cx="14" cy="26" rx="10" ry="1.3" fill="#4A4149" opacity=".13"/><path d="M7 4.500h14l4 6-11 14-11-14Z" fill="#d9ccf0" stroke="#7360b0" stroke-width="1.300" stroke-linejoin="round"/><path d="M3 10.500h22M11 4.500l-2 6 5 14 5-14-2-6" fill="none" stroke="#7360b0" stroke-width="1.100" stroke-linejoin="round"/></svg></span><h3>Tesouros</h3><p class="desc">Achadinhos do Japão</p></a>
+      <a class="frente f-paralelos" href="/paralelos/"><span class="fi"><svg viewBox="0 0 28 28" aria-hidden="true"><ellipse cx="14" cy="26" rx="10" ry="1.3" fill="#4A4149" opacity=".13"/><path d="M4.500 5.500h19a2 2 0 0 1 2 2v9a2 2 0 0 1-2 2H13l-5 4.500V18.500H6.500a2 2 0 0 1-2-2v-9a2 2 0 0 1 2-2Z" fill="#e3e8f2" stroke="#5b6b8a" stroke-width="1.300" stroke-linejoin="round"/><path d="M9 10.500h10M9 13.500h6" stroke="#5b6b8a" stroke-width="1.300" stroke-linecap="round"/></svg></span><h3>Paralelos</h3><p class="desc">Feed da comunidade e Substack</p></a>
     </div>
   </section>
 
