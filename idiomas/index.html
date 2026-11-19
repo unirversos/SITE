@@ -28,7 +28,7 @@ h1.q{font-family:'Baloo 2',cursive;font-weight:700;font-size:clamp(30px,5vw,44px
 .tri .tx span{font-size:15px;color:var(--ink-soft)}.tri .go{font-weight:700;color:var(--c);white-space:nowrap}
 @media (max-width:560px){.tri{grid-template-columns:44px minmax(0,1fr)}.tri .fl{width:44px;height:44px;font-size:15px}.tri .go{grid-column:2}}
 .breve{display:flex;flex-wrap:wrap;gap:14px}
-.breve div{flex:1 1 260px;background:#fff;border:1.5px dashed var(--blush-2);border-radius:20px;padding:14px 22px;display:flex;align-items:center;gap:14px}
+.breve div{opacity:.45;filter:grayscale(1);pointer-events:none;user-select:none;flex:1 1 260px;background:#fff;border:1.5px dashed var(--blush-2);border-radius:20px;padding:14px 22px;display:flex;align-items:center;gap:14px}
 .breve i{font-style:normal;width:40px;height:40px;border-radius:50%;display:grid;place-items:center;font-family:'Baloo 2',cursive;font-weight:700}
 .breve b{font-family:'Baloo 2',cursive;font-size:18px;display:block;line-height:1.2}.breve span{font-size:13.5px;color:var(--ink-soft)}
 .vivo{text-align:center;padding:10px 0 56px}
@@ -139,11 +139,30 @@ h1.q{font-family:'Baloo 2',cursive;font-weight:700;font-size:clamp(30px,5vw,44px
 .quiz a b{color:var(--pink-deep)}
 .quiz .bs{width:32px;height:32px;border-radius:50%;background:var(--blush);display:grid;place-items:center;font-size:17px;flex:none}
 
-.tri.avatar{--c:#4f7a58}.tri-par{display:grid;gap:14px}
-@media (min-width:760px){.tri-par{grid-template-columns:1fr 1fr}.tri-par .tri{grid-template-columns:1fr;justify-items:start;align-content:start;gap:10px}.tri-par .tri .fl{width:52px;height:52px;font-size:24px}.tri-par .tri.zero .fl{font-size:22px}}
-@media (min-width:860px){.cb{display:grid;grid-template-columns:minmax(0,5fr) minmax(0,8fr);gap:24px;align-items:center}
-.cb .cadsec{padding:20px 0}.cb .cad{flex-direction:column;gap:22px;text-align:center}.cb .cad .tx{max-width:300px}
-.cb:has(#bau.on){grid-template-columns:minmax(0,1fr)}}
+
+/* kit de partida: três ícones ilustrados, pequenos, lado a lado */
+.kit{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;margin:18px auto 6px;max-width:560px}
+.kc{display:flex;flex-direction:column;align-items:center;gap:6px;color:var(--ink);text-decoration:none;transition:transform .2s}
+.kc:hover{transform:translateY(-3px)}
+.kc b{font-family:'Baloo 2',cursive;font-weight:800;font-size:16px;line-height:1.1}
+.ic{height:86px;display:grid;place-items:center}
+.kc .capa{position:relative;display:block;width:64px;height:80px;border-radius:4px 10px 10px 4px;background:var(--pink,#B5514D);box-shadow:inset 6px 0 0 rgba(0,0,0,.12),0 10px 16px -10px rgba(74,40,40,.6);transform:rotate(-4deg);transition:transform .2s}
+.kc .capa:before{content:"";position:absolute;right:11px;top:-3px;bottom:-3px;width:6px;background:#3a2b38;border-radius:2px;opacity:.85}
+.kc .capa .et{position:absolute;left:9px;right:19px;top:22px;padding:5px 2px;background:#fffdf9;border-radius:3px;text-align:center;font-family:'Baloo 2',cursive;font-weight:800;font-size:9px;line-height:1.05;color:#3a2b38}
+.kc .capa .fit{position:absolute;bottom:-8px;left:20px;width:6px;height:20px;background:var(--gold,#C0913F);clip-path:polygon(0 0,100% 0,100% 100%,50% 80%,0 100%)}
+.kc:hover .capa{transform:rotate(2deg)}
+.cracha{position:relative;width:58px;height:80px;border-radius:9px;background:#EAF2EC;border:2px solid #b9d0be;display:flex;flex-direction:column;align-items:center;justify-content:flex-end;gap:3px;padding-bottom:7px;box-shadow:0 10px 16px -10px rgba(60,100,70,.5);transform:rotate(3deg);transition:transform .2s}
+.cracha .furo{position:absolute;top:6px;left:50%;width:18px;height:5px;margin-left:-9px;border-radius:4px;background:#fff;border:1.5px solid #b9d0be}
+.cracha .foto{width:36px;height:36px;border-radius:50%;background:#fff;border:2px dashed #8fb59a;display:grid;place-items:center;font-size:18px}
+.cracha em{font-style:normal;font-family:'Baloo 2',cursive;font-weight:800;font-size:8px;letter-spacing:2px;color:#4f7a58}
+.kc:hover .cracha{transform:rotate(-2deg)}
+.bilhete{position:relative;display:flex;align-items:center;gap:6px;width:88px;height:54px;padding:0 8px;border-radius:8px;background:#FBF4E6;border:2px dashed #dccbaa;transform:rotate(-3deg);transition:transform .2s}
+.bilhete:before,.bilhete:after{content:"";position:absolute;left:34px;width:11px;height:11px;border-radius:50%;background:var(--cream,#FDF8F5);border:2px dashed #dccbaa}
+.bilhete:before{top:-7px}.bilhete:after{bottom:-7px}
+.bilhete .nb{font-family:'Baloo 2',cursive;font-weight:800;font-size:28px;line-height:1;color:#4f7a58;padding-right:7px;border-right:2px dashed #dccbaa}
+.bilhete .lb{font-family:'Baloo 2',cursive;font-weight:800;font-size:10px;line-height:1.1;letter-spacing:.5px;color:#7A5B21}
+.kc:hover .bilhete{transform:rotate(2deg)}
+.quiz{margin:14px 0 6px}.quiz a{padding:6px 14px 6px 8px;font-size:13px}.quiz .bs{width:24px;height:24px;font-size:13px}
 .pu-sec{padding:30px 0 6px;scroll-margin-top:70px}.pu-sec h2{font-family:'Baloo 2',cursive;font-weight:700;font-size:clamp(24px,4vw,32px);line-height:1.2;margin:0 0 4px}
 .pu-sec .sub{margin:0 0 14px}
 .pu-eb{margin:0 0 6px;font-size:12px;letter-spacing:3px;text-transform:uppercase;color:var(--pink-deep);font-weight:700}
@@ -170,20 +189,28 @@ h1.q{font-family:'Baloo 2',cursive;font-weight:700;font-size:clamp(30px,5vw,44px
     </div>
   </nav>
   <main>
-  <h1 class="q" id="trilhas">Por onde você quer começar?</h1>
-  <p class="sub">A conta é grátis e guarda o seu progresso em qualquer aparelho.</p>
-  <div class="trilhas">
-    <div class="tri-par">
-    <a class="tri avatar" id="cardAvatar" href="/idiomas/avatar/"><span class="fl">🎨</span><span class="tx"><small>seu personagem</small><b>Meu avatar</b><span>Monte o seu personagem: ele acompanha você nas aulas e entra com você no Salão.</span></span><span class="go" id="avGo">Criar meu avatar →</span></a>
-    <a class="tri zero" href="/idiomas/aula-zero/"><span class="fl">0</span><span class="tx"><small>bilhete de entrada · opcional</small><b>Aula Zero</b><span>Nunca estudou japonês? As 5 chaves em 15 minutos, antes dos mapas.</span></span><span class="go">Conhecer →</span></a>
-    </div>
-    <a class="tri ja" href="/idiomas/japones/"><span class="fl">JA</span><span class="tx"><b>Japonês</b><small>trilha completa</small><span><strong>12 mapas de viagem</strong> com prova e carimbo, e o <strong>Salão do Planeta Utopia</strong>.</span></span><span class="go">Começar →</span></a>
+  <section class="kit" aria-label="Seu kit de partida">
+    <a class="kc" href="/idiomas/caderno/" aria-label="Abrir o Caderno de Unir Versos">
+      <span class="ic"><span class="capa" aria-hidden="true"><span class="et">Caderno de Unir Versos</span><span class="fit"></span></span></span>
+      <b>Caderno</b>
+    </a>
+    <a class="kc" id="cardAvatar" href="/idiomas/avatar/">
+      <span class="ic"><span class="cracha" aria-hidden="true"><i class="furo"></i><span class="foto">🎨</span><em>VOCÊ</em></span></span>
+      <b id="avGo">Avatar</b>
+    </a>
+    <a class="kc" href="/idiomas/aula-zero/">
+      <span class="ic"><span class="bilhete" aria-hidden="true"><span class="nb">0</span><span class="lb">AULA<br>ZERO</span></span></span>
+      <b>Aula Zero</b>
+    </a>
+  </section>
+  <p class="quiz"><a href="/idiomas/autoanalise/"><span class="bs" aria-hidden="true">🧭</span><span>Não sabe por onde começar? <b>Faça o quiz de 5 minutos</b> e descubra o seu caminho</span><span aria-hidden="true">→</span></a></p>
+  <div class="trilhas" id="trilhas">
+    <a class="tri ja" href="/idiomas/japones/"><span class="fl">JA</span><span class="tx"><b>Japonês</b><small>trilha completa</small><span><strong>12 aulas contextuais grátis</strong></span></span><span class="go">Começar →</span></a>
     <div class="breve">
       <div><i style="background:#E4E8F1;color:#4c5a7a">EN</i><span><b>Inglês</b>Em breve</span></div>
       <div><i style="background:#E1EDE5;color:#3d6050">PT</i><span><b>Português</b>Em breve</span></div>
     </div>
   </div>
-  <p class="quiz"><a href="/idiomas/autoanalise/"><span class="bs" aria-hidden="true">🧭</span><span>Não sabe por onde começar? <b>Faça o quiz de 5 minutos</b> e descubra o seu caminho</span><span aria-hidden="true">→</span></a></p>
 
   <section class="pu-sec" id="planeta-utopia" aria-labelledby="pu-t">
     <p class="pu-eb">✦ Espírito · Encontros ao vivo</p>
@@ -196,66 +223,7 @@ h1.q{font-family:'Baloo 2',cursive;font-weight:700;font-size:clamp(30px,5vw,44px
     </div>
   </section>
 
-  <div class="cb">
-  <section class="cadsec">
-    <a class="cad" href="/idiomas/caderno/" aria-label="Abrir o Caderno de Unir Versos">
-      <span class="capa" aria-hidden="true"><span class="et">Caderno de Unir Versos</span><span class="fit"></span></span>
-      <span class="tx"><span class="d">Suas anotações e palavras, sempre à mão em qualquer página.</span><span class="go">Abrir o caderno</span></span>
-    </a>
-  </section>
-
-  <section class="bau" id="bau" aria-labelledby="bau-t">
-    <div class="bau-card">
-      <div class="bau-in">
-        <h2 id="bau-t">O baú de ferramentas</h2>
-        <p class="bau-sub">Explore, complete minidesafios e desbloqueie novas skills.</p>
-        <div class="bau-corpo"><div class="bau-lado"><div class="glow" aria-hidden="true"></div>
-        <button type="button" class="bau-btn" id="bau-btn" aria-expanded="false" aria-controls="bau-c" aria-label="Abrir o baú de ferramentas">
-          <span class="cofre"><svg viewBox="0 0 300 250" class="c-fechado respira" aria-hidden="true">
-<ellipse cx="150" cy="232" rx="118" ry="11" fill="#4A4149" opacity=".12"/>
-<rect x="44" y="118" width="212" height="102" rx="10" fill="#a58b7b" stroke="#5d4c42" stroke-width="3"/>
-<path d="M44 150 H256 M44 184 H256" stroke="#8a7568" stroke-width="2.5"/>
-<path d="M44 124 V92 Q44 52 150 52 Q256 52 256 92 V124 Z" fill="#7a6659" stroke="#5d4c42" stroke-width="3" stroke-linejoin="round"/>
-<path d="M62 84 Q150 40 238 84" fill="none" stroke="#9a8576" stroke-width="3" stroke-linecap="round"/>
-<rect x="84" y="52" width="16" height="168" fill="#C0913F"/><rect x="200" y="52" width="16" height="168" fill="#C0913F"/>
-<rect x="132" y="104" width="36" height="44" rx="7" fill="#C0913F" stroke="#8f6a25" stroke-width="2.5"/>
-<circle class="brilho" cx="150" cy="126" r="17" fill="#FBF2DF"/><circle cx="150" cy="123" r="5.5" fill="#FBF2DF"/><path d="M150 127 v10" stroke="#FBF2DF" stroke-width="4" stroke-linecap="round"/>
-</svg><svg viewBox="0 0 300 250" class="c-aberto" aria-hidden="true">
-<ellipse cx="150" cy="232" rx="118" ry="11" fill="#4A4149" opacity=".12"/>
-<!-- tampa aberta (atrás) -->
-<path d="M52 118 L66 46 Q150 22 234 46 L248 118 Z" fill="#7a6659" stroke="#5d4c42" stroke-width="3" stroke-linejoin="round"/>
-<path d="M70 52 Q150 32 230 52" fill="none" stroke="#9a8576" stroke-width="3" stroke-linecap="round"/>
-<rect x="84" y="46" width="16" height="72" fill="#C0913F" opacity=".95"/><rect x="200" y="46" width="16" height="72" fill="#C0913F" opacity=".95"/>
-<!-- brilho -->
-<path d="M62 124 L238 124 L226 100 L74 100 Z" fill="#FBF2DF"/>
-<path d="M150 22 L150 -2" stroke="#C0913F" stroke-width="0"/>
-<g fill="#C0913F" class="estrelas"><path d="M120 86 l4 -14 l4 14 l14 4 l-14 4 l-4 14 l-4 -14 l-14 -4z" transform="translate(0,-18) scale(.9)"/><path d="M196 74 l3 -10 l3 10 l10 3 l-10 3 l-3 10 l-3 -10 l-10 -3z" transform="translate(-6,-10)"/><circle cx="160" cy="64" r="3"/><circle cx="104" cy="88" r="2.5"/></g>
-<!-- corpo -->
-<rect x="44" y="118" width="212" height="102" rx="10" fill="#a58b7b" stroke="#5d4c42" stroke-width="3"/>
-<path d="M44 150 H256 M44 184 H256" stroke="#8a7568" stroke-width="2.5"/>
-<rect x="84" y="118" width="16" height="102" fill="#C0913F"/><rect x="200" y="118" width="16" height="102" fill="#C0913F"/>
-<rect x="44" y="118" width="212" height="12" fill="#8a7568" opacity=".55"/>
-<!-- fecho -->
-<rect x="132" y="132" width="36" height="42" rx="7" fill="#C0913F" stroke="#8f6a25" stroke-width="2.5"/>
-<circle cx="150" cy="150" r="5.5" fill="#FBF2DF"/><path d="M150 154 v10" stroke="#FBF2DF" stroke-width="4" stroke-linecap="round"/>
-</svg></span>
-        </button>
-        <span class="dica" id="bau-dica">Clique no baú para abrir</span>
-        <div class="peek" id="bau-peek"><span>Kanji</span><span>Hiragana</span><span>Amuleto de bolso</span><span>Números</span><em>e mais…</em></div>
-        </div>
-        <div class="bau-c" id="bau-c" hidden>
-          <h3>praticar</h3>
-          <div class="pils"><a class="pil p" href="/idiomas/avatar/" title="Seu personagem, criado no Ateliê."><span class="gl" aria-hidden="true">絵</span>Meu avatar</a><a class="pil p" href="/idiomas/palavras/" title="As palavras das aulas, com áudio."><span class="gl" aria-hidden="true">言</span>Minhas palavras</a><a class="pil p" href="/idiomas/hiragana/" title="Letras com ordem dos traços."><span class="gl" aria-hidden="true">あ</span>Hiragana</a><a class="pil p" href="/idiomas/katakana/" title="Letras com ordem dos traços."><span class="gl" aria-hidden="true">ア</span>Katakana</a><a class="pil p" href="/idiomas/kanji/" title="Estante e baralhos por tema."><span class="gl" aria-hidden="true">漢</span>Kanji</a><a class="pil p" href="/idiomas/numeros/" title="Contagem e horas."><span class="gl" aria-hidden="true">数</span>Números</a><a class="pil p" href="/idiomas/calendario/" title="Dias da semana e datas."><span class="gl" aria-hidden="true">暦</span>Calendário</a><a class="pil p" href="/idiomas/gravador/" title="Grave a sua voz e ouça."><span class="gl" aria-hidden="true">声</span>Gravador</a></div>
-          <h3 class="b">consultar</h3>
-          <div class="pils"><a class="pil v" href="/idiomas/amuleto/" title="52 frases prontas em 3 idiomas."><span class="gl" aria-hidden="true">守</span>Amuleto de bolso</a><a class="pil v" href="/idiomas/ar/" title="Às vezes precisamos de um ar."><span class="gl" aria-hidden="true">風</span>Ar</a><a class="pil v" href="/idiomas/guia/" title="Sobrevivência no Japão."><span class="gl" aria-hidden="true">道</span>Mini guia</a></div>
-          <p class="pdica" id="bau-pd" aria-hidden="true">Passe o mouse num botão para ver o que é.</p>
-        </div>
-        </div>
-      </div>
-    </div>
-  </section>
-  </div>
-
+  
   <section class="vivo" id="ao-vivo">
     <p class="eyebrow">ao vivo com a sensei</p>
     <a class="vagas" href="https://wa.me/5519996390950?text=Oi%21%20Vim%20pelo%20site%20da%20Unirversos%20e%20quero%20saber%20das%20vagas%20abertas%20%28aula%20individual%20ou%20em%20grupo%29." target="_blank" rel="noopener">vagas abertas <span aria-hidden="true">→</span></a>
@@ -269,40 +237,11 @@ h1.q{font-family:'Baloo 2',cursive;font-weight:700;font-size:clamp(30px,5vw,44px
     <div class="cr">unirversos — tudo conectado · Aline Kikuti</div>
   </footer>
 </div>
-<script>
-(function(){
-  var box=document.getElementById('bau'),b=document.getElementById('bau-btn'),c=document.getElementById('bau-c'),d=document.getElementById('bau-dica'),pk=document.getElementById('bau-peek');
-  var pd=document.getElementById('bau-pd'),pd0=pd.textContent;
-  function mostra(e){var a=e.target.closest&&e.target.closest('.pil');if(a){pd.innerHTML='<b>'+a.textContent.replace(/^./,'').trim()+'</b> · '+a.title;pd.classList.add('on')}}
-  function some(){pd.textContent=pd0;pd.classList.remove('on')}
-  c.addEventListener('mouseover',mostra);c.addEventListener('focusin',mostra);c.addEventListener('mouseleave',some);c.addEventListener('focusout',some);
-  function set(o){box.classList.toggle('on',o);b.setAttribute('aria-expanded',String(o));b.setAttribute('aria-label',o?'Fechar o baú de ferramentas':'Abrir o baú de ferramentas');d.textContent=o?'Clique no baú para fechar':'Clique no baú para abrir';c.hidden=!o;pk.hidden=o}
-  var lado=document.querySelector('.bau-lado'),calmo=window.matchMedia&&matchMedia('(prefers-reduced-motion: reduce)').matches,ocup=false;
-  /* FLIP: o baú desliza (e encolhe) do centro para o lado, sem pulo */
-  function flip(fn){var r0=b.getBoundingClientRect();fn();var r1=b.getBoundingClientRect();if(!r1.width||!lado.animate)return r1;
-    var s=r0.width/r1.width;b.animate([{transform:'translate('+(r0.left-r1.left)+'px,'+(r0.top-r1.top)+'px) scale('+s+')',transformOrigin:'0 0'},{transform:'none',transformOrigin:'0 0'}],{duration:520,easing:'cubic-bezier(.2,.8,.3,1)'});return r1}
-  /* arco-íris: cada botão sai de dentro do baú num arco, um por um, com um brilho de cor diferente */
-  function arco(volta,fim,rb){var ps=[].slice.call(c.querySelectorAll('.pil'));if(!ps.length||!ps[0].animate){if(fim)fim();return}
-    box.classList.add('arco');rb=rb||b.getBoundingClientRect();var cx=rb.left+rb.width/2,cy=rb.top+rb.height*.42,n=ps.length,ult=null;
-    ps.forEach(function(p,i){var r=p.getBoundingClientRect(),dx=cx-(r.left+r.width/2),dy=cy-(r.top+r.height/2),h=Math.round(i*360/n),
-      sobe=Math.min(115,Math.max(70,Math.abs(dx)*.25+50)),
-      k=[{transform:'translate('+dx+'px,'+dy+'px) scale(.15)',opacity:0,boxShadow:'0 0 0 0 hsla('+h+',85%,70%,0)'},
-         {transform:'translate('+dx*.45+'px,'+(dy*.45-sobe)+'px) scale(.85) rotate('+(dx>0?-8:8)+'deg)',opacity:1,boxShadow:'0 0 22px 6px hsla('+h+',85%,72%,.75)',offset:.55},
-         {transform:'none',opacity:1,boxShadow:'0 0 0 0 hsla('+h+',85%,70%,0)'}];
-      if(volta)k.reverse();
-      ult=p.animate(k,volta?{duration:380,delay:(n-1-i)*35,easing:'ease-in',fill:'forwards'}:{duration:760,delay:120+i*85,easing:'cubic-bezier(.25,.8,.35,1)',fill:'backwards'})});
-    ult.onfinish=function(){box.classList.remove('arco');ps.forEach(function(p){p.getAnimations().forEach(function(a){a.cancel()})});if(fim)fim()}}
-  function anima(o){if(ocup)return;if(calmo){set(o);return}ocup=true;
-    if(o){box.classList.add('treme');setTimeout(function(){box.classList.remove('treme');var rf=flip(function(){set(true)});arco(false,null,rf);ocup=false},300)}
-    else{arco(true,function(){flip(function(){set(false)});ocup=false})}}
-  b.addEventListener('click',function(){anima(!box.classList.contains('on'))});
-})();
-</script>
 <script src="/entrar.js" defer></script>
-<script defer src="/caderno-flutuante.js?v=12"></script>
+<script defer src="/caderno-flutuante.js?v=13"></script>
 <script>
 /* se o avatar já existe, o card muda para "Editar" */
-(function(){try{var v=JSON.parse(localStorage.getItem('utopiaAvatar1')||'null');if(v&&v.sel){var g=document.getElementById('avGo');if(g)g.textContent='Editar meu avatar →';}}catch(e){}})();
+(function(){try{var v=JSON.parse(localStorage.getItem('utopiaAvatar1')||'null');if(v&&v.sel){var g=document.getElementById('avGo');if(g)g.textContent="Editar avatar";}}catch(e){}})();
 </script>
 </body>
 </html>

@@ -167,7 +167,7 @@ footer a:hover{color:var(--pink)}
       <article class="u-card caderno wide">
         <p class="u-tag">aprendizado e comunidade</p>
         <h3><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 5.5C4 4.7 4.7 4 5.5 4H11v15H5.5c-.8 0-1.5-.7-1.5-1.5z"/><path d="M20 5.5c0-.8-.7-1.5-1.5-1.5H13v15h5.5c.8 0 1.5-.7 1.5-1.5z"/></svg> Idiomas</h3>
-        <ul class="dest"><li>Aula zero: o ponto de partida</li><li>Mapas de contexto: cenas práticas para usar o japonês de verdade</li><li>Baú de estudo: hiragana, katakana, kanji, números e muito mais</li><li>Planeta Utopia: Salão ao vivo, aula em dupla e mural da comunidade</li><li>Seu avatar, para falar de si na primeira pessoa</li></ul>
+        <ul class="dest"><li>Aula zero: o ponto de partida</li><li>Aulas contextuais: cenas práticas para usar o japonês de verdade</li><li>Baú de estudo: hiragana, katakana, kanji, números e muito mais</li><li>Planeta Utopia: Salão ao vivo, aula em dupla e mural da comunidade</li><li>Seu avatar, para falar de si na primeira pessoa</li></ul>
         <div class="u-go-row"><a class="u-go" id="caderno-cont" href="/idiomas/japones/" hidden></a><a class="u-go" id="caderno-abrir" href="/idiomas/aula-zero/">Aula zero · comece aqui →</a><a class="u-go" id="avatar-btn" href="/idiomas/avatar/">Crie seu avatar →</a><a class="u-go" href="/idiomas/#planeta-utopia">Planeta Utopia →</a><a class="u-go u-card-link" href="/idiomas/" aria-label="Abrir Idiomas"></a></div>
       </article>
       <article class="u-card travessia">
@@ -221,7 +221,7 @@ footer a:hover{color:var(--pink)}
 (function(){try{
   var ler=function(k){try{var v=localStorage.getItem(k);return v==null?null:JSON.parse(v)}catch(e){return null}};
   var av=ler('utopiaAvatar1'),E=window.UniTrilha.estado(),b=document.getElementById('caderno-cont'),row=b.parentNode,t=null,h=null;
-  if(!(av&&av.sel)&&!E.some(function(m){return m.aula||m.prova})){b.href='/idiomas/japones/';b.textContent='Abrir mapas →';b.hidden=false;row.classList.add('novo');return}
+  if(!(av&&av.sel)&&!E.some(function(m){return m.aula||m.prova})){b.href='/idiomas/japones/';b.textContent='Abrir aulas →';b.hidden=false;row.classList.add('novo');return}
   else for(var i=0;i<E.length;i++){var m=E[i];
     if(!m.aula){t='Mapa '+(i+1)+' · '+m.titulo;h=m.aulaHref;break}
     if(!m.prova){t='Prova do mapa '+(i+1)+' · '+m.titulo;h=m.testeHref;break}}

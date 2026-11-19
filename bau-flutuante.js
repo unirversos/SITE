@@ -8,8 +8,8 @@
   try { localStorage.removeItem(KEY); } catch (e) {}
 
   var path = location.pathname, atual = path + location.search;
-  /* nestas páginas o baú já está na tela (/idiomas/) ou o foco é o jogo (Planeta Utopia) */
-  if (path === '/idiomas/' || path === '/idiomas/index.html' || path.indexOf('/idiomas/nova/') === 0 || path.indexOf('/idiomas/planeta-utopia/') === 0) return;
+  /* nestas páginas o foco é o jogo (Planeta Utopia) */
+  if (path.indexOf('/idiomas/nova/') === 0 || path.indexOf('/idiomas/planeta-utopia/') === 0) return;
 
   function lerJSON(k) { try { var v = JSON.parse(sessionStorage.getItem(k) || 'null'); return v && (Date.now() - (v.t0 || 0) < TTL) ? v : null; } catch (e) { return null; } }
   function gravar(k, v) { try { v.t0 = Date.now(); sessionStorage.setItem(k, JSON.stringify(v)); } catch (e) {} }
