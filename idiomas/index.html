@@ -141,7 +141,8 @@ h1.q{font-family:'Baloo 2',cursive;font-weight:700;font-size:clamp(30px,5vw,44px
 
 
 /* kit de partida: três ícones ilustrados, pequenos, lado a lado */
-.kit{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;margin:18px auto 6px;max-width:560px}
+.kit{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px;margin:18px auto 6px;max-width:700px}
+button.kc{border:0;background:none;padding:0;cursor:pointer;font:inherit}.kc .ic svg{width:72px;height:72px}
 .kc{display:flex;flex-direction:column;align-items:center;gap:6px;color:var(--ink);text-decoration:none;transition:transform .2s}
 .kc:hover{transform:translateY(-3px)}
 .kc b{font-family:'Baloo 2',cursive;font-weight:800;font-size:16px;line-height:1.1}
@@ -175,7 +176,7 @@ h1.q{font-family:'Baloo 2',cursive;font-weight:700;font-size:clamp(30px,5vw,44px
 @media (max-width:560px){.pu-grid{gap:8px}.pu-sec .tri{padding:12px 10px;gap:6px;justify-items:center;text-align:center;border-left-width:1.5px;border-top:5px solid var(--c)}.pu-sec .tri .fl{width:40px;height:40px;font-size:20px}.pu-sec .tri b{font-size:15px}.pu-sec .tri .tx>span,.pu-sec .tri .go{display:none}}
 </style>
 <link rel="stylesheet" href="/estilo-celular.css?v=3">
-<script defer src="/menu-ativo.js?v=2"></script>
+<script defer src="/menu-ativo.js?v=2"></script><script defer src="/voltar-global.js?v=1"></script>
 <link rel="icon" href="/favicon.svg" type="image/svg+xml"><link rel="icon" href="/favicon.ico" sizes="48x48"><link rel="apple-touch-icon" href="/apple-touch-icon.png"><link rel="manifest" href="/manifest.webmanifest"><meta name="theme-color" content="#3a2b38"><meta name="mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-title" content="Unirversos"><script src="/app.js" defer></script></head>
 <body>
 <div class="wrap">
@@ -205,6 +206,7 @@ h1.q{font-family:'Baloo 2',cursive;font-weight:700;font-size:clamp(30px,5vw,44px
       <span class="ic"><span class="bilhete" aria-hidden="true"><span class="nb">0</span><span class="lb">AULA<br>ZERO</span></span></span>
       <b>Aula Zero</b>
     </a>
+    <button class="kc" type="button" id="kcBau" aria-label="Abrir o baú de ferramentas"><span class="ic"><svg viewBox="0 0 28 28" aria-hidden="true"><ellipse cx="14" cy="25.5" rx="10" ry="1.4" fill="#4A4149" opacity=".15"/><rect x="3.5" y="12.5" width="21" height="11.5" rx="2" fill="#a58b7b" stroke="#5d4c42" stroke-width="1.4"/><path d="M3.5 12.5V10C3.5 6 8 4 14 4s10.5 2 10.5 6v2.5Z" fill="#7a6659" stroke="#5d4c42" stroke-width="1.4" stroke-linejoin="round"/><rect x="8" y="4.5" width="2.6" height="19.5" fill="#C0913F"/><rect x="17.4" y="4.5" width="2.6" height="19.5" fill="#C0913F"/><rect x="11.8" y="11" width="4.4" height="6" rx="1.2" fill="#C0913F" stroke="#8f6a25"/><circle cx="14" cy="13.6" r="1" fill="#FBF2DF"/></svg></span><b>Baú</b></button>
   </section>
   <p class="quiz"><a href="/idiomas/autoanalise/"><span class="bs" aria-hidden="true">🧭</span><span>Não sabe por onde começar? <b>Faça o quiz de 5 minutos</b> e descubra o seu caminho</span><span aria-hidden="true">→</span></a></p>
   <div class="trilhas" id="trilhas">
@@ -244,6 +246,7 @@ h1.q{font-family:'Baloo 2',cursive;font-weight:700;font-size:clamp(30px,5vw,44px
 <script defer src="/caderno-flutuante.js?v=14"></script>
 <script>
 /* se o avatar já existe, o card muda para "Editar" */
+(function(){var kb=document.getElementById("kcBau");if(kb)kb.onclick=function(e){e.stopPropagation();var a=document.getElementById("bz-aba");if(a)a.click()};})();
 (function(){try{var v=JSON.parse(localStorage.getItem('utopiaAvatar1')||'null');if(v&&v.sel){var g=document.getElementById('avGo');if(g)g.textContent="Editar avatar";}}catch(e){}})();
 </script>
 </body>
