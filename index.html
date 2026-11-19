@@ -93,6 +93,8 @@ h1 .split{color:var(--pink)}
 .u-card{transition:transform .2s ease,box-shadow .2s ease}
 .u-card:hover,.u-card:focus-within{transform:translateY(-3px);box-shadow:0 14px 28px -16px rgba(58,43,56,.35),0 2px 6px -2px rgba(58,43,56,.08)}
 @media (prefers-reduced-motion:reduce){.u-card{transition:none}.u-card:hover,.u-card:focus-within{transform:none}}
+.u-card.wide{grid-column:1/-1}
+@media (min-width:720px){.u-card.wide .dest{grid-template-columns:repeat(2,minmax(0,1fr));column-gap:28px}}
 .u-card{grid-template-rows:auto auto 1fr auto}
 .u-go{justify-self:start;display:inline-flex;align-items:center;gap:6px;background:var(--c);color:#fff;text-decoration:none;font-weight:700;font-size:14.5px;padding:9px 18px;border-radius:999px;margin-top:4px}
 .u-go:hover{filter:brightness(.95)}
@@ -160,19 +162,13 @@ footer a:hover{color:var(--pink)}
     </div>
   </header>
 
-  <section class="quad" aria-label="Os quatro caminhos" id="t-uni" style="scroll-margin-top:24px">
+  <section class="quad" aria-label="Os caminhos" id="t-uni" style="scroll-margin-top:24px">
     <div class="uni">
-      <article class="u-card caderno">
-        <p class="u-tag">aprendizado</p>
-        <h3><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 5.5C4 4.7 4.7 4 5.5 4H11v15H5.5c-.8 0-1.5-.7-1.5-1.5z"/><path d="M20 5.5c0-.8-.7-1.5-1.5-1.5H13v15h5.5c.8 0 1.5-.7 1.5-1.5z"/></svg> Idiomas<small>Japonês do zero e divertido, para quem não abre mão da autonomia: menos perrengue no Japão, mais zona de conforto.</small></h3>
-        <ul class="dest"><li>Aula zero: o ponto de partida</li><li>Mapas de contexto: cenas práticas para usar o japonês de verdade</li><li>Jogos para treinar</li><li>Baú de estudo: hiragana, katakana, kanji, números e muito mais</li></ul>
-        <div class="u-go-row"><a class="u-go" id="caderno-cont" href="/idiomas/japones/" hidden></a><a class="u-go" id="caderno-abrir" href="/idiomas/aula-zero/">Aula zero · comece aqui →</a><a class="u-go u-card-link" href="/idiomas/" aria-label="Abrir Idiomas"></a></div>
-      </article>
-      <article class="u-card idiomas">
-        <p class="u-tag">comunidade</p>
-        <h3><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="4.5"/><ellipse cx="12" cy="12" rx="10" ry="3.5" transform="rotate(-25 12 12)"/></svg> Planeta Utopia<small>Espaço vivo de prática, jogos e troca cultural.</small></h3>
-        <ul class="dest"><li>Salão de interação ao vivo</li><li>Jogos para treinar o idioma</li><li>Seu avatar, para falar de si na primeira pessoa</li><li><a href="/paralelos/" style="position:relative;z-index:1;color:inherit;text-decoration:none;border-bottom:1px solid var(--line)">Mural da comunidade: relatos e trocas</a></li></ul>
-        <div class="u-go-row"><a class="u-go" id="avatar-btn" href="/idiomas/avatar/">Crie seu avatar →</a><a class="u-go" href="/idiomas/#planeta-utopia">Entrar no Planeta Utopia →</a></div>
+      <article class="u-card caderno wide">
+        <p class="u-tag">aprendizado e comunidade</p>
+        <h3><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 5.5C4 4.7 4.7 4 5.5 4H11v15H5.5c-.8 0-1.5-.7-1.5-1.5z"/><path d="M20 5.5c0-.8-.7-1.5-1.5-1.5H13v15h5.5c.8 0 1.5-.7 1.5-1.5z"/></svg> Idiomas</h3>
+        <ul class="dest"><li>Aula zero: o ponto de partida</li><li>Mapas de contexto: cenas práticas para usar o japonês de verdade</li><li>Baú de estudo: hiragana, katakana, kanji, números e muito mais</li><li>Planeta Utopia: Salão ao vivo, aula em dupla e mural da comunidade</li><li>Seu avatar, para falar de si na primeira pessoa</li></ul>
+        <div class="u-go-row"><a class="u-go" id="caderno-cont" href="/idiomas/japones/" hidden></a><a class="u-go" id="caderno-abrir" href="/idiomas/aula-zero/">Aula zero · comece aqui →</a><a class="u-go" id="avatar-btn" href="/idiomas/avatar/">Crie seu avatar →</a><a class="u-go" href="/idiomas/#planeta-utopia">Planeta Utopia →</a><a class="u-go u-card-link" href="/idiomas/" aria-label="Abrir Idiomas"></a></div>
       </article>
       <article class="u-card travessia">
         <p class="u-tag">viagem</p>

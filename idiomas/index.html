@@ -141,6 +141,9 @@ h1.q{font-family:'Baloo 2',cursive;font-weight:700;font-size:clamp(30px,5vw,44px
 
 .tri.avatar{--c:#4f7a58}.tri-par{display:grid;gap:14px}
 @media (min-width:760px){.tri-par{grid-template-columns:1fr 1fr}.tri-par .tri{grid-template-columns:1fr;justify-items:start;align-content:start;gap:10px}.tri-par .tri .fl{width:52px;height:52px;font-size:24px}.tri-par .tri.zero .fl{font-size:22px}}
+@media (min-width:860px){.cb{display:grid;grid-template-columns:minmax(0,5fr) minmax(0,8fr);gap:24px;align-items:center}
+.cb .cadsec{padding:20px 0}.cb .cad{flex-direction:column;gap:22px;text-align:center}.cb .cad .tx{max-width:300px}
+.cb:has(#bau.on){grid-template-columns:minmax(0,1fr)}}
 .pu-sec{padding:30px 0 6px;scroll-margin-top:70px}.pu-sec h2{font-family:'Baloo 2',cursive;font-weight:700;font-size:clamp(24px,4vw,32px);line-height:1.2;margin:0 0 4px}
 .pu-sec .sub{margin:0 0 14px}
 .pu-eb{margin:0 0 6px;font-size:12px;letter-spacing:3px;text-transform:uppercase;color:var(--pink-deep);font-weight:700}
@@ -193,6 +196,7 @@ h1.q{font-family:'Baloo 2',cursive;font-weight:700;font-size:clamp(30px,5vw,44px
     </div>
   </section>
 
+  <div class="cb">
   <section class="cadsec">
     <a class="cad" href="/idiomas/caderno/" aria-label="Abrir o Caderno de Unir Versos">
       <span class="capa" aria-hidden="true"><span class="et">Caderno de Unir Versos</span><span class="fit"></span></span>
@@ -250,6 +254,7 @@ h1.q{font-family:'Baloo 2',cursive;font-weight:700;font-size:clamp(30px,5vw,44px
       </div>
     </div>
   </section>
+  </div>
 
   <section class="vivo" id="ao-vivo">
     <p class="eyebrow">ao vivo com a sensei</p>
