@@ -93,8 +93,28 @@ h1 .split{color:var(--pink)}
 .u-card{transition:transform .2s ease,box-shadow .2s ease}
 .u-card:hover,.u-card:focus-within{transform:translateY(-3px);box-shadow:0 14px 28px -16px rgba(58,43,56,.35),0 2px 6px -2px rgba(58,43,56,.08)}
 @media (prefers-reduced-motion:reduce){.u-card{transition:none}.u-card:hover,.u-card:focus-within{transform:none}}
+/* card de Idiomas: objetos desenhados */
+.u-desc{margin:0;color:var(--muted);font-size:14.5px;padding-top:10px;border-top:1.5px dashed var(--line)}
+.obj{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:8px;max-width:760px;position:relative;z-index:2}
+.obj a{display:flex;flex-direction:column;align-items:center;gap:4px;color:var(--ink);text-decoration:none;transition:transform .2s}
+.obj a:hover{transform:translateY(-3px)}
+.obj b{font-family:var(--f-display);font-weight:800;font-size:15px;line-height:1.1}
+.obj b.lg{text-align:center;line-height:1.1}.obj .ob{height:80px;display:grid;place-items:center}.obj .ob svg{width:68px;height:68px}
+.ob-capa{position:relative;display:block;width:56px;height:70px;border-radius:4px 9px 9px 4px;background:#B5514D;box-shadow:inset 5px 0 0 rgba(0,0,0,.12),0 8px 14px -9px rgba(74,40,40,.6);transform:rotate(-4deg)}
+.ob-capa:before{content:"";position:absolute;right:9px;top:-3px;bottom:-3px;width:5px;background:#3a2b38;border-radius:2px;opacity:.85}
+.ob-capa i{position:absolute;left:8px;right:17px;top:21px;height:20px;background:#fffdf9;border-radius:3px}
+.ob-capa u{position:absolute;bottom:-7px;left:18px;width:5px;height:18px;background:#C0913F;clip-path:polygon(0 0,100% 0,100% 100%,50% 80%,0 100%)}
+.ob-cracha{position:relative;width:52px;height:72px;border-radius:9px;background:#EAF2EC;border:2px solid #b9d0be;display:flex;flex-direction:column;align-items:center;justify-content:flex-end;gap:3px;padding-bottom:6px;transform:rotate(3deg)}
+.ob-cracha .furo{position:absolute;top:6px;left:50%;width:16px;height:5px;margin-left:-8px;border-radius:4px;background:#fff;border:1.5px solid #b9d0be}
+.ob-cracha .foto{width:32px;height:32px;border-radius:50%;background:#fff;border:2px dashed #8fb59a;display:grid;place-items:center;font-size:16px}
+.ob-cracha em{font-style:normal;font-family:var(--f-display);font-weight:800;font-size:7.5px;letter-spacing:2px;color:#4f7a58}
+.ob-bilhete{position:relative;display:flex;align-items:center;gap:6px;width:82px;height:50px;padding:0 8px;border-radius:8px;background:#FBF4E6;border:2px dashed #dccbaa;transform:rotate(-3deg)}
+.ob-bilhete:before,.ob-bilhete:after{content:"";position:absolute;left:31px;width:10px;height:10px;border-radius:50%;background:#fff;border:2px dashed #dccbaa}
+.ob-bilhete:before{top:-7px}.ob-bilhete:after{bottom:-7px}
+.ob-bilhete .nb{font-family:var(--f-display);font-weight:800;font-size:26px;line-height:1;color:#4f7a58;padding-right:6px;border-right:2px dashed #dccbaa}
+.ob-bilhete .lb{font-family:var(--f-display);font-weight:800;font-size:9.5px;line-height:1.1;letter-spacing:.5px;color:#7A5B21}
+@media (max-width:520px){.obj{gap:2px}.obj b{font-size:12.5px;white-space:nowrap}.obj b.lg{white-space:normal;font-size:11.5px}.obj .ob{height:68px}.obj .ob svg{width:50px;height:50px}.ob-capa{width:44px;height:56px}.ob-capa i{top:16px;height:16px;left:6px;right:13px}.ob-cracha{width:42px;height:60px}.ob-cracha .foto{width:26px;height:26px;font-size:13px}.ob-bilhete{width:60px;height:38px;padding:0 5px;gap:4px}.ob-bilhete:before,.ob-bilhete:after{left:22px;width:8px;height:8px}.ob-bilhete .nb{font-size:20px;padding-right:4px}.ob-bilhete .lb{font-size:7.5px}}
 .u-card.wide{grid-column:1/-1}
-@media (min-width:720px){.u-card.wide .dest{grid-template-columns:repeat(2,minmax(0,1fr));column-gap:28px}}
 .u-card{grid-template-rows:auto auto 1fr auto}
 .u-go{justify-self:start;display:inline-flex;align-items:center;gap:6px;background:var(--c);color:#fff;text-decoration:none;font-weight:700;font-size:14.5px;padding:9px 18px;border-radius:999px;margin-top:4px}
 .u-go:hover{filter:brightness(.95)}
@@ -147,7 +167,7 @@ footer a:hover{color:var(--pink)}
 </style>
 <link rel="stylesheet" href="/estilo-celular.css?v=3">
 <script defer src="/menu-ativo.js?v=2"></script>
-<link rel="icon" href="/favicon.svg" type="image/svg+xml"><link rel="icon" href="/favicon.ico" sizes="48x48"><link rel="apple-touch-icon" href="/apple-touch-icon.png"><link rel="manifest" href="/manifest.webmanifest"><meta name="theme-color" content="#3a2b38"><meta name="mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-title" content="Unirversos"><script src="/app.js" defer></script><style id="uni-logo">.logo,.brand,.sitebar .brand{font-family:"Baloo 2","Zen Maru Gothic",system-ui,sans-serif!important;font-weight:800!important;font-size:19px!important;letter-spacing:.14em!important;text-transform:none!important;text-decoration:none!important}.logo span,.brand span{color:#c23f5e!important;font:inherit!important;letter-spacing:inherit!important;margin:0!important}</style></head>
+<link rel="icon" href="/favicon.svg" type="image/svg+xml"><link rel="icon" href="/favicon.ico" sizes="48x48"><link rel="apple-touch-icon" href="/apple-touch-icon.png"><link rel="manifest" href="/manifest.webmanifest"><meta name="theme-color" content="#3a2b38"><meta name="mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-title" content="Unirversos"><script src="/app.js" defer></script><style id="uni-logo">.logo,.brand,.sitebar .brand{font-family:"Baloo 2","Zen Maru Gothic",system-ui,sans-serif!important;font-weight:800!important;font-size:19px!important;letter-spacing:.14em!important;text-transform:none!important;text-decoration:none!important}.logo span,.brand span{color:#c23f5e!important;font:inherit!important;letter-spacing:inherit!important;margin:0!important}</style><script defer src="/copiar-caderno.js?v=2"></script></head>
 <body>
 <div class="wrap">
   <nav class="sitebar" aria-label="Site">
@@ -167,7 +187,14 @@ footer a:hover{color:var(--pink)}
       <article class="u-card caderno wide">
         <p class="u-tag">aprendizado e comunidade</p>
         <h3><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 5.5C4 4.7 4.7 4 5.5 4H11v15H5.5c-.8 0-1.5-.7-1.5-1.5z"/><path d="M20 5.5c0-.8-.7-1.5-1.5-1.5H13v15h5.5c.8 0 1.5-.7 1.5-1.5z"/></svg> Idiomas</h3>
-        <ul class="dest"><li>Aula zero: o ponto de partida</li><li>Aulas contextuais: cenas práticas para usar o japonês de verdade</li><li>Baú de estudo: hiragana, katakana, kanji, números e muito mais</li><li>Planeta Utopia: Salão, ensaio guiado e mural da comunidade</li><li>Seu avatar, para falar de si na primeira pessoa</li></ul>
+        <p class="u-desc">Do primeiro passo à prática ao vivo: aulas, ferramentas e comunidade.</p>
+        <div class="obj">
+          <a href="/idiomas/avatar/"><span class="ob"><span class="ob-cracha" aria-hidden="true"><i class="furo"></i><span class="foto">🎨</span><em>VOCÊ</em></span></span><b>Avatar</b></a>
+          <a href="/idiomas/aula-zero/"><span class="ob"><span class="ob-bilhete" aria-hidden="true"><span class="nb">0</span><span class="lb">AULA<br>ZERO</span></span></span><b>Aula Zero</b></a>
+          <a href="/idiomas/japones/"><span class="ob"><svg viewBox="0 0 28 28" aria-hidden="true"><ellipse cx="14" cy="25.5" rx="10.5" ry="1.4" fill="#4A4149" opacity=".15"/><path d="M2.5 7.5 9.5 5l9 2.500 7-2.500v16l-7 2.500-9-2.500-7 2.500Z" fill="#F6EBCB" stroke="#a08a5a" stroke-width="1.2" stroke-linejoin="round"/><path d="M9.5 5v16M18.5 7.500v16" stroke="#a08a5a" stroke-width="1" fill="none"/><path d="M9.500 5 2.500 7.500v16l7-2.500Z" fill="#E1EDE5" opacity=".9"/><path d="M18.500 7.500 25.500 5v16l-7 2.500Z" fill="#F3DFC1" opacity=".9"/><path d="M5 18c3-1 4-4 7-3.500s3 3 6 1.500 3.500-5 6.500-5" fill="none" stroke="#b5514d" stroke-width="1.300" stroke-dasharray="2 2" stroke-linecap="round"/><path d="M22 6.200c-2 0-3.300 1.500-3.300 3.200 0 2.200 3.300 5 3.300 5s3.300-2.800 3.300-5c0-1.700-1.300-3.200-3.300-3.200Z" fill="#b5514d" stroke="#8a3a37" stroke-width=".9"/><circle cx="22" cy="9.300" r="1.100" fill="#FBF2DF"/></svg></span><b class="lg">Mapas de contexto</b></a>
+          <a href="/idiomas/"><span class="ob"><svg viewBox="0 0 28 28" aria-hidden="true"><ellipse cx="14" cy="25.5" rx="10" ry="1.4" fill="#4A4149" opacity=".15"/><rect x="3.5" y="12.5" width="21" height="11.5" rx="2" fill="#a58b7b" stroke="#5d4c42" stroke-width="1.4"/><path d="M3.5 12.5V10C3.5 6 8 4 14 4s10.5 2 10.5 6v2.5Z" fill="#7a6659" stroke="#5d4c42" stroke-width="1.4" stroke-linejoin="round"/><rect x="8" y="4.5" width="2.6" height="19.5" fill="#C0913F"/><rect x="17.4" y="4.5" width="2.6" height="19.5" fill="#C0913F"/><rect x="11.8" y="11" width="4.4" height="6" rx="1.2" fill="#C0913F" stroke="#8f6a25"/><circle cx="14" cy="13.6" r="1" fill="#FBF2DF"/></svg></span><b>Baú</b></a>
+          <a href="/idiomas/caderno/"><span class="ob"><span class="ob-capa" aria-hidden="true"><i></i><u></u></span></span><b>Caderno</b></a>
+        </div>
         <div class="u-go-row"><a class="u-go" id="caderno-cont" href="/idiomas/japones/" hidden></a><a class="u-go" id="caderno-abrir" href="/idiomas/aula-zero/">Aula zero · comece aqui →</a><a class="u-go u-card-link" href="/idiomas/" aria-label="Abrir Idiomas"></a></div>
       </article>
       <article class="u-card travessia">
@@ -221,7 +248,7 @@ footer a:hover{color:var(--pink)}
 (function(){try{
   var ler=function(k){try{var v=localStorage.getItem(k);return v==null?null:JSON.parse(v)}catch(e){return null}};
   var av=ler('utopiaAvatar1'),E=window.UniTrilha.estado(),b=document.getElementById('caderno-cont'),row=b.parentNode,t=null,h=null;
-  if(!(av&&av.sel)&&!E.some(function(m){return m.aula||m.prova})){b.href='/idiomas/japones/';b.textContent='Abrir aulas →';b.hidden=false;row.classList.add('novo');return}
+  if(!(av&&av.sel)&&!E.some(function(m){return m.aula||m.prova})){b.href='/idiomas/japones/';b.textContent='Abrir mapas →';b.hidden=false;row.classList.add('novo');return}
   else for(var i=0;i<E.length;i++){var m=E[i];
     if(!m.aula){t='Mapa '+(i+1)+' · '+m.titulo;h=m.aulaHref;break}
     if(!m.prova){t='Prova do mapa '+(i+1)+' · '+m.titulo;h=m.testeHref;break}}
