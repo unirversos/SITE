@@ -33,9 +33,11 @@
   /* painel e aba do Dicionário: mesma família do Caderno e do Baú */
   var cssD = document.createElement('style');
   cssD.textContent = css.textContent.replace(/#cf-p/g, '#cf-dp').replace(/#cf-aba/g, '#cf-dab').replace(/#C23F5E|#c23f5e/g, '#7d6bb5').replace(/#ecdadd/g, '#dcd3ee') +
-    '@media (min-width:701px){#cf-dab{left:0;right:auto;top:42%;border:2px solid #dcd3ee;border-left:0;border-right:6px solid #7d6bb5;border-radius:0 18px 18px 0;box-shadow:6px 8px 20px -12px rgba(58,43,56,.35)}#cf-dp{right:auto;left:0;border-left:0;border-right:4px solid #7d6bb5;transform:translateX(-105%);box-shadow:14px 0 36px -18px rgba(58,43,56,.45)}#cf-dp.on{transform:none}}' +
-    '@media (min-width:1100px){#cf-dab{top:auto;bottom:140px}}' +
-    '#cf-dp .dm{flex:1;min-height:0}' +
+    '@media (min-width:1100px){#cf-dp{right:auto;left:0;border-left:0;border-right:4px solid #7d6bb5;transform:translateX(-105%);box-shadow:14px 0 36px -18px rgba(58,43,56,.45)}#cf-dp.on{transform:none}}' +
+    '#cf-dp .dm{flex:1;min-height:0}#cf-dab{top:calc(42% - 200px)}' +
+    '#cf-dp.sheet{top:0;bottom:auto;right:0;left:auto;width:min(440px,100vw);height:52vh;border-left:4px solid #7d6bb5;border-bottom:2px solid #dcd3ee;border-radius:0 0 0 20px;transform:translateY(-105%);box-shadow:0 14px 30px -18px rgba(58,43,56,.5)}#cf-dp.sheet.on{transform:none}' +
+    /* computador largo: com os dois abertos, o Caderno se expande e o dicionário vira um painel de canto */
+    '@media (min-width:1100px){body.cf-duplo #cf-p{width:min(920px,calc(100vw - 360px));transition:width .22s ease}body.cf-duplo #cf-dp{width:340px}}'+
     '@media (max-width:700px){#cf-dab{top:auto!important;bottom:max(10px,env(safe-area-inset-bottom,0px))!important;left:50%!important;right:auto!important;transform:translateX(-50%)}}' +
     '@media (max-width:430px){#cf-dab,#cf-aba,#bz-aba{padding:8px 11px!important;gap:5px!important;font-size:14px!important}}';
   document.head.appendChild(cssD);
@@ -54,7 +56,7 @@
   var p = document.createElement('aside');
   p.id = 'cf-p'; p.setAttribute('aria-label', 'Caderno de Unir Versos');
   p.innerHTML =
-    '<div class="h"><h2>Caderno de Unir Versos</h2><button class="x" type="button" id="cf-f" aria-label="Fechar o Caderno de Unir Versos">×</button></div>' +
+    '<div class="h"><h2>Caderno de Unir Versos</h2><button class="b" type="button" id="cf-dd" aria-label="Abrir o Dicionário">📖 Dicionário</button><button class="x" type="button" id="cf-f" aria-label="Fechar o Caderno de Unir Versos">×</button></div>' +
     '<div class="r" id="cf-r"><select id="cf-l" aria-label="Anotação"></select><button class="b p" type="button" id="cf-n">+ Nova</button></div>' +
     '<div id="cf-nb"><div id="cf-lv"></div><div class="vz" id="cf-vz" hidden>Ainda não há anotações. Toque em <b>+ Nova</b>.</div></div>' +
     '<div class="f"><span><span id="cf-e" aria-live="polite">Salvo neste aparelho</span> <button class="b" type="button" id="cf-en" hidden>Entrar</button></span><span><button class="b" type="button" id="cf-z">Apagar</button> <a href="/idiomas/caderno/" id="cf-tc">Abrir em tela cheia →</a></span></div>';
@@ -70,7 +72,8 @@
   function estado() { $('cf-e').textContent = C.texto(); $('cf-en').hidden = C.estado() !== 'sem-login'; }
   function abrir(v) {
     if (v && window.innerWidth < 1100 && dp.classList.contains('on')) { dp.classList.remove('on'); dab.style.display = ''; dab.setAttribute('aria-expanded', 'false'); }
-    p.classList.toggle('on', v); aba.setAttribute('aria-expanded', String(v)); aba.style.display = v ? 'none' : '';
+    if (!v && dp.classList.contains('sheet')) { dp.classList.remove('on', 'sheet'); dab.style.display = ''; dab.setAttribute('aria-expanded', 'false'); p.style.top = ''; }
+    p.classList.toggle('on', v); aba.setAttribute('aria-expanded', String(v)); aba.style.display = v ? 'none' : ''; if (window.cfMarca) window.cfMarca();
     if (v) { estado(); if (!livro.id() || !C.obter(livro.id())) abreProxima(); livro.reajustar(); setTimeout(function () { livro.reajustar(); livro.foca(); }, 250); }
     else { C.agora(); aba.focus(); }
   }
@@ -112,15 +115,34 @@
     dp.addEventListener('keydown', function (e) { e.stopPropagation(); if (e.key === 'Escape') abrirDic(false); });
     dp.addEventListener('keyup', function (e) { e.stopPropagation(); });
     dp.addEventListener('keypress', function (e) { e.stopPropagation(); });
+    /* na borda direita, junto do Baú e do Caderno: acima do Baú se couber; senão, abaixo do Caderno */
+    function acomoda() {
+      if (window.innerWidth <= 700) { dab.style.top = ''; return; }
+      var bz = document.getElementById('bz-aba'), h = dab.offsetHeight || 183, vh = window.innerHeight, ab = aba.getBoundingClientRect();
+      var topo = bz ? bz.getBoundingClientRect().top : ab.top;
+      var acima = topo - h - 12;
+      if (acima >= 8) dab.style.top = acima + 'px';
+      else { var baixo = ab.bottom + 12; dab.style.top = Math.max(8, Math.min(baixo, vh - h - 8)) + 'px'; }
+      dab.style.bottom = 'auto';
+    }
+    [100, 600, 1500].forEach(function (t) { setTimeout(acomoda, t); }); window.addEventListener('resize', acomoda);
     dab.onclick = function () { abrirDic(true); };
+    $('cf-dd').onclick = function () { abrirDic(true); };
     $('cf-df').onclick = function () { abrirDic(false); };
+    function marca() { var d = dp.classList.contains('on') && p.classList.contains('on') && window.innerWidth >= 1100; document.body.classList.toggle('cf-duplo', d); setTimeout(function () { if (livro) livro.reajustar(); }, 260); }
+    window.addEventListener('resize', marca); window.cfMarca = marca;
     function abrirDic(v) {
-      if (v && window.innerWidth < 1100 && p.classList.contains('on')) abrir(false);
-      dp.classList.toggle('on', v); dab.setAttribute('aria-expanded', String(v)); dab.style.display = v ? 'none' : '';
+      /* Caderno aberto em tela pequena: o dicionário vira uma gaveta embaixo e o Caderno continua visível em cima */
+      var gaveta = v && window.innerWidth < 1100 && p.classList.contains('on');
+      dp.classList.toggle('sheet', gaveta || (!v && dp.classList.contains('sheet')));
+      if (v && !gaveta && window.innerWidth < 1100 && p.classList.contains('on')) abrir(false);
+      p.style.top = gaveta ? '52vh' : '';
+      if (gaveta) setTimeout(function () { livro.reajustar(); }, 260);
+      dp.classList.toggle('on', v); dab.setAttribute('aria-expanded', String(v)); marca(); dab.style.display = v ? 'none' : '';
       if (v) {
         if (!dic) { var fazer = function () { dic = UniDic.montar($('cf-dm'), { salvar: salvaPalavra }); dic.foca(); }; if (window.UniDic) fazer(); else carrega('/caderno-dic.js?v=3', fazer); }
         else dic.foca();
-      } else dab.focus();
+      } else { dp.classList.remove('sheet'); p.style.top = ''; setTimeout(function () { livro.reajustar(); }, 260); dab.focus(); }
     }
     window.UniCadernoFlutuante.dicionario = function () { abrirDic(true); };
     $('cf-l').onchange = function () { abre(this.value); };
@@ -138,7 +160,7 @@
   function carrega(src, fn) { var t = document.createElement('script'); t.src = src; t.onload = fn; document.head.appendChild(t); }
   function inicia() {
     function pronto() { C = window.UniCaderno; if (document.body) montar(); else document.addEventListener('DOMContentLoaded', montar); }
-    function com() { if (window.UniLivro) pronto(); else carrega('/caderno-livro.js?v=10', pronto); }
+    function com() { if (window.UniLivro) pronto(); else carrega('/caderno-livro.js?v=11', pronto); }
     if (window.UniCaderno) com(); else carrega('/caderno-dados.js?v=2', com);
   }
   inicia();

@@ -489,7 +489,7 @@
 
     /* ---------- tamanho ---------- */
     function ajusta() {
-      var w = el.clientWidth, d = pref === '2' ? true : pref === '1' ? false : (!opc.simples && w >= 760);
+      var w = el.clientWidth, d = pref === '2' ? true : pref === '1' ? false : (w >= 760);
       var vb = nav.querySelector('.vst'); if (vb) { vb.innerHTML = d ? '<svg viewBox="0 0 20 20" aria-hidden="true"><rect x="4.500" y="2.500" width="11" height="15" rx="1.500"/></svg>1 pág.' : '<svg viewBox="0 0 20 20" aria-hidden="true"><rect x="1.500" y="3.500" width="7.500" height="13" rx="1.200"/><rect x="11" y="3.500" width="7.500" height="13" rx="1.200"/></svg>2 pág.'; vb.title = d ? 'Ver uma página por vez' : 'Ver duas páginas lado a lado'; }
       /* 1% da largura da folha, em px (no lugar de unidades de container: elas deixavam cada tecla lenta, ~1 s) */
       if (w) el.style.setProperty('--u', ((d ? w / 2 : w) / 100).toFixed(3) + 'px');
