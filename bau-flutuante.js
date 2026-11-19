@@ -36,7 +36,7 @@
     /* a barra de pílulas "Ferramentas" é substituída pelo baú */
     '.trail .caixa{display:none!important}' +
     '#bz-aba{position:fixed;right:0;z-index:9000;display:flex;flex-direction:column;align-items:center;gap:10px;padding:18px 11px;border:2px solid #e6d3a3;border-right:0;border-left:6px solid #C0913F;border-radius:18px 0 0 18px;background:#fff;color:#3a2b38;font:800 17px "Zen Maru Gothic",system-ui,sans-serif;cursor:pointer;box-shadow:-6px 8px 20px -12px rgba(58,43,56,.35)}' +
-    '#bz-aba span{writing-mode:vertical-rl;letter-spacing:.1em}#bz-aba svg{width:26px;height:26px;stroke:#8f6a25;fill:none;stroke-width:1.7;stroke-linecap:round;stroke-linejoin:round}#bz-aba:hover{background:#fffaf0}' +
+    '#bz-aba span{writing-mode:vertical-rl;letter-spacing:.1em}#bz-aba svg{width:30px;height:30px;stroke-linecap:round;stroke-linejoin:round}#bz-aba:hover{background:#fffaf0}' +
     /* celular: as abas viram pílulas na base da tela (não cobrem mais o conteúdo) */
     '@media (max-width:700px){#bz-aba{top:auto!important;bottom:max(10px,env(safe-area-inset-bottom,0px))!important;left:10px!important;right:auto!important;flex-direction:row;gap:8px;padding:8px 16px;min-height:44px;border:2px solid #e6d3a3;border-left:2px solid #e6d3a3;border-radius:999px;font-size:15px;box-shadow:0 8px 18px -10px rgba(58,43,56,.45)}#bz-aba span{writing-mode:horizontal-tb;letter-spacing:.02em}#bz-aba svg{width:20px;height:20px}body{padding-bottom:calc(72px + env(safe-area-inset-bottom,0px))}}' +
     '#bz-aba:focus-visible,#bz-p button:focus-visible,#bz-p a:focus-visible,#bz-chip button:focus-visible{outline:3px solid #b7a6dc;outline-offset:2px}' +
@@ -54,7 +54,7 @@
 
   var aba = document.createElement('button');
   aba.id = 'bz-aba'; aba.type = 'button'; aba.setAttribute('aria-expanded', 'false'); aba.setAttribute('aria-controls', 'bz-p'); aba.setAttribute('aria-label', 'Abrir o Baú de ferramentas');
-  aba.innerHTML = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 11V8a8 5 0 0 1 16 0v3"/><rect x="3" y="11" width="18" height="9" rx="2"/><path d="M12 11v4M10.5 13h3"/></svg><span>Baú</span>';
+  aba.innerHTML = '<svg viewBox="0 0 28 28" aria-hidden="true"><ellipse cx="14" cy="25.5" rx="10" ry="1.4" fill="#4A4149" opacity=".15" stroke="none"/><rect x="3.5" y="12.5" width="21" height="11.5" rx="2" fill="#a58b7b" stroke="#5d4c42" stroke-width="1.4"/><path d="M3.5 12.5V10C3.5 6 8 4 14 4s10.500 2 10.500 6v2.500Z" fill="#7a6659" stroke="#5d4c42" stroke-width="1.4" stroke-linejoin="round"/><rect x="8" y="4.500" width="2.600" height="19.500" fill="#C0913F" stroke="none"/><rect x="17.400" y="4.500" width="2.600" height="19.500" fill="#C0913F" stroke="none"/><rect x="11.800" y="11" width="4.400" height="6" rx="1.200" fill="#C0913F" stroke="#8f6a25" stroke-width="1"/><circle cx="14" cy="13.600" r="1" fill="#FBF2DF" stroke="none"/></svg><span>Baú</span>';
 
   var p = document.createElement('aside');
   p.id = 'bz-p'; p.setAttribute('aria-label', 'Baú de ferramentas');

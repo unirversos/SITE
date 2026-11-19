@@ -1,5 +1,5 @@
 /* Baú flutuante: aba no canto com todas as ferramentas */
-(function(){if(window.top!==window||document.getElementById('bz-js'))return;var s=document.createElement('script');s.id='bz-js';s.src='/bau-flutuante.js?v=5';s.defer=true;document.head.appendChild(s);})();
+(function(){if(window.top!==window||document.getElementById('bz-js'))return;var s=document.createElement('script');s.id='bz-js';s.src='/bau-flutuante.js?v=6';s.defer=true;document.head.appendChild(s);})();
 (function(){if(document.getElementById('volta-js'))return;var s=document.createElement('script');s.id='volta-js';s.src='/voltar.js?v=1';document.head.appendChild(s);})();
 /* Unirversos · Caderno flutuante: aba na borda direita que abre o caderno sem sair da página.
    Usa as mesmas anotações de /idiomas/caderno/ e da Área do aluno (caderno em páginas, uma por vez aqui). Sempre começa recolhido. */
@@ -14,7 +14,7 @@
   var css = document.createElement('style');
   css.textContent =
     '#cf-aba{position:fixed;right:0;top:42%;z-index:9000;display:flex;flex-direction:column;align-items:center;gap:10px;padding:18px 11px;border:2px solid #ecdadd;border-right:0;border-left:6px solid #c23f5e;border-radius:18px 0 0 18px;background:#fff;color:#3a2b38;font:800 17px "Zen Maru Gothic",system-ui,sans-serif;cursor:pointer;box-shadow:-6px 8px 20px -12px rgba(58,43,56,.35);min-height:64px}' +
-    '#cf-aba span{writing-mode:vertical-rl;letter-spacing:.1em}#cf-aba svg{width:26px;height:26px;stroke:#c23f5e;fill:none;stroke-width:1.6;stroke-linecap:round;stroke-linejoin:round}' +
+    '#cf-aba span{writing-mode:vertical-rl;letter-spacing:.1em}#cf-aba svg{width:30px;height:30px;stroke-linecap:round;stroke-linejoin:round}' +
     '@media (min-width:1100px){#cf-aba{top:auto;bottom:140px}}#cf-aba:hover{background:#fdf6f4}#cf-aba:focus-visible,#cf-p button:focus-visible,#cf-p select:focus-visible,#cf-p textarea:focus-visible,#cf-p a:focus-visible{outline:3px solid #b7a6dc;outline-offset:2px}' +
     /* celular: as abas viram pílulas na base da tela (não cobrem mais o conteúdo) */
     '@media (max-width:700px){#cf-aba{top:auto!important;bottom:max(10px,env(safe-area-inset-bottom,0px))!important;right:10px!important;flex-direction:row;gap:8px;padding:8px 16px;min-height:44px;border:2px solid #ecdadd;border-left:2px solid #ecdadd;border-radius:999px;font-size:15px;box-shadow:0 8px 18px -10px rgba(58,43,56,.45)}#cf-aba span{writing-mode:horizontal-tb;letter-spacing:.02em}#cf-aba svg{width:20px;height:20px}body{padding-bottom:calc(72px + env(safe-area-inset-bottom,0px))}}' +
@@ -31,7 +31,7 @@
 
   var aba = document.createElement('button');
   aba.id = 'cf-aba'; aba.type = 'button'; aba.setAttribute('aria-expanded', 'false'); aba.setAttribute('aria-controls', 'cf-p'); aba.setAttribute('aria-label', 'Abrir o Caderno de Unir Versos');
-  aba.innerHTML = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 4h12a2 2 0 0 1 2 2v14H7a2 2 0 0 1-2-2z"/><path d="M9 4v16M12 9h4M12 13h4"/></svg><span>Caderno</span>';
+  aba.innerHTML = '<svg viewBox="0 0 28 28" aria-hidden="true"><rect x="5" y="2.500" width="17.500" height="22" rx="1.600" fill="#B5514D" stroke="#8a3a37" stroke-width="1.200"/><rect x="5" y="2.500" width="3" height="22" rx="1" fill="#8a3a37" stroke="none"/><rect x="17" y="1.800" width="2.200" height="23.400" rx="1" fill="#3a2b38" stroke="none"/><rect x="9.500" y="8" width="6.600" height="7" rx="1" fill="#fffdf9" stroke="none"/><path d="M10.800 10.400h4M10.800 12.600h4" stroke="#3a2b38" stroke-width="1" fill="none"/><path d="M11.500 24.500v3.200l1.500-1.100 1.500 1.100v-3.200Z" fill="#C0913F" stroke="none"/></svg><span>Caderno</span>';
 
   var p = document.createElement('aside');
   p.id = 'cf-p'; p.setAttribute('aria-label', 'Caderno de Unir Versos');
