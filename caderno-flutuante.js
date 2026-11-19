@@ -26,6 +26,7 @@
     '#cf-p .r{display:flex;gap:8px}#cf-p select{flex:1;min-width:0;font:inherit;font-size:14px;border:1.5px solid #ecdadd;border-radius:12px;padding:6px 10px;background:#fff;color:#3a2b38}' +
     '#cf-p .b{font:inherit;font-size:13.5px;font-weight:700;border:1.5px solid #ecdadd;background:#fff;border-radius:99px;padding:6px 14px;cursor:pointer;color:#3a2b38;min-height:38px;white-space:nowrap}#cf-p .b.p{background:#c23f5e;border-color:#c23f5e;color:#fff}' +
     '#cf-p .f{display:flex;flex-wrap:wrap;justify-content:space-between;align-items:center;gap:6px 10px;font-size:12.5px;color:#705f6c}#cf-p .f a{color:#a8324f;font-weight:700;text-decoration:none}' +
+    '#cf-p .ab{display:flex;gap:6px}#cf-p .ab button{flex:1;font:inherit;font-size:14px;font-weight:800;border:1.5px solid #ecdadd;background:#fff;border-radius:99px;padding:7px 10px;min-height:40px;cursor:pointer;color:#705f6c;display:flex;align-items:center;justify-content:center;gap:6px}#cf-p .ab button svg{width:18px;height:18px}#cf-p .ab button.on{background:#c23f5e;border-color:#c23f5e;color:#fff}#cf-p [hidden]{display:none!important}' +
     '#cf-p .vz{background:#fff;border:1.5px dashed #ecdadd;border-radius:16px;padding:28px 16px;text-align:center;color:#705f6c}';
   document.head.appendChild(css);
 
@@ -37,8 +38,10 @@
   p.id = 'cf-p'; p.setAttribute('aria-label', 'Caderno de Unir Versos');
   p.innerHTML =
     '<div class="h"><h2>Caderno de Unir Versos</h2><button class="x" type="button" id="cf-f" aria-label="Fechar o Caderno de Unir Versos">×</button></div>' +
-    '<div class="r"><select id="cf-l" aria-label="Anotação"></select><button class="b p" type="button" id="cf-n">+ Nova</button></div>' +
-    '<div id="cf-lv"></div><div class="vz" id="cf-vz" hidden>Ainda não há anotações. Toque em <b>+ Nova</b>.</div>' +
+    '<div class="ab" role="tablist"><button type="button" id="cf-ta" class="on" role="tab" aria-selected="true"><svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="4" y="2.500" width="11" height="15" rx="1.500"/><path d="M7 7h5M7 10h5"/></svg>Caderno</button><button type="button" id="cf-td" role="tab" aria-selected="false"><svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 4.500c2.500-1 4.500-.8 7 .8 2.500-1.600 4.500-1.800 7-.8v11c-2.500-1-4.500-.8-7 .8-2.500-1.600-4.500-1.800-7-.8Z"/><path d="M10 5.300v11"/></svg>Dicionário</button></div>' +
+    '<div id="cf-dc" hidden></div>' +
+    '<div class="r" id="cf-r"><select id="cf-l" aria-label="Anotação"></select><button class="b p" type="button" id="cf-n">+ Nova</button></div>' +
+    '<div id="cf-nb"><div id="cf-lv"></div><div class="vz" id="cf-vz" hidden>Ainda não há anotações. Toque em <b>+ Nova</b>.</div></div>' +
     '<div class="f"><span><span id="cf-e" aria-live="polite">Salvo neste aparelho</span> <button class="b" type="button" id="cf-en" hidden>Entrar</button></span><span><button class="b" type="button" id="cf-z">Apagar</button> <a href="/idiomas/caderno/" id="cf-tc">Abrir em tela cheia →</a></span></div>';
 
   function $(i) { return document.getElementById(i); }
@@ -82,6 +85,27 @@
       }
     } catch (x) {}
     $('cf-n').onclick = nova;
+    var dic = null;
+    function vista(d) {
+      $('cf-ta').classList.toggle('on', !d); $('cf-td').classList.toggle('on', d); $('cf-ta').setAttribute('aria-selected', String(!d)); $('cf-td').setAttribute('aria-selected', String(d));
+      $('cf-r').hidden = d; $('cf-nb').hidden = d; $('cf-dc').hidden = !d;
+      if (d) {
+        if (!dic) {
+          var fazer = function () { dic = UniDic.montar($('cf-dc'), { salvar: salvaPalavra }); dic.foca(); };
+          if (window.UniDic) fazer(); else carrega('/caderno-dic.js?v=1', fazer);
+        } else dic.foca();
+      } else { livro.reajustar(); }
+    }
+    /* "Salvar no caderno": acrescenta a palavra no fim da anotação aberta (ou cria uma anotação nova) */
+    function salvaPalavra(linha) {
+      var id = livro.id(), n = id && C.obter(id);
+      if (!n) { n = C.nova(); id = n.id; }
+      C.atualizar(id, { x: (n.x ? n.x.replace(/\s+$/, '') + '\n' : '') + linha });
+      abre(id);
+    }
+    $('cf-ta').onclick = function () { vista(false); };
+    $('cf-td').onclick = function () { vista(true); };
+    window.UniCadernoFlutuante.dicionario = function () { abrir(true); vista(true); };
     $('cf-l').onchange = function () { abre(this.value); };
     $('cf-en').onclick = function () { C.entrar(); };
     $('cf-z').onclick = function () {
