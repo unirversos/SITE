@@ -103,6 +103,35 @@ h1 .jp rt{font-size:.5em;letter-spacing:.05em}
 .cf-p h4{margin:0;font-family:var(--f-display);font-size:16.5px;line-height:1.2}
 .cf-p p{margin:2px 0 0;font-size:13.5px;line-height:1.45;color:var(--muted)}
 .cf-g{grid-column:1/-1;margin:0;background:color-mix(in srgb,var(--sage) 12%,var(--card));border:1.5px solid var(--line);border-left:6px solid var(--sage);border-radius:14px;padding:9px 14px;font-size:14px;line-height:1.45}
+
+/* vitrine calma: skincare em destaque, coleções como ícones pequenos */
+.cats{grid-template-columns:repeat(3,minmax(0,1fr));gap:16px;max-width:860px}
+.cats>section.ab,.cats>section[aria-labelledby="c-skincare"]{grid-column:1/-1}
+.cats>section:not(.ab) .capa{border:1.5px solid var(--line);border-radius:22px;background:var(--card);box-shadow:none;height:100%;gap:0;justify-items:center;text-align:center;padding:16px 10px 14px;align-content:start}
+.cats>section:not(.ab) .capa:hover,.cats>section:not(.ab) .capa:focus-visible{border-color:var(--pink);box-shadow:none}
+.cats>section:not(.ab) .capa-ic{aspect-ratio:auto;background:none;border-radius:0;box-shadow:none;display:block;font-size:0}
+.cats>section:not(.ab) .capa-ic svg{width:62px;height:62px;display:block}
+.cats>section:not(.ab) .capa-t{border-top:0;padding:6px 0 0;display:grid;gap:2px;justify-items:center}
+.cats>section:not(.ab) .capa-n{font-size:17px;font-weight:800;line-height:1.2}
+.cats>section:not(.ab) .capa-p{font-size:13.5px;color:var(--muted);margin:0}
+.cats>section:not(.ab) .capa-p b{color:var(--ink)}
+.sk-h:not(.ab){border:0;background:var(--blush);border-radius:26px}
+.sk-h:not(.ab) .sk-tg{box-shadow:none}
+.hero h1{font-size:clamp(34px,5vw,48px)}
+@media (max-width:560px){.cats{grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}.cats>section:not(.ab) .capa{padding:12px 6px 10px;border-radius:18px}.cats>section:not(.ab) .capa-ic svg{width:48px;height:48px}.cats>section:not(.ab) .capa-n{font-size:13.5px}.cats>section:not(.ab) .capa-p{font-size:11.5px}}
+/* menos ruído */
+.hero .eyebrow,.sk-eye,.capa-b,.sk-h:not(.ab) .sk-ch{display:none}
+.cf-m{margin:0 4px}.cf-m summary{font-weight:600;font-size:14px;color:var(--muted);list-style:none}.cf-m summary::after{content:"▾";margin-left:6px}.cf-m[open] summary::after{content:"▴"}.cf-m summary::-webkit-details-marker{display:none}
+.cf-m ol{margin:8px 0 10px}
+.cf-m .cf-g,.cf-m .cf-a{margin-top:8px}
+/* como funciona: leve, sem caixas */
+.cf{display:flex;flex-wrap:wrap;gap:8px 22px;align-items:center;background:none;border:0;padding:2px 4px}
+.cf-p{background:none;border:0;padding:0;gap:8px;align-items:center}
+.cf-p>b{width:24px;height:24px;font-size:13px}
+.cf-p h4{font-size:15px}
+.cf-m{flex:1 1 100%;font-size:14px;color:var(--muted)}.cf-m summary{cursor:pointer;font-weight:700;color:var(--pink);min-height:32px;display:flex;align-items:center}.cf-m ol{margin:6px 0 0;padding-left:20px;display:grid;gap:6px}.cf-m li b{color:var(--ink)}
+.cf-g{background:none;border:0;border-left:0;padding:0 4px;font-size:13.5px;color:var(--muted)}
+@media(max-width:760px){.cf{gap:6px 14px}.cf-p h4{font-size:14px}}
 .cf-a{grid-column:1/-1;display:flex;flex-wrap:wrap;justify-content:space-between;align-items:center;gap:8px 16px;font-size:13.5px;color:var(--muted);padding:0 4px}
 .cf-a a{font-family:var(--f-display);font-weight:800;font-size:15px;color:var(--pink);text-decoration:underline;text-underline-offset:3px}
 @media(max-width:760px){.cf{grid-template-columns:1fr;gap:8px}.cf-p{padding:10px 12px}}
@@ -229,11 +258,12 @@ h1 .jp rt{font-size:.5em;letter-spacing:.05em}
 .ex{position:absolute;top:10px;left:10px;background:#fff;border:1.5px dashed var(--pink);color:var(--pink);font-size:11px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;padding:2px 8px;border-radius:999px}
 .vazio{margin:0;color:var(--muted);font-size:14.5px;background:var(--card);border:1.5px dashed var(--line);border-radius:14px;padding:14px 16px}
 
-.abas{display:flex;gap:6px;background:var(--card);border:1.5px solid var(--line);border-radius:999px;padding:5px;width:max-content;max-width:100%;overflow-x:auto}
-.abas a{flex:0 0 auto;text-decoration:none;font-family:var(--f-display);font-weight:700;font-size:15px;padding:8px 16px;border-radius:999px;color:var(--muted);white-space:nowrap}
-.abas a[aria-current="page"]{background:var(--ink);color:#fff}
+.abas{display:flex;gap:6px 18px;flex-wrap:wrap;width:100%}
+.abas a{display:grid;justify-items:center;gap:2px;text-decoration:none;font-family:var(--f-display);font-weight:700;font-size:14.5px;color:var(--muted);padding:4px 10px 6px;border-bottom:3px solid transparent;line-height:1.2}
+.abas .ai svg{width:46px;height:46px;display:block}
+.abas a[aria-current="page"]{color:var(--ink);border-bottom-color:var(--pink)}
 .abas a:not([aria-current]):hover{color:var(--pink)}
-@media (max-width:520px){.abas{width:100%}.abas a{flex:1 1 0;text-align:center;padding:8px 3px;font-size:12.5px;white-space:normal;line-height:1.2}}
+@media (max-width:520px){.abas{display:grid;grid-template-columns:repeat(4,1fr);gap:4px}.abas a{padding:4px 2px 6px;font-size:12px;text-align:center}.abas .ai svg{width:38px;height:38px}}
 .calcbox{background:var(--card);border:1.5px solid var(--line);border-left:6px solid var(--sky);border-radius:var(--r);padding:22px;display:grid;gap:14px}
 .calcbox h2{font-family:var(--f-display);font-size:clamp(22px,3vw,28px);margin:0;line-height:1.15}
 .calcbox p{margin:0}
@@ -264,10 +294,10 @@ footer a:hover{color:var(--pink)}
   </nav>
 
   <nav class="abas" aria-label="Unirversos Tesouros">
-    <a href="/loja/" aria-current="page">🛒 Vitrine</a>
-    <a href="/loja/encomendas/">🛍️ Encomendas</a>
-    <a href="/loja/brecho/">🧥 Brechó</a>
-    <a href="/loja/revista/">📖 Revista Memórias</a>
+    <a href="/loja/" aria-current="page"><span class="ai"><svg viewBox="0 0 28 28" aria-hidden="true"><ellipse cx="14" cy="25.5" rx="10" ry="1.4" fill="#4A4149" opacity=".15"/><path d="M4 11h20v13H4Z" fill="#F3F0FA" stroke="#7a63b8" stroke-width="1.200" stroke-linejoin="round"/><path d="M3 11l2-6h18l2 6Z" fill="#b7a6dc" stroke="#7a63b8" stroke-width="1.200" stroke-linejoin="round"/><path d="M8 5l-1 6M14 5v6M20 5l1 6" stroke="#fffdf9" stroke-width="1.300"/><rect x="7" y="14" width="9" height="10" rx="1" fill="#E4DCF5" stroke="#7a63b8" stroke-width="1"/><rect x="18" y="14" width="3.500" height="10" fill="#fffdf9" stroke="#7a63b8" stroke-width="1"/><rect x="10.500" y="16.500" width="3" height="5" rx="1" fill="#7a63b8"/></svg></span>Vitrine</a>
+    <a href="/loja/encomendas/"><span class="ai"><svg viewBox="0 0 28 28" aria-hidden="true"><ellipse cx="14" cy="25.5" rx="10" ry="1.4" fill="#4A4149" opacity=".15"/><path d="M4 10.500 14 6l10 4.500V21L14 25.500 4 21Z" fill="#D8B58A" stroke="#8a6a44" stroke-width="1.200" stroke-linejoin="round"/><path d="M4 10.500 14 15l10-4.500M14 15v10.500" stroke="#8a6a44" stroke-width="1.200" fill="none"/><path d="M9 8.200l10 4.600v3.500l-10-4.600Z" fill="#b7a6dc" stroke="#7a63b8" stroke-width=".9" stroke-linejoin="round"/></svg></span>Encomendas</a>
+    <a href="/loja/brecho/"><span class="ai"><svg viewBox="0 0 28 28" aria-hidden="true"><ellipse cx="14" cy="25.5" rx="10" ry="1.4" fill="#4A4149" opacity=".15"/><path d="M14 4.500a2 2 0 1 1 2 2c-1.200 0-2 .8-2 2v1.500" fill="none" stroke="#7a63b8" stroke-width="1.500" stroke-linecap="round"/><path d="M14 10 3.500 17.500a1.200 1.200 0 0 0 .7 2.200h19.600a1.200 1.200 0 0 0 .7-2.200Z" fill="none" stroke="#7a63b8" stroke-width="1.500" stroke-linejoin="round"/><path d="M8 22.500 6 25M20 22.500l2 2.500" stroke="none"/><path d="M7 19.700h14l1 5.300H6Z" fill="#E4DCF5" stroke="#7a63b8" stroke-width="1.200" stroke-linejoin="round"/></svg></span>Brechó</a>
+    <a href="/loja/revista/"><span class="ai"><svg viewBox="0 0 28 28" aria-hidden="true"><ellipse cx="14" cy="26" rx="10" ry="1.3" fill="#4A4149" opacity=".15"/><g transform="rotate(-4 14 14)"><rect x="6" y="3.500" width="16" height="21" rx="1.500" fill="#fffdf9" stroke="#a08a5a" stroke-width="1.200"/><rect x="8" y="5.500" width="12" height="3.200" rx=".8" fill="#b5514d"/><rect x="8" y="10.500" width="12" height="7" rx=".8" fill="#E1EDE5"/><path d="M8 17.500l3.500-3.500 2.500 2.500 2-2 4 3Z" fill="#8fb59a"/><path d="M8 20.500h12M8 22.500h7" stroke="#d9c9a0" stroke-width="1.100" stroke-linecap="round"/></g></svg></span>Revista Memórias</a>
   </nav>
 
   <header class="hero">
@@ -306,6 +336,7 @@ footer a:hover{color:var(--pink)}
     {id:'didatico', capa:'/loja/fotos/capa-didatico.jpg', cor:'var(--lavender)', ic:'📚', nome:'Material didático', sub:'Livros e cadernos para estudar japonês.'},
     {id:'gadgets',  ic:'🌸', nome:'Gadgets & Papelaria Japonesa', sub:'Design minimalista, tecnologia portátil e organização para a sua rotina.'}
   ];
+  const ICO={zelda:'<svg viewBox=\'0 0 28 28\' aria-hidden=\'true\'><ellipse cx=\'14\' cy=\'26\' rx=\'10\' ry=\'1.3\' fill=\'#4A4149\' opacity=\'.15\'/><g transform=\'rotate(35 14 14)\'><path d=\'M14 1.500l2.500 3.500v11h-5V5Z\' fill=\'#E4E8EC\' stroke=\'#7d8b93\' stroke-width=\'1.200\' stroke-linejoin=\'round\'/><rect x=\'8.500\' y=\'16\' width=\'11\' height=\'2.400\' rx=\'1.200\' fill=\'#8e6a1f\'/><rect x=\'12.700\' y=\'18.400\' width=\'2.600\' height=\'5\' rx=\'1\' fill=\'#5d4c42\'/><circle cx=\'14\' cy=\'24.600\' r=\'1.500\' fill=\'#b5514d\'/></g></svg>',pokecafe:'<svg viewBox="0 0 28 28" aria-hidden="true"><ellipse cx="14" cy="26" rx="10" ry="1.3" fill="#4A4149" opacity=".15"/><path d="M9 3.500c-1 1.500 1 2.500 0 4M14 3c-1 1.500 1 2.500 0 4.500M19 3.500c-1 1.500 1 2.500 0 4" fill="none" stroke="#c9b9a0" stroke-width="1.200" stroke-linecap="round"/><path d="M5.500 10h15v6.500a7.500 7.500 0 0 1-15 0Z" fill="#fffdf9" stroke="#a08a5a" stroke-width="1.300" stroke-linejoin="round"/><path d="M5.500 13.500h15" stroke="#b5514d" stroke-width="2.200"/><path d="M20.500 11.500h1.500a3 3 0 0 1 0 6h-2" fill="none" stroke="#a08a5a" stroke-width="1.300"/><path d="M4 24.500h18" stroke="#a08a5a" stroke-width="1.300" stroke-linecap="round"/></svg>',didatico:'<svg viewBox="0 0 28 28" aria-hidden="true"><ellipse cx="14" cy="26" rx="10" ry="1.3" fill="#4A4149" opacity=".15"/><path d="M14 7C11.500 5 7.500 4.500 4 5.500v15c3.500-1 7.500-.5 10 1.500 2.500-2 6.500-2.500 10-1.500v-15C20.500 4.500 16.500 5 14 7Z" fill="#fffdf9" stroke="#7a63b8" stroke-width="1.300" stroke-linejoin="round"/><path d="M14 7v15" stroke="#7a63b8" stroke-width="1.100"/><text x="9" y="16.500" text-anchor="middle" font-size="7.500" font-weight="800" fill="#7a63b8" font-family="sans-serif">あ</text><path d="M17 11h4.500M17 14h4.500M17 17h3" stroke="#b7a6dc" stroke-width="1.200" stroke-linecap="round"/></svg>'};
   const ARQ=window.CATS_ARQUIVADAS||[];
   for(let i=CATS.length-1;i>=0;i--) if(ARQ.includes(CATS[i].id)) CATS.splice(i,1);
   const ITENS=(window.ACHADOS||[]).filter(x=>x&&x.nome&&!x.arquivado&&!ARQ.includes(x.cat));
@@ -428,11 +459,13 @@ footer a:hover{color:var(--pink)}
   const LOTE=window.SK_LOTE||null;
   const ZAP_LISTA='https://chat.whatsapp.com/HXPuZAzq8f6EWIyyLTBSlm'; /* grupo de avisos no WhatsApp */
   function comoFunciona(){
-    return `<div class="cf" aria-label="Como funciona">
-      <div class="cf-p"><b>1</b><div><h4>Você escolhe</h4><p>Monte o pedido (mínimo R$ ${fmR(CXMIN).replace(',00','')}, sozinha ou com as amigas) e envie pelo WhatsApp.</p></div></div>
-      <div class="cf-p"><b>2</b><div><h4>Garante com 50%</h4><p>Metade no Pix reserva a sua vaga. O restante, só antes da entrega.</p></div></div>
-      <div class="cf-p"><b>3</b><div><h4>Eu trago do Japão</h4><p>Compro pessoalmente em dezembro e janeiro e entrego em fevereiro. Taxa e impostos inclusos; frete dentro do Brasil à parte.</p></div></div>
-      <p class="cf-g">🤝 <b>Garantia:</b> se eu não encontrar algum produto, você escolhe entre trocar por outro ou receber o valor dele de volta.</p>\n      <div class="cf-a"><span>Aline Kikuti · compro tudo pessoalmente no Japão</span><a href="${ZAP_LISTA}" target="_blank" rel="noopener">Entrar no grupo de avisos →</a></div></div>`;
+    return `<details class="cf-m" aria-label="Como funciona"><summary>Como funciona, garantia e avisos</summary>
+      <ol>
+        <li><b>Você escolhe.</b> Monte o pedido (mínimo R$ ${fmR(CXMIN).replace(',00','')}, sozinha ou com as amigas) e envie pelo WhatsApp.</li>
+        <li><b>Garante com 50%.</b> Metade no Pix reserva a sua vaga. O restante, só antes da entrega.</li>
+        <li><b>Eu trago do Japão.</b> Compro pessoalmente em dezembro e janeiro e entrego em fevereiro. Taxa e impostos inclusos; frete dentro do Brasil à parte.</li></ol>
+      <p class="cf-g">🤝 <b>Garantia:</b> se eu não encontrar algum produto, você escolhe entre trocar por outro ou receber o valor dele de volta.</p>
+      <div class="cf-a"><span>Aline Kikuti · compro tudo pessoalmente no Japão</span><a href="${ZAP_LISTA}" target="_blank" rel="noopener">Entrar no grupo de avisos →</a></div></details>`;
   }
   function skHeader(c,lista,ab){
     /* fotos da capa: as preferidas primeiro; se alguma estiver oculta, completa com outras */
@@ -440,12 +473,12 @@ footer a:hover{color:var(--pink)}
     const th=PREF.map(id=>CX.find(p=>p.id===id&&p.foto)).filter(Boolean);
     CX.forEach(p=>{ if(th.length<6&&p.foto&&!th.includes(p)) th.push(p); });
     const tot=lista.length+CX.length;
-    if(ab) return `<div class="sk-h ab"><div class="sk-top"><span class="capa-n" id="c-${c.id}">${c.ic} ${esc(c.nome)}</span>
+    if(ab) return `<div class="sk-h ab"><div class="sk-top"><span class="capa-n" id="c-${c.id}">${esc(c.nome)}</span>
       <button type="button" class="sk-tg" data-col="${c.id}" aria-expanded="true" aria-controls="cc-${c.id}">Recolher ▴</button></div></div>`;
     return `<div class="sk-h"><div class="sk-tx">
       <p class="sk-eye">Direto do Japão · ${tot} itens</p>
       ${LOTE?`<p class="sk-lote">🔥 ${esc(LOTE.nome)} · ${LOTE.vagas} vagas${LOTE.ate?` · pedidos até ${esc(LOTE.ate)}`:''}</p>`:''}
-      <span class="capa-n" id="c-${c.id}">${c.ic} ${esc(c.nome)}</span>
+      <span class="capa-n" id="c-${c.id}">${esc(c.nome)}</span>
       ${aPartir(c,lista)?`<span class="capa-p">${aPartir(c,lista)}</span>`:''}
       <div class="sk-ch" role="group" aria-label="Filtrar skin, hair e sun care">${skChips(lista)}</div>
       <button type="button" class="sk-tg" data-col="${c.id}" aria-expanded="false" aria-controls="cc-${c.id}">Ver os produtos ▾</button></div>
@@ -498,8 +531,8 @@ footer a:hover{color:var(--pink)}
         </div></section>`;
       return `<section class="col${ab?' ab':''}" aria-labelledby="c-${c.id}">
         <button type="button" class="capa" style="--cc:${c.cor||'var(--pink)'}" data-col="${c.id}" aria-expanded="${ab}" aria-controls="cc-${c.id}">
-          ${c.capa?`<img src="${esc(c.capa)}" alt="" loading="lazy">`:`<span class="capa-ic" aria-hidden="true">${c.ic}</span>`}
-          <span class="capa-t"><span class="capa-n" id="c-${c.id}">${c.ic} ${esc(c.nome)}</span>${aPartir(c,lista)?`<span class="capa-p">${aPartir(c,lista)}</span>`:''}<span class="capa-b"><b>${ab?'Recolher ▴':'Ver coleção ▾'}</b></span></span>
+          <span class="capa-ic" aria-hidden="true">${ICO[c.id]||c.ic}</span>
+          <span class="capa-t"><span class="capa-n" id="c-${c.id}">${esc(c.nome)}</span>${aPartir(c,lista)?`<span class="capa-p">${aPartir(c,lista)}</span>`:''}<span class="capa-b"><b>${ab?'Recolher ▴':'Ver coleção ▾'}</b></span></span>
         </button>
         <div class="col-c" id="cc-${c.id}"${ab?'':' hidden'}>
         ${lista.length? `<div class="grid">${lista.map(x=>card(x,c)).join('')}</div>` : (c.id==='skincare'?'':`<p class="vazio">Os achados desta categoria chegam em breve.</p>`)}
