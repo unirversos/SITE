@@ -77,6 +77,57 @@ button:focus-visible,a:focus-visible,.chip:focus-visible{outline:3px solid #b7a6
 .foot .big{font-family:'Baloo 2',cursive;font-size:17px;margin-bottom:12px}
 .foot .tags{display:flex;gap:16px;justify-content:center;flex-wrap:wrap;font-size:13px;color:var(--pink-deep)}
 .foot .credit{margin-top:14px;font-size:12px;color:var(--muted)}
+
+/* feed moderno */
+.escrever label,.escrever #formPost>div>span.nota{position:absolute;left:-9999px}
+#formPost{gap:8px}
+#formPost .chips{gap:6px}#formPost .chip{min-height:34px;padding:4px 14px;font-size:13.5px}
+#author{padding:9px 14px;font-size:15px;border:0}
+.escrever textarea{min-height:76px}
+#formPost .nota{font-size:12px}
+
+.wrap{max-width:660px}
+.hero{padding:6px 0 14px;gap:4px}
+.hero h1{font-size:clamp(28px,5vw,38px)}
+.hero p{font-size:16px}
+.escrever{border:0;border-radius:22px;box-shadow:0 14px 34px -26px rgba(58,43,56,.55);padding:18px 18px 12px;margin-bottom:18px;gap:10px}
+.escrever textarea{border:0;background:var(--paper);border-radius:16px;min-height:96px;font-size:17px}
+.escrever .btn{min-height:44px}
+.comb{margin-top:2px;font-size:13.5px;color:var(--muted)}.comb summary{cursor:pointer;font-weight:700;min-height:34px;display:flex;align-items:center;list-style:none}.comb summary::-webkit-details-marker{display:none}.comb summary::after{content:"▾";margin-left:6px}.comb[open] summary::after{content:"▴"}
+.comb ul{list-style:none;display:grid;gap:6px;padding:4px 0 8px}.comb li{display:block}.comb li::before{content:none}
+.lista-h{position:sticky;top:0;z-index:5;background:var(--paper);padding:8px 0;margin:0 0 10px;justify-content:flex-start;border-bottom:1px solid var(--line)}
+.abas-feed{gap:2px 18px;flex-wrap:nowrap;overflow-x:auto;scrollbar-width:none}
+.abas-feed .chip{border:0;border-bottom:3px solid transparent;border-radius:0;background:none;color:var(--muted);padding:6px 2px;min-height:38px;white-space:nowrap}
+.abas-feed .chip.on{background:none;color:var(--ink);border-bottom-color:var(--pink)}
+.mural{gap:14px}
+.post{border:0;border-radius:22px;box-shadow:0 12px 30px -26px rgba(58,43,56,.6);padding:16px 18px 10px;gap:10px}
+.av{width:44px;height:44px;background:linear-gradient(135deg,#f6d8df,#ead9f3)}
+.texto{font-size:18px;line-height:1.55}
+.etq{background:#f3eef9;border-color:transparent;color:#6a569b}
+.rodape{border-top:0;padding-top:2px}
+.reacao{border-color:transparent;background:var(--paper);padding:6px 12px;min-height:38px}
+.reacao.on{background:#f7dbe2}
+.resp{margin-left:12px}
+
+/* compacto */
+.hero{padding:0 0 10px}.hero h1{font-size:clamp(24px,4.4vw,30px)}.hero p{font-size:14.5px}
+.escrever{padding:12px 12px 8px;border-radius:18px;margin-bottom:12px;gap:8px}
+.escrever textarea{min-height:60px;font-size:15px;padding:10px 12px}
+#author{padding:7px 12px;font-size:14px}
+#formPost .chip{min-height:30px;padding:2px 12px;font-size:13px}
+.escrever .btn{min-height:38px;font-size:14px;padding:8px 20px}
+.comb{font-size:12.5px}.comb summary{min-height:28px}
+.lista-h{padding:2px 0;margin-bottom:8px}.abas-feed .chip{min-height:34px;font-size:13.5px}
+.mural{gap:10px}
+.post{padding:12px 14px 8px;gap:6px;border-radius:18px}
+.av{width:34px;height:34px;font-size:15px}
+.quem{gap:9px}.quem b{font-size:14px}.quando{font-size:12px}
+.etq{font-size:11px;padding:3px 10px}
+.texto{font-size:16px;line-height:1.5}
+.rodape{gap:6px}
+.reacao{font-size:12.5px;padding:3px 10px;min-height:32px;gap:5px}
+.mini.forte{font-size:12.5px;padding:3px 12px;min-height:32px}
+.resp{padding:8px 12px;margin-left:8px}.resp-nome{font-size:12px}.resp-txt{font-size:14px}
 </style>
 <link rel="stylesheet" href="/estilo-celular.css?v=3">
 <script defer src="/menu-ativo.js?v=2"></script><script defer src="/voltar-global.js?v=4"></script>
@@ -96,31 +147,12 @@ button:focus-visible,a:focus-visible,.chip:focus-visible{outline:3px solid #b7a6
   </nav>
 
   <header class="hero">
-    <p class="eyebrow">unirversos paralelos</p>
     <h1>Mural da <em>comunidade</em></h1>
-    <p>Uma frase por dia, no idioma que você escolher. Aqui, errar é bem-vindo e cada registro vira conversa.</p>
-    <div class="subs"><a class="btn claro" href="https://substack.com/@unirversosparalelos" target="_blank" rel="noopener">Reflexões em voz alta, no Substack <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17L17 7M9 7h8v8"/></svg></a></div>
+    <p>Uma frase por dia, no idioma que você escolher.</p>
   </header>
 
-  <section class="dois" aria-label="Tema e combinados">
-    <div class="cx tema">
-      <p class="eyebrow">tema da semana</p>
-      <h2 id="temaTitulo">…</h2>
-      <p>Escreva sobre o tema quando quiser durante a semana. Pode ser uma palavra, uma frase ou um parágrafo, no idioma que você escolher.</p>
-      <p class="peq" id="temaSemana"></p>
-    </div>
-    <div class="cx">
-      <p class="eyebrow verde">combinados</p>
-      <ul>
-        <li>Errar faz parte. Ninguém corrige sem você pedir.</li>
-        <li>Cuide de quem aparece nas suas histórias: sem nomes ou dados de outras pessoas.</li>
-        <li>Algo te incomodou? Use Denunciar. A Aline recebe e cuida.</li>
-      </ul>
-    </div>
-  </section>
-
   <section class="escrever" aria-labelledby="h-escrever">
-    <h2 id="h-escrever">Escrever no mural</h2>
+    <h2 id="h-escrever" class="sr">Escrever no mural</h2>
     <div id="diarioEntrar"><p class="nota" style="margin-bottom:12px">Para escrever, reagir e responder, entre com a sua conta grátis. Ler é livre.</p><button type="button" class="btn">Entrar para participar →</button></div>
     <form id="formPost" hidden>
       <div><span class="nota" style="display:block;margin-bottom:6px;font-weight:700">Idioma deste registro</span><div class="chips" id="escolhaLang"></div></div>
@@ -130,10 +162,14 @@ button:focus-visible,a:focus-visible,.chip:focus-visible{outline:3px solid #b7a6
       <div><button type="submit" class="btn">Publicar no mural</button></div>
       <p id="diarioAviso" class="aviso" aria-live="polite"></p>
     </form>
+    <details class="comb"><summary>Combinados da comunidade</summary><ul>
+      <li>Errar faz parte. Ninguém corrige sem você pedir.</li>
+      <li>Cuide de quem aparece nas suas histórias: sem nomes ou dados de outras pessoas.</li>
+      <li>Algo te incomodou? Use Denunciar. A Aline recebe e cuida.</li></ul></details>
   </section>
 
   <section aria-labelledby="h-reg">
-    <div class="lista-h"><h2 id="h-reg">Registros da comunidade</h2><div class="chips" id="abas"></div></div>
+    <div class="lista-h"><h2 id="h-reg" class="sr">Registros da comunidade</h2><div class="chips abas-feed" id="abas"></div></div>
     <div class="mural" id="mural" aria-live="polite"></div>
   </section>
 
@@ -146,8 +182,7 @@ button:focus-visible,a:focus-visible,.chip:focus-visible{outline:3px solid #b7a6
     <p class="credit">Aline Kikuti</p>
   </footer>
 </div>
-<script src="/paralelos/temas.js?v=1"></script>
-<script type="module" src="/paralelos/mural.js?v=2"></script>
+<script type="module" src="/paralelos/mural.js?v=3"></script>
 <script src="/entrar.js" defer></script>
 </body>
 </html>

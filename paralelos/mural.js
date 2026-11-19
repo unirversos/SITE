@@ -24,13 +24,8 @@ let user = null, filtro = 'todos', langNovo = 'pt';
 const porLang = { ja: [], en: [], pt: [] };
 let reac = [], resp = [], recursos = true, carregou = 0, abertas = {}, rascunho = {};
 
-/* tema da semana (lista em /paralelos/temas.js) */
-(function(){
-  const t = window.UniTemas.atual();
-  $('temaTitulo').textContent = t.titulo;
-  $('temaSemana').textContent = 'Semana ' + t.numero + ' de ' + t.total + ' · muda toda segunda-feira';
-  textoEl.placeholder = t.titulo + '…';
-})();
+/* sem tema: o campo convida a escrever livremente */
+textoEl.placeholder = 'O que você quer registrar hoje?';
 
 /* idioma escolhido e filtro (vem de ?l= quando alguém usa os links antigos) */
 try {
