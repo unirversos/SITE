@@ -307,6 +307,28 @@ body.ver-ro .ro-svg{paint-order:stroke;stroke:#3a2b38;stroke-width:3px;stroke-li
 #clTit .cw.fala{transform:translateY(-3px) scale(1.13);text-shadow:0 0 14px rgba(243,201,105,.95)}
 @media (prefers-reduced-motion:reduce){#clAv.anda .cl-cab,#clAv.anda .cl-corpo,#clAv.anda .cl-sombra{animation:none}#clTit .cw{transition:none}}
 #clTit .cro{display:none;margin:5px 0 0 4px;width:max-content;max-width:100%;background:#fff1c9;border:2px solid var(--tinta);border-radius:8px;padding:1px 8px;font-size:max(11px,.45em);font-weight:700;color:var(--tinta);line-height:1.4}body.ver-ro #clTit .cro{display:block}
+
+/* aprofundar (opcional): 番線 com números clicáveis */
+.ap-bt{margin-top:6px}
+#aprof{position:fixed;inset:0;z-index:9999;display:flex;align-items:flex-end;justify-content:center;background:rgba(58,43,56,.45)}
+#aprof[hidden]{display:none}
+#aprof .ap-f{width:min(520px,100%);max-height:92vh;overflow:auto;background:#fffaf3;border:3px solid var(--tinta);border-bottom:0;border-radius:18px 18px 0 0;padding:16px 16px 78px;animation:apsobe .35s cubic-bezier(.34,1.3,.64,1)}
+@keyframes apsobe{from{transform:translateY(40px);opacity:0}to{transform:none;opacity:1}}
+#aprof h3{margin:0 0 4px;font-size:1.05rem}
+#aprof .ap-x{float:right;border:2px solid var(--tinta);background:#fff;border-radius:10px;width:34px;height:34px;font-size:16px;cursor:pointer}
+#aprof .ap-placa{display:flex;align-items:center;justify-content:center;gap:10px;background:#3f7fb0;color:#fff;border:3px solid var(--tinta);border-radius:12px;box-shadow:4px 4px 0 var(--tinta);margin:12px 0;padding:10px 14px;font-weight:800}
+#aprof .ap-n{font-size:2.6rem;line-height:1;min-width:1.2ch;text-align:center;display:inline-block}
+#aprof .ap-n.pop{animation:appop .4s cubic-bezier(.34,1.56,.64,1)}
+@keyframes appop{from{transform:scale(.5);opacity:.3}to{transform:none;opacity:1}}
+#aprof .ap-k{font-size:1.5rem}
+#aprof .ap-frase{text-align:center;margin:6px 0 10px;min-height:4.2em}
+#aprof .ap-frase .jp{font-size:1.5rem;font-weight:800}
+#aprof .ap-grade{display:grid;grid-template-columns:repeat(5,1fr);gap:8px}
+#aprof .ap-grade button{font:inherit;font-weight:800;font-size:1.2rem;padding:10px 0;border:2px solid var(--tinta);border-radius:10px;background:#fff;cursor:pointer;box-shadow:2px 2px 0 var(--tinta);transition:transform .15s cubic-bezier(.34,1.56,.64,1)}
+#aprof .ap-grade button:active{transform:translate(2px,2px);box-shadow:none}
+#aprof .ap-grade button.on{background:#f3c969}
+#aprof p .ro{display:inline-block;margin:0 2px}
+#aprof .ap-nota{font-size:.85rem;opacity:.8;margin:10px 0 0}
 </style>
 </head>
 <body>
@@ -783,14 +805,39 @@ function telaAgua(c){
 }
 /* fase 0 de cada chave: tocar e ouvir todos os círculos da cena; só então abre o exercício */
 function toqueCompleto(c){return S.acesas.includes(c.n)||c.hot.every((h,i)=>S.visto.has(c.n+'-'+i));}
+
+const APN=[['いち','ichi'],['に','ni'],['さん','san'],['よん','yon'],['ご','go'],['ろく','roku'],['なな','nana'],['はち','hachi'],['きゅう','kyū'],['じゅう','jū']];
+function aprofunda(){
+  let el=$('aprof');if(!el){el=document.createElement('div');el.id='aprof';el.hidden=true;document.body.appendChild(el);}
+  let n=3;
+  const fecha=()=>{el.hidden=true;document.removeEventListener('keydown',esc);};
+  const esc=e=>{if(e.key==='Escape')fecha();};
+  const desenha=(fala1)=>{
+    const [r,ro]=APN[n-1];
+    el.innerHTML=`<div class="ap-f" role="dialog" aria-label="Aprofundar: 番線"><button class="ap-x" type="button" aria-label="Fechar">✕</button>
+     <span class="elem agua"><i></i>Aprofundar · opcional</span>
+     <h3>ホーム e <span lang="ja">番線</span></h3>
+     <p><b lang="ja">ホーム</b> é o lugar onde você espera o trem. <b lang="ja">番線</b> (<span class="ro">bansen</span>) é o <b>número</b> da plataforma: <span lang="ja">番</span> = número, <span lang="ja">線</span> = linha.</p>
+     <div class="ap-placa" lang="ja"><span class="ap-n" id="apN">${n}</span><span class="ap-k">番線</span></div>
+     <div class="ap-frase"><div class="jp" lang="ja">${r}ばんせんです</div><div class="ro">${ro}-bansen desu</div><div class="pt">É a plataforma ${n}.</div></div>
+     <div class="ap-grade">${APN.map((_,i)=>`<button type="button" data-n="${i+1}" class="${i+1===n?'on':''}">${i+1}</button>`).join('')}</div>
+     <p class="ap-nota">Toque num número para trocar a placa e ouvir.</p></div>`;
+    el.querySelector('.ap-x').onclick=fecha;
+    el.querySelectorAll('.ap-grade button').forEach(b=>b.onclick=()=>{n=+b.dataset.n;desenha(true);});
+    if(fala1){const nn=$('apN');if(nn)nn.classList.add('pop');fala(r+'ばんせんです');}
+  };
+  el.onclick=e=>{if(e.target===el)fecha();};
+  desenha(false);el.hidden=false;document.addEventListener('keydown',esc);
+}
 function telaToque(c){
   const M=c.hot.length;
   painel.innerHTML=`<span class="elem agua"><i></i>Chave ${String(c.n).padStart(2,'0')} · Toque e ouça</span>
    <h2>Toque em cada círculo da cena e ouça.</h2>
    <p>Cada um que você toca acende a cena. Quando todos estiverem acesos, o exercício abre.</p>
    <div class="contagem" id="ctg"></div><p class="gram" id="ctgTxt"></p>
-   <div class="acoes"><button class="btn pri" type="button" id="abreEx" disabled>Abrir o exercício →</button></div>`;
+   <div class="acoes"><button class="btn pri" type="button" id="abreEx" disabled>Abrir o exercício →</button></div>${c.n===1?'<div class="acoes ap-bt"><button class="btn ghost" type="button" id="btApro">🔍 Aprofundar: <span lang="ja">番線</span> (número da plataforma)</button></div>':''}`;
   $('abreEx').onclick=()=>{S.toqueOk[S.k]=true;vai('agua');};
+  if($('btApro'))$('btApro').onclick=aprofunda;
   atualizaToque();
 }
 function atualizaToque(novo){
