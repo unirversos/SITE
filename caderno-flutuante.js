@@ -92,7 +92,7 @@
       if (d) {
         if (!dic) {
           var fazer = function () { dic = UniDic.montar($('cf-dc'), { salvar: salvaPalavra }); dic.foca(); };
-          if (window.UniDic) fazer(); else carrega('/caderno-dic.js?v=2', fazer);
+          if (window.UniDic) fazer(); else carrega('/caderno-dic.js?v=3', fazer);
         } else dic.foca();
       } else { livro.reajustar(); }
     }

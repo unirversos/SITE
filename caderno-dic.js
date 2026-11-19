@@ -8,6 +8,39 @@
   /* endereço do intermediário (Cloudflare Worker); vazio = o navegador fala direto com os dicionários */
   var API = '';
   var CK = 'uniDicPt1';
+
+  /* kana → romaji (Hepburn), para mostrar a leitura em romaji */
+  var RM = (function () {
+    var b = 'a i u e o ka ki ku ke ko sa shi su se so ta chi tsu te to na ni nu ne no ha hi fu he ho ma mi mu me mo ya yu yo ra ri ru re ro wa wo n ga gi gu ge go za ji zu ze zo da ji zu de do ba bi bu be bo pa pi pu pe po vu'.split(' ');
+    var k = 'あ い う え お か き く け こ さ し す せ そ た ち つ て と な に ぬ ね の は ひ ふ へ ほ ま み む め も や ゆ よ ら り る れ ろ わ を ん が ぎ ぐ げ ご ざ じ ず ぜ ぞ だ ぢ づ で ど ば び ぶ べ ぼ ぱ ぴ ぷ ぺ ぽ ゔ'.split(' ');
+    var map = {}; k.forEach(function (c, i) { map[c] = b[i]; });
+    map['ぁ'] = 'a'; map['ぃ'] = 'i'; map['ぅ'] = 'u'; map['ぇ'] = 'e'; map['ぉ'] = 'o';
+    var yo = { 'ゃ': 'a', 'ゅ': 'u', 'ょ': 'o' };
+    var VOG = 'aiueo';
+    function kata(t) { return t.replace(/[ァ-ヶ]/g, function (c) { return String.fromCharCode(c.charCodeAt(0) - 0x60); }); }
+    return function (t) {
+      t = kata(String(t || '')); var o = '', dobra = false;
+      for (var i = 0; i < t.length; i++) {
+        var c = t[i], n = t[i + 1];
+        if (c === 'っ') { dobra = true; continue; }
+        if (c === 'ー') { var u = o.slice(-1); if (VOG.indexOf(u) >= 0) o += u; continue; }
+        var r = map[c];
+        if (r == null) { o += c; dobra = false; continue; }
+        if (n && /[ぁぃぅぇぉ]/.test(n) && /^(fu|vu|shi|chi|ji|te|de|to|do|tsu|u)$/.test(r)) {
+          var vv = map[n], pre = r === 'fu' ? 'f' : r === 'vu' ? 'v' : r === 'shi' ? 'sh' : r === 'chi' ? 'ch' : r === 'ji' ? 'j' : r === 'tsu' ? 'ts' : r === 'u' ? 'w' : r[0];
+          r = (/^(sh|ch|j)$/.test(pre) && vv === 'i') ? pre + 'i' : (/^(sh|ch|j)$/.test(pre) ? pre + vv : (pre === 'w' && vv === 'i' ? 'wi' : pre + vv)); i++;
+        } else
+        if (n && yo[n] && /i$/.test(r) && c !== 'い') {
+          var ba = r === 'shi' ? 'sh' : r === 'chi' ? 'ch' : r === 'ji' ? 'j' : r.slice(0, -1);
+          r = ba + (yo[n] === 'a' || ba === 'sh' || ba === 'ch' || ba === 'j' ? yo[n] : 'y' + yo[n]); if (/^(sh|ch|j)$/.test(ba)) r = ba + yo[n]; else r = ba + 'y' + yo[n]; i++;
+        }
+        if (dobra) { r = (r.indexOf('ch') === 0 ? 't' : r[0]) + r; dobra = false; }
+        if (c === 'ん' && n && /[あいうえおやゆよ]/.test(n)) r = "n'";
+        o += r;
+      }
+      return o;
+    };
+  })();
   function lerCache() { try { return JSON.parse(localStorage.getItem(CK) || '{}'); } catch (e) { return {}; } }
   function gravaCache(c) { try { var k = Object.keys(c); if (k.length > 300) k.slice(0, 100).forEach(function (x) { delete c[x]; }); localStorage.setItem(CK, JSON.stringify(c)); } catch (e) {} }
 
@@ -62,10 +95,10 @@
     var f = el.querySelector('form'), q = el.querySelector('#dc-q'), R = el.querySelector('#dc-r'), seq = 0;
     function msg(h) { R.innerHTML = '<div class="ms">' + h + '</div>'; }
     function links(t) { return 'Abrir "' + esc(t) + '" em <a href="https://jotoba.de/search/0/' + encodeURIComponent(t) + '" target="_blank" rel="noopener">Jotoba</a> ou <a href="https://jisho.org/search/' + encodeURIComponent(t) + '" target="_blank" rel="noopener">Jisho</a>.'; }
-    function linhaSalvar(x, pt) { return (x.k ? x.k + (x.r ? ' (' + x.r + ')' : '') : x.r) + ' — ' + (pt || x.s[0].g.slice(0, 3).join(', ')); }
+    function linhaSalvar(x, pt) { return (x.k ? x.k + (x.r ? ' (' + x.r + ' · ' + RM(x.r) + ')' : '') : x.r + ' (' + RM(x.r) + ')') + ' — ' + (pt || x.s[0].g.slice(0, 3).join(', ')); }
     function pinta(rs, texto) {
       R.innerHTML = '<div class="dc">' + rs.map(function (x, i) {
-        return '<div class="it" data-i="' + i + '"><div class="pal"><span class="jp">' + esc(x.k || x.r) + '</span>' + (x.k && x.r ? '<span class="rd">' + esc(x.r) + '</span>' : '') + (x.comum ? '<span class="cm">comum</span>' : '') + '</div>' +
+        return '<div class="it" data-i="' + i + '"><div class="pal"><span class="jp">' + esc(x.k || x.r) + '</span>' + '<span class="rd">' + (x.k && x.r ? esc(x.r) + ' · ' : '') + '<b>' + esc(RM(x.r)) + '</b></span>' + (x.comum ? '<span class="cm">comum</span>' : '') + '</div>' +
           '<ol>' + x.s.slice(0, 3).map(function (s) { return '<li>' + esc(s.g.join('; ')) + '</li>'; }).join('') + '</ol>' +
           '<div class="pt nt" hidden></div><button class="sv" type="button">+ Salvar no caderno</button></div>';
       }).join('') + '<div class="nt">' + texto + '</div></div>';
