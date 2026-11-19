@@ -37,9 +37,9 @@
   function mostra() {
     if (document.getElementById('bz-chip') || document.getElementById('uv-chip')) return;
     var st = document.createElement('style');
-    st.textContent = '#uv-chip{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:8px 16px;background:#FFF6E6;border-bottom:1px solid #ead9b0;font:14px/1.4 "Zen Maru Gothic",system-ui,sans-serif;color:#3a2b38;position:relative;z-index:50}' +
-      '#uv-chip .v{font:inherit;font-weight:700;border:1.5px solid #C0913F;background:#fff;color:#7A5B21;border-radius:99px;padding:5px 14px;min-height:36px;cursor:pointer}' +
-      '#uv-chip .x{font:inherit;border:0;background:transparent;color:#71676e;font-size:20px;line-height:1;cursor:pointer;min-width:36px;min-height:36px}' +
+    st.textContent = '#uv-chip{display:flex;align-items:center;justify-content:flex-start;padding:10px 16px 0;font:14px/1.4 "Zen Maru Gothic",system-ui,sans-serif;color:#3a2b38;position:relative;z-index:50}' +
+      '#uv-chip .v{font:inherit;font-weight:700;border:0;background:none;color:#705f6c;padding:6px 0;min-height:40px;cursor:pointer;text-align:left}#uv-chip .v:hover{color:#a8324f}#uv-chip .v:focus-visible{outline:3px solid #b7a6dc;outline-offset:2px;border-radius:6px}' +
+      '#uv-chip .x{display:none}' +
       'body.uv-on a[data-volta],body.uv-on .eyebrow.back{display:none!important}';
     document.head.appendChild(st);
     var c = document.createElement('div');

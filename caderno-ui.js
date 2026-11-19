@@ -82,6 +82,12 @@
     } catch (e) {}
     return {
       id: function () { return livro.id(); },
+      /* acrescenta uma linha no fim da anotação aberta (ou cria uma anotação nova) — usado pelo dicionário */
+      salvaLinha: function (linha) {
+        var id = livro.id(), n = id && C.obter(id);
+        if (!n) { n = C.nova(); id = n.id; }
+        C.atualizar(id, { x: (n.x ? n.x.replace(/\s+$/, '') + '\n' : '') + linha }); abre(id);
+      },
       novaSobre: function (titulo, dt) { var id = livro.novaSobre(titulo, dt); abre(id); setTimeout(function () { livro.foca(); }, 300); return id; }
     };
   }

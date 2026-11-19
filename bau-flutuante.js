@@ -48,8 +48,8 @@
     '#bz-p a.it{display:flex;align-items:center;gap:12px;padding:8px 6px;border-radius:12px;color:#3a2b38;text-decoration:none;font-weight:700;min-height:48px}#bz-p a.it:hover{background:#f3e8dd}' +
     '#bz-p a.it i{font-style:normal;width:36px;height:36px;border-radius:50%;display:grid;place-items:center;font-size:18px;flex:none;background:#FBF2DF;color:#7A5B21}#bz-p a.it.c i{background:#E8EFE8;color:#3d6050}' +
     '#bz-p a.it[aria-current="page"]{background:#efe3d6}' +
-    '#bz-chip{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:8px 16px;background:#FFF6E6;border-bottom:1px solid #ead9b0;font:14px/1.4 "Zen Maru Gothic",system-ui,sans-serif;color:#3a2b38}' +
-    '#bz-chip .v{font:inherit;font-weight:700;border:1.5px solid #C0913F;background:#fff;color:#7A5B21;border-radius:99px;padding:5px 14px;min-height:36px;cursor:pointer}#bz-chip .x{font:inherit;border:0;background:transparent;color:#71676e;font-size:20px;line-height:1;cursor:pointer;min-width:36px;min-height:36px}';
+    '#bz-chip{display:flex;align-items:center;justify-content:flex-start;gap:10px;padding:10px 16px 0;font:14px/1.4 "Zen Maru Gothic",system-ui,sans-serif;color:#3a2b38}' +
+    '#bz-chip .v{font:inherit;font-weight:700;border:0;background:none;color:#705f6c;padding:6px 0;min-height:40px;cursor:pointer;text-align:left}#bz-chip .x{display:none}';
   document.head.appendChild(css);
 
   var aba = document.createElement('button');

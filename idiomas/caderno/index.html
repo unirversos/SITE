@@ -75,9 +75,10 @@ h1{font-family:var(--f-display);font-weight:800;font-size:clamp(26px,5vw,34px);l
 .modo button:focus-visible{outline:3px solid var(--lavender);outline-offset:2px}
 .rod .acts2{display:flex;align-items:center;gap:8px}
 .rod{display:flex;flex-wrap:wrap;justify-content:space-between;align-items:center;gap:8px;font-size:12.5px;color:var(--muted)}
+@media (max-width:480px){#dicbt,#recolher{padding:8px 12px!important;margin-left:6px!important;font-size:13px!important}}
 </style>
 <link rel="stylesheet" href="/estilo-celular.css?v=3">
-<script defer src="/menu-ativo.js?v=2"></script><script defer src="/voltar-global.js?v=4"></script>
+<script defer src="/menu-ativo.js?v=2"></script><script defer src="/voltar-global.js?v=5"></script>
 <link rel="icon" href="/favicon.svg" type="image/svg+xml"><link rel="icon" href="/favicon.ico" sizes="48x48"><link rel="apple-touch-icon" href="/apple-touch-icon.png"><link rel="manifest" href="/manifest.webmanifest"><meta name="theme-color" content="#3a2b38"><meta name="mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-title" content="Unirversos"><script src="/app.js" defer></script><style id="uni-logo">.logo,.brand,.sitebar .brand{font-family:"Baloo 2","Zen Maru Gothic",system-ui,sans-serif!important;font-weight:800!important;font-size:19px!important;letter-spacing:.14em!important;text-transform:none!important;text-decoration:none!important}.logo span,.brand span{color:#c23f5e!important;font:inherit!important;letter-spacing:inherit!important;margin:0!important}</style></head>
 </head>
 <body>
@@ -85,18 +86,34 @@ h1{font-family:var(--f-display);font-weight:800;font-size:clamp(26px,5vw,34px);l
   <nav class="sitebar" aria-label="Site"><a class="brand" href="/">UNI<span>R</span>VERSOS</a><span class="navlinks"><a href="/idiomas/">idiomas</a><a href="/travessia/">travessia</a><a href="/loja/">tesouros</a><span class="nav-sep" aria-hidden="true" style="opacity:.3">|</span><a href="/paralelos/">paralelos</a><a href="/sobre/">sobre</a></span></nav>
   <nav class="trail" aria-label="Trilha"><a href="/idiomas/japones/">← Minha trilha</a></nav>
   <header>
-    <button type="button" id="recolher" style="float:right;margin:2px 0 8px 12px;font:inherit;font-size:14px;font-weight:700;border:1.5px solid var(--line,#e7e1da);background:var(--card,#fff);color:inherit;border-radius:99px;padding:8px 18px;min-height:40px;cursor:pointer">Recolher ↘</button>
+    <button type="button" id="dicbt" style="float:right;margin:2px 0 8px 12px;font:inherit;font-size:14px;font-weight:700;border:1.5px solid var(--line,#e7e1da);background:var(--card,#fff);color:inherit;border-radius:99px;padding:8px 18px;min-height:40px;cursor:pointer" aria-expanded="false" aria-controls="dicbox">📖 Dicionário</button><button type="button" id="recolher" style="float:right;margin:2px 0 8px 12px;font:inherit;font-size:14px;font-weight:700;border:1.5px solid var(--line,#e7e1da);background:var(--card,#fff);color:inherit;border-radius:99px;padding:8px 18px;min-height:40px;cursor:pointer">Recolher ↘</button>
     <h1>Caderno de Unir Versos</h1>
     <p class="sub">Anotações livres, em páginas: escreva com o teclado e desenhe com a caneta por cima. Com a conta, tudo vai junto para qualquer aparelho.</p>
   </header>
+  <section id="dicbox" hidden style="background:#fff;border:1.5px solid #ecdadd;border-radius:18px;padding:14px;margin:0 0 14px"><div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px"><b style="font-family:var(--f-display);font-size:18px">Dicionário</b><button type="button" id="dicx" aria-label="Fechar o dicionário" style="font:inherit;border:1.5px solid #ecdadd;background:#fff;border-radius:99px;width:36px;height:36px;cursor:pointer">×</button></div><div id="dicmt"></div></section>
   <div id="cad"></div>
 </div>
 <script src="/caderno-dados.js?v=2"></script>
 <script src="/caderno-livro.js?v=10"></script>
-<script src="/caderno-ui.js?v=3"></script>
+<script src="/caderno-ui.js?v=4"></script>
 <script src="/voltar.js?v=1"></script>
-<script defer src="/bau-flutuante.js?v=7"></script>
+<script defer src="/bau-flutuante.js?v=8"></script>
 <script>window.UniCadernoTela = UniCadernoUI.montar(document.getElementById('cad'));</script>
+<script>
+/* Dicionário: abre em cima do caderno, sem sair da página; "Salvar" põe a palavra na anotação aberta */
+(function(){
+  var box=document.getElementById('dicbox'),bt=document.getElementById('dicbt'),dic=null;
+  function abre(v){
+    box.hidden=!v; bt.setAttribute('aria-expanded',String(v));
+    if(!v)return;
+    function fazer(){dic=UniDic.montar(document.getElementById('dicmt'),{salvar:function(l){window.UniCadernoTela.salvaLinha(l);}});dic.foca();}
+    if(dic)dic.foca(); else if(window.UniDic)fazer(); else{var s=document.createElement('script');s.src='/caderno-dic.js?v=2';s.onload=fazer;document.head.appendChild(s);}
+  }
+  bt.onclick=function(){abre(box.hidden);};
+  document.getElementById('dicx').onclick=function(){abre(false);bt.focus();};
+  box.addEventListener('keydown',function(e){e.stopPropagation();if(e.key==='Escape'){abre(false);bt.focus();}});
+})();
+</script>
 <script>
 /* Recolher: volta para a página de onde o caderno foi aberto (ou a anterior do site) e reabre o painel na mesma anotação */
 document.getElementById('recolher').onclick=function(){

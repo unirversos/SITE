@@ -5,6 +5,8 @@
   if (window.UniDic) return;
   function esc(s) { return String(s == null ? '' : s).replace(/[&<>"]/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]; }); }
   var TEM_JA = /[぀-ヿ㐀-鿿]/;
+  /* endereço do intermediário (Cloudflare Worker); vazio = o navegador fala direto com os dicionários */
+  var API = '';
   var CK = 'uniDicPt1';
   function lerCache() { try { return JSON.parse(localStorage.getItem(CK) || '{}'); } catch (e) { return {}; } }
   function gravaCache(c) { try { var k = Object.keys(c); if (k.length > 300) k.slice(0, 100).forEach(function (x) { delete c[x]; }); localStorage.setItem(CK, JSON.stringify(c)); } catch (e) {} }
@@ -13,7 +15,7 @@
 
   /* tradução automática (MyMemory) */
   function traduz(txt, de, para) {
-    var url = 'https://api.mymemory.translated.net/get?q=' + encodeURIComponent(txt) + '&langpair=' + de + '|' + para;
+    var url = API ? API + '/traduz?q=' + encodeURIComponent(txt) + '&de=' + de + '&para=' + para : 'https://api.mymemory.translated.net/get?q=' + encodeURIComponent(txt) + '&langpair=' + de + '|' + para;
     return tempo(8000, fetch(url)).then(function (r) { return r.json(); }).then(function (j) {
       var t = j && j.responseData && j.responseData.translatedText;
       if (!t || /MYMEMORY|INVALID|QUERY LENGTH/i.test(t)) throw new Error('sem tradução');
@@ -22,7 +24,7 @@
   }
 
   function jotoba(q) {
-    return tempo(9000, fetch('https://jotoba.de/api/search/words', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ query: q, language: 'English', no_english: false }) }))
+    return tempo(9000, fetch(API ? API + '/jotoba' : 'https://jotoba.de/api/search/words', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ query: q, language: 'English', no_english: false }) }))
       .then(function (r) { if (!r.ok) throw new Error('jotoba ' + r.status); return r.json(); })
       .then(function (j) {
         return (j.words || []).slice(0, 8).map(function (w) {
@@ -33,7 +35,7 @@
       });
   }
   function jisho(q) {
-    return tempo(9000, fetch('https://jisho.org/api/v1/search/words?keyword=' + encodeURIComponent(q)))
+    return tempo(9000, fetch(API ? API + '/jisho?keyword=' + encodeURIComponent(q) : 'https://jisho.org/api/v1/search/words?keyword=' + encodeURIComponent(q)))
       .then(function (r) { if (!r.ok) throw new Error('jisho ' + r.status); return r.json(); })
       .then(function (j) {
         return (j.data || []).slice(0, 8).map(function (w) {
@@ -48,6 +50,7 @@
   }
 
   var CSS = '.dc{display:flex;flex-direction:column;gap:10px}.dc form{display:flex;gap:8px}.dc input{flex:1;min-width:0;font:inherit;font-size:16px;border:1.5px solid #ecdadd;border-radius:12px;padding:9px 12px;background:#fff;color:#3a2b38}' +
+    '.dc .bt{font:inherit;font-size:14px;font-weight:700;border:1.5px solid #c23f5e;background:#c23f5e;color:#fff;border-radius:99px;padding:6px 16px;min-height:42px;cursor:pointer}.dc .bt:focus-visible,.dc input:focus-visible,.dc .sv:focus-visible{outline:3px solid #b7a6dc;outline-offset:2px}' +
     '.dc .it{background:#fff;border:1.5px solid #ecdadd;border-radius:16px;padding:12px 14px;display:flex;flex-direction:column;gap:6px}.dc .pal{display:flex;align-items:baseline;gap:10px;flex-wrap:wrap}.dc .jp{font:800 24px/1.2 "Zen Maru Gothic",system-ui,sans-serif}.dc .rd{font-size:14px;color:#705f6c}' +
     '.dc .cm{font-size:11px;font-weight:800;color:#a8324f;background:#fdeaee;border-radius:99px;padding:1px 8px}.dc ol{margin:0;padding-left:20px;font-size:14.5px}.dc li{margin:2px 0}.dc .en{font-size:12.5px;color:#705f6c}.dc .nt{font-size:12.5px;color:#705f6c}' +
     '.dc .sv{align-self:flex-start;font:inherit;font-size:13.5px;font-weight:700;border:1.5px solid #c23f5e;background:#fff;color:#a8324f;border-radius:99px;padding:6px 14px;min-height:38px;cursor:pointer}.dc .sv.ok{background:#e8efe8;border-color:#9bb59b;color:#3f5a3f}' +
@@ -55,7 +58,7 @@
 
   function montar(el, op) {
     if (!document.getElementById('dc-css')) { var st = document.createElement('style'); st.id = 'dc-css'; st.textContent = CSS; document.head.appendChild(st); }
-    el.innerHTML = '<div class="dc"><form role="search"><input type="search" id="dc-q" placeholder="水 · mizu · water · água" aria-label="Palavra para buscar" autocomplete="off" autocapitalize="off" spellcheck="false"><button class="b p" type="submit">Buscar</button></form><div id="dc-r" aria-live="polite"></div></div>';
+    el.innerHTML = '<div class="dc"><form role="search"><input type="search" id="dc-q" placeholder="水 · mizu · water · água" aria-label="Palavra para buscar" autocomplete="off" autocapitalize="off" spellcheck="false"><button class="bt" type="submit">Buscar</button></form><div id="dc-r" aria-live="polite"></div></div>';
     var f = el.querySelector('form'), q = el.querySelector('#dc-q'), R = el.querySelector('#dc-r'), seq = 0;
     function msg(h) { R.innerHTML = '<div class="ms">' + h + '</div>'; }
     function links(t) { return 'Abrir "' + esc(t) + '" em <a href="https://jotoba.de/search/0/' + encodeURIComponent(t) + '" target="_blank" rel="noopener">Jotoba</a> ou <a href="https://jisho.org/search/' + encodeURIComponent(t) + '" target="_blank" rel="noopener">Jisho</a>.'; }
