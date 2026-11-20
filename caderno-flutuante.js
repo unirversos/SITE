@@ -140,7 +140,7 @@
       if (gaveta) setTimeout(function () { livro.reajustar(); }, 260);
       dp.classList.toggle('on', v); dab.setAttribute('aria-expanded', String(v)); marca(); dab.style.display = v ? 'none' : '';
       if (v) {
-        if (!dic) { var fazer = function () { dic = UniDic.montar($('cf-dm'), { salvar: salvaPalavra }); dic.foca(); }; if (window.UniDic) fazer(); else carrega('/caderno-dic.js?v=3', fazer); }
+        if (!dic) { var fazer = function () { dic = UniDic.montar($('cf-dm'), { salvar: salvaPalavra }); dic.foca(); }; if (window.UniDic) fazer(); else carrega('/caderno-dic.js?v=4', fazer); }
         else dic.foca();
       } else { dp.classList.remove('sheet'); p.style.top = ''; setTimeout(function () { livro.reajustar(); }, 260); dab.focus(); }
     }

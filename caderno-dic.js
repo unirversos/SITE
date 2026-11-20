@@ -7,7 +7,7 @@
   var TEM_JA = /[぀-ヿ㐀-鿿]/;
   /* endereço do intermediário (Cloudflare Worker); vazio = o navegador fala direto com os dicionários */
   var API = '';
-  var CK = 'uniDicPt1';
+  var CK = 'uniDicPt2';
 
   /* kana → romaji (Hepburn), para mostrar a leitura em romaji */
   var RM = (function () {
@@ -46,14 +46,26 @@
 
   function tempo(ms, p) { return new Promise(function (ok, no) { var t = setTimeout(function () { no(new Error('tempo')); }, ms); p.then(function (v) { clearTimeout(t); ok(v); }, function (e) { clearTimeout(t); no(e); }); }); }
 
-  /* tradução automática (MyMemory) */
-  function traduz(txt, de, para) {
+  /* tradução automática: Google Tradutor (principal) e MyMemory (reserva).
+     O MyMemory sozinho errava palavras soltas (ex.: "trabalho" virava "Safety"). */
+  function google(txt, de, para) {
+    var url = 'https://translate.googleapis.com/translate_a/single?client=gtx&dt=t&sl=' + de.split('-')[0] + '&tl=' + para.split('-')[0] + '&q=' + encodeURIComponent(txt);
+    return tempo(6000, fetch(url)).then(function (r) { if (!r.ok) throw new Error('google ' + r.status); return r.json(); }).then(function (j) {
+      var t = (j && j[0] || []).map(function (p) { return p && p[0] || ''; }).join('').trim();
+      if (!t) throw new Error('sem tradução');
+      return t;
+    });
+  }
+  function memory(txt, de, para) {
     var url = API ? API + '/traduz?q=' + encodeURIComponent(txt) + '&de=' + de + '&para=' + para : 'https://api.mymemory.translated.net/get?q=' + encodeURIComponent(txt) + '&langpair=' + de + '|' + para;
     return tempo(8000, fetch(url)).then(function (r) { return r.json(); }).then(function (j) {
       var t = j && j.responseData && j.responseData.translatedText;
       if (!t || /MYMEMORY|INVALID|QUERY LENGTH/i.test(t)) throw new Error('sem tradução');
       return t;
     });
+  }
+  function traduz(txt, de, para) {
+    return google(txt, de, para).catch(function () { return memory(txt, de, para); });
   }
 
   function jotoba(q) {
