@@ -170,13 +170,25 @@ async function atividadesDoAluno(email){
   };
 }
 
+/* prévia da Área do aluno, dentro da ficha (só leitura) */
+function previa(email){
+  let box = $('prev-cx');
+  if (box) { box.remove(); $('prev-ab').textContent = '👁 Ver como o aluno vê'; return; }
+  $('f').insertAdjacentHTML('afterend', `<section class="cx" id="prev-cx"><div class="topo"><h2>Como o aluno vê</h2><div class="linha"><button type="button" class="mini" id="prev-at">↻ Atualizar</button><a class="mini" href="/aluno/?ver=${encodeURIComponent(email)}" target="_blank" rel="noopener">Abrir em tela cheia ↗</a></div></div>
+    <p class="mut peq">É a Área do aluno com os dados dele, só para olhar: os botões não gravam nada. Depois de salvar a ficha, toque em Atualizar.</p>
+    <iframe id="prev-if" class="prev-if" src="/aluno/?ver=${encodeURIComponent(email)}" title="Prévia da Área do aluno"></iframe></section>`);
+  $('prev-ab').textContent = '✕ Fechar a prévia';
+  $('prev-at').onclick = () => { $('prev-if').src = $('prev-if').src; };
+  $('prev-cx').scrollIntoView({ behavior: 'smooth', block: 'start' });
+}
+
 async function ficha(a){
   editando = a ? a.id : null; feitosAtual = (a && a.feitos) || []; a = a || { ativo: true, dur: 60, horarios: [], avulsas: [], pular: [], material: [] };
   let notas = '';
   if (editando) { try { const n = await getDoc(doc(db, 'aulas_notas', editando)); if (n.exists()) notas = n.data().texto || ''; } catch (e) {} }
   area.innerHTML = `<button type="button" class="voltar" id="voltar">← Todos os alunos</button>
   <form class="cx ficha" id="f">
-    <h2>${editando ? esc(a.nome || editando) : 'Novo aluno'}</h2>
+    <div class="topo"><h2>${editando ? esc(a.nome || editando) : 'Novo aluno'}</h2>${editando ? '<button type="button" class="mini" id="prev-ab">👁 Ver como o aluno vê</button>' : ''}</div>
     <div class="dois">
       <div><label for="f-nome">Nome</label><input id="f-nome" type="text" required value="${esc(a.nome)}"></div>
       <div><label for="f-email">E-mail que o aluno usa para entrar</label><input id="f-email" type="email" required value="${esc(editando || '')}" ${editando ? 'readonly' : 'list="f-pessoas" placeholder="Digite ou escolha da lista"'} autocomplete="off"><datalist id="f-pessoas"></datalist>${editando ? '' : '<p class="mut peq" id="f-pdica"></p>'}</div>
@@ -206,6 +218,7 @@ async function ficha(a){
   </form>`;
   const f = $('f');
   $('voltar').onclick = () => lista();
+  if (editando) $('prev-ab').onclick = () => previa(editando);
   if (editando) { area.insertAdjacentHTML('beforeend', '<section class="cx" id="cad-al"></section>'); cadernoDoAluno(editando); atividadesDoAluno(editando); }
   if (!editando) lePerfis().then(ps => {
     const ja = new Set(alunos.map(x => x.id)), livres = ps.filter(p => !ja.has(p.email));

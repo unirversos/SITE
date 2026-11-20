@@ -20,6 +20,11 @@ const quando = d => fmt(d, { weekday: 'long', day: 'numeric', month: 'long' }) +
 const linkOk = u => /^https:\/\//.test(u || '');
 /* texto com links: o que começa com https:// vira link clicável (abre em nova aba) */
 const comLinks = s => esc(s).replace(/https:\/\/[^\s<]+[^\s<.,;:!?)\]'"]/g, u => `<a class="lk" href="${u}" target="_blank" rel="noopener">${u.replace(/^https:\/\/(www\.)?/, '').slice(0, 48)}${u.length > 56 ? '…' : ''} ↗</a>`);
+/* prévia: a professora abre /aluno/?ver=e-mail e vê a tela do aluno, só para olhar (nada é gravado) */
+const PROFS = ['unirversos.idiomas@gmail.com', 'li.kikuti@gmail.com'];
+const PREVIA = (new URLSearchParams(location.search).get('ver') || '').trim().toLowerCase();
+let soLeitura = false;
+const grava = d => soLeitura ? Promise.resolve() : grava(d);
 let parar = null, aula = null, timer = null, meuEmail = '', aberto = false, novos = { recado: false, tarefa: false, itens: new Set() };
 
 /* formato do material + seta "↗" quando abre fora do site */
@@ -89,7 +94,7 @@ const erroPerm = (e, el) => { console.warn(e); if (el) el.textContent = e && e.c
 
 /* o que mudou desde a última visita (recado, tarefa, materiais, gravações) ganha a etiqueta "novo" */
 function calculaNovos(a){
-  const k = 'uniAulasVisto:' + meuEmail, itens = [].concat(a.material || [], a.gravacoes || []).filter(m => m && m.t).map(idItem);
+  const k = (soLeitura ? 'uniAulasPrevia:' : 'uniAulasVisto:') + meuEmail, itens = [].concat(a.material || [], a.gravacoes || []).filter(m => m && m.t).map(idItem);
   let v = null; try { v = JSON.parse(localStorage.getItem(k) || 'null'); } catch (e) {}
   if (v) {
     novos.recado = !!a.recado && a.recado !== v.recado;
@@ -112,7 +117,7 @@ function mandaAvatar(){
   if (!aula || !meuEmail) return;
   let a = null; try { a = window.UtopiaAvatar && window.UtopiaAvatar.load(); } catch (e) {}
   const v = a && a.sel ? JSON.stringify(a.sel) : '';
-  if ((aula.avatar || '') !== v) updateDoc(doc(db, 'aulas', meuEmail), { avatar: v }).then(() => { aula.avatar = v; }).catch(() => {});
+  if ((aula.avatar || '') !== v) grava({ avatar: v }).then(() => { aula.avatar = v; }).catch(() => {});
 }
 document.addEventListener('uni-progresso', mandaAvatar);
 
@@ -171,13 +176,13 @@ function pinta(){
     const k = b.dataset.gravar, atual = (aula.gravar || []).filter(x => x >= chave(new Date()));
     const novo = atual.includes(k) ? atual.filter(x => x !== k) : atual.concat(k).sort();
     b.disabled = true;
-    try { await updateDoc(doc(db, 'aulas', meuEmail), { gravar: novo }); aula.gravar = novo; pinta(); }
+    try { await grava({ gravar: novo }); aula.gravar = novo; pinta(); }
     catch (e) { console.warn(e); b.disabled = false; b.textContent = t('erroSalvar'); }
   });
   area.querySelectorAll('[data-plan]').forEach(b => b.onclick = () => { planAberta = planAberta === b.dataset.plan ? '' : b.dataset.plan; planCheia = false; pinta(); });
   area.querySelectorAll('[data-fiz]').forEach(b => b.onclick = async () => {
     const u = b.dataset.fiz, on = (aula.feitos || []).includes(u); b.disabled = true;
-    try { await updateDoc(doc(db, 'aulas', meuEmail), { feitos: on ? arrayRemove(u) : arrayUnion(u) }); /* a lista se atualiza sozinha pelo onSnapshot */ }
+    try { await grava({ feitos: on ? arrayRemove(u) : arrayUnion(u) }); /* a lista se atualiza sozinha pelo onSnapshot */ }
     catch (e) { b.disabled = false; erroPerm(e, $('st-m')); }
   });
   const fl = $('f-link');
@@ -185,14 +190,14 @@ function pinta(){
     e.preventDefault(); const url = $('l-url').value.trim(), tt = $('l-t').value.trim();
     if (!linkOk(url)) { $('st-l').textContent = TX.ruim(); return; }
     const item = { url, t: tt.slice(0, 120), q: new Date().toISOString() };
-    try { await updateDoc(doc(db, 'aulas', meuEmail), { links: arrayUnion(item) }); const s2 = $('st-l'); if (s2) s2.textContent = TX.ok(); }
+    try { await grava({ links: arrayUnion(item) }); const s2 = $('st-l'); if (s2) s2.textContent = TX.ok(); }
     catch (x) { erroPerm(x, $('st-l')); }
   };
   if ($('anotar')) $('anotar').onclick = () => { if (window.CadernoNovaSobre) window.CadernoNovaSobre(t('aulaDe', { d: p.ini.toLocaleDateString(L.loc, { day: 'numeric', month: 'long' }) }), p.ini); };
   const ck = $('feita');
   if (ck) ck.onchange = async () => {
     const valor = ck.checked ? a.tarefa : '';
-    try { await updateDoc(doc(db, 'aulas', meuEmail), { tarefaFeita: valor }); aula.tarefaFeita = valor; pinta(); }
+    try { await grava({ tarefaFeita: valor }); aula.tarefaFeita = valor; pinta(); }
     catch (e) { console.warn(e); ck.checked = !ck.checked; $('st-t').textContent = t('erroSalvar'); }
   };
   clearTimeout(timer); timer = setTimeout(pinta, 30e3);
@@ -207,7 +212,9 @@ onAuthStateChanged(auth, async u => {
     return;
   }
   try {
-    meuEmail = u.email.toLowerCase();
+    const eu = u.email.toLowerCase();
+    soLeitura = !!PREVIA && PROFS.includes(eu) && PREVIA !== eu;
+    meuEmail = soLeitura ? PREVIA : eu;
     /* escuta o cadastro em tempo real: quando a professora salva, a área do aluno se atualiza sozinha (sem recarregar) */
     if (parar) parar();
     parar = onSnapshot(doc(db, 'aulas', meuEmail), s => {
