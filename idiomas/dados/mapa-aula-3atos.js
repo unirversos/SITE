@@ -352,6 +352,7 @@ function ensureStageChrome(){
   let pl=$('plLayer'); if(!pl){ pl=document.createElement('div'); pl.className='pl-layer'; pl.id='plLayer'; sw.appendChild(pl); }
   let ly=$('hsLayer'); if(!ly){ ly=document.createElement('div'); ly.className='hs-layer'; ly.id='hsLayer'; sw.appendChild(ly); }
   if(!$('propsCena')){ const pc=document.createElement('div'); pc.className='props-cena'; pc.id='propsCena'; sw.appendChild(pc); }
+  if(!$('clip')){ const cp=document.createElement('div'); cp.className='clip'; cp.id='clip'; cp.hidden=true; sw.appendChild(cp); }
   if(!$('falaCena')){ const f=document.createElement('div'); f.className='fala-cena'; f.id='falaCena'; f.hidden=true; sw.appendChild(f); }
   return {sw,bg,tag,pp,ly};
 }
@@ -381,12 +382,12 @@ function renderStage(){
     stg.innerHTML=`
       <defs><linearGradient id="stageShade" x1="0" y1="0" x2="0" y2="1"><stop offset="55%" stop-color="#3a2b38" stop-opacity="0"/><stop offset="100%" stop-color="#3a2b38" stop-opacity=".22"/></linearGradient></defs>
       <rect width="400" height="225" fill="url(#stageShade)"/>
-      ${charSVG(Object.assign({},n.sel,{face:npcFace}),20,76,118,npcCls,n.extra)}
-      ${mood==='wrong'?`<g class="q"><circle cx="136" cy="78" r="16" fill="#fff" stroke="#cfe0f0" stroke-width="2"/><text x="136" y="85" text-anchor="middle" font-family="Baloo 2, sans-serif" font-size="20" font-weight="800" fill="#4f8fc4">?</text></g>`:''}
-      ${stamp}
+      ${(()=>{ const cl=A.clipe&&ato===1; return charSVG(Object.assign({},n.sel,{face:npcFace}),cl?26:20,cl?100:76,cl?96:118,npcCls,n.extra); })()}
+      ${mood==='wrong'&&!(A.clipe&&ato===1)?`<g class="q"><circle cx="136" cy="78" r="16" fill="#fff" stroke="#cfe0f0" stroke-width="2"/><text x="136" y="85" text-anchor="middle" font-family="Baloo 2, sans-serif" font-size="20" font-weight="800" fill="#4f8fc4">?</text></g>`:''}
+      ${A.clipe&&ato===1?'':stamp}
       <g class="${o.enter?'enter':''}"><g class="char ${meCls}">
         ${c.meProp?iconInStage(c.meProp,234,174,30):''}
-        <svg x="256" y="70" width="128" height="160" viewBox="0 0 240 300">${AV?AV.markup(Object.assign({},me,{face:meFace}),{noBg:true,still:true}):''}</svg>
+        <svg x="${A.clipe&&ato===1?278:256}" y="${A.clipe&&ato===1?100:70}" width="${A.clipe&&ato===1?96:128}" height="${A.clipe&&ato===1?120:160}" viewBox="0 0 240 300">${AV?AV.markup(Object.assign({},me,{face:meFace}),{noBg:true,still:true}):''}</svg>
       </g></g>`;
   }
 
@@ -404,7 +405,7 @@ function setStage(o){ stageOpt=o||{}; renderStage(); }
 
 function renderHotspots(ly){
   const list=(A&&A.cen&&A.cen.hotspots)||[];
-  if(!list.length || ato===2 || (ato===0&&f1Atual()>=2)){ ly.innerHTML=''; return; }
+  if(!list.length || ato===2 || (ato===1&&A.clipe) || (ato===0&&f1Atual()>=2)){ ly.innerHTML=''; return; }
   /* no diálogo os personagens ocupam as laterais: só ficam as pistas do meio e do alto da cena */
   const ver=h=>ato!==1||(h.x>=35&&h.x<=63)||h.y<32;
   ly.innerHTML=list.map((h,i)=>!ver(h)?'':`<button type="button" class="hs-dot${P.hotspots&&P.hotspots[i]?' visto':''}" style="left:${h.x}%;top:${h.y}%" data-hs="${i}" title="${h.pt}" aria-label="${h.pt}"><span>♪</span></button>`).join('');
@@ -478,7 +479,7 @@ function goAto(n){
   preBaixaAudios();
   ato=Math.max(0,Math.min(2,n));
   mood='idle';
-  document.body.dataset.ato=ATOS[ato].key; if(ato!==0) fala(null);
+  document.body.dataset.ato=ATOS[ato].key; if(ato!==0) fala(null); if(ato!==1&&$('clip')){ $('clip').hidden=true; clearTimeout(clipT); } document.body.classList.toggle('modo-clipe',!!(A&&A.clipe&&ato===1));
   renderSteps();
   [stAto1,stAto2,stAto3][ato]();
 }
@@ -619,6 +620,7 @@ function trocaVeg(on){ VEG=on; CENAS=(VEG&&CENAS_V)?CENAS_V:CENAS_N; done={}; ok
 
 function stAto2(){ loadCena(ci); }
 function loadCena(n){
+  if(A.clipe) return loadClipe(n);
   ci=Math.max(0,Math.min(CENAS.length-1,n));
   const c=CENAS[ci];
   bank=bancoDe(c); placed=[]; mood='idle';
@@ -729,6 +731,110 @@ function wireCena(){
     sparkle(['🔥','🎉','✨','⭐']);
     goAto(2);
   };
+}
+
+/* ---------- ATO 2 em modo “clipe”: tudo acontece dentro da imagem ----------
+   legenda curta → o personagem fala (balão) → cartas de intenção (se houver escolha) → peças na faixa da cena →
+   sua frase no balão do avatar → reação em japonês + objeto no balcão → ▶ continua */
+let clipT=null, clipFase='leg', grupo=null, cEf=null;
+function cenaEfetiva(c){
+  if(!c.escolhas||grupo==null) return c;
+  const S=SEQS(c), g=c.escolhas[grupo].seqs.map(i=>S[i]);
+  return Object.assign({},c,{ans:g[0].ans,ansPt:g[0].ansPt,alts:g.slice(1)});
+}
+function loadClipe(n){
+  ci=Math.max(0,Math.min(CENAS.length-1,n));
+  const c=CENAS[ci]; grupo=null; placed=[]; mood='idle'; clearTimeout(clipT);
+  cEf=cenaEfetiva(c); bank=bancoDe(cEf);
+  $('panel').innerHTML=`
+    <div class="row clip-topo"><span class="elem fogo"><i></i>Ato 2 de 3 · 🔥 Diálogo</span><span class="spacer"></span><div class="stamps" id="stamps"></div></div>
+    <div class="row clip-ferr">
+      <button class="btn small" type="button" id="exPrev" ${ci===0?'disabled':''}>← anterior</button>
+      <button class="btn small" type="button" id="exRedo">↺ refazer</button>
+      <button class="btn small" type="button" id="qbCena" aria-expanded="false">🔍 palavra por palavra</button>
+      <span class="spacer"></span>
+      <button class="btn small" type="button" id="exPular" hidden>pular ▸</button>
+    </div>
+    <div id="qbCenaBox"></div>`;
+  $('panel').insertAdjacentHTML('afterbegin','<div class="clip-mob" id="clipMob"></div>');
+  $('exPrev').onclick=()=>{ if(ci>0) loadClipe(ci-1); };
+  $('exRedo').onclick=()=>{ delete done[ci]; delete propsCena[ci]; loadClipe(ci); };
+  $('qbCena').onclick=()=>{ const bx=$('qbCenaBox'), ab=!bx.innerHTML; bx.innerHTML=ab?quebraHTML(c.say):''; $('qbCena').setAttribute('aria-expanded',String(ab));
+    if(ab){ const list=quebraFrase(c.say,A.words); bx.onclick=e=>{ const b=e.target.closest('.qbk'); if(b) speak(list[+b.dataset.qb].k); }; } };
+  $('stamps').innerHTML=CENAS.map((_,k)=>`<span class="stamp ${done[k]?'ok':k===ci?'now':''}">${done[k]?'OK':k+1}</span>`).join('');
+  const cp=$('clip'); cp.hidden=false;
+  if(done[ci]){ clipFase='ok'; renderStage(); return renderClipe(); }
+  clipFase=c.clima?'leg':'fala'; renderStage(); renderClipe();
+  if(clipFase==='leg') clipT=setTimeout(()=>{ clipFase='fala'; renderClipe(); speak(c.say); clipT=setTimeout(proximaFase,1600); },c.nota?3400:2200);
+  else { speak(c.say); clipT=setTimeout(proximaFase,1400); }
+  mostraPalco();
+}
+function proximaFase(){ const c=CENAS[ci]; if(done[ci]) return; clipFase=c.escolhas?'escolha':'montar'; renderClipe(); }
+function renderClipe(){
+  const c=CENAS[ci], cp=$('clip'), ok=!!done[ci], cur=cEf||c;
+  const npcB=`<div class="cb npc${mood==='wrong'?' hm':''}"><span class="cb-who">${c.quem||A.npc.nome}<button type="button" class="cb-say" data-say="q" aria-label="Ouvir">🔊</button></span><b lang="ja">${c.q}</b><span class="ro">${c.ro}</span><small class="cb-pt">${c.pt}</small></div>`;
+  let html='';
+  if(clipFase==='leg'){
+    html=`<div class="clip-leg"><span>${c.clima}</span>${c.nota?`<em>💡 ${rk(c.nota)}</em>`:''}</div>`;
+  } else {
+    let npc=npcB, me='';
+    if(ok){ const r=(c.reage||[])[okIdx[ci]||0];
+      if(r&&r.jp) npc=`<div class="cb npc rea"><span class="cb-who">${c.quem||A.npc.nome}<button type="button" class="cb-say" data-say="r" aria-label="Ouvir">🔊</button></span><b lang="ja">${r.jp}</b><span class="ro">${roFrase(r.jp)}</span><small class="cb-pt">${r.t}</small></div>`;
+      me=`<div class="cb me ok"><span class="cb-who">${meName} ✓</span><b lang="ja">${okJp[ci]||''}</b><small class="cb-pt">${okPt[ci]||c.ansPt}</small></div>`;
+    } else if(clipFase==='montar'){
+      me=`<div class="cb me"><span class="cb-who">${meName}</span><div class="cb-slots" id="cbSlots">${Array.from({length:NSLOT(cur)},(_,k)=>{ const t=placed[k]!==undefined?bank[placed[k]]:null;
+        return t?`<button type="button" class="slot filled" data-k="${k}"><b>${t.k}</b><small>${t.r}</small></button>`:`<span class="slot"></span>`; }).join('')}</div></div>`;
+    }
+    let hud='';
+    if(ok) hud=`<div class="clip-hud fim"><button type="button" class="clip-go" id="clipGo">${ci<CENAS.length-1?'▶ continuar':'▶ fechar a cena · Ato 3 🌱'}</button></div>`;
+    else if(clipFase==='escolha') hud=`<div class="clip-hud"><p class="clip-q">O que você quer?</p><div class="clip-cartas">${c.escolhas.map((e,k)=>`<button type="button" class="clip-carta" data-g="${k}"><span>${e.ico}</span>${e.t}</button>`).join('')}</div></div>`;
+    else if(clipFase==='montar') hud=`<div class="clip-hud"><div class="clip-bank" id="clipBank">${bank.map((t,k)=>`<button type="button" class="tile ${placed.includes(k)?'used':''}" data-k="${k}"><b>${t.k}</b><small>${t.r}</small></button>`).join('')}</div>
+      <div class="clip-ic"><button type="button" data-a="ouvir" title="Ouvir">🔊</button><button type="button" data-a="devagar" title="Devagar">🐢</button>${c.molde!=null?'<button type="button" data-a="molde" title="Ver molde">📐</button>':''}<button type="button" data-a="limpar" title="Limpar">↺</button>
+      <button type="button" class="clip-ok" id="clipOk" ${SEQS(cur).some(q=>q.ans.length===placed.length)?'':'disabled'}>Responder ✓</button></div>
+      <p class="clip-dica" id="clipDica">${clipDica||''}</p></div>`;
+    /* no celular a faixa de jogo sai da imagem e fica logo abaixo dela */
+    const mob=window.matchMedia&&matchMedia('(max-width:640px)').matches;
+    html=`<div class="clip-npc">${npc}</div><div class="clip-me">${me}</div>${mob?'':hud}`;
+    if($('clipMob')) $('clipMob').innerHTML=mob?hud:'';
+  }
+  if(clipFase==='leg'&&$('clipMob')) $('clipMob').innerHTML='';
+  cp.innerHTML=html; cp.dataset.fase=ok?'ok':clipFase;
+  const R=sel=>[...cp.querySelectorAll(sel)].concat($('clipMob')?[...$('clipMob').querySelectorAll(sel)]:[]);
+  cp.querySelectorAll('.cb-say').forEach(b=>b.onclick=e=>{ e.stopPropagation(); if(b.dataset.say==='q') speak(c.say); else { const r=(c.reage||[])[okIdx[ci]||0]; if(r) speak(r.jp); } });
+  R('.clip-carta').forEach(b=>b.onclick=e=>{ e.stopPropagation(); grupo=+b.dataset.g; cEf=cenaEfetiva(c); bank=bancoDe(cEf); placed=[]; clipFase='montar'; clipDica=''; renderClipe(); });
+  if($('clipBank')) $('clipBank').onclick=e=>{ e.stopPropagation(); const b=e.target.closest('.tile'); if(!b) return; const k=+b.dataset.k; if(placed.includes(k)||placed.length>=NSLOT(cur)) return; placed.push(k); speak(bank[k].k); mood='idle'; renderClipe(); };
+  if($('cbSlots')) $('cbSlots').onclick=e=>{ e.stopPropagation(); const b=e.target.closest('.slot.filled'); if(!b) return; placed.splice(+b.dataset.k,1); renderClipe(); };
+  R('.clip-ic [data-a]').forEach(b=>b.onclick=e=>{ e.stopPropagation(); const a=b.dataset.a;
+    if(a==='ouvir') speak(c.say); if(a==='devagar') speak(c.say,.55); if(a==='limpar'){ placed=[]; renderClipe(); }
+    if(a==='molde'){ const m=A.moldes[c.molde]; if(m){ clipDica=`📐 ${m.tpl.replace(/<\/?i>/g,'')} <span class="ro">(${m.tplRo})</span>`; renderClipe(); } } });
+  if($('clipOk')) $('clipOk').onclick=e=>{ e.stopPropagation(); responderClipe(); };
+  if($('clipGo')) $('clipGo').onclick=e=>{ e.stopPropagation(); avancaClipe(); };
+  $('exPular').hidden=!(IS_LOCAL&&!ok);
+  $('exPular').onclick=()=>avancaClipe();
+}
+let clipDica='', okIdx={}, okJp={};
+const roFrase=t=>String(t).split(/\s+/).map(p=>{ const m=p.match(/^(.*?)([！？!?。、]*)$/); return roWord(m[1])+(m[2]?m[2].replace('！','!').replace('？','?').replace('。','.').replace('、',','):''); }).join(' ');
+function responderClipe(){
+  const c=CENAS[ci], cur=cEf||c, hit=SEQS(cur).find(q=>CASA(cur,q));
+  if(hit){
+    done[ci]=true; okPt[ci]=hit.ansPt; okJp[ci]=placed.map(k=>bank[k].k).join(' ');
+    const rIdx=Math.max(0,SEQS(c).findIndex(q=>CASA(c,q))); okIdx[ci]=rIdx;
+    const rea=(c.reage||[])[rIdx]; if(rea&&rea.prop) propsCena[ci]=rea.prop; else delete propsCena[ci];
+    mood='ok'; clipDica=''; speak(okJp[ci]); sparkle(['🔥','✨','🌸']);
+    renderStage(); renderClipe();
+    $('stamps').innerHTML=CENAS.map((_,k)=>`<span class="stamp ${done[k]?'ok':k===ci?'now':''}">${done[k]?'OK':k+1}</span>`).join('');
+    if(rea&&rea.jp) clipT=setTimeout(()=>speak(rea.jp),1500);
+  } else {
+    mood='wrong'; renderStage();
+    errosTurno[ci]=(errosTurno[ci]||0)+1;
+    const partes=String(c.erroNpc||'').split(/\s*(?=Dica:|Comece|Responda com|Confirme:|Use )/);
+    clipDica=c.erroNpc?`💬 ${errosTurno[ci]>1?rk(c.erroNpc):partes[0]}`:'💬 Hmm… a pessoa não entendeu. Troque uma peça e tente de novo.';
+    renderClipe(); clipT=setTimeout(()=>{ if(mood==='wrong'){ mood='idle'; renderStage(); renderClipe(); } },1800);
+  }
+}
+function avancaClipe(){
+  if(ci<CENAS.length-1) return loadClipe(ci+1);
+  const first=!P.steps[2]; P.steps[2]=1; persist(); if(first) gainXP(20); sparkle(['🔥','🎉','✨','⭐']); goAto(2);
 }
 
 /* ---------- ATO 3 · 🌱 TERRA · Gravar frase no Caderno ---------- */

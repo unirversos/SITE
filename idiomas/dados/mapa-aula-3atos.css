@@ -377,3 +377,77 @@ body.no-ro .fala-cena .ro{display:none}
 .props-cena span{font-size:3.2cqw;line-height:1;animation:propEntra .5s cubic-bezier(.3,1.6,.5,1) both}
 @keyframes propEntra{from{transform:scale(.2) translateY(10px);opacity:0}to{transform:none;opacity:1}}
 @media (prefers-reduced-motion:reduce){.props-cena span{animation:none}}
+
+/* ===== Ato 2 em modo “clipe”: o diálogo acontece dentro da imagem ===== */
+.clip{position:absolute;inset:0;z-index:8;pointer-events:none;font-size:clamp(12px,1.55cqw,16px)}
+.clip[hidden]{display:none}
+.clip>*{pointer-events:auto}
+/* legenda de filme */
+.clip-leg{position:absolute;left:50%;bottom:7%;transform:translateX(-50%);max-width:82%;display:grid;gap:4px;justify-items:center;text-align:center;
+  background:rgba(30,22,30,.78);color:#fff;border-radius:10px;padding:.7em 1.2em;animation:legEntra .6s ease both;backdrop-filter:blur(2px)}
+.clip-leg span{font-style:italic;font-size:1.15em;line-height:1.35}
+.clip-leg em{font-style:normal;font-size:.92em;color:#ffe7a8}
+@keyframes legEntra{from{opacity:0;transform:translate(-50%,8px)}to{opacity:1;transform:translate(-50%,0)}}
+/* balões sobre a cabeça dos personagens */
+.clip-npc{position:absolute;left:3%;top:5%;max-width:46%}
+.clip-me{position:absolute;right:3%;top:5%;max-width:46%;display:flex;justify-content:flex-end}
+.cb{position:relative;display:grid;gap:1px;background:#fff;border:2px solid #3a2b38;border-radius:16px;padding:.45em .85em .55em;box-shadow:0 6px 18px rgba(58,43,56,.22);animation:falaEntra2 .35s ease both}
+.cb::after{content:"";position:absolute;bottom:-9px;width:14px;height:14px;background:#fff;border-right:2px solid #3a2b38;border-bottom:2px solid #3a2b38;transform:rotate(45deg)}
+.cb.npc::after{left:26%}.cb.me::after{right:26%}
+.cb b{font-size:1.45em;line-height:1.3}
+.cb .ro{font-size:.85em;color:var(--pink)}
+.cb .cb-pt{font-size:.82em;color:var(--muted)}
+.cb-who{display:flex;align-items:center;gap:6px;font-size:.72em;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
+.cb-say{border:0;background:none;cursor:pointer;font-size:1.2em;padding:0}
+.cb.hm{animation:balanca .45s ease}
+.cb.rea{border-color:#4f7a58}.cb.rea::after{border-color:#4f7a58}
+.cb.me{border-color:#c23f5e}.cb.me::after{border-color:#c23f5e}
+.cb.me.ok{background:#fff5f7}
+.cb-slots{display:flex;gap:4px;flex-wrap:wrap;min-height:2.4em}
+.cb-slots .slot{min-width:2.6em;min-height:2.4em;border:1.5px dashed #e7b9c5;border-radius:10px;display:grid;place-items:center;background:#fff;font:inherit;padding:.15em .4em;cursor:pointer}
+.cb-slots .slot.filled{border-style:solid;border-color:#c23f5e;background:#fff5f7}
+.cb-slots .slot b{font-size:1.1em}.cb-slots .slot small{font-size:.7em;color:var(--muted)}
+@keyframes falaEntra2{from{opacity:0;transform:translateY(6px) scale(.97)}to{opacity:1;transform:none}}
+@keyframes balanca{0%,100%{transform:none}25%{transform:translateX(-5px)}75%{transform:translateX(5px)}}
+/* faixa de jogo na base da cena */
+.clip-hud{position:absolute;left:0;right:0;bottom:0;padding:.7em .9em .8em;background:linear-gradient(180deg,rgba(255,250,247,0),rgba(255,250,247,.94) 22%);display:grid;gap:.5em;justify-items:center}
+.clip-hud.fim{background:none;justify-items:end}
+.clip-q{margin:0;font-weight:700;color:#3a2b38;text-shadow:0 1px 0 #fff}
+.clip-cartas{display:flex;gap:.8em;flex-wrap:wrap;justify-content:center}
+.clip-carta{display:grid;justify-items:center;gap:.2em;min-width:9em;padding:.7em 1.1em;border-radius:16px;border:2px solid #3a2b38;background:#fff;font:inherit;font-weight:700;cursor:pointer;box-shadow:0 5px 0 #3a2b38;transition:transform .12s}
+.clip-carta span{font-size:2em;line-height:1}
+.clip-carta:hover{transform:translateY(-2px)}
+.clip-carta:active{transform:translateY(3px);box-shadow:0 2px 0 #3a2b38}
+.clip-bank{display:flex;gap:.45em;flex-wrap:wrap;justify-content:center}
+.clip-bank .tile{font-size:1em}
+.clip-ic{display:flex;gap:.4em;align-items:center;flex-wrap:wrap;justify-content:center}
+.clip-ic button{border:1.5px solid var(--line);background:#fff;border-radius:999px;min-width:2.4em;height:2.4em;font:inherit;cursor:pointer}
+.clip-ic .clip-ok{padding:0 1.2em;background:#c23f5e;border-color:#c23f5e;color:#fff;font-weight:700}
+.clip-ic .clip-ok:disabled{opacity:.45;cursor:default}
+.clip-dica{margin:0;max-width:92%;text-align:center;font-size:.92em;color:#3a2b38;min-height:1em}
+.clip-go{padding:.75em 1.4em;border-radius:999px;border:2px solid #3a2b38;background:#fff;font:inherit;font-weight:800;cursor:pointer;box-shadow:0 5px 0 #3a2b38;animation:pulsaGo 1.6s ease-in-out infinite}
+@keyframes pulsaGo{0%,100%{transform:none}50%{transform:translateY(-3px)}}
+/* no modo clipe a cena ganha altura e o painel fica enxuto */
+body.modo-clipe .clip-topo{margin-bottom:0}
+body.modo-clipe .clip-ferr{gap:6px;flex-wrap:wrap}
+body.modo-clipe .props-cena{z-index:6}
+@media (max-width:640px){
+  .clip{font-size:12px}
+  .clip-npc,.clip-me{max-width:60%}
+  .clip-me{top:auto;bottom:42%}
+  .clip-carta{min-width:7em;padding:.5em .8em}
+}
+@media (prefers-reduced-motion:reduce){.clip-leg,.cb,.clip-go{animation:none}}
+.clip-me{top:17%}
+body.modo-clipe .ato-tag,body.modo-clipe .prog-pill{display:none}
+.clip-mob:empty{display:none}
+.clip-mob .clip-hud{position:static;background:none;padding:4px 0 6px}
+.clip-mob .clip-hud.fim{justify-items:stretch}
+.clip-mob .clip-go{width:100%}
+.clip-mob .clip-dica{font-size:13.5px}
+@media (max-width:640px){
+  .clip-npc{max-width:58%}
+  .clip-me{top:auto;bottom:6%;max-width:58%}
+  .clip-npc .cb-pt,.clip-me .cb-pt{display:none}
+  .clip-leg{max-width:92%;bottom:4%}
+}
