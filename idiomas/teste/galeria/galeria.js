@@ -113,8 +113,8 @@ function card(i){
   return `<article class="card s-${st}" data-n="${i.n}">
     <div class="top"><span>${SEM(i.s)} · ${DIA(i.d)}</span><span>${novo(i.n) ? `<button type="button" class="novo" data-visto="${i.n}" title="Marcar como visto">nova correção · ✓ vi</button> ` : ''}<span class="pill p-${st}">${ST[st]}</span></span></div>
     <h3><span lang="ja">${esc(est)}</span> ${ro ? `<small>${esc(ro)}</small>` : ''}</h3>
-    ${oculta && !abertosEx.has(i.n) ? `<button type="button" class="verex" data-ex="${i.n}">👁 ver explicação</button>` : `<p class="nu">${esc(i.nu)}</p>`}
-    ${`<div class="ex"><button type="button" class="som" data-som="${i.n}" aria-label="Ouvir o exemplo">🔊</button><p><span class="jp" lang="ja">${esc(i.x)}</span><br>${pt ? `<span class="pt">${esc(i.tr)}</span>` : `<button type="button" class="verpt" data-pt="${i.n}">ver tradução</button>`}</p></div>`}
+    ${oculta && !abertosEx.has(i.n) ? `<button type="button" class="verex" data-ex="${i.n}">👁 ver explicação</button>` : `<p class="nu">${esc(i.nu)}${oculta ? ` <button type="button" class="verpt" data-ex="${i.n}">ocultar</button>` : ''}</p>`}
+    ${`<div class="ex"><button type="button" class="som" data-som="${i.n}" aria-label="Ouvir o exemplo">🔊</button><p><span class="jp" lang="ja">${esc(i.x)}</span><br>${pt ? `<span class="pt">${esc(i.tr)}</span> <button type="button" class="verpt" data-pt="${i.n}">ocultar tradução</button>` : `<button type="button" class="verpt" data-pt="${i.n}">ver tradução</button>`}</p></div>`}
     <label class="l" for="f${i.n}">${souProf ? 'FRASE DO ALUNO' : 'MINHA FRASE'}</label>
     <textarea id="f${i.n}" data-f="${i.n}" rows="2" lang="ja" placeholder="${souProf ? 'O aluno ainda não escreveu' : 'Escreva uma frase sua com essa estrutura'}" ${souProf ? 'readonly' : ''}>${esc(r.f)}</textarea>
     ${corr}
@@ -151,8 +151,8 @@ $('cards').addEventListener('click', e => {
     if (a === 'reabre') grava(n, { st: (resp(n).f || '').trim() ? 'revisao' : 'pendente', ap: false }, $('ok' + n));
     depois(n); return; }
   const vv = e.target.closest('[data-visto]'); if (vv) { marcaVisto(Number(vv.dataset.visto)); vv.remove(); pintaChips(); if (filtro.st === 'novas' && !itens.some(i => novo(i.n))) { filtro.st = 'praticar'; pintaChips(); pintaCards(); } return; }
-  const x = e.target.closest('[data-ex]'); if (x) { abertosEx.add(Number(x.dataset.ex)); const c = x.closest('.card'); c.outerHTML = card(itens[Number(x.dataset.ex)]); return; }
-  const p = e.target.closest('[data-pt]'); if (p) { abertosPt.add(Number(p.dataset.pt)); p.outerHTML = `<span class="pt">${esc(itens[Number(p.dataset.pt)].tr)}</span>`; return; }
+  const x = e.target.closest('[data-ex]'); if (x) { const k = Number(x.dataset.ex); abertosEx.has(k) ? abertosEx.delete(k) : abertosEx.add(k); const c = x.closest('.card'); c.outerHTML = card(itens[Number(x.dataset.ex)]); return; }
+  const p = e.target.closest('[data-pt]'); if (p) { const k = Number(p.dataset.pt); abertosPt.has(k) ? abertosPt.delete(k) : abertosPt.add(k); p.closest('.card').outerHTML = card(itens[k]); return; }
   const s = e.target.closest('[data-som]'); if (s) fala(itens[Number(s.dataset.som)].x);
 });
 function fala(t){
