@@ -2,7 +2,7 @@
    Modelo: window.UniAtividade (arquivo estático). Respostas: Firestore atividades/{e-mail} → { [atividade.id]: { [n]: {f, st, c, m} } }.
    Aluno escreve a frase e o status; a professora vê qualquer aluno (?aluno=e-mail) e escreve a correção. */
 import { auth, db } from "/idiomas/dados/conta.js?v=6";
-import { doc, getDoc, setDoc, collection, getDocs } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+import { doc, getDoc, setDoc, collection, getDocs, onSnapshot } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
 import { onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
 
 const PROFS = ['unirversos.idiomas@gmail.com', 'li.kikuti@gmail.com'];
@@ -47,6 +47,15 @@ async function carrega(){
   }
   $('aviso').innerHTML = nuvem ? '' : '<p class="aviso">Sem conexão com a nuvem agora: o que você escrever fica salvo neste aparelho e vai para a nuvem quando voltar.</p>';
 }
+/* aviso fixo quando a nuvem não salvou: o trabalho está no aparelho e sobe sozinho depois */
+let semNuvem = false;
+function avisoNuvem(on){
+  if (on === semNuvem) return; semNuvem = on;
+  let b = $('nuvem-av');
+  if (!on) { if (b) b.remove(); return; }
+  if (!b) { b = document.createElement('div'); b.id = 'nuvem-av'; b.className = 'nuvem-av'; b.setAttribute('role', 'status'); document.body.appendChild(b); }
+  b.innerHTML = `<b>⚠️ ${souProf ? 'Não salvou na nuvem agora.' : 'Suas frases não foram para a nuvem agora.'}</b> ${souProf ? 'A correção ficou guardada neste aparelho e' : 'Elas ficaram guardadas neste aparelho e'} vão para a nuvem sozinhas na próxima vez que você abrir esta página <u>neste mesmo aparelho</u>${souProf ? '.' : ', e aí a professora vê.'} Não limpe os dados do navegador até lá.`;
+}
 const fila = {};
 function grava(n, campos, el){
   R[n] = Object.assign({}, resp(n), campos, { m: Date.now() });
@@ -59,8 +68,9 @@ function grava(n, campos, el){
         setDoc(doc(db, 'atividades', alvo), { [A.id]: { [n]: R[n] } }, { merge: true }).then(() => true, e => { console.warn(e); return false; }),
         new Promise(r => setTimeout(() => r(null), 6000))
       ]);
-      if (el) el.textContent = ok ? 'salvo ✓' : 'salvo neste aparelho · vai para a nuvem quando voltar';
-    } else if (el) el.textContent = 'salvo neste aparelho';
+      if (el) el.textContent = ok ? 'salvo ✓' : '⚠️ não salvou na nuvem · guardado neste aparelho';
+      avisoNuvem(!ok);
+    } else { if (el) el.textContent = '⚠️ guardado só neste aparelho'; avisoNuvem(true); }
     pintaNums();
   }, 700);
 }
@@ -221,8 +231,27 @@ document.addEventListener('mouseup', () => setTimeout(() => {
 /* ---------- quem está vendo ---------- */
 /* acesso restrito: só quem a professora liberou (o documento atividades/{e-mail} é criado por ela) */
 const trava = on => document.querySelectorAll('#nums,#sems,.ferr,#mostra,#cards').forEach(el => el.hidden = on);
+/* ao vivo: o que o aluno (ou a professora) muda em outro aparelho aparece aqui sem recarregar. Só lê, nunca grava. */
+let pararVivo = null;
+function aoVivo(){
+  if (pararVivo) { pararVivo(); pararVivo = null; }
+  if (!nuvem || !liberado) return;
+  pararVivo = onSnapshot(doc(db, 'atividades', alvo), s => {
+    if (s.metadata.hasPendingWrites || !s.exists()) return;
+    const d = s.data()[A.id] || {}, mud = [];
+    Object.keys(d).forEach(n => { if (d[n] && (d[n].m || 0) > ((R[n] || {}).m || 0)) { R[n] = d[n]; mud.push(Number(n)); } });
+    if (!mud.length) return;
+    pintaNums(); pintaChips();
+    mud.forEach(n => {
+      const c = $('cards').querySelector(`.card[data-n="${n}"]`);
+      if (c && c.contains(document.activeElement)) return; /* não atrapalha quem está digitando neste card */
+      if (c) { if (passa(itens[n])) { c.outerHTML = card(itens[n]); const nc = $('cards').querySelector(`.card[data-n="${n}"]`); if (nc) { nc.classList.add('chegou'); setTimeout(() => nc.classList.remove('chegou'), 1600); } } else depois(n); }
+      else if (passa(itens[n])) pintaCards();
+    });
+  }, e => console.warn('ao vivo', e));
+}
 async function abre(email){
-  alvo = email; await carrega();
+  alvo = email; await carrega(); aoVivo();
   const lib = $('lib'); if (lib) lib.remove();
   if (nuvem && !liberado) {
     trava(true);

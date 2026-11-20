@@ -138,7 +138,7 @@ function pinta(){
     const abertaAgora = agora >= p.ini - ANTES && agora < p.fim, agoraMesmo = agora >= p.ini;
     c = `<p class="eyebrow">${t('aulaPart')} · ${agoraMesmo ? t('agora') : t('proxima')}</p><h2 class="cap">${esc(quando(p.ini))}</h2>`
       + (abertaAgora && linkOk(a.meet)
-        ? `<a class="btn grande primary" href="${esc(a.meet)}" target="_blank" rel="noopener">${t('entrar')} <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 10l5-3v10l-5-3z"/><rect x="3" y="6" width="12" height="12" rx="2"/></svg></a><p class="mut peq">${t('abreMeet')}</p>`
+        ? `<a class="btn grande primary" id="entrar-meet" href="${esc(a.meet)}" target="_blank" rel="noopener">${t('entrar')} <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 10l5-3v10l-5-3z"/><rect x="3" y="6" width="12" height="12" rx="2"/></svg></a><p class="mut peq">${t('abreMeet')}</p>`
         : abertaAgora ? `<p class="mut">${t('semLink')}</p>`
         : `<p class="mut">${t('faltam', { f: falta(p.ini - agora) })}</p><span class="btn grande off" aria-disabled="true">${t('entrar')}</span>`);
     if (agora < p.ini) c += `<div class="linha">${btnGravar(p, a)}<span class="mut peq">${t('gravDica')}</span></div>`;
@@ -192,6 +192,14 @@ function pinta(){
     const item = { url, t: tt.slice(0, 120), q: new Date().toISOString() };
     try { await grava({ links: arrayUnion(item) }); const s2 = $('st-l'); if (s2) s2.textContent = TX.ok(); }
     catch (x) { erroPerm(x, $('st-l')); }
+  };
+  /* Meet numa janela ao lado do site (no computador); no celular abre normal, no app do Meet */
+  const em = $('entrar-meet');
+  if (em) em.onclick = e => {
+    if (window.innerWidth < 900 || !window.screen) return;
+    const W = screen.availWidth, H = screen.availHeight, w = Math.max(480, Math.round(W * .42));
+    const j = window.open(em.href, 'uniMeet', `popup=yes,width=${w},height=${H},left=${(screen.availLeft || 0) + W - w},top=${screen.availTop || 0}`);
+    if (j) { e.preventDefault(); try { j.focus(); } catch (x) {} }
   };
   if ($('anotar')) $('anotar').onclick = () => { if (window.CadernoNovaSobre) window.CadernoNovaSobre(t('aulaDe', { d: p.ini.toLocaleDateString(L.loc, { day: 'numeric', month: 'long' }) }), p.ini); };
   const ck = $('feita');
