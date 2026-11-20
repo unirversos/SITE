@@ -324,7 +324,7 @@ const ATOS=[
 ];
 let A=null, P=null;
 let ato=0; // 0 = Ato 1 (Hotspots), 1 = Ato 2 (Diálogo), 2 = Ato 3 (Caderno)
-let ci=0, bank=[], placed=[], done={}, okPt={}, mood='idle', stageOpt={}, errosTurno={};
+let ci=0, bank=[], placed=[], done={}, okPt={}, mood='idle', stageOpt={}, errosTurno={}, propsCena={};
 let CENAS=[], CENAS_N=[], CENAS_V=null, VEG=false;
 const wordH=w=>w.h||w.k;
 const SR=window.SpeechRecognition||window.webkitSpeechRecognition;
@@ -351,6 +351,7 @@ function ensureStageChrome(){
   let pp=$('progPill'); if(!pp){ pp=document.createElement('div'); pp.className='prog-pill'; pp.id='progPill'; sw.appendChild(pp); }
   let pl=$('plLayer'); if(!pl){ pl=document.createElement('div'); pl.className='pl-layer'; pl.id='plLayer'; sw.appendChild(pl); }
   let ly=$('hsLayer'); if(!ly){ ly=document.createElement('div'); ly.className='hs-layer'; ly.id='hsLayer'; sw.appendChild(ly); }
+  if(!$('propsCena')){ const pc=document.createElement('div'); pc.className='props-cena'; pc.id='propsCena'; sw.appendChild(pc); }
   if(!$('falaCena')){ const f=document.createElement('div'); f.className='fala-cena'; f.id='falaCena'; f.hidden=true; sw.appendChild(f); }
   return {sw,bg,tag,pp,ly};
 }
@@ -395,20 +396,28 @@ function renderStage(){
     const terraOk=!!(P.steps[4]||lerNotaCaderno(A.slug));
     ui.pp.innerHTML=`<i class="${P.steps[1]?'on agua':''}" title="Água"></i><i class="${P.steps[2]?'on fogo':''}" title="Fogo"></i><i class="${terraOk?'on terra':''}" title="Terra"></i>`;
     renderHotspots(ui.ly);
+    { const pc=$('propsCena'), pos=A.cen.propsPos, L=Object.keys(propsCena).sort().map(k=>propsCena[k]).filter(Boolean);
+      if(pc){ pc.hidden=!pos||!L.length||ato===0; if(pos){ pc.style.left=pos.x+'%'; pc.style.top=pos.y+'%'; } pc.innerHTML=L.map((e,i)=>`<span style="animation-delay:${i*.05}s">${e}</span>`).join(''); } }
   }
 }
 function setStage(o){ stageOpt=o||{}; renderStage(); }
 
 function renderHotspots(ly){
   const list=(A&&A.cen&&A.cen.hotspots)||[];
-  if(!list.length || ato!==0 || f1Atual()>=2){ ly.innerHTML=''; return; }
-  ly.innerHTML=list.map((h,i)=>`<button type="button" class="hs-dot${P.hotspots&&P.hotspots[i]?' visto':''}" style="left:${h.x}%;top:${h.y}%" data-hs="${i}" title="${h.pt}" aria-label="${h.pt}"><span>♪</span></button>`).join('');
+  if(!list.length || ato===2 || (ato===0&&f1Atual()>=2)){ ly.innerHTML=''; return; }
+  /* no diálogo os personagens ocupam as laterais: só ficam as pistas do meio e do alto da cena */
+  const ver=h=>ato!==1||(h.x>=35&&h.x<=63)||h.y<32;
+  ly.innerHTML=list.map((h,i)=>!ver(h)?'':`<button type="button" class="hs-dot${P.hotspots&&P.hotspots[i]?' visto':''}" style="left:${h.x}%;top:${h.y}%" data-hs="${i}" title="${h.pt}" aria-label="${h.pt}"><span>♪</span></button>`).join('');
   ly.onclick=e=>{ const b=e.target.closest('.hs-dot'); if(!b) return; e.stopPropagation(); openHotspot(+b.dataset.hs); };
 }
 
 function openHotspot(idx){
   const list=(A&&A.cen&&A.cen.hotspots)||[], h=list[idx]; if(!h) return;
-  if(f1Atual()===1&&esc&&esc.alvo!=null) return respondeEscuta(idx);
+  if(ato===0&&f1Atual()===1&&esc&&esc.alvo!=null) return respondeEscuta(idx);
+  if(ato===1){ /* pista: no diálogo, tocar num ponto da cena só lembra o que é */
+    const w=(A.words||[]).find(x=>x.id===h.wordId); speak(h.say);
+    document.querySelectorAll('.toast').forEach(t=>t.remove());
+    toast(`🔍 <span lang="ja">${h.say}</span>${w?` · ${w.pt}`:''}`); return; }
   P.hotspots=P.hotspots||{};
   const novo=!P.hotspots[idx];
   P.hotspots[idx]=1;
@@ -616,6 +625,7 @@ function loadCena(n){
   $('panel').innerHTML=`
     <div class="row"><span class="elem fogo"><i></i>Ato 2 de 3 · 🔥 Fogo · Agir no Diálogo</span><span class="spacer"></span><div class="stamps" id="stamps"></div></div>
     ${CENAS_V?`<div class="row"><button class="btn small vegbtn" type="button" id="btnVeg" aria-pressed="${VEG}">🥗 ${VEG?'Modo vegetariano ativo · voltar ao normal':'Praticar cena adaptada (vegetariana / ほんだし)'}</button></div>`:''}
+    ${c.clima?`<p class="clima">🎬 ${rk(c.clima)}</p>`:''}${c.nota?`<p class="nota-cult">${rk(c.nota)}</p>`:''}
     <div class="talk" style="padding:0"><div class="bubble npc" id="npcBubble"></div><div class="bubble me" id="meBubble"></div></div>
     <p class="hint" id="hint"></p>
     <div class="bank" id="bank"></div>
@@ -690,10 +700,12 @@ function wireCena(){
   $('btnCheck').onclick=()=>{
     const c=CENAS[ci], hit=SEQS(c).find(q=>CASA(c,q)), right=!!hit;
     if(right){
-      done[ci]=true; okPt[ci]=hit.ansPt; mood='ok'; renderCena();
+      done[ci]=true; okPt[ci]=hit.ansPt; mood='ok';
+      const rIdx=SEQS(c).findIndex(q=>CASA(c,q)), rea=(c.reage||[])[rIdx]; if(rea&&rea.prop) propsCena[ci]=rea.prop; else delete propsCena[ci];
+      renderCena();
       speak(placed.map(k=>bank[k].k).join(' '));
       sparkle(['🔥','💖','✨','🌸','⭐']);
-      hint(`<b>せいかい！</b> ${hit.ansPt}${SEQS(c).length>1?' <span class="ro">(há mais de um jeito certo)</span>':''}`);
+      hint(`<b>せいかい！</b> ${hit.ansPt}${rea?`<span class="reage">💬 ${rk(rea.t)}</span>`:(SEQS(c).length>1?' <span class="ro">(há mais de um jeito certo)</span>':'')}`);
     } else {
       mood='wrong'; renderStage();
       if(c.erroNpc){
@@ -737,7 +749,7 @@ function stAto3(){
     ${A.fio&&A.fio.proximo?`<div class="fio-next"><span>🗺️ ${A.fio.proximo}</span></div>`:''}
     <div class="caderno-card${nota?' ok':''}" id="cadCard">
       <div class="hc-head"><b>📒 Sua frase para o Caderno</b>${nota?'<span class="hc-badge">✓ Salvo</span>':''}</div>
-      <p class="pt" style="margin:0">${cp.dica}</p>
+      <p class="pt" style="margin:0">${cp.dica}</p>${A.ancora?`<p class="ancora">🌙 ${A.ancora}</p>`:''}
       ${cp.moldeH?`<div class="moldebox"><div class="jpl" lang="ja">${cp.moldeH}</div></div>`:''}
       ${sugestoes.length?`<div class="sug-row"><span class="pt">Ou toque num exemplo para começar:</span>${sugestoes.map((s,i)=>`<button type="button" class="sug-btn" data-sug="${i}"><b lang="ja">${s.k}</b><small class="ro">${s.r}</small></button>`).join('')}</div>`:''}
       <div class="acoes">
@@ -793,7 +805,7 @@ function stAto3(){
   };
   $('btnSalvarCaderno').onclick=salvar;
   inp.onkeydown=e=>{ if(e.key==='Enter'){ e.preventDefault(); salvar(); } };
-  $('btnReplay').onclick=()=>{ done={}; okPt={}; ci=0; goAto(0); };
+  $('btnReplay').onclick=()=>{ done={}; okPt={}; propsCena={}; ci=0; goAto(0); };
 }
 
 /* ---------- preparação e carga da aula ---------- */

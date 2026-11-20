@@ -366,3 +366,14 @@ body[data-ato="terra"] .panel{--el:var(--terra)}
 .mol-op.now{border-color:#c2751f;background:#fff1de;box-shadow:0 0 0 2px #f6dcb9}
 .mol-use{color:var(--muted)}
 body.no-ro .fala-cena .ro{display:none}
+
+/* piloto RPG: clima, nota cultural, reação do personagem e objetos no balcão */
+.clima{margin:0;padding:8px 12px;border-left:3px solid #b7a6dc;background:#f7f4fc;border-radius:0 12px 12px 0;font-size:14px;color:#4b3f5c;font-style:italic}
+.nota-cult{margin:0;padding:8px 12px;background:#fff8e6;border:1px solid #f3dfa6;border-radius:12px;font-size:13.5px}
+.reage{display:block;margin-top:6px;padding:8px 12px;background:#f2f7f3;border:1px solid #cfe0d3;border-radius:12px;color:#3e6347;font-weight:500}
+.ancora{margin:2px 0 0;padding:8px 12px;background:#f7f4fc;border-radius:12px;font-size:13.5px;color:#4b3f5c}
+.props-cena{position:absolute;z-index:4;transform:translate(-50%,-50%);display:flex;gap:.6cqw;padding:.4cqw .9cqw;background:rgba(255,255,255,.88);border:1.5px solid #ecdadd;border-radius:999px;box-shadow:0 4px 12px rgba(58,43,56,.15)}
+.props-cena[hidden]{display:none}
+.props-cena span{font-size:3.2cqw;line-height:1;animation:propEntra .5s cubic-bezier(.3,1.6,.5,1) both}
+@keyframes propEntra{from{transform:scale(.2) translateY(10px);opacity:0}to{transform:none;opacity:1}}
+@media (prefers-reduced-motion:reduce){.props-cena span{animation:none}}
