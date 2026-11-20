@@ -7,7 +7,7 @@
 <meta name="description" content="A trilha de japonês da Unirversos, em ordem: aprenda as letras, faça a Aula Zero e os 12 mapas de contexto, cada um com prova e carimbo.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@500;700;800&family=DotGothic16&family=Zen+Maru+Gothic:wght@400;500;700&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@500;700;800&family=Zen+Maru+Gothic:wght@400;500;700&display=swap">
 <style>html[data-login="obrigatorio"]:not(.uni-ok) body>*:not(#uni-gate){visibility:hidden}</style>
 <script type="module" src="/idiomas/dados/conta.js?v=6"></script>
 <script>setTimeout(function(){var h=document.documentElement;if(!h.classList.contains('uni-ok')&&!document.getElementById('uni-gate'))h.classList.add('uni-ok')},10000)</script>
@@ -148,7 +148,7 @@ footer a{color:var(--ink);text-decoration:none}
 </div>
 <script src="/idiomas/dados/avatar.js?v=20261016b"></script>
 <script src="/idiomas/dados/mapa-pessoal.js?v=1"></script>
-<script src="/idiomas/japones/vila.js?v=2"></script>
+<script src="/idiomas/japones/caminho.js?v=1"></script>
 <script>
 (function(){
   /* ordem da viagem, em 4 regiões: Chegada · Primeiros dias · Encontros · Pela cidade */
@@ -192,7 +192,7 @@ footer a{color:var(--ink);text-decoration:none}
       <div class="ac">${o.ac||''}</div></li>`;
   }
 
-  /* mapinha: a vila em pixel art (vila.js); cada carimbo colore um lugar */
+  /* mapinha: o caminho ilustrado (caminho.js); cada mapa concluído ganha cor */
   function renderMapa(E){
     const el=document.getElementById('mapinha'); if(!el||!window.VilaTrilha) return;
     let avatar=null;
