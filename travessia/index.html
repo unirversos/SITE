@@ -161,6 +161,18 @@ footer a{color:var(--pink);text-decoration:none;display:inline-flex;align-items:
   .fixo{position:fixed;left:max(12px,env(safe-area-inset-left,0px));right:max(12px,env(safe-area-inset-right,0px));bottom:max(12px,env(safe-area-inset-bottom,0px));z-index:50;gap:8px;padding:8px;background:rgba(255,255,255,.96);border:1.5px solid var(--line);border-radius:999px;box-shadow:0 10px 30px -10px rgba(58,43,56,.5);backdrop-filter:blur(6px)}
   .fixo .btn{flex:1 1 0;font-size:15px;padding:8px 10px}
 }
+
+/* proposta: o calendário mora na própria Travessia, recolhível */
+.cal-emb{background:#fff;border:1.5px solid var(--line,#ecdadd);border-radius:20px;margin:6px 0 22px;overflow:hidden;box-shadow:0 10px 26px -20px rgba(58,43,56,.4)}
+.cal-emb summary{list-style:none;display:flex;align-items:center;justify-content:space-between;gap:10px;padding:12px 16px;cursor:pointer;font-size:16px}
+.cal-emb summary::-webkit-details-marker{display:none}
+.cal-emb summary small{color:var(--muted,#705f6c);font-size:13px;margin-left:6px}
+.cal-acoes{display:flex;align-items:center;gap:12px}.cal-acoes a{font-size:13.5px;font-weight:700;color:var(--pink-d,#a8344f);text-decoration:none}
+.cal-ab{width:28px;height:28px;border-radius:50%;border:1.5px solid var(--line,#ecdadd);display:grid;place-items:center}
+.cal-ab::before{content:"▾";font-size:13px}.cal-emb:not([open]) .cal-ab::before{content:"▸"}
+#calIf{display:block;width:100%;height:min(82vh,860px);border:0;border-top:1.5px solid var(--line,#ecdadd);background:var(--paper,#fdf6f4)}
+.cal-emb:not([open]){margin-bottom:14px}
+.faixa-t{background:#fbf1de;color:#7a5418;font-size:13px;text-align:center;padding:6px 12px}
 </style>
 <link rel="icon" href="/favicon.svg" type="image/svg+xml"><link rel="icon" href="/favicon.ico" sizes="48x48"><link rel="apple-touch-icon" href="/apple-touch-icon.png"><link rel="manifest" href="/manifest.webmanifest"><meta name="theme-color" content="#3a2b38"><meta name="mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-title" content="Unirversos"><script src="/app.js" defer></script><style id="uni-logo">.logo,.brand,.sitebar .brand{font-family:"Baloo 2","Zen Maru Gothic",system-ui,sans-serif!important;font-weight:800!important;font-size:19px!important;letter-spacing:.14em!important;text-transform:none!important;text-decoration:none!important}.logo span,.brand span{color:#c23f5e!important;font:inherit!important;letter-spacing:inherit!important;margin:0!important}</style></head>
 <body>
@@ -174,13 +186,11 @@ footer a{color:var(--pink);text-decoration:none;display:inline-flex;align-items:
   <header class="hero">
     <h1>Sua viagem <em>já começou!</em></h1>
     <p class="lede">Do começo ao fim, tudo nas suas mãos. Tudo gratuito.</p>
-    <form class="viagem" id="viagem" novalidate aria-label="Datas da viagem">
-      <div class="vf" id="vForm"><span class="vq">Quando você viaja?</span><label>De<input type="date" id="vIni"></label><label>até<input type="date" id="vFim"></label><button type="submit" class="btn pri">Montar calendário →</button></div>
-      <p class="vok" id="vOk" hidden></p>
-      <p class="vprazo" id="onde-prazo" hidden></p>
-      <p class="verr" id="vErr" role="alert"></p>
-    </form>
   </header>
+  <details class="cal-emb" id="calEmb" open>
+    <summary><span>🗓️ <b>Seu calendário</b> <small id="calResumo"></small></span><span class="cal-acoes"><a href="/travessia/calendario/" onclick="event.stopPropagation()">Tela cheia ↗</a><span class="cal-ab" aria-hidden="true"></span></span></summary>
+    <iframe id="calIf" src="/travessia/calendario/?embed=1" title="Seu calendário de viagem" loading="eager"></iframe>
+  </details>
 
   <section aria-label="Ferramentas da travessia" id="ferramentas">
     <div class="grid">
@@ -282,5 +292,13 @@ new IntersectionObserver(function(e){var x=e[0];f.classList.toggle('on',!x.isInt
 </script>
 <script defer src="/menu-ativo.js?v=2"></script><script defer src="/voltar-global.js?v=5"></script>
 <script src="/entrar.js" defer></script>
+<script>
+(function(){
+  var d=document.getElementById('calEmb'); if(!d)return;
+  try{ if(localStorage.getItem('uniCalEmbAberto')==='0')d.open=false; }catch(e){}
+  d.addEventListener('toggle',function(){ try{localStorage.setItem('uniCalEmbAberto',d.open?'1':'0');}catch(e){} });
+  try{ var c=JSON.parse(localStorage.getItem('uniCalendario1')||'null'); if(c&&c.ini&&c.fim){ var f=function(x){var p=x.split('-');return p[2]+'/'+p[1];}; document.getElementById('calResumo').textContent='· '+f(c.ini)+' a '+f(c.fim)+(Array.isArray(c.ev)&&c.ev.length?' · '+c.ev.length+' eventos':''); } }catch(e){}
+})();
+</script>
 </body>
 </html>

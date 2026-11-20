@@ -71,10 +71,11 @@ const linhaMat = (m = { t: '', url: '' }) => {
     <div class="lin1"><label class="sr">Título</label><input type="text" data-k="t" placeholder="Título (ex.: Aula 3 · slides)" value="${esc(m.t)}">${i && i.pg ? `<span class="pg">${esc(i.pg)}</span>` : ''}${fez ? '<em class="tag">✓ o aluno fez</em>' : ''}</div>
     <div class="lin1"><label class="sr">Link exato</label><input type="url" data-k="url" placeholder="${i ? 'Cole aqui o link exato (ex.: a lição 3)' : 'https://…'}" value="${esc(m.url)}">${i ? `<a class="abre" href="${esc(absUrl(i.url))}" target="_blank" rel="noopener" title="Abrir o site para achar a página e copiar o link">abrir ↗</a>` : ''}<button type="button" class="copia" title="Copiar este link">⧉</button></div>
     ${i ? '<p class="mut peq dica">Abra o site, ache a página certa e cole o link dela aqui. Sem link exato, o aluno vai para a página inicial.</p>' : ''}
+    <details class="au-d"${m.au ? ' open' : ''}><summary>🎧 ${m.au ? 'Áudio junto' : '+ áudio junto (PDF com áudio, do Drive)'}</summary><label class="sr">Link do áudio</label><input type="url" data-k="au" placeholder="Link do áudio no Drive (ex.: a faixa 3 do livro)" value="${esc(m.au)}"></details>
     <label class="sr">Frase para o aluno</label><input type="text" data-k="nota" class="nota" placeholder="Sua frase para o aluno (opcional), ex.: ouça antes de quinta" value="${esc(m.nota)}">
   </div><button type="button" class="x" aria-label="Tirar este material">×</button></div>`;
 };
-const leMat = r => { const g = k => (r.querySelector(`[data-k="${k}"]`) || {}).value || ''; const url = g('url').trim(), m = { t: g('t').trim() || url, url }; if (r.dataset.cat) { m.cat = r.dataset.cat; const i = daCat(m.cat); if (i && i.emo) m.emo = i.emo; } if (g('nota').trim()) m.nota = g('nota').trim(); return m; };
+const leMat = r => { const g = k => (r.querySelector(`[data-k="${k}"]`) || {}).value || ''; const url = g('url').trim(), m = { t: g('t').trim() || url, url }; if (r.dataset.cat) { m.cat = r.dataset.cat; const i = daCat(m.cat); if (i && i.emo) m.emo = i.emo; } if (g('nota').trim()) m.nota = g('nota').trim(); if (/^https:\/\//.test(g('au').trim())) m.au = g('au').trim(); return m; };
 /* escolher da biblioteca: grade de ícones por nível */
 function abrePicker(onEscolhe, extraHtml = ''){
   fechaPicker();

@@ -104,15 +104,25 @@ html.embed .pagina{padding-top:8px}
 .rodape{display:flex;flex-wrap:wrap;gap:8px 20px;justify-content:space-between;color:var(--muted);font-size:14px;border-top:1.5px solid var(--line);padding-top:16px}
 .rodape a{color:var(--pink);text-decoration:none;margin-right:12px}
 </style>
-<link rel="icon" href="/favicon.svg" type="image/svg+xml"><link rel="icon" href="/favicon.ico" sizes="48x48"><link rel="apple-touch-icon" href="/apple-touch-icon.png"><link rel="manifest" href="/manifest.webmanifest"><meta name="theme-color" content="#3a2b38"><meta name="mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-title" content="Unirversos"><script src="/app.js" defer></script><script defer src="/voltar-global.js?v=5"></script><style id="uni-logo">.logo,.brand,.sitebar .brand{font-family:"Baloo 2","Zen Maru Gothic",system-ui,sans-serif!important;font-weight:800!important;font-size:19px!important;letter-spacing:.14em!important;text-transform:none!important;text-decoration:none!important}.logo span,.brand span{color:#c23f5e!important;font:inherit!important;letter-spacing:inherit!important;margin:0!important}</style></head>
+<link rel="icon" href="/favicon.svg" type="image/svg+xml"><link rel="icon" href="/favicon.ico" sizes="48x48"><link rel="apple-touch-icon" href="/apple-touch-icon.png"><link rel="manifest" href="/manifest.webmanifest"><meta name="theme-color" content="#3a2b38"><meta name="mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-title" content="Unirversos"><script src="/app.js" defer></script><script defer src="/voltar-global.js?v=5"></script><style id="uni-logo">.logo,.brand,.sitebar .brand{font-family:"Baloo 2","Zen Maru Gothic",system-ui,sans-serif!important;font-weight:800!important;font-size:19px!important;letter-spacing:.14em!important;text-transform:none!important;text-decoration:none!important}.logo span,.brand span{color:#c23f5e!important;font:inherit!important;letter-spacing:inherit!important;margin:0!important}
+/* ===== padrão Travessia (proposta) ===== */
+.crumb{display:none!important}
+.faixa-t{background:#fbf1de;color:#7a5418;font-size:13px;text-align:center;padding:6px 12px;margin:0 -9999px 10px;padding-inline:9999px}
+.ey-t{font-size:12px;letter-spacing:.18em;text-transform:uppercase;color:#8e6a1f;font-weight:700;margin:0}
+
+.pagina{max-width:1060px!important}
+.pagina>*:not(.sitebar):not(.rodape):not(footer){max-width:640px;width:100%}
+.pagina h1{font-size:clamp(32px,5.4vw,50px)!important;line-height:1.06}
+</style></head>
 <body>
 <script>if(/[?&]embed=1/.test(location.search))document.documentElement.classList.add('embed');</script>
 <div class="pagina">
   <div class="sitebar" role="navigation" aria-label="Site">
     <a href="/" class="logo">UNI<span>R</span>VERSOS</a>
-    <span class="navlinks"><a href="/idiomas/">idiomas</a><a href="/travessia/">travessia</a><a href="/loja/">tesouros</a><span class="nav-sep" aria-hidden="true" style="opacity:.3">|</span><a href="/paralelos/">paralelos</a><a href="/sobre/">sobre</a></span>
+    <span class="navlinks"><a href="/idiomas/">idiomas</a><a href="/travessia/" aria-current="page">travessia</a><a href="/loja/">tesouros</a><span class="nav-sep" aria-hidden="true" style="opacity:.3">|</span><a href="/paralelos/">paralelos</a><a href="/sobre/">sobre</a></span>
   </div>
   <p class="crumb"><a href="/travessia/calendario/">← Calendário</a></p>
+  <p class="ey-t">Unirversos Travessia · Deslocamento</p>
   <h1>De <em>→</em> para</h1>
 
   <div class="rota">
@@ -129,10 +139,10 @@ html.embed .pagina{padding-top:8px}
 
   <footer class="rodape"><span>unirversos — tudo conectado · Aline Kikuti</span><span><a href="/travessia/navi/">Como usar o Navi</a><a href="/travessia/calendario/">Calendário</a></span></footer>
 </div>
-<script src="../calendario/geo.js?v=7"></script>
-<script src="../agendamentos/regras.js?v=3"></script>
-<script src="../calendario/avisos.js?v=4"></script>
-<script src="./deslocamento.js?v=20"></script>
+<script src="/travessia/calendario/geo.js?v=7"></script>
+<script src="/travessia/agendamentos/regras.js?v=3"></script>
+<script src="/travessia/calendario/avisos.js?v=4"></script>
+<script src="/travessia/deslocamento/deslocamento.js?v=20"></script>
 <script src="/entrar.js" defer></script>
 </body>
 </html>

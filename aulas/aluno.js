@@ -62,29 +62,46 @@ function itemMat(m){
   const i = m.cat && CAT.find(x => x.id === m.cat), fez = (aula.feitos || []).includes(m.url);
   return `<li class="mat-i${i || m.emo ? ' doCat' : ''}">${icoCat(i, m)}<span class="mat-c">${linkMat(m)}${i && i.pg ? ` <span class="pg">${esc(i.pg)}</span>` : ''}${m.nota ? `<span class="mat-n">${comLinks(m.nota)}</span>` : ''}</span>${linkOk(m.url) ? `<button type="button" class="fiz${fez ? ' on' : ''}" data-fiz="${esc(m.url)}" aria-pressed="${fez}">${fez ? TX.feito() : TX.fiz()}</button>` : ''}</li>`;
 }
-/* planilha do Google nos materiais: abre dentro da página (Dicionário e Caderno continuam ao lado) */
+/* abrir aqui: planilha, documento, apresentação e arquivos do Drive (PDF, áudio, vídeo) abrem dentro da página.
+   Um material pode ter um áudio junto (m.au): o PDF e o áudio aparecem na mesma tela, com o Caderno e o Dicionário ao lado. */
 let planAberta = '', planCheia = false, temAtiv = false;
-const ehPlan = u => /^https:\/\/docs\.google\.com\/spreadsheets\/d\/[\w-]+/.test(u || '');
-const planEmbed = u => { const id = u.match(/\/d\/([\w-]+)/)[1], gid = (u.match(/[#&?]gid=(\d+)/) || [])[1]; return `https://docs.google.com/spreadsheets/d/${id}/edit${gid ? '#gid=' + gid : ''}`; };
+const gid = u => (u.match(/\/d\/([\w-]+)/) || [])[1];
+const tipoAqui = u => !u ? '' : /^https:\/\/docs\.google\.com\/spreadsheets\/d\//.test(u) ? 'plan'
+  : /^https:\/\/docs\.google\.com\/document\/d\//.test(u) ? 'doc' : /^https:\/\/docs\.google\.com\/presentation\/d\//.test(u) ? 'slides'
+  : /^https:\/\/drive\.google\.com\/file\/d\//.test(u) ? 'drive' : '';
+const ehPlan = u => !!tipoAqui(u);
+const ICO_AQUI = { plan: '📊', doc: '📄', slides: '🖼️', drive: '📁' };
+const planEmbed = u => { const t = tipoAqui(u), id = gid(u);
+  if (t === 'plan') { const g = (u.match(/[#&?]gid=(\d+)/) || [])[1]; return `https://docs.google.com/spreadsheets/d/${id}/edit${g ? '#gid=' + g : ''}`; }
+  if (t === 'doc') return `https://docs.google.com/document/d/${id}/preview`;
+  if (t === 'slides') return `https://docs.google.com/presentation/d/${id}/preview`;
+  return `https://drive.google.com/file/d/${id}/preview`; };
+const auEmbed = u => gid(u || '') ? `https://drive.google.com/file/d/${gid(u)}/preview` : '';
 function blocoPlan(a){
   const ps = (a.material || []).filter(m => m && ehPlan(m.url));
   if (planAberta && !ps.some(m => m.url === planAberta)) { planAberta = ''; planCheia = false; }
   setTimeout(montaPlan, 0);
   if (!ps.length) return '';
-  return `<div class="bloco plan"><p class="eyebrow verde">📊 ${EN() ? 'Our spreadsheet' : 'Nossa planilha'}</p>
-    <div class="linha">${ps.map(m => `<button type="button" class="fiz${m.url === planAberta ? ' on' : ''}" data-plan="${esc(m.url)}" aria-pressed="${m.url === planAberta}">${m.url === planAberta ? '▾ ' : '▸ '}${esc(m.t)}</button>`).join('')}</div></div>`;
+  return `<div class="bloco plan"><p class="eyebrow verde">📂 ${EN() ? 'Open here' : 'Abrir aqui'}</p>
+    <div class="linha">${ps.map(m => `<button type="button" class="fiz${m.url === planAberta ? ' on' : ''}" data-plan="${esc(m.url)}" aria-pressed="${m.url === planAberta}">${ICO_AQUI[tipoAqui(m.url)]} ${esc(m.t)}${m.au ? ' 🎧' : ''}</button>`).join('')}</div></div>`;
 }
-/* a planilha mora fora do #area: o redesenho a cada 30 s não recarrega o que o aluno está editando */
+/* fica fora do #area: o redesenho a cada 30 s não recarrega o que o aluno está lendo ou editando */
 function montaPlan(){
   let box = $('plan-area');
   if (!box) { box = document.createElement('section'); box.id = 'plan-area'; box.className = 'cx plan-cx'; area.after(box); }
   const atual = planAberta && (aula && (aula.material || []).find(m => m.url === planAberta));
   box.hidden = !atual; box.classList.toggle('cheia', !!(atual && planCheia));
   if (!atual) { box.innerHTML = ''; box.dataset.u = ''; return; }
-  const bar = `<div class="plan-bar"><b>${esc(atual.t)}</b><span class="esp"></span><button type="button" class="mini-b" id="plan-cheia">${planCheia ? (EN() ? '↙ Exit full screen' : '↙ Sair da tela cheia') : (EN() ? '⤢ Full screen' : '⤢ Tela cheia')}</button><a class="mini-b" href="${esc(atual.url)}" target="_blank" rel="noopener">${EN() ? 'Open in Google Sheets' : 'Abrir no Google Sheets'} ↗</a><button type="button" class="mini-b" id="plan-fecha">${EN() ? 'Close' : 'Fechar'}</button></div>`;
-  if (box.dataset.u !== atual.url) {
-    box.innerHTML = bar + `<iframe class="plan-if" src="${esc(planEmbed(atual.url))}" title="${esc(atual.t)}" allow="clipboard-read; clipboard-write"></iframe><p class="mut peq">${EN() ? 'If it asks you to sign in, use the e-mail the sheet was shared with, or open it in Google Sheets. Dictionary and Notebook are on the right.' : 'Se pedir login, entre com o e-mail com que a planilha foi compartilhada, ou abra no Google Sheets. Dicionário e Caderno ficam na lateral direita.'}</p>`;
-    box.dataset.u = atual.url; if (!planCheia) box.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  const t = tipoAqui(atual.url), nomeApp = { plan: 'Google Sheets', doc: 'Google Docs', slides: 'Google Slides', drive: 'Google Drive' }[t];
+  const bar = `<div class="plan-bar"><b>${ICO_AQUI[t]} ${esc(atual.t)}</b><span class="esp"></span><button type="button" class="mini-b" id="plan-cheia">${planCheia ? (EN() ? '↙ Exit full screen' : '↙ Sair da tela cheia') : (EN() ? '⤢ Full screen' : '⤢ Tela cheia')}</button><a class="mini-b" href="${esc(atual.url)}" target="_blank" rel="noopener">${EN() ? 'Open in' : 'Abrir no'} ${nomeApp} ↗</a><button type="button" class="mini-b" id="plan-fecha">${EN() ? 'Close' : 'Fechar'}</button></div>`;
+  const chave = atual.url + '|' + (atual.au || '');
+  if (box.dataset.u !== chave) {
+    const au = auEmbed(atual.au);
+    box.innerHTML = bar + (au ? `<div class="au-bar"><span>🎧 ${EN() ? 'Audio' : 'Áudio'}</span><iframe class="au-if" src="${esc(au)}" title="${EN() ? 'Audio' : 'Áudio'}: ${esc(atual.t)}" allow="autoplay"></iframe></div>` : '') +
+      `<iframe class="plan-if" src="${esc(planEmbed(atual.url))}" title="${esc(atual.t)}" allow="clipboard-read; clipboard-write; autoplay; fullscreen"></iframe>` +
+      (atual.nota ? `<p class="mat-n">${comLinks(atual.nota)}</p>` : '') +
+      `<p class="mut peq">${EN() ? 'If it asks you to sign in, use the e-mail the file was shared with, or open it in Google. Dictionary and Notebook are on the right.' : 'Se pedir login, entre com o e-mail com que o arquivo foi compartilhado, ou abra no Google. Dicionário e Caderno ficam na lateral direita.'}</p>`;
+    box.dataset.u = chave; if (!planCheia) box.scrollIntoView({ behavior: 'smooth', block: 'start' });
   } else box.querySelector('.plan-bar').outerHTML = bar;
   $('plan-fecha').onclick = () => { planAberta = ''; planCheia = false; pinta(); };
   $('plan-cheia').onclick = () => { planCheia = !planCheia; montaPlan(); };
