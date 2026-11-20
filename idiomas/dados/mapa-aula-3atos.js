@@ -382,12 +382,12 @@ function renderStage(){
     stg.innerHTML=`
       <defs><linearGradient id="stageShade" x1="0" y1="0" x2="0" y2="1"><stop offset="55%" stop-color="#3a2b38" stop-opacity="0"/><stop offset="100%" stop-color="#3a2b38" stop-opacity=".22"/></linearGradient></defs>
       <rect width="400" height="225" fill="url(#stageShade)"/>
-      ${(()=>{ const cl=A.clipe&&ato===1; return charSVG(Object.assign({},n.sel,{face:npcFace}),cl?26:20,cl?100:76,cl?96:118,npcCls,n.extra); })()}
-      ${mood==='wrong'&&!(A.clipe&&ato===1)?`<g class="q"><circle cx="136" cy="78" r="16" fill="#fff" stroke="#cfe0f0" stroke-width="2"/><text x="136" y="85" text-anchor="middle" font-family="Baloo 2, sans-serif" font-size="20" font-weight="800" fill="#4f8fc4">?</text></g>`:''}
-      ${A.clipe&&ato===1?'':stamp}
+      ${(()=>{ const cl=(A.clipe||assist)&&ato===1; return charSVG(Object.assign({},n.sel,{face:npcFace}),cl?26:20,cl?100:76,cl?96:118,npcCls,n.extra); })()}
+      ${mood==='wrong'&&!((A.clipe||assist)&&ato===1)?`<g class="q"><circle cx="136" cy="78" r="16" fill="#fff" stroke="#cfe0f0" stroke-width="2"/><text x="136" y="85" text-anchor="middle" font-family="Baloo 2, sans-serif" font-size="20" font-weight="800" fill="#4f8fc4">?</text></g>`:''}
+      ${(A.clipe||assist)&&ato===1?'':stamp}
       <g class="${o.enter?'enter':''}"><g class="char ${meCls}">
         ${c.meProp?iconInStage(c.meProp,234,174,30):''}
-        <svg x="${A.clipe&&ato===1?278:256}" y="${A.clipe&&ato===1?100:70}" width="${A.clipe&&ato===1?96:128}" height="${A.clipe&&ato===1?120:160}" viewBox="0 0 240 300">${AV?AV.markup(Object.assign({},me,{face:meFace}),{noBg:true,still:true}):''}</svg>
+        <svg x="${(A.clipe||assist)&&ato===1?278:256}" y="${(A.clipe||assist)&&ato===1?100:70}" width="${(A.clipe||assist)&&ato===1?96:128}" height="${(A.clipe||assist)&&ato===1?120:160}" viewBox="0 0 240 300">${AV?AV.markup(Object.assign({},me,{face:meFace}),{noBg:true,still:true}):''}</svg>
       </g></g>`;
   }
 
@@ -398,14 +398,14 @@ function renderStage(){
     ui.pp.innerHTML=`<i class="${P.steps[1]?'on agua':''}" title="Água"></i><i class="${P.steps[2]?'on fogo':''}" title="Fogo"></i><i class="${terraOk?'on terra':''}" title="Terra"></i>`;
     renderHotspots(ui.ly);
     { const pc=$('propsCena'), pos=A.cen.propsPos, L=Object.keys(propsCena).sort().map(k=>propsCena[k]).filter(Boolean);
-      if(pc){ pc.hidden=!pos||!L.length||ato===0; if(pos){ pc.style.left=pos.x+'%'; pc.style.top=pos.y+'%'; } pc.innerHTML=L.map((e,i)=>`<span style="animation-delay:${i*.05}s">${e}</span>`).join(''); } }
+      if(pc){ pc.hidden=!pos||!L.length||ato!==1; if(pos){ pc.style.left=pos.x+'%'; pc.style.top=pos.y+'%'; } pc.innerHTML=L.map((e,i)=>`<span style="animation-delay:${i*.05}s">${e}</span>`).join(''); } }
   }
 }
 function setStage(o){ stageOpt=o||{}; renderStage(); }
 
 function renderHotspots(ly){
   const list=(A&&A.cen&&A.cen.hotspots)||[];
-  if(!list.length || ato!==1 || A.clipe){ ly.innerHTML=''; return; }
+  if(!list.length || ato!==1 || A.clipe || assist){ ly.innerHTML=''; return; }
   /* no diálogo os personagens ocupam as laterais: só ficam as pistas do meio e do alto da cena */
   const ver=h=>ato!==1||(h.x>=35&&h.x<=63)||h.y<32;
   ly.innerHTML=list.map((h,i)=>!ver(h)?'':`<button type="button" class="hs-dot${P.hotspots&&P.hotspots[i]?' visto':''}" style="left:${h.x}%;top:${h.y}%" data-hs="${i}" title="${h.pt}" aria-label="${h.pt}"><span>♪</span></button>`).join('');
@@ -479,7 +479,7 @@ function goAto(n){
   preBaixaAudios();
   ato=Math.max(0,Math.min(2,n));
   mood='idle';
-  document.body.dataset.ato=ATOS[ato].key; if(ato!==0) fala(null); if($('clip')){ $('clip').hidden=true; $('clip').innerHTML=''; clearTimeout(clipT); } document.body.classList.toggle('modo-clipe',!!(A&&A.clipe&&ato===1)); document.body.classList.toggle('modo-a1',ato===0);
+  document.body.dataset.ato=ATOS[ato].key; if(ato!==0) fala(null); if($('clip')){ $('clip').hidden=true; $('clip').innerHTML=''; clearTimeout(clipT); } if(ato!==1){ assist=null; } document.body.classList.toggle('modo-clipe',!!(A&&A.clipe&&ato===1)); document.body.classList.toggle('modo-a1',ato===0);
   renderSteps();
   [stAto1,stAto2,stAto3][ato]();
 }
@@ -562,8 +562,8 @@ function renderA1(){
   }
   /* fim */
   const el=a1Por(`<div class="a1-card fim"><div class="a1-ic">🌸</div><b class="a1-jp">よく できました！</b><span class="ro-sempre">yoku dekimashita!</span>
-      <span class="a1-pt">Você já conhece as ${W.length} palavras desta cena. Agora é usar de verdade.</span>
-      <div class="a1-bt"><button type="button" class="a1-r" data-a="rev">🃏 jogar de novo</button><button type="button" class="a1-go" data-a="dial">🔥 Entrar no diálogo →</button></div></div>`);
+      <span class="a1-pt">Você já conhece as ${W.length} palavras desta cena. Agora assista à cena inteira.</span>
+      <div class="a1-bt"><button type="button" class="a1-r" data-a="rev">🃏 jogar de novo</button><button type="button" class="a1-go" data-a="dial">▶ Assistir à cena →</button></div></div>`);
   el.querySelectorAll('[data-a]').forEach(b=>b.onclick=e=>{ e.stopPropagation(); if(b.dataset.a==='dial') goAto(1); else { a1Fase='jogo'; memo=null; renderA1(); } });
 }
 function novaRodada(){ const ws=memo.rodadas[memo.r]; memo.cartas=shuffle(ws.flatMap(w=>[{w,t:'jp'},{w,t:'pt'}])); memo.pares=0; memo.aberta=null; memo.trava=false; }
@@ -675,7 +675,53 @@ function bancoDe(c){
 }
 function trocaVeg(on){ VEG=on; CENAS=(VEG&&CENAS_V)?CENAS_V:CENAS_N; done={}; okPt={}; ci=0; }
 
-function stAto2(){ loadCena(ci); }
+function stAto2(){ if(!(P.assistiu||{})[VEG?'v':'n']&&!jaVez) return assistir(); loadCena(ci); }
+/* ---------- ▶ ASSISTIR (input): a cena inteira passa sozinha antes da sua vez ---------- */
+let assist=null, jaVez=false;
+const tok0=t=>[].concat(t)[0], tokK=t=>{ t=tok0(t); return typeof t==='string'?t.split('|')[0]:t.k; }, tokR=t=>{ t=tok0(t); return typeof t==='string'?(t.split('|')[1]||''):(t.r||''); };
+const durFala=t=>1300+String(t).replace(/<[^>]+>/g,'').length*170;
+function assistir(){
+  clearTimeout(clipT); fala(null); propsCena={}; done={}; okPt={};
+  assist={i:0,f:'leg',pausa:false,fim:false};
+  $('panel').innerHTML=`
+    <div class="row clip-topo"><span class="elem fogo"><i></i>Ato 2 de 3 · ▶ Assista à cena</span><span class="spacer"></span><div class="stamps" id="stamps"></div></div>
+    <p class="a1-missao">Só assista e escute: é a cena inteira, do jeito que acontece no Japão. Depois é a sua vez.</p>
+    <div class="clip-mob" id="clipMob"></div>
+    <div class="row as-ctl"><button class="btn small" type="button" id="asPausa">⏸ pausar</button><button class="btn small" type="button" id="asDeNovo">↺ do começo</button>
+      <span class="spacer"></span><button class="btn small" type="button" id="asVez">🎤 Pular para a sua vez →</button></div>`;
+  $('asPausa').onclick=()=>{ assist.pausa=!assist.pausa; $('asPausa').textContent=assist.pausa?'▶ continuar':'⏸ pausar'; if(!assist.pausa) passoAssist(); else clearTimeout(clipT); };
+  $('asDeNovo').onclick=()=>assistir();
+  $('asVez').onclick=()=>comecarVez();
+  stageOpt={}; $('clip').hidden=false; document.body.classList.add('modo-clipe'); renderStage(); passoAssist(); mostraPalco();
+}
+function passoAssist(){
+  if(!assist||assist.pausa||ato!==1) return;
+  const c=CENAS[assist.i]; if(!c) return fimAssist();
+  const ans=c.ans, jp=ans.map(tokK).join(' '), ro=ans.map(tokR).join(' '), rea=(c.reage||[])[0];
+  $('stamps').innerHTML=CENAS.map((_,k)=>`<span class="stamp ${k<assist.i?'ok':k===assist.i?'now':''}">${k<assist.i?'✓':k+1}</span>`).join('');
+  const quem=c.quem||A.npc.nome, cp=$('clip'); let npc='',me='',leg='',prox,espera;
+  if(assist.f==='leg'){ if(!c.clima){ assist.f='npc'; return passoAssist(); }
+    leg=`<div class="clip-leg"><span>${c.clima}</span></div>`; prox='npc'; espera=2400; }
+  else if(assist.f==='npc'){ npc=balaoA(quem,c.q,c.ro,c.pt,'npc'); speak(c.say); prox='me'; espera=durFala(c.say); }
+  else if(assist.f==='me'){ npc=balaoA(quem,c.q,c.ro,c.pt,'npc apaga'); me=balaoA(meName,jp,ro,c.ansPt,'me'); speak(jp); prox=rea&&rea.jp?'rea':'next'; espera=durFala(jp);
+    mood='ok'; if(rea&&rea.prop&&!rea.jp){ propsCena[assist.i]=rea.prop; } renderStage(); }
+  else if(assist.f==='rea'){ npc=balaoA(quem,rea.jp,roFrase(rea.jp),rea.t,'npc rea'); me=balaoA(meName,jp,ro,c.ansPt,'me ok apaga'); speak(rea.jp);
+    if(rea.prop) propsCena[assist.i]=rea.prop; renderStage(); prox='next'; espera=durFala(rea.jp); }
+  cp.innerHTML=`${leg}<div class="clip-npc">${npc}</div><div class="clip-me">${me}</div>`;
+  if($('clipMob')) $('clipMob').innerHTML='';
+  clipT=setTimeout(()=>{ mood='idle'; if(prox==='next'){ assist.i++; assist.f='leg'; } else assist.f=prox; passoAssist(); },espera);
+}
+function balaoA(who,jp,ro,pt,cls){ return `<div class="cb ${cls}"><span class="cb-who">${who}</span><b lang="ja">${jp}</b><span class="ro">${ro}</span><small class="cb-pt">${pt}</small></div>`; }
+function fimAssist(){
+  assist.fim=true; (P.assistiu=P.assistiu||{})[VEG?'v':'n']=1; persist();
+  $('stamps').innerHTML=CENAS.map(()=>`<span class="stamp ok">✓</span>`).join('');
+  $('clip').innerHTML=`<div class="a1-ov"><div class="a1-card"><div class="a1-ic">🎬</div><b class="a1-jp">つぎは あなたの ばん！</b><span class="ro-sempre">tsugi wa anata no ban!</span>
+    <span class="a1-pt">Agora é a sua vez de falar.</span>
+    <div class="a1-bt"><button type="button" class="a1-r" id="asRever">↺ ver de novo</button><button type="button" class="a1-go" id="asIr">🎤 Começar →</button></div></div></div>`;
+  $('asRever').onclick=e=>{ e.stopPropagation(); assistir(); };
+  $('asIr').onclick=e=>{ e.stopPropagation(); comecarVez(); };
+}
+function comecarVez(){ clearTimeout(clipT); assist=null; jaVez=true; propsCena={}; done={}; okPt={}; mood='idle'; $('clip').innerHTML=''; $('clip').hidden=!A.clipe; loadCena(0); }
 function loadCena(n){
   if(A.clipe) return loadClipe(n);
   ci=Math.max(0,Math.min(CENAS.length-1,n));

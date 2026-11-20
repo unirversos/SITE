@@ -490,3 +490,6 @@ body.no-ro .ro-sempre{display:block}
 @media (max-width:640px){.memo-g{grid-template-columns:repeat(3,1fr)}.a1-jp{font-size:2.1em}}
 /* na cena, romaji sempre visível (balões e peças do diálogo) */
 body.no-ro .cb .ro, body.no-ro .clip-bank .tile small, body.no-ro .cb-slots .slot small{display:block}
+/* ▶ assistir: balões que já falaram ficam mais fracos */
+.cb.apaga{opacity:.55}
+.as-ctl{gap:6px;flex-wrap:wrap}
