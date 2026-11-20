@@ -467,7 +467,7 @@ function renderSteps(){
   const terraOk=!!(P.steps[4]||lerNotaCaderno(A.slug));
   const feitos=[!!P.steps[1], !!P.steps[2], terraOk];
   $('steps').innerHTML=ATOS.map((a,k)=>`
-    <button type="button" class="ato-btn ${a.key} ${k===ato?'now':''} ${feitos[k]?'done':''}" data-ato="${k}">
+    <button type="button" class="ato-btn ${a.key} ${k===ato?'now':''} ${feitos[k]?'done':''} ${k>0&&!a1Liberado()?'trava':''}" data-ato="${k}">
       <span class="ato-num">Ato 0${a.n}</span>
       <span class="ato-ico">${feitos[k]?'✓':a.ico}</span>
       <span class="ato-nome">${a.nome}</span>
@@ -475,8 +475,10 @@ function renderSteps(){
     </button>`).join('');
 }
 
+const a1Liberado=()=>!!(P&&(P.steps[1]||(P.a1n&&P.a1n.rec)));
 function goAto(n){
   preBaixaAudios();
+  if(n>0&&!a1Liberado()){ document.querySelectorAll('.toast').forEach(t=>t.remove()); toast('🔒 Primeiro conheça e reconheça todas as palavras da cena.'); if(ato!==0) n=0; else return; }
   ato=Math.max(0,Math.min(2,n));
   mood='idle';
   document.body.dataset.ato=ATOS[ato].key; if(ato!==0) fala(null); if($('clip')){ $('clip').hidden=true; $('clip').innerHTML=''; clearTimeout(clipT); } if(ato!==1){ assist=null; } document.body.classList.toggle('modo-clipe',!!(A&&A.clipe&&ato===1)); document.body.classList.toggle('modo-a1',ato===0);
@@ -501,7 +503,7 @@ function mostraPalco(){ const sw=document.querySelector('.stage-wrap'); if(!sw) 
 function fala(html){ const f=$('falaCena'); if(!f) return; if(!html){ f.hidden=true; return; } f.hidden=false; f.innerHTML=html; }
 
 /* Ato 1 novo: 👀 conhecer as palavras da cena (voz + romaji) → 🃏 jogo da memória → diálogo */
-let a1Fase='conhecer', a1i=0, memo=null;
+let a1Fase='todas', a1i=0, memo=null, rec=null;
 function palavrasCena(){
   const usa=new Set(JSON.stringify(A.cenas||[]).match(/[ぁ-んァ-ヶー一-龯]+/g)||[]);
   const ws=(A.words||[]).slice();
@@ -509,21 +511,28 @@ function palavrasCena(){
 }
 function stAto1(){
   setStage({enter:true}); fala(null);
-  const W=palavrasCena(); if(!P.a1n) P.a1n={};
-  a1Fase=P.a1n.jogo?'fim':P.a1n.conheceu?'jogo':'conhecer'; a1i=0; memo=null;
+  if(!P.a1n) P.a1n={}; P.a1n.ouv=P.a1n.ouv||{};
+  a1Fase=a1Liberado()?'fim':(todasOuvidas()?'rec':'todas'); a1i=0; memo=null; rec=null;
   $('panel').innerHTML=`
     <div class="row clip-topo"><span class="elem agua"><i></i>Ato 1 de 3 · 💧 Palavras da cena</span></div>
     ${A.fio&&A.fio.gancho?`<p class="a1-missao"><b>Missão:</b> ${A.fio.gancho}</p>`:''}
     <div class="clip-mob" id="clipMob"></div>
     <nav class="f1-nav" id="a1Nav"></nav>
-    <div class="row"><span class="spacer"></span><button type="button" class="btn small" id="btnIrAto2">Ir para o diálogo →</button></div>`;
-  $('btnIrAto2').onclick=()=>goAto(1);
-  $('a1Nav').onclick=e=>{ const b=e.target.closest('[data-f]'); if(!b) return; a1Fase=b.dataset.f; a1i=0; memo=null; renderA1(); };
+    <div class="a1-extra"><span>Para treinar mais:</span><button type="button" class="btn small" data-f="cards">🎴 Cartões um a um</button><button type="button" class="btn small" data-f="jogo">🃏 Jogo da memória</button></div>`;
+  $('panel').addEventListener('click',e=>{ const b=e.target.closest('[data-f]'); if(!b||!$('panel').contains(b)) return;
+    const f=b.dataset.f; if(f==='rec'&&!todasOuvidas()) return toast('👂 Toque em todas as palavras primeiro.');
+    a1Fase=f; a1i=0; memo=null; rec=null; renderA1(); });
   renderA1();
 }
-function a1Nav(){ const feito={conhecer:!!P.a1n.conheceu,jogo:!!P.a1n.jogo};
-  $('a1Nav').innerHTML=[['conhecer','👀','Conhecer as palavras'],['jogo','🃏','Jogo da memória']].map(([f,i,n])=>`<button type="button" class="f1-b${a1Fase===f||(a1Fase==='fim'&&f==='jogo')?' now':''}${feito[f]?' ok':''}" data-f="${f}"><span>${feito[f]?'✓':i}</span>${n}</button>`).join(''); }
-function a1Por(html){ /* na imagem (computador) ou logo abaixo dela (celular) */
+const todasOuvidas=()=>palavrasCena().every(w=>P.a1n.ouv[w.id]);
+function a1Nav(){
+  const W=palavrasCena(), n=W.filter(w=>P.a1n.ouv[w.id]).length;
+  $('a1Nav').innerHTML=[['todas','👀',`Conhecer as palavras · ${n}/${W.length}`,todasOuvidas()],['rec','👂','Reconhecer pelo som',!!P.a1n.rec]]
+    .map(([f,i,t,ok],k)=>`<button type="button" class="f1-b${a1Fase===f?' now':''}${ok?' ok':''}${k===1&&!todasOuvidas()?' trava':''}" data-f="${f}"><span>${ok?'✓':k===1&&!todasOuvidas()?'🔒':i}</span>${t}</button>`).join('')
+    +(a1Liberado()?`<button type="button" class="f1-b go" id="a1Ir">▶ Assistir à cena</button>`:'');
+  if($('a1Ir')) $('a1Ir').onclick=e=>{ e.stopPropagation(); goAto(1); };
+}
+function a1Por(html){ /* na cena apagada (computador) ou logo abaixo dela (celular) */
   const mob=window.matchMedia&&matchMedia('(max-width:640px)').matches, cp=$('clip');
   cp.hidden=mob; cp.innerHTML=mob?'':`<div class="a1-ov">${html}</div>`; $('clipMob').innerHTML=mob?`<div class="a1-ov mob">${html}</div>`:'';
   return mob?$('clipMob'):cp;
@@ -531,7 +540,43 @@ function a1Por(html){ /* na imagem (computador) ou logo abaixo dela (celular) */
 const roA1=w=>`<span class="ro-sempre">${w.r}</span>`;
 function renderA1(){
   a1Nav(); const W=palavrasCena();
-  if(a1Fase==='conhecer'){
+  if(a1Fase==='todas'){
+    const n=W.filter(w=>P.a1n.ouv[w.id]).length, ok=n===W.length;
+    const el=a1Por(`<div class="a1-todas">
+        <div class="memo-h"><b>👀 Toque em cada palavra para ouvir</b><span>${n}/${W.length} ouvidas</span></div>
+        <div class="a1-grade">${W.map((w,k)=>`<button type="button" class="wc${P.a1n.ouv[w.id]?' ouvida':''}" data-k="${k}">
+          <span class="wc-ic">${iconHTML(w.ic)}</span><b lang="ja">${wordH(w)}</b>${roA1(w)}<small>${w.pt}</small>${P.a1n.ouv[w.id]?'<i class="wc-ok">✓</i>':''}</button>`).join('')}</div>
+        <div class="a1-bt">${ok?`<button type="button" class="a1-go" data-x="rec">👂 Agora: reconhecer pelo som →</button>`:`<span class="a1-falta">Faltam ${W.length-n} para liberar o próximo passo</span>`}</div>
+      </div>`);
+    el.querySelector('.a1-grade').onclick=e=>{ e.stopPropagation(); const b=e.target.closest('.wc'); if(!b) return; const w=W[+b.dataset.k];
+      speak(w.k); const novo=!P.a1n.ouv[w.id]; P.a1n.ouv[w.id]=1; persist();
+      if(novo){ b.classList.add('ouvida'); b.insertAdjacentHTML('beforeend','<i class="wc-ok">✓</i>'); const t=el.querySelector('.memo-h span'), m=W.filter(x=>P.a1n.ouv[x.id]).length; if(t) t.textContent=`${m}/${W.length} ouvidas`;
+        a1Nav(); if(m===W.length){ sparkle(['👀','✨','🌸']); setTimeout(renderA1,500); } else { const f=el.querySelector('.a1-falta'); if(f) f.textContent=`Faltam ${W.length-m} para liberar o próximo passo`; } } };
+    const g=el.querySelector('[data-x="rec"]'); if(g) g.onclick=e=>{ e.stopPropagation(); a1Fase='rec'; rec=null; renderA1(); };
+    return;
+  }
+  if(a1Fase==='rec'){
+    /* 👂 ouve o som e toca na imagem certa; precisa acertar todas (pular só manda para o fim da fila) */
+    if(!rec) rec={fila:shuffle(W.map((_,k)=>k)),ok:{},erros:0};
+    const alvo=rec.fila[0], n=Object.keys(rec.ok).length;
+    if(alvo==null) return fimRec();
+    const el=a1Por(`<div class="a1-todas">
+        <div class="memo-h"><b>👂 Ouça e toque na imagem certa</b><span>${n}/${W.length} reconhecidas</span></div>
+        <div class="rec-ctl"><button type="button" class="a1-r som" data-x="som">🔊 ouvir</button><button type="button" class="a1-r" data-x="dev">🐢 devagar</button><span class="rec-msg" id="recMsg"></span><button type="button" class="a1-r" data-x="pular">pular ▸</button></div>
+        <div class="a1-grade rec">${W.map((w,k)=>`<button type="button" class="wc img${rec.ok[k]?' ouvida':''}" data-k="${k}" ${rec.ok[k]?'disabled':''}>
+          <span class="wc-ic">${iconHTML(w.ic)}</span><small>${w.pt}</small>${rec.ok[k]?`<b lang="ja">${w.k}</b>${roA1(w)}`:''}</button>`).join('')}</div>
+      </div>`);
+    const msg=t=>{ const m=el.querySelector('#recMsg'); if(m) m.innerHTML=t; };
+    el.querySelector('.rec-ctl').onclick=e=>{ e.stopPropagation(); const x=(e.target.closest('[data-x]')||{}).dataset; if(!x) return;
+      if(x.x==='som') speak(W[alvo].k); if(x.x==='dev') speak(W[alvo].k,.55);
+      if(x.x==='pular'){ rec.fila.push(rec.fila.shift()); renderA1(); } };
+    el.querySelector('.a1-grade').onclick=e=>{ e.stopPropagation(); const b=e.target.closest('.wc'); if(!b||b.disabled) return; const k=+b.dataset.k;
+      if(k===alvo){ rec.ok[k]=1; rec.fila.shift(); b.classList.add('ouvida','acerto'); speak(W[k].k); sparkle(['✨','🌸']); setTimeout(renderA1,700); }
+      else { rec.erros++; b.classList.remove('erro'); void b.offsetWidth; b.classList.add('erro'); msg(`Isso é <b lang="ja">${W[k].k}</b> <span class="ro-sempre" style="display:inline">${W[k].r}</span>. Ouça de novo.`); setTimeout(()=>speak(W[alvo].k),900); } };
+    setTimeout(()=>speak(W[alvo].k),250);
+    return;
+  }
+  if(a1Fase==='cards'){
     const w=W[a1i], ult=a1i===W.length-1;
     const el=a1Por(`<div class="a1-card" lang="ja">
         <div class="a1-ic">${iconHTML(w.ic)}</div>
@@ -539,21 +584,21 @@ function renderA1(){
         ${w.tip?`<small class="a1-tip">${rk(w.tip)}</small>`:''}
         <div class="a1-bt"><button type="button" class="a1-r" data-a="ant" ${a1i?'':'disabled'} aria-label="Anterior">◀</button>
           <button type="button" class="a1-r som" data-a="som" aria-label="Ouvir">🔊</button><button type="button" class="a1-r" data-a="dev" aria-label="Devagar">🐢</button>
-          <button type="button" class="a1-go" data-a="prox">${ult?'🃏 Vamos jogar →':'próxima ▶'}</button></div>
+          <button type="button" class="a1-go" data-a="prox">${ult?'✓ fechar':'próxima ▶'}</button></div>
         <div class="a1-dots">${W.map((_,k)=>`<i class="${k<a1i?'on':k===a1i?'now':''}"></i>`).join('')}<span>${a1i+1}/${W.length}</span></div>
       </div>`);
     el.querySelectorAll('[data-a]').forEach(b=>b.onclick=e=>{ e.stopPropagation(); const a=b.dataset.a;
       if(a==='som') speak(w.k); if(a==='dev') speak(w.k,.55);
       if(a==='ant'&&a1i>0){ a1i--; renderA1(); }
-      if(a==='prox'){ if(!ult){ a1i++; renderA1(); } else { P.a1n.conheceu=1; persist(); a1Fase='jogo'; memo=null; renderA1(); } } });
-    speak(w.k); return;
+      if(a==='prox'){ P.a1n.ouv[w.id]=1; persist(); if(!ult){ a1i++; renderA1(); } else { a1Fase=a1Liberado()?'fim':todasOuvidas()?'rec':'todas'; renderA1(); } } });
+    P.a1n.ouv[w.id]=1; persist(); speak(w.k); return;
   }
   if(a1Fase==='jogo'){
     if(!memo){ const n=Math.ceil(W.length/Math.ceil(W.length/6)), rodadas=[]; for(let k=0;k<W.length;k+=n) rodadas.push(W.slice(k,k+n)); memo={rodadas,r:0}; novaRodada(); }
     const R=memo.rodadas, cartas=memo.cartas;
     const el=a1Por(`<div class="memo">
         <div class="memo-h"><b>🃏 Ache os pares: a palavra e o que ela quer dizer</b><span>Rodada ${memo.r+1}/${R.length} · ${memo.pares}/${R[memo.r].length} pares</span></div>
-        <div class="memo-g" style="--cols:${cartas.length>8?4:cartas.length>6?4:3}">${cartas.map((c,k)=>{ const w=c.w, ab=c.vira||c.ok;
+        <div class="memo-g" style="--cols:${cartas.length>6?4:3}">${cartas.map((c,k)=>{ const w=c.w, ab=c.vira||c.ok;
           return `<button type="button" class="mc${ab?' ab':''}${c.ok?' ok':''}${c.erro?' erro':''}" data-k="${k}" ${c.ok?'disabled':''}>
             <span class="mc-v">🌸</span><span class="mc-f">${c.t==='jp'?`<b lang="ja">${w.k}</b>${roA1(w)}`:`<i>${iconHTML(w.ic)}</i><small>${w.pt}</small>`}</span></button>`; }).join('')}</div>
       </div>`);
@@ -562,10 +607,11 @@ function renderA1(){
   }
   /* fim */
   const el=a1Por(`<div class="a1-card fim"><div class="a1-ic">🌸</div><b class="a1-jp">よく できました！</b><span class="ro-sempre">yoku dekimashita!</span>
-      <span class="a1-pt">Você já conhece as ${W.length} palavras desta cena. Agora assista à cena inteira.</span>
-      <div class="a1-bt"><button type="button" class="a1-r" data-a="rev">🃏 jogar de novo</button><button type="button" class="a1-go" data-a="dial">▶ Assistir à cena →</button></div></div>`);
-  el.querySelectorAll('[data-a]').forEach(b=>b.onclick=e=>{ e.stopPropagation(); if(b.dataset.a==='dial') goAto(1); else { a1Fase='jogo'; memo=null; renderA1(); } });
+      <span class="a1-pt">Você conhece e reconhece as ${W.length} palavras desta cena. Agora assista à cena inteira.</span>
+      <div class="a1-bt"><button type="button" class="a1-go" data-a="dial">▶ Assistir à cena →</button></div></div>`);
+  el.querySelectorAll('[data-a]').forEach(b=>b.onclick=e=>{ e.stopPropagation(); goAto(1); });
 }
+function fimRec(){ P.a1n.rec=1; if(!P.steps[1]){ P.steps[1]=1; gainXP(10); } persist(); renderSteps(); a1Fase='fim'; sparkle(['💧','🎉','✨','⭐']); renderA1(); }
 function novaRodada(){ const ws=memo.rodadas[memo.r]; memo.cartas=shuffle(ws.flatMap(w=>[{w,t:'jp'},{w,t:'pt'}])); memo.pares=0; memo.aberta=null; memo.trava=false; }
 function viraCarta(k){
   const c=memo.cartas[k]; if(c.ok||c.vira) return;
@@ -575,7 +621,7 @@ function viraCarta(k){
   if(o.w===c.w){ o.ok=c.ok=true; o.vira=c.vira=false; memo.pares++; if(c.t!=='jp') speak(c.w.k); sparkle(['✨','🌸']); renderA1();
     if(memo.pares===memo.rodadas[memo.r].length){ memo.trava=true; setTimeout(()=>{ memo.trava=false;
       if(memo.r<memo.rodadas.length-1){ memo.r++; novaRodada(); renderA1(); }
-      else { const first=!P.a1n.jogo; P.a1n.jogo=1; if(!P.steps[1]){ P.steps[1]=1; gainXP(10); } persist(); renderSteps(); a1Fase='fim'; sparkle(['💧','🎉','✨','⭐']); renderA1(); } },900); }
+      else { P.a1n.jogo=1; persist(); sparkle(['🃏','🎉','✨']); a1Fase=a1Liberado()?'fim':todasOuvidas()?'rec':'todas'; renderA1(); } },900); }
   } else { o.erro=c.erro=true; memo.trava=true; renderA1(); setTimeout(()=>{ o.vira=c.vira=o.erro=c.erro=false; memo.trava=false; renderA1(); },1000); }
 }
 function renderF1(){

@@ -493,3 +493,30 @@ body.no-ro .cb .ro, body.no-ro .clip-bank .tile small, body.no-ro .cb-slots .slo
 /* ▶ assistir: balões que já falaram ficam mais fracos */
 .cb.apaga{opacity:.55}
 .as-ctl{gap:6px;flex-wrap:wrap}
+
+/* Ato 1: todas as palavras abertas + reconhecer pelo som */
+.a1-ov{overflow:auto;place-items:start center}
+.a1-ov>*{margin:auto}
+.a1-todas{display:grid;gap:.6em;width:min(100%,54em)}
+.a1-grade{display:grid;grid-template-columns:repeat(auto-fill,minmax(8.4em,1fr));gap:.5em}
+.wc{position:relative;display:grid;justify-items:center;align-content:center;gap:.05em;padding:.55em .4em .5em;border:2px solid #3a2b38;border-radius:14px;background:#fff;
+  box-shadow:0 4px 0 #3a2b38;font:inherit;color:#3a2b38;cursor:pointer;text-align:center;transition:transform .12s}
+.wc:hover{transform:translateY(-2px)}
+.wc-ic{font-size:1.9em;line-height:1}.wc-ic svg{width:1.2em;height:1.2em}
+.wc b{font-size:1.3em;line-height:1.25}.wc b ruby rt{font-size:.45em}
+.wc small{font-size:.82em;font-weight:700;line-height:1.15}
+.wc .ro-sempre{font-size:.82em}
+.wc.ouvida{border-color:#4f7a58;box-shadow:0 4px 0 #4f7a58;background:#f6faf6}
+.wc-ok{position:absolute;right:.35em;top:.25em;font-style:normal;font-size:.8em;font-weight:800;color:#4f7a58}
+.wc.img{min-height:6.2em}
+.wc.img.ouvida{cursor:default}
+.wc.acerto{animation:propEntra .5s cubic-bezier(.3,1.6,.5,1)}
+.wc.erro{border-color:#c23f5e;box-shadow:0 4px 0 #c23f5e;animation:balanca .45s ease}
+.a1-falta{font-size:.9em;color:var(--muted);font-weight:700;background:#fff;border-radius:999px;padding:.35em .9em;border:1.5px dashed var(--line)}
+.rec-ctl{display:flex;gap:.5em;align-items:center;flex-wrap:wrap;background:#fff;border-radius:14px;padding:.45em .7em;border:1.5px solid var(--line)}
+.rec-msg{flex:1;min-width:10em;font-size:.9em}
+.a1-extra{display:flex;gap:6px;align-items:center;flex-wrap:wrap;margin-top:8px;font-size:13px;color:var(--muted)}
+.f1-b.trava{opacity:.55}
+.f1-b.go{border-style:solid;border-color:#c23f5e;background:#c23f5e;color:#fff}
+.ato-btn.trava{opacity:.55}
+@media (max-width:640px){.a1-grade{grid-template-columns:repeat(3,1fr)}.wc b{font-size:1.1em}}
