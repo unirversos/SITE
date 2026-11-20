@@ -351,6 +351,7 @@ function ensureStageChrome(){
   let pp=$('progPill'); if(!pp){ pp=document.createElement('div'); pp.className='prog-pill'; pp.id='progPill'; sw.appendChild(pp); }
   let pl=$('plLayer'); if(!pl){ pl=document.createElement('div'); pl.className='pl-layer'; pl.id='plLayer'; sw.appendChild(pl); }
   let ly=$('hsLayer'); if(!ly){ ly=document.createElement('div'); ly.className='hs-layer'; ly.id='hsLayer'; sw.appendChild(ly); }
+  if(!$('falaCena')){ const f=document.createElement('div'); f.className='fala-cena'; f.id='falaCena'; f.hidden=true; sw.appendChild(f); }
   return {sw,bg,tag,pp,ly};
 }
 function renderStage(){
@@ -372,7 +373,7 @@ function renderStage(){
   const stg=$('stage');
   stg.setAttribute('viewBox','0 0 400 225');
   stg.dataset.sat=sat;
-  if(ato===0){
+  if(ato===0&&f1Atual()<2){
     stg.innerHTML='';
   } else {
     const stamp=o.stamp?`<g class="thump"><circle cx="200" cy="64" r="20" fill="#fffd" stroke="#c94a4a" stroke-width="3"/><text x="200" y="70" text-anchor="middle" font-family="Baloo 2, sans-serif" font-size="14" font-weight="800" fill="#c94a4a">OK</text></g>`:'';
@@ -400,13 +401,14 @@ function setStage(o){ stageOpt=o||{}; renderStage(); }
 
 function renderHotspots(ly){
   const list=(A&&A.cen&&A.cen.hotspots)||[];
-  if(!list.length || ato!==0){ ly.innerHTML=''; return; }
+  if(!list.length || ato!==0 || f1Atual()>=2){ ly.innerHTML=''; return; }
   ly.innerHTML=list.map((h,i)=>`<button type="button" class="hs-dot${P.hotspots&&P.hotspots[i]?' visto':''}" style="left:${h.x}%;top:${h.y}%" data-hs="${i}" title="${h.pt}" aria-label="${h.pt}"><span>♪</span></button>`).join('');
   ly.onclick=e=>{ const b=e.target.closest('.hs-dot'); if(!b) return; e.stopPropagation(); openHotspot(+b.dataset.hs); };
 }
 
 function openHotspot(idx){
   const list=(A&&A.cen&&A.cen.hotspots)||[], h=list[idx]; if(!h) return;
+  if(f1Atual()===1&&esc&&esc.alvo!=null) return respondeEscuta(idx);
   P.hotspots=P.hotspots||{};
   const novo=!P.hotspots[idx];
   P.hotspots[idx]=1;
@@ -417,9 +419,9 @@ function openHotspot(idx){
     persist();
   }
   const vistos=list.filter((_,k)=>P.hotspots&&P.hotspots[k]).length;
-  if(vistos>=list.length && !P.steps[1]){
-    P.steps[1]=1; persist(); sparkle(['💧','✨','🎵']);
-  }
+  if(vistos>=list.length && novo){ sparkle(['💧','✨','🎵']); f1Ver=0;
+    const fb=$('f1Body'); if(fb&&!$('f1Prox')){ fb.insertAdjacentHTML('beforeend','<div class="row"><span class="spacer"></span><button type="button" class="btn primary" id="f1Prox">👂 Agora: ouça e ache na cena →</button></div>'); $('f1Prox').onclick=()=>{ f1Ver=1; renderF1(); }; }
+    if($('f1Nav')) renderF1Nav(); }
   speak(h.say);
   renderSteps();
   renderStage();
@@ -438,11 +440,6 @@ function openHotspot(idx){
   if(cnt) cnt.innerHTML=list.map((_,i)=>`<i class="${P.hotspots&&P.hotspots[i]?'on':''}"></i>`).join('')+`<span>${vistos}/${list.length}</span>`;
   const chips=$('hsChips');
   if(chips){ const ch=chips.querySelector(`[data-hs="${idx}"]`); if(ch) ch.classList.add('visto'); }
-  const btn=$('btnIrAto2');
-  if(btn && vistos>=list.length){
-    btn.classList.add('primary');
-    btn.textContent='💧 Cena explorada! Avançar para o Ato 2: Agir no diálogo →';
-  }
 }
 
 function sparkle(list){
@@ -472,44 +469,132 @@ function goAto(n){
   preBaixaAudios();
   ato=Math.max(0,Math.min(2,n));
   mood='idle';
-  document.body.dataset.ato=ATOS[ato].key;
+  document.body.dataset.ato=ATOS[ato].key; if(ato!==0) fala(null);
   renderSteps();
   [stAto1,stAto2,stAto3][ato]();
 }
 
-/* ---------- ATO 1 · 💧 ÁGUA · Explorar Hotspots na cena ---------- */
+/* ---------- ATO 1 · 💧 ÁGUA · na cena: explorar → ouça e ache → monte a frase ---------- */
+const F1=[{ico:'👀',nome:'Explorar'},{ico:'👂',nome:'Ouça e ache'},{ico:'🧩',nome:'Monte a frase'}];
+let f1Ver=null, esc=null, mi=0, msel=null;
+function a1(){ P.a1=P.a1||{esc:0,mol:{}}; P.a1.mol=P.a1.mol||{}; return P.a1; }
+const hsLista=()=>(A&&A.cen&&A.cen.hotspots)||[];
+const hsComPalavra=()=>hsLista().map((h,i)=>({h,i,w:(A.words||[]).find(x=>x.id===h.wordId)})).filter(o=>o.w);
+const explorou=()=>hsLista().every((_,k)=>P.hotspots&&P.hotspots[k]);
+const molDone=k=>Object.keys((a1().mol[k])||{}).length>=Math.min(2,combos(A.moldes[k]));
+const moldesOk=()=>!(A.moldes||[]).length||(A.moldes||[]).every((_,k)=>molDone(k));
+function combos(m){ return (m.slots||[]).reduce((n,o)=>n*o.length,1); }
+function f1Auto(){ if(!explorou()) return 0; if(!a1().esc&&hsComPalavra().length>=2) return 1; if(!moldesOk()) return 2; return 2; }
+function f1Atual(){ return f1Ver!=null?f1Ver:f1Auto(); }
+function fecharAto1(){ if(P.steps[1]) return; P.steps[1]=1; persist(); gainXP(10); sparkle(['💧','✨','🌸','⭐']); renderSteps(); renderStage(); }
+function mostraPalco(){ const sw=document.querySelector('.stage-wrap'); if(!sw) return; const r=sw.getBoundingClientRect(); if(r.top<0||r.top>innerHeight*.5) try{ sw.scrollIntoView({block:'start',behavior:'smooth'}); }catch(e){} }
+function fala(html){ const f=$('falaCena'); if(!f) return; if(!html){ f.hidden=true; return; } f.hidden=false; f.innerHTML=html; }
+
 function stAto1(){
-  setStage({enter:true});
-  const hs=(A.cen&&A.cen.hotspots)||[];
-  const vistos=hs.filter((_,k)=>P.hotspots&&P.hotspots[k]).length;
-  const tudo=hs.length===0 || vistos>=hs.length;
-  if(tudo && !P.steps[1]){ P.steps[1]=1; persist(); renderSteps(); }
+  f1Ver=null; esc=null; setStage({enter:true});
   $('panel').innerHTML=`
-    <span class="elem agua"><i></i>Ato 1 de 3 · 💧 Água · Explorar a Cena</span>
+    <span class="elem agua"><i></i>Ato 1 de 3 · 💧 Água · Na cena</span>
     <h2>${A.intro.titulo}</h2>
     ${A.fio?`<div class="fio-box">${A.fio.anterior?`<p class="fio-ant">🗺️ ${A.fio.anterior}</p>`:''}${A.fio.gancho?`<p class="fio-gancho"><b>Missão:</b> ${A.fio.gancho}</p>`:''}</div>`:''}
-    ${A.intro.txt.map(t=>`<p class="lead">${t}</p>`).join('')}
-    ${hs.length?`
-      <div class="hs-box">
-        <div class="hs-head"><b>Toque nos círculos brilhantes ♪ na ilustração acima para ouvir</b><div class="contagem" id="hsContagem">${hs.map((_,i)=>`<i class="${P.hotspots&&P.hotspots[i]?'on':''}"></i>`).join('')}<span>${vistos}/${hs.length}</span></div></div>
-        <div class="hs-chips" id="hsChips">${hs.map((h,i)=>`<button type="button" class="hs-chip${P.hotspots&&P.hotspots[i]?' visto':''}" data-hs="${i}">♪ ${h.pt}</button>`).join('')}</div>
-      </div>
-      <div id="hsPilula" hidden></div>
-    `:''}
+    <nav class="f1-nav" id="f1Nav" aria-label="Momentos do Ato 1"></nav>
+    <div id="f1Body"></div>
     <details class="guia-rapido">
-      <summary>📖 Glossário e moldes rápidos deste mapa (${A.words.length} palavras · ${A.moldes.length} moldes)</summary>
+      <summary>📖 Todas as palavras e moldes deste mapa (${A.words.length} palavras · ${A.moldes.length} moldes)</summary>
       <div class="gr-body">
         <div class="gr-words">${A.words.map((w,i)=>`<button type="button" class="gr-w" data-wi="${i}"><span class="gr-wic">${iconHTML(w.ic)}</span><span><b lang="ja">${wordH(w)}</b> <span class="ro">${w.r}</span><small>${w.pt}</small></span></button>`).join('')}</div>
         <div class="gr-moldes">${A.moldes.map(m=>`<div class="gr-m"><b>${m.titulo}</b><div class="gr-tpl">${m.tpl} <span class="ro">· ${m.tplRo}</span></div><small>${m.gram}</small></div>`).join('')}</div>
       </div>
     </details>
-    <div class="row">
-      <span class="spacer"></span>
-      <button type="button" class="btn ${tudo?'primary':''}" id="btnIrAto2">${tudo?'Avançar para o Ato 2: Agir no diálogo →':'Ir para o Ato 2: Agir no diálogo →'}</button>
-    </div>`;
-  if($('hsChips')) $('hsChips').onclick=e=>{ const b=e.target.closest('.hs-chip'); if(b) openHotspot(+b.dataset.hs); };
+    <div class="row"><span class="spacer"></span><button type="button" class="btn" id="btnIrAto2">Ir para o Ato 2: Agir no diálogo →</button></div>`;
   $('panel').querySelectorAll('.gr-w').forEach(b=>b.onclick=()=>speak(A.words[+b.dataset.wi].k));
-  $('btnIrAto2').onclick=()=>{ P.steps[1]=1; persist(); goAto(1); };
+  $('btnIrAto2').onclick=()=>{ fala(null); goAto(1); };
+  $('f1Nav').onclick=e=>{ const b=e.target.closest('[data-f]'); if(!b) return; f1Ver=+b.dataset.f; esc=null; renderF1(); };
+  renderF1();
+}
+function renderF1(){
+  const f=f1Atual(), feito=[explorou(),!!a1().esc||hsComPalavra().length<2,moldesOk()];
+  $('f1Nav').innerHTML=F1.map((x,k)=>`<button type="button" class="f1-b${k===f?' now':''}${feito[k]?' ok':''}" data-f="${k}"><span>${feito[k]?'✓':x.ico}</span>${x.nome}</button>`).join('');
+  const b=$('btnIrAto2'); if(b){ const pronto=feito.every(Boolean); b.classList.toggle('primary',pronto); b.textContent=pronto?'💧 Ato 1 completo! Ir para o Ato 2: Agir no diálogo →':'Ir para o Ato 2: Agir no diálogo →'; }
+  if(feito.every(Boolean)) fecharAto1();
+  renderStage();
+  if(f===0) return f1Explorar();
+  if(f===1) return f1Escuta();
+  return f1Moldes();
+}
+function f1Explorar(){
+  fala(null);
+  const hs=hsLista(), vistos=hs.filter((_,k)=>P.hotspots&&P.hotspots[k]).length;
+  $('f1Body').innerHTML=`${A.intro.txt.map(t=>`<p class="lead">${t}</p>`).join('')}
+    ${hs.length?`<div class="hs-box">
+      <div class="hs-head"><b>👀 Toque nos círculos ♪ da cena para ouvir o que é cada coisa</b><div class="contagem" id="hsContagem">${hs.map((_,i)=>`<i class="${P.hotspots&&P.hotspots[i]?'on':''}"></i>`).join('')}<span>${vistos}/${hs.length}</span></div></div>
+      <div class="hs-chips" id="hsChips">${hs.map((h,i)=>`<button type="button" class="hs-chip${P.hotspots&&P.hotspots[i]?' visto':''}" data-hs="${i}">♪ ${h.pt}</button>`).join('')}</div>
+    </div><div id="hsPilula" hidden></div>`:''}
+    ${explorou()?`<div class="row"><span class="spacer"></span><button type="button" class="btn primary" id="f1Prox">👂 Agora: ouça e ache na cena →</button></div>`:''}`;
+  if($('hsChips')) $('hsChips').onclick=e=>{ const b=e.target.closest('.hs-chip'); if(b) openHotspot(+b.dataset.hs); };
+  if($('f1Prox')) $('f1Prox').onclick=()=>{ f1Ver=1; renderF1(); };
+}
+/* 👂 ouça e ache: o personagem pergunta onde está; a pessoa toca no objeto certo da cena */
+function f1Escuta(){
+  const L=hsComPalavra();
+  if(L.length<2){ f1Ver=2; return renderF1(); }
+  if(!esc||esc.fim) esc={fila:shuffle(L.map(o=>o.i)),acertos:0,erros:0,alvo:null,fim:false};
+  if(esc.alvo==null) esc.alvo=esc.fila.shift();
+  const o=L.find(x=>x.i===esc.alvo), w=o.w, h=o.h;
+  /* objeto: "〜は どこですか？"; frase (cumprimento, pedido…): o personagem diz a frase e a pessoa toca onde ela acontece */
+  const q=h.onde?`${w.k}は どこですか？`:h.say, qro=h.onde?`${w.r} wa doko desu ka?`:String(h.say).split(/\s+/).map(roWord).join(' ');
+  fala(`<span class="fc-who">${A.npc.nome}</span><b lang="ja">${q}</b><span class="ro">${qro}</span><button type="button" class="fc-say" id="fcSay" aria-label="Ouvir de novo">🔊</button>`);
+  $('falaCena').querySelector('#fcSay').onclick=e=>{ e.stopPropagation(); speak(q); };
+  $('f1Body').innerHTML=`<div class="hs-box esc">
+      <div class="hs-head"><b>👂 Ouça e toque, na cena, no lugar certo</b><div class="contagem">${L.map((_,k)=>`<i class="${k<esc.acertos?'on':''}"></i>`).join('')}<span>${esc.acertos}/${L.length}</span></div></div>
+      <p class="pt" style="margin:0">Sem português aqui: só o ouvido. O que a pessoa disse está no balão da cena.</p>
+      <div class="row"><button type="button" class="btn" id="escOuvir">🔊 Ouvir de novo</button></div>
+      <p class="hint" id="escHint"></p></div>`;
+  $('escOuvir').onclick=()=>speak(q);
+  mostraPalco(); speak(q);
+}
+function respondeEscuta(idx){
+  const L=hsComPalavra(), h=hsLista()[idx];
+  if(idx===esc.alvo){
+    esc.acertos++; speak(h.say); mood='ok'; sparkle(['👂','✨','💧']);
+    if(esc.fila.length){ esc.alvo=null; setTimeout(()=>{ mood='idle'; f1Escuta(); },1100); }
+    else { esc.fim=true; esc.alvo=null; a1().esc=1; persist(); gainXP(10); fala(`<b>せいかい！</b> <span>Você achou tudo só de ouvir.</span>`);
+      $('f1Body').innerHTML=`<div class="hs-box esc ok"><div class="hs-head"><b>👂 Ouvido afiado! ${L.length}/${L.length}</b></div></div><div class="row"><span class="spacer"></span><button type="button" class="btn primary" id="f1Prox">🧩 Agora: monte a frase →</button></div>`;
+      $('f1Prox').onclick=()=>{ f1Ver=2; renderF1(); }; renderF1Nav(); }
+  } else {
+    esc.erros++; const w=(A.words||[]).find(x=>x.id===h.wordId);
+    speak(h.say);
+    const eh=$('escHint'); if(eh) eh.innerHTML=`Isso aí é <b lang="ja">${w?w.k:h.say}</b>${w?` <span class="ro">(${w.r})</span>`:''}. Ouça de novo e procure outra coisa.`;
+  }
+}
+function renderF1Nav(){ const f=f1Atual(), feito=[explorou(),!!a1().esc||hsComPalavra().length<2,moldesOk()];
+  $('f1Nav').innerHTML=F1.map((x,k)=>`<button type="button" class="f1-b${k===f?' now':''}${feito[k]?' ok':''}" data-f="${k}"><span>${feito[k]?'✓':x.ico}</span>${x.nome}</button>`).join(''); }
+/* 🧩 monte a frase: troca as peças do molde e ouve; a frase aparece no balão da cena */
+function moldePartes(m,sel){ return m.parts.map(p=>typeof p==='number'?Object.assign({slot:true},sel[p]):tok(p)); }
+function moldeTexto(m,sel,key){ const t=m[key]; if(typeof t==='function') return t(sel); if(t) return t.replace(/\{(\d)\}/g,(_,d)=>sel[+d][key]); return sel[0][key]; }
+function f1Moldes(){
+  const MS=A.moldes||[]; if(!MS.length){ $('f1Body').innerHTML='<p class="pt">Este mapa não tem moldes.</p>'; return; }
+  mi=Math.min(mi,MS.length-1); const m=MS[mi];
+  if(!msel||msel.mi!==mi) msel={mi,sel:m.slots.map(o=>o[0])};
+  const sel=msel.sel, partes=moldePartes(m,sel), jp=partes.map(p=>p.h||p.k).join(' '), say=partes.map(p=>p.k).join(' '), ro=partes.map(p=>p.r).join(' ');
+  const pt=moldeTexto(m,sel,'pt'), ouvidas=Object.keys(a1().mol[mi]||{}).length, precisa=Math.min(2,combos(m));
+  fala(`<span class="fc-who">${meName}</span><b lang="ja">${jp}</b><span class="ro">${ro}</span><span class="fc-pt">${pt}</span>`);
+  $('f1Body').innerHTML=`<div class="mol-tabs">${MS.map((x,k)=>`<button type="button" class="mol-t${k===mi?' now':''}${molDone(k)?' ok':''}" data-m="${k}">${molDone(k)?'✓':k+1}</button>`).join('')}</div>
+    <div class="mol-card">
+      <div class="mol-h"><b>🧩 ${m.titulo}</b><span class="mol-n">${Math.min(ouvidas,precisa)}/${precisa} versões</span></div>
+      <div class="mol-tpl" lang="ja">${m.tpl} <span class="ro">· ${m.tplRo}</span></div>
+      ${m.slots.map((ops,si)=>`<div class="mol-ops">${ops.map((o,oi)=>`<button type="button" class="mol-op${sel[si]===o?' now':''}" data-s="${si}" data-o="${oi}"><b lang="ja">${o.h||o.k}</b><small>${o.r}</small></button>`).join('')}</div>`).join('')}
+      <p class="pt" style="margin:0">💡 ${m.gram}${m.use?` <span class="mol-use">· ${m.use}</span>`:''}</p>
+      <p class="pt" style="margin:0">Troque as peças e ouça: cada frase nova aparece no balão da cena. Ouça <b>${precisa} versões</b> para fechar este molde.</p>
+      <div class="row"><button type="button" class="btn primary" id="molOuvir">🔊 Ouvir a frase</button><span class="spacer"></span>${mi<MS.length-1&&molDone(mi)?'<button type="button" class="btn" id="molProx">Próximo molde →</button>':''}</div>
+    </div>`;
+  const ouvir=()=>{ speak(say); const k=sel.map(o=>o.k).join('|'); const r=a1().mol; r[mi]=r[mi]||{}; const novo=!r[mi][k]; r[mi][k]=1; persist();
+    if(novo&&molDone(mi)&&Object.keys(r[mi]).length===precisa){ sparkle(['🧩','✨','🌸']); gainXP(5); }
+    mood='ok'; renderStage(); setTimeout(()=>{ mood='idle'; },900);
+    f1Moldes(); renderF1Nav(); if(moldesOk()&&explorou()&&(a1().esc||hsComPalavra().length<2)) { renderF1Nav(); fecharAto1(); const b=$('btnIrAto2'); if(b){ b.classList.add('primary'); b.textContent='💧 Ato 1 completo! Ir para o Ato 2: Agir no diálogo →'; } } };
+  $('molOuvir').onclick=ouvir;
+  $('f1Body').querySelectorAll('.mol-op').forEach(b=>b.onclick=()=>{ sel[+b.dataset.s]=m.slots[+b.dataset.s][+b.dataset.o]; ouvir(); });
+  $('f1Body').querySelectorAll('.mol-t').forEach(b=>b.onclick=()=>{ mi=+b.dataset.m; f1Moldes(); });
+  if($('molProx')) $('molProx').onclick=()=>{ mi++; f1Moldes(); };
 }
 
 /* ---------- ATO 2 · 🔥 FOGO · Agir no diálogo ---------- */

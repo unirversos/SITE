@@ -333,3 +333,36 @@ body[data-ato="terra"] .panel{--el:var(--terra)}
   font-family:"Zen Maru Gothic",sans-serif;font-weight:700;color:#3a2b38;font-size:calc(var(--fs) * 1cqw);line-height:1.15;
   white-space:nowrap;letter-spacing:.02em;transition:filter .65s ease}
 .pl-layer[data-sat="0"] .placa-txt{filter:saturate(.26)}
+
+/* Ato 1 em três momentos: explorar → ouça e ache → monte a frase */
+.f1-nav{display:flex;gap:6px;flex-wrap:wrap;margin:6px 0 2px}
+.f1-b{display:inline-flex;align-items:center;gap:6px;border:1.5px dashed var(--line);background:#fff;border-radius:999px;padding:6px 12px;font:inherit;font-size:13.5px;font-weight:700;color:var(--muted);cursor:pointer}
+.f1-b span{font-size:15px}
+.f1-b.now{border-style:solid;border-color:#3f7fb0;color:#2b5f87;background:#f4f9fd}
+.f1-b.ok{border-style:solid;border-color:#cfe0d3;color:#3e6347;background:#f2f7f3}
+.f1-b.ok.now{border-color:#3f7fb0}
+.fala-cena{position:absolute;left:50%;top:12%;transform:translateX(-50%);z-index:7;max-width:78%;
+  background:#fff;border:2px solid #3a2b38;border-radius:18px;padding:8px 16px 9px;box-shadow:0 8px 22px rgba(58,43,56,.22);
+  display:grid;justify-items:center;gap:1px;text-align:center;animation:falaEntra .35s ease}
+.fala-cena::after{content:"";position:absolute;left:50%;bottom:-10px;width:16px;height:16px;background:#fff;border-right:2px solid #3a2b38;border-bottom:2px solid #3a2b38;transform:translateX(-50%) rotate(45deg)}
+.fala-cena b{font-size:clamp(16px,2.6cqw,26px);line-height:1.3}
+.fala-cena .fc-who{font-size:11px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
+.fala-cena .fc-pt{font-size:12.5px;color:var(--muted)}
+.fala-cena .fc-say{position:absolute;right:-12px;top:-12px;width:34px;height:34px;border-radius:50%;border:2px solid #3a2b38;background:#fff;cursor:pointer;font-size:15px}
+.fala-cena ruby rt{font-size:.5em}
+@keyframes falaEntra{from{opacity:0;transform:translate(-50%,6px)}to{opacity:1;transform:translate(-50%,0)}}
+.hs-box.esc.ok{background:#f2f7f3;border-color:#cfe0d3}
+.mol-tabs{display:flex;gap:6px;margin:4px 0}
+.mol-t{width:34px;height:34px;border-radius:50%;border:1.5px solid var(--line);background:#fff;font:inherit;font-weight:800;cursor:pointer;color:var(--muted)}
+.mol-t.now{border-color:var(--pink);color:var(--pink)}
+.mol-t.ok{background:#e8efe8;border-color:#cfe0d3;color:#3e6347}
+.mol-card{background:#fff;border:1.5px solid var(--line);border-left:5px solid #c2751f;border-radius:16px;padding:12px 14px;display:grid;gap:10px}
+.mol-h{display:flex;justify-content:space-between;gap:10px;align-items:baseline;flex-wrap:wrap}
+.mol-n{font-size:12.5px;font-weight:700;color:#c2751f}
+.mol-tpl{font-size:18px}
+.mol-ops{display:flex;gap:8px;flex-wrap:wrap}
+.mol-op{display:grid;justify-items:center;border:1.5px solid var(--line);background:#fffaf3;border-radius:12px;padding:6px 12px;font:inherit;cursor:pointer;min-width:64px}
+.mol-op b{font-size:17px}.mol-op small{font-size:11.5px;color:var(--muted)}
+.mol-op.now{border-color:#c2751f;background:#fff1de;box-shadow:0 0 0 2px #f6dcb9}
+.mol-use{color:var(--muted)}
+body.no-ro .fala-cena .ro{display:none}
