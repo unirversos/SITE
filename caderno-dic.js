@@ -123,9 +123,21 @@
         card.querySelector('.sv').onclick = function () { var b = this; op.salvar(linhaSalvar(x, x.pt)); b.textContent = '✓ Salvo'; b.classList.add('ok'); setTimeout(function () { b.textContent = '+ Salvar no caderno'; b.classList.remove('ok'); }, 1800); };
       });
     }
+    /* teclado japonês (IME): enquanto a palavra está sendo convertida, o texto ainda não "entrou" no campo.
+       Esperamos a conversão terminar e buscamos sozinhos logo depois (sem precisar de Tab nem de clicar). */
+    var compondo = false, auto = null, ultima = '';
+    q.addEventListener('compositionstart', function () { compondo = true; clearTimeout(auto); });
+    q.addEventListener('compositionend', function () { compondo = false; clearTimeout(auto); auto = setTimeout(function () { if (q.value.trim() && q.value.trim() !== ultima) buscar(); }, 700); });
+    q.addEventListener('keydown', function (e) { if (e.key === 'Enter' && (e.isComposing || e.keyCode === 229)) { e.preventDefault(); } });
     f.onsubmit = function (e) {
       e.preventDefault();
+      if (compondo) return;
+      clearTimeout(auto);
+      setTimeout(buscar, 0);   /* lê o campo depois que a conversão do teclado japonês foi aplicada */
+    };
+    function buscar() {
       var t = q.value.trim(); if (!t) return;
+      ultima = t;
       var n = ++seq; msg('Buscando…');
       var extra = null;
       var tarefas = [busca(t).catch(function (e) { return e; })];
@@ -139,7 +151,7 @@
         if (!rs.length) { msg('Nada encontrado para "' + esc(t) + '". ' + links(t)); return; }
         pinta(rs.slice(0, 10), 'Significados em inglês pelo ' + (a && a.fonte || 'Jotoba') + (extra ? ' · também busquei por "' + esc(extra) + '"' : '') + '. O português é tradução automática: confira antes de estudar.');
       });
-    };
+    }
     return { foca: function () { setTimeout(function () { q.focus(); }, 50); } };
   }
   window.UniDic = { montar: montar };
