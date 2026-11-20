@@ -11,6 +11,7 @@ const esc = s => String(s == null ? '' : s).replace(/[&<>"']/g, c => ({ '&':'&am
 const ST = { pendente: 'A praticar', feito: 'Feito', corrigir: 'Corrigir', dominado: 'Dominado ✓' };
 const DIA = n => n + '日目', SEM = n => '第' + n + '週';
 const itens = A.itens.map((r, n) => ({ n, s: r[0], d: r[1], e: r[2], nu: r[3], x: r[4], tr: r[5] }));
+let oculta = (() => { try { return localStorage.getItem('uniAtivOculta') === '1'; } catch (e) { return false; } })(), abertosEx = new Set();
 let R = {}, alvo = '', souProf = false, nuvem = true, filtro = { sem: 0, st: '', q: '' }, abertosPt = new Set();
 
 $('tit').textContent = A.titulo; $('sub').textContent = A.sub;
@@ -59,9 +60,11 @@ $('sems').onclick = e => { const b = e.target.closest('[data-sem]'); if (!b) ret
 
 /* ---------- filtros ---------- */
 function pintaChips(){
+  $('oc').textContent = oculta ? '👁 Mostrar explicações' : '🙈 Ocultar explicações'; $('oc').setAttribute('aria-pressed', oculta);
   $('chips').innerHTML = [['', 'Todas'], ['pendente', 'A praticar'], ['feito', 'Feito'], ['corrigir', 'Corrigir'], ['dominado', 'Dominadas']]
     .map(([k, t]) => `<button type="button" class="chip${filtro.st === k ? ' on' : ''}" data-st="${k}">${t}</button>`).join(' ');
 }
+$('oc').onclick = () => { oculta = !oculta; abertosEx.clear(); try { localStorage.setItem('uniAtivOculta', oculta ? '1' : '0'); } catch (e) {} pintaChips(); pintaCards(); };
 $('chips').onclick = e => { const b = e.target.closest('[data-st]'); if (!b) return; filtro.st = b.dataset.st; pintaChips(); pintaCards(); };
 $('q').oninput = () => { filtro.q = $('q').value.trim().toLowerCase(); pintaCards(); };
 const visiveis = () => itens.filter(i => (!filtro.sem || i.s === filtro.sem) && (!filtro.st || stDe(i.n) === filtro.st)
@@ -79,8 +82,8 @@ function card(i){
   return `<article class="card s-${st}" data-n="${i.n}">
     <div class="top"><span>${SEM(i.s)} · ${DIA(i.d)}</span><span class="pill p-${st}">${ST[st]}</span></div>
     <h3><span lang="ja">${esc(est)}</span> ${ro ? `<small>${esc(ro)}</small>` : ''}</h3>
-    <p class="nu">${esc(i.nu)}</p>
-    <div class="ex"><button type="button" class="som" data-som="${i.n}" aria-label="Ouvir o exemplo">🔊</button><p><span class="jp" lang="ja">${esc(i.x)}</span><br>${pt ? `<span class="pt">${esc(i.tr)}</span>` : `<button type="button" class="verpt" data-pt="${i.n}">ver tradução</button>`}</p></div>
+    ${oculta && !abertosEx.has(i.n) ? `<button type="button" class="verex" data-ex="${i.n}">👁 ver explicação</button>` : `<p class="nu">${esc(i.nu)}</p>
+    <div class="ex"><button type="button" class="som" data-som="${i.n}" aria-label="Ouvir o exemplo">🔊</button><p><span class="jp" lang="ja">${esc(i.x)}</span><br>${pt ? `<span class="pt">${esc(i.tr)}</span>` : `<button type="button" class="verpt" data-pt="${i.n}">ver tradução</button>`}</p></div>`}
     <label class="l" for="f${i.n}">MINHA FRASE</label>
     <textarea id="f${i.n}" data-f="${i.n}" rows="2" lang="ja" placeholder="Escreva uma frase sua com essa estrutura" ${souProf ? 'readonly' : ''}>${esc(r.f)}</textarea>
     ${corr}
@@ -103,6 +106,7 @@ $('cards').addEventListener('change', e => {
   const c = t.closest('.card'); c.className = 'card s-' + t.value; c.querySelector('.pill').className = 'pill p-' + t.value; c.querySelector('.pill').textContent = ST[t.value];
 });
 $('cards').addEventListener('click', e => {
+  const x = e.target.closest('[data-ex]'); if (x) { abertosEx.add(Number(x.dataset.ex)); const c = x.closest('.card'); c.outerHTML = card(itens[Number(x.dataset.ex)]); return; }
   const p = e.target.closest('[data-pt]'); if (p) { abertosPt.add(Number(p.dataset.pt)); p.outerHTML = `<span class="pt">${esc(itens[Number(p.dataset.pt)].tr)}</span>`; return; }
   const s = e.target.closest('[data-som]'); if (s) fala(itens[Number(s.dataset.som)].x);
 });
