@@ -114,7 +114,26 @@ a:focus-visible,button:focus-visible,input:focus-visible,select:focus-visible,te
 <link rel="icon" href="/favicon.svg" type="image/svg+xml"><link rel="icon" href="/favicon.ico" sizes="48x48"><link rel="apple-touch-icon" href="/apple-touch-icon.png">
 <script type="module" src="/idiomas/dados/conta.js?v=6"></script>
 <script>setTimeout(function(){var h=document.documentElement;if(!h.classList.contains('uni-ok')&&!document.getElementById('uni-gate'))h.classList.add('uni-ok')},10000)</script>
-<script defer src="/voltar-global.js?v=5"></script><style id="uni-logo">.logo,.brand,.sitebar .brand{font-family:"Baloo 2","Zen Maru Gothic",system-ui,sans-serif!important;font-weight:800!important;font-size:19px!important;letter-spacing:.14em!important;text-transform:none!important;text-decoration:none!important}.logo span,.brand span{color:#c23f5e!important;font:inherit!important;letter-spacing:inherit!important;margin:0!important}</style></head>
+<script defer src="/voltar-global.js?v=5"></script><style id="uni-logo">.logo,.brand,.sitebar .brand{font-family:"Baloo 2","Zen Maru Gothic",system-ui,sans-serif!important;font-weight:800!important;font-size:19px!important;letter-spacing:.14em!important;text-transform:none!important;text-decoration:none!important}.logo span,.brand span{color:#c23f5e!important;font:inherit!important;letter-spacing:inherit!important;margin:0!important}</style><style>
+:root{--c-pink:#c23f5e;--c-sage:#7fa487;--c-gold:#c9a24b;--c-lav:#9a8cc4}
+.mats .mat-i{display:flex;gap:10px;align-items:center}
+.mat-c{flex:1;display:flex;flex-direction:column;gap:2px;min-width:0}.mat-c .pg{align-self:flex-start}
+.mat-n{font-size:13.5px;color:#705f6c}
+.mi{width:38px;height:38px;flex:none;border-radius:50%;display:grid;place-items:center;background:#fff;border:1.5px solid #ecdadd;color:var(--c)}.mi svg{width:19px;height:19px;fill:none;stroke:currentColor;stroke-width:1.7;stroke-linecap:round;stroke-linejoin:round}
+.pg{font-size:11px;font-weight:700;color:#a0712a;background:#fbf1de;border-radius:999px;padding:1px 8px}
+.fiz{font:inherit;font-size:13px;font-weight:700;flex:none;border:1.5px solid #ecdadd;background:#fff;color:#3a2b38;border-radius:999px;padding:6px 14px;min-height:38px;cursor:pointer}.fiz.on{background:#e8efe8;border-color:#e8efe8;color:#3f5c46}
+.manda{display:flex;flex-direction:column;gap:8px;border-top:1px dashed #ecdadd;padding-top:12px}
+#f-link input{flex:1;min-width:180px;font:inherit;font-size:15px;padding:9px 12px;border:1.5px solid #ecdadd;border-radius:12px;background:#fdf6f4}
+.plan-cx{gap:10px;scroll-margin-top:12px}
+.plan-bar{display:flex;flex-wrap:wrap;gap:8px;align-items:center}.plan-bar .esp{flex:1}
+.mini-b{font:inherit;font-size:13px;font-weight:700;color:#3a2b38;background:#fff;border:1.5px solid #ecdadd;border-radius:999px;padding:6px 14px;min-height:38px;cursor:pointer;text-decoration:none;display:inline-flex;align-items:center}
+.plan-if{width:100%;height:70vh;min-height:420px;border:1.5px solid #ecdadd;border-radius:14px;background:#fff}
+.plan-cx.cheia{position:fixed;inset:0;z-index:40;border-radius:0;margin:0;padding:12px 70px 12px 12px}
+.plan-cx.cheia .plan-if{height:calc(100vh - 110px)}
+@media(max-width:700px){.plan-cx.cheia{padding-right:12px}}
+.teste-faixa{background:#fbf1de;color:#7a5418;font-size:13px;text-align:center;padding:6px 12px}
+</style>
+</head>
 <body>
 <div class="wrap" style="display:flex;flex-direction:column;gap:20px">
   <nav class="nav">
@@ -165,16 +184,6 @@ a:focus-visible,button:focus-visible,input:focus-visible,select:focus-visible,te
     </section>
   </div>
 
-  <div class="sec-t"><h2 data-i="atalhos">Atalhos</h2></div>
-  <div class="atalhos">
-    <a class="at" href="/idiomas/hiragana/"><span class="gl" lang="ja" aria-hidden="true">あ</span><b>Hiragana</b></a>
-    <a class="at" href="/idiomas/katakana/"><span class="gl" lang="ja" aria-hidden="true">ア</span><b>Katakana</b></a>
-    <a class="at" href="/idiomas/kanji/"><span class="gl" lang="ja" aria-hidden="true">漢</span><b>Kanji</b></a>
-    <a class="at" href="/idiomas/calendario/"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><rect x="4" y="5.5" width="16" height="14.5" rx="2.5"/><path d="M4 10h16M8.5 3.5v4M15.5 3.5v4"/></svg><b data-i="calendario">Calendário</b></a>
-    <a class="at" href="/idiomas/palavras/"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 4h11a3 3 0 013 3v13H8a3 3 0 01-3-3z"/><path d="M5 17a3 3 0 013-3h11"/></svg><b data-i="palavras">Minhas palavras</b></a>
-    <a class="at larga" href="/paralelos/"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 5h16v11H9l-5 4z"/></svg><b data-i="mural">Mural</b><span id="tema"></span></a>
-  </div>
-
   <section class="cx" aria-labelledby="h-conta">
     <p class="eyebrow" id="h-conta" data-i="conta">sua conta</p>
     <div class="conta-l"><span id="email"></span><a href="/privacidade/" data-i="privacidade">Como cuidamos dos seus dados</a><button type="button" class="mini-b" id="sair" data-i="sairConta">Sair da conta</button></div>
@@ -187,7 +196,8 @@ a:focus-visible,button:focus-visible,input:focus-visible,select:focus-visible,te
 <script src="/paralelos/temas.js?v=1"></script>
 <script src="/caderno-dados.js?v=2"></script>
 <script type="module" src="/aluno/aluno.js?v=5"></script>
-<script type="module" src="/aulas/aluno.js?v=15"></script>
+<script src="/idiomas/dados/cursos-gratis.js?v=1"></script>
+<script type="module" src="/aulas/aluno.js?v=16"></script>
 <script defer src="/caderno-flutuante.js?v=21"></script>
 </body>
 </html>

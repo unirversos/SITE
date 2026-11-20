@@ -2,7 +2,7 @@
    Firestore: aulas/{email em minúsculas} — só o próprio aluno (e-mail confirmado) e a professora conseguem ler.
    Quem não é aluno particular não vê nada. Textos em português ou inglês (aluno/i18n.js). */
 import { auth, db } from "/idiomas/dados/conta.js?v=6";
-import { doc, onSnapshot, updateDoc } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+import { doc, getDoc, onSnapshot, updateDoc, arrayUnion, arrayRemove } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
 import { onAuthStateChanged, sendEmailVerification } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
 import { proximas, chave } from "/aulas/aulas-comum.js?v=2";
 
@@ -44,6 +44,48 @@ const linkMat = m => {
   const tp = tipo(m.url), ext = fora(m.url);
   return `<a href="${esc(m.url)}"${ext ? ' target="_blank" rel="noopener"' : ''}>${esc(m.t)}${tp ? ` <span class="fmt">${tp}</span>` : ''} <span aria-hidden="true">${ext ? '↗' : '→'}</span>${ext ? `<span class="sr">${t('novaAba')}</span>` : ''}</a>${n}`;
 };
+
+/* materiais da biblioteca livre: ícone, etiqueta de parte paga, frase da professora e "✓ fiz" */
+const CAT = (window.UniCursos || []).flatMap(sc => sc.itens);
+const EN = () => L.lang === 'en';
+const TX = { fiz: () => EN() ? 'Done' : 'Fiz', feito: () => EN() ? '✓ done' : '✓ fiz', mandar: () => EN() ? '📎 Send a link to your teacher' : '📎 Mandar um link para a professora',
+  tit: () => EN() ? 'What is it? (optional)' : 'O que é? (opcional)', env: () => EN() ? 'Send' : 'Enviar', ok: () => EN() ? 'Sent ✓' : 'Enviado ✓',
+  seus: () => EN() ? 'links you sent' : 'links que você mandou', libera: () => EN() ? 'This still needs to be enabled. Tell your teacher.' : 'Isso ainda precisa ser liberado. Avise a professora.',
+  ruim: () => EN() ? 'Paste a link starting with https://' : 'Cole um link que comece com https://' };
+const icoCat = i => i ? `<span class="mi" style="--c:var(--c-${i.c})" aria-hidden="true"><svg viewBox="0 0 24 24">${i.svg}</svg></span>` : '';
+function itemMat(m){
+  const i = m.cat && CAT.find(x => x.id === m.cat), fez = (aula.feitos || []).includes(m.url);
+  return `<li class="mat-i${i ? ' doCat' : ''}">${icoCat(i)}<span class="mat-c">${linkMat(m)}${i && i.pg ? ` <span class="pg">${esc(i.pg)}</span>` : ''}${m.nota ? `<span class="mat-n">${comLinks(m.nota)}</span>` : ''}</span>${linkOk(m.url) ? `<button type="button" class="fiz${fez ? ' on' : ''}" data-fiz="${esc(m.url)}" aria-pressed="${fez}">${fez ? TX.feito() : TX.fiz()}</button>` : ''}</li>`;
+}
+/* planilha do Google nos materiais: abre dentro da página (Dicionário e Caderno continuam ao lado) */
+let planAberta = '', planCheia = false, temAtiv = false;
+const ehPlan = u => /^https:\/\/docs\.google\.com\/spreadsheets\/d\/[\w-]+/.test(u || '');
+const planEmbed = u => { const id = u.match(/\/d\/([\w-]+)/)[1], gid = (u.match(/[#&?]gid=(\d+)/) || [])[1]; return `https://docs.google.com/spreadsheets/d/${id}/edit${gid ? '#gid=' + gid : ''}`; };
+function blocoPlan(a){
+  const ps = (a.material || []).filter(m => m && ehPlan(m.url));
+  if (planAberta && !ps.some(m => m.url === planAberta)) { planAberta = ''; planCheia = false; }
+  setTimeout(montaPlan, 0);
+  if (!ps.length) return '';
+  return `<div class="bloco plan"><p class="eyebrow verde">📊 ${EN() ? 'Our spreadsheet' : 'Nossa planilha'}</p>
+    <div class="linha">${ps.map(m => `<button type="button" class="fiz${m.url === planAberta ? ' on' : ''}" data-plan="${esc(m.url)}" aria-pressed="${m.url === planAberta}">${m.url === planAberta ? '▾ ' : '▸ '}${esc(m.t)}</button>`).join('')}</div></div>`;
+}
+/* a planilha mora fora do #area: o redesenho a cada 30 s não recarrega o que o aluno está editando */
+function montaPlan(){
+  let box = $('plan-area');
+  if (!box) { box = document.createElement('section'); box.id = 'plan-area'; box.className = 'cx plan-cx'; area.after(box); }
+  const atual = planAberta && (aula && (aula.material || []).find(m => m.url === planAberta));
+  box.hidden = !atual; box.classList.toggle('cheia', !!(atual && planCheia));
+  if (!atual) { box.innerHTML = ''; box.dataset.u = ''; return; }
+  const bar = `<div class="plan-bar"><b>${esc(atual.t)}</b><span class="esp"></span><button type="button" class="mini-b" id="plan-cheia">${planCheia ? (EN() ? '↙ Exit full screen' : '↙ Sair da tela cheia') : (EN() ? '⤢ Full screen' : '⤢ Tela cheia')}</button><a class="mini-b" href="${esc(atual.url)}" target="_blank" rel="noopener">${EN() ? 'Open in Google Sheets' : 'Abrir no Google Sheets'} ↗</a><button type="button" class="mini-b" id="plan-fecha">${EN() ? 'Close' : 'Fechar'}</button></div>`;
+  if (box.dataset.u !== atual.url) {
+    box.innerHTML = bar + `<iframe class="plan-if" src="${esc(planEmbed(atual.url))}" title="${esc(atual.t)}" allow="clipboard-read; clipboard-write"></iframe><p class="mut peq">${EN() ? 'If it asks you to sign in, use the e-mail the sheet was shared with, or open it in Google Sheets. Dictionary and Notebook are on the right.' : 'Se pedir login, entre com o e-mail com que a planilha foi compartilhada, ou abra no Google Sheets. Dicionário e Caderno ficam na lateral direita.'}</p>`;
+    box.dataset.u = atual.url; if (!planCheia) box.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  } else box.querySelector('.plan-bar').outerHTML = bar;
+  $('plan-fecha').onclick = () => { planAberta = ''; planCheia = false; pinta(); };
+  $('plan-cheia').onclick = () => { planCheia = !planCheia; montaPlan(); };
+}
+document.addEventListener('keydown', e => { if (e.key === 'Escape' && planCheia) { planCheia = false; montaPlan(); } });
+const erroPerm = (e, el) => { console.warn(e); if (el) el.textContent = e && e.code === 'permission-denied' ? TX.libera() : t('erroSalvar'); };
 
 /* o que mudou desde a última visita (recado, tarefa, materiais, gravações) ganha a etiqueta "novo" */
 function calculaNovos(a){
@@ -98,10 +140,12 @@ function pinta(){
   }
   if (a.recado) c += `<div class="bloco"><p class="eyebrow verde">${t('recado')}${tagNovo(novos.recado)}</p><p class="pre">${comLinks(a.recado)}</p></div>`;
   if (a.tarefa) c += `<div class="bloco"><p class="eyebrow">${t('tarefa')}${tagNovo(novos.tarefa)}</p><label class="tarefa${feita ? ' feita' : ''}"><input type="checkbox" id="feita"${feita ? ' checked' : ''}><span class="pre">${comLinks(a.tarefa)}</span></label><p class="mut peq" id="st-t" aria-live="polite">${feita ? t('feita') : ''}</p></div>`;
+  c += blocoPlan(a);
+  if (temAtiv) c += `<div class="bloco"><p class="eyebrow">✦ ${EN() ? 'Your activities' : 'Suas atividades'}</p><a class="mini-b" href="/idiomas/atividades/gramatica-n2/" style="align-self:flex-start">${EN() ? 'N2 Grammar · 8 weeks' : 'Gramática N2 · 8 semanas'} →</a></div>`;
   if (p) c += `<button type="button" class="remarcar" id="anotar" style="align-self:flex-start">${t('anotar')}</button>`;
 
   /* detalhes: materiais, gravações, próximas aulas e remarcação */
-  const mats = (a.material || []).filter(m => m && m.t).map(m => `<li>${linkMat(m)}</li>`).join('');
+  const mats = (a.material || []).filter(m => m && m.t).map(itemMat).join('');
   const gravs = (a.gravacoes || []).filter(m => m && m.t).map(m => `<li>${linkMat(m)}</li>`).join('');
   const sem = t('semana'), fixos = (a.horarios || []).map(h => t('toda', { d: sem[h.dia], h: esc(h.hora) })).join(' · ');
   const seg = prox.slice(1, 2).map(v => `<li class="li-aula"><span><span class="cap">${esc(quando(v.ini))}</span>${v.avulsa ? ` <em class="tag">${t('avulsa')}</em>` : ''}</span>${btnGravar(v, a)}</li>`).join('');
@@ -113,7 +157,9 @@ function pinta(){
     remarcar = `<a class="remarcar" href="${esc(href)}" target="_blank" rel="noopener">${t('remarcar')}</a>`;
   }
   const d = `<details class="det"${aberto ? ' open' : ''}><summary>${t('detalhes')}${tagNovo(novos.itens.size > 0)}</summary><div class="det-c">
-      <div><p class="eyebrow">${t('materiais')}</p>${mats ? `<ul class="lst">${mats}</ul>` : `<p class="mut">${t('semMat')}</p>`}</div>
+      <div><p class="eyebrow">${t('materiais')}</p>${mats ? `<ul class="lst mats">${mats}</ul>` : `<p class="mut">${t('semMat')}</p>`}<p class="mut peq" id="st-m" aria-live="polite"></p></div>
+      <div class="manda"><p class="eyebrow verde">${TX.mandar()}</p><form id="f-link" class="linha"><label class="sr" for="l-url">Link</label><input id="l-url" type="url" placeholder="https://…" required><label class="sr" for="l-t">${TX.tit()}</label><input id="l-t" type="text" placeholder="${TX.tit()}"><button class="btn" type="submit">${TX.env()}</button></form><p class="mut peq" id="st-l" aria-live="polite"></p>
+        ${(a.links || []).length ? `<p class="mut peq">${TX.seus()}:</p><ul class="lst">${a.links.map(x => `<li><a href="${esc(x.url)}" target="_blank" rel="noopener">${esc(x.t || x.url)} ↗</a></li>`).join('')}</ul>` : ''}</div>
       ${gravs ? `<div><p class="eyebrow">${t('gravacoes')}</p><ul class="lst">${gravs}</ul></div>` : ''}
       <div><p class="eyebrow">${t('proximas')}</p>${fixos ? `<p>${fixos} <span class="mut">${t('horaBr')}</span></p>` : `<p class="mut">${t('semFixo')}</p>`}${seg ? `<p class="mut peq" style="margin-top:6px">${t('depois')}</p><ul class="lst">${seg}</ul>` : ''}</div>
       ${p ? `<div class="regra"><p class="peq">${t('regra')}</p>${remarcar}</div>` : ''}
@@ -128,6 +174,20 @@ function pinta(){
     try { await updateDoc(doc(db, 'aulas', meuEmail), { gravar: novo }); aula.gravar = novo; pinta(); }
     catch (e) { console.warn(e); b.disabled = false; b.textContent = t('erroSalvar'); }
   });
+  area.querySelectorAll('[data-plan]').forEach(b => b.onclick = () => { planAberta = planAberta === b.dataset.plan ? '' : b.dataset.plan; planCheia = false; pinta(); });
+  area.querySelectorAll('[data-fiz]').forEach(b => b.onclick = async () => {
+    const u = b.dataset.fiz, on = (aula.feitos || []).includes(u); b.disabled = true;
+    try { await updateDoc(doc(db, 'aulas', meuEmail), { feitos: on ? arrayRemove(u) : arrayUnion(u) }); /* a lista se atualiza sozinha pelo onSnapshot */ }
+    catch (e) { b.disabled = false; erroPerm(e, $('st-m')); }
+  });
+  const fl = $('f-link');
+  if (fl) fl.onsubmit = async e => {
+    e.preventDefault(); const url = $('l-url').value.trim(), tt = $('l-t').value.trim();
+    if (!linkOk(url)) { $('st-l').textContent = TX.ruim(); return; }
+    const item = { url, t: tt.slice(0, 120), q: new Date().toISOString() };
+    try { await updateDoc(doc(db, 'aulas', meuEmail), { links: arrayUnion(item) }); const s2 = $('st-l'); if (s2) s2.textContent = TX.ok(); }
+    catch (x) { erroPerm(x, $('st-l')); }
+  };
   if ($('anotar')) $('anotar').onclick = () => { if (window.CadernoNovaSobre) window.CadernoNovaSobre(t('aulaDe', { d: p.ini.toLocaleDateString(L.loc, { day: 'numeric', month: 'long' }) }), p.ini); };
   const ck = $('feita');
   if (ck) ck.onchange = async () => {
@@ -155,6 +215,7 @@ onAuthStateChanged(auth, async u => {
       const nova = s.data();
       if (!aula) calculaNovos(nova); else marcaMudancas(aula, nova);
       aula = nova; pinta(); mandaAvatar();
+      if (!temAtiv) getDoc(doc(db, 'atividades', meuEmail)).then(x => { if (x.exists()) { temAtiv = true; if (aula) pinta(); } }).catch(() => {});
     }, e => { console.warn(e); if (!aula) area.innerHTML = `<section class="cx"><p class="eyebrow">${t('aulaPart')}</p><p class="mut peq">${t(e && e.code === 'permission-denied' ? 'semPermissao' : 'erroAulas')}</p></section>`; });
   } catch (e) { console.warn(e); area.innerHTML = ''; }
 });

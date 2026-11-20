@@ -64,6 +64,22 @@ legend{padding:0 6px;margin:0}
 .pedido{background:#f7dbe2;border-left:0;border-radius:14px;padding:12px 14px;color:#7c2038;font-size:15px}.tag.rec{background:#f7dbe2;color:#7c2038}
 .privado{background:var(--sage-soft);border-radius:14px;padding:12px 14px}.privado textarea{background:#fff}
 .sr{position:absolute;left:-9999px}
+.rep.mat.doCat,.rep.mat:has(.campos){align-items:flex-start}
+.campos{flex:1;display:flex;flex-direction:column;gap:6px;min-width:0}.lin1{display:flex;gap:8px;align-items:center;flex-wrap:wrap}.lin1 input{flex:1;min-width:180px}
+.campos .nota{font-size:14px;background:#fff}.dica{margin:-2px 0 0}
+.mi{--c:var(--ink);width:42px;height:42px;flex:none;border-radius:50%;display:grid;place-items:center;background:#fff;border:1.5px solid var(--line);color:var(--c)}.mi svg{width:21px;height:21px;fill:none;stroke:currentColor;stroke-width:1.7;stroke-linecap:round;stroke-linejoin:round}
+:root{--c-pink:#c23f5e;--c-sage:#7fa487;--c-gold:#c9a24b;--c-lav:#9a8cc4}
+.pg{font-size:11px;font-weight:700;color:#a0712a;background:#fbf1de;border-radius:999px;padding:2px 9px;white-space:nowrap}
+.abre,.copia{font:inherit;font-size:13.5px;font-weight:700;color:var(--pink-deep);text-decoration:none;background:#fff;border:1.5px solid var(--line);border-radius:999px;padding:6px 12px;min-height:40px;display:inline-flex;align-items:center;cursor:pointer}
+.picker{position:fixed;inset:0;background:rgba(58,43,56,.35);display:grid;place-items:center;padding:16px;z-index:50}
+.pk-box{background:#fff;border-radius:20px;max-width:720px;width:100%;max-height:88vh;overflow:auto;padding:20px 22px;display:flex;flex-direction:column;gap:14px}
+.pk-g{display:grid;grid-template-columns:repeat(auto-fill,minmax(120px,1fr));gap:10px;margin-top:8px}
+.pk-t{font:inherit;color:inherit;background:none;border:1.5px solid transparent;border-radius:14px;padding:10px 6px;display:grid;justify-items:center;gap:6px;text-align:center;cursor:pointer;font-size:13px;line-height:1.25}
+.pk-t:hover,.pk-t:focus-visible{border-color:var(--line);background:var(--paper)}
+.lk-al{display:flex;gap:10px;align-items:center;justify-content:space-between;flex-wrap:wrap}
+#ms{display:flex;flex-direction:column;gap:14px}#ms .rep.mat{padding-bottom:14px;border-bottom:1px dashed var(--line)}
+.teste-faixa{background:#fbf1de;color:#7a5418;font-size:13px;text-align:center;padding:6px 12px}
+
 </style>
 <link rel="stylesheet" href="/estilo-celular.css?v=3">
 <link rel="icon" href="/favicon.svg" type="image/svg+xml"><link rel="icon" href="/favicon.ico" sizes="48x48"><link rel="apple-touch-icon" href="/apple-touch-icon.png">
@@ -92,6 +108,7 @@ legend{padding:0 6px;margin:0}
 </div>
 <script src="/idiomas/dados/avatar.js?v=20261016g"></script>
 <script src="/caderno-livro.js?v=11"></script>
-<script type="module" src="/aulas/professora.js?v=8"></script>
+<script src="/idiomas/dados/cursos-gratis.js?v=1"></script>
+<script type="module" src="/aulas/professora.js?v=9"></script>
 </body>
 </html>
