@@ -11,7 +11,7 @@ const esc = s => String(s == null ? '' : s).replace(/[&<>"']/g, c => ({ '&':'&am
 const ST = { pendente: 'A praticar', feito: 'Feito', corrigir: 'Corrigir', dominado: 'Dominado ✓' };
 const DIA = n => n + '日目', SEM = n => '第' + n + '週';
 const itens = A.itens.map((r, n) => ({ n, s: r[0], d: r[1], e: r[2], nu: r[3], x: r[4], tr: r[5] }));
-let oculta = (() => { try { return localStorage.getItem('uniAtivOculta') === '1'; } catch (e) { return false; } })(), abertosEx = new Set();
+let oculta = (() => { try { return localStorage.getItem('uniAtivOculta') !== '0'; } catch (e) { return true; } })(), abertosEx = new Set();
 let R = {}, alvo = '', souProf = false, nuvem = true, filtro = { sem: 0, st: '', q: '' }, abertosPt = new Set();
 
 $('tit').textContent = A.titulo; $('sub').textContent = A.sub;
