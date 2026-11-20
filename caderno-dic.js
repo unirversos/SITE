@@ -117,7 +117,7 @@
       var cache = lerCache();
       Array.prototype.forEach.call(R.querySelectorAll('.it'), function (card, i) {
         var x = rs[i], en = x.s[0].g.slice(0, 3).join(', '), ptEl = card.querySelector('.pt');
-        function mostra(t) { x.pt = t; ptEl.hidden = false; ptEl.textContent = 'PT (tradução automática): ' + t; }
+        function mostra(t) { t = t.split(/\s*[,;]\s*/).filter(function (w, i, l) { return w && l.map(function (z) { return z.toLowerCase(); }).indexOf(w.toLowerCase()) === i; }).join(', '); x.pt = t; ptEl.hidden = false; ptEl.textContent = 'PT (tradução automática): ' + t; }
         if (cache[en]) mostra(cache[en]);
         else if (i < 5) traduz(en, 'en', 'pt-BR').then(function (t) { var c = lerCache(); c[en] = t; gravaCache(c); mostra(t); }, function () {});
         card.querySelector('.sv').onclick = function () { var b = this; op.salvar(linhaSalvar(x, x.pt)); b.textContent = '✓ Salvo'; b.classList.add('ok'); setTimeout(function () { b.textContent = '+ Salvar no caderno'; b.classList.remove('ok'); }, 1800); };
