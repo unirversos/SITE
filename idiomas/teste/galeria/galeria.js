@@ -16,6 +16,14 @@ let R = {}, alvo = '', souProf = false, nuvem = true, filtro = { sem: 0, st: '',
 
 $('tit').textContent = A.titulo; $('sub').textContent = A.sub;
 const resp = n => R[n] || {};
+/* o que é novo: correção que o aluno ainda não viu / frase que a professora ainda não viu (guardado no aparelho de cada um) */
+let visto = {};
+const chaveVisto = () => 'uniAtivVisto:' + (souProf ? 'prof:' : '') + A.id + ':' + alvo;
+const leVisto = () => { try { visto = JSON.parse(localStorage.getItem(chaveVisto()) || '{}'); } catch (e) { visto = {}; } };
+const marcaVisto = n => { visto[n] = Date.now(); try { localStorage.setItem(chaveVisto(), JSON.stringify(visto)); } catch (e) {} };
+const novo = n => { const r = resp(n);
+  return souProf ? !!(r.f || '').trim() && (r.fm || r.m || 0) > (visto[n] || 0) && r.st !== 'dominado'
+                 : !!(r.c || '').trim() && (r.cm || 0) > (visto[n] || 0); };
 const stDe = n => resp(n).st || (resp(n).f ? 'feito' : 'pendente');
 
 /* ---------- guardar ---------- */
@@ -61,13 +69,14 @@ $('sems').onclick = e => { const b = e.target.closest('[data-sem]'); if (!b) ret
 /* ---------- filtros ---------- */
 function pintaChips(){
   $('oc').textContent = oculta ? '👁 Mostrar explicações' : '🙈 Ocultar explicações'; $('oc').setAttribute('aria-pressed', oculta);
-  $('chips').innerHTML = [['', 'Todas'], ['pendente', 'A praticar'], ['feito', 'Feito'], ['corrigir', 'Corrigir'], ['dominado', 'Dominadas']]
+  const nn = itens.filter(i => novo(i.n)).length;
+  $('chips').innerHTML = (nn ? `<button type="button" class="chip novas${filtro.st === 'novas' ? ' on' : ''}" data-st="novas">${souProf ? '✎ Para corrigir' : '✦ Correções novas'} (${nn})</button> ` : '') + [['', 'Todas'], ['pendente', 'A praticar'], ['feito', 'Feito'], ['corrigir', 'Corrigir'], ['dominado', 'Dominadas']]
     .map(([k, t]) => `<button type="button" class="chip${filtro.st === k ? ' on' : ''}" data-st="${k}">${t}</button>`).join(' ');
 }
 $('oc').onclick = () => { oculta = !oculta; abertosEx.clear(); try { localStorage.setItem('uniAtivOculta', oculta ? '1' : '0'); } catch (e) {} pintaChips(); pintaCards(); };
 $('chips').onclick = e => { const b = e.target.closest('[data-st]'); if (!b) return; filtro.st = b.dataset.st; pintaChips(); pintaCards(); };
 $('q').oninput = () => { filtro.q = $('q').value.trim().toLowerCase(); pintaCards(); };
-const visiveis = () => itens.filter(i => (!filtro.sem || i.s === filtro.sem) && (!filtro.st || stDe(i.n) === filtro.st)
+const visiveis = () => itens.filter(i => (!filtro.sem || i.s === filtro.sem) && (!filtro.st || (filtro.st === 'novas' ? novo(i.n) : stDe(i.n) === filtro.st))
   && (!filtro.q || [i.e, i.nu, i.x, i.tr, resp(i.n).f].join(' ').toLowerCase().includes(filtro.q)));
 
 /* ---------- cards ---------- */
@@ -80,7 +89,7 @@ function card(i){
     ? `<div class="corr"><label class="l" for="c${i.n}">CORREÇÃO DA PROFESSORA</label><textarea id="c${i.n}" data-c="${i.n}" rows="2" placeholder="Escreva a frase corrigida ou um comentário">${esc(r.c)}</textarea></div>`
     : (r.c ? `<div class="corr"><b>CORREÇÃO DA PROFESSORA</b><div style="white-space:pre-wrap">${esc(r.c)}</div></div>` : '');
   return `<article class="card s-${st}" data-n="${i.n}">
-    <div class="top"><span>${SEM(i.s)} · ${DIA(i.d)}</span><span class="pill p-${st}">${ST[st]}</span></div>
+    <div class="top"><span>${SEM(i.s)} · ${DIA(i.d)}</span><span>${novo(i.n) ? `<button type="button" class="novo" data-visto="${i.n}" title="Marcar como visto">${souProf ? 'frase nova · ✓ vi' : 'nova correção · ✓ vi'}</button> ` : ''}<span class="pill p-${st}">${ST[st]}</span></span></div>
     <h3><span lang="ja">${esc(est)}</span> ${ro ? `<small>${esc(ro)}</small>` : ''}</h3>
     ${oculta && !abertosEx.has(i.n) ? `<button type="button" class="verex" data-ex="${i.n}">👁 ver explicação</button>` : `<p class="nu">${esc(i.nu)}</p>
     <div class="ex"><button type="button" class="som" data-som="${i.n}" aria-label="Ouvir o exemplo">🔊</button><p><span class="jp" lang="ja">${esc(i.x)}</span><br>${pt ? `<span class="pt">${esc(i.tr)}</span>` : `<button type="button" class="verpt" data-pt="${i.n}">ver tradução</button>`}</p></div>`}
@@ -97,15 +106,16 @@ function pintaCards(){
 }
 $('cards').addEventListener('input', e => {
   const t = e.target;
-  if (t.dataset.f) { const n = Number(t.dataset.f); const ja = stDe(n); grava(n, Object.assign({ f: t.value }, t.value.trim() && ja === 'pendente' ? { st: 'feito' } : {}), $('ok' + n)); }
-  if (t.dataset.c) { const n = Number(t.dataset.c); grava(n, { c: t.value }, $('ok' + n)); }
+  if (t.dataset.f) { const n = Number(t.dataset.f); const ja = stDe(n); grava(n, Object.assign({ f: t.value, fm: Date.now() }, t.value.trim() && ja === 'pendente' ? { st: 'feito' } : {}), $('ok' + n)); }
+  if (t.dataset.c) { const n = Number(t.dataset.c); grava(n, { c: t.value, cm: Date.now() }, $('ok' + n)); marcaVisto(n); const b = t.closest('.card').querySelector('.novo'); if (b) { b.remove(); pintaChips(); } }
 });
 $('cards').addEventListener('change', e => {
   const t = e.target; if (!t.dataset.s) return;
-  const n = Number(t.dataset.s); grava(n, { st: t.value }, $('ok' + n));
+  const n = Number(t.dataset.s); grava(n, { st: t.value }, $('ok' + n)); if (souProf) { marcaVisto(n); const b = t.closest('.card').querySelector('.novo'); if (b) b.remove(); pintaChips(); }
   const c = t.closest('.card'); c.className = 'card s-' + t.value; c.querySelector('.pill').className = 'pill p-' + t.value; c.querySelector('.pill').textContent = ST[t.value];
 });
 $('cards').addEventListener('click', e => {
+  const vv = e.target.closest('[data-visto]'); if (vv) { marcaVisto(Number(vv.dataset.visto)); vv.remove(); pintaChips(); if (filtro.st === 'novas' && !itens.some(i => novo(i.n))) { filtro.st = ''; pintaChips(); pintaCards(); } return; }
   const x = e.target.closest('[data-ex]'); if (x) { abertosEx.add(Number(x.dataset.ex)); const c = x.closest('.card'); c.outerHTML = card(itens[Number(x.dataset.ex)]); return; }
   const p = e.target.closest('[data-pt]'); if (p) { abertosPt.add(Number(p.dataset.pt)); p.outerHTML = `<span class="pt">${esc(itens[Number(p.dataset.pt)].tr)}</span>`; return; }
   const s = e.target.closest('[data-som]'); if (s) fala(itens[Number(s.dataset.som)].x);
@@ -179,6 +189,7 @@ async function abre(email){
     };
     return;
   }
+  leVisto(); if (itens.some(i => novo(i.n)) && !filtro.st) filtro.st = 'novas';
   trava(false); pintaNums(); pintaChips(); pintaCards();
 }
 onAuthStateChanged(auth, async u => {
