@@ -19,9 +19,10 @@ const stDe = n => resp(n).st || (resp(n).f ? 'feito' : 'pendente');
 
 /* ---------- guardar ---------- */
 const chaveLocal = () => 'uniAtiv:' + A.id + ':' + alvo;
+let liberado = false;
 async function carrega(){
-  R = {};
-  try { const s = await getDoc(doc(db, 'atividades', alvo)); R = (s.exists() && s.data()[A.id]) || {}; nuvem = true; }
+  R = {}; liberado = false;
+  try { const s = await getDoc(doc(db, 'atividades', alvo)); liberado = s.exists(); R = (s.exists() && s.data()[A.id]) || {}; nuvem = true; }
   catch (e) { console.warn(e); nuvem = false; try { R = JSON.parse(localStorage.getItem(chaveLocal()) || '{}'); } catch (x) {} }
   $('aviso').innerHTML = nuvem ? '' : '<p class="aviso">Por enquanto, o que você escrever fica salvo só neste aparelho. Falta liberar o espaço de atividades no Firebase.</p>';
 }
@@ -157,8 +158,24 @@ document.addEventListener('mouseup', () => setTimeout(() => {
 }, 10));
 
 /* ---------- quem está vendo ---------- */
+/* acesso restrito: só quem a professora liberou (o documento atividades/{e-mail} é criado por ela) */
+const trava = on => document.querySelectorAll('#nums,#sems,.ferr,#mostra,#cards').forEach(el => el.hidden = on);
 async function abre(email){
-  alvo = email; await carrega(); pintaNums(); pintaChips(); pintaCards();
+  alvo = email; await carrega();
+  const lib = $('lib'); if (lib) lib.remove();
+  if (nuvem && !liberado) {
+    trava(true);
+    $('aviso').innerHTML = souProf
+      ? `<div class="aviso" id="lib">Esta atividade ainda não foi liberada para este aluno. <button type="button" class="btn" id="lib-ok" style="margin-left:8px">Liberar para este aluno</button></div>`
+      : '<p class="aviso" id="lib">✦ Atividade exclusiva. Peça acesso à sua professora.</p>';
+    if ($('lib-ok')) $('lib-ok').onclick = async () => {
+      $('lib-ok').disabled = true;
+      try { await setDoc(doc(db, 'atividades', alvo), { liberado: new Date().toISOString(), [A.id]: {} }, { merge: true }); abre(alvo); }
+      catch (e) { console.warn(e); $('lib-ok').textContent = 'Não consegui liberar'; }
+    };
+    return;
+  }
+  trava(false); pintaNums(); pintaChips(); pintaCards();
 }
 onAuthStateChanged(auth, async u => {
   if (!u) return;
