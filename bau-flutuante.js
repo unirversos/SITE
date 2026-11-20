@@ -28,7 +28,7 @@
       ['絵', '/idiomas/avatar/', 'Meu avatar'], ['言', '/idiomas/palavras/', 'Minhas palavras'], ['あ', '/idiomas/hiragana/', 'Hiragana'], ['ア', '/idiomas/katakana/', 'Katakana'],
       ['漢', '/idiomas/kanji/', 'Kanji'], ['数', '/idiomas/numeros/', 'Números'], ['暦', '/idiomas/calendario/', 'Calendário'], ['声', '/idiomas/gravador/', 'Gravador']]],
     ['consultar', [
-      ['守', '/idiomas/amuleto/', 'Amuleto de bolso'], ['風', '/idiomas/ar/', 'Ar'], ['道', '/idiomas/guia/', 'Mini guia']]]
+      ['守', '/idiomas/amuleto/', 'Amuleto de bolso'], ['風', '/idiomas/ar/', 'Ar'], ['道', '/idiomas/guia/', 'Mini guia'], ['話', '/paralelos/', 'Mural']]]
   ];
 
   var css = document.createElement('style');
