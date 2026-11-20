@@ -38,7 +38,7 @@ function lista(){
       <span class="info"><b>${esc(a.nome || 'Sem nome')}</b><span class="mut peq">${esc(a.id)}</span></span>
       <span class="prox">${p && (a.gravar || []).includes(chave(p.ini)) ? '<em class="tag rec">gravar a próxima</em> ' : ''}${a.tarefa && a.tarefaFeita === a.tarefa ? '<em class="tag">tarefa feita</em> ' : ''}${a.ativo === false ? '<em class="tag">pausado</em>' : p ? 'próxima: ' + esc(quando(p.ini)) : '<span class="mut">sem aula marcada</span>'}</span></button>`;
   }).join('');
-  area.innerHTML = `<div class="topo"><h2>Seus alunos <span class="mut">(${alunos.length})</span></h2><div class="linha"><button type="button" class="btn claro" id="todos">📚 Mandar para todos</button><button type="button" class="btn" id="novo">+ Novo aluno</button></div></div>
+  area.innerHTML = `<div class="topo"><h2>Seus alunos <span class="mut">(${alunos.length})</span></h2><div class="linha"><a class="btn claro" href="/idiomas/atividades/gramatica-n2/">✦ Atividades</a><button type="button" class="btn claro" id="todos">📚 Mandar para todos</button><button type="button" class="btn" id="novo">+ Novo aluno</button></div></div>
     <div class="alunos">${cards || '<p class="mut">Nenhum aluno ainda. Clique em "+ Novo aluno" para começar.</p>'}</div>`;
   $('novo').onclick = () => ficha(null); $('todos').onclick = mandarTodos;
   area.querySelectorAll('.aluno').forEach(b => b.onclick = () => ficha(alunos.find(a => a.id === b.dataset.id)));
@@ -51,10 +51,19 @@ const linhaGrav = (m = { t: '', url: '' }) => `<div class="rep mat" data-tipo="g
 const pedidos = a => { const hoje = chave(new Date(Date.now() - 3 * 3600e3)).slice(0, 10), l = (a.gravar || []).filter(k => k.slice(0, 10) >= hoje);
   return l.length ? `<div class="pedido"><b>O aluno pediu gravação:</b> ${l.map(k => esc(new Date(k + ':00-03:00').toLocaleString('pt-BR', { weekday: 'short', day: 'numeric', month: 'short', hour: '2-digit', minute: '2-digit', timeZone: 'America/Sao_Paulo' }))).join(' · ')}<br><span class="peq">Lembre de apertar "Gravar" no Meet. Depois, cole o link em Gravações.</span></div>` : ''; };
 /* catálogo único (idiomas/dados/cursos-gratis.js) */
-const CAT = (window.UniCursos || []).flatMap(sc => sc.itens.map(i => Object.assign({ sec: sc.b }, i)));
+/* conteúdo da própria Unirversos: aparece primeiro no "escolher da biblioteca" (com emoji no lugar do ícone) */
+const UNI = { b: '✦', s: 'Unirversos', itens: [
+  { id: 'u-aula-zero', n: 'Aula Zero', emo: '🎫', url: '/idiomas/aula-zero/' },
+  ...((window.UniTrilha && window.UniTrilha.MAPAS) || []).map(m => ({ id: 'u-mapa-' + m[0], n: 'Mapa · ' + m[2], emo: m[1], url: '/idiomas/mapas/' + m[0] + '/aula/' })),
+  { id: 'u-gram-n2', n: 'Gramática N2 · galeria', emo: '✦', url: '/idiomas/atividades/gramatica-n2/', restrito: true },
+  { id: 'u-caderno', n: 'Caderno', emo: '📓', url: '/idiomas/caderno/' },
+  { id: 'u-biblioteca', n: 'Biblioteca livre', emo: '📚', url: '/idiomas/biblioteca/' }
+] };
+const SECOES = [UNI].concat(window.UniCursos || []);
+const CAT = SECOES.flatMap(sc => sc.itens.map(i => Object.assign({ sec: sc.b }, i)));
 const daCat = id => CAT.find(i => i.id === id);
 const absUrl = u => /^\//.test(u || '') ? 'https://unirversos.com' + u : (u || '');
-const icone = (i, cls = 'mi') => i ? `<span class="${cls}" style="--c:var(--c-${i.c})"><svg viewBox="0 0 24 24">${i.svg}</svg></span>` : '';
+const icone = (i, cls = 'mi') => !i ? '' : i.emo ? `<span class="${cls} emo" aria-hidden="true">${i.emo}</span>` : `<span class="${cls}" style="--c:var(--c-${i.c})"><svg viewBox="0 0 24 24">${i.svg}</svg></span>`;
 let feitosAtual = [];
 const linhaMat = (m = { t: '', url: '' }) => {
   const i = m.cat && daCat(m.cat), fez = m.url && feitosAtual.includes(m.url);
@@ -62,16 +71,17 @@ const linhaMat = (m = { t: '', url: '' }) => {
     <div class="lin1"><label class="sr">Título</label><input type="text" data-k="t" placeholder="Título (ex.: Aula 3 · slides)" value="${esc(m.t)}">${i && i.pg ? `<span class="pg">${esc(i.pg)}</span>` : ''}${fez ? '<em class="tag">✓ o aluno fez</em>' : ''}</div>
     <div class="lin1"><label class="sr">Link exato</label><input type="url" data-k="url" placeholder="${i ? 'Cole aqui o link exato (ex.: a lição 3)' : 'https://…'}" value="${esc(m.url)}">${i ? `<a class="abre" href="${esc(absUrl(i.url))}" target="_blank" rel="noopener" title="Abrir o site para achar a página e copiar o link">abrir ↗</a>` : ''}<button type="button" class="copia" title="Copiar este link">⧉</button></div>
     ${i ? '<p class="mut peq dica">Abra o site, ache a página certa e cole o link dela aqui. Sem link exato, o aluno vai para a página inicial.</p>' : ''}
+    <details class="au-d"${m.au ? ' open' : ''}><summary>🎧 ${m.au ? 'Áudio junto' : '+ áudio junto (PDF com áudio, do Drive)'}</summary><label class="sr">Link do áudio</label><input type="url" data-k="au" placeholder="Link do áudio no Drive (ex.: a faixa 3 do livro)" value="${esc(m.au)}"></details>
     <label class="sr">Frase para o aluno</label><input type="text" data-k="nota" class="nota" placeholder="Sua frase para o aluno (opcional), ex.: ouça antes de quinta" value="${esc(m.nota)}">
   </div><button type="button" class="x" aria-label="Tirar este material">×</button></div>`;
 };
-const leMat = r => { const g = k => (r.querySelector(`[data-k="${k}"]`) || {}).value || ''; const url = g('url').trim(), m = { t: g('t').trim() || url, url }; if (r.dataset.cat) m.cat = r.dataset.cat; if (g('nota').trim()) m.nota = g('nota').trim(); return m; };
+const leMat = r => { const g = k => (r.querySelector(`[data-k="${k}"]`) || {}).value || ''; const url = g('url').trim(), m = { t: g('t').trim() || url, url }; if (r.dataset.cat) { m.cat = r.dataset.cat; const i = daCat(m.cat); if (i && i.emo) m.emo = i.emo; } if (g('nota').trim()) m.nota = g('nota').trim(); if (/^https:\/\//.test(g('au').trim())) m.au = g('au').trim(); return m; };
 /* escolher da biblioteca: grade de ícones por nível */
 function abrePicker(onEscolhe, extraHtml = ''){
   fechaPicker();
   const d = document.createElement('div'); d.className = 'picker'; d.id = 'picker'; d.setAttribute('role', 'dialog'); d.setAttribute('aria-label', 'Escolher da biblioteca');
   d.innerHTML = `<div class="pk-box"><div class="topo"><h2>📚 Biblioteca livre</h2><button type="button" class="x" id="pk-x" aria-label="Fechar">×</button></div>${extraHtml}
-    ${(window.UniCursos || []).map(sc => `<div class="pk-sec"><p class="eyebrow">${esc(sc.b)} · ${esc(sc.s)}</p><div class="pk-g">${sc.itens.map(i => `<button type="button" class="pk-t" data-id="${esc(i.id)}">${icone(i, 'mi')}<b>${i.n}</b>${i.pg ? `<span class="pg">${esc(i.pg)}</span>` : ''}</button>`).join('')}</div></div>`).join('')}
+    ${SECOES.map(sc => `<div class="pk-sec"><p class="eyebrow">${esc(sc.b)} · ${esc(sc.s)}</p><div class="pk-g">${sc.itens.map(i => `<button type="button" class="pk-t" data-id="${esc(i.id)}">${icone(i, 'mi')}<b>${i.n}</b>${i.pg ? `<span class="pg">${esc(i.pg)}</span>` : ''}</button>`).join('')}</div></div>`).join('')}
     <p class="mut peq">Os links levam aos sites oficiais e gratuitos. Depois de escolher, cole o link exato da página que você quer.</p></div>`;
   document.body.appendChild(d);
   d.addEventListener('click', e => { if (e.target === d || e.target.closest('#pk-x')) return fechaPicker(); const b = e.target.closest('.pk-t'); if (b) onEscolhe(daCat(b.dataset.id), d); });
@@ -144,13 +154,42 @@ function mandarTodos(){
   });
 }
 
+/* galeria de gramática: liberar e abrir direto da ficha (sem copiar link) */
+async function atividadesDoAluno(email){
+  const box = $('ativ'); if (!box) return;
+  const url = '/idiomas/atividades/gramatica-n2/?aluno=' + encodeURIComponent(email);
+  let lib = false;
+  try { lib = (await getDoc(doc(db, 'atividades', email))).exists(); } catch (e) { box.innerHTML = '<legend>✦ Atividades exclusivas</legend><p class="mut peq">Não consegui ver agora.</p>'; return; }
+  if (!$('ativ') || editando !== email) return;
+  box.innerHTML = `<legend>✦ Atividades exclusivas</legend><div class="lk-al"><span><b>Gramática N2 · 8 semanas</b> ${lib ? '<em class="tag">liberada</em>' : '<span class="mut peq">· ainda não liberada</span>'}</span>
+    ${lib ? `<a class="mini" href="${url}">Abrir a galeria deste aluno →</a>` : '<button type="button" class="mini" id="ativ-lib">✦ Liberar para este aluno</button>'}</div>
+    ${lib ? '<p class="mut peq">Ele vê "✦ Suas atividades" na Área do aluno, sem precisar de link.</p>' : ''}`;
+  if ($('ativ-lib')) $('ativ-lib').onclick = async () => {
+    $('ativ-lib').disabled = true;
+    try { await setDoc(doc(db, 'atividades', email), { liberado: new Date().toISOString(), n2gram: {} }, { merge: true }); atividadesDoAluno(email); }
+    catch (e) { console.warn(e); $('ativ-lib').textContent = 'Não consegui liberar'; }
+  };
+}
+
+/* prévia da Área do aluno, dentro da ficha (só leitura) */
+function previa(email){
+  let box = $('prev-cx');
+  if (box) { box.remove(); $('prev-ab').textContent = '👁 Ver como o aluno vê'; return; }
+  $('f').insertAdjacentHTML('afterend', `<section class="cx" id="prev-cx"><div class="topo"><h2>Como o aluno vê</h2><div class="linha"><button type="button" class="mini" id="prev-at">↻ Atualizar</button><a class="mini" href="/aluno/teste/?ver=${encodeURIComponent(email)}" target="_blank" rel="noopener">Abrir em tela cheia ↗</a></div></div>
+    <p class="mut peq">É a Área do aluno com os dados dele, só para olhar: os botões não gravam nada. Depois de salvar a ficha, toque em Atualizar.</p>
+    <iframe id="prev-if" class="prev-if" src="/aluno/teste/?ver=${encodeURIComponent(email)}" title="Prévia da Área do aluno"></iframe></section>`);
+  $('prev-ab').textContent = '✕ Fechar a prévia';
+  $('prev-at').onclick = () => { $('prev-if').src = $('prev-if').src; };
+  $('prev-cx').scrollIntoView({ behavior: 'smooth', block: 'start' });
+}
+
 async function ficha(a){
   editando = a ? a.id : null; feitosAtual = (a && a.feitos) || []; a = a || { ativo: true, dur: 60, horarios: [], avulsas: [], pular: [], material: [] };
   let notas = '';
   if (editando) { try { const n = await getDoc(doc(db, 'aulas_notas', editando)); if (n.exists()) notas = n.data().texto || ''; } catch (e) {} }
   area.innerHTML = `<button type="button" class="voltar" id="voltar">← Todos os alunos</button>
   <form class="cx ficha" id="f">
-    <h2>${editando ? esc(a.nome || editando) : 'Novo aluno'}</h2>
+    <div class="topo"><h2>${editando ? esc(a.nome || editando) : 'Novo aluno'}</h2>${editando ? '<button type="button" class="mini" id="prev-ab">👁 Ver como o aluno vê</button>' : ''}</div>
     <div class="dois">
       <div><label for="f-nome">Nome</label><input id="f-nome" type="text" required value="${esc(a.nome)}"></div>
       <div><label for="f-email">E-mail que o aluno usa para entrar</label><input id="f-email" type="email" required value="${esc(editando || '')}" ${editando ? 'readonly' : 'list="f-pessoas" placeholder="Digite ou escolha da lista"'} autocomplete="off"><datalist id="f-pessoas"></datalist>${editando ? '' : '<p class="mut peq" id="f-pdica"></p>'}</div>
@@ -169,6 +208,7 @@ async function ficha(a){
     <div><label for="f-tarefa">Tarefa ${a.tarefa && a.tarefaFeita === a.tarefa ? '<em class="tag">o aluno marcou como feita</em>' : ''}</label><textarea id="f-tarefa" rows="3">${esc(a.tarefa)}</textarea><p class="mut peq">Se você trocar o texto da tarefa, a marcação de feita volta a ficar em branco para o aluno.</p></div>
     <fieldset><legend>Materiais</legend><div id="ms">${(a.material || []).map(linhaMat).join('')}</div><div class="linha"><button type="button" class="mini" id="pk-abre">📚 escolher da biblioteca</button><button type="button" class="mini" data-add="m">+ material</button></div></fieldset>
     ${linksDoAluno(a)}
+    ${editando ? '<fieldset id="ativ"><legend>✦ Atividades exclusivas</legend><p class="mut peq">Carregando…</p></fieldset>' : ''}
 
     ${pedidos(a)}
     <fieldset><legend>Gravações <span class="mut">(link do Drive ou YouTube; só para aulas que o aluno pediu)</span></legend><div id="gs">${(a.gravacoes || []).map(linhaGrav).join('')}</div><button type="button" class="mini" data-add="g">+ gravação</button></fieldset>
@@ -179,7 +219,8 @@ async function ficha(a){
   </form>`;
   const f = $('f');
   $('voltar').onclick = () => lista();
-  if (editando) { area.insertAdjacentHTML('beforeend', '<section class="cx" id="cad-al"></section>'); cadernoDoAluno(editando); }
+  if (editando) $('prev-ab').onclick = () => previa(editando);
+  if (editando) { area.insertAdjacentHTML('beforeend', '<section class="cx" id="cad-al"></section>'); cadernoDoAluno(editando); atividadesDoAluno(editando); }
   if (!editando) lePerfis().then(ps => {
     const ja = new Set(alunos.map(x => x.id)), livres = ps.filter(p => !ja.has(p.email));
     $('f-pessoas').innerHTML = livres.map(p => `<option value="${esc(p.email)}">${esc(p.nome || '')}</option>`).join('');
