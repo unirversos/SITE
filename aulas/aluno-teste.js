@@ -57,6 +57,34 @@ function itemMat(m){
   const i = m.cat && CAT.find(x => x.id === m.cat), fez = (aula.feitos || []).includes(m.url);
   return `<li class="mat-i${i ? ' doCat' : ''}">${icoCat(i)}<span class="mat-c">${linkMat(m)}${i && i.pg ? ` <span class="pg">${esc(i.pg)}</span>` : ''}${m.nota ? `<span class="mat-n">${comLinks(m.nota)}</span>` : ''}</span>${linkOk(m.url) ? `<button type="button" class="fiz${fez ? ' on' : ''}" data-fiz="${esc(m.url)}" aria-pressed="${fez}">${fez ? TX.feito() : TX.fiz()}</button>` : ''}</li>`;
 }
+/* planilha do Google nos materiais: abre dentro da página (Dicionário e Caderno continuam ao lado) */
+let planAberta = '', planCheia = false;
+const ehPlan = u => /^https:\/\/docs\.google\.com\/spreadsheets\/d\/[\w-]+/.test(u || '');
+const planEmbed = u => { const id = u.match(/\/d\/([\w-]+)/)[1], gid = (u.match(/[#&?]gid=(\d+)/) || [])[1]; return `https://docs.google.com/spreadsheets/d/${id}/edit${gid ? '#gid=' + gid : ''}`; };
+function blocoPlan(a){
+  const ps = (a.material || []).filter(m => m && ehPlan(m.url));
+  if (planAberta && !ps.some(m => m.url === planAberta)) { planAberta = ''; planCheia = false; }
+  setTimeout(montaPlan, 0);
+  if (!ps.length) return '';
+  return `<div class="bloco plan"><p class="eyebrow verde">📊 ${EN() ? 'Our spreadsheet' : 'Nossa planilha'}</p>
+    <div class="linha">${ps.map(m => `<button type="button" class="fiz${m.url === planAberta ? ' on' : ''}" data-plan="${esc(m.url)}" aria-pressed="${m.url === planAberta}">${m.url === planAberta ? '▾ ' : '▸ '}${esc(m.t)}</button>`).join('')}</div></div>`;
+}
+/* a planilha mora fora do #area: o redesenho a cada 30 s não recarrega o que o aluno está editando */
+function montaPlan(){
+  let box = $('plan-area');
+  if (!box) { box = document.createElement('section'); box.id = 'plan-area'; box.className = 'cx plan-cx'; area.after(box); }
+  const atual = planAberta && (aula && (aula.material || []).find(m => m.url === planAberta));
+  box.hidden = !atual; box.classList.toggle('cheia', !!(atual && planCheia));
+  if (!atual) { box.innerHTML = ''; box.dataset.u = ''; return; }
+  const bar = `<div class="plan-bar"><b>${esc(atual.t)}</b><span class="esp"></span><button type="button" class="mini-b" id="plan-cheia">${planCheia ? (EN() ? '↙ Exit full screen' : '↙ Sair da tela cheia') : (EN() ? '⤢ Full screen' : '⤢ Tela cheia')}</button><a class="mini-b" href="${esc(atual.url)}" target="_blank" rel="noopener">${EN() ? 'Open in Google Sheets' : 'Abrir no Google Sheets'} ↗</a><button type="button" class="mini-b" id="plan-fecha">${EN() ? 'Close' : 'Fechar'}</button></div>`;
+  if (box.dataset.u !== atual.url) {
+    box.innerHTML = bar + `<iframe class="plan-if" src="${esc(planEmbed(atual.url))}" title="${esc(atual.t)}" allow="clipboard-read; clipboard-write"></iframe><p class="mut peq">${EN() ? 'If it asks you to sign in, use the e-mail the sheet was shared with, or open it in Google Sheets. Dictionary and Notebook are on the right.' : 'Se pedir login, entre com o e-mail com que a planilha foi compartilhada, ou abra no Google Sheets. Dicionário e Caderno ficam na lateral direita.'}</p>`;
+    box.dataset.u = atual.url; if (!planCheia) box.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  } else box.querySelector('.plan-bar').outerHTML = bar;
+  $('plan-fecha').onclick = () => { planAberta = ''; planCheia = false; pinta(); };
+  $('plan-cheia').onclick = () => { planCheia = !planCheia; montaPlan(); };
+}
+document.addEventListener('keydown', e => { if (e.key === 'Escape' && planCheia) { planCheia = false; montaPlan(); } });
 const erroPerm = (e, el) => { console.warn(e); if (el) el.textContent = e && e.code === 'permission-denied' ? TX.libera() : t('erroSalvar'); };
 
 /* o que mudou desde a última visita (recado, tarefa, materiais, gravações) ganha a etiqueta "novo" */
@@ -112,6 +140,7 @@ function pinta(){
   }
   if (a.recado) c += `<div class="bloco"><p class="eyebrow verde">${t('recado')}${tagNovo(novos.recado)}</p><p class="pre">${comLinks(a.recado)}</p></div>`;
   if (a.tarefa) c += `<div class="bloco"><p class="eyebrow">${t('tarefa')}${tagNovo(novos.tarefa)}</p><label class="tarefa${feita ? ' feita' : ''}"><input type="checkbox" id="feita"${feita ? ' checked' : ''}><span class="pre">${comLinks(a.tarefa)}</span></label><p class="mut peq" id="st-t" aria-live="polite">${feita ? t('feita') : ''}</p></div>`;
+  c += blocoPlan(a);
   if (p) c += `<button type="button" class="remarcar" id="anotar" style="align-self:flex-start">${t('anotar')}</button>`;
 
   /* detalhes: materiais, gravações, próximas aulas e remarcação */
@@ -144,6 +173,7 @@ function pinta(){
     try { await updateDoc(doc(db, 'aulas', meuEmail), { gravar: novo }); aula.gravar = novo; pinta(); }
     catch (e) { console.warn(e); b.disabled = false; b.textContent = t('erroSalvar'); }
   });
+  area.querySelectorAll('[data-plan]').forEach(b => b.onclick = () => { planAberta = planAberta === b.dataset.plan ? '' : b.dataset.plan; planCheia = false; pinta(); });
   area.querySelectorAll('[data-fiz]').forEach(b => b.onclick = async () => {
     const u = b.dataset.fiz, on = (aula.feitos || []).includes(u); b.disabled = true;
     try { await updateDoc(doc(db, 'aulas', meuEmail), { feitos: on ? arrayRemove(u) : arrayUnion(u) }); /* a lista se atualiza sozinha pelo onSnapshot */ }
