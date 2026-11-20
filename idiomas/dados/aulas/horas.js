@@ -1,7 +1,7 @@
 (function(){
 const R=(k,f)=>`<ruby>${k}<rt>${f}</rt></ruby>`;
 (window.AULAS=window.AULAS||{}).horas={
-  slug:'horas', num:'09', titulo:'Horas', emoji:'🕒', jp:R('時間','じかん'), h1:'Marcando um horário',
+  slug:'horas', num:'08', titulo:'Horas', emoji:'🕒', jp:R('時間','じかん'), h1:'Marcando um horário',
   fim:'Você perguntou horários e marcou a visita falando japonês.',
   intro:{titulo:'🕒 Visita ao museu',
     txt:['Você chegou ao balcão de um museu. Quer saber até que horas ele fica aberto e marcar uma visita guiada.',

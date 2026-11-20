@@ -4,7 +4,7 @@
 (function () {
   if (window.UniLicao) return;
   var AZ = [{"n": 1, "jp": "です", "molde": "coisa です", "ro": "[coisa] desu", "ex": "おにぎりです", "exro": "onigiri desu", "dia": "Com です você já responde “o que é isso?” em qualquer lugar do Japão."}, {"n": 2, "jp": "じゃない", "molde": "coisa じゃない", "ro": "[coisa] janai", "ex": "バスじゃない", "exro": "basu janai", "dia": "Com じゃない você corrige: “não é isso, é aquilo”."}, {"n": 3, "jp": "ます", "molde": "coisa を / lugar に ação ます", "ro": "[coisa] o / [lugar] ni + [ação]-masu", "ex": "とうきょうにいきます", "exro": "Tōkyō ni ikimasu", "dia": "Com ます você diz o que faz: vou, como, bebo, compro."}, {"n": 4, "jp": "ません", "molde": "coisa を ação ません", "ro": "[coisa] o [ação]-masen", "ex": "さかなをたべません", "exro": "sakana o tabemasen", "dia": "Com ません você diz o que não come nem bebe, e evita um susto no restaurante."}, {"n": 5, "jp": "ください", "molde": "すみません、coisa を ください", "ro": "sumimasen, [coisa] o kudasai", "ex": "おちゃをください", "exro": "ocha o kudasai", "dia": "Com ください você pede. É a chave que abre os balcões."}];
-  var SLUGS = ['aulazero','aeroporto','hotel','restaurante','kombini','trens','compras','roupas','emergencia','apresentacao','horas','planos','sinalizacao'];
+  var SLUGS = ['aulazero','aeroporto','sinalizacao','trens','hotel','kombini','restaurante','apresentacao','horas','planos','compras','roupas','emergencia'];
   function limpa(s) { return String(s == null ? '' : s).replace(/<rt>.*?<\/rt>/g, '').replace(/<[^>]+>/g, '').replace(/&nbsp;/g, ' ').trim(); }
   function kana(s) { return limpa(String(s).split('|')[0]); }
   var LINHA = '________________________';

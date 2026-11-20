@@ -1,7 +1,7 @@
 (function(){
 const R=(k,f)=>`<ruby>${k}<rt>${f}</rt></ruby>`;
 (window.AULAS=window.AULAS||{}).planos={
-  slug:'planos', num:'10', titulo:'Planos', emoji:'🎉', jp:R('約束','やくそく'), h1:'Vamos sair?',
+  slug:'planos', num:'09', titulo:'Planos', emoji:'🎉', jp:R('約束','やくそく'), h1:'Vamos sair?',
   fim:'Você convidou, combinou, recusou com jeitinho e aceitou em japonês.',
   intro:{titulo:'🎬 Combinando um programa',
     txt:['Sua amiga <b>ハナ</b> (Hana) está de bobeira. Que tal convidar para um filme?',

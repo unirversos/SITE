@@ -148,10 +148,10 @@ footer a{color:var(--ink);text-decoration:none}
 </div>
 <script src="/idiomas/dados/avatar.js?v=20261016b"></script>
 <script src="/idiomas/dados/mapa-pessoal.js?v=1"></script>
-<script src="/idiomas/japones/vila.js?v=1"></script>
+<script src="/idiomas/japones/vila.js?v=2"></script>
 <script>
 (function(){
-  /* ordem da viagem, em 4 regiões: Chegada · Primeiros dias · Pela cidade · Encontros */
+  /* ordem da viagem, em 4 regiões: Chegada · Primeiros dias · Encontros · Pela cidade */
   const MAPAS=[
     ['aeroporto','✈️','Aeroporto','Imigração, reserva, bagagem','aeroporto'],
     ['sinalizacao','🪧','Sinalização','Placas, saída, proibido, perigo','placas'],
@@ -159,11 +159,11 @@ footer a{color:var(--ink);text-decoration:none}
     ['hotel','🏨','Hotel','Check-in, café da manhã, problemas no quarto','hotel'],
     ['kombini','🏪','Konbini','Esquentar, sacola, recibo','conbini'],
     ['restaurante','🍜','Restaurante','Quantas pessoas, pedido, conta','restaurante'],
+    ['apresentacao','🤝','Apresentação','Nome, país, trabalho, hobby','base'],
     ['horas','🕒','Horas','Que horas são, marcar horário','numeros'],
+    ['planos','🎬','Planos','Convidar, aceitar, recusar','planos'],
     ['compras','🎁','Compras','Preço, desconto, これ・それ・あれ','compras'],
     ['roupas','👚','Roupas','Provar, tamanho, cor','roupas'],
-    ['apresentacao','🤝','Apresentação','Nome, país, trabalho, hobby','base'],
-    ['planos','🎬','Planos','Convidar, aceitar, recusar','planos'],
     ['emergencia','🆘','Emergência','Perdi, dói aqui, chame ajuda','sos']
   ];
   const ler=k=>{ try{ const v=localStorage.getItem(k); return v==null?null:JSON.parse(v); }catch(e){ try{ return localStorage.getItem(k); }catch(_){ return null; } } };

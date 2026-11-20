@@ -34,7 +34,7 @@ const R=(k,f)=>`<ruby>${k}<rt>${f}</rt></ruby>`;
     {quem:'Garçom',q:'お'+R('飲','の')+'み'+R('物','もの')+'は いかがですか？',say:'おのみものは いかがですか？',ro:'O-nomimono wa ikaga desu ka?',pt:'E para beber?',
      ans:['とうにゅうラテ|tōnyū rate','を|o','おねがいします|onegaishimasu'],extra:['ぎゅうにゅう|gyūnyū','は|wa','です|desu'],ansPt:'Um latte com leite de soja, por favor.',tarefa:1,molde:null,distr:[]}
   ],
-  slug:'restaurante', num:'02', titulo:'Restaurante', emoji:'🍽️', jp:R('食堂','しょくどう'), h1:'Uma tigela de lámen',
+  slug:'restaurante', num:'06', titulo:'Restaurante', emoji:'🍽️', jp:R('食堂','しょくどう'), h1:'Uma tigela de lámen',
   fim:'Você pediu, comeu e pagou falando japonês.',
   intro:{titulo:'🍜 Hora de comer!',
     txt:['Você entra num restaurante pequeno de lámen. Assim que a porta abre, todo mundo grita <b>いらっしゃいませ！</b> ("bem-vindo!"). Não precisa responder: é só um cumprimento da casa.',

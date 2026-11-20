@@ -1,7 +1,7 @@
 (function(){
 const R=(k,f)=>`<ruby>${k}<rt>${f}</rt></ruby>`;
 (window.AULAS=window.AULAS||{}).kombini={
-  slug:'kombini', num:'03', titulo:'Konbini', emoji:'🏪', jp:'コンビニ', h1:'Lanche na loja de conveniência',
+  slug:'kombini', num:'05', titulo:'Konbini', emoji:'🏪', jp:'コンビニ', h1:'Lanche na loja de conveniência',
   fim:'Você comprou o seu lanche e respondeu todas as perguntas do caixa.',
   intro:{titulo:'🏪 Uma passadinha no konbini',
     txt:['O <b>コンビニ</b> (konbini) é a loja de conveniência aberta 24 horas. Lá você compra onigiri, bentô, bebidas, paga contas e saca dinheiro.',

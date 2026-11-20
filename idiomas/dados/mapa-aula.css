@@ -343,3 +343,23 @@ body{padding-bottom:260px}
   .top .tools>.btn.ar,.btn.ar{top:calc(120px + var(--sw) * .625 + 14px);bottom:auto;right:14px;width:var(--sw)}
 }
 @media (max-width:520px){.top .tools>.btn.ar,.btn.ar{padding:8px 16px;font-size:16px}.btn.ar .ar-sub{font-size:12.5px}}
+
+/* ---------- ideias do pacote do Neon: fio entre mapas, pontos clicáveis na cena, erro com reação, molde no caderno ---------- */
+.fio{margin:0 0 6px;font-size:13.5px;color:var(--muted);font-style:italic}
+.fio-fim{margin:2px 0 8px;font-style:normal;color:var(--sage);font-weight:500}
+.hs-p{margin:10px 0 0;padding:8px 12px;border-left:3px solid var(--gold);background:#fffaf0;border-radius:0 10px 10px 0;font-size:14px}
+.hs-n{display:inline-block;margin-left:4px;font-family:var(--f-display);font-weight:700;color:var(--gold);white-space:nowrap}
+.stage .hs{cursor:pointer}
+.stage .hs-halo{fill:#f3c969;opacity:.35;transform-origin:center;transform-box:fill-box;animation:hsPulse 1.8s ease-in-out infinite}
+.stage .hs-dot{fill:#fff;stroke:#d9a93c;stroke-width:3}
+.stage .hs.visto .hs-halo{fill:#a9c4a4;animation:none;opacity:.45}
+.stage .hs.visto .hs-dot{stroke:#517158}
+.stage .hs-ok{fill:none;stroke:#517158;stroke-width:2.2;stroke-linecap:round;stroke-linejoin:round}
+@keyframes hsPulse{0%,100%{transform:scale(.75);opacity:.25}50%{transform:scale(1.15);opacity:.55}}
+@media (prefers-reduced-motion:reduce){.stage .hs-halo{animation:none}}
+.hs-t{display:grid;gap:1px;text-align:left}
+.hs-t b{font-size:17px}
+.molde-dica{display:block;margin-top:4px}
+.cp-molde{display:inline-block;margin-left:4px;font-size:15px;letter-spacing:.03em}
+.toast .hs-t .ro{color:#f3b3c3}.toast .hs-t small{font-weight:500}.toast:has(.hs-t){border-radius:16px}
+.toast:has(.hs-t){bottom:auto;top:14px;z-index:60}

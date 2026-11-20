@@ -113,17 +113,24 @@ function markup(sel,opt){
   opt=opt||{}; S=Object.assign({},DEFAULT,sel||{}); S.acc=S.acc||[]; S.traits=S.traits||[];
   const clip='uabody'+(++clipN), changed=opt.changed||null, h=HEX[S.hairColor]||HEX.kuro, c=HEX[S.clothColor]||HEX.midori, s=SKINS[S.skin]||SKINS[3];
   const cls=k=>changed===k?(k==='bg'?'ua-fade':'ua-pop'):''; const hij=S.acc.includes('hijabu');
-  return `<defs><clipPath id="${clip}"><path d="${BODY}"/></clipPath></defs>
+  const ol='uaol'+clipN, hc='uahc'+clipN, OL=`filter="url(#${ol})"`;
+  /* sombra da franja na testa e do queixo no pescoço (cel), brilho no cabelo */
+  const semFranja=hij||S.hair==='bouzu'||S.acc.includes('boushi');
+  const sombra=`<g clip-path="url(#${hc})" fill="${shade(s,-38)}" opacity=".28">${semFranja?'':'<path d="M60 134 C68 120 80 108 92 100 C110 112 130 110 140 92 C158 98 172 110 180 134 C180 112 170 104 158 102 C150 112 132 120 112 116 C100 118 82 116 60 134 Z"/>'}</g>
+    <path d="M106 186 Q120 196 134 186 L134 198 Q120 206 106 198 Z" fill="${shade(s,-40)}" opacity=".3"/>`;
+  const brilho=(hij||S.hair==='bouzu')?'':`<path d="M92 72 Q116 62 142 70" stroke="#fff" stroke-width="5" stroke-linecap="round" fill="none" opacity=".28"/>`;
+  return `<defs><clipPath id="${clip}"><path d="${BODY}"/></clipPath><clipPath id="${hc}"><ellipse cx="120" cy="128" rx="58" ry="62"/></clipPath>
+   <filter id="${ol}" x="-15%" y="-15%" width="130%" height="130%"><feMorphology in="SourceAlpha" operator="dilate" radius="2.2" result="d"/><feFlood flood-color="#4a3540"/><feComposite in2="d" operator="in" result="o"/><feMerge><feMergeNode in="o"/><feMergeNode in="SourceGraphic"/></feMerge></filter></defs>
    ${opt.noBg?'':`<g class="${cls('bg')}">${drawBg(S.bg)}</g>`}
    <g class="${opt.still?'':'char'}">
-    <g class="${cls('hair')}">${hij?'':drawHairBack(S.hair,h)}</g>
+    <g class="${cls('hair')}" ${OL}>${hij?'':drawHairBack(S.hair,h)}</g>
     <g class="${cls('trait')}">${has('kurumaisu')?drawWheelchair():''}</g>
-    <g class="${cls('body')}">${drawBody(S.clothes,c,s).replace('url(#bodyclip)','url(#'+clip+')')}</g>
-    <g class="${cls('skin')}">${drawHead(s)}</g>
+    <g class="${cls('body')}" ${OL}>${drawBody(S.clothes,c,s).replace('url(#bodyclip)','url(#'+clip+')')}</g>
+    <g class="${cls('skin')}" ${OL}>${drawHead(s)}</g><g class="${cls('skin')}">${sombra}</g>
     <g class="${cls('face')}">${drawFace(S.face)}</g>
     <g class="${cls('trait')}">${drawTraitsFace(h)}</g>
-    <g class="${cls('hair')}">${hij?'':drawHairFront(S.hair,h)}</g>
-    <g class="${cls('acc')}">${(hij?['hijabu']:[]).concat(S.acc.filter(a=>a!=='hijabu'),has('hochouki')&&!hij?['hochouki']:[]).map(drawAcc).join('')}</g>
+    <g class="${cls('hair')}" ${OL}>${hij?'':drawHairFront(S.hair,h)}</g><g class="${cls('hair')}">${brilho}</g>
+    <g class="${cls('acc')}" ${OL}>${(hij?['hijabu']:[]).concat(S.acc.filter(a=>a!=='hijabu'),has('hochouki')&&!hij?['hochouki']:[]).filter(a=>a!=='megane').map(drawAcc).join('')}</g><g class="${cls('acc')}">${S.acc.includes('megane')?drawAcc('megane'):''}</g>
    </g>`;
 }
 function svg(sel,opt){ opt=opt||{}; return `<svg viewBox="${opt.viewBox||'0 0 240 300'}" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="${opt.label||'Avatar'}" style="display:block;width:100%;height:100%">${markup(sel,opt)}</svg>`; }

@@ -1,7 +1,7 @@
 (function(){
 const R=(k,f)=>`<ruby>${k}<rt>${f}</rt></ruby>`;
 (window.AULAS=window.AULAS||{}).emergencia={
-  slug:'emergencia', num:'07', titulo:'Emergência', emoji:'🆘', jp:R('緊急','きんきゅう'), h1:'No posto policial',
+  slug:'emergencia', num:'12', titulo:'Emergência', emoji:'🆘', jp:R('緊急','きんきゅう'), h1:'No posto policial',
   fim:'Você pediu ajuda, explicou o problema e chamou socorro em japonês.',
   intro:{titulo:'🆘 Respira: você vai saber pedir ajuda',
     txt:['Ninguém quer precisar, mas é bom saber. No Japão existe o <b>こうばん</b> (kōban), um posto policial pequeno em quase toda esquina. Os policiais ajudam com coisas perdidas, caminhos e emergências.',

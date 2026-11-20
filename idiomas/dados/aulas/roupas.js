@@ -1,7 +1,7 @@
 (function(){
 const R=(k,f)=>`<ruby>${k}<rt>${f}</rt></ruby>`;
 (window.AULAS=window.AULAS||{}).roupas={
-  slug:'roupas', num:'06', titulo:'Roupas', emoji:'👗', jp:R('服','ふく'), h1:'Provando roupa',
+  slug:'roupas', num:'11', titulo:'Roupas', emoji:'👗', jp:R('服','ふく'), h1:'Provando roupa',
   fim:'Você provou, trocou o tamanho e escolheu a cor em japonês.',
   intro:{titulo:'👚 Uma camiseta linda na vitrine',
     txt:['Você viu uma peça linda e quer provar. Mas os tamanhos japoneses costumam ser menores…',

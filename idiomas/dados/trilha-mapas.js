@@ -4,17 +4,17 @@
 (function(){
   var MAPAS=[
     ['aeroporto','✈️','Aeroporto','Imigração, reserva, bagagem','aeroporto'],
-    ['hotel','🏨','Hotel','Check-in, café da manhã, problemas no quarto','hotel'],
-    ['restaurante','🍜','Restaurante','Quantas pessoas, pedido, conta','restaurante'],
-    ['kombini','🏪','Konbini','Esquentar, sacola, recibo','conbini'],
+    ['sinalizacao','🪧','Sinalização','Placas, saída, proibido, perigo','placas'],
     ['trens','🚆','Trens','Destino, preço, plataforma','trens'],
-    ['compras','🎁','Compras','Preço, desconto, これ・それ・あれ','compras'],
-    ['roupas','👚','Roupas','Provar, tamanho, cor','roupas'],
-    ['emergencia','🆘','Emergência','Perdi, dói aqui, chame ajuda','sos'],
+    ['hotel','🏨','Hotel','Check-in, café da manhã, problemas no quarto','hotel'],
+    ['kombini','🏪','Konbini','Esquentar, sacola, recibo','conbini'],
+    ['restaurante','🍜','Restaurante','Quantas pessoas, pedido, conta','restaurante'],
     ['apresentacao','🤝','Apresentação','Nome, país, trabalho, hobby','base'],
     ['horas','🕒','Horas','Que horas são, marcar horário','numeros'],
     ['planos','🎬','Planos','Convidar, aceitar, recusar','planos'],
-    ['sinalizacao','🪧','Sinalização','Placas, saída, proibido, perigo','placas']
+    ['compras','🎁','Compras','Preço, desconto, これ・それ・あれ','compras'],
+    ['roupas','👚','Roupas','Provar, tamanho, cor','roupas'],
+    ['emergencia','🆘','Emergência','Perdi, dói aqui, chame ajuda','sos']
   ];
   function ler(k){ try{ var v=localStorage.getItem(k); return v==null?null:JSON.parse(v); }catch(e){ return null; } }
   /* aula: chegou à última etapa da aula · prova: carimbo do Planeta (o mesmo passaporte) */

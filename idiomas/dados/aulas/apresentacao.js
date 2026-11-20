@@ -1,7 +1,7 @@
 (function(){
 const R=(k,f)=>`<ruby>${k}<rt>${f}</rt></ruby>`;
 (window.AULAS=window.AULAS||{}).apresentacao={
-  slug:'apresentacao', num:'08', titulo:'Apresentação', emoji:'🤝', jp:R('自己紹介','じこしょうかい'), h1:'Uma nova amiga',
+  slug:'apresentacao', num:'07', titulo:'Apresentação', emoji:'🤝', jp:R('自己紹介','じこしょうかい'), h1:'Uma nova amiga',
   fim:'Você se apresentou e fez uma amiga nova em japonês.',
   intro:{titulo:'☕ Encontro de intercâmbio',
     txt:['Você foi a um café de intercâmbio de idiomas. Uma moça simpática chamada <b>ファティマ</b> (Fátima) senta na sua mesa.',

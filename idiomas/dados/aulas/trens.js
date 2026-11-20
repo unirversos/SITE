@@ -1,7 +1,7 @@
 (function(){
 const R=(k,f)=>`<ruby>${k}<rt>${f}</rt></ruby>`;
 (window.AULAS=window.AULAS||{}).trens={
-  slug:'trens', num:'04', titulo:'Trens', emoji:'🚆', jp:R('電車','でんしゃ'), h1:'Pegando o trem certo',
+  slug:'trens', num:'03', titulo:'Trens', emoji:'🚆', jp:R('電車','でんしゃ'), h1:'Pegando o trem certo',
   fim:'Você descobriu o preço, a plataforma e a saída falando japonês.',
   intro:{titulo:'🚆 Rumo a Shinjuku',
     txt:['A estação parece um labirinto, mas no guichê tem sempre alguém para ajudar. Você quer ir até <b>しんじゅく</b> (Shinjuku).',

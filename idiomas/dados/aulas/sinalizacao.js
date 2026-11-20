@@ -1,7 +1,7 @@
 (function(){
 const R=(k,f)=>`<ruby>${k}<rt>${f}</rt></ruby>`;
 (window.AULAS=window.AULAS||{}).sinalizacao={
-  slug:'sinalizacao', num:'11', titulo:'Sinalização', emoji:'🪧', jp:R('看板','かんばん'), h1:'Lendo as placas',
+  slug:'sinalizacao', num:'02', titulo:'Sinalização', emoji:'🪧', jp:R('看板','かんばん'), h1:'Lendo as placas',
   fim:'Você leu as placas, achou o caminho e ainda ajudou alguém.',
   intro:{titulo:'🪧 Placas por todo lado',
     txt:['Na praça da estação tem placa para tudo: saída, entrada, proibido fumar, perigo… Uma senhora simpática, a <b>おばあさん</b>, está ali do lado.',

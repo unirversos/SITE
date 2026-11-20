@@ -1,7 +1,7 @@
 (function(){
 const R=(k,f)=>`<ruby>${k}<rt>${f}</rt></ruby>`;
 (window.AULAS=window.AULAS||{}).aeroporto={
-  slug:'aeroporto', num:'00', titulo:'Aeroporto', emoji:'🛂', jp:R('空港','くうこう'), h1:'Chegando em Tóquio',
+  slug:'aeroporto', num:'01', titulo:'Aeroporto', emoji:'🛂', jp:R('空港','くうこう'), h1:'Chegando em Tóquio',
   fim:'Você passou pela imigração inteira falando japonês.',
   intro:{titulo:'✈️ Você acabou de pousar em Tóquio!',
     txt:[],

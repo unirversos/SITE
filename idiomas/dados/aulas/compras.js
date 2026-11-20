@@ -1,7 +1,7 @@
 (function(){
 const R=(k,f)=>`<ruby>${k}<rt>${f}</rt></ruby>`;
 (window.AULAS=window.AULAS||{}).compras={
-  slug:'compras', num:'05', titulo:'Compras', emoji:'🛍️', jp:R('買','か')+'い'+R('物','もの'), h1:'Lembrancinhas para levar',
+  slug:'compras', num:'10', titulo:'Compras', emoji:'🛍️', jp:R('買','か')+'い'+R('物','もの'), h1:'Lembrancinhas para levar',
   fim:'Você escolheu, negociou o desconto e pagou falando japonês.',
   intro:{titulo:'🎁 Hora das lembrancinhas',
     txt:['Você entra numa lojinha cheia de <b>おみやげ</b> (lembrancinhas) para levar ao Brasil.',

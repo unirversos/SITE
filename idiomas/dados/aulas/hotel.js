@@ -1,7 +1,7 @@
 (function(){
 const R=(k,f)=>`<ruby>${k}<rt>${f}</rt></ruby>`;
 (window.AULAS=window.AULAS||{}).hotel={
-  slug:'hotel', num:'01', titulo:'Hotel', emoji:'🏨', jp:'ホテル', h1:'Fazendo o check-in',
+  slug:'hotel', num:'04', titulo:'Hotel', emoji:'🏨', jp:'ホテル', h1:'Fazendo o check-in',
   fim:'Você fez o check-in e resolveu tudo no quarto em japonês.',
   intro:{titulo:'🏨 Chegou ao hotel!',
     txt:['Depois do voo, você chega ao hotel cansada e com a mala. Na recepção (<b>フロント</b>, "front") a recepcionista vai pedir o seu nome, perguntar quantas noites você fica e te entregar a chave.',

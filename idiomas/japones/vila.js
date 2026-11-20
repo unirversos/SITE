@@ -43,7 +43,9 @@ const COR=Object.assign({cabelo:'#2b2730',pele:'#d79f73',roupa:'#4f7a58'},dados.
 
 const W=192,H=580;
 const INK='#3a2b38',PINK='#c23f5e',BLUSH='#f8dde1',SAGE='#4f7a58',SAGEL='#a9c4a4',TAUPE='#816c5b',GOLD='#d9a93c',LAV='#b7a6dc',LAVL='#e6def5',CREAM='#fff7ea',WHITE='#ffffff',DARK='#5a4658',WOOD='#e9c9a8',LIT='#f9dc8c',GLASS='#cfe3e6';
-const REG=['Chegada','Primeiros dias','Pela cidade','Encontros'];
+const REG=['Chegada','Primeiros dias','Encontros','Pela cidade'];
+/* cada lugar tem seu prédio, qualquer que seja a ordem da trilha */
+const TIPO={aeroporto:0,sinalizacao:1,trens:2,hotel:3,kombini:4,restaurante:5,horas:6,compras:7,roupas:8,apresentacao:9,planos:10,emergencia:11};
 const FLOR=['#a9c4a4','#f3b3c3','#ecc65a','#b7a6dc'];
 const MAPAS=dados.mapas.map(m=>[m.slug,m.nome,m.desc,m.terr]);
 const COLX=[40,96,152], rowPy=r=>98+r*120, SALAO_Y=550;
@@ -100,7 +102,7 @@ function desenhaFundo(){
   for(let r=0;r<4;r++){const py=rowPy(r);[68,124].forEach((tx,j)=>{
     const viz=ST.map((s,i)=>i).filter(i=>ST[i].r===r&&Math.abs(ST[i].x-tx)<40);
     arvore(tx,py-9,FLOR[r],viz.some(i=>S.prova[i]));});}
-  MAPAS.forEach((m,i)=>{const s=ST[i];predio(i,s.x,s.py-8,S.prova[i]);poste(s.x+21,s.py-8,S.prova[i]);});
+  MAPAS.forEach((m,i)=>{const s=ST[i];predio(TIPO[m[0]]??i,s.x,s.py-8,S.prova[i]);poste(s.x+21,s.py-8,S.prova[i]);});
   salao(96,SALAO_Y-8,todos);
 }
 let P=c=>c;
