@@ -32,23 +32,35 @@ const stDe = n => { const r = resp(n);
 /* ---------- guardar ---------- */
 const chaveLocal = () => 'uniAtiv:' + A.id + ':' + alvo;
 let liberado = false;
+/* cópia de segurança no aparelho: tudo o que se escreve fica também no navegador; ao abrir, o que estiver mais novo
+   no aparelho do que na nuvem é reenviado (salva o trabalho se a internet ou o Firebase falharem) */
+const leLocal = () => { try { return JSON.parse(localStorage.getItem(chaveLocal()) || '{}'); } catch (e) { return {}; } };
+const guardaLocal = () => { try { localStorage.setItem(chaveLocal(), JSON.stringify(R)); } catch (e) {} };
 async function carrega(){
   R = {}; liberado = false;
   try { const s = await getDoc(doc(db, 'atividades', alvo)); liberado = s.exists(); R = (s.exists() && s.data()[A.id]) || {}; nuvem = true; }
-  catch (e) { console.warn(e); nuvem = false; try { R = JSON.parse(localStorage.getItem(chaveLocal()) || '{}'); } catch (x) {} }
-  $('aviso').innerHTML = nuvem ? '' : '<p class="aviso">Por enquanto, o que você escrever fica salvo só neste aparelho. Falta liberar o espaço de atividades no Firebase.</p>';
+  catch (e) { console.warn(e); nuvem = false; R = leLocal(); }
+  if (nuvem && liberado) {
+    const L = leLocal(), pend = {};
+    Object.keys(L).forEach(n => { if (L[n] && (L[n].m || 0) > ((R[n] || {}).m || 0)) { R[n] = L[n]; pend[n] = L[n]; } });
+    if (Object.keys(pend).length) setDoc(doc(db, 'atividades', alvo), { [A.id]: pend }, { merge: true }).catch(e => console.warn('reenvio', e));
+  }
+  $('aviso').innerHTML = nuvem ? '' : '<p class="aviso">Sem conexão com a nuvem agora: o que você escrever fica salvo neste aparelho e vai para a nuvem quando voltar.</p>';
 }
 const fila = {};
 function grava(n, campos, el){
   R[n] = Object.assign({}, resp(n), campos, { m: Date.now() });
+  guardaLocal();
   clearTimeout(fila[n]);
   if (el) el.textContent = 'salvando…';
   fila[n] = setTimeout(async () => {
     if (nuvem) {
-      try { await setDoc(doc(db, 'atividades', alvo), { [A.id]: { [n]: R[n] } }, { merge: true }); if (el) el.textContent = 'salvo ✓'; }
-      catch (e) { console.warn(e); nuvem = false; if (el) el.textContent = 'salvo neste aparelho'; }
-    }
-    if (!nuvem) { try { localStorage.setItem(chaveLocal(), JSON.stringify(R)); } catch (e) {} if (el) el.textContent = 'salvo neste aparelho'; }
+      const ok = await Promise.race([
+        setDoc(doc(db, 'atividades', alvo), { [A.id]: { [n]: R[n] } }, { merge: true }).then(() => true, e => { console.warn(e); return false; }),
+        new Promise(r => setTimeout(() => r(null), 6000))
+      ]);
+      if (el) el.textContent = ok ? 'salvo ✓' : 'salvo neste aparelho · vai para a nuvem quando voltar';
+    } else if (el) el.textContent = 'salvo neste aparelho';
     pintaNums();
   }, 700);
 }
