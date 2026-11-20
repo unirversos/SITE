@@ -1,0 +1,267 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="robots" content="noindex">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Unirversos Idiomas — por onde você quer começar?</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Baloo+2:wght@500;600;700;800&family=Zen+Maru+Gothic:wght@400;500;700&display=swap');
+:root{--pink:#b5514d;--pink-deep:#9c3f3b;--blush:#FBEBE7;--blush-2:#F0DFDA;--cream:#FDF8F5;--ink:#4A4149;--ink-soft:#71676e;--gold:#C0913F;--gold-soft:#FBF2DF;--taupe:#8a7568}
+*{box-sizing:border-box;margin:0;padding:0}
+@media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
+body{font-family:'Zen Maru Gothic',sans-serif;color:var(--ink);background:var(--cream) radial-gradient(rgba(181,81,77,.16) 1.2px,transparent 1.4px) 0 0/22px 22px;line-height:1.7;font-size:16px;-webkit-font-smoothing:antialiased}
+.wrap{max-width:980px;margin:0 auto;padding:0 24px}
+.nav{display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap;padding:22px 0}
+.logo{font-family:'Baloo 2',cursive;font-size:19px;font-weight:800;letter-spacing:.14em;text-decoration:none;color:inherit}.logo span{color:var(--pink)}
+.nav .links{display:flex;flex-wrap:wrap;align-items:center;gap:8px 18px;font-size:13px}
+.nav .links a{color:var(--ink-soft);text-decoration:none}.nav .links a:hover{color:var(--pink-deep)}.nav .links a.on{color:var(--pink)}
+a:focus-visible,button:focus-visible{outline:3px solid #686eb2;outline-offset:3px}
+h1.q{font-family:'Baloo 2',cursive;font-weight:700;font-size:clamp(30px,5vw,44px);line-height:1.15;margin:34px 0 8px}
+.sub{color:var(--ink-soft);margin-bottom:26px}
+.trilhas{display:grid;gap:14px}
+.tri{display:grid;grid-template-columns:56px minmax(0,1fr) auto;gap:16px;align-items:center;background:#fff;border:1.5px solid var(--blush-2);border-left:6px solid var(--c);border-radius:20px;padding:20px 24px;text-decoration:none;color:inherit;transition:transform .15s ease,box-shadow .15s ease}
+.tri{box-shadow:0 10px 24px -20px rgba(150,90,70,.55)}.tri:hover{transform:translateY(-3px);box-shadow:0 18px 30px -18px rgba(150,90,70,.55)}
+.tri.zero{--c:#8a7568}.tri.ja{--c:#b5514d}
+.tri .fl{width:56px;height:56px;border-radius:50%;display:grid;place-items:center;font-family:'Baloo 2',cursive;font-weight:700;font-size:19px;color:#fff;background:var(--c)}
+.tri b{font-family:'Baloo 2',cursive;font-size:24px;line-height:1.2;display:block}
+.tri small{font-size:12px;letter-spacing:1.5px;text-transform:uppercase;color:var(--c);font-weight:700;display:block}
+.tri .tx span{font-size:15px;color:var(--ink-soft)}.tri .go{font-weight:700;color:var(--c);white-space:nowrap}
+@media (max-width:560px){.tri{grid-template-columns:44px minmax(0,1fr)}.tri .fl{width:44px;height:44px;font-size:15px}.tri .go{grid-column:2}}
+.breve{display:flex;flex-wrap:wrap;gap:14px}
+.breve div{opacity:.45;filter:grayscale(1);pointer-events:none;user-select:none;flex:1 1 260px;background:#fff;border:1.5px dashed var(--blush-2);border-radius:20px;padding:14px 22px;display:flex;align-items:center;gap:14px}
+.breve i{font-style:normal;width:40px;height:40px;border-radius:50%;display:grid;place-items:center;font-family:'Baloo 2',cursive;font-weight:700}
+.breve b{font-family:'Baloo 2',cursive;font-size:18px;display:block;line-height:1.2}.breve span{font-size:13.5px;color:var(--ink-soft)}
+.vivo{text-align:center;padding:10px 0 56px}
+.vivo .eyebrow{font-size:12px;letter-spacing:4px;text-transform:uppercase;color:var(--pink-deep);font-weight:700;margin-bottom:12px}
+.vagas{display:inline-block;background:var(--gold-soft);color:#7A5B21;border:1.5px solid var(--gold);border-radius:999px;padding:11px 30px;font-family:'Baloo 2',cursive;font-weight:700;font-size:21px;text-decoration:none;transition:transform .15s}
+.vagas:hover{transform:translateY(-2px)}
+.vivo p.n{margin-top:12px;font-size:14px;color:var(--ink-soft)}
+.foot{border-top:1px solid var(--blush-2);padding:26px 0 56px;text-align:center;font-size:14px;color:var(--ink-soft);line-height:2}
+.foot a{color:var(--pink-deep);font-weight:700;text-decoration:none}.foot .cr{font-size:12.5px;margin-top:6px}
+
+.cadsec{padding:44px 0 20px}
+.cad{display:flex;align-items:center;justify-content:center;gap:30px;flex-wrap:wrap;max-width:680px;margin:0 auto;color:var(--ink);text-decoration:none}
+.capa{position:relative;display:block;width:196px;height:246px;flex:none;border-radius:6px 16px 16px 6px;background:var(--pink,#B5514D);box-shadow:inset 10px 0 0 rgba(0,0,0,.12),0 18px 28px -16px rgba(74,40,40,.6);transition:transform .2s ease}
+.capa:before{content:"";position:absolute;right:26px;top:-4px;bottom:-4px;width:11px;background:#3a2b38;border-radius:3px;opacity:.85}
+.capa .et{position:absolute;left:24px;right:50px;top:64px;background:#fffdf9;border-radius:6px;padding:14px 8px;text-align:center;font-family:'Baloo 2',cursive;font-weight:800;font-size:23px;line-height:1.05;color:#3a2b38;box-shadow:0 2px 0 rgba(0,0,0,.08)}
+.capa .fit{position:absolute;bottom:-14px;left:54px;width:10px;height:40px;background:var(--gold,#C0913F);clip-path:polygon(0 0,100% 0,100% 100%,50% 80%,0 100%)}
+.cad:hover .capa{transform:translateY(-4px) rotate(-2deg)}
+.cad .tx{flex:0 1 auto;max-width:270px}
+.cad .tx b{display:block;font-family:'Baloo 2',cursive;font-weight:800;font-size:clamp(24px,4vw,30px);line-height:1.15;margin-bottom:6px}
+.cad .d{display:block;font-size:15px;color:#5d535b;margin-bottom:16px}
+.cad .go{display:inline-block;background:var(--pink);color:#fff;font-weight:700;border-radius:40px;padding:11px 24px;box-shadow:0 8px 18px rgba(181,81,77,.25)}
+@media (max-width:600px){.cad{text-align:center}}
+.bau{padding:20px 0 60px}
+.bau-card{position:relative;background:#fff;border:1.5px solid var(--blush-2);border-radius:28px;padding:40px 28px 34px;text-align:center;overflow:hidden}
+.glow{position:absolute;left:50%;top:42%;width:460px;height:460px;transform:translate(-50%,-50%);border-radius:50%;background:radial-gradient(circle,rgba(192,145,63,.28),rgba(192,145,63,0) 62%);opacity:0;transition:opacity .6s ease;pointer-events:none}
+.bau.on .glow{opacity:1}
+.bau-in{position:relative}
+.bau h2{font-family:'Baloo 2',cursive;font-weight:700;font-size:clamp(28px,4.5vw,38px);line-height:1.15;margin-bottom:6px}
+.bau-sub{color:var(--ink-soft);font-size:17px;max-width:520px;margin:0 auto 6px}
+.bau-btn{display:block;margin:0 auto;border:0;background:transparent;padding:0;cursor:pointer;font:inherit;width:300px;max-width:100%}
+.cofre{display:block;position:relative;width:300px;height:250px;max-width:100%}
+.cofre svg{position:absolute;inset:0;width:100%;height:100%;display:block;transition:opacity .45s ease}
+.c-aberto{opacity:0}.bau.on .c-aberto{opacity:1}.bau.on .c-fechado{opacity:0}
+.estrelas{opacity:0;transition:opacity .5s ease 0s}.bau.on .estrelas{opacity:1;transition-delay:.4s}
+.respira{animation:respira 3.4s ease-in-out infinite;transform-origin:50% 90%}
+.brilho{animation:brilho 2.8s ease-in-out infinite}
+@keyframes respira{0%,100%{transform:scale(1)}50%{transform:scale(1.035)}}
+@keyframes brilho{0%,100%{opacity:0}50%{opacity:.55}}
+@keyframes pulso{0%,100%{opacity:.55}50%{opacity:1}}
+@keyframes subir{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:none}}
+@keyframes sair{0%{opacity:0;transform:translateY(-150px) scale(.4) rotate(-8deg)}60%{opacity:1;transform:translateY(10px) scale(1.05) rotate(2deg)}100%{opacity:1;transform:none}}
+.dica{display:inline-block;font-size:14px;font-weight:700;color:var(--pink-deep);animation:pulso 2.8s ease-in-out infinite}
+.peek{display:flex;flex-wrap:wrap;justify-content:center;gap:8px;margin-top:14px}.peek[hidden]{display:none}
+.peek span{background:#fff;border:1.5px solid #e6d3a3;color:#7A5B21;border-radius:999px;padding:3px 14px;font-size:13.5px;font-weight:700}
+.peek em{font-style:normal;font-size:14px;color:var(--ink-soft);align-self:center}
+.bau-c{text-align:left}.bau-c[hidden]{display:none}
+.bau-c h3{font-size:12px;letter-spacing:3px;text-transform:uppercase;color:var(--taupe);font-weight:700;margin:0 0 10px;animation:subir .5s ease .3s both}
+.bau-c h3.b{margin-top:22px;animation-delay:.45s}
+.bau-corpo{display:flex;flex-direction:column;align-items:center;gap:22px;margin-top:4px}
+.bau-lado{position:relative;display:flex;flex-direction:column;align-items:center}.bau-lado>*:not(.glow){position:relative}
+
+@media (min-width:760px){
+ .bau.on .bau-corpo{flex-direction:row;align-items:flex-start;gap:34px;justify-content:center}
+ .bau.on .bau-btn{width:220px;margin-top:-34px}
+ .bau.on .bau-c{flex:0 1 560px}
+}
+.pils{display:flex;flex-wrap:wrap;gap:8px}
+.pil{display:inline-flex;align-items:center;gap:7px;background:#fff;border:1.5px solid #e6d3a3;border-radius:999px;padding:6px 14px 6px 6px;min-height:40px;color:var(--ink);text-decoration:none;font-size:14.5px;font-weight:700;transition:transform .15s,border-color .15s,background .15s;animation:sairL .55s cubic-bezier(.2,.9,.3,1.15) both}
+.pil:hover{transform:translateY(-2px);border-color:var(--gold);background:#fffaf0}
+.pil .gl{width:28px;height:28px;border-radius:50%;display:grid;place-items:center;font-size:14px;flex:none}
+.pil.p .gl{background:var(--gold-soft);color:#7A5B21}.pil.v{border-color:#cfe0d2}.pil.v .gl{background:#E8EFE8;color:#3d6050}
+.pils .pil:nth-child(2){animation-delay:.06s}.pils .pil:nth-child(3){animation-delay:.12s}.pils .pil:nth-child(4){animation-delay:.18s}.pils .pil:nth-child(5){animation-delay:.24s}.pils .pil:nth-child(6){animation-delay:.3s}.pils .pil:nth-child(7){animation-delay:.36s}.pils .pil:nth-child(8){animation-delay:.42s}
+@media (max-width:759px){.pils{justify-content:center}.bau-c h3{text-align:center}}
+.pdica{margin:18px 0 0;min-height:22px;font-size:14px;color:var(--ink-soft);transition:color .2s;animation:subir .5s ease .6s both}.pdica.on{color:var(--ink)}.pdica b{color:#7A5B21}
+@media (hover:none),(max-width:759px){.pdica{display:none}}
+/* abrir: o baú dá uma tremidinha, a tampa salta e as ferramentas saem voando DO baú */
+@keyframes treme{0%,100%{transform:rotate(0)}20%{transform:rotate(-4deg) translateY(-3px)}40%{transform:rotate(4deg)}60%{transform:rotate(-3deg) translateY(-2px)}80%{transform:rotate(2deg)}}
+.bau.treme .cofre{animation:treme .3s ease-in-out;transform-origin:50% 90%}
+@keyframes tampa{0%{transform:scale(.94) translateY(6px)}55%{transform:scale(1.05) translateY(-4px)}100%{transform:none}}
+.bau.on .c-aberto{animation:tampa .5s cubic-bezier(.3,1.4,.5,1);transform-origin:50% 85%}
+@keyframes faisca{0%{opacity:0;transform:scale(.3)}50%{opacity:1;transform:scale(1.25)}100%{opacity:1;transform:none}}
+.bau.on .estrelas{animation:faisca .6s ease .25s both;transform-origin:50% 30%;transform-box:fill-box}
+@keyframes sairL{0%{opacity:0;transform:translate(-170px,30px) scale(.3) rotate(-10deg)}65%{opacity:1;transform:translate(6px,-3px) scale(1.06) rotate(1deg)}100%{opacity:1;transform:none}}
+@keyframes sairC{0%{opacity:0;transform:translateY(-130px) scale(.3)}65%{opacity:1;transform:translateY(5px) scale(1.05)}100%{opacity:1;transform:none}}
+@media (max-width:759px){.pil{animation-name:sairC}}
+/* fechar: as ferramentas voltam para dentro do baú antes da tampa fechar */
+@keyframes guardaL{to{opacity:0;transform:translate(-170px,30px) scale(.3) rotate(-10deg)}}
+@keyframes guardaC{to{opacity:0;transform:translateY(-130px) scale(.3)}}
+.bau.guarda .pil{animation:guardaL .28s ease-in forwards!important}
+.bau.guarda .bau-c h3,.bau.guarda .pdica{transition:opacity .2s;opacity:0}
+@media (max-width:759px){.bau.guarda .pil{animation-name:guardaC!important}}
+/* o baú fechado convida ao clique: levanta, inclina e a fechadura brilha */
+.bau-btn .cofre{transition:transform .25s ease}
+.bau:not(.on) .bau-btn:hover .cofre,.bau:not(.on) .bau-btn:focus-visible .cofre{transform:translateY(-6px) rotate(-2deg)}
+.bau:not(.on) .bau-btn:hover .c-fechado{filter:drop-shadow(0 0 14px rgba(192,145,63,.55))}
+.bau:not(.on) .bau-btn:hover+.dica{animation:none;opacity:1}
+.bau.on .bau-btn:hover .cofre{transform:scale(1.03)}
+.bau.arco .pil{animation:none!important}.bau.arco .pil:hover{transform:none}
+/* Japonês = ação principal da página */
+.tri.ja{padding:26px 26px;border-width:1.5px 1.5px 1.5px 7px}
+.tri.ja b{font-size:28px}
+.tri .fl.mp{background:none;width:72px;height:72px;border-radius:0}.tri .fl.mp svg{width:72px;height:72px}.tri.ja{grid-template-columns:76px minmax(0,1fr) auto}
+@media (max-width:560px){.tri.ja{grid-template-columns:60px minmax(0,1fr)}.tri .fl.mp,.tri .fl.mp svg{width:60px;height:60px}}
+.tri .tx strong{color:var(--ink);font-weight:700}
+.tri.ja .go{background:var(--pink);color:#fff;border-radius:40px;padding:12px 26px;box-shadow:0 8px 18px rgba(181,81,77,.25);transition:background .15s}
+.tri.ja:hover .go{background:var(--pink-deep)}
+/* Aula Zero = bilhete de entrada: compacto, papel creme, picote antes do botão */
+.tri.zero{position:relative;background:#FBF4E6;border:1.5px dashed #dccbaa;border-left:6px solid var(--c);padding:14px 22px;grid-template-columns:44px minmax(0,1fr) auto;box-shadow:none}
+.tri.zero .fl{width:44px;height:44px;font-size:17px}
+.tri.zero b{font-size:20px}
+.tri.zero .tx span{font-size:14px}
+.tri.zero .go{border-left:2px dashed #dccbaa;padding:6px 0 6px 20px;font-size:14.5px}
+.tri.zero:before,.tri.zero:after{content:"";position:absolute;right:118px;width:16px;height:16px;border-radius:50%;background:var(--cream,#FDF8F5);border:1.5px dashed #dccbaa}
+.tri.zero:before{top:-9px}.tri.zero:after{bottom:-9px}
+@media (max-width:560px){.tri.zero:before,.tri.zero:after{display:none}.tri.zero .go{border-left:0;padding:0}.tri.ja .go{justify-self:start}}
+/* quiz em pílula com bússola */
+.quiz{margin-top:22px;text-align:center}
+.quiz a{display:inline-flex;align-items:center;gap:10px;background:#fff;border:1.5px solid var(--blush-2);border-radius:999px;padding:10px 20px 10px 12px;color:var(--ink-soft);font-size:15px;text-decoration:none;box-shadow:0 8px 20px -16px rgba(150,90,70,.5);transition:transform .15s,border-color .15s}
+.quiz a:hover{transform:translateY(-2px);border-color:var(--pink)}
+.quiz a b{color:var(--pink-deep)}
+.quiz .bs{width:32px;height:32px;border-radius:50%;background:var(--blush);display:grid;place-items:center;font-size:17px;flex:none}
+
+
+/* kit de partida: três ícones ilustrados, pequenos, lado a lado */
+.kit{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:10px;margin:18px auto 6px;max-width:700px}
+@media(max-width:560px){.kit{grid-template-columns:repeat(3,minmax(0,1fr));row-gap:18px}}
+button.kc{border:0;background:none;padding:0;cursor:pointer;font:inherit}.kc .ic svg{width:72px;height:72px}
+.kc{display:flex;flex-direction:column;align-items:center;gap:6px;color:var(--ink);text-decoration:none;transition:transform .2s}
+.kc:hover{transform:translateY(-3px)}
+.kc b{font-family:'Baloo 2',cursive;font-weight:800;font-size:16px;line-height:1.1}
+.ic{height:86px;display:grid;place-items:center}
+.kc .capa{position:relative;display:block;width:64px;height:80px;border-radius:4px 10px 10px 4px;background:var(--pink,#B5514D);box-shadow:inset 6px 0 0 rgba(0,0,0,.12),0 10px 16px -10px rgba(74,40,40,.6);transform:rotate(-4deg);transition:transform .2s}
+.kc .capa:before{content:"";position:absolute;right:11px;top:-3px;bottom:-3px;width:6px;background:#3a2b38;border-radius:2px;opacity:.85}
+.kc .capa .et{position:absolute;left:9px;right:19px;top:22px;padding:5px 2px;background:#fffdf9;border-radius:3px;text-align:center;font-family:'Baloo 2',cursive;font-weight:800;font-size:9px;line-height:1.05;color:#3a2b38}
+.kc .capa .fit{position:absolute;bottom:-8px;left:20px;width:6px;height:20px;background:var(--gold,#C0913F);clip-path:polygon(0 0,100% 0,100% 100%,50% 80%,0 100%)}
+.kc:hover .capa{transform:rotate(2deg)}
+.cracha{position:relative;width:58px;height:80px;border-radius:9px;background:#EAF2EC;border:2px solid #b9d0be;display:flex;flex-direction:column;align-items:center;justify-content:flex-end;gap:3px;padding-bottom:7px;box-shadow:0 10px 16px -10px rgba(60,100,70,.5);transform:rotate(3deg);transition:transform .2s}
+.cracha .furo{position:absolute;top:6px;left:50%;width:18px;height:5px;margin-left:-9px;border-radius:4px;background:#fff;border:1.5px solid #b9d0be}
+.cracha .foto{width:36px;height:36px;border-radius:50%;background:#fff;border:2px dashed #8fb59a;display:grid;place-items:center;font-size:18px}
+.cracha em{font-style:normal;font-family:'Baloo 2',cursive;font-weight:800;font-size:8px;letter-spacing:2px;color:#4f7a58}
+.kc:hover .cracha{transform:rotate(-2deg)}
+.bilhete{position:relative;display:flex;align-items:center;gap:6px;width:88px;height:54px;padding:0 8px;border-radius:8px;background:#FBF4E6;border:2px dashed #dccbaa;transform:rotate(-3deg);transition:transform .2s}
+.bilhete:before,.bilhete:after{content:"";position:absolute;left:34px;width:11px;height:11px;border-radius:50%;background:var(--cream,#FDF8F5);border:2px dashed #dccbaa}
+.bilhete:before{top:-7px}.bilhete:after{bottom:-7px}
+.bilhete .nb{font-family:'Baloo 2',cursive;font-weight:800;font-size:28px;line-height:1;color:#4f7a58;padding-right:7px;border-right:2px dashed #dccbaa}
+.bilhete .lb{font-family:'Baloo 2',cursive;font-weight:800;font-size:10px;line-height:1.1;letter-spacing:.5px;color:#7A5B21}
+.kc:hover .bilhete{transform:rotate(2deg)}
+.quiz{margin:14px 0 6px}.quiz a{padding:6px 14px 6px 8px;font-size:13px}.quiz .bs{width:24px;height:24px;font-size:13px}
+.pu-sec{padding:30px 0 6px;scroll-margin-top:70px}.pu-sec h2{font-family:'Baloo 2',cursive;font-weight:700;font-size:clamp(24px,4vw,32px);line-height:1.2;margin:0 0 4px}
+.pu-sec .sub{margin:0 0 14px}
+.pu-eb{margin:0 0 6px;font-size:12px;letter-spacing:3px;text-transform:uppercase;color:var(--pink-deep);font-weight:700}
+.pu-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}
+.pu-sec .tri{grid-template-columns:1fr;justify-items:start;align-content:start;gap:8px;padding:16px 18px}
+.pu-sec .tri b{font-size:20px}.pu-sec .tri .fl{width:46px;height:46px;font-size:22px}.pu-sec .tri .tx span{font-size:14px;line-height:1.45}.pu-sec .tri .go{font-size:14px}
+@media (min-width:561px){.pu-sec{padding-top:22px}.pu-sec h2{font-size:clamp(20px,3vw,24px)}.pu-sec .sub{font-size:14px;margin-bottom:10px}
+.pu-sec .tri{grid-template-columns:40px minmax(0,1fr);align-items:start;column-gap:12px;row-gap:0;padding:12px 14px}
+.pu-sec .tri .fl{width:40px;height:40px;font-size:19px}.pu-sec .tri b{font-size:17px}.pu-sec .tri .tx span{font-size:13px;line-height:1.4;display:block;margin-top:2px}.pu-sec .tri .go{display:none}}
+@media (max-width:560px){.pu-grid{gap:8px}.pu-sec .tri{padding:12px 10px;gap:6px;justify-items:center;text-align:center;border-left-width:1.5px;border-top:5px solid var(--c)}.pu-sec .tri .fl{width:40px;height:40px;font-size:20px}.pu-sec .tri b{font-size:15px}.pu-sec .tri .tx>span,.pu-sec .tri .go{display:none}}
+
+/* proposta: topo mais leve */
+.uni-prof,.uni-inst{display:none!important}
+.kit.kit2{grid-template-columns:repeat(3,minmax(0,1fr));max-width:560px;margin:14px auto 4px;gap:8px}
+.kit.kit2 .kc{flex-direction:row;gap:10px;justify-content:center;background:#fff;border:1.5px solid var(--line,#ecdadd);border-radius:16px;padding:8px 10px}
+.kit.kit2 .kc .ic{zoom:.5;flex:none}
+.kit.kit2 .kc b{font-size:15px}
+@media(max-width:560px){.kit.kit2{grid-template-columns:1fr 1fr 1fr}.kit.kit2 .kc{flex-direction:column;gap:2px;padding:8px 4px}.kit.kit2 .kc b{font-size:13px}}
+.quiz2{text-align:center;margin:8px 0 4px;font-size:13.5px}.quiz2 a{color:var(--muted,#705f6c);text-decoration:none}.quiz2 a b{color:var(--pink-deep,#a8324f)}
+.faixa-t{background:#fbf1de;color:#7a5418;font-size:13px;text-align:center;padding:6px 12px}
+</style>
+<link rel="stylesheet" href="/estilo-celular.css?v=3">
+<script defer src="/menu-ativo.js?v=2"></script><script defer src="/voltar-global.js?v=5"></script>
+<link rel="icon" href="/favicon.svg" type="image/svg+xml"><link rel="icon" href="/favicon.ico" sizes="48x48"><link rel="apple-touch-icon" href="/apple-touch-icon.png"><link rel="manifest" href="/manifest.webmanifest"><meta name="theme-color" content="#3a2b38"><meta name="mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-title" content="Unirversos"><script src="/app.js" defer></script><style id="uni-logo">.logo,.brand,.sitebar .brand{font-family:"Baloo 2","Zen Maru Gothic",system-ui,sans-serif!important;font-weight:800!important;font-size:19px!important;letter-spacing:.14em!important;text-transform:none!important;text-decoration:none!important}.logo span,.brand span{color:#c23f5e!important;font:inherit!important;letter-spacing:inherit!important;margin:0!important}</style></head>
+<body>
+<div class="faixa-t">Proposta de teste · topo de Idiomas mais leve</div>
+<div class="wrap">
+  <nav class="nav">
+    <a href="/" class="logo">UNI<span>R</span>VERSOS</a>
+    <div class="links">
+      <a href="/idiomas/" class="on">idiomas</a>
+      <a href="/travessia/">travessia</a>
+      <a href="/loja/">tesouros</a>
+      <span class="nav-sep" aria-hidden="true" style="opacity:.3">|</span>
+      <a href="/paralelos/">paralelos</a>
+      <a href="/sobre/">sobre</a>
+      
+    </div>
+  </nav>
+  <main>
+  <div class="trilhas" id="trilhas">
+    <a class="tri ja" href="/idiomas/japones/"><span class="fl mp"><svg viewBox="0 0 28 28" aria-hidden="true"><ellipse cx="14" cy="25.5" rx="10.5" ry="1.4" fill="#4A4149" opacity=".15"/><path d="M2.5 7.5 9.5 5l9 2.500 7-2.500v16l-7 2.500-9-2.500-7 2.500Z" fill="#F6EBCB" stroke="#a08a5a" stroke-width="1.2" stroke-linejoin="round"/><path d="M9.5 5v16M18.5 7.500v16" stroke="#a08a5a" stroke-width="1" fill="none"/><path d="M9.500 5 2.500 7.500v16l7-2.500Z" fill="#E1EDE5" opacity=".9"/><path d="M18.500 7.500 25.500 5v16l-7 2.500Z" fill="#F3DFC1" opacity=".9"/><path d="M5 18c3-1 4-4 7-3.500s3 3 6 1.500 3.500-5 6.500-5" fill="none" stroke="#b5514d" stroke-width="1.300" stroke-dasharray="2 2" stroke-linecap="round"/><path d="M22 6.200c-2 0-3.300 1.500-3.300 3.200 0 2.200 3.300 5 3.300 5s3.300-2.800 3.300-5c0-1.700-1.300-3.200-3.300-3.200Z" fill="#b5514d" stroke="#8a3a37" stroke-width=".9"/><circle cx="22" cy="9.300" r="1.100" fill="#FBF2DF"/></svg></span><span class="tx"><b>Japonês</b><small>trilha completa</small><span><strong>12 mapas de contexto grátis</strong></span></span><span class="go">Começar →</span></a>
+    <div class="breve">
+      <div><i style="background:#E4E8F1;color:#4c5a7a">EN</i><span><b>Inglês</b>Em breve</span></div>
+      <div><i style="background:#E1EDE5;color:#3d6050">PT</i><span><b>Português</b>Em breve</span></div>
+    </div>
+  </div>
+  <section class="kit kit2" aria-label="Seu kit de partida">
+    <a class="kc" id="cardAvatar" href="/idiomas/avatar/">
+      <span class="ic"><span class="cracha" aria-hidden="true"><i class="furo"></i><span class="foto">🎨</span><em>VOCÊ</em></span></span>
+      <b id="avGo">Avatar</b>
+    </a>
+    <a class="kc" href="/idiomas/aula-zero/">
+      <span class="ic"><span class="bilhete" aria-hidden="true"><span class="nb">0</span><span class="lb">AULA<br>ZERO</span></span></span>
+      <b>Aula Zero</b>
+    </a>
+    <a class="kc" href="/idiomas/biblioteca/" aria-label="Abrir a Biblioteca livre: cursos grátis de japonês">
+      <span class="ic"><svg viewBox="0 0 28 28" aria-hidden="true"><ellipse cx="14" cy="25.5" rx="10" ry="1.4" fill="#4A4149" opacity=".15"/><rect x="4" y="6" width="5" height="18" rx="1.2" fill="#7fa487" stroke="#3f5c46" stroke-width="1.3"/><rect x="9.6" y="4" width="5" height="20" rx="1.2" fill="#c9a24b" stroke="#8f6a25" stroke-width="1.3"/><rect x="15.6" y="7.2" width="5" height="17.4" rx="1.2" fill="#c23f5e" stroke="#8a2a42" stroke-width="1.3" transform="rotate(12 18 16)"/><path d="M5.3 10h2.4M10.9 8h2.4M10.9 20h2.4" stroke="#fff" stroke-width="1.2" stroke-linecap="round"/></svg></span>
+      <b>Biblioteca livre</b>
+    </a>
+  </section>
+  <p class="quiz2"><a href="/idiomas/autoanalise/">🧭 Não sabe por onde começar? <b>Faça o quiz de 5 minutos →</b></a></p>
+
+  <section class="pu-sec" id="planeta-utopia" aria-labelledby="pu-t">
+    <p class="pu-eb">✦ Espírito · Encontros ao vivo</p>
+    <h2 id="pu-t">🪐 Praticar com a turma · Planeta Utopia</h2>
+    <p class="sub">Depois de aprender, converse de verdade: com o seu avatar, em ensaios guiados ou escrevendo para a turma.</p>
+    <div class="pu-grid">
+    <a class="tri" style="--c:#b5514d" href="/idiomas/planeta-utopia/salao/#sala"><span class="fl">🏮</span><span class="tx"><b>O Salão</b><span>Interação e jogos</span></span><span class="go">Entrar no Salão →</span></a>
+    <a class="tri" style="--c:#4f7a58" href="/idiomas/planeta-utopia/salao/aula-dupla/"><span class="fl">🗣️</span><span class="tx"><b>Ensaio</b><span>Role play guiado</span></span><span class="go">Entrar na aula →</span></a>
+    <a class="tri" style="--c:#b5514d" href="/paralelos/"><span class="fl">💬</span><span class="tx"><b>Mural da comunidade</b><span>Feed da comunidade</span></span><span class="go">Abrir o mural →</span></a>
+    </div>
+  </section>
+
+  
+  <section class="vivo" id="ao-vivo">
+    <p class="eyebrow">ao vivo com a sensei</p>
+    <a class="vagas" href="https://wa.me/5519996390950?text=Oi%21%20Vim%20pelo%20site%20da%20Unirversos%20e%20quero%20saber%20das%20vagas%20abertas%20%28aula%20individual%20ou%20em%20grupo%29." target="_blank" rel="noopener">vagas abertas <span aria-hidden="true">→</span></a>
+    <p class="n">Aulas individuais e em grupo · 20% das vagas são bolsas para alunos da rede pública.</p>
+  </section>
+  </main>
+
+  <footer class="foot">
+    <div><b>Reflexões em Voz Alta</b> no Substack · <a href="https://substack.com/@unirversosparalelos">Assinar</a></div>
+    <div>Instagram <a href="https://instagram.com/unirversos.idiomas">@unirversos.idiomas</a> · <a href="mailto:unirversos.idiomas@gmail.com">unirversos.idiomas@gmail.com</a></div>
+    <div class="cr">unirversos — tudo conectado · Aline Kikuti</div>
+  </footer>
+</div>
+<script src="/entrar.js" defer></script>
+<script defer src="/caderno-flutuante.js?v=21"></script>
+<script>
+/* se o avatar já existe, o card muda para "Editar" */
+(function(){var kb=document.getElementById("kcBau");if(kb)kb.onclick=function(e){e.stopPropagation();var a=document.getElementById("bz-aba");if(a)a.click()};})();
+(function(){try{var v=JSON.parse(localStorage.getItem('utopiaAvatar1')||'null');if(v&&v.sel){var g=document.getElementById('avGo');if(g)g.textContent="Editar avatar";}}catch(e){}})();
+</script>
+</body>
+</html>
