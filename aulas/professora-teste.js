@@ -3,7 +3,7 @@
 import { auth, db } from "/idiomas/dados/conta.js?v=6";
 import { collection, getDocs, doc, getDoc, setDoc, deleteDoc, updateDoc, arrayUnion, arrayRemove } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
 import { onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
-import { proximas, DIAS, chave } from "/aulas/aulas-comum.js?v=2";
+import { proximas, DIAS, chave, ymd } from "/aulas/aulas-comum.js?v=2";
 
 const $ = id => document.getElementById(id), area = $('area');
 const esc = s => String(s == null ? '' : s).replace(/[&<>"']/g, c => ({ '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;' }[c]));
@@ -29,6 +29,39 @@ async function carrega(){
     area.innerHTML = `<section class="cx"><h2>Esta página é só da professora</h2><p class="mut">${e && e.code === 'permission-denied' ? 'A sua conta não tem acesso a esta tela. Se você é a Aline, confira se entrou com o e-mail certo e se as regras do Firestore foram publicadas.' : 'Não consegui carregar agora. Confira a internet e recarregue.'}</p></section>`;
   }
 }
+/* ---------- Hoje: as aulas do dia, com "Entrar na aula" (acende 15 min antes) ---------- */
+const ANTES = 15 * 60e3;
+let timerHoje = null;
+const horaBR = d => d.toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit', timeZone: 'America/Sao_Paulo' });
+function falta(ms){ const m = Math.round(ms / 60e3); return m < 60 ? `em ${m} min` : `em ${Math.floor(m / 60)} h${m % 60 ? ' ' + (m % 60) + ' min' : ''}`; }
+function blocoHoje(){
+  const agora = new Date(), hoje = ymd(agora);
+  const aulas = alunos.flatMap(a => proximas(a, 4, agora).filter(v => ymd(v.ini) === hoje || v.ini <= agora).map(v => ({ a, v })))
+    .sort((x, y) => x.v.ini - y.v.ini);
+  if (!aulas.length) return '<section class="cx hoje vazio"><p class="eyebrow">hoje</p><p class="mut">Nenhuma aula hoje. 🌿</p></section>';
+  return `<section class="cx hoje"><p class="eyebrow">hoje · ${aulas.length} ${aulas.length > 1 ? 'aulas' : 'aula'}</p><ul class="hoje-l">${aulas.map(({ a, v }) => {
+    const agoraMesmo = agora >= v.ini, aberta = agora >= v.ini - ANTES, temMeet = /^https:\/\//.test(a.meet || '');
+    const st = agoraMesmo ? '<em class="tag agora">agora</em>' : `<span class="mut peq">${falta(v.ini - agora)}</span>`;
+    const ent = temMeet ? `<a class="btn${aberta ? '' : ' off'}" data-meet href="${esc(a.meet)}" target="_blank" rel="noopener"${aberta ? '' : ' aria-disabled="true" tabindex="-1"'}>▶ Entrar na aula</a>` : '<span class="mut peq">sem link do Meet na ficha</span>';
+    return `<li class="${agoraMesmo ? 'ja' : ''}"><span class="h">${horaBR(v.ini)}</span><span class="n"><b>${esc(a.nome || a.id)}</b> ${st}${(a.gravar || []).includes(chave(v.ini)) ? ' <em class="tag rec">pediu gravação</em>' : ''}</span><span class="linha">${ent}<button type="button" class="mini" data-ficha="${esc(a.id)}">Abrir ficha</button></span></li>`;
+  }).join('')}</ul></section>`;
+}
+/* Meet numa janela ao lado do site (no computador) */
+function abreMeet(e, a){
+  if (a.classList.contains('off')) { e.preventDefault(); return; }
+  if (window.innerWidth < 900 || !window.screen) return;
+  const W = screen.availWidth, H = screen.availHeight, w = Math.max(480, Math.round(W * .42));
+  const j = window.open(a.href, 'uniMeet', `popup=yes,width=${w},height=${H},left=${(screen.availLeft || 0) + W - w},top=${screen.availTop || 0}`);
+  if (j) { e.preventDefault(); try { j.focus(); } catch (x) {} }
+}
+function ligaHoje(){
+  const box = area.querySelector('.hoje'); if (!box) return;
+  box.querySelectorAll('[data-meet]').forEach(a => a.onclick = e => abreMeet(e, a));
+  box.querySelectorAll('[data-ficha]').forEach(b => b.onclick = () => ficha(alunos.find(x => x.id === b.dataset.ficha)));
+  clearTimeout(timerHoje);
+  timerHoje = setTimeout(() => { const b = area.querySelector('.hoje'); if (b && !editando) { b.outerHTML = blocoHoje(); ligaHoje(); } }, 30e3);
+}
+
 function lista(){
   editando = null;
   const cards = alunos.map(a => {
@@ -38,10 +71,11 @@ function lista(){
       <span class="info"><b>${esc(a.nome || 'Sem nome')}</b><span class="mut peq">${esc(a.id)}</span></span>
       <span class="prox">${p && (a.gravar || []).includes(chave(p.ini)) ? '<em class="tag rec">gravar a próxima</em> ' : ''}${a.tarefa && a.tarefaFeita === a.tarefa ? '<em class="tag">tarefa feita</em> ' : ''}${a.ativo === false ? '<em class="tag">pausado</em>' : p ? 'próxima: ' + esc(quando(p.ini)) : '<span class="mut">sem aula marcada</span>'}</span></button>`;
   }).join('');
-  area.innerHTML = `<div class="topo"><h2>Seus alunos <span class="mut">(${alunos.length})</span></h2><div class="linha"><a class="btn claro" href="/idiomas/atividades/gramatica-n2/">✦ Atividades</a><button type="button" class="btn claro" id="todos">📚 Mandar para todos</button><button type="button" class="btn" id="novo">+ Novo aluno</button></div></div>
+  area.innerHTML = blocoHoje() + `<div class="topo"><h2>Seus alunos <span class="mut">(${alunos.length})</span></h2><div class="linha"><a class="btn claro" href="/idiomas/atividades/gramatica-n2/">✦ Atividades</a><button type="button" class="btn claro" id="todos">📚 Mandar para todos</button><button type="button" class="btn" id="novo">+ Novo aluno</button></div></div>
     <div class="alunos">${cards || '<p class="mut">Nenhum aluno ainda. Clique em "+ Novo aluno" para começar.</p>'}</div>`;
   $('novo').onclick = () => ficha(null); $('todos').onclick = mandarTodos;
   area.querySelectorAll('.aluno').forEach(b => b.onclick = () => ficha(alunos.find(a => a.id === b.dataset.id)));
+  ligaHoje();
 }
 
 const linhaHorario = (h = { dia: 1, hora: '19:00' }) => `<div class="rep" data-tipo="h"><label class="sr">Dia</label><select>${DIAS.map((d, i) => `<option value="${i}"${Number(h.dia) === i ? ' selected' : ''}>${d}</option>`).join('')}</select><label class="sr">Hora</label><input type="time" value="${esc(h.hora)}" required><button type="button" class="x" aria-label="Tirar este horário">×</button></div>`;
