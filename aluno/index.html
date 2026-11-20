@@ -120,6 +120,8 @@ a:focus-visible,button:focus-visible,input:focus-visible,select:focus-visible,te
 .mat-c{flex:1;display:flex;flex-direction:column;gap:2px;min-width:0}.mat-c .pg{align-self:flex-start}
 .mat-n{font-size:13.5px;color:#705f6c}
 .mi{width:38px;height:38px;flex:none;border-radius:50%;display:grid;place-items:center;background:#fff;border:1.5px solid #ecdadd;color:var(--c)}.mi svg{width:19px;height:19px;fill:none;stroke:currentColor;stroke-width:1.7;stroke-linecap:round;stroke-linejoin:round}
+.ver-trilha{margin:0}.dois:has(#continuar[hidden]){grid-template-columns:1fr}
+.mi.emo{font-size:18px;line-height:1}
 .pg{font-size:11px;font-weight:700;color:#a0712a;background:#fbf1de;border-radius:999px;padding:1px 8px}
 .fiz{font:inherit;font-size:13px;font-weight:700;flex:none;border:1.5px solid #ecdadd;background:#fff;color:#3a2b38;border-radius:999px;padding:6px 14px;min-height:38px;cursor:pointer}.fiz.on{background:#e8efe8;border-color:#e8efe8;color:#3f5c46}
 .manda{display:flex;flex-direction:column;gap:8px;border-top:1px dashed #ecdadd;padding-top:12px}
@@ -168,8 +170,9 @@ a:focus-visible,button:focus-visible,input:focus-visible,select:focus-visible,te
 
   <div id="area" class="aulas" aria-live="polite"></div>
 
+  <p class="ver-trilha"><button type="button" class="mini-b" id="ver-trilha" aria-controls="continuar" aria-expanded="false">🗺️ Ver minha trilha nos mapas</button></p>
   <div class="dois">
-    <section class="cx destaque" id="continuar" aria-labelledby="h-cont">
+    <section class="cx destaque" id="continuar" aria-labelledby="h-cont" hidden>
       <p class="eyebrow" data-i="continuar">continuar de onde parou</p>
       <h2 id="h-cont">…</h2>
       <p class="mut" id="cont-desc"></p>
@@ -196,8 +199,9 @@ a:focus-visible,button:focus-visible,input:focus-visible,select:focus-visible,te
 <script src="/paralelos/temas.js?v=1"></script>
 <script src="/caderno-dados.js?v=2"></script>
 <script type="module" src="/aluno/aluno.js?v=5"></script>
+<script>(function(){var b=document.getElementById('ver-trilha'),c=document.getElementById('continuar');if(!b||!c)return;b.onclick=function(){var abre=c.hidden;c.hidden=!abre;b.setAttribute('aria-expanded',abre);b.textContent=abre?'Ocultar a trilha':'🗺️ Ver minha trilha nos mapas';if(abre)c.scrollIntoView({behavior:'smooth',block:'nearest'});};})();</script>
 <script src="/idiomas/dados/cursos-gratis.js?v=1"></script>
-<script type="module" src="/aulas/aluno.js?v=16"></script>
+<script type="module" src="/aulas/aluno.js?v=17"></script>
 <script defer src="/caderno-flutuante.js?v=21"></script>
 </body>
 </html>

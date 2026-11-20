@@ -213,7 +213,9 @@ onAuthStateChanged(auth, async u => {
       if (!s.exists()) { aula = null; clearTimeout(timer); area.innerHTML = `<section class="cx"><p class="eyebrow">${t('aulaPart')}</p><p class="mut peq">${t('semCadastro', { e: esc(meuEmail) })}</p></section>`; return; }
       const nova = s.data();
       if (!aula) calculaNovos(nova); else marcaMudancas(aula, nova);
-      aula = nova; pinta(); mandaAvatar();
+      const primeira = !aula; aula = nova; pinta();
+      /* só manda o avatar uma vez ao abrir (e quando o aluno muda o avatar): mandar a cada atualização fazia dois aparelhos com avatares diferentes regravarem um o do outro sem parar */
+      if (primeira) mandaAvatar();
     }, e => { console.warn(e); if (!aula) area.innerHTML = `<section class="cx"><p class="eyebrow">${t('aulaPart')}</p><p class="mut peq">${t(e && e.code === 'permission-denied' ? 'semPermissao' : 'erroAulas')}</p></section>`; });
   } catch (e) { console.warn(e); area.innerHTML = ''; }
 });

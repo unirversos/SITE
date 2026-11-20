@@ -52,10 +52,10 @@ const TX = { fiz: () => EN() ? 'Done' : 'Fiz', feito: () => EN() ? '✓ done' : 
   tit: () => EN() ? 'What is it? (optional)' : 'O que é? (opcional)', env: () => EN() ? 'Send' : 'Enviar', ok: () => EN() ? 'Sent ✓' : 'Enviado ✓',
   seus: () => EN() ? 'links you sent' : 'links que você mandou', libera: () => EN() ? 'This still needs to be enabled. Tell your teacher.' : 'Isso ainda precisa ser liberado. Avise a professora.',
   ruim: () => EN() ? 'Paste a link starting with https://' : 'Cole um link que comece com https://' };
-const icoCat = i => i ? `<span class="mi" style="--c:var(--c-${i.c})" aria-hidden="true"><svg viewBox="0 0 24 24">${i.svg}</svg></span>` : '';
+const icoCat = (i, m) => i ? `<span class="mi" style="--c:var(--c-${i.c})" aria-hidden="true"><svg viewBox="0 0 24 24">${i.svg}</svg></span>` : m && m.emo ? `<span class="mi emo" aria-hidden="true">${esc(m.emo)}</span>` : '';
 function itemMat(m){
   const i = m.cat && CAT.find(x => x.id === m.cat), fez = (aula.feitos || []).includes(m.url);
-  return `<li class="mat-i${i ? ' doCat' : ''}">${icoCat(i)}<span class="mat-c">${linkMat(m)}${i && i.pg ? ` <span class="pg">${esc(i.pg)}</span>` : ''}${m.nota ? `<span class="mat-n">${comLinks(m.nota)}</span>` : ''}</span>${linkOk(m.url) ? `<button type="button" class="fiz${fez ? ' on' : ''}" data-fiz="${esc(m.url)}" aria-pressed="${fez}">${fez ? TX.feito() : TX.fiz()}</button>` : ''}</li>`;
+  return `<li class="mat-i${i || m.emo ? ' doCat' : ''}">${icoCat(i, m)}<span class="mat-c">${linkMat(m)}${i && i.pg ? ` <span class="pg">${esc(i.pg)}</span>` : ''}${m.nota ? `<span class="mat-n">${comLinks(m.nota)}</span>` : ''}</span>${linkOk(m.url) ? `<button type="button" class="fiz${fez ? ' on' : ''}" data-fiz="${esc(m.url)}" aria-pressed="${fez}">${fez ? TX.feito() : TX.fiz()}</button>` : ''}</li>`;
 }
 /* planilha do Google nos materiais: abre dentro da página (Dicionário e Caderno continuam ao lado) */
 let planAberta = '', planCheia = false, temAtiv = false;
@@ -214,7 +214,9 @@ onAuthStateChanged(auth, async u => {
       if (!s.exists()) { aula = null; clearTimeout(timer); area.innerHTML = `<section class="cx"><p class="eyebrow">${t('aulaPart')}</p><p class="mut peq">${t('semCadastro', { e: esc(meuEmail) })}</p></section>`; return; }
       const nova = s.data();
       if (!aula) calculaNovos(nova); else marcaMudancas(aula, nova);
-      aula = nova; pinta(); mandaAvatar();
+      const primeira = !aula; aula = nova; pinta();
+      /* só manda o avatar uma vez ao abrir (e quando o aluno muda o avatar): mandar a cada atualização fazia dois aparelhos com avatares diferentes regravarem um o do outro sem parar */
+      if (primeira) mandaAvatar();
       if (!temAtiv) getDoc(doc(db, 'atividades', meuEmail)).then(x => { if (x.exists()) { temAtiv = true; if (aula) pinta(); } }).catch(() => {});
     }, e => { console.warn(e); if (!aula) area.innerHTML = `<section class="cx"><p class="eyebrow">${t('aulaPart')}</p><p class="mut peq">${t(e && e.code === 'permission-denied' ? 'semPermissao' : 'erroAulas')}</p></section>`; });
   } catch (e) { console.warn(e); area.innerHTML = ''; }
