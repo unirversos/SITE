@@ -1,0 +1,306 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="robots" content="noindex">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>Unirversos Travessia · ferramentas para planejar e viver o Japão</title>
+<meta name="description" content="Ferramentas gratuitas para a sua viagem ao Japão: calendário da viagem, ingressos (quando comprar e em que pé está), burocracia de entrada, deslocamento entre cidades e mini guia de sobrevivência.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@500;700;800&family=Zen+Maru+Gothic:wght@400;500;700&display=swap">
+<style>
+:root{
+  --paper:#fdf6f4; --card:#ffffff; --ink:#3a2b38; --muted:#6b5a67; --line:#ecdadd;
+  --pink:#c23f5e; --pink-d:#a8344f; --gold:#8e6a1f; --gold-soft:#fbf2df; --sage:#517158; --sage-soft:#e8efe8; --lavender:#b7a6dc;
+  --f-display:"Baloo 2","Zen Maru Gothic",system-ui,sans-serif;
+  --f-body:"Zen Maru Gothic","Hiragino Maru Gothic ProN","Noto Sans JP",system-ui,sans-serif;
+  --r:20px;
+  --s1:8px; --s2:16px; --s3:24px; --s4:40px; --s5:56px; /* escala de espaços */
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth;-webkit-text-size-adjust:100%}
+@media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}*{transition:none!important}}
+body{margin:0;background:var(--paper);color:var(--ink);font-family:var(--f-body);font-size:16px;line-height:1.7;
+  background-image:radial-gradient(var(--line) 1.2px,transparent 1.3px);background-size:22px 22px;
+  padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));padding-block:18px 40px}
+a{color:inherit}
+a:focus-visible,button:focus-visible{outline:3px solid var(--lavender);outline-offset:3px;border-radius:8px}
+.pular{position:absolute;left:-999px;top:8px;background:var(--ink);color:#fff;padding:10px 16px;border-radius:999px;z-index:100;text-decoration:none}
+.pular:focus{left:16px}
+.wrap{max-width:1060px;margin:0 auto;display:grid;gap:var(--s5)}
+.wrap>*{min-width:0}
+
+/* barra do site */
+.sitebar{display:flex;flex-wrap:wrap;justify-content:space-between;align-items:center;gap:var(--s1) 18px}
+.logo{font-family:var(--f-display);font-weight:800;font-size:19px;letter-spacing:.14em;text-decoration:none;display:inline-flex;align-items:center;min-height:44px}
+.logo span{color:var(--pink)}
+.navlinks{display:flex;flex-wrap:wrap;align-items:center;gap:0 18px;font-size:15px}
+.navlinks a{text-decoration:none;color:var(--muted);display:inline-flex;align-items:center;min-height:44px}
+.navlinks a:hover{color:var(--pink)}
+.navlinks a[aria-current="page"]{color:var(--ink);border-bottom:2px solid var(--pink)}
+
+/* botões Instalar/Entrar (injetados pelo site todo) com área de toque confortável */
+.uni-chip button,.uni-inst button{min-height:44px;padding-inline:16px!important}
+.navlinks{row-gap:0}
+
+/* topo */
+.hero{display:grid;gap:14px;padding-top:var(--s1)}
+.eyebrow{font-size:12px;letter-spacing:.2em;text-transform:uppercase;color:var(--gold);font-weight:700;margin:0}
+h1{font-family:var(--f-display);font-weight:800;font-size:clamp(38px,6.4vw,62px);line-height:1.04;margin:0;text-wrap:balance;letter-spacing:-.01em}
+h1 em{font-style:normal;color:var(--pink)}
+.lede{font-size:clamp(17px,2vw,19px);font-weight:500;margin:0;max-width:58ch}
+.lede2{margin:0;max-width:58ch;color:var(--muted)}
+.acts{display:flex;flex-wrap:wrap;gap:10px;margin-top:6px}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;min-height:48px;text-decoration:none;font-family:var(--f-display);font-weight:700;font-size:16px;padding:10px 22px;border-radius:999px;border:1.5px solid var(--pink);transition:filter .15s,transform .15s}
+.btn.pri{background:var(--pink);color:#fff;box-shadow:0 6px 16px -8px rgba(194,63,94,.7)}
+.btn.sec{background:var(--card);color:var(--pink)}
+.btn:hover{filter:brightness(.96)}
+.btn:active{transform:translateY(1px)}
+
+/* títulos de seção */
+.sec-h{display:grid;gap:4px;margin-bottom:var(--s2)}
+.sec-h h2{font-family:var(--f-display);font-weight:800;font-size:clamp(26px,3.6vw,34px);line-height:1.15;margin:0}
+.sec-h p{margin:0;color:var(--muted);max-width:62ch}
+
+
+/* onde estou / próximo passo (só aparece quando há dados neste aparelho) */
+.onde{background:var(--sage-soft);border-left:6px solid var(--sage);border-radius:var(--r);padding:16px 20px;display:grid;gap:4px;max-width:760px}
+.onde[hidden]{display:none}
+.onde strong.t{font-family:var(--f-display);font-weight:800;font-size:17px}
+.onde p{margin:0;font-size:15px}
+.onde a{font-family:var(--f-display);font-weight:700;color:var(--pink);text-decoration:none;display:inline-flex;align-items:center;min-height:44px}
+.onde a:hover{text-decoration:underline}
+
+.onde{padding:8px 14px;display:flex;flex-wrap:wrap;align-items:center;gap:0 12px;border-radius:14px;border-left-width:4px;margin-top:-30px;max-width:none;width:fit-content}
+.onde strong.t{font-size:15px}.onde p{font-size:14px}.onde a{min-height:36px;font-size:14px}
+/* destaque: calendário */
+.destaque{display:grid;gap:12px;justify-items:start;background:linear-gradient(135deg,#fff 0%,var(--gold-soft) 100%);border:2px solid var(--pink);border-radius:28px;padding:clamp(22px,4vw,38px);box-shadow:0 18px 40px -24px rgba(194,63,94,.55)}
+.destaque .tag{font-size:12px;letter-spacing:.16em;text-transform:uppercase;font-weight:700;color:#fff;background:var(--pink);border-radius:999px;padding:3px 12px}
+.destaque h2{font-family:var(--f-display);font-weight:800;font-size:clamp(28px,4.6vw,44px);line-height:1.1;margin:0;text-wrap:balance}
+.vant{list-style:none;margin:6px 0 10px;padding:0;display:grid;gap:14px;width:100%;grid-template-columns:repeat(3,minmax(0,1fr))}
+.vant li{display:flex;gap:12px;align-items:flex-start;background:rgba(255,255,255,.7);border-left:4px solid var(--gold);border-radius:14px;padding:14px 16px}
+.vant .vi{font-size:24px;line-height:1.2;flex:none}
+.vant strong{display:block;font-family:var(--f-display);font-weight:800;font-size:17px;line-height:1.25;margin-bottom:2px}
+.vant div span{display:block;color:var(--muted);font-size:15px;line-height:1.5}
+@media (max-width:820px){.vant{grid-template-columns:1fr}}
+.btn.big{font-size:clamp(18px,3vw,22px);padding:14px 30px;min-height:56px;box-shadow:0 12px 26px -12px rgba(194,63,94,.8)}
+
+/* ferramentas */
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(min(100%,300px),1fr));gap:18px}
+.tool{position:relative;background:var(--card);border:1.5px solid var(--line);border-left:6px solid var(--gold);border-radius:var(--r);padding:20px;display:grid;gap:8px;align-content:start;box-shadow:0 10px 24px -18px rgba(58,43,56,.35);transition:transform .15s,box-shadow .15s}
+.tool:hover{transform:translateY(-2px);box-shadow:0 16px 30px -18px rgba(58,43,56,.45)}
+.tool:focus-within{outline:3px solid var(--lavender);outline-offset:3px}
+.tool .n{font-family:var(--f-display);font-weight:800;font-size:15px;color:var(--gold);letter-spacing:.08em;display:flex;align-items:center;gap:10px}
+.tool .n .ico{font-size:28px;line-height:1;letter-spacing:0}
+.tool h3{font-family:var(--f-display);font-weight:800;font-size:21px;line-height:1.2;margin:0}
+.tool p{margin:0;color:var(--muted);font-size:15px}
+.tool .go{margin-top:6px;display:flex;align-items:center;min-height:48px;text-decoration:none;font-family:var(--f-display);font-weight:700;color:var(--pink)}
+/* o card inteiro é clicável, sem duplicar links para o leitor de tela */
+.tool .go::after{content:"";position:absolute;inset:0;border-radius:var(--r)}
+.tool .go:hover{text-decoration:underline}
+/* card importante: borda rosa e selo */
+.tool.importante{border-left-color:var(--pink);background:linear-gradient(135deg,#fff 60%,#fbeef0 100%)}
+.selo-imp{margin-left:auto;font-family:var(--f-body);font-size:11px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:#fff;background:var(--pink);border-radius:999px;padding:3px 12px;line-height:1.5}
+.tool.breve{border-left-color:var(--line);border-style:dashed;border-left-style:dashed;background:transparent;box-shadow:none}
+.tool.breve:hover{transform:none;box-shadow:none}
+.tool.breve .n{color:var(--muted)}
+
+
+/* ícones desenhados */
+.objs{display:grid;gap:10px;width:100%;max-width:620px;pointer-events:none}
+.objs.n3{grid-template-columns:repeat(3,minmax(0,1fr))}
+.objs .o{display:grid;justify-items:center;gap:4px;text-align:center}
+.objs .ob svg{width:64px;height:64px;display:block}
+.objs b{font-family:var(--f-display);font-weight:800;font-size:15px;line-height:1.2}
+.tool{text-align:center;justify-items:center;padding:18px 14px 10px;border-left-width:1.5px;border-top:5px solid var(--gold)}
+.tool.importante{border-top-color:var(--pink)}
+.tool .tico svg{width:64px;height:64px;display:block}
+.tool h3{font-size:19px}
+.tool p{font-size:14.5px}
+.tool .go{justify-content:center;min-height:44px;margin-top:0;font-size:15px}
+.tool .selo-imp{position:absolute;top:10px;right:10px;margin:0;font-size:10px;padding:2px 9px}
+.grid{grid-template-columns:repeat(3,minmax(0,1fr));gap:16px}
+@media (max-width:720px){.grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}.tool{padding:14px 10px 6px}.tool h3{font-size:16px}.tool p{font-size:13.5px;line-height:1.45}.tool .tico svg,.objs .ob svg{width:52px;height:52px}.objs b{font-size:13px}.tool .selo-imp{position:static;justify-self:center}}
+
+.tool h3 .go{display:inline;min-height:0;margin:0;font:inherit;color:inherit;text-decoration:none}.tool h3 .go:hover{text-decoration:none}.tool:hover h3{color:var(--pink)}
+
+/* datas da viagem */
+.viagem{display:grid;gap:6px;margin-top:6px}
+.vf{display:flex;flex-wrap:wrap;align-items:center;gap:10px 14px;background:var(--card);border:1.5px solid var(--line);border-radius:20px;padding:12px 16px;width:fit-content;max-width:100%}
+.vf .vq{font-family:var(--f-display);font-weight:800;font-size:17px}
+.vf label{display:flex;align-items:center;gap:8px;font-size:15px;color:var(--muted)}
+.vf input{font:inherit;color:var(--ink);min-height:44px;padding:6px 10px;border:1.5px solid var(--line);border-radius:12px;background:#fff}
+.vf .btn{min-height:44px;padding:8px 18px;font-size:15px}
+.vok{margin:0;display:flex;flex-wrap:wrap;align-items:center;gap:4px 12px;font-weight:700;font-family:var(--f-display);font-size:17px}
+.vok a{color:var(--pink);text-decoration:none;font-size:15px;min-height:44px;display:inline-flex;align-items:center}
+.vok a:hover{text-decoration:underline}
+.verr{margin:0;color:var(--pink-d);font-size:14px;min-height:0}
+.verr:empty{display:none}.vf[hidden],.vok[hidden]{display:none}
+@media (max-width:640px){.vf{width:100%;gap:6px 10px;padding:10px 12px;border-radius:16px}.vf .vq{flex:1 1 100%;font-size:15px}.vf label{flex:1 1 0;min-width:0;flex-direction:column;align-items:stretch;gap:2px;font-size:12px}.vf input{min-width:0;width:100%;min-height:40px;padding:4px 8px;font-size:14px}.vf .btn{flex:1 1 100%;min-height:40px;font-size:14px;padding:6px 14px}}
+.vprazo{margin:0;font-size:14.5px;color:var(--muted)}.vprazo[hidden]{display:none}.vprazo a{color:var(--pink);font-weight:700;text-decoration:none;margin-left:4px}.vprazo a:hover{text-decoration:underline}
+.tool .bd{font-style:normal;font-size:12px;font-weight:700;color:var(--sage);background:var(--sage-soft);border-radius:999px;padding:1px 10px;line-height:1.6;margin-bottom:6px}
+.tool.depois{border-style:dashed;border-color:var(--line);border-top:5px dashed var(--line);background:transparent;box-shadow:none}.tool.depois .tico{opacity:.8}
+/* pontes */
+.pontes{display:grid;gap:12px;grid-template-columns:repeat(auto-fit,minmax(min(100%,320px),1fr))}
+.ponte{display:grid;gap:4px;background:var(--card);border:1.5px solid var(--line);border-radius:16px;padding:16px 18px;align-content:start}
+.ponte p{margin:0;color:var(--muted);font-size:15px}
+.ponte a{font-family:var(--f-display);font-weight:700;color:var(--pink);text-decoration:none;display:inline-flex;align-items:center;min-height:44px}
+.ponte a:hover{text-decoration:underline}
+
+footer{display:flex;flex-wrap:wrap;gap:0 20px;justify-content:space-between;align-items:center;color:var(--muted);font-size:14px;border-top:1.5px solid var(--line);padding-top:var(--s2)}
+footer a{color:var(--pink);text-decoration:none;display:inline-flex;align-items:center;min-height:44px;margin-right:12px}
+
+/* celular: barra fixa embaixo, ao alcance do polegar */
+.fixo{display:none}
+@media (max-width:640px){
+  body{padding-bottom:96px}
+  .wrap{gap:var(--s4)}
+  .acts .btn{flex:1 1 100%}
+  .destaque .btn.big{width:100%}
+  .fixo.on{display:flex}
+  .fixo{position:fixed;left:max(12px,env(safe-area-inset-left,0px));right:max(12px,env(safe-area-inset-right,0px));bottom:max(12px,env(safe-area-inset-bottom,0px));z-index:50;gap:8px;padding:8px;background:rgba(255,255,255,.96);border:1.5px solid var(--line);border-radius:999px;box-shadow:0 10px 30px -10px rgba(58,43,56,.5);backdrop-filter:blur(6px)}
+  .fixo .btn{flex:1 1 0;font-size:15px;padding:8px 10px}
+}
+
+/* proposta: o calendário mora na própria Travessia, recolhível */
+.cal-emb{background:#fff;border:1.5px solid var(--line,#ecdadd);border-radius:20px;margin:6px 0 22px;overflow:hidden;box-shadow:0 10px 26px -20px rgba(58,43,56,.4)}
+.cal-emb summary{list-style:none;display:flex;align-items:center;justify-content:space-between;gap:10px;padding:12px 16px;cursor:pointer;font-size:16px}
+.cal-emb summary::-webkit-details-marker{display:none}
+.cal-emb summary small{color:var(--muted,#705f6c);font-size:13px;margin-left:6px}
+.cal-acoes{display:flex;align-items:center;gap:12px}.cal-acoes a{font-size:13.5px;font-weight:700;color:var(--pink-d,#a8344f);text-decoration:none}
+.cal-ab{width:28px;height:28px;border-radius:50%;border:1.5px solid var(--line,#ecdadd);display:grid;place-items:center}
+.cal-ab::before{content:"▾";font-size:13px}.cal-emb:not([open]) .cal-ab::before{content:"▸"}
+#calIf{display:block;width:100%;height:min(82vh,860px);border:0;border-top:1.5px solid var(--line,#ecdadd);background:var(--paper,#fdf6f4)}
+.cal-emb:not([open]){margin-bottom:14px}
+.faixa-t{background:#fbf1de;color:#7a5418;font-size:13px;text-align:center;padding:6px 12px}
+</style>
+<link rel="icon" href="/favicon.svg" type="image/svg+xml"><link rel="icon" href="/favicon.ico" sizes="48x48"><link rel="apple-touch-icon" href="/apple-touch-icon.png"><link rel="manifest" href="/manifest.webmanifest"><meta name="theme-color" content="#3a2b38"><meta name="mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-title" content="Unirversos"><script src="/app.js" defer></script><style id="uni-logo">.logo,.brand,.sitebar .brand{font-family:"Baloo 2","Zen Maru Gothic",system-ui,sans-serif!important;font-weight:800!important;font-size:19px!important;letter-spacing:.14em!important;text-transform:none!important;text-decoration:none!important}.logo span,.brand span{color:#c23f5e!important;font:inherit!important;letter-spacing:inherit!important;margin:0!important}</style></head>
+<body>
+<div class="faixa-t">Proposta de teste · Travessia com o calendário na própria página</div>
+<a class="pular" href="#ferramentas">Pular para as ferramentas</a>
+<div class="wrap">
+  <div class="sitebar" role="navigation" aria-label="Site">
+    <a href="/" class="logo">UNI<span>R</span>VERSOS</a>
+    <span class="navlinks"><a href="/idiomas/">idiomas</a><a href="/travessia/" aria-current="page">travessia</a><a href="/loja/">tesouros</a><span class="nav-sep" aria-hidden="true" style="opacity:.3">|</span><a href="/paralelos/">paralelos</a><a href="/sobre/">sobre</a></span>
+  </div>
+
+  <header class="hero">
+    <h1>Sua viagem <em>já começou!</em></h1>
+    <p class="lede">Do começo ao fim, tudo nas suas mãos. Tudo gratuito.</p>
+  </header>
+  <details class="cal-emb" id="calEmb" open>
+    <summary><span>🗓️ <b>Seu calendário</b> <small id="calResumo"></small></span><span class="cal-acoes"><a href="/travessia/calendario/" onclick="event.stopPropagation()">Tela cheia ↗</a><span class="cal-ab" aria-hidden="true"></span></span></summary>
+    <iframe id="calIf" src="/travessia/calendario/?embed=1" title="Seu calendário de viagem" loading="eager"></iframe>
+  </details>
+
+  <section aria-label="Ferramentas da travessia" id="ferramentas">
+    <div class="grid">
+      <article class="tool importante"><span class="selo-imp">Importante</span><span class="tico"><svg viewBox="0 0 28 28" aria-hidden="true"><ellipse cx="14" cy="26" rx="10" ry="1.3" fill="#4A4149" opacity=".15"/><g transform="rotate(-4 14 14)"><rect x="6" y="3" width="16" height="21.500" rx="2" fill="#b5514d" stroke="#7d3532" stroke-width="1.200"/><circle cx="14" cy="11.500" r="4.200" fill="none" stroke="#F3E3B8" stroke-width="1.200"/><path d="M9.800 11.500h8.400M14 7.300c-2 2.500-2 5.900 0 8.400M14 7.300c2 2.500 2 5.900 0 8.400" stroke="#F3E3B8" stroke-width=".9" fill="none"/><path d="M9.500 19.500h9" stroke="#F3E3B8" stroke-width="1.300" stroke-linecap="round"/></g></svg></span><h3><a class="go" href="/travessia/burocracia/">Burocracia de entrada</a></h3><p>Visto, Visit Japan Web e Suica, antes de pousar.</p></article>
+      <article class="tool"><span class="tico"><svg viewBox="0 0 28 28" aria-hidden="true"><ellipse cx="14" cy="26" rx="10" ry="1.3" fill="#4A4149" opacity=".15"/><g transform="rotate(-6 14 14)"><path d="M3 8.5h22v4a1.800 1.800 0 0 0 0 3.600V20H3v-3.900a1.800 1.800 0 0 0 0-3.600Z" fill="#F3E3B8" stroke="#a08a5a" stroke-width="1.200" stroke-linejoin="round"/><path d="M18 9v11" stroke="#a08a5a" stroke-width="1" stroke-dasharray="1.600 1.600"/><path d="M6.500 12.500h8M6.500 15.500h5.500" stroke="#8e6a1f" stroke-width="1.300" stroke-linecap="round"/><circle cx="21.500" cy="14.200" r="1.500" fill="#b5514d"/></g></svg></span><h3><a class="go" href="/travessia/ingressos/">Ingressos</a></h3><p>Personalize sua experiência.</p></article>
+      <article class="tool"><span class="tico"><svg viewBox="0 0 28 28" aria-hidden="true"><ellipse cx="14" cy="26" rx="10" ry="1.3" fill="#4A4149" opacity=".15"/><rect x="4.500" y="5.500" width="19" height="18" rx="2.500" fill="#fffdf9" stroke="#a08a5a" stroke-width="1.200"/><path d="M4.500 8a2.500 2.500 0 0 1 2.500-2.500h14A2.500 2.500 0 0 1 23.500 8v3h-19Z" fill="#8e6a1f"/><path d="M9.500 3.500v4M18.500 3.500v4" stroke="#5d4c42" stroke-width="1.500" stroke-linecap="round"/><g fill="#d9c9a0"><circle cx="9" cy="15" r="1.200"/><circle cx="14" cy="15" r="1.200"/><circle cx="19" cy="15" r="1.200"/><circle cx="9" cy="19.500" r="1.200"/><circle cx="19" cy="19.500" r="1.200"/></g><circle cx="14" cy="19.500" r="2.200" fill="#b5514d"/></svg></span><h3><a class="go" href="/travessia/calendario/">Calendário de viagem</a></h3><p>Adicione seus endereços e eventos.</p></article>
+      <article class="tool"><span class="tico"><svg viewBox="0 0 28 28" aria-hidden="true"><ellipse cx="14" cy="26" rx="10" ry="1.3" fill="#4A4149" opacity=".15"/><rect x="5" y="4" width="18" height="16" rx="6" fill="#fffdf9" stroke="#517158" stroke-width="1.300"/><rect x="8" y="7.500" width="12" height="6" rx="2" fill="#E1EDE5" stroke="#517158" stroke-width="1"/><path d="M5 16.500h18" stroke="#b5514d" stroke-width="1.500"/><circle cx="9.500" cy="18" r="1.100" fill="#8e6a1f"/><circle cx="18.500" cy="18" r="1.100" fill="#8e6a1f"/><path d="M8 24l2-4M20 24l-2-4M8 24h12" stroke="#517158" stroke-width="1.300" stroke-linecap="round" fill="none"/></svg></span><h3><a class="go" href="/travessia/deslocamento/">Deslocamentos e aplicativos</a></h3><p>Trens, passagens e passo a passo.</p></article>
+      <article class="tool"><span class="tico"><svg viewBox="0 0 28 28" aria-hidden="true"><ellipse cx="14" cy="26" rx="10" ry="1.3" fill="#4A4149" opacity=".15"/><g transform="rotate(4 14 14)"><rect x="6.500" y="3.500" width="15.500" height="21" rx="1.800" fill="#6b8f72" stroke="#44614b" stroke-width="1.200"/><rect x="6.500" y="3.500" width="3" height="21" rx="1.200" fill="#44614b"/><circle cx="15.500" cy="11.500" r="4" fill="#F6EBCB" stroke="#44614b" stroke-width="1"/><path d="M15.500 8.500l1.300 3-3 1.300 1.700-4.300Z" fill="#b5514d"/><path d="M11.500 19.500h8" stroke="#F6EBCB" stroke-width="1.300" stroke-linecap="round"/></g></svg></span><h3><a class="go" href="/travessia/guia-sobrevivencia/">Guia de sobrevivência</a></h3><p>Coisas que você precisa saber<br>e coisas que você precisa saber falar.</p></article>
+      <article class="tool depois"><span class="tico"><svg viewBox="0 0 28 28" aria-hidden="true"><ellipse cx="14" cy="26" rx="10" ry="1.3" fill="#4A4149" opacity=".15"/><g transform="rotate(-4 14 14)"><rect x="6" y="3.500" width="16" height="21" rx="1.500" fill="#fffdf9" stroke="#a08a5a" stroke-width="1.200"/><rect x="8" y="5.500" width="12" height="3.200" rx=".8" fill="#b5514d"/><rect x="8" y="10.500" width="12" height="7" rx=".8" fill="#E1EDE5"/><path d="M8 17.500l3.500-3.500 2.500 2.500 2-2 4 3Z" fill="#8fb59a"/><path d="M8 20.500h12M8 22.500h7" stroke="#d9c9a0" stroke-width="1.100" stroke-linecap="round"/></g></svg></span><h3><a class="go" href="/loja/revista/">Revista Memórias</a></h3><p>Para guardar depois da viagem.</p></article>
+    </div>
+  </section>
+
+  <footer>
+    <span>unirversos — tudo conectado · Aline Kikuti</span>
+    <span>
+      <a href="https://instagram.com/unirversos.idiomas" rel="noopener">@unirversos.idiomas</a>
+      <a href="mailto:unirversos.idiomas@gmail.com">unirversos.idiomas@gmail.com</a>
+    </span>
+  </footer>
+</div>
+<nav class="fixo" id="fixo" aria-label="Atalhos">
+  <a class="btn pri" href="/travessia/calendario/">📅 Calendário</a>
+  <a class="btn sec" href="/travessia/ingressos/">🎟️ Ingressos</a>
+</nav>
+<script>
+/* Datas da viagem: se o calendário já existe neste aparelho, só mostra o período (lê uniCalendario1, sem gravar).
+   Se não existe, guarda as datas em uniViagemDatas1 e o calendário abre com elas já preenchidas. */
+(function(){
+  function ler(k){try{return JSON.parse(localStorage.getItem(k)||'null');}catch(e){return null;}}
+  function ok(d){return typeof d==='string'&&/^\d{4}-\d{2}-\d{2}$/.test(d)&&!isNaN(new Date(d+'T00:00:00Z'));}
+  function br(d){var p=d.split('-');return p[2]+'/'+p[1]+'/'+p[0].slice(2);}
+  function dias(a,b){return Math.round((new Date(b+'T00:00:00Z')-new Date(a+'T00:00:00Z'))/864e5)+1;}
+  var f=document.getElementById('viagem'),form=document.getElementById('vForm'),vok=document.getElementById('vOk'),er=document.getElementById('vErr'),
+      i=document.getElementById('vIni'),j=document.getElementById('vFim');
+  if(!f)return;
+  var cal=ler('uniCalendario1'),pd=ler('uniViagemDatas1');
+  if(cal&&ok(cal.ini)&&ok(cal.fim)&&cal.fim>=cal.ini){
+    form.hidden=true;vok.hidden=false;
+    var hj=new Date(),hs=hj.getFullYear()+'-'+String(hj.getMonth()+1).padStart(2,'0')+'-'+String(hj.getDate()).padStart(2,'0');
+    var st=hs<cal.ini?'faltam '+(dias(hs,cal.ini)-1)+(dias(hs,cal.ini)-1===1?' dia':' dias'):(hs<=cal.fim?'viagem em andamento':'viagem concluída');
+    var nev=Array.isArray(cal.ev)?cal.ev.length:0;
+    vok.appendChild(document.createTextNode('📅 '+br(cal.ini)+' a '+br(cal.fim)+' · '+st+(nev?' · '+nev+(nev===1?' evento':' eventos'):'')));
+    var a=document.createElement('a');a.href='/travessia/calendario/';a.textContent='Abrir calendário →';vok.appendChild(a);
+    return;
+  }
+  if(pd&&ok(pd.ini)&&ok(pd.fim)){i.value=pd.ini;j.value=pd.fim;}
+  f.addEventListener('submit',function(ev){
+    ev.preventDefault();
+    if(!ok(i.value)||!ok(j.value)){er.textContent='Escolha o primeiro e o último dia da viagem.';return;}
+    if(j.value<i.value){er.textContent='O último dia precisa ser igual ou depois do primeiro.';return;}
+    if(dias(i.value,j.value)>541){er.textContent='Escolha um período de até 18 meses.';return;}
+    er.textContent='';
+    try{localStorage.setItem('uniViagemDatas1',JSON.stringify({ini:i.value,fim:j.value}));}catch(e){}
+    location.href='/travessia/calendario/';
+  });
+})();
+</script>
+<script>
+/* Só leitura: lê o que o calendário, os ingressos e a burocracia já guardaram NESTE aparelho. Não grava nada. Tudo entra na tela com textContent. */
+(function(){
+  function ler(k){try{return JSON.parse(localStorage.getItem(k)||'null');}catch(e){return null;}}
+  var D=/^\d{4}-\d{2}-\d{2}$/;
+  var cal=ler('uniCalendario1'),st=ler('travessiaStatusV1'),bur=ler('travessiaBurocracia1');
+  var ev=cal&&Array.isArray(cal.ev)?cal.ev.filter(function(e){return e&&D.test(e.data);}):[];
+  var itens=st&&st.itens&&typeof st.itens==='object'?st.itens:{};
+  var h=new Date(),hojeS=h.getFullYear()+'-'+String(h.getMonth()+1).padStart(2,'0')+'-'+String(h.getDate()).padStart(2,'0');
+  var qi=cal&&cal.qi&&typeof cal.qi==='object'&&Object.keys(cal.qi).length?cal.qi:(ler('agQueroIr')||{});
+  var pz={};
+  Object.keys(itens).forEach(function(id){var i=itens[id];if(i&&i.status==='ganhei'&&D.test(i.prazo||''))pz[id]=i.prazo;});
+  Object.keys(qi).forEach(function(id){var q=qi[id];if(!q)return;if(q.st==='ganhei'&&D.test(q.prazo||''))pz[id]=q.prazo;else if(q.st)delete pz[id];});
+  var prazos=Object.keys(pz).filter(function(id){return pz[id]>=hojeS;}).map(function(id){return {id:id,prazo:pz[id]};}).sort(function(a,b){return a.prazo<b.prazo?-1:1;});
+  function br(d){var p=d.split('-');return p[2]+'/'+p[1];}
+  function selo(card,txt){var c=document.querySelector('.tool a[href="'+card+'"]');if(!c||!txt)return;var t=c.closest('.tool'),e=document.createElement('em');e.className='bd';e.textContent=txt;t.appendChild(e);}
+  /* selos nos cards */
+  if(ev.length)selo('/travessia/calendario/',ev.length+(ev.length===1?' evento':' eventos'));
+  var nb=bur?Object.keys(bur).filter(function(k){return bur[k];}).length:0;
+  if(nb)selo('/travessia/burocracia/',nb+(nb===1?' item feito':' itens feitos'));
+  var nq=Object.keys(qi).filter(function(k){return qi[k]&&qi[k].st;}).length;
+  if(prazos.length)selo('/travessia/ingressos/',prazos.length===1?'prazo em '+br(prazos[0].prazo):prazos.length+' prazos · o 1º em '+br(prazos[0].prazo));
+  else if(nq)selo('/travessia/ingressos/',nq+(nq===1?' na sua lista':' na sua lista'));
+  /* linha do prazo mais próximo, perto das datas */
+  if(prazos.length){
+    var pe=document.getElementById('onde-prazo');
+    function mostrar(nome){
+      pe.textContent='🎟️ Prazo de pagamento mais próximo: '+(nome?nome+' · ':'')+br(prazos[0].prazo)+(prazos.length>1?' (+'+(prazos.length-1)+' depois) ':' ');
+      var a=document.createElement('a');a.href='/travessia/ingressos/';a.textContent='Abrir meus ingressos →';pe.appendChild(a);pe.hidden=false;
+    }
+    mostrar('');
+    var s=document.createElement('script');s.src='/travessia/agendamentos/regras.js?v=3';
+    s.onload=function(){var a=(window.AGENDA_REGRAS||[]).filter(function(x){return x.id===prazos[0].id;})[0];if(a&&a.nome)mostrar(a.nome);};
+    document.head.appendChild(s);
+  }
+})();
+</script>
+<script>
+/* Barra de atalhos do celular: só aparece depois que a pessoa passou do bloco do calendário, para não repetir o botão. */
+(function(){var f=document.getElementById('fixo'),d=document.querySelector('.destaque');if(!f||!d||!('IntersectionObserver' in window))return;
+new IntersectionObserver(function(e){var x=e[0];f.classList.toggle('on',!x.isIntersecting&&x.boundingClientRect.top<0);}).observe(d);})();
+</script>
+<script defer src="/menu-ativo.js?v=2"></script><script defer src="/voltar-global.js?v=5"></script>
+<script src="/entrar.js" defer></script>
+<script>
+(function(){
+  var d=document.getElementById('calEmb'); if(!d)return;
+  try{ if(localStorage.getItem('uniCalEmbAberto')==='0')d.open=false; }catch(e){}
+  d.addEventListener('toggle',function(){ try{localStorage.setItem('uniCalEmbAberto',d.open?'1':'0');}catch(e){} });
+  try{ var c=JSON.parse(localStorage.getItem('uniCalendario1')||'null'); if(c&&c.ini&&c.fim){ var f=function(x){var p=x.split('-');return p[2]+'/'+p[1];}; document.getElementById('calResumo').textContent='· '+f(c.ini)+' a '+f(c.fim)+(Array.isArray(c.ev)&&c.ev.length?' · '+c.ev.length+' eventos':''); } }catch(e){}
+})();
+</script>
+</body>
+</html>
