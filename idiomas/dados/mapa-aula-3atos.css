@@ -451,3 +451,42 @@ body.modo-clipe .ato-tag,body.modo-clipe .prog-pill{display:none}
   .clip-npc .cb-pt,.clip-me .cb-pt{display:none}
   .clip-leg{max-width:92%;bottom:4%}
 }
+
+/* ===== Ato 1 novo: conhecer as palavras + jogo da memória (na cena) ===== */
+.ro-sempre{display:block;color:var(--pink);font-size:.95em;font-weight:500}
+body.no-ro .ro-sempre{display:block}
+.a1-missao{margin:4px 0 2px;font-size:14px;color:var(--muted)}
+.a1-ov{position:absolute;inset:0;display:grid;place-items:center;background:rgba(253,246,244,.55);backdrop-filter:blur(1.5px);padding:3%;font-size:clamp(12px,1.5cqw,16px)}
+.a1-ov.mob{position:static;background:none;backdrop-filter:none;padding:4px 0 8px;font-size:14px}
+.a1-card{display:grid;justify-items:center;gap:.25em;text-align:center;background:#fff;border:2px solid #3a2b38;border-radius:22px;padding:1.1em 1.6em 1em;
+  box-shadow:0 8px 0 #3a2b38,0 14px 30px rgba(58,43,56,.18);min-width:min(22em,92%);max-width:30em;animation:falaEntra2 .35s ease both}
+.a1-ic{font-size:3.4em;line-height:1}.a1-ic svg{width:1.2em;height:1.2em}
+.a1-jp{font-size:2.5em;line-height:1.25}
+.a1-jp ruby rt{font-size:.38em}
+.a1-pt{font-size:1.05em;font-weight:700;color:#3a2b38}
+.a1-tip{color:var(--muted);max-width:26em}
+.a1-bt{display:flex;gap:.5em;align-items:center;justify-content:center;flex-wrap:wrap;margin-top:.5em}
+.a1-r{min-width:2.6em;height:2.6em;border-radius:999px;border:1.5px solid var(--line);background:#fff;font:inherit;cursor:pointer;padding:0 .8em}
+.a1-r:disabled{opacity:.35;cursor:default}
+.a1-r.som{border-color:#3f7fb0;background:#f4f9fd}
+.a1-go{height:2.6em;padding:0 1.3em;border-radius:999px;border:2px solid #3a2b38;background:#c23f5e;color:#fff;font:inherit;font-weight:800;cursor:pointer;box-shadow:0 4px 0 #3a2b38}
+.a1-dots{display:flex;gap:4px;align-items:center;margin-top:.3em}
+.a1-dots i{width:8px;height:8px;border-radius:50%;background:#ecdadd}.a1-dots i.on{background:#a9c4a4}.a1-dots i.now{background:#c23f5e}
+.a1-dots span{font-size:.8em;color:var(--muted);margin-left:6px}
+.a1-card.fim{border-color:#4f7a58;box-shadow:0 8px 0 #4f7a58,0 14px 30px rgba(58,43,56,.18)}
+.memo{display:grid;gap:.6em;width:min(100%,46em)}
+.memo-h{display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap;align-items:baseline;background:#fff;border-radius:14px;padding:.45em .9em;border:1.5px solid var(--line)}
+.memo-h span{font-size:.85em;color:var(--muted);font-weight:700}
+.memo-g{display:grid;grid-template-columns:repeat(var(--cols),1fr);gap:.55em}
+.mc{position:relative;aspect-ratio:4/3;border:2px solid #3a2b38;border-radius:14px;background:#fff;cursor:pointer;font:inherit;padding:0;box-shadow:0 4px 0 #3a2b38;transition:transform .15s;color:#3a2b38}
+.mc:hover{transform:translateY(-2px)}
+.mc-v{position:absolute;inset:0;display:grid;place-items:center;font-size:1.8em;background:repeating-linear-gradient(45deg,#fbe9ee 0 8px,#fff4f6 8px 16px);border-radius:12px}
+.mc-f{position:absolute;inset:0;display:none;place-items:center;align-content:center;gap:.1em;padding:.3em;text-align:center}
+.mc-f b{font-size:1.45em;line-height:1.2}.mc-f i{font-style:normal;font-size:1.9em;line-height:1}.mc-f i svg{width:1.2em;height:1.2em}
+.mc-f small{font-size:.85em;font-weight:700;line-height:1.15}.mc-f .ro-sempre{font-size:.85em}
+.mc.ab .mc-v{display:none}.mc.ab .mc-f{display:grid}
+.mc.ok{border-color:#4f7a58;box-shadow:0 4px 0 #4f7a58;background:#f2f7f3;cursor:default}
+.mc.erro{border-color:#c23f5e;animation:balanca .45s ease}
+@media (max-width:640px){.memo-g{grid-template-columns:repeat(3,1fr)}.a1-jp{font-size:2.1em}}
+/* na cena, romaji sempre visível (balões e peças do diálogo) */
+body.no-ro .cb .ro, body.no-ro .clip-bank .tile small, body.no-ro .cb-slots .slot small{display:block}

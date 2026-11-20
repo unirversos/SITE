@@ -318,7 +318,7 @@ function preBaixaAudios(){
 
 /* ---------- estado global da aula (3 Atos) ---------- */
 const ATOS=[
-  {n:1, key:'agua', ico:'💧', nome:'Explorar cena', sub:'Água · Ouvir'},
+  {n:1, key:'agua', ico:'💧', nome:'Palavras da cena', sub:'Água · Conhecer e jogar'},
   {n:2, key:'fogo', ico:'🔥', nome:'Agir no diálogo', sub:'Fogo · Responder'},
   {n:3, key:'terra', ico:'🌱', nome:'Gravar no Caderno', sub:'Terra · Registrar'}
 ];
@@ -375,7 +375,7 @@ function renderStage(){
   const stg=$('stage');
   stg.setAttribute('viewBox','0 0 400 225');
   stg.dataset.sat=sat;
-  if(ato===0&&f1Atual()<2){
+  if(ato===0){
     stg.innerHTML='';
   } else {
     const stamp=o.stamp?`<g class="thump"><circle cx="200" cy="64" r="20" fill="#fffd" stroke="#c94a4a" stroke-width="3"/><text x="200" y="70" text-anchor="middle" font-family="Baloo 2, sans-serif" font-size="14" font-weight="800" fill="#c94a4a">OK</text></g>`:'';
@@ -405,7 +405,7 @@ function setStage(o){ stageOpt=o||{}; renderStage(); }
 
 function renderHotspots(ly){
   const list=(A&&A.cen&&A.cen.hotspots)||[];
-  if(!list.length || ato===2 || (ato===1&&A.clipe) || (ato===0&&f1Atual()>=2)){ ly.innerHTML=''; return; }
+  if(!list.length || ato!==1 || A.clipe){ ly.innerHTML=''; return; }
   /* no diálogo os personagens ocupam as laterais: só ficam as pistas do meio e do alto da cena */
   const ver=h=>ato!==1||(h.x>=35&&h.x<=63)||h.y<32;
   ly.innerHTML=list.map((h,i)=>!ver(h)?'':`<button type="button" class="hs-dot${P.hotspots&&P.hotspots[i]?' visto':''}" style="left:${h.x}%;top:${h.y}%" data-hs="${i}" title="${h.pt}" aria-label="${h.pt}"><span>♪</span></button>`).join('');
@@ -479,7 +479,7 @@ function goAto(n){
   preBaixaAudios();
   ato=Math.max(0,Math.min(2,n));
   mood='idle';
-  document.body.dataset.ato=ATOS[ato].key; if(ato!==0) fala(null); if(ato!==1&&$('clip')){ $('clip').hidden=true; clearTimeout(clipT); } document.body.classList.toggle('modo-clipe',!!(A&&A.clipe&&ato===1));
+  document.body.dataset.ato=ATOS[ato].key; if(ato!==0) fala(null); if($('clip')){ $('clip').hidden=true; $('clip').innerHTML=''; clearTimeout(clipT); } document.body.classList.toggle('modo-clipe',!!(A&&A.clipe&&ato===1)); document.body.classList.toggle('modo-a1',ato===0);
   renderSteps();
   [stAto1,stAto2,stAto3][ato]();
 }
@@ -500,26 +500,83 @@ function fecharAto1(){ if(P.steps[1]) return; P.steps[1]=1; persist(); gainXP(10
 function mostraPalco(){ const sw=document.querySelector('.stage-wrap'); if(!sw) return; const r=sw.getBoundingClientRect(); if(r.top<0||r.top>innerHeight*.5) try{ sw.scrollIntoView({block:'start',behavior:'smooth'}); }catch(e){} }
 function fala(html){ const f=$('falaCena'); if(!f) return; if(!html){ f.hidden=true; return; } f.hidden=false; f.innerHTML=html; }
 
+/* Ato 1 novo: 👀 conhecer as palavras da cena (voz + romaji) → 🃏 jogo da memória → diálogo */
+let a1Fase='conhecer', a1i=0, memo=null;
+function palavrasCena(){
+  const usa=new Set(JSON.stringify(A.cenas||[]).match(/[ぁ-んァ-ヶー一-龯]+/g)||[]);
+  const ws=(A.words||[]).slice();
+  return ws.sort((x,y)=>(usa.has(y.k)?1:0)-(usa.has(x.k)?1:0)||ws.indexOf(x)-ws.indexOf(y));
+}
 function stAto1(){
-  f1Ver=null; esc=null; setStage({enter:true});
+  setStage({enter:true}); fala(null);
+  const W=palavrasCena(); if(!P.a1n) P.a1n={};
+  a1Fase=P.a1n.jogo?'fim':P.a1n.conheceu?'jogo':'conhecer'; a1i=0; memo=null;
   $('panel').innerHTML=`
-    <span class="elem agua"><i></i>Ato 1 de 3 · 💧 Água · Na cena</span>
-    <h2>${A.intro.titulo}</h2>
-    ${A.fio?`<div class="fio-box">${A.fio.anterior?`<p class="fio-ant">🗺️ ${A.fio.anterior}</p>`:''}${A.fio.gancho?`<p class="fio-gancho"><b>Missão:</b> ${A.fio.gancho}</p>`:''}</div>`:''}
-    <nav class="f1-nav" id="f1Nav" aria-label="Momentos do Ato 1"></nav>
-    <div id="f1Body"></div>
-    <details class="guia-rapido">
-      <summary>📖 Todas as palavras e moldes deste mapa (${A.words.length} palavras · ${A.moldes.length} moldes)</summary>
-      <div class="gr-body">
-        <div class="gr-words">${A.words.map((w,i)=>`<button type="button" class="gr-w" data-wi="${i}"><span class="gr-wic">${iconHTML(w.ic)}</span><span><b lang="ja">${wordH(w)}</b> <span class="ro">${w.r}</span><small>${w.pt}</small></span></button>`).join('')}</div>
-        <div class="gr-moldes">${A.moldes.map(m=>`<div class="gr-m"><b>${m.titulo}</b><div class="gr-tpl">${m.tpl} <span class="ro">· ${m.tplRo}</span></div><small>${m.gram}</small></div>`).join('')}</div>
-      </div>
-    </details>
-    <div class="row"><span class="spacer"></span><button type="button" class="btn" id="btnIrAto2">Ir para o Ato 2: Agir no diálogo →</button></div>`;
-  $('panel').querySelectorAll('.gr-w').forEach(b=>b.onclick=()=>speak(A.words[+b.dataset.wi].k));
-  $('btnIrAto2').onclick=()=>{ fala(null); goAto(1); };
-  $('f1Nav').onclick=e=>{ const b=e.target.closest('[data-f]'); if(!b) return; f1Ver=+b.dataset.f; esc=null; renderF1(); };
-  renderF1();
+    <div class="row clip-topo"><span class="elem agua"><i></i>Ato 1 de 3 · 💧 Palavras da cena</span></div>
+    ${A.fio&&A.fio.gancho?`<p class="a1-missao"><b>Missão:</b> ${A.fio.gancho}</p>`:''}
+    <div class="clip-mob" id="clipMob"></div>
+    <nav class="f1-nav" id="a1Nav"></nav>
+    <div class="row"><span class="spacer"></span><button type="button" class="btn small" id="btnIrAto2">Ir para o diálogo →</button></div>`;
+  $('btnIrAto2').onclick=()=>goAto(1);
+  $('a1Nav').onclick=e=>{ const b=e.target.closest('[data-f]'); if(!b) return; a1Fase=b.dataset.f; a1i=0; memo=null; renderA1(); };
+  renderA1();
+}
+function a1Nav(){ const feito={conhecer:!!P.a1n.conheceu,jogo:!!P.a1n.jogo};
+  $('a1Nav').innerHTML=[['conhecer','👀','Conhecer as palavras'],['jogo','🃏','Jogo da memória']].map(([f,i,n])=>`<button type="button" class="f1-b${a1Fase===f||(a1Fase==='fim'&&f==='jogo')?' now':''}${feito[f]?' ok':''}" data-f="${f}"><span>${feito[f]?'✓':i}</span>${n}</button>`).join(''); }
+function a1Por(html){ /* na imagem (computador) ou logo abaixo dela (celular) */
+  const mob=window.matchMedia&&matchMedia('(max-width:640px)').matches, cp=$('clip');
+  cp.hidden=mob; cp.innerHTML=mob?'':`<div class="a1-ov">${html}</div>`; $('clipMob').innerHTML=mob?`<div class="a1-ov mob">${html}</div>`:'';
+  return mob?$('clipMob'):cp;
+}
+const roA1=w=>`<span class="ro-sempre">${w.r}</span>`;
+function renderA1(){
+  a1Nav(); const W=palavrasCena();
+  if(a1Fase==='conhecer'){
+    const w=W[a1i], ult=a1i===W.length-1;
+    const el=a1Por(`<div class="a1-card" lang="ja">
+        <div class="a1-ic">${iconHTML(w.ic)}</div>
+        <b class="a1-jp">${wordH(w)}</b>${roA1(w)}<span class="a1-pt">${w.pt}</span>
+        ${w.tip?`<small class="a1-tip">${rk(w.tip)}</small>`:''}
+        <div class="a1-bt"><button type="button" class="a1-r" data-a="ant" ${a1i?'':'disabled'} aria-label="Anterior">◀</button>
+          <button type="button" class="a1-r som" data-a="som" aria-label="Ouvir">🔊</button><button type="button" class="a1-r" data-a="dev" aria-label="Devagar">🐢</button>
+          <button type="button" class="a1-go" data-a="prox">${ult?'🃏 Vamos jogar →':'próxima ▶'}</button></div>
+        <div class="a1-dots">${W.map((_,k)=>`<i class="${k<a1i?'on':k===a1i?'now':''}"></i>`).join('')}<span>${a1i+1}/${W.length}</span></div>
+      </div>`);
+    el.querySelectorAll('[data-a]').forEach(b=>b.onclick=e=>{ e.stopPropagation(); const a=b.dataset.a;
+      if(a==='som') speak(w.k); if(a==='dev') speak(w.k,.55);
+      if(a==='ant'&&a1i>0){ a1i--; renderA1(); }
+      if(a==='prox'){ if(!ult){ a1i++; renderA1(); } else { P.a1n.conheceu=1; persist(); a1Fase='jogo'; memo=null; renderA1(); } } });
+    speak(w.k); return;
+  }
+  if(a1Fase==='jogo'){
+    if(!memo){ const n=Math.ceil(W.length/Math.ceil(W.length/6)), rodadas=[]; for(let k=0;k<W.length;k+=n) rodadas.push(W.slice(k,k+n)); memo={rodadas,r:0}; novaRodada(); }
+    const R=memo.rodadas, cartas=memo.cartas;
+    const el=a1Por(`<div class="memo">
+        <div class="memo-h"><b>🃏 Ache os pares: a palavra e o que ela quer dizer</b><span>Rodada ${memo.r+1}/${R.length} · ${memo.pares}/${R[memo.r].length} pares</span></div>
+        <div class="memo-g" style="--cols:${cartas.length>8?4:cartas.length>6?4:3}">${cartas.map((c,k)=>{ const w=c.w, ab=c.vira||c.ok;
+          return `<button type="button" class="mc${ab?' ab':''}${c.ok?' ok':''}${c.erro?' erro':''}" data-k="${k}" ${c.ok?'disabled':''}>
+            <span class="mc-v">🌸</span><span class="mc-f">${c.t==='jp'?`<b lang="ja">${w.k}</b>${roA1(w)}`:`<i>${iconHTML(w.ic)}</i><small>${w.pt}</small>`}</span></button>`; }).join('')}</div>
+      </div>`);
+    el.querySelector('.memo-g').onclick=e=>{ e.stopPropagation(); const b=e.target.closest('.mc'); if(!b||memo.trava) return; viraCarta(+b.dataset.k); };
+    return;
+  }
+  /* fim */
+  const el=a1Por(`<div class="a1-card fim"><div class="a1-ic">🌸</div><b class="a1-jp">よく できました！</b><span class="ro-sempre">yoku dekimashita!</span>
+      <span class="a1-pt">Você já conhece as ${W.length} palavras desta cena. Agora é usar de verdade.</span>
+      <div class="a1-bt"><button type="button" class="a1-r" data-a="rev">🃏 jogar de novo</button><button type="button" class="a1-go" data-a="dial">🔥 Entrar no diálogo →</button></div></div>`);
+  el.querySelectorAll('[data-a]').forEach(b=>b.onclick=e=>{ e.stopPropagation(); if(b.dataset.a==='dial') goAto(1); else { a1Fase='jogo'; memo=null; renderA1(); } });
+}
+function novaRodada(){ const ws=memo.rodadas[memo.r]; memo.cartas=shuffle(ws.flatMap(w=>[{w,t:'jp'},{w,t:'pt'}])); memo.pares=0; memo.aberta=null; memo.trava=false; }
+function viraCarta(k){
+  const c=memo.cartas[k]; if(c.ok||c.vira) return;
+  c.vira=true; if(c.t==='jp') speak(c.w.k);
+  if(memo.aberta==null){ memo.aberta=k; return renderA1(); }
+  const o=memo.cartas[memo.aberta]; memo.aberta=null;
+  if(o.w===c.w){ o.ok=c.ok=true; o.vira=c.vira=false; memo.pares++; if(c.t!=='jp') speak(c.w.k); sparkle(['✨','🌸']); renderA1();
+    if(memo.pares===memo.rodadas[memo.r].length){ memo.trava=true; setTimeout(()=>{ memo.trava=false;
+      if(memo.r<memo.rodadas.length-1){ memo.r++; novaRodada(); renderA1(); }
+      else { const first=!P.a1n.jogo; P.a1n.jogo=1; if(!P.steps[1]){ P.steps[1]=1; gainXP(10); } persist(); renderSteps(); a1Fase='fim'; sparkle(['💧','🎉','✨','⭐']); renderA1(); } },900); }
+  } else { o.erro=c.erro=true; memo.trava=true; renderA1(); setTimeout(()=>{ o.vira=c.vira=o.erro=c.erro=false; memo.trava=false; renderA1(); },1000); }
 }
 function renderF1(){
   const f=f1Atual(), feito=[explorou(),!!a1().esc||hsComPalavra().length<2,moldesOk()];
