@@ -520,3 +520,9 @@ body.no-ro .cb .ro, body.no-ro .clip-bank .tile small, body.no-ro .cb-slots .slo
 .f1-b.go{border-style:solid;border-color:#c23f5e;background:#c23f5e;color:#fff}
 .ato-btn.trava{opacity:.55}
 @media (max-width:640px){.a1-grade{grid-template-columns:repeat(3,1fr)}.wc b{font-size:1.1em}}
+/* Ar: indicação da série da Xuan */
+.ar-xuan{display:flex;gap:10px;align-items:center;margin-top:12px;padding:10px 12px;border:1.5px solid var(--line);border-left:4px solid #c9a24b;border-radius:12px;background:#fffdf7;text-decoration:none;color:inherit}
+.ar-xuan span:first-child{font-size:22px}
+.ar-xuan span:last-child{display:grid;line-height:1.3}
+.ar-xuan small{color:var(--muted);font-size:12.5px}
+.ar-xuan:hover{border-color:#c9a24b}
