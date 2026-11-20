@@ -177,14 +177,23 @@ function renderStage(){
       <g transform="translate(140 104)">${c.prop||''}</g></g>`:(c.prop?`<g transform="translate(140 160)">${c.prop}</g>`:'');
   const stamp = o.stamp?`<g class="thump"><circle cx="${ct?178:150}" cy="${ct?128:60}" r="15" fill="#fff8" stroke="#c94a4a" stroke-width="2.5"/><text x="${ct?178:150}" y="${ct?133:65}" text-anchor="middle" font-family="Baloo 2, sans-serif" font-size="12" font-weight="800" fill="#c94a4a">OK</text></g>`:'';
   /* cena ilustrada (c.bg): a imagem é o cenário inteiro; c.bgFrente = altura do balcão, que volta por cima do personagem */
-  if(c.bg){ const img=`<image href="${c.bg}" width="400" height="250" preserveAspectRatio="xMidYMid slice"/>`;
-    $('stage').innerHTML=`${img}
+  if(c.bg){
+    /* a cena acende conforme a pessoa avança: começa apagada e ganha cor a cada etapa e a cada resposta certa da cena */
+    const nd=Object.keys(done||{}).length, tot=(CENAS&&CENAS.length)||1;
+    const pr=P.steps[4]?1:Math.min(1,([0,1,2,3].filter(k=>P.steps[k]).length+nd/tot)/5);
+    const subiu=pr>luzAnt+.001; luzAnt=pr;
+    const filt=`filter:grayscale(${((1-pr)*.8).toFixed(2)}) sepia(${((1-pr)*.25).toFixed(2)}) brightness(${(.9+pr*.1).toFixed(2)})`;
+    const img=`<image href="${c.bg}" width="400" height="250" preserveAspectRatio="xMidYMid slice" style="${filt}" class="bgimg${subiu?' acende':''}"/>`;
+    /* o objeto tocado acende na hora: um círculo da ilustração em cor, por cima da cena ainda apagada */
+    const HL=(c.hotspots||[]).map((h,i)=>HSV[i]?`<circle cx="${h.x*4}" cy="${h.y*2.5}" r="${luzNova===i?0:40}" fill="#fff">${luzNova===i?'<animate attributeName="r" from="0" to="40" dur=".8s" fill="freeze"/>':''}</circle>`:'').join(''); luzNova=-1;
+    const luzToq=(HL&&pr<1)?`<defs><filter id="hsBl" x="-50%" y="-50%" width="200%" height="200%"><feGaussianBlur stdDeviation="6"/></filter><mask id="hsMk" maskUnits="userSpaceOnUse" x="0" y="0" width="400" height="250"><g filter="url(#hsBl)">${HL}</g></mask></defs><image href="${c.bg}" width="400" height="250" preserveAspectRatio="xMidYMid slice" mask="url(#hsMk)"/>`:'';
+    $('stage').innerHTML=`${img}${luzToq}
     ${o.noNpc?'':charSVG(Object.assign({},n.sel,{face:npcFace}),c.npcX!=null?c.npcX:42,c.npcY!=null?c.npcY:52,c.npcW||124,npcCls,n.extra)}
     ${c.bgFrente!=null?`<clipPath id="bgFr"><rect y="${c.bgFrente}" width="400" height="${250-c.bgFrente}"/></clipPath><g clip-path="url(#bgFr)">${img}</g>`:''}
     ${mood==='wrong'&&!o.noNpc?`<g class="q"><circle cx="${(c.npcX!=null?c.npcX:42)+118}" cy="58" r="16" fill="#fff" stroke="#cfe0f0" stroke-width="2"/><text x="${(c.npcX!=null?c.npcX:42)+118}" y="65" text-anchor="middle" font-family="Baloo 2, sans-serif" font-size="20" font-weight="800" fill="#4f8fc4">?</text></g>`:''}
     ${stamp}${hsSVG(o)}
     <g class="${o.enter?'enter':''}"><g class="char ${meCls}">
-      <svg x="${c.meX!=null?c.meX:236}" y="62" width="148" height="185" viewBox="0 0 240 300">${AV.markup(Object.assign({},me,{face:meFace}),{noBg:true,still:true})}</svg>
+      <svg x="${c.meX!=null?c.meX:236}" y="${c.meY!=null?c.meY:62}" width="${c.meW||148}" height="${(c.meW||148)*1.25}" viewBox="0 0 240 300">${AV.markup(Object.assign({},me,{face:meFace}),{noBg:true,still:true})}</svg>
     </g></g>`; return; }
   $('stage').innerHTML=`
     <rect width="400" height="250" fill="${c.wall||'#fbefe6'}"/>
@@ -205,7 +214,7 @@ function setStage(o){ stageOpt=o||{}; renderStage(); }
 let HSV={};
 function hsSVG(o){ const L=(A.cen&&A.cen.hotspots)||[]; if(!o.hs||!L.length) return '';
   return L.map((h,i)=>`<g class="hs${HSV[i]?' visto':''}" data-hs="${i}" transform="translate(${h.x*4} ${h.y*2.5})" role="button" aria-label="Ouvir: ${h.pt}"><circle class="hs-halo" r="17"/><circle class="hs-dot" r="7"/>${HSV[i]?'<path d="M-3 0 l2 2.5 l4 -5" class="hs-ok"/>':''}</g>`).join(''); }
-function hsToca(i){ const h=(A.cen.hotspots||[])[i]; if(!h) return; speak(h.say); document.querySelectorAll('.toast').forEach(t=>t.remove()); const novo=!HSV[i]; HSV[i]=1; renderStage();
+function hsToca(i){ const h=(A.cen.hotspots||[])[i]; if(!h) return; speak(h.say); document.querySelectorAll('.toast').forEach(t=>t.remove()); const novo=!HSV[i]; HSV[i]=1; if(novo) luzNova=i; renderStage();
   const tot=A.cen.hotspots.length, n=Object.keys(HSV).length, ct=$('hsCount'); if(ct) ct.textContent=`${n} de ${tot}`;
   toast(`<span class="hs-t"><b>${h.say}</b>${h.ro?`<small class="ro">${h.ro}</small>`:''}<small>${h.pt}</small></span>`);
   if(novo&&n===tot) sparkle(['✨','🔍','🌸','⭐']); }
@@ -223,7 +232,7 @@ function renderSteps(){
 }
 const PROVA_TERR={aeroporto:'aeroporto',hotel:'hotel',restaurante:'restaurante',kombini:'conbini',trens:'trens',compras:'compras',roupas:'roupas',emergencia:'sos',apresentacao:'base',horas:'numeros',planos:'planos',sinalizacao:'placas'};
 /* áudios da aula: baixa em segundo plano (4 por vez) logo na primeira etapa, para o 🔊 tocar sem espera no 4G */
-let preBaixou=false; let erros={}; const AUDIO_PRONTO={};
+let preBaixou=false; let erros={}; let luzAnt=-1; let luzNova=-1; const AUDIO_PRONTO={};
 function preBaixaAudios(){
   if(preBaixou||!window.AUDIO_MAP||!window.fetch) return; preBaixou=true;
   const base=window.AUDIO_BASE||'/idiomas/audio/', ids=new Set();
@@ -718,7 +727,7 @@ function loadAula(slug){
   const prepC=c=>Object.assign(c,{pt:rk(c.pt),ansPt:rk(c.ansPt),alts:c.alts.map(a=>Object.assign(a,{ansPt:rk(a.ansPt)})),dica:c.dica?rk(c.dica):c.dica,distr:(c.distr||[]).map(rk)});
   CENAS=raw.cenas.map(prep).map(prepC); CENAS_N=CENAS; CENAS_V=raw.cenasVeg?raw.cenasVeg.map(prep).map(prepC):null; VEG=false;
   P=M[slug]=Object.assign({words:{},steps:{}},M[slug]||{});
-  step=0; wi=0; mi=0; oi=0; ci=0; done={}; erros={}; HSV={}; $('fx').innerHTML='';
+  step=0; wi=0; mi=0; oi=0; ci=0; done={}; erros={}; HSV={}; luzAnt=-1; $('fx').innerHTML='';
   document.title=A.docTitle||`Aula ${String(ORDEM.indexOf(A.slug)+1).padStart(2,'0')} · ${A.titulo} | Mapas de contexto · Unirversos`;
   $('eyebrow').innerHTML=`${A.eyebrow||('Mapa de contexto '+A.num)} · ${A.titulo} · <span style="text-transform:none;letter-spacing:.05em">${A.jp}</span>`;
   $('h1').textContent=A.h1;

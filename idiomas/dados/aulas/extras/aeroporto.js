@@ -8,9 +8,9 @@ A.fio={
   proximo:'Passaporte carimbado e malas na mão. Agora é achar as placas do terminal rumo ao trem →'
 };
 A.cen.hotspots=[
-  {x:41, y:53, say:'パスポートです', ro:'pasupōto desu', pt:'É o passaporte.'},
-  {x:76, y:27, say:'とうきょうです', ro:'Tōkyō desu', pt:'É Tóquio (o painel de chegada).'},
-  {x:57, y:79, say:'にもつです', ro:'nimotsu desu', pt:'É a bagagem.'}
+  {x:22, y:80, say:'パスポートです', ro:'pasupōto desu', pt:'É o passaporte.'},
+  {x:82, y:39, say:'とうきょうです', ro:'Tōkyō desu', pt:'É Tóquio (o painel de chegada).'},
+  {x:49, y:80, say:'にもつです', ro:'nimotsu desu', pt:'É a bagagem.'}
 ];
 const ERRO={
   'もくてきは なんですか？':'O oficial espera, caneta parada no ar. Ele quer saber <b>por que</b> você veio.',
@@ -22,12 +22,5 @@ const ERRO={
 A.cenas.forEach(c=>{ if(ERRO[c.say]) c.erroNpc=ERRO[c.say]; });
 A.cadernoPrompt={molde:'もくてきち は ＿＿ です。', dica:'Guarde no caderno o destino da sua viagem:'};
 })();
-/* cena ilustrada (teste de estética) */
-(function(){ const c=(window.AULAS||{}).aeroporto.cen;
-  c.bg='/idiomas/img/cenas/aeroporto-imigracao.webp'; c.bgFrente=186; c.npcX=150; c.npcY=40; c.npcW=118;
-  c.hotspots=[
-    {x:21, y:82, say:'パスポートです', ro:'pasupōto desu', pt:'É o passaporte.'},
-    {x:81, y:36, say:'とうきょうです', ro:'Tōkyō desu', pt:'É Tóquio (o painel de chegada).'},
-    {x:31, y:62, say:'にもつです', ro:'nimotsu desu', pt:'É a bagagem.'}
-  ];
-})();
+/* área de teste: cenário ilustrado (aeroporto) */
+(function(){ const A=(window.AULAS||{})['aeroporto']; if(!A) return; Object.assign(A.cen,{bg:'/idiomas/img/cenas/aeroporto.webp', bgFrente:176, npcX:86, npcY:58, npcW:112, meX:282, meY:98, meW:116}); })();
