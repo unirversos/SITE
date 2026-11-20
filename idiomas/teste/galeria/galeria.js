@@ -8,23 +8,26 @@ import { onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.12.0/f
 const PROFS = ['unirversos.idiomas@gmail.com', 'li.kikuti@gmail.com'];
 const A = window.UniAtividade, $ = id => document.getElementById(id);
 const esc = s => String(s == null ? '' : s).replace(/[&<>"']/g, c => ({ '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;' }[c]));
-const ST = { pendente: 'A praticar', feito: 'Feito', corrigir: 'Corrigir', dominado: 'Dominado ✓' };
+/* caminho de cada estrutura: A praticar → (aluno escreve) Aguardando a professora → Feito ✓ (aprovada) ou Corrigir (volta com a correção) */
+const ST = { pendente: 'A praticar', revisao: 'Aguardando a professora', corrigir: 'Corrigir', feito: 'Feito ✓' };
+const PRATICAR = ['pendente', 'revisao', 'corrigir'];
 const DIA = n => n + '日目', SEM = n => '第' + n + '週';
 const itens = A.itens.map((r, n) => ({ n, s: r[0], d: r[1], e: r[2], nu: r[3], x: r[4], tr: r[5] }));
 let oculta = (() => { try { return localStorage.getItem('uniAtivOculta') !== '0'; } catch (e) { return true; } })(), abertosEx = new Set();
-let R = {}, alvo = '', souProf = false, nuvem = true, filtro = { sem: 0, st: '', q: '' }, abertosPt = new Set();
+let R = {}, alvo = '', souProf = false, nuvem = true, filtro = { sem: 0, st: 'praticar', q: '' }, abertosPt = new Set();
 
 $('tit').textContent = A.titulo; $('sub').textContent = A.sub;
 const resp = n => R[n] || {};
-/* o que é novo: correção que o aluno ainda não viu / frase que a professora ainda não viu (guardado no aparelho de cada um) */
+/* correção nova que o aluno ainda não viu (guardado no aparelho dele) */
 let visto = {};
-const chaveVisto = () => 'uniAtivVisto:' + (souProf ? 'prof:' : '') + A.id + ':' + alvo;
+const chaveVisto = () => 'uniAtivVisto:' + A.id + ':' + alvo;
 const leVisto = () => { try { visto = JSON.parse(localStorage.getItem(chaveVisto()) || '{}'); } catch (e) { visto = {}; } };
 const marcaVisto = n => { visto[n] = Date.now(); try { localStorage.setItem(chaveVisto(), JSON.stringify(visto)); } catch (e) {} };
-const novo = n => { const r = resp(n);
-  return souProf ? !!(r.f || '').trim() && (r.fm || r.m || 0) > (visto[n] || 0) && r.st !== 'dominado'
-                 : !!(r.c || '').trim() && (r.cm || 0) > (visto[n] || 0); };
-const stDe = n => resp(n).st || (resp(n).f ? 'feito' : 'pendente');
+const novo = n => { const r = resp(n); return !souProf && !!(r.c || '').trim() && (r.cm || 0) > (visto[n] || 0) && stDe(n) !== 'feito'; };
+const stDe = n => { const r = resp(n);
+  if ((r.st === 'feito' && r.ap) || r.st === 'dominado') return 'feito';
+  if (r.st === 'corrigir') return 'corrigir';
+  return (r.f || '').trim() ? 'revisao' : 'pendente'; };
 
 /* ---------- guardar ---------- */
 const chaveLocal = () => 'uniAtiv:' + A.id + ':' + alvo;
@@ -51,17 +54,19 @@ function grava(n, campos, el){
 }
 
 /* ---------- números e semanas ---------- */
+function barra(lista){
+  const tot = lista.length, c = k => lista.filter(i => stDe(i.n) === k).length;
+  return ['feito', 'revisao', 'corrigir'].map(k => `<i class="b-${k}" style="width:${100 * c(k) / tot}%"></i>`).join('');
+}
 function pintaNums(){
-  const tot = itens.length, com = itens.filter(i => (resp(i.n).f || '').trim()).length;
-  const cont = k => itens.filter(i => stDe(i.n) === k).length;
-  $('nums').innerHTML = [
-    ['Estruturas', tot, 'var(--ink)'], ['Com frase própria', com, 'var(--gold)'],
-    ['A praticar', cont('pendente') + cont('corrigir'), 'var(--terra)'], ['Dominadas', cont('dominado'), 'var(--sage)']
-  ].map(([t, v, c]) => `<div class="num" style="--c:${c}"><b>${v}</b><span>${t}</span></div>`).join('');
+  const tot = itens.length, c = k => itens.filter(i => stDe(i.n) === k).length, f = c('feito');
+  $('nums').innerHTML = `<div class="prog"><div class="prog-t"><b>${f} de ${tot}</b> estruturas feitas <span>${Math.round(100 * f / tot)}%</span></div>
+    <div class="prog-b">${barra(itens)}</div>
+    <div class="leg"><span><i class="b-feito"></i>Feitas ✓ ${f}</span><span><i class="b-revisao"></i>Aguardando a professora ${c('revisao')}</span><span><i class="b-corrigir"></i>Para corrigir ${c('corrigir')}</span><span><i class="b-pendente"></i>Ainda sem frase ${c('pendente')}</span></div></div>`;
   const sems = [...new Set(itens.map(i => i.s))];
   $('sems').innerHTML = sems.map(s => {
-    const da = itens.filter(i => i.s === s), ok = da.filter(i => ['feito', 'dominado'].includes(stDe(i.n))).length;
-    return `<button type="button" class="sem${filtro.sem === s ? ' on' : ''}" data-sem="${s}" aria-pressed="${filtro.sem === s}">${SEM(s)}<small>${ok}/${da.length}</small><span class="tr"><i style="width:${Math.round(100 * ok / da.length)}%"></i></span></button>`;
+    const da = itens.filter(i => i.s === s), ok = da.filter(i => stDe(i.n) === 'feito').length;
+    return `<button type="button" class="sem${filtro.sem === s ? ' on' : ''}${ok === da.length ? ' cheia' : ''}" data-sem="${s}" aria-pressed="${filtro.sem === s}">${SEM(s)}<small>${ok}/${da.length} ✓</small><span class="tr">${barra(da)}</span></button>`;
   }).join('');
 }
 $('sems').onclick = e => { const b = e.target.closest('[data-sem]'); if (!b) return; const s = Number(b.dataset.sem); filtro.sem = filtro.sem === s ? 0 : s; pintaNums(); pintaCards(); };
@@ -69,53 +74,83 @@ $('sems').onclick = e => { const b = e.target.closest('[data-sem]'); if (!b) ret
 /* ---------- filtros ---------- */
 function pintaChips(){
   $('oc').textContent = oculta ? '👁 Mostrar explicações' : '🙈 Ocultar explicações'; $('oc').setAttribute('aria-pressed', oculta);
-  const nn = itens.filter(i => novo(i.n)).length;
-  $('chips').innerHTML = (nn ? `<button type="button" class="chip novas${filtro.st === 'novas' ? ' on' : ''}" data-st="novas">${souProf ? '✎ Para corrigir' : '✦ Correções novas'} (${nn})</button> ` : '') + [['', 'Todas'], ['pendente', 'A praticar'], ['feito', 'Feito'], ['corrigir', 'Corrigir'], ['dominado', 'Dominadas']]
-    .map(([k, t]) => `<button type="button" class="chip${filtro.st === k ? ' on' : ''}" data-st="${k}">${t}</button>`).join(' ');
+  const nPr = itens.filter(i => PRATICAR.includes(stDe(i.n))).length, nRev = itens.filter(i => stDe(i.n) === 'revisao').length, nNov = itens.filter(i => novo(i.n)).length;
+  const ch = (k, t, cls = '') => `<button type="button" class="chip${cls}${filtro.st === k ? ' on' : ''}" data-st="${k}">${t}</button>`;
+  $('chips').innerHTML = [
+    souProf && nRev ? ch('revisao', `✎ Para aprovar (${nRev})`, ' novas') : '',
+    !souProf && nNov ? ch('novas', `✦ Correções novas (${nNov})`, ' novas') : '',
+    ch('praticar', `A praticar (${nPr})`), ch('feito', `Feito ✓ (${itens.length - nPr})`), ch('', 'Todas')
+  ].join(' ');
 }
 $('oc').onclick = () => { oculta = !oculta; abertosEx.clear(); try { localStorage.setItem('uniAtivOculta', oculta ? '1' : '0'); } catch (e) {} pintaChips(); pintaCards(); };
 $('chips').onclick = e => { const b = e.target.closest('[data-st]'); if (!b) return; filtro.st = b.dataset.st; pintaChips(); pintaCards(); };
 $('q').oninput = () => { filtro.q = $('q').value.trim().toLowerCase(); pintaCards(); };
-const visiveis = () => itens.filter(i => (!filtro.sem || i.s === filtro.sem) && (!filtro.st || (filtro.st === 'novas' ? novo(i.n) : stDe(i.n) === filtro.st))
+const passa = i => { const st = stDe(i.n);
+  return !filtro.st || (filtro.st === 'novas' ? novo(i.n) : filtro.st === 'praticar' ? PRATICAR.includes(st) : st === filtro.st); };
+const visiveis = () => itens.filter(i => (!filtro.sem || i.s === filtro.sem) && passa(i)
   && (!filtro.q || [i.e, i.nu, i.x, i.tr, resp(i.n).f].join(' ').toLowerCase().includes(filtro.q)));
+
+/* ---------- histórico de correções (fica no card para o aluno rever) ---------- */
+const hist = (n, e) => (resp(n).h || []).concat(Object.assign({ t: Date.now() }, e)).slice(-20);
+const dataCurta = t => new Date(t).toLocaleDateString('pt-BR', { day: 'numeric', month: 'short' });
+function blocoHist(r){
+  const h = (r.h || []).filter(x => x && x.f); if (!h.length) return '';
+  return `<details class="hist"><summary>📜 Histórico (${h.length})</summary><ol>${h.map(x => `<li><span class="hd">${dataCurta(x.t)}</span>
+    <span class="hf" lang="ja">${esc(x.f)}</span>${x.ok ? '<span class="hok">✓ aprovada</span>' : `<span class="hc">→ <span lang="ja">${esc(x.c)}</span></span>`}</li>`).join('')}</ol></details>`;
+}
 
 /* ---------- cards ---------- */
 function card(i){
   const r = resp(i.n), st = stDe(i.n), pt = abertosPt.has(i.n);
   const m = i.e.match(/^(.*?)\s*\(([^)]*)\)\s*$/), est = m ? m[1] : i.e, ro = m ? m[2] : '';
-  const opcoes = (souProf ? Object.keys(ST) : ['pendente', 'feito', 'dominado'].concat(st === 'corrigir' ? ['corrigir'] : []))
-    .map(k => `<option value="${k}"${k === st ? ' selected' : ''}>${ST[k]}</option>`).join('');
   const corr = souProf
     ? `<div class="corr"><label class="l" for="c${i.n}">CORREÇÃO DA PROFESSORA</label><textarea id="c${i.n}" data-c="${i.n}" rows="2" placeholder="Escreva a frase corrigida ou um comentário">${esc(r.c)}</textarea></div>`
-    : (r.c ? `<div class="corr"><b>CORREÇÃO DA PROFESSORA</b><div style="white-space:pre-wrap">${esc(r.c)}</div></div>` : '');
+    : (r.c && st !== 'feito' ? `<div class="corr"><b>CORREÇÃO DA PROFESSORA</b><div style="white-space:pre-wrap">${esc(r.c)}</div></div>` : '');
+  const acoes = souProf
+    ? (st === 'feito' ? `<button type="button" class="mini" data-acao="reabre" data-n="${i.n}">↺ Reabrir</button>`
+       : (r.f || '').trim() ? `<button type="button" class="mini ok" data-acao="aprova" data-n="${i.n}">✓ Aprovar</button><button type="button" class="mini" data-acao="corrige" data-n="${i.n}">✎ Pedir correção</button>` : '<span class="salvo">Ainda sem frase do aluno.</span>')
+    : (st === 'revisao' ? '<span class="salvo">Enviada · a professora vai ver</span>' : st === 'corrigir' ? '<span class="salvo">Reescreva a frase com a correção</span>' : '');
   return `<article class="card s-${st}" data-n="${i.n}">
-    <div class="top"><span>${SEM(i.s)} · ${DIA(i.d)}</span><span>${novo(i.n) ? `<button type="button" class="novo" data-visto="${i.n}" title="Marcar como visto">${souProf ? 'frase nova · ✓ vi' : 'nova correção · ✓ vi'}</button> ` : ''}<span class="pill p-${st}">${ST[st]}</span></span></div>
+    <div class="top"><span>${SEM(i.s)} · ${DIA(i.d)}</span><span>${novo(i.n) ? `<button type="button" class="novo" data-visto="${i.n}" title="Marcar como visto">nova correção · ✓ vi</button> ` : ''}<span class="pill p-${st}">${ST[st]}</span></span></div>
     <h3><span lang="ja">${esc(est)}</span> ${ro ? `<small>${esc(ro)}</small>` : ''}</h3>
     ${oculta && !abertosEx.has(i.n) ? `<button type="button" class="verex" data-ex="${i.n}">👁 ver explicação</button>` : `<p class="nu">${esc(i.nu)}</p>
     <div class="ex"><button type="button" class="som" data-som="${i.n}" aria-label="Ouvir o exemplo">🔊</button><p><span class="jp" lang="ja">${esc(i.x)}</span><br>${pt ? `<span class="pt">${esc(i.tr)}</span>` : `<button type="button" class="verpt" data-pt="${i.n}">ver tradução</button>`}</p></div>`}
-    <label class="l" for="f${i.n}">MINHA FRASE</label>
-    <textarea id="f${i.n}" data-f="${i.n}" rows="2" lang="ja" placeholder="Escreva uma frase sua com essa estrutura" ${souProf ? 'readonly' : ''}>${esc(r.f)}</textarea>
+    <label class="l" for="f${i.n}">${souProf ? 'FRASE DO ALUNO' : 'MINHA FRASE'}</label>
+    <textarea id="f${i.n}" data-f="${i.n}" rows="2" lang="ja" placeholder="${souProf ? 'O aluno ainda não escreveu' : 'Escreva uma frase sua com essa estrutura'}" ${souProf ? 'readonly' : ''}>${esc(r.f)}</textarea>
     ${corr}
-    <div class="pe"><label class="sr" for="s${i.n}">Status</label><select id="s${i.n}" data-s="${i.n}">${opcoes}</select><span class="salvo" id="ok${i.n}" aria-live="polite"></span></div>
+    ${blocoHist(r)}
+    <div class="pe"><span class="acoes">${acoes}</span><span class="salvo" id="ok${i.n}" aria-live="polite"></span></div>
   </article>`;
 }
 function pintaCards(){
   const v = visiveis();
   $('mostra').textContent = `Mostrando ${v.length} de ${itens.length} estruturas`;
-  $('cards').innerHTML = v.map(card).join('') || '<p class="sub">Nenhuma estrutura com esse filtro.</p>';
+  $('cards').innerHTML = v.map(card).join('') || `<p class="sub">${filtro.st === 'revisao' ? 'Tudo aprovado por aqui ✓' : filtro.st === 'praticar' ? 'Nada para praticar com esse filtro 🎉' : 'Nenhuma estrutura com esse filtro.'}</p>`;
+}
+/* depois de mudar o status: atualiza números e, se o card não cabe mais no filtro, ele sai da tela */
+function depois(n){
+  pintaNums(); pintaChips();
+  const c = $('cards').querySelector(`.card[data-n="${n}"]`); if (!c) return;
+  if (passa(itens[n])) { c.outerHTML = card(itens[n]); return; }
+  c.classList.add('saindo'); setTimeout(() => { c.remove(); if (!$('cards').querySelector('.card')) pintaCards(); else $('mostra').textContent = `Mostrando ${visiveis().length} de ${itens.length} estruturas`; }, 420);
 }
 $('cards').addEventListener('input', e => {
   const t = e.target;
-  if (t.dataset.f) { const n = Number(t.dataset.f); const ja = stDe(n); grava(n, Object.assign({ f: t.value, fm: Date.now() }, t.value.trim() && ja === 'pendente' ? { st: 'feito' } : {}), $('ok' + n)); }
-  if (t.dataset.c) { const n = Number(t.dataset.c); grava(n, { c: t.value, cm: Date.now() }, $('ok' + n)); marcaVisto(n); const b = t.closest('.card').querySelector('.novo'); if (b) { b.remove(); pintaChips(); } }
-});
-$('cards').addEventListener('change', e => {
-  const t = e.target; if (!t.dataset.s) return;
-  const n = Number(t.dataset.s); grava(n, { st: t.value }, $('ok' + n)); if (souProf) { marcaVisto(n); const b = t.closest('.card').querySelector('.novo'); if (b) b.remove(); pintaChips(); }
-  const c = t.closest('.card'); c.className = 'card s-' + t.value; c.querySelector('.pill').className = 'pill p-' + t.value; c.querySelector('.pill').textContent = ST[t.value];
+  if (t.dataset.f && !souProf) {
+    const n = Number(t.dataset.f), antes = stDe(n), tem = !!t.value.trim();
+    grava(n, { f: t.value, fm: Date.now(), st: tem ? 'revisao' : 'pendente', ap: false }, $('ok' + n));
+    const agora = stDe(n); if (agora !== antes) { const c = t.closest('.card'); c.className = 'card s-' + agora; const p = c.querySelector('.pill'); p.className = 'pill p-' + agora; p.textContent = ST[agora]; pintaNums(); pintaChips(); }
+  }
+  if (t.dataset.c) { const n = Number(t.dataset.c); grava(n, { c: t.value, cm: Date.now() }, $('ok' + n)); }
 });
 $('cards').addEventListener('click', e => {
-  const vv = e.target.closest('[data-visto]'); if (vv) { marcaVisto(Number(vv.dataset.visto)); vv.remove(); pintaChips(); if (filtro.st === 'novas' && !itens.some(i => novo(i.n))) { filtro.st = ''; pintaChips(); pintaCards(); } return; }
+  const ac = e.target.closest('[data-acao]');
+  if (ac) { const n = Number(ac.dataset.n), a = ac.dataset.acao;
+    if (a === 'aprova') grava(n, { st: 'feito', ap: true, apm: Date.now(), h: hist(n, { f: resp(n).f, ok: 1 }) }, $('ok' + n));
+    if (a === 'corrige') { const ta = $('c' + n); if (!ta.value.trim()) { ta.focus(); ta.placeholder = 'Escreva aqui a correção e toque de novo em “Pedir correção”'; return; } grava(n, { st: 'corrigir', ap: false, cm: Date.now(), h: hist(n, { f: resp(n).f, c: ta.value.trim() }) }, $('ok' + n)); }
+    if (a === 'reabre') grava(n, { st: (resp(n).f || '').trim() ? 'revisao' : 'pendente', ap: false }, $('ok' + n));
+    depois(n); return; }
+  const vv = e.target.closest('[data-visto]'); if (vv) { marcaVisto(Number(vv.dataset.visto)); vv.remove(); pintaChips(); if (filtro.st === 'novas' && !itens.some(i => novo(i.n))) { filtro.st = 'praticar'; pintaChips(); pintaCards(); } return; }
   const x = e.target.closest('[data-ex]'); if (x) { abertosEx.add(Number(x.dataset.ex)); const c = x.closest('.card'); c.outerHTML = card(itens[Number(x.dataset.ex)]); return; }
   const p = e.target.closest('[data-pt]'); if (p) { abertosPt.add(Number(p.dataset.pt)); p.outerHTML = `<span class="pt">${esc(itens[Number(p.dataset.pt)].tr)}</span>`; return; }
   const s = e.target.closest('[data-som]'); if (s) fala(itens[Number(s.dataset.som)].x);
@@ -127,7 +162,7 @@ function fala(t){
 
 /* ---------- flashcard ---------- */
 let fcLista = [], fcI = 0, fcVira = false;
-$('fc-abre').onclick = () => { fcLista = visiveis().filter(i => stDe(i.n) !== 'dominado'); if (!fcLista.length) fcLista = visiveis(); fcI = 0; fcVira = false; fcPinta(); };
+$('fc-abre').onclick = () => { fcLista = visiveis().filter(i => stDe(i.n) !== 'feito'); if (!fcLista.length) fcLista = visiveis(); fcI = 0; fcVira = false; fcPinta(); };
 function fcPinta(){
   let o = $('fc'); if (!o) { o = document.createElement('div'); o.id = 'fc'; o.className = 'fc'; o.setAttribute('role', 'dialog'); o.setAttribute('aria-label', 'Modo flashcard'); document.body.appendChild(o); }
   if (!fcLista.length) { o.remove(); return; }
@@ -142,7 +177,7 @@ function fcPinta(){
   $('fc-x').onclick = () => { o.remove(); pintaCards(); };
   $('fc-ant').onclick = () => vai(-1); $('fc-prox').onclick = () => vai(1);
   if ($('fc-som')) $('fc-som').onclick = () => fala(i.x);
-  if ($('fc-sei')) $('fc-sei').onclick = () => { if (!souProf) grava(i.n, { st: 'dominado' }); vai(1); };
+  if ($('fc-sei')) $('fc-sei').onclick = () => vai(1);
   if ($('fc-rev')) $('fc-rev').onclick = () => vai(1);
   o.onclick = e => { if (e.target === o) { o.remove(); pintaCards(); } };
 }
@@ -189,7 +224,7 @@ async function abre(email){
     };
     return;
   }
-  leVisto(); if (itens.some(i => novo(i.n)) && !filtro.st) filtro.st = 'novas';
+  leVisto(); filtro.st = souProf ? (itens.some(i => stDe(i.n) === 'revisao') ? 'revisao' : 'praticar') : (itens.some(i => novo(i.n)) ? 'novas' : 'praticar');
   trava(false); pintaNums(); pintaChips(); pintaCards();
 }
 onAuthStateChanged(auth, async u => {
