@@ -72,6 +72,9 @@
     '.lv-del{position:absolute;top:calc(var(--u,4px)*1.6);right:calc(var(--u,4px)*1.6);z-index:4;font:inherit;cursor:pointer;border:1.5px solid #ecdadd;background:#fff;color:#705f6c;border-radius:99px;font-size:12px;font-weight:700;padding:3px 10px;min-height:30px;opacity:.75}',
     '.lv-del:hover{opacity:1;color:#a32a2a;border-color:#d9a3a9}',
     '.lv.caneta .lv-del{display:none}',
+    /* no modo Caneta, rolar com a caneta virava risco: botões para ir à folha de cima e à próxima */
+    '.lv-rola{display:none}.lv.caneta .lv-rola{display:flex;flex-direction:column;gap:8px;position:sticky;bottom:12px;margin:-104px 8px 0 auto;width:max-content;z-index:5}',
+    '.lv-rola button{font:inherit;font-size:16px;width:46px;height:46px;border-radius:50%;border:1.5px solid #ecdadd;background:#fff;color:#3a2b38;cursor:pointer;box-shadow:0 8px 18px -10px rgba(58,43,56,.45)}.lv-rola button:disabled{opacity:.35;cursor:default}',
     /* caneta por cima */
     '.lv-pg canvas{position:absolute;inset:0;width:100%;height:100%;z-index:2;pointer-events:none;touch-action:none;display:block}',
     '.lv.caneta .lv-pg canvas{pointer-events:auto;cursor:crosshair}.lv.caneta.borracha .lv-pg canvas{cursor:cell}',
@@ -216,6 +219,7 @@
       '<button type="button" data-f="cl" aria-label="Limpar os desenhos desta página" title="Limpar os desenhos desta página">' + IC.cl + '</button></div>' +
       '</div>' +
       '<div class="lv-livro" aria-live="off"></div>' +
+      '<div class="lv-rola"><button type="button" data-r="-1" aria-label="Folha de cima" title="Folha de cima">▲</button><button type="button" data-r="1" aria-label="Próxima folha" title="Próxima folha">▼</button></div>' +
       '<div class="lv-nav"><button type="button" data-n="-1" aria-label="Página anterior">' + IC.ant + '</button><span class="lbl" aria-live="polite"></span><button type="button" data-n="1" aria-label="Próxima página">' + IC.prox + '</button><button type="button" class="mais" data-n="mais">+ página</button><button type="button" class="vst" data-n="vista" aria-label="Mudar entre uma página e duas páginas"></button></div>' +
       '<div class="lv-prof" hidden><button type="button" class="lv-pf" aria-pressed="false"></button><span class="lv-pfs" aria-live="polite"></span></div>' +
       '<p class="lv-dica" hidden>Com a caneta em uso, a palma da mão não risca a folha. Para virar a página, use as setas.</p>';
@@ -321,6 +325,19 @@
       if (foco) { var t = pg(i).querySelector('.lv-tx'); t.focus(); }
     }
     function anda(d) { vaiPara(ini + d * (dupla ? 2 : 1)); }
+    /* ▲ ▼ do modo Caneta: com as folhas uma embaixo da outra, primeiro rola até a outra folha; depois vira a página */
+    function rola(d) {
+      var v = visiveis().filter(function (i) { return i < pags.length; }), emp = dupla && el.classList.contains('empilha');
+      var ver = function (i) { var p = pg(i); if (p) p.scrollIntoView({ behavior: 'smooth', block: 'start' }); };
+      if (emp && v.length > 1) {
+        var r2 = pg(v[1]).getBoundingClientRect(), naSegunda = r2.top < window.innerHeight * 0.45;
+        if (d > 0 && !naSegunda) return ver(v[1]);
+        if (d < 0 && naSegunda) return ver(v[0]);
+      }
+      var antes = ini; anda(d); if (ini === antes) return;
+      var v2 = visiveis().filter(function (i) { return i < pags.length; });
+      ver(d < 0 && emp && v2.length > 1 ? v2[1] : v2[0]);
+    }
     function maisPagina(foco) {
       pags.push({ x: '', s: [] }); salvaTudo(); constroi(); vaiPara(pags.length - 1, foco);
       if (foco && modo === 'txt') pg(pags.length - 1).querySelector('.lv-tx').focus();
@@ -430,11 +447,14 @@
         if (e.pointerType === 'mouse' && e.button !== 0) return;
         e.preventDefault(); try { c.setPointerCapture(e.pointerId); } catch (x) {}
         { var pgEl = pg(i); if (pgEl) pgEl.classList.add('tocou'); }
-        if (ferr === 'bor' || (e.pointerType === 'pen' && (e.buttons & 32))) { apagando = true; borrou = false; apaga(e); return; }
+        /* borracha: ferramenta escolhida, ponta de borracha (32) ou o botão lateral da caneta apertado (2, ex.: S Pen) */
+        if (ferr === 'bor' || (e.pointerType === 'pen' && (e.buttons & 34))) { apagando = true; borrou = false; apaga(e); return; }
         atual = { k: cor, w: esp, d: [] }; adiciona(e); desenha(i, atual);
       });
       c.addEventListener('pointermove', function (e) {
         if (e.pointerType === 'pen') penVisto = Date.now();
+        if (!apagando && atual && e.pointerType === 'pen' && (e.buttons & 34)) { /* apertou o botão no meio do traço: guarda o traço e passa a apagar */
+          if (atual.d.length) { guardaHist(i); pags[i].s = pags[i].s.concat([atual]); } atual = null; desenha(i); salvaPag(i); apagando = true; borrou = false; }
         if (apagando) { var ev = e.getCoalescedEvents ? e.getCoalescedEvents() : [e]; if (!ev.length) ev = [e]; ev.forEach(apaga); return; }
         if (!atual) return; e.preventDefault();
         var ev2 = e.getCoalescedEvents ? e.getCoalescedEvents() : [e]; if (!ev2.length) ev2 = [e];
@@ -475,6 +495,7 @@
         alvo.forEach(function (i) { guardaHist(i); pags[i].s = []; salvaPag(i); desenha(i); });
       }
     });
+    el.querySelector('.lv-rola').addEventListener('click', function (e) { var b = e.target.closest('[data-r]'); if (b) rola(+b.dataset.r); });
     nav.addEventListener('click', function (e) {
       var b = e.target.closest('button'); if (!b || b.disabled) return;
       if (b.dataset.n === 'mais') maisPagina(true); else if (b.dataset.n === 'vista') { pref = dupla ? '1' : '2'; try { localStorage.setItem('uniCadernoVista', pref); } catch (x) {} ajusta(); } else anda(+b.dataset.n);

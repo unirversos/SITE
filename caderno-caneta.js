@@ -87,12 +87,13 @@
       if (e.pointerType === 'touch' && Date.now() - penVisto < 4000) return;
       if (e.pointerType === 'mouse' && e.button !== 0) return;
       e.preventDefault(); try { canvas.setPointerCapture(e.pointerId); } catch (x) {}
-      var borr = modo === 'bor' || (e.pointerType === 'pen' && (e.buttons & 32));
+      var borr = modo === 'bor' || (e.pointerType === 'pen' && (e.buttons & 34)); /* 32 = ponta de borracha, 2 = botão lateral (S Pen) */
       if (borr) { apagando = true; borrou = false; apaga(e); return; }
       atual = { k: cor, w: esp, d: [] }; adiciona(e); desenhaTudo();
     });
     canvas.addEventListener('pointermove', function (e) {
       if (e.pointerType === 'pen') penVisto = Date.now();
+      if (!apagando && atual && e.pointerType === 'pen' && (e.buttons & 34)) { if (atual.d.length) { salvaHist(); tr.push(atual); } atual = null; desenhaTudo(); mudou(); apagando = true; borrou = false; }
       if (apagando) { var ev = e.getCoalescedEvents ? e.getCoalescedEvents() : [e]; if (!ev.length) ev = [e]; ev.forEach(apaga); return; }
       if (!atual) return; e.preventDefault();
       var ev2 = e.getCoalescedEvents ? e.getCoalescedEvents() : [e]; if (!ev2.length) ev2 = [e];
