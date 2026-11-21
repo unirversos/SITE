@@ -12,7 +12,7 @@ const NIVEIS = ['N5 · Começando', 'N4', 'N3', 'N2', 'N1', 'Geral'];
 
 /* atividades interativas do próprio site (só o título é público; o conteúdo pede liberação) */
 const ATIVIDADES = [
-  { t: 'Gramática N2 · 8 semanas', d: '104 estruturas, flashcards e correção da professora', emo: '✦', c: 'var(--gold-s)', url: '/idiomas/atividades/gramatica-n2/' }
+  { t: 'Gramática N2 · 8 semanas', d: '104 estruturas, flashcards e correção da professora', emo: '✦', c: 'var(--gold-s)', url: '/idiomas/teste/galeria/' }
 ];
 
 /* tipo de arquivo pelo link */

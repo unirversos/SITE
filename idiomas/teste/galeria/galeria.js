@@ -44,6 +44,7 @@ const stDe = n => { const r = resp(n);
 /* ---------- guardar ---------- */
 const chaveLocal = () => 'uniAtiv:' + A.id + ':' + alvo;
 let liberado = false;
+const soVer = () => souProf && (!alvo || (nuvem && !liberado));
 /* cópia de segurança no aparelho: tudo o que se escreve fica também no navegador; ao abrir, o que estiver mais novo
    no aparelho do que na nuvem é reenviado (salva o trabalho se a internet ou o Firebase falharem) */
 const leLocal = () => { try { return JSON.parse(localStorage.getItem(chaveLocal()) || '{}'); } catch (e) { return {}; } };
@@ -149,11 +150,11 @@ function card(i){
     <h3><span lang="ja">${esc(est)}</span> ${ro ? `<small>${esc(ro)}</small>` : ''}</h3>
     ${oculta && !abertosEx.has(i.n) ? `<button type="button" class="verex" data-ex="${i.n}">👁 ver explicação</button>` : `<p class="nu">${esc(i.nu)}${oculta ? ` <button type="button" class="verpt" data-ex="${i.n}">ocultar</button>` : ''}</p>`}
     ${`<div class="ex"><button type="button" class="som" data-som="${i.n}" aria-label="Ouvir o exemplo">🔊</button><p><span class="jp" lang="ja">${esc(i.x)}</span><br>${pt ? `<span class="pt">${esc(i.tr)}</span> <button type="button" class="verpt" data-pt="${i.n}">ocultar tradução</button>` : `<button type="button" class="verpt" data-pt="${i.n}">ver tradução</button>`}</p></div>`}
-    <label class="l" for="f${i.n}">${souProf ? 'FRASE DO ALUNO' : 'MINHA FRASE'}</label>
+    ${soVer() ? '' : `<label class="l" for="f${i.n}">${souProf ? 'FRASE DO ALUNO' : 'MINHA FRASE'}</label>
     <textarea id="f${i.n}" data-f="${i.n}" rows="2" lang="ja" placeholder="${souProf ? 'O aluno ainda não escreveu' : 'Escreva uma frase sua com essa estrutura'}" ${souProf ? 'readonly' : ''}>${esc(r.f)}</textarea>
     ${corr}
     ${blocoHist(r)}
-    <div class="pe"><span class="acoes">${acoes}</span><span class="salvo" id="ok${i.n}" aria-live="polite"></span></div>
+    <div class="pe"><span class="acoes">${acoes}</span><span class="salvo" id="ok${i.n}" aria-live="polite"></span></div>`}
   </article>`;
 }
 function pintaCards(){
@@ -262,9 +263,27 @@ function aoVivo(){
     });
   }, e => console.warn('ao vivo', e));
 }
+/* configurações da professora: liberação do aluno escolhido (fica recolhido para não atrapalhar) */
+function pintaCfg(){
+  const c = $('cfg'); if (!c) return;
+  const nome = ($('al') && $('al').selectedOptions[0] || {}).text || '';
+  c.querySelector('.cfg-c').innerHTML = !alvo ? '<p class="salvo">Escolha um aluno para ver ou mudar a liberação desta atividade.</p>'
+    : liberado ? `<p>✓ <b>${esc(nome)}</b> está liberado nesta atividade.</p>`
+    : `<p><b>${esc(nome)}</b> ainda não está liberado: ele não vê esta atividade.</p><button type="button" class="btn" id="lib-ok">Liberar para ${esc(nome)}</button>`;
+  if ($('lib-ok')) $('lib-ok').onclick = async () => {
+    $('lib-ok').disabled = true;
+    try { await setDoc(doc(db, 'atividades', alvo), { liberado: new Date().toISOString(), [A.id]: {} }, { merge: true }); abre(alvo); }
+    catch (e) { console.warn(e); $('lib-ok').textContent = 'Não consegui liberar'; }
+  };
+}
 async function abre(email){
-  alvo = email; await carrega(); aoVivo();
+  alvo = email;
+  if (souProf && !alvo) { R = {}; liberado = false; nuvem = true; $('aviso').innerHTML = ''; if (pararVivo) { pararVivo(); pararVivo = null; } }
+  else { await carrega(); aoVivo(); }
   const lib = $('lib'); if (lib) lib.remove();
+  pintaCfg();
+  document.body.classList.toggle('sover', soVer());
+  if (soVer()) { filtro.st = ''; trava(false); pintaNums(); pintaChips(); pintaCards(); return; }
   if (nuvem && !liberado) {
     trava(true);
     $('aviso').innerHTML = souProf
@@ -287,8 +306,9 @@ onAuthStateChanged(auth, async u => {
   if (!souProf) { $('quem').innerHTML = ''; return abre(eu); }
   let alunos = [];
   try { alunos = (await getDocs(collection(db, 'aulas'))).docs.map(d => ({ id: d.id, nome: d.data().nome || d.id })).sort((a, b) => a.nome.localeCompare(b.nome)); } catch (e) {}
-  const ini = pedido || (alunos[0] && alunos[0].id) || eu;
-  $('quem').innerHTML = `<span class="pill p-feito">Você está como professora</span><label for="al">Aluno:</label><select id="al">${alunos.map(a => `<option value="${esc(a.id)}"${a.id === ini ? ' selected' : ''}>${esc(a.nome)}</option>`).join('')}</select><span class="salvo">Você escreve as correções; a frase é do aluno.</span>`;
-  $('al').onchange = () => { history.replaceState(null, '', '?aluno=' + encodeURIComponent($('al').value)); abre($('al').value); };
+  const ini = pedido; /* sem ?aluno= a professora abre só a atividade */
+  $('quem').innerHTML = `<span class="pill p-feito">Você está como professora</span><label for="al">Aluno:</label><select id="al"><option value="">— só a atividade —</option>${alunos.map(a => `<option value="${esc(a.id)}"${a.id === ini ? ' selected' : ''}>${esc(a.nome)}</option>`).join('')}</select>
+    <details class="cfg" id="cfg"><summary>⚙ Configurações</summary><div class="cfg-c"></div></details>`;
+  $('al').onchange = () => { const v = $('al').value; history.replaceState(null, '', v ? '?aluno=' + encodeURIComponent(v) : location.pathname); abre(v); };
   abre(ini);
 });
