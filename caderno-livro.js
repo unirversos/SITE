@@ -92,6 +92,11 @@
     '.lv.dupla .lv-livro.vai .lv-pg.esq{transform-origin:right center;animation:lvFolhaE .45s cubic-bezier(.2,.7,.3,1);backface-visibility:hidden;z-index:2}',
     '.lv.dupla .lv-livro.volta .lv-pg.dir{transform-origin:left center;animation:lvFolhaD .45s cubic-bezier(.2,.7,.3,1);backface-visibility:hidden;z-index:2}',
     '@media (prefers-reduced-motion:reduce){.lv-livro.vai .lv-pg,.lv-livro.volta .lv-pg{animation:none}}',
+    /* duas folhas num espaço estreito: uma embaixo da outra, cada uma com a largura toda */
+    '.lv.dupla.empilha .lv-livro{grid-template-columns:1fr;gap:14px}.lv.dupla.empilha .lv-livro::after{display:none}',
+    '.lv.dupla.empilha .lv-pg.esq,.lv.dupla.empilha .lv-pg.dir{border-radius:16px;border:1.5px solid #ecdadd}',
+    '.lv.dupla.empilha .lv-pg.esq .lv-num{left:auto;right:calc(var(--u,4px)*4)}.lv.dupla.empilha .lv-fant{aspect-ratio:auto;min-height:76px}',
+    '.lv.dupla.empilha .lv-livro.vai .lv-pg,.lv.dupla.empilha .lv-livro.volta .lv-pg{animation:none}',
     '.lv-fant{background:#fffdfc;align-items:center;justify-content:center;box-shadow:none}',
     '.lv-fant button{font:inherit;cursor:pointer;border:1.5px dashed #d9c3c9;background:#fff;color:#705f6c;border-radius:99px;padding:8px 18px;font-weight:700;font-size:14px;min-height:40px}.lv-fant button:hover{border-color:#c23f5e;color:#c23f5e}',
     '.lv-dica{font-size:12px;color:#705f6c;margin:0;text-align:center}',
@@ -293,13 +298,14 @@
         var i = +p.dataset.i, on = v.indexOf(i) >= 0;
         p.classList.toggle('fora', !on); p.classList.toggle('esq', dupla && i === v[0]); p.classList.toggle('dir', dupla && i === v[1]);
         p.setAttribute('aria-hidden', String(!on));
-        p.style.gridColumn = on && dupla ? (i === v[0] ? '1' : '2') : '';
+        var emp = el.classList.contains('empilha'), lado = i === v[0] ? '1' : '2';
+        p.style.gridColumn = on && dupla ? (emp ? '1' : lado) : ''; p.style.gridRow = on && dupla && emp ? lado : '';
       });
       /* no caderno aberto, a página da direita ainda em branco vira um convite para continuar */
       var fan = livro.querySelector('.lv-fant');
       if (dupla && !opc.leitura && pags.length && ini + 1 >= pags.length) {
         if (!fan) { fan = document.createElement('div'); fan.className = 'lv-pg lv-fant dir'; fan.innerHTML = '<button type="button">+ nova página</button>'; fan.querySelector('button').onclick = function () { maisPagina(true); }; livro.appendChild(fan); }
-        fan.style.gridColumn = '2';
+        var empF = el.classList.contains('empilha'); fan.style.gridColumn = empF ? '1' : '2'; fan.style.gridRow = empF ? '2' : '';
       } else if (fan) fan.remove();
       var ult = Math.min(pags.length, ini + (dupla ? 2 : 1));
       lbl.textContent = (dupla && ult > ini + 1 ? 'páginas ' + (ini + 1) + '–' + ult : 'página ' + (ini + 1)) + ' de ' + pags.length;
@@ -492,8 +498,9 @@
       var w = el.clientWidth, d = pref === '2' ? true : pref === '1' ? false : (w >= 760);
       var vb = nav.querySelector('.vst'); if (vb) { vb.innerHTML = d ? '<svg viewBox="0 0 20 20" aria-hidden="true"><rect x="4.500" y="2.500" width="11" height="15" rx="1.500"/></svg>1 pág.' : '<svg viewBox="0 0 20 20" aria-hidden="true"><rect x="1.500" y="3.500" width="7.500" height="13" rx="1.200"/><rect x="11" y="3.500" width="7.500" height="13" rx="1.200"/></svg>2 pág.'; vb.title = d ? 'Ver uma página por vez' : 'Ver duas páginas lado a lado'; }
       /* 1% da largura da folha, em px (no lugar de unidades de container: elas deixavam cada tecla lenta, ~1 s) */
-      if (w) el.style.setProperty('--u', ((d ? w / 2 : w) / 100).toFixed(3) + 'px');
-      if (d !== dupla) { dupla = d; el.classList.toggle('dupla', d); ini = dupla ? ini - (ini % 2) : ini; mostra(); }
+      var emp = d && w < 560, mudouEmp = emp !== el.classList.contains('empilha'); el.classList.toggle('empilha', emp);
+      if (w) el.style.setProperty('--u', ((d && !emp ? w / 2 : w) / 100).toFixed(3) + 'px');
+      if (d !== dupla) { dupla = d; el.classList.toggle('dupla', d); ini = dupla ? ini - (ini % 2) : ini; mostra(); } else if (mudouEmp) mostra();
       desenhaVisiveis();
     }
     if (window.ResizeObserver) { ro = new ResizeObserver(function () { ajusta(); }); ro.observe(el); } else window.addEventListener('resize', ajusta);
