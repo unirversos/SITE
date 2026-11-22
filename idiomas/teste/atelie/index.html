@@ -330,6 +330,39 @@ h1{font-size:clamp(24px,4vw,30px)}
 .lv-toast rt{color:inherit;opacity:.8}
 
 [hidden]{display:none!important}
+/* ===== três telas: carteirinha (entrada), editar, treinar ===== */
+.modos{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+.modos .btn{min-height:42px}
+.so-edit,.so-treino,.so-cart{display:none}
+body.m-edit .so-edit,body.m-treino .so-treino{display:flex}
+body.m-cart .so-cart{display:flex}
+body.m-cart .main{grid-template-columns:minmax(0,1fr)}
+body.m-cart .stage,body.m-cart #tabs,body.m-cart #multiNote,body.m-cart #opts,body.m-cart #word,body.m-cart .passe-form,body.m-cart .passe h2{display:none!important}
+body.m-cart .passe{grid-template-columns:minmax(0,1fr);max-width:640px;margin:0 auto;width:100%}
+body.m-cart.novo .passe-sec,body.m-cart.novo .planet,body.m-cart.novo .next{display:none}
+body.m-edit .passe>div:last-child,body.m-edit .planet,body.m-edit .next{display:none!important}
+body.m-treino .main{display:none}
+body.m-treino section.caderno{display:grid}
+.topicos,#speechPop,.avatar-count{display:none!important}
+.avatar-row{display:flex!important;flex-direction:column;align-items:center}
+.cart-vazia{flex-direction:column;align-items:center;gap:14px;max-width:640px;margin:0 auto;width:100%;border:2px dashed #dccbaa;border-radius:20px;background:#fffdf9;padding:40px 20px;text-align:center}
+.cart-vazia .sil{width:120px;height:150px;border-radius:14px;border:2px dashed #dccbaa;display:grid;place-items:center;font-size:44px;color:#c9b48a;background:var(--paper)}
+.cart-vazia p{margin:0;color:var(--muted)}
+body:not(.novo) .cart-vazia{display:none!important}
+.pronto-bar{position:sticky;bottom:12px;justify-content:center;z-index:6}
+.pronto-bar .btn{box-shadow:0 10px 24px -12px rgba(58,43,56,.5)}
+.treino{flex-direction:column;gap:12px;background:var(--card);border:1.5px solid var(--line);border-left:5px solid var(--sage);border-radius:var(--r);padding:18px 20px}
+.treino h2{margin:0;font-family:var(--f-display)}
+.treino>p{margin:0;color:var(--muted);font-size:14px}
+.tr-lista{display:grid;gap:8px}
+.tr-l{display:grid;grid-template-columns:auto minmax(0,1fr);gap:4px 12px;align-items:center;text-align:left;border:1.5px solid var(--line);background:var(--paper);border-radius:14px;padding:10px 14px;font:inherit;color:var(--ink);cursor:pointer}
+.tr-l:hover{border-color:var(--pink)}
+.tr-l .ic{grid-row:span 3;font-size:20px}
+.tr-l .cat{font-size:11.5px;font-weight:700;color:var(--sage)}
+.tr-l b{font-size:16px;letter-spacing:.02em}
+.tr-l small{color:var(--muted);font-size:13px}
+@media (max-width:700px){.pronto-bar{bottom:calc(70px + env(safe-area-inset-bottom,0px))}}
+
 </style>
 <link rel="stylesheet" href="/estilo-celular.css?v=3">
 <script defer src="/menu-ativo.js?v=2"></script><script defer src="/voltar-global.js?v=5"></script>
@@ -353,6 +386,24 @@ h1{font-size:clamp(24px,4vw,30px)}
     </div>
   </header>
 
+  <div class="modos so-cart">
+    <button class="btn primary" type="button" data-modo="edit">✏️ Editar avatar</button>
+    <button class="btn" type="button" data-modo="treino">🗣️ Treinar frases</button>
+  </div>
+  <div class="modos so-edit so-treino">
+    <button class="btn" type="button" data-modo="cart">← Minha carteirinha</button>
+  </div>
+  <div class="cart-vazia so-cart">
+    <div class="sil" aria-hidden="true">?</div>
+    <p>Sua carteirinha ainda está vazia.</p>
+    <button class="btn primary" type="button" data-modo="edit">✏️ Editar avatar</button>
+  </div>
+  <section class="treino so-treino" aria-label="Treinar frases">
+    <h2><ruby>自己紹介<rt>じこしょうかい</rt></ruby> · Treinar</h2>
+    <p>Toque numa frase para ouvir e repita em voz alta.</p>
+    <div class="tr-lista" id="trLista"></div>
+    <div><button class="btn primary" type="button" id="trTodas">▶ Ouvir todas</button></div>
+  </section>
   <div class="main">
     <section class="stage" aria-label="Seu avatar">
       <span class="tape l"></span><span class="tape r"></span>
@@ -486,6 +537,8 @@ h1{font-size:clamp(24px,4vw,30px)}
 
 
 
+  <div class="modos pronto-bar so-edit"><button class="btn primary" type="button" data-modo="cart">✓ Pronto · ver carteirinha</button></div>
+
   <section class="caderno">
     <header>
       <h2>Minhas palavras <span data-ro="tangochō"><ruby>単語帳<rt>たんごちょう</rt></ruby></span></h2>
@@ -554,7 +607,7 @@ function updateHint(){
   const h=$('avatarHint'), card=$('avatarCard');
   if(!h||!card) return;
   if(card.classList.contains('is-speaking')) h.textContent='🔊 Falando…';
-  else if(speechOpen) h.textContent='🔊 Toque para repetir';
+  
   else h.textContent='💬 Toque para falar';
 }
 function stopSpeakUI(){
@@ -747,9 +800,7 @@ function floatXP(el,amount){ const f=document.createElement('span'); f.className
 $('avatarCard').addEventListener('click',()=>{
   const list=sentences();
   if(!list.length) return;
-  if(!speechOpen){ speechOpen=true; tipOpen=false; }
-  renderSpeech();
-  speakCard(list[speechIdx].jp,false);
+  falaAssunto(state.cat);
 });
 document.querySelector('.avatar-row').addEventListener('click',e=>{ const b=e.target.closest('.top-bt'); if(!b) return;
   const list=sentences(), i=+b.dataset.t; if(!list[i]) return;
@@ -784,7 +835,7 @@ $('opts').addEventListener('click',e=>{
   const isNew=!state.learned[id]; if(isNew){ state.learned[id]=true; gain(WORD_XP); }
   speak(WORDS[id].kana);
   abreTopico(cat.key==='clothColor'?'clothes':cat.key, cat.multi?id:null);
-  renderAll(cat.layer,true); avisaFrase();
+  renderAll(cat.layer,true); marcaFeito();
   if(isNew){ const nb=$('opts').querySelector(`[data-id="${id}"]`); nb&&floatXP(nb,WORD_XP); }
 });
 $('age').addEventListener('input',e=>{ state.sel.age=+e.target.value; renderAge(); });
@@ -862,6 +913,34 @@ if($('btnPng')) $('btnPng').onclick=async()=>{
   }catch(e){ b.textContent='Não deu certo, tente de novo'; setTimeout(()=>b.textContent=old,2500); b.disabled=false; return; }
   b.textContent=old; b.disabled=false;
 };
+
+/* ===== telas: carteirinha · editar · treinar ===== */
+const TEMO={'Idade':'🎂','Pele':'🎨','Cabelo':'💇','Cor do cabelo':'🖌️','Roupa':'👕','Expressão':'😊','Acessórios':'🎀','Do seu jeito':'✨','Cenário':'🏞️'};
+let feito=(()=>{ try{ return localStorage.getItem('uniAtelieFeito')==='1'; }catch(e){ return false; } })();
+if(!feito && (Object.keys(state.learned).length || state.profile.name)) feito=true;
+function marcaFeito(){ if(feito) return; feito=true; try{ localStorage.setItem('uniAtelieFeito','1'); }catch(e){} document.body.classList.remove('novo'); }
+function renderTreino(){
+  $('trLista').innerHTML=sentences().map((l,i)=>{ const nome=(l.cat.split('·').pop()||'').trim();
+    return `<button type="button" class="tr-l" data-i="${i}"><span class="ic" aria-hidden="true">${TEMO[nome]||'💬'}</span><span class="cat">${nome}</span><b lang="ja">${l.jp}</b><small class="ro">${kana2ro(l.jp)}</small><small>${l.pt}</small></button>`; }).join('');
+}
+$('trLista').addEventListener('click',e=>{ const b=e.target.closest('.tr-l'); if(b) speak(sentences()[+b.dataset.i].jp); });
+$('trTodas').onclick=()=>speak(sentences().map(l=>l.jp).join(' '));
+function modo(m,semHist){
+  document.body.classList.remove('m-cart','m-edit','m-treino'); document.body.classList.add('m-'+m);
+  if(m==='edit') marcaFeito();
+  if(m==='treino') renderTreino();
+  if(m==='cart') renderCard();
+  if(!semHist){ const h=m==='edit'?'#editar':m==='treino'?'#treinar':' '; history.pushState(null,'',h.trim()||location.pathname+location.search); }
+  window.scrollTo({top:0});
+}
+document.addEventListener('click',e=>{ const b=e.target.closest('[data-modo]'); if(b) modo(b.dataset.modo); });
+const modoDoHash=()=>location.hash==='#editar'?'edit':location.hash==='#treinar'?'treino':'cart';
+window.addEventListener('popstate',()=>modo(modoDoHash(),true));
+if(!feito) document.body.classList.add('novo');
+modo(modoDoHash(),true);
+/* nas abas do editor: tocar na aba fala a frase daquele assunto; tocar no avatar também */
+function falaAssunto(k){ const i=idxTopico(k==='clothColor'?'clothes':k); const l=sentences()[i]; if(l) speakCard(l.jp,false); }
+$('tabs').addEventListener('click',e=>{ const b=e.target.closest('.tab'); if(b) setTimeout(()=>falaAssunto(state.cat),0); });
 </script>
 <script defer src="/caderno-flutuante.js?v=21"></script>
 </body>
