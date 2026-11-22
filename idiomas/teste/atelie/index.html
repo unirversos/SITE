@@ -53,7 +53,8 @@ h1 .jp{font-family:var(--f-body);font-weight:700;font-size:.5em;color:var(--pink
   background:repeating-linear-gradient(45deg,var(--blush) 0 8px,rgba(183,166,220,.55) 8px 16px)}
 .tape.l{left:18px;transform:rotate(-6deg)} .tape.r{right:18px;transform:rotate(5deg);
   background:repeating-linear-gradient(-45deg,var(--sage-soft) 0 8px,rgba(81,113,88,.45) 8px 16px)}
-.avatar-wrap{display:grid;gap:10px;justify-items:center;container-type:inline-size;width:100%}
+.avatar-wrap{display:grid;gap:10px;justify-items:center;container-type:inline-size;width:100%;min-width:0;max-width:100%}
+.avatar-row,.topicos{min-width:0;max-width:100%}
 /* um botãozinho por assunto: ao lado do avatar quando sobra espaço, embaixo dele quando é estreito */
 .avatar-row{display:flex;flex-direction:column;align-items:center;gap:10px;width:100%}
 .avatar-row .avatar-card{order:0}
@@ -63,6 +64,11 @@ h1 .jp{font-family:var(--f-body);font-weight:700;font-size:.5em;color:var(--pink
 .top-bt:hover{border-color:var(--pink)}
 .top-bt[aria-pressed="true"]{background:var(--pink);border-color:var(--pink);color:#fff}
 .top-bt i{font-style:normal}
+@media (max-width:700px){#frToast{bottom:calc(76px + env(safe-area-inset-bottom,0px))}}
+@container (max-width:499px){
+  .topicos{flex-wrap:nowrap;justify-content:flex-start;overflow-x:auto;padding:2px 2px 6px;scrollbar-width:none;-webkit-overflow-scrolling:touch}
+  .topicos::-webkit-scrollbar{display:none}.top-bt{flex:none}
+}
 @container (min-width:500px){
   .avatar-row{display:grid;grid-template-columns:minmax(0,1fr) auto minmax(0,1fr);align-items:center;gap:14px}
   .topicos{order:initial;flex-direction:column;width:auto;gap:8px}
@@ -378,6 +384,7 @@ h1{font-size:clamp(24px,4vw,30px)}
           </div>
           <div class="sp-controls">
             <button type="button" class="sp-btn" id="spReplay">🔊 Repetir</button>
+            <button type="button" class="sp-btn" id="spTroca">✏️ Trocar</button>
             <button type="button" class="sp-btn all" id="spAll">▶ Todas</button>
           </div>
         </div>
@@ -594,9 +601,13 @@ function renderTopicos(list){
   const vistos={}, bts=list.map((l,i)=>{ const nome=(l.cat.split('·').pop()||'').trim(); vistos[nome]=(vistos[nome]||0)+1;
     const rot=nome+(vistos[nome]>1?' '+vistos[nome]:'');
     return `<button type="button" class="top-bt" data-t="${i}" aria-pressed="${speechOpen&&i===speechIdx}"><i aria-hidden="true">${TOP_EMO[nome]||'💬'}</i>${rot}</button>`; });
-  const meio=Math.ceil(bts.length/2);
+  const estreito=$('topL').closest('.avatar-wrap').clientWidth<500, meio=estreito?bts.length:Math.ceil(bts.length/2);
   $('topL').innerHTML=bts.slice(0,meio).join(''); $('topR').innerHTML=bts.slice(meio).join('');
 }
+function avisaFrase(){ const pop=$('speechPop'); if(!speechOpen||!pop) return; const r=pop.getBoundingClientRect();
+  if(r.bottom>0&&r.top<innerHeight) return; const l=sentences()[speechIdx]; if(!l) return;
+  let t=$('frToast'); if(!t){ t=document.createElement('div'); t.id='frToast'; t.className='lv-toast'; t.setAttribute('role','status'); document.body.appendChild(t); }
+  t.innerHTML=`<span lang="ja">${l.jp}</span><br><small style="opacity:.8;font-weight:500">${l.pt}</small>`; t.hidden=false; clearTimeout(t._h); t._h=setTimeout(()=>t.hidden=true,3200); }
 function idxTopico(k,o){ const l=sentences(); let i=l.findIndex(x=>x.k===k&&(!o||x.o===o)); if(i<0) i=l.findIndex(x=>x.k===k); return i; }
 function abreTopico(k,o){ const i=idxTopico(k,o); if(i<0) return false; speechIdx=i; speechOpen=true; tipOpen=false; return true; }
 function renderSpeech(){
@@ -746,6 +757,10 @@ document.querySelector('.avatar-row').addEventListener('click',e=>{ const b=e.ta
   const k=list[i].k, cat=CATS.find(c=>c.key===k);
   if(cat){ state.cat=k; const v=state.sel[k]; state.focus=cat.multi?(list[i].o||v[0]||cat.opts[0].id):v; renderAll(null,false); } else renderSpeech();
   speakCard(list[i].jp,false); });
+$('spTroca').onclick=()=>{ const l=sentences()[speechIdx]; if(!l) return;
+  const alvo=l.k==='skin'?$('skins'):l.k==='age'?$('age'):$('tabs');
+  if(CATS.find(c=>c.key===l.k)){ state.cat=l.k; const v=state.sel[l.k]; state.focus=Array.isArray(v)?(l.o||v[0]||CATS.find(c=>c.key===l.k).opts[0].id):v; renderAll(null,false); }
+  alvo&&alvo.scrollIntoView({behavior:'smooth',block:'center'}); };
 $('spReplay').onclick=()=>{ const list=sentences(); if(list[speechIdx]) speakCard(list[speechIdx].jp,false); };
 $('spAll').onclick=()=>{ const list=sentences(); if(list.length) speakCard(list.map(l=>l.jp).join(' '),true); };
 $('spClose').onclick=()=>{ speechOpen=false; tipOpen=false; stopAudio(); renderSpeech(); };
@@ -769,7 +784,7 @@ $('opts').addEventListener('click',e=>{
   const isNew=!state.learned[id]; if(isNew){ state.learned[id]=true; gain(WORD_XP); }
   speak(WORDS[id].kana);
   abreTopico(cat.key==='clothColor'?'clothes':cat.key, cat.multi?id:null);
-  renderAll(cat.layer,true);
+  renderAll(cat.layer,true); avisaFrase();
   if(isNew){ const nb=$('opts').querySelector(`[data-id="${id}"]`); nb&&floatXP(nb,WORD_XP); }
 });
 $('age').addEventListener('input',e=>{ state.sel.age=+e.target.value; renderAge(); });
