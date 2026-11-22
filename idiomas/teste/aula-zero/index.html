@@ -83,6 +83,9 @@ h1{font-family:var(--f-display);font-weight:800;font-size:clamp(30px,5.2vw,46px)
 @media (prefers-reduced-motion:reduce){.scene img.cena-cor{animation:none;--spr:var(--rb)}}
 #hs{position:absolute;inset:0;z-index:5;pointer-events:none}
 #hs>*{pointer-events:auto}
+.chave.dica{animation:dicaCh .9s ease-in-out infinite;position:relative;z-index:1}
+@keyframes dicaCh{0%,100%{box-shadow:0 0 0 0 rgba(194,63,94,0);transform:scale(1)}50%{box-shadow:0 0 0 6px rgba(194,63,94,.32);transform:scale(1.05)}}
+@media (prefers-reduced-motion:reduce){.chave.dica{animation:none;outline:3px solid #c23f5e}}
 .nav-ex{display:flex;gap:10px;margin-top:16px}
 .nav-ex .btn{flex:1 1 0;min-width:0;margin:0;justify-content:center;text-align:center}
 .nav-ex:has(.voltaBtn:only-child) .btn{flex:0 1 calc(50% - 5px)}
@@ -570,16 +573,19 @@ const CHAVES=[
   ganho:'Agora você sabe dizer o que não faz.',dia:'Com ません você diz o que não come nem bebe, e evita um susto no restaurante.'},
 
  {n:5,jp:'か',ico:'❓',
-  gram:'<b>これはなんですか</b> = “o que é isto?”. <b>なん</b> é a palavra da dúvida e <b>か</b> fecha a pergunta (sem “?”: a voz sobe no fim). A resposta é a chave 01: <em>coisa</em> + <b>です</b>.',
-  molde:'これは <b>なん</b>ですか。→ <em>coisa</em> です',moldeRo:'kore wa nan desu ka? → [coisa] desu',
+  gram:'<b>か</b> no fim da frase vira <b>pergunta</b>, com です ou com ます (a voz sobe no fim; não se escreve “?”). <b>これはなんですか</b> = “o que é isto?”; <em>なん</em> é a palavra da dúvida.',
+  molde:'<em>coisa</em> <b>ですか</b> · <em>ação</em> <b>ますか</b>',moldeRo:'[coisa] desu ka? · [ação]-masu ka?',
   hot:[
-   H(P_ONI,'onigiri','これはなんですか。おにぎりです',['これは',['なん','k'],'ですか。おにぎり',['です','k']],'kore wa nan desu ka? onigiri desu','O que é isto? É um onigiri.','What is this? It\'s an onigiri.'),
-   H(P_TICKET,'kippu','これはなんですか。きっぷです',['これは',['なん','k'],'ですか。きっぷ',['です','k']],'kore wa nan desu ka? kippu desu','O que é isto? É o bilhete.','What is this? It\'s the ticket.'),
-   H(P_WATER,'mizu','これはなんですか。みずです',['これは',['なん','k'],'ですか。みず',['です','k']],'kore wa nan desu ka? mizu desu','O que é isto? É água.','What is this? It\'s water.')],
+   Object.assign(H(P_ONI,'onigiri','これはなんですか。おにぎりです',['これは',['なん','k'],'ですか。おにぎり',['です','k']],'kore wa nan desu ka? onigiri desu','O que é isto? É um onigiri.','What is this? It\'s an onigiri.'),{par:1}),
+   Object.assign(H(P_TRAIN,'nori','でんしゃにのりますか',['でんしゃに','のり','ます',['か','k']],'densha ni norimasu ka?','Você pega o trem?','Do you take the train?'),{par:3}),
+   Object.assign(H(P_TICKET,'kippu','これはなんですか。きっぷです',['これは',['なん','k'],'ですか。きっぷ',['です','k']],'kore wa nan desu ka? kippu desu','O que é isto? É o bilhete.','What is this? It\'s the ticket.'),{par:1}),
+   Object.assign(H(P_SIGN,'iki','とうきょうにいきますか',[TOK.tokyo,'に','いき','ます',['か','k']],'Tōkyō ni ikimasu ka?','Você vai para Tóquio?','Do you go to Tokyo?'),{par:3}),
+   Object.assign(H(P_WATER,'mizu','これはなんですか。みずです',['これは',['なん','k'],'ですか。みず',['です','k']],'kore wa nan desu ka? mizu desu','O que é isto? É água.','What is this? It\'s water.'),{par:1}),
+   Object.assign(H(P_WC,'iki2','トイレにいきますか',['トイレに','いき','ます',['か','k']],'toire ni ikimasu ka?','Você vai ao banheiro?','Do you go to the restroom?'),{par:3})],
   agua:{say:'これはなんですか。おにぎりです',t:['これは',['なん','k'],'ですか。おにぎり',['です','k']],ro:'kore wa nan desu ka? onigiri desu',pt:'O que é isto? É um onigiri.',g:[['これ'],['は','わ'],['なん','なに','何'],['ですか'],['おにぎり'],['です']]},
   fogo:{pedido:'Você pegou um objeto e não sabe o que é. Pergunte e responda: o que é isto? É o bilhete.',say:'これはなんですか。きっぷです',t:['これは',['なん','k'],'ですか。きっぷ',['です','k']],ro:'kore wa nan desu ka? kippu desu',pt:'O que é isto? É o bilhete.',g:[['これ'],['は','わ'],['なん','なに','何'],['ですか'],['きっぷ','切符'],['です']]},
-  terra:{pedido:'Pergunte o que é isto e responda.',itens:['onigiri','kippu','mizu'],suf:{_:['ですか']},exemplo:'これはなんですか',exemploRo:'kore wa nan desu ka?',key:'ですか'},
-  ganho:'Agora você sabe perguntar. As 5 chaves estão acesas.',dia:'Com か você pergunta. É a chave que abre as conversas.'}
+  terra:{pedido:'Pergunte com ですか ou ますか.',itens:['onigiri','kippu','mizu','nori','iki','iki2'],suf:{_:['ですか','ますか']},exemplo:'これはなんですか',exemploRo:'kore wa nan desu ka?',key:'か'},
+  ganho:'Agora você sabe perguntar. As 5 chaves estão acesas.',dia:'Com か você pergunta, com です ou com ます. É a chave que abre as conversas.'}
 ];
 
 /* ---------- estado ---------- */
@@ -916,7 +922,7 @@ const FIX={
  2:[['🍙','Não é chá.','','','おちゃ','ocha','chá','じゃない','janai'],['🚆','Não é água.','','','みず','mizu','água','じゃない','janai'],['🍵','Não é onigiri.','','','おにぎり','onigiri','bolinho de arroz','じゃない','janai'],['💧','Não é trem.','','','でんしゃ','densha','trem','じゃない','janai'],['🍙','Não é bilhete.','','','きっぷ','kippu','bilhete','じゃない','janai']],
  3:[['🍙','Eu como o onigiri.','','','おにぎり','onigiri','bolinho de arroz','をたべます','o tabemasu'],['🍵','Eu bebo o chá.','','','おちゃ','ocha','chá','をのみます','o nomimasu'],['🚉','Eu vou para Tóquio.','','','とうきょう','Tōkyō','Tóquio','にいきます','ni ikimasu'],['💧','Eu bebo a água.','','','みず','mizu','água','をのみます','o nomimasu'],['🚻','Eu vou ao banheiro.','','','トイレ','toire','banheiro','にいきます','ni ikimasu']],
  4:[['🥩','Não como carne.','','','にく','niku','carne','をたべません','o tabemasen'],['🍵','Não bebo chá.','','','おちゃ','ocha','chá','をのみません','o nomimasen'],['🐟','Não como peixe.','','','さかな','sakana','peixe','をたべません','o tabemasen'],['💧','Não bebo água.','','','みず','mizu','água','をのみません','o nomimasen'],['🍙','Não como onigiri.','','','おにぎり','onigiri','bolinho de arroz','をたべません','o tabemasen']],
- 5:[['🍙','O que é isto? É um onigiri.','これはなんですか。','kore wa nan desu ka? ','おにぎり','onigiri','bolinho de arroz','です','desu'],['🎫','O que é isto? É o bilhete.','これはなんですか。','kore wa nan desu ka? ','きっぷ','kippu','bilhete','です','desu'],['💧','O que é isto? É água.','これはなんですか。','kore wa nan desu ka? ','みず','mizu','água','です','desu'],['🍙','O que é isto? É onigiri.','これはなんですか。','kore wa nan desu ka? ','おにぎり','onigiri','bolinho de arroz','です','desu'],['🎫','O que é isto? É o bilhete.','これはなんですか。','kore wa nan desu ka? ','きっぷ','kippu','bilhete','です','desu']]
+ 5:[['🍙','O que é isto? É um onigiri.','これはなんですか。','kore wa nan desu ka? ','おにぎり','onigiri','bolinho de arroz','です','desu'],['💧','Você bebe água?','','','みず','mizu','água','をのみますか','o nomimasu ka?'],['🎫','O que é isto? É o bilhete.','これはなんですか。','kore wa nan desu ka? ','きっぷ','kippu','bilhete','です','desu'],['🚻','Você vai ao banheiro?','','','トイレ','toire','banheiro','にいきますか','ni ikimasu ka?'],['🚆','Você vai para Tóquio?','','','とうきょう','Tōkyō','Tóquio','にいきますか','ni ikimasu ka?']]
 };
 function plim(ok){
   try{const AC=window.AudioContext||window.webkitAudioContext;if(!AC)return;const a=new AC(),t=a.currentTime;
@@ -1229,6 +1235,7 @@ function telaTerraPisca(c){
   const h2=painel.querySelector('h2');
   if(h2)h2.insertAdjacentHTML('afterend','<div class="contagem" aria-label="'+(T.i+1)+' de '+total+'">'+T.ordem.map((_,j)=>'<i class="'+(j<T.i?'on':'')+'"></i>').join('')+'</div>');
   luzAlvo(h,hsBox.children[e]);
+  if(c.n===5&&h.par){ const ids=[h.par-1,4]; ids.forEach(ix=>{const b=barra.children[ix]; if(b) b.classList.add('dica');}); }
 }
 function telaTerra(c){
   if(c.n!==1) return telaTerraPisca(c);
