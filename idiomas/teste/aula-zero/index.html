@@ -262,6 +262,7 @@ body[data-etapa="ar"] .painel{--el:var(--gold)}
 #clAv .cl-braco::after{content:"";position:absolute;bottom:-14%;left:-5%;width:110%;aspect-ratio:1;border-radius:50%;background:var(--cl-pele,#f2c9a5)}
 #clAv .cl-prop{position:absolute;bottom:-38%;left:50%;transform:translateX(-50%) rotate(var(--cl-contra,0deg));font-size:clamp(16px,5vw,26px);line-height:1;z-index:3}
 #clAv .cl-som{position:absolute;left:85%;top:-6%;background:#fff;border:2px solid var(--line);border-radius:12px;padding:1px 8px;font-weight:800;font-size:13px;white-space:nowrap;opacity:0}
+.fx-img{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin:10px 0}.fx-quadro{padding:0;border:3px solid var(--line);border-radius:12px;overflow:hidden;background:#fff;cursor:pointer;line-height:0}.fx-quadro img{width:100%;height:auto;display:block}.fx-quadro:hover{border-color:var(--terra)}.fx-quadro.ok{border-color:#3d8b5a;box-shadow:0 0 0 3px rgba(61,139,90,.3)}@media(max-width:560px){.fx-img{grid-template-columns:repeat(2,1fr)}}
 .cl-legenda{margin:10px 0 4px;padding:12px 14px;border-left:5px solid var(--agua,#3f7fb0);background:#fff;border-radius:10px}
 .cl-legenda .jpl{font-size:24px}.cl-legenda .jpl b{color:#c0392b}
 #clAv[hidden]{display:none}
@@ -941,6 +942,7 @@ function plim(ok){
     setTimeout(()=>{try{a.close();}catch(e){}},1500);}catch(e){}
 }
 function telaFixa(c){
+  if(c.n===3)return telaFixaClipe(c);
   const R=FIX[c.n].slice(),n0=R.length,refeito=new Set();let q=0,trava=false;
   const banco=[];R.forEach(r=>{if(!banco.find(b=>b[0]===r[4]))banco.push([r[4],r[5],r[6],({'でんしゃ':'🚆','おにぎり':'🍙','きっぷ':'🎫','おちゃ':'🍵','みず':'💧','とうきょう':'🚉','にく':'🥩','さかな':'🐟','トイレ':'🚻'})[r[4]]||'']);});
   const emb=a=>{a=a.slice();for(let i=a.length-1;i>0;i--){const j=(i*7+3)%(i+1);[a[i],a[j]]=[a[j],a[i]];}return a;};
@@ -967,6 +969,33 @@ function telaFixa(c){
           setTimeout(()=>{ttsJa((String(pre)+w+pos).replace(/。/g,'、'),.95);},700);}
         q++;setTimeout(()=>{trava=false;if(q>=R.length)fim();else mostra();},3200+(R[q-1]&&String(R[q-1][2]).length?1800:900));}
       else{plim(false);b.classList.add('tremeu');setTimeout(()=>b.classList.remove('tremeu'),500);if(q<n0&&!refeito.has(q)){refeito.add(q);R.push(R[q]);}est.className='estado erro';est.textContent='Esse é '+b.dataset.v+' ('+(banco.find(x=>x[0]===b.dataset.v)||[])[2]+'). Tente de novo.';}};
+  }
+  mostra();
+}
+
+/* chave 03 · fixação: ouvir a frase, repetir em voz alta e tocar no quadro certo do clipe */
+function telaFixaClipe(c){
+  const ORD=[2,0,3,1,4],OPC=[3,1,4,0,2]; /* rodadas e posição das imagens, embaralhadas de forma fixa */
+  const R=ORD.slice(),n0=R.length,refeito=new Set();let q=0,trava=false;
+  const frase=k=>k.say;
+  const fim=()=>{S.ff=0;vai('falafix');};
+  function mostra(){
+    const k=CLIP[R[q]];
+    painel.innerHTML=`<span class="elem fogo"><i></i>Chave 03 · Fixação · ouça, repita e escolha${q>=n0?' · revendo as que errou':''}</span>
+     <h2><button type="button" class="btn ghost small" id="fxOuve" aria-label="Ouvir a frase">🔊 Ouvir de novo</button></h2>
+     <div class="contagem" aria-label="${q} de ${R.length}">${R.map((_,i)=>`<i class="${i<q?'on':''}"></i>`).join('')}</div>
+     <p class="nota"><b>Ouça e repita em voz alta.</b> Depois toque na imagem que mostra a ação.</p>
+     <div class="fx-img" id="fxBt">${OPC.map(j=>`<button type="button" class="fx-quadro" data-j="${j}" aria-label="${CLIP[j].pt}"><img src="${CLIP[j].video.replace('.mp4','_acao.jpg')}" alt="" loading="eager"></button>`).join('')}</div>
+     <div class="estado" id="estado"></div>
+     <div class="acoes"><button class="btn ghost" type="button" id="fxPula">Pular fixação →</button></div>`;
+    $('fxPula').onclick=()=>{pararMic();vai('fogo');};
+    $('fxOuve').onclick=()=>{fala(frase(k));};
+    setTimeout(()=>{if(!trava)fala(frase(k));},500);
+    $('fxBt').onclick=e=>{const b=e.target.closest('[data-j]');if(!b||trava)return;const est=$('estado'),j=+b.dataset.j;
+      if(j===R[q]){trava=true;plim(true);b.classList.add('ok');est.className='estado ok';est.textContent='✓ '+k.say.replace(/ます$/,'')+'ます · '+k.pt;
+        setTimeout(()=>{ttsJa(k.say,.95);},700);
+        q++;setTimeout(()=>{trava=false;if(q>=R.length)fim();else mostra();},3600);}
+      else{plim(false);b.classList.add('tremeu');setTimeout(()=>b.classList.remove('tremeu'),500);if(q<n0&&!refeito.has(q)){refeito.add(q);R.push(R[q]);}est.className='estado erro';est.textContent='Essa imagem é: '+CLIP[j].pt+' Tente de novo.';}};
   }
   mostra();
 }
