@@ -81,6 +81,8 @@ h1{font-family:var(--f-display);font-weight:800;font-size:clamp(30px,5.2vw,46px)
  animation:spotR .9s ease-in-out infinite}
 @keyframes spotR{0%,100%{--spr:calc(var(--rb)*.85);opacity:.75}50%{--spr:calc(var(--rb)*1.15);opacity:1}}
 @media (prefers-reduced-motion:reduce){.scene img.cena-cor{animation:none;--spr:var(--rb)}}
+#hs{position:absolute;inset:0;z-index:5;pointer-events:none}
+#hs>*{pointer-events:auto}
 .hs{position:absolute;transform:translate(-50%,-50%);width:44px;height:44px;border-radius:50%;border:0;background:rgba(255,255,255,.0);padding:0}
 .hs::before{content:"";position:absolute;inset:6px;border-radius:50%;background:rgba(255,255,255,.92);border:2px solid var(--pink);box-shadow:0 2px 6px rgba(58,43,56,.25)}
 .hs::after{content:"";position:absolute;inset:0;border-radius:50%;border:2px solid var(--pink);opacity:.6;animation:ping 2.2s ease-out infinite}
