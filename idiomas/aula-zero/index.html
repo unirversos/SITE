@@ -823,7 +823,7 @@ function atualizaToque(novo){
 }
 function telaChegada(){
   painel.innerHTML=`<span class="elem ganho"><i></i>Chegada</span>
-   <h2>${S.acesas.length?S.acesas.length+' de 5 chaves ativadas.':'Desbloqueia 5 chaves.'}</h2>
+   <h2>${S.acesas.length?S.acesas.length+' de 5 chaves ativadas.':'Desbloqueie 5 chaves.'}</h2>
    <p>Em 15 minutos você aprende a afirmar, negar e perguntar em japonês.</p>
    <div class="acoes"><button class="btn pri" type="button" id="go">${S.acesas.length&&S.acesas.length<5?'Continuar →':'Ativar a primeira chave →'}</button></div>`;
   $('go').onclick=()=>{fala('とうきょうです');S.k=S.primeiraApagada?S.primeiraApagada():0;vai('agua');};
