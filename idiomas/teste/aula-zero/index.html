@@ -200,6 +200,13 @@ body[data-etapa="ar"] .painel{--el:var(--gold)}
 .scene svg{transition:filter .4s}
 .scene #avatarNao.apresenta{width:30%;left:3%;bottom:3%;animation:piscaFace .9s ease-in-out infinite;border-radius:50%}
 #avatarNao.apresenta .balao{left:70%;top:0;border-color:var(--terra);color:var(--terra);font-size:16px}
+.scene{position:relative}
+#ganhoCena{position:absolute;left:50%;top:48%;transform:translate(-50%,-50%);z-index:6;display:grid;justify-items:center;gap:6px;pointer-events:none;animation:ganhoIn .7s cubic-bezier(.2,1.4,.4,1) both}
+#ganhoCena .gc-key{width:clamp(90px,22%,150px);aspect-ratio:1;filter:drop-shadow(0 0 18px rgba(232,168,32,.8))}
+#ganhoCena .gc-t{background:rgba(255,255,255,.92);border:2px solid #e8a820;border-radius:14px;padding:6px 16px;font-size:clamp(20px,4vw,30px);font-weight:800;text-align:center;color:#3a2b38}
+#ganhoCena .gc-t small{display:block;font-size:12px;font-weight:600;color:#8a6a1c;letter-spacing:.08em;text-transform:uppercase}
+@keyframes ganhoIn{from{opacity:0;transform:translate(-50%,-30%) scale(.5)}to{opacity:1;transform:translate(-50%,-50%) scale(1)}}
+@media (prefers-reduced-motion:reduce){#ganhoCena{animation:none}}
 .nome-card{display:flex;align-items:center;gap:14px;justify-content:center;margin:10px auto;padding:12px 18px;max-width:340px;border:2px solid var(--terra);border-radius:18px;background:#fff;animation:puxa .6s ease-out}
 .nc-av{width:84px;height:84px;border-radius:50%;overflow:hidden;animation:piscaFace .9s ease-in-out infinite}
 .nc-av svg{width:100%;height:100%;display:block}
@@ -643,6 +650,7 @@ if(LIVRE){
 }
 function vai(passo){if(passo!=='terra')S.t1=null;if(passo==='agua'&&S.passo!=='agua')S.ai=0;if(S.__paraClipe){S.__paraClipe();S.__paraClipe=null;}if(passo!=='clipe'&&S.passo==='clipe')S.clipeVisto=true;S.passo=passo;S.erros=0;S.feitos=[];pararMic();pilula.hidden=true;render();}
 function render(){
+  { const gc=document.getElementById('ganhoCena'); if(gc) gc.remove(); }
   window.__render=render;
   if(S.passo==='retoma'&&S.k<1)S.passo='agua';
   if(S.passo==='agua'&&!toqueCompleto(CHAVES[S.k])&&!S.toqueOk[S.k])S.passo='toque';
@@ -991,22 +999,25 @@ function telaClipe(c){
   try{const sc=document.querySelector('.scene');const r=sc.getBoundingClientRect();if(r.top<0||r.top>innerHeight*.3)window.scrollTo({top:scrollY+r.top-8,behavior:'smooth'});}catch(e){}
   roda();
 }
+const KEY_SVG='<svg viewBox="0 0 64 64" width="100%" height="100%" aria-hidden="true"><g transform="rotate(-40 32 32)" stroke="#3a2b38" stroke-width="3" stroke-linejoin="round" stroke-linecap="round"><circle cx="32" cy="14" r="10" fill="#e8a820"/><circle cx="32" cy="14" r="3.5" fill="#fff8e6"/><rect x="29" y="23" width="6" height="32" rx="2" fill="#e8a820"/><path d="M35 44h8v5h-8M35 52h6v4h-6" fill="#e8a820"/></g></svg>';
 function telaGanho(c){
   const ja=S.acesas.includes(c.n);
   desenhaBarra();
   const ultima=S.k===CHAVES.length-1;
-  painel.innerHTML=`<div class="fim-bloco"><div class="grande" aria-hidden="true">${c.ico}</div>
+  painel.innerHTML=`<div class="fim-bloco">
     <span class="elem ganho"><i></i>Ganho · chave ${String(c.n).padStart(2,'0')}</span>
     <h2>${c.jp}</h2><p>${c.ganho}</p>
     ${S.ditas[c.n]?`<p class="voce-disse"><small>Você disse</small><span class="jpl" lang="ja">${S.ditas[c.n]}</span></p>`:''}
     <p class="dia">${c.dia||''}</p>
     <p class="salva"><button class="btn ghost small" type="button" id="salvaCad">📓 Salvar frase no caderno</button></p>
     <div class="acoes"><button class="btn pri" type="button" id="prox">${ultima?'Perguntas prontas →':'Próxima chave →'}</button></div></div>`;
+  const mostraGC=()=>{ const sc=document.querySelector('.scene'); if(sc){ const old=$('ganhoCena'); if(old) old.remove(); const g=document.createElement('div'); g.id='ganhoCena'; g.setAttribute('aria-hidden','true'); g.innerHTML='<div class="gc-key">'+KEY_SVG+'</div><div class="gc-t"><small>chave '+String(c.n).padStart(2,'0')+' acesa</small>'+c.jp+'</div>'; sc.appendChild(g); } };
   let acesa=false;
-  const acende=()=>{if(acesa)return;acesa=true;if(!S.acesas.includes(c.n)){S.acesas.push(c.n);salva();}
+  const acende=()=>{mostraGC();if(acesa)return;acesa=true;if(!S.acesas.includes(c.n)){S.acesas.push(c.n);salva();}
     desenhaBarra();luzCena(c.n);const sl=barra.children[S.k];if(sl&&!ja)sl.classList.add('pop');};
   const conquistou=S.conquista;S.conquista=false;
   const voo=(ja||!conquistou)?(conquistou?acende():0,null):voaChave(c,acende);
+  if(!voo)mostraGC();
   $('salvaCad').onclick=function(){if(salvaFrase(c)){this.textContent='✓ Salva no caderno';this.disabled=true;}else location.href='/idiomas/caderno/';};
   $('prox').onclick=()=>{if(voo)voo.cancela();acende();if(ultima){S.p=0;vai('prontas');}else{S.k++;vai(S.retomado[S.k]?'agua':'retoma');}};
 }
