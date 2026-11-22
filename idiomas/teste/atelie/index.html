@@ -369,6 +369,7 @@ body:not(.novo) .cart-vazia{display:none!important}
 .tr-info{display:grid;gap:4px;color:var(--muted)}
 .tr-info[hidden]{display:none}
 .tr-ouvir{font-size:17px;padding:12px 26px}
+.tr-deck>.tr-ver{justify-self:center}
 .tr-ver{border:0;background:none;color:var(--muted);font:inherit;font-size:14px;text-decoration:underline;cursor:pointer}
 .tr-nav{display:flex;justify-content:space-between;align-items:center;gap:10px;color:var(--muted);font-size:14px}
 @media (max-width:700px){.pronto-bar{bottom:calc(70px + env(safe-area-inset-bottom,0px))}}
@@ -420,6 +421,7 @@ body:not(.novo) .cart-vazia{display:none!important}
         <button type="button" class="tr-ver" id="trVer">👁 Ver romaji e tradução</button>
       </div>
       <div class="tr-nav"><button type="button" class="btn" id="trAnt">← Anterior</button><span id="trN"></span><button type="button" class="btn" id="trProx">Próxima →</button></div>
+      <button type="button" class="tr-ver" id="trTodas">▶ Ouvir a apresentação completa</button>
     </div>
   </section>
   <div class="main">
@@ -954,13 +956,14 @@ function renderTreino(){
   $('trInfo').hidden=!trVis; $('trVer').textContent=trVis?'🙈 Esconder romaji e tradução':'👁 Ver romaji e tradução';
   $('trN').textContent=(trI+1)+' / '+L.length;
   $('trProg').innerHTML=L.map((_,i)=>`<i class="${i===trI?'on':trVisto.has(i)?'ok':''}"></i>`).join('');
-  $('trAnt').disabled=trI===0; $('trProx').disabled=trI===L.length-1;
+  $('trAnt').disabled=trI===0; const fim=trI===L.length-1; $('trProx').textContent=fim?'✓ Terminei · ver carteirinha':'Próxima →'; $('trProx').classList.toggle('primary',fim);
 }
 const trOuve=()=>speak(sentences()[trI].jp);
 $('trJp').onclick=$('trOuvir').onclick=trOuve;
 $('trVer').onclick=()=>{ trVis=!trVis; renderTreino(); };
 $('trAnt').onclick=()=>{ if(trI>0){ trI--; renderTreino(); } };
-$('trProx').onclick=()=>{ if(trI<sentences().length-1){ trI++; renderTreino(); trOuve(); } };
+$('trProx').onclick=()=>{ if(trI<sentences().length-1){ trI++; renderTreino(); trOuve(); } else { trI=0; trVisto=new Set(); modo('cart'); } };
+$('trTodas').onclick=()=>speak(sentences().map(l=>l.jp).join(' '));
 function modo(m,semHist){
   document.body.classList.remove('m-cart','m-edit','m-treino'); document.body.classList.add('m-'+m);
   if(m==='edit') marcaFeito();
