@@ -641,7 +641,7 @@ function desenhaHot(){
   trocaCena();
   { const sc=document.querySelector('.scene'); if(sc) sc.classList.toggle('pb',S.passo==='terra'&&CHAVES[S.k]&&S.k<5); }
   { const ic=$('imgEstCor'); if(ic) ic.hidden=true; }
-  hsBox.innerHTML='';const av=$('avatarNao');if(av){av.hidden=true;av.classList.remove('vai','apresenta');}
+  hsBox.innerHTML='';const av=$('avatarNao');if(av){clearTimeout(av._t);av.hidden=true;av.classList.remove('vai','apresenta','sim','pergunta');}
   if(S.passo==='chegada'||S.passo==='fim'||S.passo==='final'||S.passo==='prontas'||S.passo==='clipe'||S.passo==='retoma'){$('dicaCena').hidden=true;return;}
   $('dicaCena').hidden=false;
   const c=CHAVES[S.k];
@@ -653,7 +653,9 @@ function desenhaHot(){
     const riscaNao=(quieto)=>{const x=document.createElement('span');x.className='xitem'+(quieto?' quieto':'');x.textContent='✕';x.style.left=h.x+'%';x.style.top=h.y+'%';x.setAttribute('aria-hidden','true');hsBox.appendChild(x);};
     if(c.n===4&&S.visto.has(c.n+'-'+i)&&S.passo!=='terra')riscaNao(true);
     b.onclick=()=>{const jaVisto=S.visto.has(c.n+'-'+i);S.visto.add(c.n+'-'+i);b.classList.add('visto');pilula.hidden=false;
-      if(c.n===4||c.n===5){if(c.n===4&&!jaVisto)riscaNao(false);const av=$('avatarNao');if(av){av.classList.toggle('pergunta',c.n===5);{const bl=av.querySelector('.balao');bl.textContent=c.n===5?'これは なん？':'';bl.hidden=c.n!==5;}av.hidden=false;av.classList.remove('vai');void av.offsetWidth;av.classList.add('vai');}}
+      if(c.n===2){const av=$('avatarNao');if(av){clearTimeout(av._t);av.classList.remove('sim','pergunta');const bl=av.querySelector('.balao');bl.textContent='じゃない';bl.hidden=false;av.hidden=false;av.classList.remove('vai');void av.offsetWidth;av.classList.add('vai');
+        av._t=setTimeout(()=>{av.classList.add('sim');bl.textContent='です';av.classList.remove('vai');void av.offsetWidth;av.classList.add('vai');},1300);}}
+      if(c.n===4||c.n===5){if(c.n===4&&!jaVisto)riscaNao(false);const av=$('avatarNao');if(av){clearTimeout(av._t);av.classList.remove('sim');av.classList.toggle('pergunta',c.n===5);{const bl=av.querySelector('.balao');bl.textContent=c.n===5?'これは なん？':'';bl.hidden=c.n!==5;}av.hidden=false;av.classList.remove('vai');void av.offsetWidth;av.classList.add('vai');}}
       pilula.innerHTML=`<div class="pilula"><div class="jpl" lang="ja">${html(h.t)}</div><div class="ro">${h.ro}</div><p class="gram">${c.gram}</p>${h.resp?`<p class="gram"><button type="button" class="btn small" id="ouveResp">💬 Resposta: <span lang="ja">${h.resp.ja}</span> · ${h.resp.pt}</button></p>`:''}${h.num?`<p class="gram"><a href="/idiomas/numeros/#${h.num}" target="_blank" rel="noopener"><b>🔢 Aprender os números ↗</b></a> (${h.numTxt||''})</p>`:''}</div>`;
       if(h.resp){const br=$('ouveResp');if(br)br.onclick=()=>fala(h.resp.ja);}
       if(c.n===4){const V={iki:'いき',nori:'のり',tabe:'たべ',nomi:'のみ',iki2:'いき',kai:'かい'}[h.item];const pl=pilula.querySelector('.pilula');if(pl&&V)pl.insertAdjacentHTML('beforeend','<p class="gram verbo">'+V+'<b>ます</b> → '+V+'<b>ません</b></p>');}
@@ -687,18 +689,20 @@ if(LIVRE){
 function vai(passo){if(passo!=='terra')S.t1=null;if(passo==='agua'&&S.passo!=='agua')S.ai=(S.__ai!=null?S.__ai:0);S.__ai=null;if(S.__paraClipe){S.__paraClipe();S.__paraClipe=null;}if(passo!=='clipe'&&S.passo==='clipe')S.clipeVisto=true;S.passo=passo;S.erros=0;S.feitos=[];pararMic();pilula.hidden=true;render();}
 function render(){
   render0();
-  const ok=['agua','fixa','falafix','fogo','terra'].includes(S.passo);
+  const ok=['toque','agua','fixa','falafix','fogo','terra'].includes(S.passo);
   if(ok&&painel&&!painel.querySelector('.voltaBtn')){
     const nav=document.createElement('div');nav.className='nav-ex';
-    const v=document.createElement('button');v.type='button';v.className='btn ghost voltaBtn';v.textContent='← Voltar';v.setAttribute('aria-label','Voltar ao exercício anterior');v.onclick=voltaPasso;nav.appendChild(v);
-    const pu=[...painel.querySelectorAll('button.btn.ghost')].find(b=>/^Pular/.test(b.textContent.trim()));
-    if(pu){const rot=pu.textContent.trim();pu.setAttribute('aria-label',rot.replace(/→/,'').trim());pu.textContent='Pular →';pu.classList.add('pulaBtn');nav.appendChild(pu);}
+    const v=document.createElement('button');v.type='button';v.className='btn ghost voltaBtn';v.textContent='← Anterior';v.setAttribute('aria-label','Exercício anterior');v.onclick=voltaPasso;nav.appendChild(v);
+    let pu=[...painel.querySelectorAll('button.btn.ghost')].find(b=>/^Pular/.test(b.textContent.trim()));
+    if(!pu&&S.passo==='toque'){pu=document.createElement('button');pu.type='button';pu.className='btn ghost';pu.onclick=()=>{S.toqueOk[S.k]=true;vai('agua');};}
+    if(pu){pu.setAttribute('aria-label','Próximo exercício');pu.textContent='Próximo →';pu.classList.add('pulaBtn');nav.appendChild(pu);}
     painel.appendChild(nav);
   }
 }
 function voltaPasso(){
   const p=S.passo;try{pararMic();}catch(e){}
-  if(p==='agua'){ if((S.ai||0)>0){S.ai--;vai('agua');} else vai('toque'); }
+  if(p==='toque'){ if(S.k>0){S.k--;vai('terra');} else vai('chegada'); }
+  else if(p==='agua'){ if((S.ai||0)>0){S.ai--;vai('agua');} else vai('toque'); }
   else if(p==='fixa'){ S.__ai=Math.max(0,CHAVES[S.k].hot.length-1); vai('agua'); }
   else if(p==='falafix'){ vai('fixa'); }
   else if(p==='fogo'){ S.ff=0; vai('falafix'); }
