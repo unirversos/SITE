@@ -826,7 +826,7 @@ function telaChegada(){
    <h2>${S.acesas.length?S.acesas.length+' de 5 chaves ativadas.':'Desbloqueie 5 chaves.'}</h2>
    <p>Em 15 minutos você aprende a afirmar, negar e perguntar em japonês.</p>
    <div class="acoes"><button class="btn pri" type="button" id="go">${S.acesas.length&&S.acesas.length<5?'Continuar →':'Ativar a primeira chave →'}</button></div>`;
-  $('go').onclick=()=>{fala('とうきょうです');S.k=S.primeiraApagada?S.primeiraApagada():0;vai('agua');};
+  $('go').onclick=()=>{S.k=S.primeiraApagada?S.primeiraApagada():0;vai('agua');};
 }
 
 /* Caderno: uma única anotação da Aula Zero. Cada chave acrescenta a sua linha na hora (salvaFrase); no fim, o botão completa e abre.
