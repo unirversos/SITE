@@ -1235,6 +1235,7 @@ function telaTerraPisca(c){
   const alvo={say:hh.say,t:hh.t,ro:hh.ro,pt:hh.pt,g:[[hh.say]],diag:()=>'Quase. Toque no ♪ que pisca (ou em 🔊 Ouvir) e repita.',
     depois:()=>{plim(true);T.i++;if(T.i>=total){S.t1=null;S.conquista=true;vai(c.n===3?'quiz':'ganho');}else telaTerra(c);}};
   telaResposta(c,'terra','Terra · gravar','Uma coisa da cena está piscando. Diga a frase dela.',alvo);
+  { const pb=document.createElement('button');pb.type='button';pb.className='btn ghost';pb.textContent='Pular →';pb.onclick=()=>{try{pararMic();}catch(e){}alvo.depois();};painel.appendChild(pb); }
   const h2=painel.querySelector('h2');
   if(h2)h2.insertAdjacentHTML('afterend','<div class="contagem" aria-label="'+(T.i+1)+' de '+total+'">'+T.ordem.map((_,j)=>'<i class="'+(j<T.i?'on':'')+'"></i>').join('')+'</div>');
   luzAlvo(h,hsBox.children[e]);
@@ -1261,6 +1262,7 @@ function telaTerra(c){
    <div class="acoes" id="acoes"></div><div class="estado" id="estado"></div><div class="ouvi" id="ouvi"></div>
    <div id="escrita"></div><div id="reforco" class="acoes" style="flex-direction:column;align-items:flex-start"></div>`;
   if(faseNome){ try{ const av=$('avatarNao'); if(av){ const A=window.UtopiaAvatar,a=A&&A.load(),pf=(a&&a.profile)||{}; const cab=av.querySelector('.cabeca'); const sel=(a&&a.sel)||(A&&A.DEFAULT); if(A&&sel&&cab) cab.innerHTML=A.svg(sel,{viewBox:'40 46 160 160',still:true,label:'Seu avatar'}); const bl=av.querySelector('.balao'); bl.textContent=((pf.kata||pf.name||'').trim()||'？？？')+'です'; bl.hidden=false; av.querySelector('.bracos').innerHTML=''; av.classList.remove('sim','vai'); av.classList.add('apresenta'); av.hidden=false; } }catch(e){} }
+  { const pb=document.createElement('button');pb.type='button';pb.className='btn ghost';pb.textContent='Pular →';pb.onclick=()=>{try{pararMic();}catch(e){}if(faseNome){S.t1=null;S.conquista=true;vai('ganho');}else{S.t1.i++;telaTerra(c);}};painel.appendChild(pb); }
   const JA=/^[぀-ゟ゠-ヿ一-鿿]+$/;
   /* sufixos aceitos (do mais longo para o mais curto); cada um pode pedir um tipo de palavra */
   const sufs=[];
