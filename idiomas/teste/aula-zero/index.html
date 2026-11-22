@@ -447,8 +447,10 @@ function dist(a,b){const m=a.length,n=b.length;if(!m)return n;if(!n)return m;con
 /* a frase tem que ser a estrutura inteira (grupos em ordem), com um começo opcional (はい, いいえ, これは) */
 const PREF=['','これは','いいえ','はい','すみません'].map(norm);
 const formas=g=>{let acc=[''];g.forEach(gr=>{acc=acc.flatMap(a=>gr.map(x=>a+norm(x)));});return acc;};
+const KJ=[['お手洗い','おてあらい'],['お弁当','おべんとう'],['東京','とうきょう'],['電車','でんしゃ'],['切符','きっぷ'],['牛乳','ぎゅうにゅう'],['大阪','おおさか'],['寿司','すし'],['お茶','おちゃ'],['お酒','おさけ'],['弁当','べんとう'],['飲み','のみ'],['食べ','たべ'],['行き','いき'],['乗り','のり'],['買い','かい'],['魚','さかな'],['肉','にく'],['卵','たまご'],['何','なん'],['水','みず'],['駅','えき'],['茶','ちゃ']];
+const kj2kana=t=>KJ.reduce((a,[k,v])=>a.split(k).join(v),String(t||''));
 function confere(texto,ans,fala){
-  const t=norm(texto);if(!t)return false;
+  const t=norm(kj2kana(texto));if(!t)return false;
   const F=ans._f||(ans._f=formas(ans.g));
   if(F.some(f=>PREF.some(p=>t===p+f)))return true;
   /* na fala, o reconhecimento erra letras: aceita bem parecido */
