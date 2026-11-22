@@ -1105,6 +1105,7 @@ function telaResposta(c,tipo,titulo,pedido,alvo){
   if(tipo==='agua'&&c.n===3)painel.insertAdjacentHTML('beforeend','<div class="acoes"><button class="btn ghost" type="button" id="clRever">🎬 Rever o clipe</button></div>');
   if($('clRever'))$('clRever').onclick=()=>{pararMic();S.cl=0;S.passo='clipe';render();};
   const prox=alvo.depois||(()=>vai(tipo==='fogo'?'terra':'fixa'));
+  if(tipo==='fogo'){ const pb=document.createElement('button'); pb.type='button'; pb.className='btn ghost'; pb.textContent='Pular →'; pb.onclick=()=>{ try{pararMic();}catch(e){} prox(); }; painel.appendChild(pb); }
   const cc=Object.assign({},c,{_ouvirAlvo:()=>fala(alvo.say),_esconde:tipo==='fogo'});
   const E=montaEntrada(cc,(textos,via)=>{
     const fal=via==='voz';
