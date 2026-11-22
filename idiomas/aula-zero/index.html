@@ -850,8 +850,8 @@ const FIX={
 };
 function plim(ok){
   try{const AC=window.AudioContext||window.webkitAudioContext;if(!AC)return;const a=new AC(),t=a.currentTime;
-    (ok?[[784,0],[1175,.11]]:[[220,0]]).forEach(([f,d])=>{const o=a.createOscillator(),g=a.createGain();o.type=ok?'sine':'triangle';o.frequency.value=f;g.gain.setValueAtTime(.0001,t+d);g.gain.exponentialRampToValueAtTime(.18,t+d+.02);g.gain.exponentialRampToValueAtTime(.0001,t+d+.25);o.connect(g);g.connect(a.destination);o.start(t+d);o.stop(t+d+.3);});
-    setTimeout(()=>{try{a.close();}catch(e){}},700);}catch(e){}
+    (ok?[[784,0,.2],[988,.1,.2],[1175,.2,.2],[1568,.3,.2],[1175,.42,.15],[1568,.52,.5]]:[[220,0,.25]]).forEach(([f,d,L])=>{const o=a.createOscillator(),g=a.createGain();o.type=ok?'sine':'triangle';o.frequency.value=f;g.gain.setValueAtTime(.0001,t+d);g.gain.exponentialRampToValueAtTime(.18,t+d+.02);g.gain.exponentialRampToValueAtTime(.0001,t+d+(L||.25));o.connect(g);g.connect(a.destination);o.start(t+d);o.stop(t+d+(L||.25)+.05);});
+    setTimeout(()=>{try{a.close();}catch(e){}},1500);}catch(e){}
 }
 function telaFixa(c){
   const R=FIX[c.n].slice(),n0=R.length,refeito=new Set();let q=0,trava=false;
@@ -874,8 +874,8 @@ function telaFixa(c){
     $('fxBt').onclick=e=>{const b=e.target.closest('[data-v]');if(!b||trava)return;const est=$('estado');
       if(b.dataset.v!==w)fala(b.dataset.v);
       if(b.dataset.v===w){trava=true;plim(true);b.classList.add('pri');const lc=painel.querySelector('.lacuna');if(lc){lc.textContent=w;lc.style.borderBottomStyle='solid';}est.className='estado ok';est.textContent='✓ '+pre+w+pos;
-        {let seg=false;const frase=()=>{if(seg)return;seg=true;fala(pre+w+pos);};try{if(audioAtual){audioAtual.pause();audioAtual=null;}}catch(e){}tocaUma(w,frase);setTimeout(frase,1400);}
-        q++;setTimeout(()=>{trava=false;if(q>=R.length)fim();else mostra();},2300);}
+        {let seg=false;const frase=()=>{if(seg)return;seg=true;fala(pre+w+pos);};try{if(audioAtual){audioAtual.pause();audioAtual=null;}}catch(e){}setTimeout(()=>tocaUma(w,frase),900);setTimeout(frase,2300);}
+        q++;setTimeout(()=>{trava=false;if(q>=R.length)fim();else mostra();},3600);}
       else{plim(false);b.classList.add('tremeu');setTimeout(()=>b.classList.remove('tremeu'),500);if(q<n0&&!refeito.has(q)){refeito.add(q);R.push(R[q]);}est.className='estado erro';est.textContent='Esse é '+b.dataset.v+' ('+(banco.find(x=>x[0]===b.dataset.v)||[])[2]+'). Tente de novo.';}};
   }
   mostra();
