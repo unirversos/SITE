@@ -262,7 +262,12 @@ body[data-etapa="ar"] .painel{--el:var(--gold)}
 #clAv .cl-braco::after{content:"";position:absolute;bottom:-14%;left:-5%;width:110%;aspect-ratio:1;border-radius:50%;background:var(--cl-pele,#f2c9a5)}
 #clAv .cl-prop{position:absolute;bottom:-38%;left:50%;transform:translateX(-50%) rotate(var(--cl-contra,0deg));font-size:clamp(16px,5vw,26px);line-height:1;z-index:3}
 #clAv .cl-som{position:absolute;left:85%;top:-6%;background:#fff;border:2px solid var(--line);border-radius:12px;padding:1px 8px;font-weight:800;font-size:13px;white-space:nowrap;opacity:0}
-#fxCena .fx-img{margin:0}.fx-img{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin:10px 0}.fx-quadro{padding:7px;border:3px solid var(--terra,#c0654a);border-radius:18px;background:#fff;cursor:pointer;line-height:0;box-shadow:0 5px 0 rgba(192,101,74,.35);transition:transform .08s,box-shadow .08s}.fx-quadro img{width:100%;height:auto;display:block;border-radius:10px}.fx-quadro:active{transform:translateY(4px);box-shadow:0 1px 0 rgba(192,101,74,.35)}.fx-quadro:hover{background:#fff7f2}.fx-quadro.ok{border-color:#3d8b5a;box-shadow:0 5px 0 rgba(61,139,90,.4)}@media(max-width:560px){.fx-img{grid-template-columns:repeat(2,1fr)}}
+#fxCena{aspect-ratio:16/9;box-sizing:border-box;background:var(--card)}
+#fxCena .fx-img{margin:0;height:100%;grid-template-columns:repeat(6,1fr);grid-template-rows:1fr 1fr;gap:14px}
+#fxCena .fx-quadro{display:flex;height:100%;min-height:0}#fxCena .fx-quadro img{width:100%;height:100%;object-fit:cover;flex:1;min-height:0}
+#fxCena .fx-quadro:nth-child(-n+3){grid-column:span 2}#fxCena .fx-quadro:nth-child(4){grid-column:2/4}#fxCena .fx-quadro:nth-child(5){grid-column:4/6}
+@media(max-width:700px){#fxCena{aspect-ratio:4/5}#fxCena .fx-img{grid-template-columns:repeat(2,1fr);grid-template-rows:repeat(3,1fr);gap:10px}#fxCena .fx-quadro:nth-child(n){grid-column:auto}#fxCena .fx-quadro:nth-child(5){grid-column:1/-1}}
+.fx-img{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin:10px 0}.fx-quadro{padding:7px;border:3px solid var(--terra,#c0654a);border-radius:18px;background:#fff;cursor:pointer;line-height:0;box-shadow:0 5px 0 rgba(192,101,74,.35);transition:transform .08s,box-shadow .08s}.fx-quadro img{width:100%;height:auto;display:block;border-radius:10px}.fx-quadro:active{transform:translateY(4px);box-shadow:0 1px 0 rgba(192,101,74,.35)}.fx-quadro:hover{background:#fff7f2}.fx-quadro.ok{border-color:#3d8b5a;box-shadow:0 5px 0 rgba(61,139,90,.4)}@media(max-width:560px){.fx-img{grid-template-columns:repeat(2,1fr)}}
 .cl-legenda{margin:10px 0 4px;padding:12px 14px;border-left:5px solid var(--agua,#3f7fb0);background:#fff;border-radius:10px}
 .cl-legenda .jpl{font-size:24px}.cl-legenda .jpl b{color:#c0392b}
 #clAv[hidden]{display:none}
@@ -384,7 +389,7 @@ body.ver-ro .ro-svg{paint-order:stroke;stroke:#3a2b38;stroke-width:3px;stroke-li
       <g id="pW" transform="translate(130 20)"><rect x="46" y="0" width="28" height="22" rx="6" fill="#fff" stroke="#9aa89a" stroke-width="3"/><path d="M26 22h68l8 150H18z" fill="#6fb36f" stroke="#4f8f4f" stroke-width="4" stroke-linejoin="round"/><rect x="28" y="62" width="64" height="62" rx="6" fill="#fff"/><text x="60" y="97" text-anchor="middle" font-family="Zen Maru Gothic, sans-serif" font-size="20" font-weight="800" fill="#2f6b2f">ワサビ</text><text class="ro-svg" x="60" y="113" text-anchor="middle" font-family="Zen Maru Gothic, sans-serif" font-size="12" font-weight="700" fill="#2f6b2f">wasabi</text></g>
       <g id="pN" style="display:none"><rect x="90" y="50" width="220" height="110" rx="14" fill="#fff" stroke="#cfc3c9" stroke-width="4"/><text x="200" y="138" text-anchor="middle" font-size="96">🍖</text></g>
     </svg>
-    <div id="fxCena" style="display:none;padding:12px"></div>
+    <div id="fxCena" style="display:none;padding:14px"></div>
     <video id="clVid" muted playsinline preload="auto" poster="/idiomas/video/kaimasu.jpg" aria-label="Clipe: comprar o bilhete" style="display:none;width:100%;height:auto"></video>
     <svg id="svgClip" viewBox="0 0 400 250" role="img" aria-label="Clipe: o seu avatar faz as ações" style="display:none">
       <rect width="400" height="250" fill="#fbf3ea"/>
