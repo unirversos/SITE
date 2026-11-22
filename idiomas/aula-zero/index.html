@@ -655,7 +655,7 @@ function desenhaHot(){
       if(c.n===2){const av=$('avatarNao');if(av){clearTimeout(av._t);av.classList.remove('sim','pergunta');const bl=av.querySelector('.balao');bl.textContent='じゃない';bl.hidden=false;av.hidden=false;av.classList.remove('vai');void av.offsetWidth;av.classList.add('vai');
         av._t=setTimeout(()=>{av.classList.add('sim');bl.textContent='です';av.classList.remove('vai');void av.offsetWidth;av.classList.add('vai');},1300);}}
       if(c.n===4||c.n===5){if(c.n===4&&!jaVisto)riscaNao(false);const av=$('avatarNao');if(av){clearTimeout(av._t);av.classList.remove('sim');av.classList.toggle('pergunta',c.n===5);{const bl=av.querySelector('.balao');bl.textContent=c.n===5?'これは なん？':'';bl.hidden=c.n!==5;}av.hidden=false;av.classList.remove('vai');void av.offsetWidth;av.classList.add('vai');}}
-      pilula.innerHTML=`<div class="pilula"><div class="jpl" lang="ja">${html(h.t)}</div><div class="ro">${h.ro}</div><p class="gram">${c.gram}</p>${h.resp?`<p class="gram"><button type="button" class="btn small" id="ouveResp">💬 Resposta: <span lang="ja">${h.resp.ja}</span> · ${h.resp.pt}</button></p>`:''}${h.num?`<p class="gram"><a href="/idiomas/numeros/#${h.num}" target="_blank" rel="noopener"><b>🔢 Aprender os números ↗</b></a> (${h.numTxt||''})</p>`:''}</div>`;
+      pilula.innerHTML=`<div class="pilula"><div class="jpl" lang="ja">${html(h.t)}</div><div class="ro">${h.ro}</div><p class="pt">${h.pt}</p><p class="en">${h.en}</p><p class="gram">${c.gram}</p>${h.resp?`<p class="gram"><button type="button" class="btn small" id="ouveResp">💬 Resposta: <span lang="ja">${h.resp.ja}</span> · ${h.resp.pt}</button></p>`:''}${h.num?`<p class="gram"><a href="/idiomas/numeros/#${h.num}" target="_blank" rel="noopener"><b>🔢 Aprender os números ↗</b></a> (${h.numTxt||''})</p>`:''}</div>`;
       if(h.resp){const br=$('ouveResp');if(br)br.onclick=()=>fala(h.resp.ja);}
       if(c.n===4){const V={iki:'いき',nori:'のり',tabe:'たべ',nomi:'のみ',iki2:'いき',kai:'かい'}[h.item];const pl=pilula.querySelector('.pilula');if(pl&&V)pl.insertAdjacentHTML('beforeend','<p class="gram verbo">'+V+'<b>ます</b> → '+V+'<b>ません</b></p>');}
       fala(h.say);if(!jaVisto)magia(h);luzToque(jaVisto?null:c.n+'-'+i);if(S.passo==='toque')atualizaToque(!jaVisto);};
@@ -1179,7 +1179,7 @@ function telaResposta(c,tipo,titulo,pedido,alvo){
   const mostrar=tipo==='agua'||S.erros>=2;
   painel.innerHTML=`<span class="elem ${tipo==='final'?'ganho':tipo}"><i></i>${c.rotulo||('Chave '+String(c.n).padStart(2,'0')+' · '+titulo)}</span>
    <h2>${pedido}</h2>
-   <div class="alvo ${mostrar?'':'oculto'}" id="alvo"><div class="jpl" lang="ja">${html(alvo.t)}</div><div class="ro">${alvo.ro}</div><div class="pt">${alvo.pt}</div></div>
+   <div class="alvo ${mostrar?'':'oculto'}" id="alvo"><div class="jpl" lang="ja">${html(alvo.t)}</div><div class="ro">${alvo.ro}</div>${tipo==='terra'?'':`<div class="pt">${alvo.pt}</div>`}</div>
    <div class="acoes" id="acoes"></div><div class="estado" id="estado"></div><div class="ouvi" id="ouvi"></div>
    <div id="escrita"></div><div id="reforco" class="acoes" style="flex-direction:column;align-items:flex-start"></div>`;
   if(tipo==='agua'&&c.intro)painel.insertAdjacentHTML('afterbegin','<p class="intro-cena">🏪 '+c.intro+'</p>');
