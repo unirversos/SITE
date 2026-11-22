@@ -393,7 +393,14 @@ body.m-cart .c-intro{display:none}
 #dice{width:100%;justify-content:center;background:var(--ink);color:var(--paper);border-color:var(--ink)}
 .btn-curio{border:0;background:none;color:var(--muted);text-decoration:underline;font-size:13px;box-shadow:none;padding:2px 6px}
 .chip small{margin-left:6px}
-#cTitle small{display:block;margin:2px 0 0}
+.card .c-pt,.card dd small,.card .c-tr{display:none}
+.c-vazio{font-weight:500;color:var(--muted);font-size:13px}
+.c-tt{position:relative;cursor:help;outline:none}
+.c-tt::after,.c-feat-i::after{content:attr(data-tr);position:absolute;left:0;top:100%;z-index:6;background:var(--ink);color:var(--paper);font:600 12.5px/1.35 var(--f-body);padding:6px 10px;border-radius:10px;white-space:pre-line;max-width:260px;width:max-content;opacity:0;transform:translateY(-3px);pointer-events:none;transition:.15s}
+.c-tt[data-tr]:hover::after,.c-tt[data-tr]:focus::after,.c-feat-i:hover::after,.c-feat-i:focus::after{opacity:1;transform:none}
+.c-tt:not([data-tr])::after{display:none}
+.c-feat-i{position:relative;cursor:help;outline:none}
+#cdFeat::after{display:none}
 .tab-mais{border-style:dashed;color:var(--muted)}
 .credito-voz{display:none!important}
 .sobre-vozes{margin:24px auto 0;max-width:560px;text-align:center;font-size:12.5px;color:var(--muted)}
@@ -541,17 +548,17 @@ body.m-cart .c-intro{display:none}
             <div class="c-body">
               <div class="c-photo"><svg id="cardAvatar" viewBox="0 0 240 300" role="img" aria-label="Foto do avatar"></svg></div>
               <dl class="c-data">
-                <div><dt><span data-ro="namae"><ruby>名前<rt>なまえ</rt></ruby></span> · NOME</dt><dd id="cName"></dd></div>
-                <div><dt><span data-ro="nenrei"><ruby>年齢<rt>ねんれい</rt></ruby></span> · IDADE</dt><dd id="cAge"></dd></div>
-                <div><dt><span data-ro="shōgō"><ruby>称号<rt>しょうごう</rt></ruby></span> · TÍTULO</dt><dd id="cTitle"></dd></div>
-                <div><dt><span data-ro="tokuchō"><ruby>特徴<rt>とくちょう</rt></ruby></span> · CARACTERÍSTICAS</dt><dd><ul id="cFeat"></ul></dd></div>
+                <div id="cdNome" class="c-tt" tabindex="0"><dt><span data-ro="namae"><ruby>名前<rt>なまえ</rt></ruby></span> <span class="c-pt">· NOME</span></dt><dd id="cName"></dd></div>
+                <div id="cdIdade" class="c-tt" tabindex="0"><dt><span data-ro="nenrei"><ruby>年齢<rt>ねんれい</rt></ruby></span> <span class="c-pt">· IDADE</span></dt><dd id="cAge"></dd></div>
+                <div id="cdTitulo" class="c-tt" tabindex="0"><dt><span data-ro="shōgō"><ruby>称号<rt>しょうごう</rt></ruby></span> <span class="c-pt">· TÍTULO</span></dt><dd id="cTitle"></dd></div>
+                <div id="cdFeat" class="c-tt"><dt><span data-ro="tokuchō"><ruby>特徴<rt>とくちょう</rt></ruby></span> <span class="c-pt">· CARACTERÍSTICAS</span></dt><dd><ul id="cFeat"></ul></dd></div>
               </dl>
             </div>
             <dl class="c-intro" style="margin-block:0"><dt><span data-ro="jikoshōkai"><ruby>自己紹介<rt>じこしょうかい</rt></ruby></span></dt><dd style="margin:0"><p id="cIntro"></p><p class="c-ro ro" id="cIntroRo"></p><p class="c-tr" id="cIntroTr"></p></dd></dl>
             <footer class="c-foot">
-              <div class="qr" id="qr" title="Abre o Planeta Utopia"></div>
+              <div class="qr" id="qr" title="QR: abre o seu caderno de palavras"></div>
               <div class="c-meta">
-                <span class="qr-note">QR: abre o seu caderno de palavras</span>
+                
               <span><span data-ro="hakkōbi"><ruby>発行日<rt>はっこうび</rt></ruby></span>: <b id="cDate"></b></span>
                 <span id="cXp"></span>
                 <div class="bar"><i id="cBar"></i></div>
@@ -824,17 +831,20 @@ function renderCard(){
   const S=state.sel,p=state.profile;
   $('cLv').textContent='★ Lv. '+g.level;
   const nm=(p.kata||'').trim(), lat=(p.name||'').trim();
-  $('cName').innerHTML=nm||lat?esc(nm||lat)+(nm&&lat?`<small>${esc(lat)}</small>`:''):'<small>Sem nome ainda — toque aqui para escrever</small>';
+  $('cdNome').dataset.tr=(lat&&nm&&lat!==nm?'Nome: '+lat:'Nome');
+  $('cName').innerHTML=nm||lat?esc(nm||lat)+(nm&&lat?`<small>${esc(lat)}</small>`:''):'<span class="c-vazio">Sem nome ainda — toque aqui</span>';
   $('cAge').innerHTML=`<ruby>${S.age}歳<rt>${ageInfo(S.age).kana}</rt></ruby><span class="ro">${kana2ro(ageInfo(S.age).kana)}</span>`;
+  $('cdIdade').dataset.tr='Idade: '+S.age+' anos · age '+S.age;
+  { const t=AV.title(g.level); $('cdTitulo').dataset.tr='Título: '+t[2]+(t[3]?' · '+t[3]:''); }
   $('cTitle').innerHTML=`${AV.titleHTML(g.level)} <span class="ro">${kana2ro(AV.title(g.level)[1])}</span><small>${AV.title(g.level)[2]}</small>`;
-  const f=[];
-  if(!S.acc.includes('hijabu')) f.push(`かみ: ${find(HAIR,S.hair).kana}・${find(COLORS,S.hairColor).kana}`);
-  f.push(`${find(COLORS,S.clothColor).mod} ${find(CLOTHES,S.clothes).kana}`);
-  S.acc.forEach(id=>f.push(find(ACC,id).kana)); S.traits.forEach(id=>f.push(find(TRAITS,id).kana));
-  $('cFeat').innerHTML=f.map(x=>`<li>${x} <span class="ro">${kana2ro(x.replace(/[:・]/g,' '))}</span></li>`).join('');
+  const f=[],ft=[];
+  if(!S.acc.includes('hijabu')){ f.push(`かみ: ${find(HAIR,S.hair).kana}・${find(COLORS,S.hairColor).kana}`); ft.push(`Cabelo: ${find(HAIR,S.hair).pt}, ${find(COLORS,S.hairColor).pt}`); }
+  f.push(`${find(COLORS,S.clothColor).mod} ${find(CLOTHES,S.clothes).kana}`); ft.push(`${find(CLOTHES,S.clothes).pt} (${find(COLORS,S.clothColor).pt})`);
+  S.acc.forEach(id=>{ f.push(find(ACC,id).kana); ft.push(find(ACC,id).pt); }); S.traits.forEach(id=>{ f.push(find(TRAITS,id).kana); ft.push(find(TRAITS,id).pt); });
+  $('cFeat').innerHTML=f.map((x,i)=>`<li class="c-feat-i" tabindex="0" data-tr="${esc(ft[i]||'')}">${x} <span class="ro">${kana2ro(x.replace(/[:・]/g,' '))}</span></li>`).join('');
   $('cIntro').textContent=introText(); { const nm=displayName(); $('cIntroRo').textContent=nm?kana2ro(introText().replace(nm,'＠')).replace('＠',nm):kana2ro(introText()).replace('＿＿＿','___'); } $('cIntroTr').innerHTML=introTr();
   const d=new Date(); $('cDate').innerHTML=dateJa(d);
-    $('cXp').innerHTML=`EXP <b>${g.xp}/${g.maxXp}</b> · ${Object.keys(state.learned).length} palavras`;
+    $('cXp').innerHTML=`EXP <b>${g.xp}/${g.maxXp}</b> · ${Object.keys(state.learned).length}<ruby>語<rt>ご</rt></ruby>`;
   $('cBar').style.width=(g.xp/g.maxXp*100)+'%';
   updateQR();
 }
