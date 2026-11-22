@@ -939,22 +939,23 @@ function plim(ok){
 }
 function telaFixa(c){
   const R=FIX[c.n].slice(),n0=R.length,refeito=new Set();let q=0,trava=false;
-  const banco=[];R.forEach(r=>{if(!banco.find(b=>b[0]===r[4]))banco.push([r[4],r[5],r[6]]);});
+  const banco=[];R.forEach(r=>{if(!banco.find(b=>b[0]===r[4]))banco.push([r[4],r[5],r[6],({'でんしゃ':'🚆','おにぎり':'🍙','きっぷ':'🎫','おちゃ':'🍵','みず':'💧','とうきょう':'🚉','にく':'🥩','さかな':'🐟'})[r[4]]||'']);});
   const emb=a=>{a=a.slice();for(let i=a.length-1;i>0;i--){const j=(i*7+3)%(i+1);[a[i],a[j]]=[a[j],a[i]];}return a;};
   const bs=emb(banco);
   const fim=()=>{S.ff=0;vai('falafix');};
   function mostra(){
     const [em,pt,pre,preRo,w,wRo,wpt,pos,posRo]=R[q];
     painel.innerHTML=`<span class="elem fogo"><i></i>Chave ${String(c.n).padStart(2,'0')} · Fixação · modo turbo${q>=n0?' · revendo as que errou':''}</span>
-     <h2>${em} ${pt} <button type="button" class="btn ghost small" id="fxOuve" aria-label="Ouvir a frase">🔊</button></h2>
+     <h2><button type="button" class="btn ghost small" id="fxOuve" aria-label="Ouvir a frase">🔊 Ouvir de novo</button></h2>
      <div class="contagem" aria-label="${q} de ${R.length}">${R.map((_,i)=>`<i class="${i<q?'on':''}"></i>`).join('')}</div>
      <div class="moldebox"><div class="jpl" lang="ja">${pre}<span class="lacuna">＿＿</span>${pos}</div><div class="ro">${preRo}___ ${posRo}</div></div>
      <p class="nota"><b>Toque e repita em voz alta</b> a frase que o áudio disser. Toque na palavra que completa a frase.</p>
-     <div class="qz-bt" id="fxBt">${bs.map(b=>`<button type="button" class="btn" data-v="${b[0]}" lang="ja">${b[0]}<small class="ro">${b[1]}</small></button>`).join('')}</div>
+     <div class="qz-bt" id="fxBt">${bs.map(b=>`<button type="button" class="btn" data-v="${b[0]}" lang="ja"><span style="display:block;font-size:2rem;line-height:1.1" aria-hidden="true">${b[3]||''}</span>${b[0]}<small class="ro">${b[1]}</small></button>`).join('')}</div>
      <div class="estado" id="estado"></div>
      <div class="acoes"><button class="btn ghost" type="button" id="fxPula">Pular fixação →</button></div>`;
     $('fxPula').onclick=()=>{pararMic();vai('fogo');};
-    $('fxOuve').onclick=function(){if(this.disabled)return;this.disabled=true;this.textContent='🔊 ouvida';fala(pre+w+pos);}; /* 1 vez por rodada, sem penalizar o erro */
+    $('fxOuve').onclick=()=>{fala(pre+w+pos);}; /* sem texto na tela: a frase vem só pela voz */
+    setTimeout(()=>{if(!trava)fala(pre+w+pos);},500);
     $('fxBt').onclick=e=>{const b=e.target.closest('[data-v]');if(!b||trava)return;const est=$('estado');
       if(b.dataset.v!==w)fala(b.dataset.v);
       if(b.dataset.v===w){trava=true;plim(true);b.classList.add('pri');const lc=painel.querySelector('.lacuna');if(lc){lc.textContent=w;lc.style.borderBottomStyle='solid';}est.className='estado ok';est.textContent='✓ '+pre+w+pos;
