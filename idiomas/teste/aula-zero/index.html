@@ -743,7 +743,7 @@ function luzToque(novo){
     }
     mk=svg.querySelector('.mk-spots');
     const kon=id==='svgKon';let h='';
-    CHAVES.forEach(c=>{if((c.n>=4)!==kon)return;c.hot.forEach((o,i)=>{if(S.visto.has(c.n+'-'+i))h+='<circle cx="'+(o.x*4)+'" cy="'+(o.y*2.5)+'" r="'+(novo===c.n+'-'+i?0:38)+'" fill="#fff">'+(novo===c.n+'-'+i?'<animate attributeName="r" from="0" to="38" dur=".9s" fill="freeze" calcMode="spline" keyTimes="0;1" keySplines=".2 .8 .3 1"/>':'')+'</circle>';});});
+    CHAVES.forEach(c=>{if((c.n>=5)!==kon)return;c.hot.forEach((o,i)=>{if(S.visto.has(c.n+'-'+i))h+='<circle cx="'+(o.x*4)+'" cy="'+(o.y*2.5)+'" r="'+(novo===c.n+'-'+i?0:38)+'" fill="#fff">'+(novo===c.n+'-'+i?'<animate attributeName="r" from="0" to="38" dur=".9s" fill="freeze" calcMode="spline" keyTimes="0;1" keySplines=".2 .8 .3 1"/>':'')+'</circle>';});});
     mk.innerHTML=h;
   });
 }
