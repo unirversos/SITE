@@ -198,6 +198,13 @@ body[data-etapa="ar"] .painel{--el:var(--gold)}
 .ro-in{display:none;color:var(--muted);font-weight:500;font-size:.85em}body.ver-ro .ro-in{display:inline}
 .scene.pb svg{filter:grayscale(1) contrast(1.05);transition:filter .4s}
 .scene svg{transition:filter .4s}
+.nome-card{display:flex;align-items:center;gap:14px;justify-content:center;margin:10px auto;padding:12px 18px;max-width:340px;border:2px solid var(--terra);border-radius:18px;background:#fff;animation:puxa .6s ease-out}
+.nc-av{width:84px;height:84px;border-radius:50%;overflow:hidden;animation:piscaFace .9s ease-in-out infinite}
+.nc-av svg{width:100%;height:100%;display:block}
+.nc-t{font-size:22px;font-weight:700}.nc-t span{color:var(--muted);margin-left:4px;font-weight:500}
+@keyframes puxa{from{transform:translateY(40px);opacity:0}to{transform:none;opacity:1}}
+@keyframes piscaFace{0%,100%{transform:scale(1);box-shadow:0 0 0 0 rgba(194,63,94,0)}50%{transform:scale(1.08);box-shadow:0 0 0 10px rgba(194,63,94,.3)}}
+@media (prefers-reduced-motion:reduce){.nome-card,.nc-av{animation:none}}
 .hs.pisca{animation:piscaHs .8s ease-in-out infinite;z-index:4}
 @keyframes piscaHs{0%,100%{transform:translate(-50%,-50%) scale(1);box-shadow:0 0 0 0 rgba(194,63,94,.0)}50%{transform:translate(-50%,-50%) scale(1.35);box-shadow:0 0 0 12px rgba(194,63,94,.35)}}
 @media (prefers-reduced-motion:reduce){.hs.pisca{animation:none;outline:4px solid #c23f5e}}
@@ -632,7 +639,7 @@ if(LIVRE){
   };
   $('lvAnt').onclick=()=>anda(-1);$('lvProx').onclick=()=>anda(1);
 }
-function vai(passo){if(passo==='agua'&&S.passo!=='agua')S.ai=0;if(S.__paraClipe){S.__paraClipe();S.__paraClipe=null;}if(passo!=='clipe'&&S.passo==='clipe')S.clipeVisto=true;S.passo=passo;S.erros=0;S.feitos=[];pararMic();pilula.hidden=true;render();}
+function vai(passo){if(passo!=='terra')S.t1=null;if(passo==='agua'&&S.passo!=='agua')S.ai=0;if(S.__paraClipe){S.__paraClipe();S.__paraClipe=null;}if(passo!=='clipe'&&S.passo==='clipe')S.clipeVisto=true;S.passo=passo;S.erros=0;S.feitos=[];pararMic();pilula.hidden=true;render();}
 function render(){
   window.__render=render;
   if(S.passo==='retoma'&&S.k<1)S.passo='agua';
@@ -1150,16 +1157,23 @@ function telaFinal(){
 function telaTerra(c){
   const t=c.terra,feitos=S.feitos.length;
   desenhaHot();
-  /* chave 01: uma coisa da cena pisca; a pessoa diz o nome dela + です */
-  let alvoPisca=null;
-  if(c.n===1){ const lista=c.hot.map((h,i)=>({h,i})).filter(x=>!S.feitos.includes(x.h.item)); const e=lista[Math.floor(Math.random()*lista.length)]; if(e){ alvoPisca=e.h; const b=hsBox.children[e.i]; if(b) b.classList.add('pisca'); } }
+  /* chave 01: uma coisa da cena pisca por vez (todas, em ordem aleatória); no fim a carteirinha aparece e a pessoa diz o próprio nome + です */
+  let alvoPisca=null,faseNome=false,totalRod=0;
+  if(c.n===1){
+    if(!S.t1){ const ix=c.hot.map((_,i)=>i); for(let i=ix.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[ix[i],ix[j]]=[ix[j],ix[i]];} S.t1={ordem:ix,i:0}; }
+    totalRod=S.t1.ordem.length;
+    if(S.t1.i>=totalRod){ faseNome=true; hsBox.innerHTML=''; }
+    else { const e=S.t1.ordem[S.t1.i]; alvoPisca=c.hot[e]; const bt=hsBox.children[e]; if(bt) bt.classList.add('pisca'); }
+  }
   painel.innerHTML=`<span class="elem terra"><i></i>Chave ${String(c.n).padStart(2,'0')} · Terra · gravar</span>
-   <h2>${alvoPisca?'Uma coisa da cena está piscando. Diga o que é, com です.':t.pedido}</h2>
-   <div class="contagem" id="cont" aria-label="${feitos} de 1">${[0].map(i=>`<i class="${i<feitos?'on':''}"></i>`).join('')}</div>
+   <h2>${faseNome?'Agora é a sua vez: apresente-se. Diga seu nome com です.':alvoPisca?'Uma coisa da cena está piscando. Diga o que é, com です.':t.pedido}</h2>
+   ${c.n===1?`<div class="contagem" id="cont" aria-label="${S.t1.i} de ${totalRod+1}">${Array.from({length:totalRod+1},(_,i)=>`<i class="${i<S.t1.i?'on':''}"></i>`).join('')}</div>`:`<div class="contagem" id="cont" aria-label="${feitos} de 1">${[0].map(i=>`<i class="${i<feitos?'on':''}"></i>`).join('')}</div>`}
+   ${faseNome?'<div class="nome-card" id="nomeCard"><div class="nc-av" id="ncAv"></div><div class="nc-t"><b id="ncNome"></b><span>です</span></div></div>':''}
    <div class="moldebox"><div class="jpl" lang="ja">${c.molde}</div><div class="ro">${c.moldeRo}</div></div>
    ${c.n===3?'<p class="ptdica">👆 Toque no <span class="pt o">を</span> ou no <span class="pt ni">に</span> para ver a diferença.</p>':''}
    <div class="acoes" id="acoes"></div><div class="estado" id="estado"></div><div class="ouvi" id="ouvi"></div>
    <div id="escrita"></div><div id="reforco" class="acoes" style="flex-direction:column;align-items:flex-start"></div>`;
+  if(faseNome){ try{ const A=window.UtopiaAvatar,a=A&&A.load(); const sel=(a&&a.sel)||(A&&A.DEFAULT); if(A&&sel) $('ncAv').innerHTML=A.svg(sel,{viewBox:'40 46 160 160',still:true,label:'Seu avatar'}); const pf=(a&&a.profile)||{}; $('ncNome').textContent=(pf.kata||pf.name||'').trim()||'？？？'; }catch(e){} }
   const JA=/^[぀-ゟ゠-ヿ一-鿿]+$/;
   /* sufixos aceitos (do mais longo para o mais curto); cada um pode pedir um tipo de palavra */
   const sufs=[];
@@ -1205,7 +1219,13 @@ function telaTerra(c){
     for(const x of textos){const w=palavraDe(x);if(w){
       if(alvoPisca&&canon(w)!==alvoPisca.item){ E.falha(dito,'A que está piscando é outra. Toque no ♪ que pisca para ouvir a palavra.'); return; }
       const id=t.tipos?ultimoTipo:canon(w);
-      if(S.feitos.includes(id)){E.aviso(t.tipos?'Essa palavra de pergunta você já usou. Use outra: どこ, なん ou なんじ.':'Essa palavra você já usou. Escolha outra.',dito);return;}
+      if(c.n!==1&&S.feitos.includes(id)){E.aviso(t.tipos?'Essa palavra de pergunta você já usou. Use outra: どこ, なん ou なんじ.':'Essa palavra você já usou. Escolha outra.',dito);return;}
+      if(c.n===1){
+        S.ditas[c.n]=x; E.ok(x,faseNome?'✓ Prazer em conhecer!':'✓ Boa!');
+        if(faseNome){ S.t1=null; setTimeout(()=>{S.conquista=true;vai('ganho');},1500); }
+        else { plim(true); S.t1.i++; setTimeout(()=>telaTerra(c),1200); }
+        return;
+      }
       S.feitos.push(id);S.ditas[c.n]=x;E.ok(x,'✓ Boa!');
       if(S.feitos.length>=1){setTimeout(()=>{S.conquista=true;vai(c.n===3?'quiz':'ganho');},1200);}else setTimeout(()=>telaTerra(c),1100);
       return;}}
