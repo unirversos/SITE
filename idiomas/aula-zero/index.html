@@ -195,6 +195,11 @@ body[data-etapa="ar"] .painel{--el:var(--gold)}
 .ro-svg{display:none}body.ver-ro .ro-svg{display:inline}
 .ro-bar{display:none;font-size:10px;color:var(--muted);line-height:1}body.ver-ro .ro-bar{display:block}
 .ro-in{display:none;color:var(--muted);font-weight:500;font-size:.85em}body.ver-ro .ro-in{display:inline}
+.scene.pb svg{filter:grayscale(1) contrast(1.05);transition:filter .4s}
+.scene svg{transition:filter .4s}
+.hs.pisca{animation:piscaHs .8s ease-in-out infinite;z-index:4}
+@keyframes piscaHs{0%,100%{transform:translate(-50%,-50%) scale(1);box-shadow:0 0 0 0 rgba(194,63,94,.0)}50%{transform:translate(-50%,-50%) scale(1.35);box-shadow:0 0 0 12px rgba(194,63,94,.35)}}
+@media (prefers-reduced-motion:reduce){.hs.pisca{animation:none;outline:4px solid #c23f5e}}
 .lacuna{display:inline-block;min-width:2.2em;border-bottom:3px dotted var(--terra);text-align:center;color:var(--terra)}
 .tremeu{animation:nao .45s}
 .btn.pri[data-v]{background:var(--terra);color:#fff}.btn.pri[data-v] small{color:#fff}.qz-bt .btn small.ro{display:none}body.ver-ro .qz-bt .btn small.ro{display:block}
@@ -582,6 +587,7 @@ function trocaCena(){
 }
 function desenhaHot(){
   trocaCena();
+  { const sc=document.querySelector('.scene'); if(sc) sc.classList.toggle('pb',S.passo==='terra'&&CHAVES[S.k]&&CHAVES[S.k].n===1); }
   hsBox.innerHTML='';const av=$('avatarNao');if(av){av.hidden=true;av.classList.remove('vai');}
   if(S.passo==='chegada'||S.passo==='fim'||S.passo==='final'||S.passo==='prontas'||S.passo==='clipe'||S.passo==='retoma'){$('dicaCena').hidden=true;return;}
   $('dicaCena').hidden=false;
@@ -1098,6 +1104,7 @@ function telaResposta(c,tipo,titulo,pedido,alvo){
   if(tipo==='agua'&&c.n===3)painel.insertAdjacentHTML('beforeend','<div class="acoes"><button class="btn ghost" type="button" id="clRever">🎬 Rever o clipe</button></div>');
   if($('clRever'))$('clRever').onclick=()=>{pararMic();S.cl=0;S.passo='clipe';render();};
   const prox=alvo.depois||(()=>vai(tipo==='fogo'?'terra':'fixa'));
+  if(tipo==='fogo'){ const pb=document.createElement('button'); pb.type='button'; pb.className='btn ghost'; pb.textContent='Pular →'; pb.onclick=()=>{ try{pararMic();}catch(e){} prox(); }; painel.appendChild(pb); }
   const cc=Object.assign({},c,{_ouvirAlvo:()=>fala(alvo.say),_esconde:tipo==='fogo'});
   const E=montaEntrada(cc,(textos,via)=>{
     const fal=via==='voz';
@@ -1142,8 +1149,11 @@ function telaFinal(){
 function telaTerra(c){
   const t=c.terra,feitos=S.feitos.length;
   desenhaHot();
+  /* chave 01: uma coisa da cena pisca; a pessoa diz o nome dela + です */
+  let alvoPisca=null;
+  if(c.n===1){ const lista=c.hot.map((h,i)=>({h,i})).filter(x=>!S.feitos.includes(x.h.item)); const e=lista[Math.floor(Math.random()*lista.length)]; if(e){ alvoPisca=e.h; const b=hsBox.children[e.i]; if(b) b.classList.add('pisca'); } }
   painel.innerHTML=`<span class="elem terra"><i></i>Chave ${String(c.n).padStart(2,'0')} · Terra · gravar</span>
-   <h2>${t.pedido}</h2>
+   <h2>${alvoPisca?'Uma coisa da cena está piscando. Diga o que é, com です.':t.pedido}</h2>
    <div class="contagem" id="cont" aria-label="${feitos} de 1">${[0].map(i=>`<i class="${i<feitos?'on':''}"></i>`).join('')}</div>
    <div class="moldebox"><div class="jpl" lang="ja">${c.molde}</div><div class="ro">${c.moldeRo}</div></div>
    ${c.n===3?'<p class="ptdica">👆 Toque no <span class="pt o">を</span> ou no <span class="pt ni">に</span> para ver a diferença.</p>':''}
@@ -1192,6 +1202,7 @@ function telaTerra(c){
       E.falha(dito,msg||'Escreva uma frase inteira e feche com ます.');return;
     }
     for(const x of textos){const w=palavraDe(x);if(w){
+      if(alvoPisca&&canon(w)!==alvoPisca.item){ E.falha(dito,'A que está piscando é outra. Toque no ♪ que pisca para ouvir a palavra.'); return; }
       const id=t.tipos?ultimoTipo:canon(w);
       if(S.feitos.includes(id)){E.aviso(t.tipos?'Essa palavra de pergunta você já usou. Use outra: どこ, なん ou なんじ.':'Essa palavra você já usou. Escolha outra.',dito);return;}
       S.feitos.push(id);S.ditas[c.n]=x;E.ok(x,'✓ Boa!');
