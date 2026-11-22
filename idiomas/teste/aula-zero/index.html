@@ -703,7 +703,7 @@ function render(){
 }
 function voltaPasso(){
   const p=S.passo;try{pararMic();}catch(e){}
-  if(p==='toque'){ if(S.k>0){S.k--;vai('terra');} else vai('chegada'); }
+  if(p==='toque'){ if(CHAVES[S.k].n===3&&S.clipeVisto){S.cl=CLIP.length-1;S.clipeRever=false;vai('clipe');} else if(S.k>0){S.k--;vai('terra');} else vai('chegada'); }
   else if(p==='agua'){ if((S.ai||0)>0){S.ai--;vai('agua');} else vai('toque'); }
   else if(p==='fixa'){ S.__ai=Math.max(0,CHAVES[S.k].hot.length-1); vai('agua'); }
   else if(p==='falafix'){ vai('fixa'); }
@@ -716,7 +716,7 @@ function render0(){
   window.__render=render;
   if(S.passo==='retoma'&&S.k<1)S.passo='agua';
   if(S.passo==='agua'&&!toqueCompleto(CHAVES[S.k])&&!S.toqueOk[S.k])S.passo='toque';
-  if(S.passo==='agua'&&CHAVES[S.k].n===3&&!S.clipeVisto){S.passo='clipe';S.cl=0;}
+  if(S.passo==='toque'&&CHAVES[S.k].n===3&&!S.clipeVisto&&!S.toqueOk[S.k]){S.passo='clipe';S.cl=0;S.clipeRever=false;}
   desenhaBarra();desenhaHot();
   luzCena();luzToque();
   { const pr=S.passo==='prontas'?((PRONTAS[S.p||0]||{}).fogo?'fogo':'agua'):null;
@@ -998,13 +998,14 @@ const CLIP=[
 function telaClipe(c){
   const i=S.cl||0,k=CLIP[i];
   hsBox.innerHTML='';
-  painel.innerHTML=`<span class="elem agua"><i></i>Chave 03 · Água · assista e repita</span>
-   <h2>Veja o que você faz. Depois repita em voz alta.</h2>
+  painel.innerHTML=`<span class="elem agua"><i></i>Chave 03 · ます · assista e repita</span>
+   <h2>Veja o que ela faz. Todo verbo termina em <b style="color:#c0392b">ます</b>.</h2>
    <div class="contagem" aria-label="${i+1} de ${CLIP.length}">${CLIP.map((_,j)=>`<i class="${j<=i?'on':''}"></i>`).join('')}</div>
-   <div class="cl-legenda" id="clLeg" style="visibility:hidden"><div class="jpl" lang="ja">${html(k.t)}</div><div class="ro">${k.ro}</div><div class="pt">${k.pt}</div></div>
-   <div class="acoes"><button class="btn" type="button" id="clDeNovo">🔁 Ver de novo</button><button class="btn pri" type="button" id="clProx">${i+1<CLIP.length?'Próximo verbo →':'Agora é com você →'}</button></div>
-   <div class="acoes"><button class="btn ghost" type="button" id="clPula">Pular clipe</button></div>`;
-  const sai=()=>{S.clipeVisto=true;S.passo='agua';parar();render();};
+   <div class="cl-legenda" id="clLeg" style="visibility:hidden"><div class="jpl" lang="ja">${k.t.map(t=>typeof t==='string'?t:t[0].replace(/ます$/,'')+'<b>ます</b>').join('')}</div><div class="ro">${k.ro}</div><div class="pt">${k.pt}</div></div>
+   <div class="nav-ex"><button class="btn ghost voltaBtn" type="button" id="clVolta">← Anterior</button><button class="btn pri" type="button" id="clProx">${i+1<CLIP.length?'Próximo verbo →':'Tocar na cena →'}</button></div>
+   <div class="acoes"><button class="btn" type="button" id="clDeNovo">🔁 Ver de novo</button><button class="btn ghost" type="button" id="clPula">Pular clipes</button></div>`;
+  const sai=()=>{const rv=S.clipeRever;S.clipeVisto=true;S.clipeRever=false;S.passo=rv?'agua':'toque';parar();render();};
+  $('clVolta').onclick=()=>{if(i>0){S.cl=i-1;parar();render();}else if(S.clipeRever){S.clipeRever=false;parar();S.clipeVisto=true;vai('agua');}else if(S.k>0){S.clipeVisto=false;parar();S.k--;vai('terra');}else{parar();vai('chegada');}};
   $('clPula').onclick=sai;
   $('clProx').onclick=()=>{if(i+1<CLIP.length){S.cl=i+1;parar();render();}else sai();};
   $('clDeNovo').onclick=()=>{parar();roda();};
@@ -1020,7 +1021,9 @@ function telaClipe(c){
       sv.style.display='none';vd.style.display='block';$('clAv').hidden=true;
       const leg=$('clLeg');leg.style.visibility='hidden';
       let ja=false;const mostra=()=>{if(ja||!vivo)return;ja=true;leg.style.visibility='visible';fala(k.say);};
-      vd.poster=k.video.replace('.mp4','.jpg');vd.src=k.video;vd.currentTime=0;vd.ontimeupdate=()=>{if(vd.currentTime>=k.vt)mostra();};vd.onended=mostra;
+      vd.poster=k.video.replace('.mp4','.jpg');vd.src=k.video;vd.currentTime=0;vd.ontimeupdate=()=>{if(vd.currentTime>=k.vt)mostra();};
+      vd.onended=()=>{mostra();tms.push(setTimeout(()=>{if(vivo&&$('clProx'))$('clProx').click();},2800));};
+      try{const nx=CLIP[i+1];if(nx&&nx.video)fetch(nx.video).catch(()=>{});}catch(e){}
       const p=vd.play();if(p&&p.catch)p.catch(()=>{mostra();});
       return;
     }
@@ -1198,7 +1201,7 @@ function telaResposta(c,tipo,titulo,pedido,alvo){
   if(tipo==='agua'&&c.intro)painel.insertAdjacentHTML('afterbegin','<p class="intro-cena">🏪 '+c.intro+'</p>');
   if(tipo==='agua')setTimeout(()=>fala(alvo.say),350);
   if(tipo==='agua'&&c.n===3)painel.insertAdjacentHTML('beforeend','<div class="acoes"><button class="btn ghost" type="button" id="clRever">🎬 Rever o clipe</button></div>');
-  if($('clRever'))$('clRever').onclick=()=>{pararMic();S.cl=0;S.passo='clipe';render();};
+  if($('clRever'))$('clRever').onclick=()=>{pararMic();S.cl=0;S.clipeRever=true;S.passo='clipe';render();};
   const prox=alvo.depois||(()=>vai(tipo==='fogo'?'terra':'fixa'));
   if(tipo==='fogo'){ const pb=document.createElement('button'); pb.type='button'; pb.className='btn ghost'; pb.textContent='Pular →'; pb.onclick=()=>{ try{pararMic();}catch(e){} prox(); }; painel.appendChild(pb); }
   const cc=Object.assign({},c,{_ouvirAlvo:()=>fala(alvo.say),_esconde:tipo==='fogo'});
