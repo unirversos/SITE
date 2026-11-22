@@ -83,6 +83,9 @@ h1{font-family:var(--f-display);font-weight:800;font-size:clamp(30px,5.2vw,46px)
 @media (prefers-reduced-motion:reduce){.scene img.cena-cor{animation:none;--spr:var(--rb)}}
 #hs{position:absolute;inset:0;z-index:5;pointer-events:none}
 #hs>*{pointer-events:auto}
+.nav-ex{display:flex;gap:10px;margin-top:16px}
+.nav-ex .btn{flex:1 1 0;min-width:0;margin:0;justify-content:center;text-align:center}
+.nav-ex:has(.voltaBtn:only-child) .btn{flex:0 1 calc(50% - 5px)}
 .hs{position:absolute;transform:translate(-50%,-50%);width:44px;height:44px;border-radius:50%;border:0;background:rgba(255,255,255,.0);padding:0}
 .hs::before{content:"";position:absolute;inset:6px;border-radius:50%;background:rgba(255,255,255,.92);border:2px solid var(--pink);box-shadow:0 2px 6px rgba(58,43,56,.25)}
 .hs::after{content:"";position:absolute;inset:0;border-radius:50%;border:2px solid var(--pink);opacity:.6;animation:ping 2.2s ease-out infinite}
@@ -671,7 +674,13 @@ function vai(passo){if(passo!=='terra')S.t1=null;if(passo==='agua'&&S.passo!=='a
 function render(){
   render0();
   const ok=['agua','fixa','falafix','fogo','terra'].includes(S.passo);
-  if(ok&&painel&&!painel.querySelector('.voltaBtn')){const b=document.createElement('button');b.type='button';b.className='btn ghost voltaBtn';b.textContent='← Voltar ao exercício anterior';b.onclick=voltaPasso;painel.appendChild(b);}
+  if(ok&&painel&&!painel.querySelector('.voltaBtn')){
+    const nav=document.createElement('div');nav.className='nav-ex';
+    const v=document.createElement('button');v.type='button';v.className='btn ghost voltaBtn';v.textContent='← Voltar';v.setAttribute('aria-label','Voltar ao exercício anterior');v.onclick=voltaPasso;nav.appendChild(v);
+    const pu=[...painel.querySelectorAll('button.btn.ghost')].find(b=>/^Pular/.test(b.textContent.trim()));
+    if(pu){const rot=pu.textContent.trim();pu.setAttribute('aria-label',rot.replace(/→/,'').trim());pu.textContent='Pular →';nav.appendChild(pu);}
+    painel.appendChild(nav);
+  }
 }
 function voltaPasso(){
   const p=S.passo;try{pararMic();}catch(e){}
