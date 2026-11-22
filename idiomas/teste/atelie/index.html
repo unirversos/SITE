@@ -226,6 +226,10 @@ h1 .jp{font-family:var(--f-body);font-weight:700;font-size:.5em;color:var(--pink
 .caderno h2 span{font-family:var(--f-body);font-size:13px;color:var(--muted);font-weight:500;margin-left:6px}
 .chips{display:flex;flex-wrap:wrap;gap:8px}
 .chip{border:1.5px solid var(--line);background:var(--paper);border-radius:99px;padding:4px 12px;font-size:14px}
+.chipw{display:inline-flex;align-items:stretch}
+.chipw .chip{border-top-right-radius:0;border-bottom-right-radius:0;border-right:0}
+.chip-cad{border:1.5px solid var(--line);background:var(--card);color:var(--pink);font:inherit;font-size:12.5px;font-weight:700;padding:4px 10px;border-radius:0 99px 99px 0;cursor:pointer}
+.chip-cad:hover{background:var(--paper)}
 .chip small{color:var(--muted);margin-left:4px;font-size:11px}
 .empty{color:var(--muted);font-size:13.5px}
 .challenge{border-top:1.5px dashed var(--line);padding-top:14px;display:grid;gap:10px}
@@ -355,13 +359,18 @@ body:not(.novo) .cart-vazia{display:none!important}
 .treino{flex-direction:column;gap:12px;background:var(--card);border:1.5px solid var(--line);border-left:5px solid var(--sage);border-radius:var(--r);padding:18px 20px}
 .treino h2{margin:0;font-family:var(--f-display)}
 .treino>p{margin:0;color:var(--muted);font-size:14px}
-.tr-lista{display:grid;gap:8px}
-.tr-l{display:grid;grid-template-columns:auto minmax(0,1fr);gap:4px 12px;align-items:center;text-align:left;border:1.5px solid var(--line);background:var(--paper);border-radius:14px;padding:10px 14px;font:inherit;color:var(--ink);cursor:pointer}
-.tr-l:hover{border-color:var(--pink)}
-.tr-l .ic{grid-row:span 3;font-size:20px}
-.tr-l .cat{font-size:11.5px;font-weight:700;color:var(--sage)}
-.tr-l b{font-size:16px;letter-spacing:.02em}
-.tr-l small{color:var(--muted);font-size:13px}
+.tr-deck{display:grid;gap:14px;max-width:560px;margin:0 auto;width:100%}
+.tr-prog{display:flex;gap:6px;justify-content:center}
+.tr-prog i{width:26px;height:6px;border-radius:6px;background:var(--line)}
+.tr-prog i.on{background:var(--pink)}.tr-prog i.ok{background:var(--sage)}
+.tr-card{display:grid;gap:14px;justify-items:center;text-align:center;border:1.5px solid var(--line);background:var(--paper);border-radius:20px;padding:26px 18px}
+.tr-cat{font-size:13px;font-weight:700;color:var(--sage)}
+.tr-jp{border:0;background:none;font:inherit;font-size:clamp(24px,5vw,32px);font-weight:700;line-height:1.5;color:var(--ink);cursor:pointer}
+.tr-info{display:grid;gap:4px;color:var(--muted)}
+.tr-info[hidden]{display:none}
+.tr-ouvir{font-size:17px;padding:12px 26px}
+.tr-ver{border:0;background:none;color:var(--muted);font:inherit;font-size:14px;text-decoration:underline;cursor:pointer}
+.tr-nav{display:flex;justify-content:space-between;align-items:center;gap:10px;color:var(--muted);font-size:14px}
 @media (max-width:700px){.pronto-bar{bottom:calc(70px + env(safe-area-inset-bottom,0px))}}
 
 </style>
@@ -401,9 +410,17 @@ body:not(.novo) .cart-vazia{display:none!important}
   </div>
   <section class="treino so-treino" aria-label="Treinar frases">
     <h2><ruby>自己紹介<rt>じこしょうかい</rt></ruby> · Treinar</h2>
-    <p>Toque numa frase para ouvir e repita em voz alta.</p>
-    <div class="tr-lista" id="trLista"></div>
-    <div><button class="btn primary" type="button" id="trTodas">▶ Ouvir todas</button></div>
+    <div class="tr-deck">
+      <div class="tr-prog" id="trProg" aria-hidden="true"></div>
+      <div class="tr-card">
+        <span class="tr-cat" id="trCat"></span>
+        <button type="button" class="tr-jp" id="trJp" lang="ja" aria-label="Ouvir a frase"></button>
+        <div class="tr-info" id="trInfo" hidden><span class="ro" id="trRo"></span><span id="trPt"></span></div>
+        <button type="button" class="btn primary tr-ouvir" id="trOuvir">🔊 Ouvir e repetir</button>
+        <button type="button" class="tr-ver" id="trVer">👁 Ver romaji e tradução</button>
+      </div>
+      <div class="tr-nav"><button type="button" class="btn" id="trAnt">← Anterior</button><span id="trN"></span><button type="button" class="btn" id="trProx">Próxima →</button></div>
+    </div>
   </section>
   <div class="main">
     <section class="stage" aria-label="Seu avatar">
@@ -743,7 +760,7 @@ function renderXP(){ renderPlanet();
 }
 function renderChips(){
   const ids=Object.keys(state.learned);
-  $('chips').innerHTML=ids.length?ids.map(id=>{const w=WORDS[id];return `<button class="chip" type="button" data-id="${id}">${ruby(w)} <span class="ro">${w.ro}</span><small>${w.pt} · <i lang="en">${w.en||''}</i></small></button>`}).join('')
+  $('chips').innerHTML=ids.length?ids.map(id=>{const w=WORDS[id];return `<span class="chipw"><button class="chip" type="button" data-id="${id}">${ruby(w)} <span class="ro">${w.ro}</span><small>${w.pt} · <i lang="en">${w.en||''}</i></small></button><button class="chip-cad" type="button" data-cad="${id}" title="Salvar no caderno" aria-label="Salvar ${w.jp} no caderno">＋ caderno</button></span>`}).join('')
     :'<p class="empty">Toque nas opções do ateliê. Cada palavra nova entra aqui e vale +5 XP.</p>';
 }
 function renderSkins(){
@@ -867,7 +884,16 @@ $('skins').addEventListener('click',e=>{const b=e.target.closest('.skin'); if(!b
   const w=skinWord(state.sel.skin), isNew=!state.learned[w.id]; if(isNew){state.learned[w.id]=true; gain(WORD_XP);}
   state.focus=w.id; speak(w.kana); abreTopico('skin'); renderAll('skin',true);
   if(isNew){const nb=$('skins').querySelector(`[data-skin="${state.sel.skin}"]`); nb&&floatXP(nb,WORD_XP);} });
-$('chips').addEventListener('click',e=>{const b=e.target.closest('.chip'); if(b){ speak(WORDS[b.dataset.id].kana); state.focus=b.dataset.id; renderWord(true);} });
+function salvaCaderno(id){
+  const w=WORDS[id]; if(!w) return; const C=window.UniCaderno;
+  const t=w.jp+(w.jp!==w.kana?' ('+w.kana+')':'');
+  if(!C){ avisa('O caderno ainda está carregando, tente de novo.'); return; }
+  if(C.vivas().some(n=>(n.t||'')===t)){ avisa('“'+w.jp+'” já está no seu caderno ✓'); return; }
+  const n=C.nova(); C.atualizar(n.id,{t,x:w.ro+'\n'+w.pt+' · '+(w.en||'')+(w.ptSay?'\n\n'+w.ptSay:'')}); C.agora&&C.agora();
+  avisa('“'+w.jp+'” salvo no caderno ✓');
+}
+function avisa(msg){ let t=$('frToast'); if(!t){ t=document.createElement('div'); t.id='frToast'; t.className='lv-toast'; t.setAttribute('role','status'); document.body.appendChild(t); } t.textContent=msg; t.hidden=false; clearTimeout(t._h); t._h=setTimeout(()=>t.hidden=true,2600); }
+$('chips').addEventListener('click',e=>{const c=e.target.closest('.chip-cad'); if(c){ salvaCaderno(c.dataset.cad); return; } const b=e.target.closest('.chip'); if(b){ speak(WORDS[b.dataset.id].kana); state.focus=b.dataset.id; renderWord(true);} });
 $('dice').onclick=()=>{ CATS.forEach(c=>{ const o=c.opts[Math.floor(Math.random()*c.opts.length)].id;
     state.sel[c.key]=c.multi?(Math.random()<.5||o==='nashi'?[]:[o]):o; });
   state.sel.skin=Math.floor(Math.random()*AV.SKINS.length); {const c=CATS.find(x=>x.key===state.cat),v=state.sel[c.key]; state.focus=c.multi?(v[0]||c.opts[0].id):v;} renderAll('body',true);
@@ -920,12 +946,21 @@ const TEMO={'Idade':'🎂','Pele':'🎨','Cabelo':'💇','Cor do cabelo':'🖌�
 let feito=(()=>{ try{ return localStorage.getItem('uniAtelieFeito')==='1'; }catch(e){ return false; } })();
 if(!feito && (Object.keys(state.learned).length || state.profile.name)) feito=true;
 function marcaFeito(){ if(feito) return; feito=true; try{ localStorage.setItem('uniAtelieFeito','1'); }catch(e){} document.body.classList.remove('novo'); }
+let trI=0,trVis=false,trVisto=new Set();
 function renderTreino(){
-  $('trLista').innerHTML=sentences().map((l,i)=>{ const nome=(l.cat.split('·').pop()||'').trim();
-    return `<button type="button" class="tr-l" data-i="${i}"><span class="ic" aria-hidden="true">${TEMO[nome]||'💬'}</span><span class="cat">${nome}</span><b lang="ja">${l.jp}</b><small class="ro">${kana2ro(l.jp)}</small><small>${l.pt}</small></button>`; }).join('');
+  const L=sentences(); if(trI>=L.length) trI=0; const l=L[trI]; trVisto.add(trI);
+  $('trCat').textContent=(TEMO[(l.cat.split('·').pop()||'').trim()]||'💬')+' '+(l.cat.split('·').pop()||'').trim();
+  $('trJp').textContent=l.jp; $('trRo').textContent=kana2ro(l.jp); $('trPt').textContent=l.pt;
+  $('trInfo').hidden=!trVis; $('trVer').textContent=trVis?'🙈 Esconder romaji e tradução':'👁 Ver romaji e tradução';
+  $('trN').textContent=(trI+1)+' / '+L.length;
+  $('trProg').innerHTML=L.map((_,i)=>`<i class="${i===trI?'on':trVisto.has(i)?'ok':''}"></i>`).join('');
+  $('trAnt').disabled=trI===0; $('trProx').disabled=trI===L.length-1;
 }
-$('trLista').addEventListener('click',e=>{ const b=e.target.closest('.tr-l'); if(b) speak(sentences()[+b.dataset.i].jp); });
-$('trTodas').onclick=()=>speak(sentences().map(l=>l.jp).join(' '));
+const trOuve=()=>speak(sentences()[trI].jp);
+$('trJp').onclick=$('trOuvir').onclick=trOuve;
+$('trVer').onclick=()=>{ trVis=!trVis; renderTreino(); };
+$('trAnt').onclick=()=>{ if(trI>0){ trI--; renderTreino(); } };
+$('trProx').onclick=()=>{ if(trI<sentences().length-1){ trI++; renderTreino(); trOuve(); } };
 function modo(m,semHist){
   document.body.classList.remove('m-cart','m-edit','m-treino'); document.body.classList.add('m-'+m);
   if(m==='edit') marcaFeito();
