@@ -667,8 +667,22 @@ if(LIVRE){
   };
   $('lvAnt').onclick=()=>anda(-1);$('lvProx').onclick=()=>anda(1);
 }
-function vai(passo){if(passo!=='terra')S.t1=null;if(passo==='agua'&&S.passo!=='agua')S.ai=0;if(S.__paraClipe){S.__paraClipe();S.__paraClipe=null;}if(passo!=='clipe'&&S.passo==='clipe')S.clipeVisto=true;S.passo=passo;S.erros=0;S.feitos=[];pararMic();pilula.hidden=true;render();}
+function vai(passo){if(passo!=='terra')S.t1=null;if(passo==='agua'&&S.passo!=='agua')S.ai=(S.__ai!=null?S.__ai:0);S.__ai=null;if(S.__paraClipe){S.__paraClipe();S.__paraClipe=null;}if(passo!=='clipe'&&S.passo==='clipe')S.clipeVisto=true;S.passo=passo;S.erros=0;S.feitos=[];pararMic();pilula.hidden=true;render();}
 function render(){
+  render0();
+  const ok=['agua','fixa','falafix','fogo','terra'].includes(S.passo);
+  if(ok&&painel&&!painel.querySelector('.voltaBtn')){const b=document.createElement('button');b.type='button';b.className='btn ghost voltaBtn';b.textContent='← Voltar ao exercício anterior';b.onclick=voltaPasso;painel.appendChild(b);}
+}
+function voltaPasso(){
+  const p=S.passo;try{pararMic();}catch(e){}
+  if(p==='agua'){ if((S.ai||0)>0){S.ai--;vai('agua');} else vai('toque'); }
+  else if(p==='fixa'){ S.__ai=Math.max(0,CHAVES[S.k].hot.length-1); vai('agua'); }
+  else if(p==='falafix'){ vai('fixa'); }
+  else if(p==='fogo'){ S.ff=0; vai('falafix'); }
+  else if(p==='terra'){ vai('fogo'); }
+  window.scrollTo(0,0);
+}
+function render0(){
   { const gc=document.getElementById('ganhoCena'); if(gc) gc.remove(); }
   window.__render=render;
   if(S.passo==='retoma'&&S.k<1)S.passo='agua';
