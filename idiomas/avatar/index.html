@@ -52,7 +52,27 @@ h1 .jp{font-family:var(--f-body);font-weight:700;font-size:.5em;color:var(--pink
   background:repeating-linear-gradient(45deg,var(--blush) 0 8px,rgba(183,166,220,.55) 8px 16px)}
 .tape.l{left:18px;transform:rotate(-6deg)} .tape.r{right:18px;transform:rotate(5deg);
   background:repeating-linear-gradient(-45deg,var(--sage-soft) 0 8px,rgba(81,113,88,.45) 8px 16px)}
-.avatar-wrap{display:grid;gap:10px;justify-items:center}
+.avatar-wrap{display:grid;gap:10px;justify-items:center;container-type:inline-size;width:100%;min-width:0;max-width:100%}
+.avatar-row,.topicos{min-width:0;max-width:100%}
+/* um botãozinho por assunto: ao lado do avatar quando sobra espaço, embaixo dele quando é estreito */
+.avatar-row{display:flex;flex-direction:column;align-items:center;gap:10px;width:100%}
+.avatar-row .avatar-card{order:0}
+.topicos{order:1;display:flex;flex-wrap:wrap;justify-content:center;gap:6px;width:100%}
+.topicos:empty{display:none}
+.top-bt{display:inline-flex;align-items:center;gap:5px;border:1.5px solid var(--line);background:var(--paper);color:var(--ink);border-radius:99px;padding:5px 11px;min-height:34px;font:inherit;font-size:12.5px;font-weight:700;line-height:1.2;cursor:pointer;transition:border-color .15s,background .15s}
+.top-bt:hover{border-color:var(--pink)}
+.top-bt[aria-pressed="true"]{background:var(--pink);border-color:var(--pink);color:#fff}
+.top-bt i{font-style:normal}
+@media (max-width:700px){#frToast{bottom:calc(76px + env(safe-area-inset-bottom,0px))}}
+@container (max-width:499px){
+  .topicos{flex-wrap:nowrap;justify-content:flex-start;overflow-x:auto;padding:2px 2px 6px;scrollbar-width:none;-webkit-overflow-scrolling:touch}
+  .topicos::-webkit-scrollbar{display:none}.top-bt{flex:none}
+}
+@container (min-width:500px){
+  .avatar-row{display:grid;grid-template-columns:minmax(0,1fr) auto minmax(0,1fr);align-items:center;gap:14px}
+  .topicos{order:initial;flex-direction:column;width:auto;gap:8px}
+  .topicos.esq{align-items:flex-end}.topicos.dir{align-items:flex-start}
+}
 .avatar-card{position:relative;display:block;padding:0;border:2px solid var(--line);background:var(--card);border-radius:16px;overflow:hidden;aspect-ratio:240/300;max-width:100%;width:100%;margin:0 auto;box-shadow:0 2px 10px rgba(58,43,56,.06);transition:transform .18s ease,box-shadow .22s ease,border-color .22s ease;touch-action:manipulation}
 .avatar-card:hover{border-color:var(--pink);transform:translateY(-1px);box-shadow:0 6px 18px rgba(58,43,56,.1)}
 .avatar-card:active{transform:scale(.99)}
@@ -138,7 +158,7 @@ h1 .jp{font-family:var(--f-body);font-weight:700;font-size:.5em;color:var(--pink
 .opt{position:relative;border:1.5px solid var(--line);background:var(--card);border-radius:16px;padding:12px 10px 10px;display:grid;justify-items:center;gap:2px;text-align:center;transition:transform .15s}
 .opt:hover{transform:translateY(-2px);border-color:var(--lavender)}
 .opt[aria-pressed="true"]{border-color:var(--pink);box-shadow:0 0 0 2px var(--pink) inset}
-.opt .j{font-size:21px;font-weight:700;line-height:1.5}
+.opt .j{white-space:nowrap;font-size:clamp(15px,2.2vw,21px);font-weight:700;line-height:1.5}
 .opt .p{font-size:12px;color:var(--muted)}
 .opt .sw{width:22px;height:22px;border-radius:50%;box-shadow:0 0 0 1.5px var(--line);margin-bottom:2px}
 .opt .badge{position:absolute;top:6px;right:8px;font-size:10px;font-weight:700;color:var(--gold);font-family:var(--f-display)}
@@ -178,7 +198,7 @@ h1 .jp{font-family:var(--f-body);font-weight:700;font-size:.5em;color:var(--pink
   background:repeating-radial-gradient(circle at 85% 20%,transparent 0 9px,rgba(142,106,31,.09) 9px 10px),var(--card);display:grid}
 .c-top{display:flex;justify-content:space-between;align-items:center;gap:10px;background:var(--ink);color:var(--paper);padding:9px 16px;font-size:12px;letter-spacing:.14em}
 .c-top b{font-family:var(--f-body);letter-spacing:.06em;font-size:15px;color:var(--gold)}
-.c-top .lv{font-family:var(--f-display);font-weight:800;letter-spacing:0;font-size:15px}
+.c-top .c-lv{font-family:var(--f-display);font-weight:800;letter-spacing:0;font-size:15px}
 .c-body{display:grid;grid-template-columns:minmax(0,150px) minmax(0,1fr);gap:16px;padding:16px}
 @media (max-width:480px){.c-body{grid-template-columns:minmax(0,108px) minmax(0,1fr);gap:12px}}
 .c-photo{border-radius:10px;overflow:hidden;border:3px solid var(--card);box-shadow:0 0 0 1.5px var(--line);aspect-ratio:240/300;align-self:start}
@@ -205,6 +225,10 @@ h1 .jp{font-family:var(--f-body);font-weight:700;font-size:.5em;color:var(--pink
 .caderno h2 span{font-family:var(--f-body);font-size:13px;color:var(--muted);font-weight:500;margin-left:6px}
 .chips{display:flex;flex-wrap:wrap;gap:8px}
 .chip{border:1.5px solid var(--line);background:var(--paper);border-radius:99px;padding:4px 12px;font-size:14px}
+.chipw{display:inline-flex;align-items:stretch}
+.chipw .chip{border-top-right-radius:0;border-bottom-right-radius:0;border-right:0}
+.chip-cad{border:1.5px solid var(--line);background:var(--card);color:var(--pink);font:inherit;font-size:12.5px;font-weight:700;padding:4px 10px;border-radius:0 99px 99px 0;cursor:pointer}
+.chip-cad:hover{background:var(--paper)}
 .chip small{color:var(--muted);margin-left:4px;font-size:11px}
 .empty{color:var(--muted);font-size:13.5px}
 .challenge{border-top:1.5px dashed var(--line);padding-top:14px;display:grid;gap:10px}
@@ -309,6 +333,83 @@ h1{font-size:clamp(24px,4vw,30px)}
 .lv-toast rt{color:inherit;opacity:.8}
 
 [hidden]{display:none!important}
+/* ===== três telas: carteirinha (entrada), editar, treinar ===== */
+.modos{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+.modos.so-cart{justify-content:center;max-width:640px;margin:0 auto;width:100%}
+#cName{cursor:pointer}.c-photo{cursor:pointer}
+.c-top .c-lv{color:#f6d9a8}
+#sayIntro{padding-block:12px}
+summary ruby{line-height:1}
+.modos .btn{min-height:42px}
+.so-edit,.so-treino,.so-cart{display:none}
+body.m-edit .so-edit,body.m-treino .so-treino{display:flex}
+body.m-cart .so-cart{display:flex}
+body.m-cart .main{grid-template-columns:minmax(0,1fr)}
+body.m-cart .stage,body.m-cart #tabs,body.m-cart #multiNote,body.m-cart #opts,body.m-cart #word,body.m-cart .passe-form,body.m-cart .passe h2{display:none!important}
+body.m-cart .passe{grid-template-columns:minmax(0,1fr);max-width:640px;margin:0 auto;width:100%}
+body.m-cart.novo .passe-sec,body.m-cart.novo .planet,body.m-cart.novo .next{display:none}
+body.m-edit .passe>div:last-child,body.m-edit .planet,body.m-edit .next{display:none!important}
+body.m-treino .main{display:none}
+body.m-edit section.caderno{display:grid}
+.topicos,#speechPop,.avatar-count{display:none!important}
+.planet,.next{display:none!important}
+.avatar-row{display:flex!important;flex-direction:column;align-items:center}
+.cart-vazia{flex-direction:column;align-items:center;gap:14px;max-width:640px;margin:0 auto;width:100%;border:2px dashed #dccbaa;border-radius:20px;background:#fffdf9;padding:40px 20px;text-align:center}
+.cart-vazia .sil{width:120px;height:150px;border-radius:14px;border:2px dashed #dccbaa;display:grid;place-items:center;font-size:44px;color:#c9b48a;background:var(--paper)}
+.cart-vazia p{margin:0;color:var(--muted)}
+body:not(.novo) .cart-vazia{display:none!important}
+body.m-edit .wrap,body.m-edit .page{padding-bottom:96px}
+body.m-edit{padding-bottom:96px}
+.pronto-bar{position:sticky;bottom:12px;justify-content:center;z-index:6}
+.pronto-bar .btn{box-shadow:0 10px 24px -12px rgba(58,43,56,.5)}
+.treino{flex-direction:column;gap:12px;background:var(--card);border:1.5px solid var(--line);border-left:5px solid var(--sage);border-radius:var(--r);padding:18px 20px}
+.treino h2{margin:0;font-family:var(--f-display)}
+.treino>p{margin:0;color:var(--muted);font-size:14px}
+.tr-deck{display:grid;gap:14px;max-width:560px;margin:0 auto;width:100%}
+.tr-prog{display:flex;gap:6px;justify-content:center}
+.tr-prog i{width:26px;height:6px;border-radius:6px;background:var(--line)}
+.tr-prog i.on{background:var(--pink)}.tr-prog i.ok{background:var(--sage)}
+.tr-card{display:grid;gap:14px;justify-items:center;text-align:center;border:1.5px solid var(--line);background:var(--paper);border-radius:20px;padding:26px 18px}
+.tr-cat{font-size:13px;font-weight:700;color:var(--sage)}
+.tr-jp{border:0;background:none;font:inherit;font-size:clamp(24px,5vw,32px);font-weight:700;line-height:1.5;color:var(--ink);cursor:pointer}
+.tr-info{display:grid;gap:4px;color:var(--muted);font-size:15px}
+.tr-info .ro{display:none;font-size:16px}body.show-ro .tr-info .ro{display:block}
+.tr-ouvir{font-size:17px;padding:12px 26px}
+.tr-deck>.tr-ver{justify-self:center}
+.tr-ver{border:0;background:none;color:var(--muted);font:inherit;font-size:14px;text-decoration:underline;cursor:pointer}
+.tr-nav{display:flex;justify-content:space-between;align-items:center;gap:10px;color:var(--muted);font-size:14px}
+@media (min-width:701px){.pronto-bar{position:fixed;right:24px;bottom:20px;width:auto}}
+body.m-edit .passe-sec{display:none}
+body.m-cart .c-intro{display:none}
+.nome-box{margin-bottom:12px}
+.sitebar .navlinks,.uni-inst,#uniVel{display:none!important}
+.top{position:relative}
+.cfg-wrap{position:absolute;right:0;top:0;z-index:20}
+.cfg-pop{position:absolute;right:0;top:calc(100% + 8px);width:min(280px,calc(100vw - 32px));display:grid;gap:12px;background:var(--card);border:1.5px solid var(--line);border-radius:16px;padding:14px;box-shadow:0 14px 30px -14px rgba(58,43,56,.45)}
+.cfg-pop[hidden]{display:none}
+.cfg-vel{display:grid;gap:6px;font-size:13px;color:var(--muted);font-weight:600}
+.cfg-vel input{width:100%;accent-color:var(--pink);min-height:36px}
+#dice{width:100%;justify-content:center;background:var(--ink);color:var(--paper);border-color:var(--ink)}
+.btn-curio{border:0;background:none;color:var(--muted);text-decoration:underline;font-size:13px;box-shadow:none;padding:2px 6px}
+.chip small{margin-left:6px}
+.card .c-pt,.card dd small,.card .c-tr{display:none}
+body.show-pt .card .c-pt{display:inline}body.show-pt .card dd small{display:inline}
+body.show-pt .c-tt::after,body.show-pt .c-feat-i::after{display:none}
+body.show-pt #cTitle small{display:block}
+.cfg-pt{display:flex;align-items:center;gap:8px;font-size:13.5px;font-weight:600}
+.c-vazio{font-weight:500;color:var(--muted);font-size:13px}
+.c-tt{position:relative;cursor:help;outline:none}
+.c-tt::after,.c-feat-i::after{content:attr(data-tr);position:absolute;left:0;top:100%;z-index:6;background:var(--ink);color:var(--paper);font:600 12.5px/1.35 var(--f-body);padding:6px 10px;border-radius:10px;white-space:pre-line;max-width:260px;width:max-content;opacity:0;transform:translateY(-3px);pointer-events:none;transition:.15s}
+.c-tt[data-tr]:hover::after,.c-tt[data-tr]:focus::after,.c-feat-i:hover::after,.c-feat-i:focus::after{opacity:1;transform:none}
+.c-tt:not([data-tr])::after{display:none}
+.c-feat-i{position:relative;cursor:help;outline:none}
+#cdFeat::after{display:none}
+.tab-mais{border-style:dashed;color:var(--muted)}
+.credito-voz{display:none!important}
+.sobre-vozes{margin:24px auto 0;max-width:560px;text-align:center;font-size:12.5px;color:var(--muted)}
+.sobre-vozes summary{cursor:pointer}
+@media (max-width:700px){.pronto-bar{bottom:calc(70px + env(safe-area-inset-bottom,0px))}}
+
 </style>
 <link rel="stylesheet" href="/estilo-celular.css?v=3">
 <script defer src="/menu-ativo.js?v=2"></script><script defer src="/voltar-global.js?v=5"></script>
@@ -320,8 +421,16 @@ h1{font-size:clamp(24px,4vw,30px)}
   <header class="top">
     <div>
       <a class="eyebrow back" href="/idiomas/japones/">← Minha trilha</a>
-      <button class="btn ro-toggle" id="roToggle" type="button" aria-pressed="false" title="Mostrar romaji embaixo do japonês">ローマ<ruby>字<rt>じ</rt></ruby> · Romaji</button>
       <h1>Ateliê de Avatar</h1>
+    </div>
+    <div class="cfg-wrap">
+      <button class="btn" id="cfgBtn" type="button" aria-expanded="false" aria-controls="cfgPop" aria-label="Ajustes">⚙️ Ajustes</button>
+      <div class="cfg-pop" id="cfgPop" hidden>
+        <button class="btn ro-toggle" id="roToggle" type="button" aria-pressed="false" title="Mostrar romaji embaixo do japonês">ローマ<ruby>字<rt>じ</rt></ruby> · Romaji</button>
+        <label class="cfg-pt"><input type="checkbox" id="cfgPt"> Mostrar português na carteirinha</label>
+        <label class="cfg-vel">Velocidade da voz <b id="cfgVelO"></b>
+          <input type="range" id="cfgVel" min="0.5" max="1.2" step="0.05" aria-label="Velocidade da voz"></label>
+      </div>
     </div>
     <div class="xp" aria-live="polite">
       <div class="xp-row"><span class="lvl" id="lvl">Nv. 1 <small>たまご</small></span><span id="xpn">0 XP</span></div>
@@ -331,15 +440,46 @@ h1{font-size:clamp(24px,4vw,30px)}
     </div>
   </header>
 
+  <div class="modos so-cart">
+    <button class="btn primary" type="button" data-modo="edit">✏️ Editar avatar</button>
+    <button class="btn" type="button" data-modo="treino">🗣️ Treinar frases</button>
+  </div>
+  <div class="modos so-edit so-treino">
+    <button class="btn" type="button" data-modo="cart">← Minha carteirinha</button>
+  </div>
+  <div class="cart-vazia so-cart">
+    <div class="sil" aria-hidden="true">?</div>
+    <p>Sua carteirinha ainda está vazia.</p>
+    <button class="btn primary" type="button" data-modo="edit">✏️ Editar avatar</button>
+  </div>
+  <section class="treino so-treino" aria-label="Treinar frases">
+    <h2><ruby>自己紹介<rt>じこしょうかい</rt></ruby> · Treinar</h2>
+    <div class="tr-deck">
+      <div class="tr-prog" id="trProg" aria-hidden="true"></div>
+      <div class="tr-card">
+        <span class="tr-cat" id="trCat"></span>
+        <button type="button" class="tr-jp" id="trJp" lang="ja" aria-label="Ouvir a frase"></button>
+        <div class="tr-info"><span class="ro" id="trRo"></span><span id="trPt" hidden></span></div>
+        <button type="button" class="btn primary tr-ouvir" id="trOuvir">🔊 Ouvir e repetir</button>
+        <button type="button" class="tr-ver" id="trVer">👁 Ver tradução</button>
+      </div>
+      <div class="tr-nav"><button type="button" class="btn" id="trAnt">← Anterior</button><span id="trN"></span><button type="button" class="btn" id="trProx">Próxima →</button></div>
+      <button type="button" class="tr-ver" id="trTodas">▶ Ouvir a apresentação completa</button>
+    </div>
+  </section>
   <div class="main">
     <section class="stage" aria-label="Seu avatar">
       <span class="tape l"></span><span class="tape r"></span>
       <div class="avatar-wrap">
+        <div class="avatar-row">
+        <div class="topicos esq" id="topL" role="group" aria-label="Assuntos"></div>
         <button type="button" id="avatarCard" class="avatar-card" aria-expanded="false" aria-controls="speechPop" aria-label="Toque para ouvir seu avatar falar">
           <svg id="avatar" viewBox="0 0 240 300" role="img" aria-label="Avatar"></svg>
           <span class="avatar-count" id="avatarCount" aria-hidden="true">1/1</span>
           <span class="avatar-hint" id="avatarHint">💬 Toque para falar</span>
         </button>
+        <div class="topicos dir" id="topR" role="group" aria-label="Mais assuntos"></div>
+        </div>
         <div class="speech-popover" id="speechPop" role="region" aria-label="Fala do avatar" aria-live="polite" hidden>
           <div class="sp-head">
             <span class="sp-cat" id="spCat"></span>
@@ -357,9 +497,8 @@ h1{font-size:clamp(24px,4vw,30px)}
             <div class="tip sp-tip" id="spTip" hidden></div>
           </div>
           <div class="sp-controls">
-            <button type="button" class="sp-btn nav" id="spPrev" aria-label="Frase anterior">‹</button>
-            <button type="button" class="sp-btn nav" id="spNext" aria-label="Próxima frase">›</button>
             <button type="button" class="sp-btn" id="spReplay">🔊 Repetir</button>
+            <button type="button" class="sp-btn" id="spTroca">✏️ Trocar</button>
             <button type="button" class="sp-btn all" id="spAll">▶ Todas</button>
           </div>
         </div>
@@ -394,7 +533,7 @@ h1{font-size:clamp(24px,4vw,30px)}
   <section class="passe-sec">
       <div class="passe">
         <div class="passe-form">
-          <h2>Carteirinha de aventureiro<span data-ro="yūtopia bōkenshashō">ユートピア<ruby>冒険者証<rt>ぼうけんしゃしょう</rt></ruby></span></h2>
+          <h2>Quem é você?<span>Seu nome na carteirinha de aventureiro</span></h2>
           <label class="field" for="pName">Seu nome
             <input id="pName" type="text" maxlength="24" autocomplete="off" placeholder="Ex.: Ana, Kenji, Tiago">
           </label>
@@ -408,21 +547,21 @@ h1{font-size:clamp(24px,4vw,30px)}
         </div>
         <div style="display:grid;gap:10px">
           <article class="card" id="card" aria-label="Carteirinha de aventureiro">
-            <header class="c-top"><span>PLANETA UTOPIA</span><b><ruby>冒険者証<rt>ぼうけんしゃしょう</rt></ruby></b><span class="lv" id="cLv"></span></header>
+            <header class="c-top"><span>PLANETA UTOPIA</span><b><ruby>冒険者証<rt>ぼうけんしゃしょう</rt></ruby></b><span class="c-lv" id="cLv"></span></header>
             <div class="c-body">
               <div class="c-photo"><svg id="cardAvatar" viewBox="0 0 240 300" role="img" aria-label="Foto do avatar"></svg></div>
               <dl class="c-data">
-                <div><dt><span data-ro="namae"><ruby>名前<rt>なまえ</rt></ruby></span> · NOME</dt><dd id="cName"></dd></div>
-                <div><dt><span data-ro="nenrei"><ruby>年齢<rt>ねんれい</rt></ruby></span> · IDADE</dt><dd id="cAge"></dd></div>
-                <div><dt><span data-ro="shōgō"><ruby>称号<rt>しょうごう</rt></ruby></span> · TÍTULO</dt><dd id="cTitle"></dd></div>
-                <div><dt><span data-ro="tokuchō"><ruby>特徴<rt>とくちょう</rt></ruby></span> · CARACTERÍSTICAS</dt><dd><ul id="cFeat"></ul></dd></div>
+                <div id="cdNome" class="c-tt" tabindex="0"><dt><span data-ro="namae"><ruby>名前<rt>なまえ</rt></ruby></span> <span class="c-pt">· NOME</span></dt><dd id="cName"></dd></div>
+                <div id="cdIdade" class="c-tt" tabindex="0"><dt><span data-ro="nenrei"><ruby>年齢<rt>ねんれい</rt></ruby></span> <span class="c-pt">· IDADE</span></dt><dd id="cAge"></dd></div>
+                <div id="cdTitulo" class="c-tt" tabindex="0"><dt><span data-ro="shōgō"><ruby>称号<rt>しょうごう</rt></ruby></span> <span class="c-pt">· TÍTULO</span></dt><dd id="cTitle"></dd></div>
+                <div id="cdFeat" class="c-tt"><dt><span data-ro="tokuchō"><ruby>特徴<rt>とくちょう</rt></ruby></span> <span class="c-pt">· CARACTERÍSTICAS</span></dt><dd><ul id="cFeat"></ul></dd></div>
               </dl>
             </div>
             <dl class="c-intro" style="margin-block:0"><dt><span data-ro="jikoshōkai"><ruby>自己紹介<rt>じこしょうかい</rt></ruby></span></dt><dd style="margin:0"><p id="cIntro"></p><p class="c-ro ro" id="cIntroRo"></p><p class="c-tr" id="cIntroTr"></p></dd></dl>
             <footer class="c-foot">
-              <div class="qr" id="qr" title="Abre o Planeta Utopia"></div>
+              <div class="qr" id="qr" title="QR: abre o seu caderno de palavras"></div>
               <div class="c-meta">
-                <span class="qr-note">QR: abre o seu <ruby>単語帳<rt>たんごちょう</rt></ruby> (Minhas palavras)</span>
+                
               <span><span data-ro="hakkōbi"><ruby>発行日<rt>はっこうび</rt></ruby></span>: <b id="cDate"></b></span>
                 <span id="cXp"></span>
                 <div class="bar"><i id="cBar"></i></div>
@@ -461,9 +600,11 @@ h1{font-size:clamp(24px,4vw,30px)}
 
 
 
+  <div class="modos pronto-bar so-edit"><button class="btn primary" type="button" data-modo="cart">✓ Pronto · ver carteirinha</button></div>
+
   <section class="caderno">
     <header>
-      <h2>Minhas palavras <span data-ro="tangochō"><ruby>単語帳<rt>たんごちょう</rt></ruby></span></h2>
+      <h2>Para salvar no caderno</h2>
       <button class="btn primary" id="chStart" type="button">Desafio de ouvido · +15 XP</button>
     </header>
     <div class="chips" id="chips"></div>
@@ -471,6 +612,7 @@ h1{font-size:clamp(24px,4vw,30px)}
     <p class="note" id="voiceNote">Áudio: por enquanto, a voz japonesa do próprio aparelho.</p>
   </section>
 </div>
+<details class="sobre-vozes"><summary>ⓘ Sobre as vozes</summary><p id="sobreVozesTxt">Vozes sintéticas. Aos poucos, as gravações da professora vão substituindo.</p></details>
 <div class="lv-toast" id="lvToast" role="status" hidden></div>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
@@ -509,27 +651,27 @@ function sentences(){
   const ageTip=ag.why||(WORDS[ag.word||'sai']&&WORDS[ag.word||'sai'].tip)||'';
   const clothTip=[WORDS[cl.id]&&WORDS[cl.id].tip, WORDS[cc.id]&&WORDS[cc.id].tip].filter(Boolean).join('<br>');
   const out=[
-    {cat:'<ruby>年齢<rt>ねんれい</rt></ruby> · Idade',jp:`わたしは ${ag.kana}です。`,pt:`Tenho ${S.age} anos.`,en:`I'm ${S.age} years old.`,tip:ageTip},
-    {cat:'<ruby>肌<rt>はだ</rt></ruby> · Pele',jp:`はだの いろは ${sk.kana}です。`,pt:sk.ptSay,en:sk.en?`My skin is ${sk.en}.`:'',tip:WORDS[sk.id]?.tip||''}
+    {k:'age',cat:'<ruby>年齢<rt>ねんれい</rt></ruby> · Idade',jp:`わたしは ${ag.kana}です。`,pt:`Tenho ${S.age} anos.`,en:`I'm ${S.age} years old.`,tip:ageTip},
+    {k:'skin',cat:'<ruby>肌<rt>はだ</rt></ruby> · Pele',jp:`はだの いろは ${sk.kana}です。`,pt:sk.ptSay,en:sk.en?`My skin is ${sk.en}.`:'',tip:WORDS[sk.id]?.tip||''}
   ];
   if(!S.acc.includes('hijabu')) out.push(
-    {cat:'<ruby>髪型<rt>かみがた</rt></ruby> · Cabelo',jp:`かみは ${hs.kana}です。`,pt:hs.ptSay,en:hs.enSay||'',tip:WORDS[hs.id]?.tip||''},
-    {cat:'<ruby>髪の色<rt>かみのいろ</rt></ruby> · Cor do cabelo',jp:`かみの いろは ${hc.kana}です。`,pt:`A cor do cabelo é ${hc.pt}.`,en:hc.en?`My hair is ${hc.en}.`:'',tip:WORDS[hc.id]?.tip||''}
+    {k:'hair',cat:'<ruby>髪型<rt>かみがた</rt></ruby> · Cabelo',jp:`かみは ${hs.kana}です。`,pt:hs.ptSay,en:hs.enSay||'',tip:WORDS[hs.id]?.tip||''},
+    {k:'hairColor',cat:'<ruby>髪の色<rt>かみのいろ</rt></ruby> · Cor do cabelo',jp:`かみの いろは ${hc.kana}です。`,pt:`A cor do cabelo é ${hc.pt}.`,en:hc.en?`My hair is ${hc.en}.`:'',tip:WORDS[hc.id]?.tip||''}
   );
   out.push(
-    {cat:'<ruby>服<rt>ふく</rt></ruby> · Roupa',jp:`${cc.mod} ${cl.kana}を きています。`,pt:`Estou vestindo ${cl.pt} (${cc.pt}).`,en:cc.en&&cl.en?`I'm wearing a ${cc.en} ${cl.en}.`:'',tip:clothTip},
-    {cat:'<ruby>表情<rt>ひょうじょう</rt></ruby> · Expressão',jp:fa.say,pt:fa.ptSay,en:fa.enSay||'',tip:WORDS[fa.id]?.tip||''}
+    {k:'clothes',cat:'<ruby>服<rt>ふく</rt></ruby> · Roupa',jp:`${cc.mod} ${cl.kana}を きています。`,pt:`Estou vestindo ${cl.pt} (${cc.pt}).`,en:cc.en&&cl.en?`I'm wearing a ${cc.en} ${cl.en}.`:'',tip:clothTip},
+    {k:'face',cat:'<ruby>表情<rt>ひょうじょう</rt></ruby> · Expressão',jp:fa.say,pt:fa.ptSay,en:fa.enSay||'',tip:WORDS[fa.id]?.tip||''}
   );
-  S.acc.forEach(id=>{const a=find(ACC,id); if(a.say) out.push({cat:'<ruby>小物<rt>こもの</rt></ruby> · Acessórios',jp:a.say,pt:a.ptSay,en:a.enSay||'',tip:WORDS[a.id]?.tip||''});});
-  S.traits.forEach(id=>{const t=find(TRAITS,id); out.push({cat:'<ruby>特徴<rt>とくちょう</rt></ruby> · Do seu jeito',jp:t.say,pt:t.ptSay,en:t.enSay||'',tip:WORDS[t.id]?.tip||''});});
-  out.push({cat:'<ruby>背景<rt>はいけい</rt></ruby> · Cenário',jp:bg.say,pt:bg.ptSay,en:bg.enSay||'',tip:WORDS[bg.id]?.tip||''});
+  S.acc.forEach(id=>{const a=find(ACC,id); if(a.say) out.push({k:'acc',o:id,cat:'<ruby>小物<rt>こもの</rt></ruby> · Acessórios',jp:a.say,pt:a.ptSay,en:a.enSay||'',tip:WORDS[a.id]?.tip||''});});
+  S.traits.forEach(id=>{const t=find(TRAITS,id); out.push({k:'traits',o:id,cat:'<ruby>特徴<rt>とくちょう</rt></ruby> · Do seu jeito',jp:t.say,pt:t.ptSay,en:t.enSay||'',tip:WORDS[t.id]?.tip||''});});
+  out.push({k:'bg',cat:'<ruby>背景<rt>はいけい</rt></ruby> · Cenário',jp:bg.say,pt:bg.ptSay,en:bg.enSay||'',tip:WORDS[bg.id]?.tip||''});
   return out;
 }
 function updateHint(){
   const h=$('avatarHint'), card=$('avatarCard');
   if(!h||!card) return;
   if(card.classList.contains('is-speaking')) h.textContent='🔊 Falando…';
-  else if(speechOpen) h.textContent='💬 Próxima frase';
+  
   else h.textContent='💬 Toque para falar';
 }
 function stopSpeakUI(){
@@ -571,9 +713,24 @@ function speakCard(text,isAll){
   },120);
   speakTimer=setTimeout(stopSpeakUI, Math.max(fallbackMs, isAll?30000:12000));
 }
+const TOP_EMO={'Idade':'🎂','Pele':'🎨','Cabelo':'💇','Cor do cabelo':'🖌️','Roupa':'👕','Expressão':'😊','Acessórios':'🎀','Do seu jeito':'✨','Cenário':'🏞️'};
+function renderTopicos(list){
+  const vistos={}, bts=list.map((l,i)=>{ const nome=(l.cat.split('·').pop()||'').trim(); vistos[nome]=(vistos[nome]||0)+1;
+    const rot=nome+(vistos[nome]>1?' '+vistos[nome]:'');
+    return `<button type="button" class="top-bt" data-t="${i}" aria-pressed="${speechOpen&&i===speechIdx}"><i aria-hidden="true">${TOP_EMO[nome]||'💬'}</i>${rot}</button>`; });
+  const estreito=$('topL').closest('.avatar-wrap').clientWidth<500, meio=estreito?bts.length:Math.ceil(bts.length/2);
+  $('topL').innerHTML=bts.slice(0,meio).join(''); $('topR').innerHTML=bts.slice(meio).join('');
+}
+function avisaFrase(){ const pop=$('speechPop'); if(!speechOpen||!pop) return; const r=pop.getBoundingClientRect();
+  if(r.bottom>0&&r.top<innerHeight) return; const l=sentences()[speechIdx]; if(!l) return;
+  let t=$('frToast'); if(!t){ t=document.createElement('div'); t.id='frToast'; t.className='lv-toast'; t.setAttribute('role','status'); document.body.appendChild(t); }
+  t.innerHTML=`<span lang="ja">${l.jp}</span><br><small style="opacity:.8;font-weight:500">${l.pt}</small>`; t.hidden=false; clearTimeout(t._h); t._h=setTimeout(()=>t.hidden=true,3200); }
+function idxTopico(k,o){ const l=sentences(); let i=l.findIndex(x=>x.k===k&&(!o||x.o===o)); if(i<0) i=l.findIndex(x=>x.k===k); return i; }
+function abreTopico(k,o){ const i=idxTopico(k,o); if(i<0) return false; speechIdx=i; speechOpen=true; tipOpen=false; return true; }
 function renderSpeech(){
   const list=sentences();
   if(!list.length) return;
+  renderTopicos(list);
   if(speechIdx>=list.length) speechIdx=list.length-1;
   if(speechIdx<0) speechIdx=0;
   const cur=list[speechIdx];
@@ -612,20 +769,23 @@ function stepSpeech(delta){
 }
 
 /* ---------- estúdio ---------- */
+const AVANC=['acc','traits','bg']; let maisOp=false;
 function renderTabs(){
-  $('tabs').innerHTML=CATS.map(c=>{const n=c.opts.filter(o=>state.learned[o.id]).length;
+  if(AVANC.includes(state.cat)) maisOp=true;
+  $('tabs').innerHTML=CATS.filter(c=>maisOp||!AVANC.includes(c.key)).map(c=>{const n=c.opts.filter(o=>state.learned[o.id]).length;
     return `<button class="tab" role="tab" type="button" data-cat="${c.key}" aria-selected="${state.cat===c.key}">
-      <span class="j">${ruby(c)}</span><span class="ro">${kana2ro(c.kana)}</span><span class="p">${c.pt} · <i lang="en">${c.en||''}</i></span><span class="count">${n}/${c.opts.length}</span></button>`}).join('');
+      <span class="j">${ruby(c)}</span><span class="p">${c.pt}</span>${n>=c.opts.length?'<span class="count" aria-label="completo">✓</span>':`<span class="count">${n}/${c.opts.length}</span>`}</button>`}).join('')+(maisOp?'':'<button class="tab tab-mais" type="button" data-mais="1"><span class="j">＋</span><span class="p">mais opções</span></button>');
 }
 function renderOpts(){
   const cat=CATS.find(c=>c.key===state.cat);
   $('multiNote').hidden=!cat.multi;
   $('opts').innerHTML=cat.opts.map(o=>`<button class="opt" type="button" data-id="${o.id}" aria-pressed="${isSel(cat,o.id)}">
-     ${state.learned[o.id]?'<span class="done" title="Aprendida"></span>':`<span class="badge">+${WORD_XP}</span>`}
+     ${state.learned[o.id]?'':`<span class="badge">+${WORD_XP}</span>`}
      ${cat.color?`<span class="sw" style="background:${o.hex}"></span>`:''}
      <span class="j">${ruby(o)}</span><span class="ro">${o.ro}</span><span class="p">${o.pt}</span><span class="p en" lang="en">${o.en||''}</span></button>`).join('');
 }
 function renderWord(animate){
+  { const c=CATS.find(x=>x.key===state.cat); if(c&&!c.multi){ const v=state.sel[c.key]; if(v&&WORDS[v]&&c.opts.some(o=>o.id===state.focus)&&state.focus!==v) state.focus=v; } }
   const w=WORDS[state.focus]||HAIR[0];
   const kana=[...w.kana].map((ch,i)=>`<span style="animation-delay:${i*60}ms">${ch}</span>`).join('');
   $('word').className='word'+(animate?' anim':'');
@@ -649,7 +809,7 @@ function renderXP(){ renderPlanet();
 }
 function renderChips(){
   const ids=Object.keys(state.learned);
-  $('chips').innerHTML=ids.length?ids.map(id=>{const w=WORDS[id];return `<button class="chip" type="button" data-id="${id}">${ruby(w)} <span class="ro">${w.ro}</span><small>${w.pt} · <i lang="en">${w.en||''}</i></small></button>`}).join('')
+  $('chips').innerHTML=ids.length?ids.map(id=>{const w=WORDS[id];return `<span class="chipw"><button class="chip" type="button" data-id="${id}">${ruby(w)} <small>${w.pt}</small></button><button class="chip-cad" type="button" data-cad="${id}" title="Salvar no caderno" aria-label="Salvar ${w.jp} no caderno">＋ caderno</button></span>`}).join('')
     :'<p class="empty">Toque nas opções do ateliê. Cada palavra nova entra aqui e vale +5 XP.</p>';
 }
 function renderSkins(){
@@ -674,17 +834,20 @@ function renderCard(){
   const S=state.sel,p=state.profile;
   $('cLv').textContent='★ Lv. '+g.level;
   const nm=(p.kata||'').trim(), lat=(p.name||'').trim();
-  $('cName').innerHTML=nm||lat?esc(nm||lat)+(nm&&lat?`<small>${esc(lat)}</small>`:''):'<small>escreva seu nome ao lado</small>';
+  $('cdNome').dataset.tr=(lat&&nm&&lat!==nm?'Nome: '+lat:'Nome');
+  $('cName').innerHTML=nm||lat?esc(nm||lat)+(nm&&lat?`<small>${esc(lat)}</small>`:''):'<span class="c-vazio">Sem nome ainda — toque aqui</span>';
   $('cAge').innerHTML=`<ruby>${S.age}歳<rt>${ageInfo(S.age).kana}</rt></ruby><span class="ro">${kana2ro(ageInfo(S.age).kana)}</span>`;
+  $('cdIdade').dataset.tr='Idade: '+S.age+' anos · age '+S.age;
+  { const t=AV.title(g.level); $('cdTitulo').dataset.tr='Título: '+t[2]+(t[3]?' · '+t[3]:''); }
   $('cTitle').innerHTML=`${AV.titleHTML(g.level)} <span class="ro">${kana2ro(AV.title(g.level)[1])}</span><small>${AV.title(g.level)[2]}</small>`;
-  const f=[];
-  if(!S.acc.includes('hijabu')) f.push(`かみ: ${find(HAIR,S.hair).kana}・${find(COLORS,S.hairColor).kana}`);
-  f.push(`${find(COLORS,S.clothColor).mod} ${find(CLOTHES,S.clothes).kana}`);
-  S.acc.forEach(id=>f.push(find(ACC,id).kana)); S.traits.forEach(id=>f.push(find(TRAITS,id).kana));
-  $('cFeat').innerHTML=f.map(x=>`<li>${x} <span class="ro">${kana2ro(x.replace(/[:・]/g,' '))}</span></li>`).join('');
+  const f=[],ft=[];
+  if(!S.acc.includes('hijabu')){ f.push(`かみ: ${find(HAIR,S.hair).kana}・${find(COLORS,S.hairColor).kana}`); ft.push(`Cabelo: ${find(HAIR,S.hair).pt}, ${find(COLORS,S.hairColor).pt}`); }
+  f.push(`${find(COLORS,S.clothColor).mod} ${find(CLOTHES,S.clothes).kana}`); ft.push(`${find(CLOTHES,S.clothes).pt} (${find(COLORS,S.clothColor).pt})`);
+  S.acc.forEach(id=>{ f.push(find(ACC,id).kana); ft.push(find(ACC,id).pt); }); S.traits.forEach(id=>{ f.push(find(TRAITS,id).kana); ft.push(find(TRAITS,id).pt); });
+  $('cFeat').innerHTML=f.map((x,i)=>`<li class="c-feat-i" tabindex="0" data-tr="${esc(ft[i]||'')}">${x} <span class="ro">${kana2ro(x.replace(/[:・]/g,' '))}</span></li>`).join('');
   $('cIntro').textContent=introText(); { const nm=displayName(); $('cIntroRo').textContent=nm?kana2ro(introText().replace(nm,'＠')).replace('＠',nm):kana2ro(introText()).replace('＿＿＿','___'); } $('cIntroTr').innerHTML=introTr();
   const d=new Date(); $('cDate').innerHTML=dateJa(d);
-    $('cXp').innerHTML=`EXP <b>${g.xp}/${g.maxXp}</b> · ${Object.keys(state.learned).length} palavras`;
+    $('cXp').innerHTML=`EXP <b>${g.xp}/${g.maxXp}</b> · ${Object.keys(state.learned).length}<ruby>語<rt>ご</rt></ruby>`;
   $('cBar').style.width=(g.xp/g.maxXp*100)+'%';
   updateQR();
 }
@@ -696,7 +859,8 @@ function renderAvatar(changed){ $('avatar').innerHTML=AV.markup(state.sel,{chang
 let qr=null, lastQR='';
 function updateQR(){ const url=cadernoURL({name:displayName(),learned:state.learned,sel:state.sel}); if(url===lastQR) return; lastQR=url;
   try{ if(!qr) qr=new QRCode($('qr'),{text:url,width:160,height:160,colorDark:'#3a2b38',colorLight:'#ffffff',correctLevel:QRCode.CorrectLevel.L}); else qr.makeCode(url); $('qr').title='Abre as suas palavras'; }catch(e){ $('qr').hidden=true; } }
-function applyRomaji(){ document.body.classList.toggle('show-ro',!!state.profile.romaji); const b=$('roToggle'); if(b) b.setAttribute('aria-pressed',!!state.profile.romaji); }
+function applyPt(){ const on=state.profile.pt!==false; document.body.classList.toggle('show-pt',on); const c=$('cfgPt'); if(c) c.checked=on; }
+function applyRomaji(){ applyPt(); document.body.classList.toggle('show-ro',!!state.profile.romaji); const b=$('roToggle'); if(b) b.setAttribute('aria-pressed',!!state.profile.romaji); }
 document.querySelectorAll('[data-ro]').forEach(el=>el.insertAdjacentHTML('beforeend',` <span class="ro">${el.dataset.ro}</span>`));
 if($('roToggle')) $('roToggle').onclick=()=>{ state.profile.romaji=!state.profile.romaji; applyRomaji(); save(); };
 function renderAll(changed,animate){ applyRomaji(); renderCard(); renderProns(); renderAge(); renderAvatar(changed); renderSpeech(); renderTabs(); renderOpts(); renderWord(animate); renderXP(); renderChips(); renderSkins(); save(); }
@@ -707,18 +871,18 @@ function floatXP(el,amount){ const f=document.createElement('span'); f.className
 $('avatarCard').addEventListener('click',()=>{
   const list=sentences();
   if(!list.length) return;
-  if(!speechOpen){
-    speechOpen=true;
-    tipOpen=false;
-  }else{
-    speechIdx=(speechIdx+1)%list.length;
-    tipOpen=false;
-  }
-  renderSpeech();
-  speakCard(list[speechIdx].jp,false);
+  falaAssunto(state.cat);
 });
-$('spPrev').onclick=()=>stepSpeech(-1);
-$('spNext').onclick=()=>stepSpeech(1);
+document.querySelector('.avatar-row').addEventListener('click',e=>{ const b=e.target.closest('.top-bt'); if(!b) return;
+  const list=sentences(), i=+b.dataset.t; if(!list[i]) return;
+  speechIdx=i; speechOpen=true; tipOpen=false;
+  const k=list[i].k, cat=CATS.find(c=>c.key===k);
+  if(cat){ state.cat=k; const v=state.sel[k]; state.focus=cat.multi?(list[i].o||v[0]||cat.opts[0].id):v; renderAll(null,false); } else renderSpeech();
+  speakCard(list[i].jp,false); });
+$('spTroca').onclick=()=>{ const l=sentences()[speechIdx]; if(!l) return;
+  const alvo=l.k==='skin'?$('skins'):l.k==='age'?$('age'):$('tabs');
+  if(CATS.find(c=>c.key===l.k)){ state.cat=l.k; const v=state.sel[l.k]; state.focus=Array.isArray(v)?(l.o||v[0]||CATS.find(c=>c.key===l.k).opts[0].id):v; renderAll(null,false); }
+  alvo&&alvo.scrollIntoView({behavior:'smooth',block:'center'}); };
 $('spReplay').onclick=()=>{ const list=sentences(); if(list[speechIdx]) speakCard(list[speechIdx].jp,false); };
 $('spAll').onclick=()=>{ const list=sentences(); if(list.length) speakCard(list.map(l=>l.jp).join(' '),true); };
 $('spClose').onclick=()=>{ speechOpen=false; tipOpen=false; stopAudio(); renderSpeech(); };
@@ -731,7 +895,7 @@ $('curioToggle').onclick=()=>{
 document.addEventListener('keydown',e=>{
   if(e.key==='Escape'&&speechOpen){ speechOpen=false; tipOpen=false; stopAudio(); renderSpeech(); $('avatarCard').focus(); }
 });
-$('tabs').addEventListener('click',e=>{const b=e.target.closest('.tab'); if(!b) return; state.cat=b.dataset.cat;
+$('tabs').addEventListener('click',e=>{const b=e.target.closest('.tab'); if(!b) return; if(b.dataset.mais){ maisOp=true; renderTabs(); return; } state.cat=b.dataset.cat;
   const cat=CATS.find(c=>c.key===state.cat); const v=state.sel[cat.key]; state.focus=cat.multi?(v[v.length-1]||cat.opts[0].id):v; renderAll(null,true); });
 $('opts').addEventListener('click',e=>{
   const b=e.target.closest('.opt'); if(!b) return; const cat=CATS.find(c=>c.key===state.cat), id=b.dataset.id;
@@ -741,11 +905,12 @@ $('opts').addEventListener('click',e=>{
   state.focus=id;
   const isNew=!state.learned[id]; if(isNew){ state.learned[id]=true; gain(WORD_XP); }
   speak(WORDS[id].kana);
-  renderAll(cat.layer,true);
+  abreTopico(cat.key==='clothColor'?'clothes':cat.key, cat.multi?id:null);
+  renderAll(cat.layer,true); marcaFeito();
   if(isNew){ const nb=$('opts').querySelector(`[data-id="${id}"]`); nb&&floatXP(nb,WORD_XP); }
 });
 $('age').addEventListener('input',e=>{ state.sel.age=+e.target.value; renderAge(); });
-$('age').addEventListener('change',e=>{ state.sel.age=+e.target.value; speak(numKana(state.sel.age)); renderSpeech(); renderCard(); save(); });
+$('age').addEventListener('change',e=>{ state.sel.age=+e.target.value; speak(numKana(state.sel.age)); abreTopico('age'); renderSpeech(); renderCard(); save(); });
 $('sayNum').onclick=()=>speak(numKana(state.sel.age));
 $('sayAge').onclick=()=>{ const a=ageInfo(state.sel.age); speak(a.kana);
   const ids=['sai',...(a.word?[a.word]:[])]; let got=0;
@@ -770,9 +935,18 @@ function speakIntro(){
 $('sayIntro').onclick=speakIntro;
 $('skins').addEventListener('click',e=>{const b=e.target.closest('.skin'); if(!b) return; state.sel.skin=+b.dataset.skin;
   const w=skinWord(state.sel.skin), isNew=!state.learned[w.id]; if(isNew){state.learned[w.id]=true; gain(WORD_XP);}
-  state.focus=w.id; speak(w.kana); renderAll('skin',true);
+  state.focus=w.id; speak(w.kana); abreTopico('skin'); renderAll('skin',true);
   if(isNew){const nb=$('skins').querySelector(`[data-skin="${state.sel.skin}"]`); nb&&floatXP(nb,WORD_XP);} });
-$('chips').addEventListener('click',e=>{const b=e.target.closest('.chip'); if(b){ speak(WORDS[b.dataset.id].kana); state.focus=b.dataset.id; renderWord(true);} });
+function salvaCaderno(id){
+  const w=WORDS[id]; if(!w) return; const C=window.UniCaderno;
+  const t=w.jp+(w.jp!==w.kana?' ('+w.kana+')':'');
+  if(!C){ avisa('O caderno ainda está carregando, tente de novo.'); return; }
+  if(C.vivas().some(n=>(n.t||'')===t)){ avisa('“'+w.jp+'” já está no seu caderno ✓'); return; }
+  const n=C.nova(); C.atualizar(n.id,{t,x:w.ro+'\n'+w.pt+' · '+(w.en||'')+(w.ptSay?'\n\n'+w.ptSay:'')}); C.agora&&C.agora();
+  avisa('“'+w.jp+'” salvo no caderno ✓');
+}
+function avisa(msg){ let t=$('frToast'); if(!t){ t=document.createElement('div'); t.id='frToast'; t.className='lv-toast'; t.setAttribute('role','status'); document.body.appendChild(t); } t.textContent=msg; t.hidden=false; clearTimeout(t._h); t._h=setTimeout(()=>t.hidden=true,2600); }
+$('chips').addEventListener('click',e=>{const c=e.target.closest('.chip-cad'); if(c){ salvaCaderno(c.dataset.cad); return; } const b=e.target.closest('.chip'); if(b){ speak(WORDS[b.dataset.id].kana); state.focus=b.dataset.id; renderWord(true);} });
 $('dice').onclick=()=>{ CATS.forEach(c=>{ const o=c.opts[Math.floor(Math.random()*c.opts.length)].id;
     state.sel[c.key]=c.multi?(Math.random()<.5||o==='nashi'?[]:[o]):o; });
   state.sel.skin=Math.floor(Math.random()*AV.SKINS.length); {const c=CATS.find(x=>x.key===state.cat),v=state.sel[c.key]; state.focus=c.multi?(v[0]||c.opts[0].id):v;} renderAll('body',true);
@@ -819,6 +993,58 @@ if($('btnPng')) $('btnPng').onclick=async()=>{
   }catch(e){ b.textContent='Não deu certo, tente de novo'; setTimeout(()=>b.textContent=old,2500); b.disabled=false; return; }
   b.textContent=old; b.disabled=false;
 };
+
+/* ===== telas: carteirinha · editar · treinar ===== */
+const TEMO={'Idade':'🎂','Pele':'🎨','Cabelo':'💇','Cor do cabelo':'🖌️','Roupa':'👕','Expressão':'😊','Acessórios':'🎀','Do seu jeito':'✨','Cenário':'🏞️'};
+let feito=(()=>{ try{ return localStorage.getItem('uniAtelieFeito')==='1'; }catch(e){ return false; } })();
+if(!feito && (Object.keys(state.learned).length || state.profile.name)) feito=true;
+function marcaFeito(){ if(feito) return; feito=true; try{ localStorage.setItem('uniAtelieFeito','1'); }catch(e){} document.body.classList.remove('novo'); }
+let trI=0,trVis=false,trVisto=new Set();
+function renderTreino(){
+  const L=sentences(); if(trI>=L.length) trI=0; const l=L[trI]; trVisto.add(trI);
+  $('trCat').textContent=(TEMO[(l.cat.split('·').pop()||'').trim()]||'💬')+' '+(l.cat.split('·').pop()||'').trim();
+  $('trJp').textContent=l.jp; $('trRo').textContent=kana2ro(l.jp); $('trPt').textContent=l.pt;
+  $('trPt').hidden=!trVis; $('trVer').textContent=trVis?'🙈 Esconder tradução':'👁 Ver tradução';
+  $('trN').textContent=(trI+1)+' / '+L.length;
+  $('trProg').innerHTML=L.map((_,i)=>`<i class="${i===trI?'on':trVisto.has(i)?'ok':''}"></i>`).join('');
+  $('trAnt').disabled=trI===0; const fim=trI===L.length-1; $('trProx').textContent=fim?'✓ Terminei · ver carteirinha':'Próxima →'; $('trProx').classList.toggle('primary',fim);
+}
+const trOuve=()=>speak(sentences()[trI].jp);
+$('trJp').onclick=$('trOuvir').onclick=trOuve;
+$('trVer').onclick=()=>{ trVis=!trVis; renderTreino(); };
+$('trAnt').onclick=()=>{ if(trI>0){ trI--; renderTreino(); } };
+$('trProx').onclick=()=>{ if(trI<sentences().length-1){ trI++; renderTreino(); trOuve(); } else { const hoje=new Date().toISOString().slice(0,10); let msg='';
+  if(g.treinoDia!==hoje){ g.treinoDia=hoje; gain(10); save(); msg='Treino completo! +10 XP ✓'; } else msg='Treino completo ✓';
+  trI=0; trVisto=new Set(); modo('cart'); avisa(msg); } };
+$('trTodas').onclick=()=>speak(sentences().map(l=>l.jp).join(' '));
+(function(){ const f=document.querySelector('.passe-form'); if(f){ f.classList.add('nome-box'); $('tabs').parentNode.insertBefore(f,$('tabs')); } })();
+if(window.AUDIO_CREDITO) $('sobreVozesTxt').textContent='Vozes sintéticas: '+window.AUDIO_CREDITO+'. Aos poucos, as gravações da professora vão substituindo.';
+$('cfgPt').onchange=e=>{ state.profile.pt=e.target.checked; applyPt(); save(); if(!e.target.checked) dicaPt(true); };
+function dicaPt(force){ try{ if(!force&&localStorage.getItem('uniDicaPt')) return; localStorage.setItem('uniDicaPt','1'); }catch(e){} avisa('Toque nos campos da carteirinha para ver a tradução.'); }
+(function(){ const b=$('cfgBtn'),pop=$('cfgPop'),r=$('cfgVel'),o=$('cfgVelO');
+  const rot=v=>v===1?'normal':'×'+v.toFixed(2).replace(/0$/,'');
+  function ler(){ const v=(window.UniVel&&UniVel.get())||1; r.value=v; o.textContent=rot(+v); }
+  b.onclick=()=>{ const ab=pop.hidden; pop.hidden=!ab; b.setAttribute('aria-expanded',ab); if(ab) ler(); };
+  r.oninput=()=>{ if(window.UniVel) UniVel.set(+r.value); o.textContent=rot(+r.value); };
+  document.addEventListener('click',e=>{ if(!pop.hidden&&!e.target.closest('.cfg-wrap')){ pop.hidden=true; b.setAttribute('aria-expanded','false'); } }); })();
+$('cName').addEventListener('click',()=>{ modo('edit'); setTimeout(()=>{ const i=$('pName'); if(i){ i.scrollIntoView({block:'center'}); i.focus(); } },60); });
+document.querySelector('.c-photo').addEventListener('click',()=>$('sayIntro').click());
+function modo(m,semHist){
+  document.body.classList.remove('m-cart','m-edit','m-treino'); document.body.classList.add('m-'+m);
+  if(m==='edit') marcaFeito();
+  if(m==='treino') renderTreino();
+  if(m==='cart') renderCard();
+  if(!semHist){ const h=m==='edit'?'#editar':m==='treino'?'#treinar':' '; history.pushState(null,'',h.trim()||location.pathname+location.search); }
+  window.scrollTo({top:0});
+}
+document.addEventListener('click',e=>{ const b=e.target.closest('[data-modo]'); if(b) modo(b.dataset.modo); });
+const modoDoHash=()=>location.hash==='#editar'?'edit':location.hash==='#treinar'?'treino':'cart';
+window.addEventListener('popstate',()=>modo(modoDoHash(),true));
+if(!feito) document.body.classList.add('novo');
+modo(modoDoHash(),true);
+/* nas abas do editor: tocar na aba fala a frase daquele assunto; tocar no avatar também */
+function falaAssunto(k){ const i=idxTopico(k==='clothColor'?'clothes':k); const l=sentences()[i]; if(l) speakCard(l.jp,false); }
+$('tabs').addEventListener('click',e=>{ const b=e.target.closest('.tab'); if(b&&!b.dataset.mais) setTimeout(()=>falaAssunto(state.cat),0); });
 </script>
 <script defer src="/caderno-flutuante.js?v=21"></script>
 </body>
