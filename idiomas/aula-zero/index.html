@@ -587,7 +587,7 @@ const CHAVES=[
   agua:{say:'これはなんですか。おにぎりです',t:['これは',['なん','k'],'ですか。おにぎり',['です','k']],ro:'kore wa nan desu ka? onigiri desu',pt:'O que é isto? É um onigiri.',g:[['これ'],['は','わ'],['なん','なに','何'],['ですか'],['おにぎり'],['です']]},
   fogo:{pedido:'Você pegou um objeto e não sabe o que é. Pergunte e responda: o que é isto? É o bilhete.',say:'これはなんですか。きっぷです',t:['これは',['なん','k'],'ですか。きっぷ',['です','k']],ro:'kore wa nan desu ka? kippu desu',pt:'O que é isto? É o bilhete.',g:[['これ'],['は','わ'],['なん','なに','何'],['ですか'],['きっぷ','切符'],['です']]},
   terra:{pedido:'Pergunte com ですか ou ますか.',itens:['onigiri','kippu','mizu','nori','iki','iki2'],suf:{_:['ですか','ますか']},exemplo:'これはなんですか',exemploRo:'kore wa nan desu ka?',key:'か'},
-  ganho:'Agora você sabe perguntar. As 5 chaves estão acesas.',dia:'Com か você pergunta, com です ou com ます. É a chave que abre as conversas.'}
+  ganho:'Agora você sabe perguntar. As 5 chaves estão desbloqueadas.',dia:'Com か você pergunta, com です ou com ます. É a chave que abre as conversas.'}
 ];
 
 /* ---------- estado ---------- */
@@ -821,9 +821,9 @@ function atualizaToque(novo){
 }
 function telaChegada(){
   painel.innerHTML=`<span class="elem ganho"><i></i>Chegada</span>
-   <h2>${S.acesas.length?S.acesas.length+' de 5 chaves acesas.':'Cinco chaves apagadas.'}</h2>
+   <h2>${S.acesas.length?S.acesas.length+' de 5 chaves desbloqueadas.':'Desbloqueia 5 chaves.'}</h2>
    <p>Em 15 minutos você aprende a afirmar, negar e perguntar em japonês.</p>
-   <div class="acoes"><button class="btn pri" type="button" id="go">${S.acesas.length&&S.acesas.length<5?'Continuar →':'Acender a primeira chave →'}</button></div>`;
+   <div class="acoes"><button class="btn pri" type="button" id="go">${S.acesas.length&&S.acesas.length<5?'Continuar →':'Desbloquear a primeira chave →'}</button></div>`;
   $('go').onclick=()=>{fala('とうきょうです');S.k=S.primeiraApagada?S.primeiraApagada():0;vai('agua');};
 }
 
@@ -857,7 +857,7 @@ function anotaNoCaderno(){
 }
 function telaFim(){
   painel.innerHTML=`<div class="fim-bloco"><div class="grande" aria-hidden="true">🗝️🗝️🗝️🗝️🗝️</div>
-   <span class="elem ganho"><i></i>Ganho</span><h2>As 5 chaves estão acesas.</h2>
+   <span class="elem ganho"><i></i>Ganho</span><h2>As 5 chaves estão desbloqueadas.</h2>
    <p>Veja o que você já consegue dizer no Japão. Cada frase abaixo é sua.</p>
    <ul class="fecho-lista">${CHAVES.map(k=>`<li><span class="jpl" lang="ja">${S.ditas[k.n]||k.terra.exemplo}</span><small>${k.jp} · ${k.dia}</small></li>`).join('')}</ul>
    <p>No primeiro mapa, o Aeroporto, você usa tudo isso de verdade.</p>
@@ -883,7 +883,7 @@ function voaChave(c,fim){
   const el=document.createElement('div');el.className='voo';el.setAttribute('aria-hidden','true');el.textContent=c.ico;
   el.style.left=r.left+'px';el.style.top=r.top+'px';el.style.width=r.width+'px';el.style.height=r.height+'px';
   const leg=document.createElement('div');leg.className='voo-leg';leg.setAttribute('aria-hidden','true');
-  leg.innerHTML='<small>chave '+String(c.n).padStart(2,'0')+' acesa</small>'+c.jp;
+  leg.innerHTML='<small>chave '+String(c.n).padStart(2,'0')+' desbloqueada</small>'+c.jp;
   document.body.appendChild(el);document.body.appendChild(leg);
   const dx=(innerWidth/2)-(r.left+r.width/2), dy=(innerHeight/2-40)-(r.top+r.height/2);
   const esc=Math.min(7,Math.max(4,(innerWidth*0.42)/Math.max(r.width,1)));
@@ -1065,7 +1065,7 @@ function telaGanho(c){
     <p class="dia">${c.dia||''}</p>
     <p class="salva"><button class="btn ghost small" type="button" id="salvaCad">📓 Salvar frase no caderno</button></p>
     <div class="acoes"><button class="btn pri" type="button" id="prox">${ultima?'Perguntas prontas →':'Próxima chave →'}</button></div></div>`;
-  const mostraGC=()=>{ const sc=document.querySelector('.scene'); if(sc){ const old=$('ganhoCena'); if(old) old.remove(); const g=document.createElement('div'); g.id='ganhoCena'; g.setAttribute('aria-hidden','true'); g.innerHTML='<div class="gc-key">'+KEY_SVG+'</div><div class="gc-t"><small>chave '+String(c.n).padStart(2,'0')+' acesa</small>'+c.jp+'</div>'; sc.appendChild(g); } };
+  const mostraGC=()=>{ const sc=document.querySelector('.scene'); if(sc){ const old=$('ganhoCena'); if(old) old.remove(); const g=document.createElement('div'); g.id='ganhoCena'; g.setAttribute('aria-hidden','true'); g.innerHTML='<div class="gc-key">'+KEY_SVG+'</div><div class="gc-t"><small>chave '+String(c.n).padStart(2,'0')+' desbloqueada</small>'+c.jp+'</div>'; sc.appendChild(g); } };
   let acesa=false;
   const acende=()=>{mostraGC();if(acesa)return;acesa=true;if(!S.acesas.includes(c.n)){S.acesas.push(c.n);salva();}
     desenhaBarra();luzCena(c.n);const sl=barra.children[S.k];if(sl&&!ja)sl.classList.add('pop');};
@@ -1127,7 +1127,7 @@ function montaEntrada(c,trata){
     ok(dito,msg){pararMic();est.className='estado ok';est.textContent=msg||'✓ Isso!';ouvi.textContent=dito?'Você disse: '+dito:'';ac.innerHTML='';esc.innerHTML='';ref.innerHTML='';}
   };
   function reforco(){
-    if(S.erros>=2)escrita(usaMic?'O mic não pegou? Digite aqui para acender sua chave:':'Digite aqui para acender sua chave:');
+    if(S.erros>=2)escrita(usaMic?'O mic não pegou? Digite aqui para desbloquear sua chave:':'Digite aqui para desbloquear sua chave:');
     if(S.erros>=3&&!$('btnMolde')){
       const b=document.createElement('button');b.type='button';b.id='btnMolde';b.className='btn molde pisca';b.textContent='ver molde';
       b.onclick=()=>{b.classList.remove('pisca');ref.querySelector('.moldebox')?.remove();const d=document.createElement('div');d.className='moldebox';
@@ -1146,7 +1146,7 @@ function montaEntrada(c,trata){
       estado:m=>{est.className='estado';est.textContent=m;},
       resultado:alts=>{volta();trata(alts,'voz');},
       falha:cod=>{volta();
-        if(falhaDeAmbiente(cod)){if(/not-allowed|service-not-allowed/.test(cod))S.micNegado=true;est.className='estado erro';est.textContent=msgMic(cod)+' Digite a resposta.';ouvi.textContent='';escrita('Digite aqui para acender sua chave:');}
+        if(falhaDeAmbiente(cod)){if(/not-allowed|service-not-allowed/.test(cod))S.micNegado=true;est.className='estado erro';est.textContent=msgMic(cod)+' Digite a resposta.';ouvi.textContent='';escrita('Digite aqui para desbloquear sua chave:');}
         else E.falha('',msgMic(cod));}
     });
   }
@@ -1160,9 +1160,9 @@ function montaEntrada(c,trata){
     if(SR){const volta=document.createElement('button');volta.type='button';volta.className='sem-mic';volta.textContent='Usar microfone';
       volta.onclick=()=>{S.semMic=false;S.micNegado=false;try{localStorage.setItem('uniNovaSemMic','0');}catch(e){}render();};ac.appendChild(volta);}
     else est.textContent='Seu navegador não escuta o microfone. Escreva a resposta.';
-    escrita('Digite aqui para acender sua chave:');
+    escrita('Digite aqui para desbloquear sua chave:');
   }
-  if(S.erros>=2)escrita(usaMic?'O mic não pegou? Digite aqui para acender sua chave:':'Digite aqui para acender sua chave:');
+  if(S.erros>=2)escrita(usaMic?'O mic não pegou? Digite aqui para desbloquear sua chave:':'Digite aqui para desbloquear sua chave:');
   return E;
 }
 
@@ -1328,7 +1328,7 @@ function telaTerra(c){
 }
 
 $('btnRecom').onclick=()=>{
-  if(!confirm('Recomeçar a Aula Zero? Suas chaves acesas serão apagadas.'))return;
+  if(!confirm('Recomeçar a Aula Zero? Suas chaves desbloqueadas voltarão a ficar bloqueadas.'))return;
   S.acesas=[];S.k=0;S.conquista=false;S.visto=new Set();S.toqueOk={};salva();
   try{pararMic();}catch(e){}
   vai('chegada');window.scrollTo(0,0);
