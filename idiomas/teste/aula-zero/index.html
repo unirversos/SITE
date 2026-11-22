@@ -511,7 +511,7 @@ const ITEM={
 const NOMES=['tokyo','densha','kippu','onigiri','mizu','ocha'];
 const html=toks=>toks.map(t=>typeof t==='string'?t:(t.k?`<ruby>${t.k}<rt>${t.f}</rt></ruby>`:(t[1]==='k'?`<b>${t[0]}</b>`:t[0]))).join('');
 const TOK={tokyo:{k:'東京',f:'とうきょう'}};
-const P_WC={x:8,y:26};
+const P_WC={x:9,y:50}; /* na porta, abaixo da plaquinha do banheiro (que fica em ~8%,26%) */
 const K_JUICE={x:37,y:64},K_PAN={x:59,y:64},K_BENTO={x:73,y:64};
 const K_LEITE={x:10,y:53},K_SAKE={x:24,y:53},K_CHA={x:37,y:53},K_SAKANA={x:59,y:53},K_NIKU={x:73,y:53},K_TAMAGO={x:87,y:53};
 const P_SIGN={x:41,y:19},P_TRAIN={x:82,y:50},P_TICKET={x:13,y:89},P_ONI={x:33,y:84},P_TEA={x:65,y:85},P_WATER={x:91,y:79};
