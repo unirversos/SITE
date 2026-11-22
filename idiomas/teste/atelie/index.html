@@ -374,6 +374,10 @@ body.m-edit{padding-bottom:96px}
 .tr-deck>.tr-ver{justify-self:center}
 .tr-ver{border:0;background:none;color:var(--muted);font:inherit;font-size:14px;text-decoration:underline;cursor:pointer}
 .tr-nav{display:flex;justify-content:space-between;align-items:center;gap:10px;color:var(--muted);font-size:14px}
+@media (min-width:701px){.pronto-bar{position:fixed;right:24px;bottom:20px;width:auto}}
+body.m-edit .passe-sec{display:none}
+body.m-cart .c-intro{display:none}
+.nome-box{margin-bottom:12px}
 @media (max-width:700px){.pronto-bar{bottom:calc(70px + env(safe-area-inset-bottom,0px))}}
 
 </style>
@@ -492,7 +496,7 @@ body.m-edit{padding-bottom:96px}
   <section class="passe-sec">
       <div class="passe">
         <div class="passe-form">
-          <h2>Carteirinha de aventureiro<span data-ro="yūtopia bōkenshashō">ユートピア<ruby>冒険者証<rt>ぼうけんしゃしょう</rt></ruby></span></h2>
+          <h2>Quem é você?<span>Seu nome na carteirinha de aventureiro</span></h2>
           <label class="field" for="pName">Seu nome
             <input id="pName" type="text" maxlength="24" autocomplete="off" placeholder="Ex.: Ana, Kenji, Tiago">
           </label>
@@ -789,7 +793,7 @@ function renderCard(){
   const S=state.sel,p=state.profile;
   $('cLv').textContent='★ Lv. '+g.level;
   const nm=(p.kata||'').trim(), lat=(p.name||'').trim();
-  $('cName').innerHTML=nm||lat?esc(nm||lat)+(nm&&lat?`<small>${esc(lat)}</small>`:''):'<small>escreva seu nome ao lado</small>';
+  $('cName').innerHTML=nm||lat?esc(nm||lat)+(nm&&lat?`<small>${esc(lat)}</small>`:''):'<small>toque em ✏️ Editar avatar para escrever seu nome</small>';
   $('cAge').innerHTML=`<ruby>${S.age}歳<rt>${ageInfo(S.age).kana}</rt></ruby><span class="ro">${kana2ro(ageInfo(S.age).kana)}</span>`;
   $('cTitle').innerHTML=`${AV.titleHTML(g.level)} <span class="ro">${kana2ro(AV.title(g.level)[1])}</span><small>${AV.title(g.level)[2]}</small>`;
   const f=[];
@@ -966,6 +970,7 @@ $('trVer').onclick=()=>{ trVis=!trVis; renderTreino(); };
 $('trAnt').onclick=()=>{ if(trI>0){ trI--; renderTreino(); } };
 $('trProx').onclick=()=>{ if(trI<sentences().length-1){ trI++; renderTreino(); trOuve(); } else { trI=0; trVisto=new Set(); modo('cart'); } };
 $('trTodas').onclick=()=>speak(sentences().map(l=>l.jp).join(' '));
+(function(){ const f=document.querySelector('.passe-form'); if(f){ f.classList.add('nome-box'); $('tabs').parentNode.insertBefore(f,$('tabs')); } })();
 function modo(m,semHist){
   document.body.classList.remove('m-cart','m-edit','m-treino'); document.body.classList.add('m-'+m);
   if(m==='edit') marcaFeito();
