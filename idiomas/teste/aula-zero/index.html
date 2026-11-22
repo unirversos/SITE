@@ -622,7 +622,7 @@ function trocaCena(){
 }
 function desenhaHot(){
   trocaCena();
-  { const sc=document.querySelector('.scene'); if(sc) sc.classList.toggle('pb',S.passo==='terra'&&CHAVES[S.k]&&CHAVES[S.k].n===1); }
+  { const sc=document.querySelector('.scene'); if(sc) sc.classList.toggle('pb',S.passo==='terra'&&CHAVES[S.k]&&S.k<3); }
   { const ic=$('imgEstCor'); if(ic) ic.hidden=true; }
   hsBox.innerHTML='';const av=$('avatarNao');if(av){av.hidden=true;av.classList.remove('vai','apresenta');}
   if(S.passo==='chegada'||S.passo==='fim'||S.passo==='final'||S.passo==='prontas'||S.passo==='clipe'||S.passo==='retoma'){$('dicaCena').hidden=true;return;}
@@ -1201,7 +1201,25 @@ function telaFinal(){
 }
 
 /* Terra: 2 frases completas, com qualquer palavra, mas 2 palavras diferentes */
+function luzAlvo(h,bt){
+  if(bt) bt.classList.add('pisca');
+  const im=document.getElementById('imgEst'),ic=document.getElementById('imgEstCor');
+  if(ic&&im&&getComputedStyle(im).display!=='none'){ ic.style.setProperty('--sx',h.x+'%'); ic.style.setProperty('--sy',h.y+'%'); ic.style.setProperty('--rb',(h.r||7)+'cqw'); ic.hidden=false; }
+}
+/* chaves 02–05: todas as coisas da cena piscam, uma por vez, em ordem aleatória; a pessoa diz a frase de cada uma */
+function telaTerraPisca(c){
+  desenhaHot();
+  if(!S.t1||S.t1.k!==c.n){ const ix=c.hot.map((_,i)=>i); for(let i=ix.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[ix[i],ix[j]]=[ix[j],ix[i]];} S.t1={ordem:ix,i:0,k:c.n}; }
+  const T=S.t1,total=T.ordem.length,e=T.ordem[T.i],h=c.hot[e];
+  const alvo={say:h.say,t:h.t,ro:h.ro,pt:h.pt,g:[[h.say]],diag:()=>'Quase. Toque no ♪ que pisca (ou em 🔊 Ouvir) e repita a frase inteira.',
+    depois:()=>{plim(true);T.i++;if(T.i>=total){S.t1=null;S.conquista=true;vai(c.n===3?'quiz':'ganho');}else telaTerra(c);}};
+  telaResposta(c,'terra','Terra · gravar','Uma coisa da cena está piscando. Diga a frase dela.',alvo);
+  const h2=painel.querySelector('h2');
+  if(h2)h2.insertAdjacentHTML('afterend','<div class="contagem" aria-label="'+(T.i+1)+' de '+total+'">'+T.ordem.map((_,j)=>'<i class="'+(j<T.i?'on':'')+'"></i>').join('')+'</div>');
+  luzAlvo(h,hsBox.children[e]);
+}
 function telaTerra(c){
+  if(c.n!==1) return telaTerraPisca(c);
   const t=c.terra,feitos=S.feitos.length;
   desenhaHot();
   /* chave 01: uma coisa da cena pisca por vez (todas, em ordem aleatória); no fim a carteirinha aparece e a pessoa diz o próprio nome + です */
@@ -1210,7 +1228,7 @@ function telaTerra(c){
     if(!S.t1){ const ix=c.hot.map((_,i)=>i); for(let i=ix.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[ix[i],ix[j]]=[ix[j],ix[i]];} S.t1={ordem:ix,i:0}; }
     totalRod=S.t1.ordem.length;
     if(S.t1.i>=totalRod){ faseNome=true; hsBox.innerHTML=''; }
-    else { const e=S.t1.ordem[S.t1.i]; alvoPisca=c.hot[e]; const bt=hsBox.children[e]; if(bt) bt.classList.add('pisca'); const ic=$('imgEstCor'); if(ic&&!document.getElementById('imgEst').hidden){ ic.style.setProperty('--sx',alvoPisca.x+'%'); ic.style.setProperty('--sy',alvoPisca.y+'%'); ic.style.setProperty('--rb',(alvoPisca.r||7)+'cqw'); ic.hidden=false; } }
+    else { const e=S.t1.ordem[S.t1.i]; alvoPisca=c.hot[e]; const bt=hsBox.children[e]; if(bt) bt.classList.add('pisca'); luzAlvo(alvoPisca,null); }
   }
   painel.innerHTML=`<span class="elem terra"><i></i>Chave ${String(c.n).padStart(2,'0')} · Terra · gravar</span>
    <h2>${faseNome?'Agora é a sua vez: apresente-se. Diga seu nome com です.':alvoPisca?'Uma coisa da cena está piscando. Diga o que é, com です.':t.pedido}</h2>
