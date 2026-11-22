@@ -373,8 +373,8 @@ body.m-edit{padding-bottom:96px}
 .tr-card{display:grid;gap:14px;justify-items:center;text-align:center;border:1.5px solid var(--line);background:var(--paper);border-radius:20px;padding:26px 18px}
 .tr-cat{font-size:13px;font-weight:700;color:var(--sage)}
 .tr-jp{border:0;background:none;font:inherit;font-size:clamp(24px,5vw,32px);font-weight:700;line-height:1.5;color:var(--ink);cursor:pointer}
-.tr-info{display:grid;gap:4px;color:var(--muted)}
-.tr-info[hidden]{display:none}
+.tr-info{display:grid;gap:4px;color:var(--muted);font-size:15px}
+.tr-info .ro{display:none;font-size:16px}body.show-ro .tr-info .ro{display:block}
 .tr-ouvir{font-size:17px;padding:12px 26px}
 .tr-deck>.tr-ver{justify-self:center}
 .tr-ver{border:0;background:none;color:var(--muted);font:inherit;font-size:14px;text-decoration:underline;cursor:pointer}
@@ -461,9 +461,9 @@ body.show-pt #cTitle small{display:block}
       <div class="tr-card">
         <span class="tr-cat" id="trCat"></span>
         <button type="button" class="tr-jp" id="trJp" lang="ja" aria-label="Ouvir a frase"></button>
-        <div class="tr-info" id="trInfo" hidden><span class="ro" id="trRo"></span><span id="trPt"></span></div>
+        <div class="tr-info"><span class="ro" id="trRo"></span><span id="trPt" hidden></span></div>
         <button type="button" class="btn primary tr-ouvir" id="trOuvir">🔊 Ouvir e repetir</button>
-        <button type="button" class="tr-ver" id="trVer">👁 Ver romaji e tradução</button>
+        <button type="button" class="tr-ver" id="trVer">👁 Ver tradução</button>
       </div>
       <div class="tr-nav"><button type="button" class="btn" id="trAnt">← Anterior</button><span id="trN"></span><button type="button" class="btn" id="trProx">Próxima →</button></div>
       <button type="button" class="tr-ver" id="trTodas">▶ Ouvir a apresentação completa</button>
@@ -1006,7 +1006,7 @@ function renderTreino(){
   const L=sentences(); if(trI>=L.length) trI=0; const l=L[trI]; trVisto.add(trI);
   $('trCat').textContent=(TEMO[(l.cat.split('·').pop()||'').trim()]||'💬')+' '+(l.cat.split('·').pop()||'').trim();
   $('trJp').textContent=l.jp; $('trRo').textContent=kana2ro(l.jp); $('trPt').textContent=l.pt;
-  $('trInfo').hidden=!trVis; $('trVer').textContent=trVis?'🙈 Esconder romaji e tradução':'👁 Ver romaji e tradução';
+  $('trPt').hidden=!trVis; $('trVer').textContent=trVis?'🙈 Esconder tradução':'👁 Ver tradução';
   $('trN').textContent=(trI+1)+' / '+L.length;
   $('trProg').innerHTML=L.map((_,i)=>`<i class="${i===trI?'on':trVisto.has(i)?'ok':''}"></i>`).join('');
   $('trAnt').disabled=trI===0; const fim=trI===L.length-1; $('trProx').textContent=fim?'✓ Terminei · ver carteirinha':'Próxima →'; $('trProx').classList.toggle('primary',fim);
