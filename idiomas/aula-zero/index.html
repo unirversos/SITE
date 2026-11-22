@@ -1066,9 +1066,7 @@ function telaGanho(c){
   const ultima=S.k===CHAVES.length-1;
   painel.innerHTML=`<div class="fim-bloco">
     <span class="elem ganho"><i></i>Ganho · chave ${String(c.n).padStart(2,'0')}</span>
-    <h2>${c.jp}</h2><p>${c.ganho}</p>
-    ${S.ditas[c.n]?`<p class="voce-disse"><small>Você disse</small><span class="jpl" lang="ja">${S.ditas[c.n]}</span></p>`:''}
-    <p class="dia">${c.dia||''}</p>
+    <h2>${c.jp}</h2><p><b>${c.ganho}</b></p>
     <p class="salva"><button class="btn ghost small" type="button" id="salvaCad">📓 Salvar frase no caderno</button></p>
     <div class="acoes"><button class="btn pri" type="button" id="prox">${ultima?'Perguntas prontas →':'Próxima chave →'}</button></div></div>`;
   const mostraGC=()=>{ const sc=document.querySelector('.scene'); if(sc){ const old=$('ganhoCena'); if(old) old.remove(); const g=document.createElement('div'); g.id='ganhoCena'; g.setAttribute('aria-hidden','true'); g.innerHTML='<div class="gc-key">'+KEY_SVG+'</div><div class="gc-t"><small>chave '+String(c.n).padStart(2,'0')+' ativada</small>'+c.jp+'</div>'; sc.appendChild(g); } };
