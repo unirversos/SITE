@@ -67,6 +67,27 @@ h1{font-family:var(--f-display);font-weight:800;font-size:clamp(30px,5.2vw,46px)
 /* cena */
 .scene{position:relative;background:var(--card);border:1.5px solid var(--line);border-radius:var(--r);overflow:hidden}
 .scene svg{display:block;width:100%;height:auto}
+.scene{container-type:inline-size}
+#placaEst{position:absolute;left:17.3%;top:12.8%;width:26.8%;height:12.9%;z-index:2;display:grid;place-content:center;justify-items:center;text-align:center;background:linear-gradient(180deg,#5b82b3,#4d74a6);border-radius:.6cqw;color:#fff;pointer-events:none;line-height:1.05;box-shadow:inset 0 0 0 .25cqw rgba(255,255,255,.35)}
+#placaEst b{font-size:3.9cqw;font-weight:800;letter-spacing:.3em;margin-right:-.3em;font-family:"Zen Maru Gothic",system-ui,sans-serif}
+#placaEst span{font-size:1.85cqw;font-weight:700;letter-spacing:.2em;text-shadow:0 .1cqw .3cqw rgba(0,20,60,.55)}
+#placaEst i{font-size:1.85cqw;font-weight:700;font-style:normal;letter-spacing:.12em;margin-top:.1cqw;text-shadow:0 .1cqw .3cqw rgba(0,20,60,.55)}
+.scene img.cena-img{display:block;width:100%;height:auto;filter:saturate(var(--sat,1));transition:filter .4s}
+.scene.pb img.cena-img{filter:grayscale(1)}
+@property --spr{syntax:'<length>';inherits:true;initial-value:8cqw}
+.scene img.cena-cor{position:absolute;left:0;top:0;width:100%;height:100%;filter:saturate(1.1);z-index:1;pointer-events:none;
+ -webkit-mask-image:radial-gradient(circle var(--spr) at var(--sx) var(--sy),#000 62%,transparent 100%);mask-image:radial-gradient(circle var(--spr) at var(--sx) var(--sy),#000 62%,transparent 100%);
+ animation:spotR .9s ease-in-out infinite}
+@keyframes spotR{0%,100%{--spr:calc(var(--rb)*.85);opacity:.75}50%{--spr:calc(var(--rb)*1.15);opacity:1}}
+@media (prefers-reduced-motion:reduce){.scene img.cena-cor{animation:none;--spr:var(--rb)}}
+#hs{position:absolute;inset:0;z-index:5;pointer-events:none}
+#hs>*{pointer-events:auto}
+.chave.dica{animation:dicaCh .9s ease-in-out infinite;position:relative;z-index:1}
+@keyframes dicaCh{0%,100%{box-shadow:0 0 0 0 rgba(194,63,94,0);transform:scale(1)}50%{box-shadow:0 0 0 6px rgba(194,63,94,.32);transform:scale(1.05)}}
+@media (prefers-reduced-motion:reduce){.chave.dica{animation:none;outline:3px solid #c23f5e}}
+.nav-ex{display:flex;gap:10px;margin-top:16px}
+.nav-ex .btn{flex:1 1 0;min-width:0;margin:0;justify-content:center;text-align:center}
+.nav-ex:has(.voltaBtn:only-child) .btn{flex:0 1 calc(50% - 5px)}
 .hs{position:absolute;transform:translate(-50%,-50%);width:44px;height:44px;border-radius:50%;border:0;background:rgba(255,255,255,.0);padding:0}
 .hs::before{content:"";position:absolute;inset:6px;border-radius:50%;background:rgba(255,255,255,.92);border:2px solid var(--pink);box-shadow:0 2px 6px rgba(58,43,56,.25)}
 .hs::after{content:"";position:absolute;inset:0;border-radius:50%;border:2px solid var(--pink);opacity:.6;animation:ping 2.2s ease-out infinite}
@@ -146,7 +167,7 @@ h1{font-family:var(--f-display);font-weight:800;font-size:clamp(30px,5.2vw,46px)
 .xitem{position:absolute;top:38%;transform:translate(-50%,-50%);font-size:42px;line-height:1;font-weight:900;color:#d11a3a;text-shadow:0 0 3px #fff,0 0 3px #fff,0 0 6px #fff;pointer-events:none;z-index:2;animation:xpop .35s cubic-bezier(.3,1.6,.5,1)}
 .xitem.quieto{animation:none}
 @keyframes xpop{0%{transform:translate(-50%,-50%) scale(.2);opacity:0}100%{transform:translate(-50%,-50%) scale(1);opacity:1}}
-#avatarNao{position:absolute;left:2%;bottom:2%;width:23%;pointer-events:none;z-index:3}
+#avatarNao{position:absolute;left:41%;bottom:26%;width:18%;pointer-events:none;z-index:3}
 #avatarNao svg{display:block;width:100%;height:auto}
 #avatarNao .balao[hidden]{display:none}
 #avatarNao .bracos{position:absolute;left:8%;right:8%;bottom:-6%;pointer-events:none}#avatarNao .bracos svg{display:block;width:100%}#avatarNao.sim .bracos{display:none}
@@ -157,6 +178,11 @@ h1{font-family:var(--f-display);font-weight:800;font-size:clamp(30px,5.2vw,46px)
 @keyframes nao{0%,100%{transform:rotate(0)}15%{transform:rotate(-14deg)}35%{transform:rotate(14deg)}55%{transform:rotate(-12deg)}75%{transform:rotate(10deg)}}
 @keyframes aparece{from{transform:translateY(12px);opacity:0}to{transform:none;opacity:1}}
 @media (prefers-reduced-motion:reduce){#avatarNao.vai .cabeca,#avatarNao.vai,.xitem{animation:none}}
+#avatarNao.pergunta .bracos{display:none}
+#avatarNao.pergunta .balao{border-color:#3d6fa8;color:#3d6fa8}
+#avatarNao.pergunta.vai .cabeca{animation:duvida .9s ease-in-out}
+@keyframes duvida{0%,100%{transform:rotate(0)}25%{transform:rotate(-12deg)}55%{transform:rotate(9deg)}80%{transform:rotate(-5deg)}}
+@media (prefers-reduced-motion:reduce){#avatarNao.pergunta.vai .cabeca{animation:none}}
 #avatarNao.sim .balao{border-color:#2f8f5b;color:#2f8f5b}
 #avatarNao.sim.vai .cabeca{animation:sim .7s ease-in-out}
 @keyframes sim{0%,100%{transform:translateY(0)}25%{transform:translateY(7px)}50%{transform:translateY(0)}75%{transform:translateY(6px)}}
@@ -197,6 +223,22 @@ body[data-etapa="ar"] .painel{--el:var(--gold)}
 .ro-in{display:none;color:var(--muted);font-weight:500;font-size:.85em}body.ver-ro .ro-in{display:inline}
 .scene.pb svg{filter:grayscale(1) contrast(1.05);transition:filter .4s}
 .scene svg{transition:filter .4s}
+.scene #avatarNao.apresenta{width:24%;left:38%;bottom:22%;animation:piscaFace .9s ease-in-out infinite;border-radius:50%}
+#avatarNao.apresenta .balao{left:70%;top:0;border-color:var(--terra);color:var(--terra);font-size:16px}
+.scene{position:relative}
+#ganhoCena{position:absolute;left:50%;top:48%;transform:translate(-50%,-50%);z-index:6;display:grid;justify-items:center;gap:6px;pointer-events:none;animation:ganhoIn .7s cubic-bezier(.2,1.4,.4,1) both}
+#ganhoCena .gc-key{width:clamp(90px,22%,150px);aspect-ratio:1;filter:drop-shadow(0 0 18px rgba(232,168,32,.8))}
+#ganhoCena .gc-t{background:rgba(255,255,255,.92);border:2px solid #e8a820;border-radius:14px;padding:6px 16px;font-size:clamp(20px,4vw,30px);font-weight:800;text-align:center;color:#3a2b38}
+#ganhoCena .gc-t small{display:block;font-size:12px;font-weight:600;color:#8a6a1c;letter-spacing:.08em;text-transform:uppercase}
+@keyframes ganhoIn{from{opacity:0;transform:translate(-50%,-30%) scale(.5)}to{opacity:1;transform:translate(-50%,-50%) scale(1)}}
+@media (prefers-reduced-motion:reduce){#ganhoCena{animation:none}}
+.nome-card{display:flex;align-items:center;gap:14px;justify-content:center;margin:10px auto;padding:12px 18px;max-width:340px;border:2px solid var(--terra);border-radius:18px;background:#fff;animation:puxa .6s ease-out}
+.nc-av{width:84px;height:84px;border-radius:50%;overflow:hidden;animation:piscaFace .9s ease-in-out infinite}
+.nc-av svg{width:100%;height:100%;display:block}
+.nc-t{font-size:22px;font-weight:700}.nc-t span{color:var(--muted);margin-left:4px;font-weight:500}
+@keyframes puxa{from{transform:translateY(40px);opacity:0}to{transform:none;opacity:1}}
+@keyframes piscaFace{0%,100%{transform:scale(1);box-shadow:0 0 0 0 rgba(194,63,94,0)}50%{transform:scale(1.08);box-shadow:0 0 0 10px rgba(194,63,94,.3)}}
+@media (prefers-reduced-motion:reduce){.nome-card,.nc-av{animation:none}}
 .hs.pisca{animation:piscaHs .8s ease-in-out infinite;z-index:4}
 @keyframes piscaHs{0%,100%{transform:translate(-50%,-50%) scale(1);box-shadow:0 0 0 0 rgba(194,63,94,.0)}50%{transform:translate(-50%,-50%) scale(1.35);box-shadow:0 0 0 12px rgba(194,63,94,.35)}}
 @media (prefers-reduced-motion:reduce){.hs.pisca{animation:none;outline:4px solid #c23f5e}}
@@ -291,6 +333,9 @@ body.ver-ro .ro-svg{paint-order:stroke;stroke:#3a2b38;stroke-width:3px;stroke-li
   <nav class="chaves" id="chaves" aria-label="As cinco chaves"></nav>
 
   <section class="scene" aria-label="Plataforma da estação, vista em primeira pessoa">
+    <img id="imgEst" class="cena-img" src="/idiomas/img/cenas/estacao.webp?v=2" width="1920" height="1080" alt="Você está na plataforma de uma estação em Tóquio. Há uma placa azul, o banheiro, um trem parado e, na sua frente, um bilhete, um onigiri, um chá e uma água.">
+    <img id="imgEstCor" class="cena-cor" src="/idiomas/img/cenas/estacao.webp?v=2" alt="" aria-hidden="true" hidden>
+    <div id="placaEst" aria-hidden="true"><b lang="ja">東京</b><span lang="ja">とうきょう</span><i>Tōkyō · Tokyo</i></div>
     <svg id="svgEst" viewBox="0 0 400 250" role="img" aria-label="Você está na plataforma de uma estação em Tóquio. Há placas com o nome da estação, uma máquina de bebidas e um trem parado. Nas suas mãos, um bilhete, um onigiri, um chá e uma garrafa de água.">
 <g class="fundo"><image href="/idiomas/img/cenas/aulazero.webp" x="-24" y="0" width="448" height="250" preserveAspectRatio="xMidYMid slice"/></g>
 <g data-luz="1"><clipPath id="cl6030"><rect x="60" y="30" width="120" height="130" rx="10"/></clipPath><g clip-path="url(#cl6030)"><image href="/idiomas/img/cenas/aulazero.webp" x="-24" y="0" width="448" height="250" preserveAspectRatio="xMidYMid slice"/></g>
@@ -460,10 +505,10 @@ const ITEM={
 const NOMES=['tokyo','densha','kippu','onigiri','mizu','ocha'];
 const html=toks=>toks.map(t=>typeof t==='string'?t:(t.k?`<ruby>${t.k}<rt>${t.f}</rt></ruby>`:(t[1]==='k'?`<b>${t[0]}</b>`:t[0]))).join('');
 const TOK={tokyo:{k:'東京',f:'とうきょう'}};
-const P_WC={x:8,y:20};
+const P_WC={x:8,y:26};
 const K_JUICE={x:37,y:64},K_PAN={x:59,y:64},K_BENTO={x:73,y:64};
 const K_LEITE={x:10,y:53},K_SAKE={x:24,y:53},K_CHA={x:37,y:53},K_SAKANA={x:59,y:53},K_NIKU={x:73,y:53},K_TAMAGO={x:87,y:53};
-const P_SIGN={x:28,y:30},P_TRAIN={x:88,y:52},P_TICKET={x:12,y:84},P_ONI={x:32,y:87},P_TEA={x:67,y:86},P_WATER={x:83,y:86};
+const P_SIGN={x:41,y:19},P_TRAIN={x:82,y:50},P_TICKET={x:13,y:89},P_ONI={x:33,y:84},P_TEA={x:65,y:85},P_WATER={x:91,y:79};
 const H=(pos,item,say,t,ro,pt,en)=>Object.assign({item,say,t,ro,pt,en},pos);
 
 const CHAVES=[
@@ -487,12 +532,12 @@ const CHAVES=[
   gram:'<b>じゃない</b> é o “não é” do dia a dia. Com <b>です</b> no fim (じゃないです) continua educado.',
   molde:'<em>coisa</em> <b>じゃない</b>',moldeRo:'[coisa] janai',
   hot:[
-   H(P_SIGN,'osaka','おおさかじゃない。とうきょうです',['おおさか',['じゃない','k'],'. ',TOK.tokyo,['です','k']],'Ōsaka janai. Tōkyō desu','Não é Osaka. É Tóquio.',"It's not Osaka. It's Tokyo."),
-   H(P_TRAIN,'basu','バスじゃない。でんしゃです',['バス',['じゃない','k'],'. でんしゃ',['です','k']],'basu janai. densha desu','Não é ônibus. É um trem.',"It's not a bus. It's a train."),
-   H(P_TICKET,'pasu','パスポートじゃない。きっぷです',['パスポート',['じゃない','k'],'. きっぷ',['です','k']],'pasupōto janai. kippu desu','Não é o passaporte. É o bilhete.',"It's not the passport. It's the ticket."),
-   H(P_ONI,'sushi','すしじゃない。おにぎりです',['すし',['じゃない','k'],'. おにぎり',['です','k']],'sushi janai. onigiri desu','Não é sushi. É um onigiri.',"It's not sushi. It's an onigiri.")],
+   Object.assign(H(P_SIGN,'osaka','おおさかじゃない。とうきょうです',['おおさか',['じゃない','k'],'. ',TOK.tokyo,['です','k']],'Ōsaka janai. Tōkyō desu','Não é Osaka. É Tóquio.',"It's not Osaka. It's Tokyo."),{neg:{say:'おおさかじゃない',t:['おおさか',['じゃない','k']],ro:'Ōsaka janai',pt:'Não é Osaka.'}}),
+   Object.assign(H(P_TRAIN,'basu','バスじゃない。でんしゃです',['バス',['じゃない','k'],'. でんしゃ',['です','k']],'basu janai. densha desu','Não é ônibus. É um trem.',"It's not a bus. It's a train."),{neg:{say:'バスじゃない',t:['バス',['じゃない','k']],ro:'basu janai',pt:'Não é ônibus.'}}),
+   Object.assign(H(P_TICKET,'pasu','パスポートじゃない。きっぷです',['パスポート',['じゃない','k'],'. きっぷ',['です','k']],'pasupōto janai. kippu desu','Não é o passaporte. É o bilhete.',"It's not the passport. It's the ticket."),{neg:{say:'パスポートじゃない',t:['パスポート',['じゃない','k']],ro:'pasupōto janai',pt:'Não é o passaporte.'}}),
+   Object.assign(H(P_ONI,'sushi','すしじゃない。おにぎりです',['すし',['じゃない','k'],'. おにぎり',['です','k']],'sushi janai. onigiri desu','Não é sushi. É um onigiri.',"It's not sushi. It's an onigiri."),{neg:{say:'すしじゃない',t:['すし',['じゃない','k']],ro:'sushi janai',pt:'Não é sushi.'}})],
   agua:{say:'パスポートじゃない',t:['パスポート',['じゃない','k']],ro:'pasupōto janai',pt:'Não é o passaporte.',g:[['パスポート'],['じゃない','じゃないです','じゃありません','ではありません']]},
-  fogo:{pedido:'Alguém aponta para o seu onigiri e pergunta: “すし？” (é sushi?). Diga que não é.',say:'すしじゃない',t:['すし',['じゃない','k']],ro:'sushi janai',pt:'Não é sushi.',g:[['すし','寿司'],['じゃない','じゃないです','じゃありません','ではありません']]},
+  fogo:{pedido:'Alguém aponta para o seu onigiri e pergunta: “すし？” (é sushi?). Diga que não é sushi e diga o que é.',say:'すしじゃない。おにぎりです',t:['すし',['じゃない','k'],'。おにぎり',['です','k']],ro:'sushi janai. onigiri desu',pt:'Não é sushi. É um onigiri.',g:[['すし','寿司'],['じゃない','じゃないです','じゃありません','ではありません'],['おにぎり'],['です']]},
   terra:{pedido:'Diga o que NÃO é com じゃない: 1 frase, com a palavra que você quiser.',itens:['osaka','basu','pasu','sushi','mizu','densha'],suf:{_:['じゃない','じゃないです','じゃありません','ではありません']},exemplo:'バスじゃない',exemploRo:'basu janai',key:'じゃない'},
   ganho:'Agora você sabe dizer o que não é.',dia:'Com じゃない você corrige: “não é isso, é aquilo”.'},
 
@@ -514,31 +559,32 @@ const CHAVES=[
  {n:4,jp:'ません',ico:'🙅',
   gram:'<b>ません</b> é o “não” do ます: たべ<b>ます</b> → たべ<b>ません</b>. Útil para dizer o que você <b>não</b> come ou não bebe.',
   molde:'<em>coisa</em> を <em>ação</em> <b>ません</b>',moldeRo:'[coisa] o [ação]-masen',
-  intro:'Você sai da estação e entra no konbini.',
   hot:[
-   H(K_SAKANA,'sakana','さかなをたべません',['さかなを','たべ',['ません','k']],'sakana o tabemasen','Eu não como peixe.','I do not eat fish.'),
-   H(K_NIKU,'niku','にくをたべません',['にくを','たべ',['ません','k']],'niku o tabemasen','Eu não como carne.','I do not eat meat.'),
-   H(K_TAMAGO,'tamago','たまごをたべません',['たまごを','たべ',['ません','k']],'tamago o tabemasen','Eu não como ovo.','I do not eat eggs.'),
-   H(K_LEITE,'gyunyu','ぎゅうにゅうをのみません',['ぎゅうにゅうを','のみ',['ません','k']],'gyūnyū o nomimasen','Eu não bebo leite.','I do not drink milk.'),
-   H(K_SAKE,'sake','おさけをのみません',['おさけを','のみ',['ません','k']],'osake o nomimasen','Eu não bebo álcool.','I do not drink alcohol.'),
-   H(K_CHA,'ocha','おちゃをのみません',['おちゃを','のみ',['ません','k']],'ocha o nomimasen','Eu não bebo chá.','I do not drink tea.')],
-  agua:{say:'さかなをたべません',t:['さかなを','たべ',['ません','k']],ro:'sakana o tabemasen',pt:'Eu não como peixe.',g:[['さかな','魚'],['を'],['たべ','食べ'],['ません']]},
-  fogo:{pedido:'Ela oferece carne. Você não come carne. Diga: eu não como carne.',say:'にくをたべません',t:['にくを','たべ',['ません','k']],ro:'niku o tabemasen',pt:'Eu não como carne.',g:[['にく','肉'],['を'],['たべ','食べ'],['ません']]},
-  terra:{pedido:'Diga o que você NÃO come ou NÃO bebe, com ません. Faça 1 frase sua.',itens:['sakana','niku','tamago','gyunyu','sake','ocha'],suf:{_:['ません']},exemplo:'さかなをたべません',exemploRo:'sakana o tabemasen',key:'ません'},
+   H(P_SIGN,'iki','とうきょうにいきません',[TOK.tokyo,'に','いき',['ません','k']],'Tōkyō ni ikimasen','Eu não vou para Tóquio.','I do not go to Tokyo.'),
+   H(P_TRAIN,'nori','でんしゃにのりません',['でんしゃに','のり',['ません','k']],'densha ni norimasen','Eu não pego o trem.','I do not take the train.'),
+   H(P_ONI,'tabe','おにぎりをたべません',['おにぎりを','たべ',['ません','k']],'onigiri o tabemasen','Eu não como o onigiri.','I do not eat the onigiri.'),
+   H(P_WATER,'nomi','みずをのみません',['みずを','のみ',['ません','k']],'mizu o nomimasen','Eu não bebo água.','I do not drink water.'),
+   H(P_WC,'iki2','トイレにいきません',['トイレに','いき',['ません','k']],'toire ni ikimasen','Eu não vou ao banheiro.','I do not go to the restroom.'),
+   H(P_TICKET,'kai','きっぷをかいません',['きっぷを','かい',['ません','k']],'kippu o kaimasen','Eu não compro o bilhete.','I do not buy the ticket.')],
+  agua:{say:'おにぎりをたべません',t:['おにぎりを','たべ',['ません','k']],ro:'onigiri o tabemasen',pt:'Eu não como o onigiri.',g:[['おにぎり'],['を'],['たべ','食べ'],['ません']]},
+  fogo:{pedido:'Oferecem a água, mas você não quer. Diga: eu não bebo água.',say:'みずをのみません',t:['みずを','のみ',['ません','k']],ro:'mizu o nomimasen',pt:'Eu não bebo água.',g:[['みず','水','おみず','お水'],['を'],['のみ','飲み'],['ません']]},
+  terra:{pedido:'Diga o que você NÃO faz, com ません. Faça 1 frase sua.',itens:['iki','nori','tabe','nomi','iki2','kai'],suf:{_:['ません']},exemplo:'おにぎりをたべません',exemploRo:'onigiri o tabemasen',key:'ません'},
   ganho:'Agora você sabe dizer o que não faz.',dia:'Com ません você diz o que não come nem bebe, e evita um susto no restaurante.'},
 
- {n:5,jp:'ください',ico:'🤲',
-  gram:'Chame com <b>すみません</b>. Depois, <b>を</b> (lido “o”) marca o que você pede e <b>ください</b> é o “por favor, me dê”.',
-  molde:'すみません、<em>coisa</em> <b>を ください</b>',moldeRo:'sumimasen, [coisa] o kudasai',
+ {n:5,jp:'か',ico:'❓',
+  gram:'<b>か</b> no fim da frase vira <b>pergunta</b>, com です ou com ます (a voz sobe no fim; não se escreve “?”). <b>これはなんですか</b> = “o que é isto?”; <em>なん</em> é a palavra da dúvida.',
+  molde:'<em>coisa</em> <b>ですか</b> · <em>ação</em> <b>ますか</b>',moldeRo:'[coisa] desu ka? · [ação]-masu ka?',
   hot:[
-   H(P_ONI,'onigiri','おにぎりをください',['おにぎりを',['ください','k']],'onigiri o kudasai','Um onigiri, por favor.','An onigiri, please.'),
-   H(P_WATER,'mizu','みずをください',['みずを',['ください','k']],'mizu o kudasai','Água, por favor.','Water, please.'),
-   H({x:68,y:76},'ocha','おちゃをください',['おちゃを',['ください','k']],'ocha o kudasai','Chá, por favor.','Tea, please.'),
-   H(K_TAMAGO,'tamago','たまごをください',['たまごを',['ください','k']],'tamago o kudasai','Um ovo, por favor.','An egg, please.')],
-  agua:{say:'すみません、みずをください',t:['すみません、','みずを',['ください','k']],ro:'sumimasen, mizu o kudasai',pt:'Com licença, água por favor.',g:[['すみません'],['みず','水'],['を'],['ください','下さい']]},
-  fogo:{pedido:'A atendente oferece peixe. Você não come peixe. Recuse e peça um onigiri.',say:'さかなをたべません。おにぎりをください',t:['さかなを','たべ',['ません','k'],'。おにぎりを',['ください','k']],ro:'sakana o tabemasen. onigiri o kudasai',pt:'Não como peixe. Um onigiri, por favor.',g:[['さかな','魚'],['を'],['たべ','食べ'],['ません'],['おにぎり'],['を'],['ください','下さい']]},
-  terra:{pedido:'Peça com ください. Pode começar com すみません. Use qualquer palavra que você quiser. Faça 1 pedido seu.',itens:['onigiri','mizu','tamago','ocha'],suf:{_:['をください','を下さい']},exemplo:'おちゃをください',exemploRo:'ocha o kudasai',key:'を ください'},
-  ganho:'Agora você sabe pedir. As 5 chaves estão acesas.',dia:'Com ください você pede. É a chave que abre os balcões.'}
+   Object.assign(H(P_ONI,'onigiri','これはなんですか。おにぎりです',['これは',['なん','k'],'ですか。おにぎり',['です','k']],'kore wa nan desu ka? onigiri desu','O que é isto? É um onigiri.','What is this? It\'s an onigiri.'),{par:1}),
+   Object.assign(H(P_TRAIN,'nori','でんしゃにのりますか',['でんしゃに','のり','ます',['か','k']],'densha ni norimasu ka?','Você pega o trem?','Do you take the train?'),{par:3}),
+   Object.assign(H(P_TICKET,'kippu','これはなんですか。きっぷです',['これは',['なん','k'],'ですか。きっぷ',['です','k']],'kore wa nan desu ka? kippu desu','O que é isto? É o bilhete.','What is this? It\'s the ticket.'),{par:1}),
+   Object.assign(H(P_SIGN,'iki','とうきょうにいきますか',[TOK.tokyo,'に','いき','ます',['か','k']],'Tōkyō ni ikimasu ka?','Você vai para Tóquio?','Do you go to Tokyo?'),{par:3}),
+   Object.assign(H(P_WATER,'mizu','これはなんですか。みずです',['これは',['なん','k'],'ですか。みず',['です','k']],'kore wa nan desu ka? mizu desu','O que é isto? É água.','What is this? It\'s water.'),{par:1}),
+   Object.assign(H(P_WC,'iki2','トイレにいきますか',['トイレに','いき','ます',['か','k']],'toire ni ikimasu ka?','Você vai ao banheiro?','Do you go to the restroom?'),{par:3})],
+  agua:{say:'これはなんですか。おにぎりです',t:['これは',['なん','k'],'ですか。おにぎり',['です','k']],ro:'kore wa nan desu ka? onigiri desu',pt:'O que é isto? É um onigiri.',g:[['これ'],['は','わ'],['なん','なに','何'],['ですか'],['おにぎり'],['です']]},
+  fogo:{pedido:'Você pegou um objeto e não sabe o que é. Pergunte e responda: o que é isto? É o bilhete.',say:'これはなんですか。きっぷです',t:['これは',['なん','k'],'ですか。きっぷ',['です','k']],ro:'kore wa nan desu ka? kippu desu',pt:'O que é isto? É o bilhete.',g:[['これ'],['は','わ'],['なん','なに','何'],['ですか'],['きっぷ','切符'],['です']]},
+  terra:{pedido:'Pergunte com ですか ou ますか.',itens:['onigiri','kippu','mizu','nori','iki','iki2'],suf:{_:['ですか','ますか']},exemplo:'これはなんですか',exemploRo:'kore wa nan desu ka?',key:'か'},
+  ganho:'Agora você sabe perguntar. As 5 chaves estão acesas.',dia:'Com か você pergunta, com です ou com ます. É a chave que abre as conversas.'}
 ];
 
 /* ---------- estado ---------- */
@@ -572,14 +618,14 @@ const ETAPAS=['agua','fogo','terra','ganho'];
 function desenhaBarra(){
   barra.innerHTML=CHAVES.map((c,i)=>{
     const on=S.acesas.includes(c.n),now=(i===S.k&&S.passo!=='chegada'&&S.passo!=='fim'&&S.passo!=='final'&&!on);
-    return `<${LIVRE?'button type="button" data-i="'+i+'"':'div'} class="chave ${on?'on':''} ${now?'now':''}"${LIVRE?' aria-label="Ir para a chave '+c.n+': '+c.jp+'"':''}><span class="ico" aria-hidden="true">${c.ico}</span><span class="jp">${c.jp}</span><span class="ro-bar">${({'です':'desu','じゃない':'janai','ます':'masu','ません':'masen','ください':'kudasai'})[c.jp]||''}</span><small>${String(c.n).padStart(2,'0')}</small></${LIVRE?'button':'div'}>`;
+    return `<${LIVRE?'button type="button" data-i="'+i+'"':'div'} class="chave ${on?'on':''} ${now?'now':''}"${LIVRE?' aria-label="Ir para a chave '+c.n+': '+c.jp+'"':''}><span class="ico" aria-hidden="true">${c.ico}</span><span class="jp">${c.jp}</span><span class="ro-bar">${({'です':'desu','じゃない':'janai','ます':'masu','ません':'masen','か':'ka'})[c.jp]||''}</span><small>${String(c.n).padStart(2,'0')}</small></${LIVRE?'button':'div'}>`;
   }).join('');
 }
 function trocaCena(){
   const pr=S.passo==='prontas'?(PRONTAS[S.p||0]||{}).scene:null;
-  const kon=!pr&&S.passo!=='chegada'&&(S.k>=3||S.passo==='prontas'||S.passo==='final'||S.passo==='fim');
+  const kon=!pr&&S.passo!=='chegada'&&(S.k>=5||S.passo==='prontas'||S.passo==='final'||S.passo==='fim');
   const cl=S.passo==='clipe';
-  const mostra={svgEst:!cl&&!kon&&!pr,svgKon:!cl&&kon,svgWc:!cl&&pr==='wc',svgProd:!cl&&(pr==='wasabi'||pr==='niku'),svgClip:cl};
+  const mostra={imgEst:!cl&&!kon&&!pr,placaEst:!cl&&!kon&&!pr,svgEst:false,svgKon:!cl&&kon,svgWc:!cl&&pr==='wc',svgProd:!cl&&(pr==='wasabi'||pr==='niku'),svgClip:cl};
   if(!cl){const av=$('clAv');if(av)av.hidden=true;}
   for(const id in mostra){const el=$(id);if(el)el.style.display=mostra[id]?'':'none';}
   if(pr==='wasabi'||pr==='niku'){const w=$('pW'),n=$('pN');if(w)w.style.display=pr==='wasabi'?'':'none';if(n)n.style.display=pr==='niku'?'':'none';}
@@ -587,8 +633,9 @@ function trocaCena(){
 }
 function desenhaHot(){
   trocaCena();
-  { const sc=document.querySelector('.scene'); if(sc) sc.classList.toggle('pb',S.passo==='terra'&&CHAVES[S.k]&&CHAVES[S.k].n===1); }
-  hsBox.innerHTML='';const av=$('avatarNao');if(av){av.hidden=true;av.classList.remove('vai');}
+  { const sc=document.querySelector('.scene'); if(sc) sc.classList.toggle('pb',S.passo==='terra'&&CHAVES[S.k]&&S.k<5); }
+  { const ic=$('imgEstCor'); if(ic) ic.hidden=true; }
+  hsBox.innerHTML='';const av=$('avatarNao');if(av){av.hidden=true;av.classList.remove('vai','apresenta');}
   if(S.passo==='chegada'||S.passo==='fim'||S.passo==='final'||S.passo==='prontas'||S.passo==='clipe'||S.passo==='retoma'){$('dicaCena').hidden=true;return;}
   $('dicaCena').hidden=false;
   const c=CHAVES[S.k];
@@ -597,13 +644,13 @@ function desenhaHot(){
     const b=document.createElement('button');b.type='button';b.className='hs'+(usado?' usado':(S.visto.has(c.n+'-'+i)?' visto':''));
     b.style.left=h.x+'%';b.style.top=h.y+'%';b.setAttribute('aria-label',usado?'Já usado':'Tocar para ouvir: '+h.pt);b.innerHTML='<span>'+(usado?'✓':'♪')+'</span>';
     if(usado)b.disabled=true;
-    const riscaNao=(quieto)=>{const x=document.createElement('span');x.className='xitem'+(quieto?' quieto':'');x.textContent='✕';x.style.left=h.x+'%';x.setAttribute('aria-hidden','true');hsBox.appendChild(x);};
+    const riscaNao=(quieto)=>{const x=document.createElement('span');x.className='xitem'+(quieto?' quieto':'');x.textContent='✕';x.style.left=h.x+'%';x.style.top=h.y+'%';x.setAttribute('aria-hidden','true');hsBox.appendChild(x);};
     if(c.n===4&&S.visto.has(c.n+'-'+i)&&S.passo!=='terra')riscaNao(true);
     b.onclick=()=>{const jaVisto=S.visto.has(c.n+'-'+i);S.visto.add(c.n+'-'+i);b.classList.add('visto');pilula.hidden=false;
-      if(c.n===4||c.n===5){if(c.n===4&&!jaVisto)riscaNao(false);const av=$('avatarNao');if(av){av.classList.toggle('sim',c.n===5);{const bl=av.querySelector('.balao');bl.textContent='Quero!';bl.hidden=c.n!==5;}av.hidden=false;av.classList.remove('vai');void av.offsetWidth;av.classList.add('vai');}}
-      pilula.innerHTML=`<div class="pilula"><div class="jpl" lang="ja">${html(h.t)}</div><div class="ro">${h.ro}</div><p class="pt">${h.pt}</p><p class="en">${h.en}</p><p class="gram">${c.gram}</p>${h.resp?`<p class="gram"><button type="button" class="btn small" id="ouveResp">💬 Resposta: <span lang="ja">${h.resp.ja}</span> · ${h.resp.pt}</button></p>`:''}${h.num?`<p class="gram"><a href="/idiomas/numeros/#${h.num}" target="_blank" rel="noopener"><b>🔢 Aprender os números ↗</b></a> (${h.numTxt||''})</p>`:''}</div>`;
+      if(c.n===4||c.n===5){if(c.n===4&&!jaVisto)riscaNao(false);const av=$('avatarNao');if(av){av.classList.toggle('pergunta',c.n===5);{const bl=av.querySelector('.balao');bl.textContent=c.n===5?'これは なん？':'';bl.hidden=c.n!==5;}av.hidden=false;av.classList.remove('vai');void av.offsetWidth;av.classList.add('vai');}}
+      pilula.innerHTML=`<div class="pilula"><div class="jpl" lang="ja">${html(h.t)}</div><div class="ro">${h.ro}</div><p class="gram">${c.gram}</p>${h.resp?`<p class="gram"><button type="button" class="btn small" id="ouveResp">💬 Resposta: <span lang="ja">${h.resp.ja}</span> · ${h.resp.pt}</button></p>`:''}${h.num?`<p class="gram"><a href="/idiomas/numeros/#${h.num}" target="_blank" rel="noopener"><b>🔢 Aprender os números ↗</b></a> (${h.numTxt||''})</p>`:''}</div>`;
       if(h.resp){const br=$('ouveResp');if(br)br.onclick=()=>fala(h.resp.ja);}
-      if(c.n===4){const nomi=['gyunyu','sake','ocha'].includes(h.item);const pl=pilula.querySelector('.pilula');if(pl)pl.insertAdjacentHTML('beforeend','<p class="gram verbo">'+(nomi?'のみもの':'たべもの')+' → <b>'+(nomi?'のみ':'たべ')+'</b>ません</p>');}
+      if(c.n===4){const V={iki:'いき',nori:'のり',tabe:'たべ',nomi:'のみ',iki2:'いき',kai:'かい'}[h.item];const pl=pilula.querySelector('.pilula');if(pl&&V)pl.insertAdjacentHTML('beforeend','<p class="gram verbo">'+V+'<b>ます</b> → '+V+'<b>ません</b></p>');}
       fala(h.say);if(!jaVisto)magia(h);luzToque(jaVisto?null:c.n+'-'+i);if(S.passo==='toque')atualizaToque(!jaVisto);};
     hsBox.appendChild(b);
   });
@@ -631,8 +678,30 @@ if(LIVRE){
   };
   $('lvAnt').onclick=()=>anda(-1);$('lvProx').onclick=()=>anda(1);
 }
-function vai(passo){if(passo==='agua'&&S.passo!=='agua')S.ai=0;if(S.__paraClipe){S.__paraClipe();S.__paraClipe=null;}if(passo!=='clipe'&&S.passo==='clipe')S.clipeVisto=true;S.passo=passo;S.erros=0;S.feitos=[];pararMic();pilula.hidden=true;render();}
+function vai(passo){if(passo!=='terra')S.t1=null;if(passo==='agua'&&S.passo!=='agua')S.ai=(S.__ai!=null?S.__ai:0);S.__ai=null;if(S.__paraClipe){S.__paraClipe();S.__paraClipe=null;}if(passo!=='clipe'&&S.passo==='clipe')S.clipeVisto=true;S.passo=passo;S.erros=0;S.feitos=[];pararMic();pilula.hidden=true;render();}
 function render(){
+  render0();
+  const ok=['agua','fixa','falafix','fogo','terra'].includes(S.passo);
+  if(ok&&painel&&!painel.querySelector('.voltaBtn')){
+    const nav=document.createElement('div');nav.className='nav-ex';
+    const v=document.createElement('button');v.type='button';v.className='btn ghost voltaBtn';v.textContent='← Voltar';v.setAttribute('aria-label','Voltar ao exercício anterior');v.onclick=voltaPasso;nav.appendChild(v);
+    const pu=[...painel.querySelectorAll('button.btn.ghost')].find(b=>/^Pular/.test(b.textContent.trim()));
+    if(pu){pu.remove();}
+    if(false){const rot=pu.textContent.trim();pu.setAttribute('aria-label',rot.replace(/→/,'').trim());pu.textContent='Pular →';nav.appendChild(pu);}
+    painel.appendChild(nav);
+  }
+}
+function voltaPasso(){
+  const p=S.passo;try{pararMic();}catch(e){}
+  if(p==='agua'){ if((S.ai||0)>0){S.ai--;vai('agua');} else vai('toque'); }
+  else if(p==='fixa'){ S.__ai=Math.max(0,CHAVES[S.k].hot.length-1); vai('agua'); }
+  else if(p==='falafix'){ vai('fixa'); }
+  else if(p==='fogo'){ S.ff=0; vai('falafix'); }
+  else if(p==='terra'){ vai('fogo'); }
+  window.scrollTo(0,0);
+}
+function render0(){
+  { const gc=document.getElementById('ganhoCena'); if(gc) gc.remove(); }
   window.__render=render;
   if(S.passo==='retoma'&&S.k<1)S.passo='agua';
   if(S.passo==='agua'&&!toqueCompleto(CHAVES[S.k])&&!S.toqueOk[S.k])S.passo='toque';
@@ -684,16 +753,17 @@ function luzToque(novo){
     }
     mk=svg.querySelector('.mk-spots');
     const kon=id==='svgKon';let h='';
-    CHAVES.forEach(c=>{if((c.n>=4)!==kon)return;c.hot.forEach((o,i)=>{if(S.visto.has(c.n+'-'+i))h+='<circle cx="'+(o.x*4)+'" cy="'+(o.y*2.5)+'" r="'+(novo===c.n+'-'+i?0:38)+'" fill="#fff">'+(novo===c.n+'-'+i?'<animate attributeName="r" from="0" to="38" dur=".9s" fill="freeze" calcMode="spline" keyTimes="0;1" keySplines=".2 .8 .3 1"/>':'')+'</circle>';});});
+    CHAVES.forEach(c=>{if((c.n>=6)!==kon)return;c.hot.forEach((o,i)=>{if(S.visto.has(c.n+'-'+i))h+='<circle cx="'+(o.x*4)+'" cy="'+(o.y*2.5)+'" r="'+(novo===c.n+'-'+i?0:38)+'" fill="#fff">'+(novo===c.n+'-'+i?'<animate attributeName="r" from="0" to="38" dur=".9s" fill="freeze" calcMode="spline" keyTimes="0;1" keySplines=".2 .8 .3 1"/>':'')+'</circle>';});});
     mk.innerHTML=h;
   });
 }
 /* acende os objetos da cena que pertencem às chaves já acesas; o fundo ganha cor aos poucos */
 function luzCena(novo){
-  const n=Math.min(S.acesas.length,5);
+  const n=5; /* cena sempre colorida: não vai acendendo */
+  { const im=document.getElementById('imgEst'); if(im) im.style.setProperty('--sat',1); }
   document.querySelectorAll('.fundo').forEach(g=>{if(n>=5)g.removeAttribute('filter');else g.setAttribute('filter','url(#sat'+n+')');});
   document.querySelectorAll('[data-luz]').forEach(g=>{
-    const k=+g.dataset.luz,on=S.acesas.includes(k);
+    const k=+g.dataset.luz,on=true;
     g.classList.toggle('on',on);
     if(on)g.removeAttribute('filter');else g.setAttribute('filter','url(#cinza)');
     if(novo===k&&on){g.classList.add('luz-pisca');setTimeout(()=>g.classList.remove('luz-pisca'),1400);}
@@ -733,7 +803,7 @@ function telaToque(c){
   const M=c.hot.length;
   painel.innerHTML=`<span class="elem agua"><i></i>Chave ${String(c.n).padStart(2,'0')} · Toque e ouça</span>
    <h2>Toque em cada círculo da cena e ouça.</h2>
-   <p>Cada um que você toca acende a cena. Quando todos estiverem acesos, o exercício abre.</p>
+   <p>Toque em todos os círculos para ouvir cada frase. Depois, o exercício abre.</p>
    <div class="contagem" id="ctg"></div><p class="gram" id="ctgTxt"></p>
    <div class="acoes"><button class="btn pri" type="button" id="abreEx" disabled>Abrir o exercício →</button></div>`;
   $('abreEx').onclick=()=>{S.toqueOk[S.k]=true;vai('agua');};
@@ -744,13 +814,13 @@ function atualizaToque(novo){
   const ctg=$('ctg');if(!ctg)return;
   ctg.setAttribute('aria-label',n+' de '+M);
   ctg.innerHTML=c.hot.map((h,i)=>`<i class="${S.visto.has(c.n+'-'+i)?'on':''}"></i>`).join('');
-  $('ctgTxt').textContent=n<M?n+' de '+M+' acesos':'Tudo aceso! ✨';
+  $('ctgTxt').textContent='';
   const b=$('abreEx');b.disabled=n<M;if(n>=M&&novo){b.classList.add('libera');claraoFinal();}
 }
 function telaChegada(){
   painel.innerHTML=`<span class="elem ganho"><i></i>Chegada</span>
    <h2>${S.acesas.length?S.acesas.length+' de 5 chaves acesas.':'Cinco chaves apagadas.'}</h2>
-   <p>Em 15 minutos você aprende a afirmar, negar e pedir em japonês.</p>
+   <p>Em 15 minutos você aprende a afirmar, negar e perguntar em japonês.</p>
    <div class="acoes"><button class="btn pri" type="button" id="go">${S.acesas.length&&S.acesas.length<5?'Continuar →':'Acender a primeira chave →'}</button></div>`;
   $('go').onclick=()=>{fala('とうきょうです');S.k=S.primeiraApagada?S.primeiraApagada():0;vai('agua');};
 }
@@ -852,7 +922,7 @@ const FIX={
  2:[['🍙','Não é chá.','','','おちゃ','ocha','chá','じゃない','janai'],['🚆','Não é água.','','','みず','mizu','água','じゃない','janai'],['🍵','Não é onigiri.','','','おにぎり','onigiri','bolinho de arroz','じゃない','janai'],['💧','Não é trem.','','','でんしゃ','densha','trem','じゃない','janai'],['🍙','Não é bilhete.','','','きっぷ','kippu','bilhete','じゃない','janai']],
  3:[['🍙','Eu como o onigiri.','','','おにぎり','onigiri','bolinho de arroz','をたべます','o tabemasu'],['🍵','Eu bebo o chá.','','','おちゃ','ocha','chá','をのみます','o nomimasu'],['🚉','Eu vou para Tóquio.','','','とうきょう','Tōkyō','Tóquio','にいきます','ni ikimasu'],['💧','Eu bebo a água.','','','みず','mizu','água','をのみます','o nomimasu'],['🚻','Eu vou ao banheiro.','','','トイレ','toire','banheiro','にいきます','ni ikimasu']],
  4:[['🥩','Não como carne.','','','にく','niku','carne','をたべません','o tabemasen'],['🍵','Não bebo chá.','','','おちゃ','ocha','chá','をのみません','o nomimasen'],['🐟','Não como peixe.','','','さかな','sakana','peixe','をたべません','o tabemasen'],['💧','Não bebo água.','','','みず','mizu','água','をのみません','o nomimasen'],['🍙','Não como onigiri.','','','おにぎり','onigiri','bolinho de arroz','をたべません','o tabemasen']],
- 5:[['🍙','Um onigiri, por favor.','すみません、','sumimasen, ','おにぎり','onigiri','bolinho de arroz','をください','o kudasai'],['💧','Água, por favor.','すみません、','sumimasen, ','みず','mizu','água','をください','o kudasai'],['🍵','Chá, por favor.','すみません、','sumimasen, ','おちゃ','ocha','chá','をください','o kudasai'],['🥚','Um ovo, por favor.','すみません、','sumimasen, ','たまご','tamago','ovo','をください','o kudasai'],['🍙','Onigiri, por favor.','すみません、','sumimasen, ','おにぎり','onigiri','bolinho de arroz','をください','o kudasai']]
+ 5:[['🍙','O que é isto? É um onigiri.','これはなんですか。','kore wa nan desu ka? ','おにぎり','onigiri','bolinho de arroz','です','desu'],['💧','Você bebe água?','','','みず','mizu','água','をのみますか','o nomimasu ka?'],['🎫','O que é isto? É o bilhete.','これはなんですか。','kore wa nan desu ka? ','きっぷ','kippu','bilhete','です','desu'],['🚻','Você vai ao banheiro?','','','トイレ','toire','banheiro','にいきますか','ni ikimasu ka?'],['🚆','Você vai para Tóquio?','','','とうきょう','Tōkyō','Tóquio','にいきますか','ni ikimasu ka?']]
 };
 function plim(ok){
   try{const AC=window.AudioContext||window.webkitAudioContext;if(!AC)return;const a=new AC(),t=a.currentTime;
@@ -891,7 +961,7 @@ const FALA_N=2;
 function telaFalaFix(c){
   const R=FIX[c.n].slice(0,FALA_N),i=S.ff||0,r=R[i];
   const [em,pt,pre,preRo,w,wRo,wpt,pos,posRo]=r;
-  const m=/^(を|に)?(たべ|のみ|いき)?(です|じゃない|ます|ません|ください)$/.exec(pos)||[];
+  const m=/^(を|に)?(たべ|のみ|いき)?(ですか|ますか|です|じゃない|ます|ません)$/.exec(pos)||[];
   const STEM={たべ:['たべ','食べ'],のみ:['のみ','飲み'],いき:['いき','行き']};
   const ID=Object.keys(ITEM).find(k=>ITEM[k].includes(w));
   const g=[ID?ITEM[ID].slice(0,4):[w]];
@@ -981,22 +1051,25 @@ function telaClipe(c){
   try{const sc=document.querySelector('.scene');const r=sc.getBoundingClientRect();if(r.top<0||r.top>innerHeight*.3)window.scrollTo({top:scrollY+r.top-8,behavior:'smooth'});}catch(e){}
   roda();
 }
+const KEY_SVG='<svg viewBox="0 0 64 64" width="100%" height="100%" aria-hidden="true"><g transform="rotate(-40 32 32)" stroke="#3a2b38" stroke-width="3" stroke-linejoin="round" stroke-linecap="round"><circle cx="32" cy="14" r="10" fill="#e8a820"/><circle cx="32" cy="14" r="3.5" fill="#fff8e6"/><rect x="29" y="23" width="6" height="32" rx="2" fill="#e8a820"/><path d="M35 44h8v5h-8M35 52h6v4h-6" fill="#e8a820"/></g></svg>';
 function telaGanho(c){
   const ja=S.acesas.includes(c.n);
   desenhaBarra();
   const ultima=S.k===CHAVES.length-1;
-  painel.innerHTML=`<div class="fim-bloco"><div class="grande" aria-hidden="true">${c.ico}</div>
+  painel.innerHTML=`<div class="fim-bloco">
     <span class="elem ganho"><i></i>Ganho · chave ${String(c.n).padStart(2,'0')}</span>
     <h2>${c.jp}</h2><p>${c.ganho}</p>
     ${S.ditas[c.n]?`<p class="voce-disse"><small>Você disse</small><span class="jpl" lang="ja">${S.ditas[c.n]}</span></p>`:''}
     <p class="dia">${c.dia||''}</p>
     <p class="salva"><button class="btn ghost small" type="button" id="salvaCad">📓 Salvar frase no caderno</button></p>
     <div class="acoes"><button class="btn pri" type="button" id="prox">${ultima?'Perguntas prontas →':'Próxima chave →'}</button></div></div>`;
+  const mostraGC=()=>{ const sc=document.querySelector('.scene'); if(sc){ const old=$('ganhoCena'); if(old) old.remove(); const g=document.createElement('div'); g.id='ganhoCena'; g.setAttribute('aria-hidden','true'); g.innerHTML='<div class="gc-key">'+KEY_SVG+'</div><div class="gc-t"><small>chave '+String(c.n).padStart(2,'0')+' acesa</small>'+c.jp+'</div>'; sc.appendChild(g); } };
   let acesa=false;
-  const acende=()=>{if(acesa)return;acesa=true;if(!S.acesas.includes(c.n)){S.acesas.push(c.n);salva();}
+  const acende=()=>{mostraGC();if(acesa)return;acesa=true;if(!S.acesas.includes(c.n)){S.acesas.push(c.n);salva();}
     desenhaBarra();luzCena(c.n);const sl=barra.children[S.k];if(sl&&!ja)sl.classList.add('pop');};
   const conquistou=S.conquista;S.conquista=false;
   const voo=(ja||!conquistou)?(conquistou?acende():0,null):voaChave(c,acende);
+  if(!voo)mostraGC();
   $('salvaCad').onclick=function(){if(salvaFrase(c)){this.textContent='✓ Salva no caderno';this.disabled=true;}else location.href='/idiomas/caderno/';};
   $('prox').onclick=()=>{if(voo)voo.cancela();acende();if(ultima){S.p=0;vai('prontas');}else{S.k++;vai(S.retomado[S.k]?'agua':'retoma');}};
 }
@@ -1119,7 +1192,7 @@ function telaResposta(c,tipo,titulo,pedido,alvo){
 /* ---------- prova final: as 5 chaves de uma vez ---------- */
 const FINAL=[
  {pedido:'Você precisa achar o banheiro. Pergunte onde fica.',say:'トイレはどこですか',t:['トイレは',['どこ','k'],'ですか'],ro:'toire wa doko desu ka?',pt:'Onde fica o banheiro?',g:[['トイレ','といれ'],['は','わ'],['どこ'],['ですか']],molde:'<em>coisa</em> は <b>どこ</b>ですか',moldeRo:'[coisa] wa doko desu ka?'},
- {pedido:'Ela aponta o fundo da loja. Antes de ir, peça um onigiri.',say:'おにぎりをください',t:['おにぎりを',['ください','k']],ro:'onigiri o kudasai',pt:'Um onigiri, por favor.',g:[['おにぎり'],['を'],['ください','下さい']],molde:'<em>coisa</em> <b>を ください</b>',moldeRo:'[coisa] o kudasai'},
+ {pedido:'Você pegou um objeto e não sabe o que é. Pergunte e responda: o que é isto? É a água.',say:'これはなんですか。みずです',t:['これは',['なん','k'],'ですか。みず',['です','k']],ro:'kore wa nan desu ka? mizu desu',pt:'O que é isto? É água.',g:[['これ'],['は','わ'],['なん','なに','何'],['ですか'],['みず','水'],['です']],molde:'これは <b>なん</b>ですか。→ <em>coisa</em> です',moldeRo:'kore wa nan desu ka? → [coisa] desu'},
  {pedido:'Ela aponta a água e pergunta: “のみますか？” (você bebe?). Responda: eu bebo a água.',say:'みずをのみます',t:['みずを','のみ',['ます','k']],ro:'mizu o nomimasu',pt:'Eu bebo água.',g:[['みず','水','おみず','お水'],['を'],['のみ','飲み'],['ます']],molde:'<em>ação</em> <b>ます</b>',moldeRo:'[ação]-masu'},
  {pedido:'Ela mostra a água e pergunta: “おちゃ？” (é chá?). Diga que não é.',say:'おちゃじゃない',t:['おちゃ',['じゃない','k']],ro:'ocha janai',pt:'Não é chá.',g:[['おちゃ','お茶'],['じゃない','じゃないです','じゃありません','ではありません']],molde:'<em>coisa</em> <b>じゃない</b>',moldeRo:'[coisa] janai'},
  {pedido:'Ela oferece peixe. Você não come peixe. Diga: eu não como peixe.',say:'さかなをたべません',t:['さかなを','たべ',['ません','k']],ro:'sakana o tabemasen',pt:'Eu não como peixe.',g:[['さかな','魚'],['を'],['たべ','食べ'],['ません']],molde:'<em>coisa</em> を <em>ação</em> <b>ません</b>',moldeRo:'[coisa] o [ação]-masen'}
@@ -1146,19 +1219,46 @@ function telaFinal(){
 }
 
 /* Terra: 2 frases completas, com qualquer palavra, mas 2 palavras diferentes */
+function luzAlvo(h,bt){
+  if(bt) bt.classList.add('pisca');
+  const im=document.getElementById('imgEst'),ic=document.getElementById('imgEstCor');
+  if(ic&&im&&getComputedStyle(im).display!=='none'){ ic.style.setProperty('--sx',h.x+'%'); ic.style.setProperty('--sy',h.y+'%'); ic.style.setProperty('--rb',(h.r||7)+'cqw'); ic.hidden=false; }
+}
+/* chaves 02–05: todas as coisas da cena piscam, uma por vez, em ordem aleatória; a pessoa diz a frase de cada uma */
+function telaTerraPisca(c){
+  desenhaHot();
+  if(!S.t1||S.t1.k!==c.n){ const ix=c.hot.map((_,i)=>i); for(let i=ix.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[ix[i],ix[j]]=[ix[j],ix[i]];} S.t1={ordem:ix,i:0,k:c.n}; }
+  const T=S.t1,total=T.ordem.length,e=T.ordem[T.i],h=c.hot[e];
+  const hh=h; /* frase completa em todas as chaves (h.neg guarda a versão curta da chave 2, sem uso) */
+  const alvo={say:hh.say,t:hh.t,ro:hh.ro,pt:hh.pt,g:[[hh.say]],diag:()=>'Quase. Toque no ♪ que pisca (ou em 🔊 Ouvir) e repita.',
+    depois:()=>{plim(true);T.i++;if(T.i>=total){S.t1=null;S.conquista=true;vai(c.n===3?'quiz':'ganho');}else telaTerra(c);}};
+  telaResposta(c,'terra','Terra · gravar','Uma coisa da cena está piscando. Diga a frase dela.',alvo);
+  const h2=painel.querySelector('h2');
+  if(h2)h2.insertAdjacentHTML('afterend','<div class="contagem" aria-label="'+(T.i+1)+' de '+total+'">'+T.ordem.map((_,j)=>'<i class="'+(j<T.i?'on':'')+'"></i>').join('')+'</div>');
+  luzAlvo(h,hsBox.children[e]);
+  if(c.n===5&&h.par){ const ids=[h.par-1,4]; ids.forEach(ix=>{const b=barra.children[ix]; if(b) b.classList.add('dica');}); }
+}
 function telaTerra(c){
+  if(c.n!==1) return telaTerraPisca(c);
   const t=c.terra,feitos=S.feitos.length;
   desenhaHot();
-  /* chave 01: uma coisa da cena pisca; a pessoa diz o nome dela + です */
-  let alvoPisca=null;
-  if(c.n===1){ const lista=c.hot.map((h,i)=>({h,i})).filter(x=>!S.feitos.includes(x.h.item)); const e=lista[Math.floor(Math.random()*lista.length)]; if(e){ alvoPisca=e.h; const b=hsBox.children[e.i]; if(b) b.classList.add('pisca'); } }
+  /* chave 01: uma coisa da cena pisca por vez (todas, em ordem aleatória); no fim a carteirinha aparece e a pessoa diz o próprio nome + です */
+  let alvoPisca=null,faseNome=false,totalRod=0;
+  if(c.n===1){
+    if(!S.t1){ const ix=c.hot.map((_,i)=>i); for(let i=ix.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[ix[i],ix[j]]=[ix[j],ix[i]];} S.t1={ordem:ix,i:0}; }
+    totalRod=S.t1.ordem.length;
+    if(S.t1.i>=totalRod){ faseNome=true; hsBox.innerHTML=''; }
+    else { const e=S.t1.ordem[S.t1.i]; alvoPisca=c.hot[e]; const bt=hsBox.children[e]; if(bt) bt.classList.add('pisca'); luzAlvo(alvoPisca,null); }
+  }
   painel.innerHTML=`<span class="elem terra"><i></i>Chave ${String(c.n).padStart(2,'0')} · Terra · gravar</span>
-   <h2>${alvoPisca?'Uma coisa da cena está piscando. Diga o que é, com です.':t.pedido}</h2>
-   <div class="contagem" id="cont" aria-label="${feitos} de 1">${[0].map(i=>`<i class="${i<feitos?'on':''}"></i>`).join('')}</div>
+   <h2>${faseNome?'Agora é a sua vez: apresente-se. Diga seu nome com です.':alvoPisca?'Uma coisa da cena está piscando. Diga o que é, com です.':t.pedido}</h2>
+   ${c.n===1?`<div class="contagem" id="cont" aria-label="${S.t1.i} de ${totalRod+1}">${Array.from({length:totalRod+1},(_,i)=>`<i class="${i<S.t1.i?'on':''}"></i>`).join('')}</div>`:`<div class="contagem" id="cont" aria-label="${feitos} de 1">${[0].map(i=>`<i class="${i<feitos?'on':''}"></i>`).join('')}</div>`}
+
    <div class="moldebox"><div class="jpl" lang="ja">${c.molde}</div><div class="ro">${c.moldeRo}</div></div>
    ${c.n===3?'<p class="ptdica">👆 Toque no <span class="pt o">を</span> ou no <span class="pt ni">に</span> para ver a diferença.</p>':''}
    <div class="acoes" id="acoes"></div><div class="estado" id="estado"></div><div class="ouvi" id="ouvi"></div>
    <div id="escrita"></div><div id="reforco" class="acoes" style="flex-direction:column;align-items:flex-start"></div>`;
+  if(faseNome){ try{ const av=$('avatarNao'); if(av){ const A=window.UtopiaAvatar,a=A&&A.load(),pf=(a&&a.profile)||{}; const cab=av.querySelector('.cabeca'); const sel=(a&&a.sel)||(A&&A.DEFAULT); if(A&&sel&&cab) cab.innerHTML=A.svg(sel,{viewBox:'40 46 160 160',still:true,label:'Seu avatar'}); const bl=av.querySelector('.balao'); bl.textContent=((pf.kata||pf.name||'').trim()||'？？？')+'です'; bl.hidden=false; av.querySelector('.bracos').innerHTML=''; av.classList.remove('sim','vai'); av.classList.add('apresenta'); av.hidden=false; } }catch(e){} }
   const JA=/^[぀-ゟ゠-ヿ一-鿿]+$/;
   /* sufixos aceitos (do mais longo para o mais curto); cada um pode pedir um tipo de palavra */
   const sufs=[];
@@ -1204,15 +1304,20 @@ function telaTerra(c){
     for(const x of textos){const w=palavraDe(x);if(w){
       if(alvoPisca&&canon(w)!==alvoPisca.item){ E.falha(dito,'A que está piscando é outra. Toque no ♪ que pisca para ouvir a palavra.'); return; }
       const id=t.tipos?ultimoTipo:canon(w);
-      if(S.feitos.includes(id)){E.aviso(t.tipos?'Essa palavra de pergunta você já usou. Use outra: どこ, なん ou なんじ.':'Essa palavra você já usou. Escolha outra.',dito);return;}
+      if(c.n!==1&&S.feitos.includes(id)){E.aviso(t.tipos?'Essa palavra de pergunta você já usou. Use outra: どこ, なん ou なんじ.':'Essa palavra você já usou. Escolha outra.',dito);return;}
+      if(c.n===1){
+        S.ditas[c.n]=x; E.ok(x,faseNome?'✓ Prazer em conhecer!':'✓ Boa!');
+        if(faseNome){ S.t1=null; setTimeout(()=>{S.conquista=true;vai('ganho');},1500); }
+        else { plim(true); S.t1.i++; setTimeout(()=>telaTerra(c),1200); }
+        return;
+      }
       S.feitos.push(id);S.ditas[c.n]=x;E.ok(x,'✓ Boa!');
       if(S.feitos.length>=1){setTimeout(()=>{S.conquista=true;vai(c.n===3?'quiz':'ganho');},1200);}else setTimeout(()=>telaTerra(c),1100);
       return;}}
     const n=norm(dito);
     let msg='Escreva uma palavra em kana ou romaji e feche com '+t.key+'.';
     if(sufs.some(sf=>n.endsWith(sf))){msg='Falta uma palavra antes do '+t.key+'.';}
-    else if(c.n===5&&(n==='ください'||n==='下さい')){msg='Falta uma palavra e o を antes do ください.';}
-    else if(c.n===5&&n.endsWith('ください')&&!/お(ください|下さい)$/.test(n)){msg='Faltou o を antes do ください.';}
+    else if(c.n===5&&n==='ますか'){msg='Falta a coisa e o verbo antes do ますか.';}
     else if(n.length>1){msg='Faltou o '+t.key+' no final.';}
     E.falha(dito,msg);
   });
