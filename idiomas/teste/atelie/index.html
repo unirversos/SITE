@@ -378,6 +378,13 @@ body.m-edit{padding-bottom:96px}
 body.m-edit .passe-sec{display:none}
 body.m-cart .c-intro{display:none}
 .nome-box{margin-bottom:12px}
+.sitebar .navlinks,.uni-inst,#uniVel{display:none!important}
+.top{position:relative}
+.cfg-wrap{position:absolute;right:0;top:0;z-index:20}
+.cfg-pop{position:absolute;right:0;top:calc(100% + 8px);width:min(280px,calc(100vw - 32px));display:grid;gap:12px;background:var(--card);border:1.5px solid var(--line);border-radius:16px;padding:14px;box-shadow:0 14px 30px -14px rgba(58,43,56,.45)}
+.cfg-pop[hidden]{display:none}
+.cfg-vel{display:grid;gap:6px;font-size:13px;color:var(--muted);font-weight:600}
+.cfg-vel input{width:100%;accent-color:var(--pink);min-height:36px}
 #dice{width:100%;justify-content:center;background:var(--ink);color:var(--paper);border-color:var(--ink)}
 .btn-curio{border:0;background:none;color:var(--muted);text-decoration:underline;font-size:13px;box-shadow:none;padding:2px 6px}
 .tab-mais{border-style:dashed;color:var(--muted)}
@@ -398,8 +405,15 @@ body.m-cart .c-intro{display:none}
   <header class="top">
     <div>
       <a class="eyebrow back" href="/idiomas/japones/">← Minha trilha</a>
-      <button class="btn ro-toggle" id="roToggle" type="button" aria-pressed="false" title="Mostrar romaji embaixo do japonês">ローマ<ruby>字<rt>じ</rt></ruby> · Romaji</button>
       <h1>Ateliê de Avatar</h1>
+    </div>
+    <div class="cfg-wrap">
+      <button class="btn" id="cfgBtn" type="button" aria-expanded="false" aria-controls="cfgPop" aria-label="Ajustes">⚙️ Ajustes</button>
+      <div class="cfg-pop" id="cfgPop" hidden>
+        <button class="btn ro-toggle" id="roToggle" type="button" aria-pressed="false" title="Mostrar romaji embaixo do japonês">ローマ<ruby>字<rt>じ</rt></ruby> · Romaji</button>
+        <label class="cfg-vel">Velocidade da voz <b id="cfgVelO"></b>
+          <input type="range" id="cfgVel" min="0.5" max="1.2" step="0.05" aria-label="Velocidade da voz"></label>
+      </div>
     </div>
     <div class="xp" aria-live="polite">
       <div class="xp-row"><span class="lvl" id="lvl">Nv. 1 <small>たまご</small></span><span id="xpn">0 XP</span></div>
@@ -983,6 +997,12 @@ $('trProx').onclick=()=>{ if(trI<sentences().length-1){ trI++; renderTreino(); t
 $('trTodas').onclick=()=>speak(sentences().map(l=>l.jp).join(' '));
 (function(){ const f=document.querySelector('.passe-form'); if(f){ f.classList.add('nome-box'); $('tabs').parentNode.insertBefore(f,$('tabs')); } })();
 if(window.AUDIO_CREDITO) $('sobreVozesTxt').textContent='Vozes sintéticas: '+window.AUDIO_CREDITO+'. Aos poucos, as gravações da professora vão substituindo.';
+(function(){ const b=$('cfgBtn'),pop=$('cfgPop'),r=$('cfgVel'),o=$('cfgVelO');
+  const rot=v=>v===1?'normal':'×'+v.toFixed(2).replace(/0$/,'');
+  function ler(){ const v=(window.UniVel&&UniVel.get())||1; r.value=v; o.textContent=rot(+v); }
+  b.onclick=()=>{ const ab=pop.hidden; pop.hidden=!ab; b.setAttribute('aria-expanded',ab); if(ab) ler(); };
+  r.oninput=()=>{ if(window.UniVel) UniVel.set(+r.value); o.textContent=rot(+r.value); };
+  document.addEventListener('click',e=>{ if(!pop.hidden&&!e.target.closest('.cfg-wrap')){ pop.hidden=true; b.setAttribute('aria-expanded','false'); } }); })();
 function modo(m,semHist){
   document.body.classList.remove('m-cart','m-edit','m-treino'); document.body.classList.add('m-'+m);
   if(m==='edit') marcaFeito();
