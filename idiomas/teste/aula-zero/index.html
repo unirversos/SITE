@@ -68,6 +68,8 @@ h1{font-family:var(--f-display);font-weight:800;font-size:clamp(30px,5.2vw,46px)
 /* cena */
 .scene{position:relative;background:var(--card);border:1.5px solid var(--line);border-radius:var(--r);overflow:hidden}
 .scene svg{display:block;width:100%;height:auto}
+.scene img.cena-img{display:block;width:100%;height:auto;filter:saturate(var(--sat,0));transition:filter .4s}
+.scene.pb img.cena-img{filter:grayscale(1)}
 .hs{position:absolute;transform:translate(-50%,-50%);width:44px;height:44px;border-radius:50%;border:0;background:rgba(255,255,255,.0);padding:0}
 .hs::before{content:"";position:absolute;inset:6px;border-radius:50%;background:rgba(255,255,255,.92);border:2px solid var(--pink);box-shadow:0 2px 6px rgba(58,43,56,.25)}
 .hs::after{content:"";position:absolute;inset:0;border-radius:50%;border:2px solid var(--pink);opacity:.6;animation:ping 2.2s ease-out infinite}
@@ -308,6 +310,7 @@ body.ver-ro .ro-svg{paint-order:stroke;stroke:#3a2b38;stroke-width:3px;stroke-li
   <nav class="chaves" id="chaves" aria-label="As cinco chaves"></nav>
 
   <section class="scene" aria-label="Plataforma da estação, vista em primeira pessoa">
+    <img id="imgEst" class="cena-img" src="/idiomas/img/cenas/estacao.webp" width="1344" height="756" alt="Você está na plataforma de uma estação em Tóquio. Há uma placa azul, o banheiro, um trem parado e, na sua frente, um bilhete, um onigiri, um chá e uma água.">
     <svg id="svgEst" viewBox="0 0 400 250" role="img" aria-label="Você está na plataforma de uma estação em Tóquio. Há placas com o nome da estação, uma máquina de bebidas e um trem parado. Nas suas mãos, um bilhete, um onigiri, um chá e uma garrafa de água.">
 <g class="fundo"><image href="/idiomas/img/cenas/aulazero.webp" x="-24" y="0" width="448" height="250" preserveAspectRatio="xMidYMid slice"/></g>
 <g data-luz="1"><clipPath id="cl6030"><rect x="60" y="30" width="120" height="130" rx="10"/></clipPath><g clip-path="url(#cl6030)"><image href="/idiomas/img/cenas/aulazero.webp" x="-24" y="0" width="448" height="250" preserveAspectRatio="xMidYMid slice"/></g>
@@ -477,10 +480,10 @@ const ITEM={
 const NOMES=['tokyo','densha','kippu','onigiri','mizu','ocha'];
 const html=toks=>toks.map(t=>typeof t==='string'?t:(t.k?`<ruby>${t.k}<rt>${t.f}</rt></ruby>`:(t[1]==='k'?`<b>${t[0]}</b>`:t[0]))).join('');
 const TOK={tokyo:{k:'東京',f:'とうきょう'}};
-const P_WC={x:8,y:20};
+const P_WC={x:8,y:26};
 const K_JUICE={x:37,y:64},K_PAN={x:59,y:64},K_BENTO={x:73,y:64};
 const K_LEITE={x:10,y:53},K_SAKE={x:24,y:53},K_CHA={x:37,y:53},K_SAKANA={x:59,y:53},K_NIKU={x:73,y:53},K_TAMAGO={x:87,y:53};
-const P_SIGN={x:28,y:30},P_TRAIN={x:88,y:52},P_TICKET={x:12,y:84},P_ONI={x:32,y:87},P_TEA={x:67,y:86},P_WATER={x:83,y:86};
+const P_SIGN={x:31,y:20},P_TRAIN={x:82,y:50},P_TICKET={x:13,y:89},P_ONI={x:33,y:84},P_TEA={x:65,y:80},P_WATER={x:91,y:79};
 const H=(pos,item,say,t,ro,pt,en)=>Object.assign({item,say,t,ro,pt,en},pos);
 
 const CHAVES=[
@@ -596,7 +599,7 @@ function trocaCena(){
   const pr=S.passo==='prontas'?(PRONTAS[S.p||0]||{}).scene:null;
   const kon=!pr&&S.passo!=='chegada'&&(S.k>=3||S.passo==='prontas'||S.passo==='final'||S.passo==='fim');
   const cl=S.passo==='clipe';
-  const mostra={svgEst:!cl&&!kon&&!pr,svgKon:!cl&&kon,svgWc:!cl&&pr==='wc',svgProd:!cl&&(pr==='wasabi'||pr==='niku'),svgClip:cl};
+  const mostra={imgEst:!cl&&!kon&&!pr,svgEst:false,svgKon:!cl&&kon,svgWc:!cl&&pr==='wc',svgProd:!cl&&(pr==='wasabi'||pr==='niku'),svgClip:cl};
   if(!cl){const av=$('clAv');if(av)av.hidden=true;}
   for(const id in mostra){const el=$(id);if(el)el.style.display=mostra[id]?'':'none';}
   if(pr==='wasabi'||pr==='niku'){const w=$('pW'),n=$('pN');if(w)w.style.display=pr==='wasabi'?'':'none';if(n)n.style.display=pr==='niku'?'':'none';}
@@ -709,6 +712,7 @@ function luzToque(novo){
 /* acende os objetos da cena que pertencem às chaves já acesas; o fundo ganha cor aos poucos */
 function luzCena(novo){
   const n=Math.min(S.acesas.length,5);
+  { const im=document.getElementById('imgEst'); if(im) im.style.setProperty('--sat',n>=5?1:n*0.2); }
   document.querySelectorAll('.fundo').forEach(g=>{if(n>=5)g.removeAttribute('filter');else g.setAttribute('filter','url(#sat'+n+')');});
   document.querySelectorAll('[data-luz]').forEach(g=>{
     const k=+g.dataset.luz,on=S.acesas.includes(k);
