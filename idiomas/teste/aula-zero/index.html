@@ -942,7 +942,7 @@ function plim(ok){
 }
 function telaFixa(c){
   const R=FIX[c.n].slice(),n0=R.length,refeito=new Set();let q=0,trava=false;
-  const banco=[];R.forEach(r=>{if(!banco.find(b=>b[0]===r[4]))banco.push([r[4],r[5],r[6],({'でんしゃ':'🚆','おにぎり':'🍙','きっぷ':'🎫','おちゃ':'🍵','みず':'💧','とうきょう':'🚉','にく':'🥩','さかな':'🐟'})[r[4]]||'']);});
+  const banco=[];R.forEach(r=>{if(!banco.find(b=>b[0]===r[4]))banco.push([r[4],r[5],r[6],({'でんしゃ':'🚆','おにぎり':'🍙','きっぷ':'🎫','おちゃ':'🍵','みず':'💧','とうきょう':'🚉','にく':'🥩','さかな':'🐟','トイレ':'🚻'})[r[4]]||'']);});
   const emb=a=>{a=a.slice();for(let i=a.length-1;i>0;i--){const j=(i*7+3)%(i+1);[a[i],a[j]]=[a[j],a[i]];}return a;};
   const bs=emb(banco);
   const fim=()=>{S.ff=0;vai('falafix');};
@@ -963,10 +963,8 @@ function telaFixa(c){
       if(b.dataset.v!==w)fala(b.dataset.v);
       if(b.dataset.v===w){trava=true;plim(true);b.classList.add('pri');const lc=painel.querySelector('.lacuna');if(lc){lc.textContent=w;lc.style.borderBottomStyle='solid';}est.className='estado ok';est.textContent='✓ '+pre+w+pos;
         {try{if(audioAtual){audioAtual.pause();audioAtual=null;}}catch(e){}
-          /* palavra + です (e o resto da frase), todas na voz gravada, uma depois da outra */
-          const mp=/^(を|に)?(たべ|のみ|いき)?(ですか|ますか|です|じゃない|ません|ます)$/.exec(pos)||[];
-          const seq=[...String(pre).split('。').map(x=>x.trim()).filter(Boolean),w,...(mp[3]?[mp[1],mp[2],mp[3]].filter(Boolean):[pos])];
-          setTimeout(()=>{let i=0;const prox=()=>{if(i<seq.length)tocaUma(seq[i++],prox);};prox();},800);}
+          /* a frase inteira de uma vez, na voz do aparelho (sem emendar pedaços gravados, que ficava truncado) */
+          setTimeout(()=>{ttsJa((String(pre)+w+pos).replace(/。/g,'、'),.95);},700);}
         q++;setTimeout(()=>{trava=false;if(q>=R.length)fim();else mostra();},3200+(R[q-1]&&String(R[q-1][2]).length?1800:900));}
       else{plim(false);b.classList.add('tremeu');setTimeout(()=>b.classList.remove('tremeu'),500);if(q<n0&&!refeito.has(q)){refeito.add(q);R.push(R[q]);}est.className='estado erro';est.textContent='Esse é '+b.dataset.v+' ('+(banco.find(x=>x[0]===b.dataset.v)||[])[2]+'). Tente de novo.';}};
   }
