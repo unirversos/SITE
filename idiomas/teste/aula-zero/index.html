@@ -262,7 +262,7 @@ body[data-etapa="ar"] .painel{--el:var(--gold)}
 #clAv .cl-braco::after{content:"";position:absolute;bottom:-14%;left:-5%;width:110%;aspect-ratio:1;border-radius:50%;background:var(--cl-pele,#f2c9a5)}
 #clAv .cl-prop{position:absolute;bottom:-38%;left:50%;transform:translateX(-50%) rotate(var(--cl-contra,0deg));font-size:clamp(16px,5vw,26px);line-height:1;z-index:3}
 #clAv .cl-som{position:absolute;left:85%;top:-6%;background:#fff;border:2px solid var(--line);border-radius:12px;padding:1px 8px;font-weight:800;font-size:13px;white-space:nowrap;opacity:0}
-.fx-img{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin:10px 0}.fx-quadro{padding:7px;border:3px solid var(--terra,#c0654a);border-radius:18px;background:#fff;cursor:pointer;line-height:0;box-shadow:0 5px 0 rgba(192,101,74,.35);transition:transform .08s,box-shadow .08s}.fx-quadro img{width:100%;height:auto;display:block;border-radius:10px}.fx-quadro:active{transform:translateY(4px);box-shadow:0 1px 0 rgba(192,101,74,.35)}.fx-quadro:hover{background:#fff7f2}.fx-quadro.ok{border-color:#3d8b5a;box-shadow:0 5px 0 rgba(61,139,90,.4)}@media(max-width:560px){.fx-img{grid-template-columns:repeat(2,1fr)}}
+#fxCena .fx-img{margin:0}.fx-img{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin:10px 0}.fx-quadro{padding:7px;border:3px solid var(--terra,#c0654a);border-radius:18px;background:#fff;cursor:pointer;line-height:0;box-shadow:0 5px 0 rgba(192,101,74,.35);transition:transform .08s,box-shadow .08s}.fx-quadro img{width:100%;height:auto;display:block;border-radius:10px}.fx-quadro:active{transform:translateY(4px);box-shadow:0 1px 0 rgba(192,101,74,.35)}.fx-quadro:hover{background:#fff7f2}.fx-quadro.ok{border-color:#3d8b5a;box-shadow:0 5px 0 rgba(61,139,90,.4)}@media(max-width:560px){.fx-img{grid-template-columns:repeat(2,1fr)}}
 .cl-legenda{margin:10px 0 4px;padding:12px 14px;border-left:5px solid var(--agua,#3f7fb0);background:#fff;border-radius:10px}
 .cl-legenda .jpl{font-size:24px}.cl-legenda .jpl b{color:#c0392b}
 #clAv[hidden]{display:none}
@@ -384,6 +384,7 @@ body.ver-ro .ro-svg{paint-order:stroke;stroke:#3a2b38;stroke-width:3px;stroke-li
       <g id="pW" transform="translate(130 20)"><rect x="46" y="0" width="28" height="22" rx="6" fill="#fff" stroke="#9aa89a" stroke-width="3"/><path d="M26 22h68l8 150H18z" fill="#6fb36f" stroke="#4f8f4f" stroke-width="4" stroke-linejoin="round"/><rect x="28" y="62" width="64" height="62" rx="6" fill="#fff"/><text x="60" y="97" text-anchor="middle" font-family="Zen Maru Gothic, sans-serif" font-size="20" font-weight="800" fill="#2f6b2f">ワサビ</text><text class="ro-svg" x="60" y="113" text-anchor="middle" font-family="Zen Maru Gothic, sans-serif" font-size="12" font-weight="700" fill="#2f6b2f">wasabi</text></g>
       <g id="pN" style="display:none"><rect x="90" y="50" width="220" height="110" rx="14" fill="#fff" stroke="#cfc3c9" stroke-width="4"/><text x="200" y="138" text-anchor="middle" font-size="96">🍖</text></g>
     </svg>
+    <div id="fxCena" style="display:none;padding:12px"></div>
     <video id="clVid" muted playsinline preload="auto" poster="/idiomas/video/kaimasu.jpg" aria-label="Clipe: comprar o bilhete" style="display:none;width:100%;height:auto"></video>
     <svg id="svgClip" viewBox="0 0 400 250" role="img" aria-label="Clipe: o seu avatar faz as ações" style="display:none">
       <rect width="400" height="250" fill="#fbf3ea"/>
@@ -634,7 +635,8 @@ function trocaCena(){
   const pr=S.passo==='prontas'?(PRONTAS[S.p||0]||{}).scene:null;
   const kon=!pr&&S.passo!=='chegada'&&(S.k>=5||S.passo==='prontas'||S.passo==='final'||S.passo==='fim');
   const cl=S.passo==='clipe';
-  const mostra={imgEst:!cl&&!kon&&!pr,placaEst:!cl&&!kon&&!pr,svgEst:false,svgKon:!cl&&kon,svgWc:!cl&&pr==='wc',svgProd:!cl&&(pr==='wasabi'||pr==='niku'),svgClip:cl};
+  const fx=S.passo==='agua'&&CHAVES[S.k]&&CHAVES[S.k].n===3;
+  const mostra={fxCena:fx,imgEst:!cl&&!fx&&!kon&&!pr,placaEst:!cl&&!fx&&!kon&&!pr,svgEst:false,svgKon:!cl&&!fx&&kon,svgWc:!cl&&pr==='wc',svgProd:!cl&&(pr==='wasabi'||pr==='niku'),svgClip:cl};
   if(!cl){const av=$('clAv');if(av)av.hidden=true;const v=$('clVid');if(v){try{v.pause();}catch(e){}v.style.display='none';}}
   for(const id in mostra){const el=$(id);if(el)el.style.display=mostra[id]?'':'none';}
   if(pr==='wasabi'||pr==='niku'){const w=$('pW'),n=$('pN');if(w)w.style.display=pr==='wasabi'?'':'none';if(n)n.style.display=pr==='niku'?'':'none';}
@@ -645,7 +647,7 @@ function desenhaHot(){
   { const sc=document.querySelector('.scene'); if(sc) sc.classList.toggle('pb',S.passo==='terra'&&CHAVES[S.k]&&S.k<5); }
   { const ic=$('imgEstCor'); if(ic) ic.hidden=true; }
   hsBox.innerHTML='';const av=$('avatarNao');if(av){clearTimeout(av._t);av.hidden=true;av.classList.remove('vai','apresenta','sim','pergunta');}
-  if(S.passo==='chegada'||S.passo==='fim'||S.passo==='final'||S.passo==='prontas'||S.passo==='clipe'||S.passo==='retoma'){$('dicaCena').hidden=true;return;}
+  if(S.passo==='chegada'||S.passo==='fim'||S.passo==='final'||S.passo==='prontas'||S.passo==='clipe'||S.passo==='retoma'||(S.passo==='agua'&&CHAVES[S.k].n===3)){$('dicaCena').hidden=true;return;}
   $('dicaCena').hidden=false;
   const c=CHAVES[S.k];
   c.hot.forEach((h,i)=>{
@@ -705,7 +707,7 @@ function render(){
 function voltaPasso(){
   const p=S.passo;try{pararMic();}catch(e){}
   if(p==='toque'){ if(CHAVES[S.k].n===3&&S.clipeVisto){S.cl=CLIP.length-1;S.clipeRever=false;vai('clipe');} else if(S.k>0){S.k--;vai('terra');} else vai('chegada'); }
-  else if(p==='agua'){ if((S.ai||0)>0){S.ai--;vai('agua');} else vai('toque'); }
+  else if(p==='agua'){ if(CHAVES[S.k].n===3){S.cl=CLIP.length-1;S.clipeRever=false;vai('clipe');} else if((S.ai||0)>0){S.ai--;vai('agua');} else vai('toque'); }
   else if(p==='fixa'){ S.__ai=Math.max(0,CHAVES[S.k].hot.length-1); vai('agua'); }
   else if(p==='falafix'){ vai(CHAVES[S.k].n===3?'agua':'fixa'); }
   else if(p==='fogo'){ S.ff=0; vai('falafix'); }
@@ -718,7 +720,7 @@ function render0(){
   if(S.passo==='retoma'&&S.k<1)S.passo='agua';
   if(S.passo==='fixa'&&CHAVES[S.k].n===3){S.passo='falafix';S.ff=0;}
   if(S.passo==='agua'&&!toqueCompleto(CHAVES[S.k])&&!S.toqueOk[S.k])S.passo='toque';
-  if(S.passo==='toque'&&CHAVES[S.k].n===3&&!S.clipeVisto&&!S.toqueOk[S.k]){S.passo='clipe';S.cl=0;S.clipeRever=false;}
+  if(S.passo==='toque'&&CHAVES[S.k].n===3){ if(!S.clipeVisto){S.passo='clipe';S.cl=0;S.clipeRever=false;} else S.passo='agua'; }
   desenhaBarra();desenhaHot();
   luzCena();luzToque();
   { const pr=S.passo==='prontas'?((PRONTAS[S.p||0]||{}).fogo?'fogo':'agua'):null;
@@ -986,9 +988,9 @@ function telaFixaClipe(c){
      <h2><button type="button" class="btn ghost small" id="fxOuve" aria-label="Ouvir a frase">🔊 Ouvir de novo</button></h2>
      <div class="contagem" aria-label="${q} de ${R.length}">${R.map((_,i)=>`<i class="${i<q?'on':''}"></i>`).join('')}</div>
      <p class="nota"><b>Ouça e repita em voz alta.</b> Depois toque na imagem que mostra a ação.</p>
-     <div class="fx-img" id="fxBt">${OPC.map(j=>`<button type="button" class="fx-quadro" data-j="${j}" aria-label="${CLIP[j].pt}"><img src="${CLIP[j].video.replace('.mp4','_acao.jpg')}" alt="" loading="eager"></button>`).join('')}</div>
      <div class="estado" id="estado"></div>
      <div class="acoes"><button class="btn ghost" type="button" id="clRever2">🎬 Rever o clipe</button><button class="btn ghost" type="button" id="fxPula">Pular →</button></div>`;
+    $('fxCena').innerHTML=`<div class="fx-img" id="fxBt">${OPC.map(j=>`<button type="button" class="fx-quadro" data-j="${j}" aria-label="${CLIP[j].pt}"><img src="${CLIP[j].video.replace('.mp4','_acao.jpg')}" alt="" loading="eager"></button>`).join('')}</div>`;
     $('fxPula').onclick=()=>{pararMic();fim();};
     $('clRever2').onclick=()=>{pararMic();S.cl=0;S.clipeRever=true;S.passo='clipe';render();};
     $('fxOuve').onclick=()=>{fala(frase(k));};
@@ -1031,11 +1033,12 @@ function telaClipe(c){
   hsBox.innerHTML='';
   painel.innerHTML=`<span class="elem agua"><i></i>Chave 03 · ます · assista e repita</span>
    <h2>Veja o que ela faz. Todo verbo termina em <b style="color:#c0392b">ます</b>.</h2>
+   <p class="nota"><b>Ouça e repita em voz alta</b> cada frase.</p>
    <div class="contagem" aria-label="${i+1} de ${CLIP.length}">${CLIP.map((_,j)=>`<i class="${j<=i?'on':''}"></i>`).join('')}</div>
    <div class="cl-legenda" id="clLeg" style="visibility:hidden"><div class="jpl" lang="ja">${k.t.map(t=>typeof t==='string'?t:t[0].replace(/ます$/,'')+'<b>ます</b>').join('')}</div><div class="ro">${k.ro}</div><div class="pt">${k.pt}</div></div>
-   <div class="nav-ex"><button class="btn ghost voltaBtn" type="button" id="clVolta">← Anterior</button><button class="btn pri" type="button" id="clProx">${i+1<CLIP.length?'Próximo verbo →':'Tocar na cena →'}</button></div>
+   <div class="nav-ex"><button class="btn ghost voltaBtn" type="button" id="clVolta">← Anterior</button><button class="btn pri" type="button" id="clProx">${i+1<CLIP.length?'Próximo verbo →':'Ouvir e escolher →'}</button></div>
    <div class="acoes"><button class="btn" type="button" id="clDeNovo">🔁 Ver de novo</button><button class="btn ghost" type="button" id="clPula">Pular clipes</button></div>`;
-  const sai=()=>{const rv=S.clipeRever;S.clipeVisto=true;S.clipeRever=false;S.passo=rv?'agua':'toque';parar();render();};
+  const sai=()=>{S.clipeVisto=true;S.clipeRever=false;S.passo='agua';parar();render();};
   $('clVolta').onclick=()=>{if(i>0){S.cl=i-1;parar();render();}else if(S.clipeRever){S.clipeRever=false;parar();S.clipeVisto=true;vai('agua');}else if(S.k>0){S.clipeVisto=false;parar();S.k--;vai('terra');}else{parar();vai('chegada');}};
   $('clPula').onclick=sai;
   $('clProx').onclick=()=>{if(i+1<CLIP.length){S.cl=i+1;parar();render();}else sai();};
@@ -1531,6 +1534,6 @@ render();
 })();
 </script>
 <script defer src="/caderno-flutuante.js?v=21"></script>
-<div id="verTeste" style="position:fixed;left:8px;bottom:6px;z-index:9999;font:11px/1 system-ui;color:#8a7a86;background:rgba(255,255,255,.85);padding:3px 7px;border-radius:8px;pointer-events:none">versão de teste · 22/11 18:15 · água c3 com imagens</div>
+<div id="verTeste" style="position:fixed;left:8px;bottom:6px;z-index:9999;font:11px/1 system-ui;color:#8a7a86;background:rgba(255,255,255,.85);padding:3px 7px;border-radius:8px;pointer-events:none">versão de teste · 22/11 18:15 · c3 sem toque, imagens na cena</div>
 </body>
 </html>
