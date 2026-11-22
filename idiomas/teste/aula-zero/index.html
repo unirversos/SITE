@@ -728,7 +728,7 @@ function luzToque(novo){
 /* acende os objetos da cena que pertencem às chaves já acesas; o fundo ganha cor aos poucos */
 function luzCena(novo){
   const n=Math.min(S.acesas.length,5);
-  { const im=document.getElementById('imgEst'); if(im) im.style.setProperty('--sat',n>=5?1:n*0.2); }
+  { const im=document.getElementById('imgEst'); if(im) im.style.setProperty('--sat',1); }
   document.querySelectorAll('.fundo').forEach(g=>{if(n>=5)g.removeAttribute('filter');else g.setAttribute('filter','url(#sat'+n+')');});
   document.querySelectorAll('[data-luz]').forEach(g=>{
     const k=+g.dataset.luz,on=S.acesas.includes(k);
