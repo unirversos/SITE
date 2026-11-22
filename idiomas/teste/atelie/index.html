@@ -159,7 +159,7 @@ h1 .jp{font-family:var(--f-body);font-weight:700;font-size:.5em;color:var(--pink
 .opt{position:relative;border:1.5px solid var(--line);background:var(--card);border-radius:16px;padding:12px 10px 10px;display:grid;justify-items:center;gap:2px;text-align:center;transition:transform .15s}
 .opt:hover{transform:translateY(-2px);border-color:var(--lavender)}
 .opt[aria-pressed="true"]{border-color:var(--pink);box-shadow:0 0 0 2px var(--pink) inset}
-.opt .j{font-size:21px;font-weight:700;line-height:1.5}
+.opt .j{white-space:nowrap;font-size:clamp(15px,2.2vw,21px);font-weight:700;line-height:1.5}
 .opt .p{font-size:12px;color:var(--muted)}
 .opt .sw{width:22px;height:22px;border-radius:50%;box-shadow:0 0 0 1.5px var(--line);margin-bottom:2px}
 .opt .badge{position:absolute;top:6px;right:8px;font-size:10px;font-weight:700;color:var(--gold);font-family:var(--f-display)}
@@ -392,6 +392,7 @@ body.m-cart .c-intro{display:none}
 .cfg-vel input{width:100%;accent-color:var(--pink);min-height:36px}
 #dice{width:100%;justify-content:center;background:var(--ink);color:var(--paper);border-color:var(--ink)}
 .btn-curio{border:0;background:none;color:var(--muted);text-decoration:underline;font-size:13px;box-shadow:none;padding:2px 6px}
+.chip small{margin-left:6px}
 .tab-mais{border-style:dashed;color:var(--muted)}
 .credito-voz{display:none!important}
 .sobre-vozes{margin:24px auto 0;max-width:560px;text-align:center;font-size:12.5px;color:var(--muted)}
@@ -773,6 +774,7 @@ function renderOpts(){
      <span class="j">${ruby(o)}</span><span class="ro">${o.ro}</span><span class="p">${o.pt}</span><span class="p en" lang="en">${o.en||''}</span></button>`).join('');
 }
 function renderWord(animate){
+  { const c=CATS.find(x=>x.key===state.cat); if(c&&!c.multi){ const v=state.sel[c.key]; if(v&&WORDS[v]&&c.opts.some(o=>o.id===state.focus)&&state.focus!==v) state.focus=v; } }
   const w=WORDS[state.focus]||HAIR[0];
   const kana=[...w.kana].map((ch,i)=>`<span style="animation-delay:${i*60}ms">${ch}</span>`).join('');
   $('word').className='word'+(animate?' anim':'');
@@ -796,7 +798,7 @@ function renderXP(){ renderPlanet();
 }
 function renderChips(){
   const ids=Object.keys(state.learned);
-  $('chips').innerHTML=ids.length?ids.map(id=>{const w=WORDS[id];return `<span class="chipw"><button class="chip" type="button" data-id="${id}">${ruby(w)} <span class="ro">${w.ro}</span><small>${w.pt} · <i lang="en">${w.en||''}</i></small></button><button class="chip-cad" type="button" data-cad="${id}" title="Salvar no caderno" aria-label="Salvar ${w.jp} no caderno">＋ caderno</button></span>`}).join('')
+  $('chips').innerHTML=ids.length?ids.map(id=>{const w=WORDS[id];return `<span class="chipw"><button class="chip" type="button" data-id="${id}">${ruby(w)} <small>${w.pt}</small></button><button class="chip-cad" type="button" data-cad="${id}" title="Salvar no caderno" aria-label="Salvar ${w.jp} no caderno">＋ caderno</button></span>`}).join('')
     :'<p class="empty">Toque nas opções do ateliê. Cada palavra nova entra aqui e vale +5 XP.</p>';
 }
 function renderSkins(){
