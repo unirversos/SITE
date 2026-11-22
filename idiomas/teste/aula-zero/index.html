@@ -552,17 +552,16 @@ const CHAVES=[
  {n:4,jp:'ません',ico:'🙅',
   gram:'<b>ません</b> é o “não” do ます: たべ<b>ます</b> → たべ<b>ません</b>. Útil para dizer o que você <b>não</b> come ou não bebe.',
   molde:'<em>coisa</em> を <em>ação</em> <b>ません</b>',moldeRo:'[coisa] o [ação]-masen',
-  intro:'Você sai da estação e entra no konbini.',
   hot:[
-   H(K_SAKANA,'sakana','さかなをたべません',['さかなを','たべ',['ません','k']],'sakana o tabemasen','Eu não como peixe.','I do not eat fish.'),
-   H(K_NIKU,'niku','にくをたべません',['にくを','たべ',['ません','k']],'niku o tabemasen','Eu não como carne.','I do not eat meat.'),
-   H(K_TAMAGO,'tamago','たまごをたべません',['たまごを','たべ',['ません','k']],'tamago o tabemasen','Eu não como ovo.','I do not eat eggs.'),
-   H(K_LEITE,'gyunyu','ぎゅうにゅうをのみません',['ぎゅうにゅうを','のみ',['ません','k']],'gyūnyū o nomimasen','Eu não bebo leite.','I do not drink milk.'),
-   H(K_SAKE,'sake','おさけをのみません',['おさけを','のみ',['ません','k']],'osake o nomimasen','Eu não bebo álcool.','I do not drink alcohol.'),
-   H(K_CHA,'ocha','おちゃをのみません',['おちゃを','のみ',['ません','k']],'ocha o nomimasen','Eu não bebo chá.','I do not drink tea.')],
-  agua:{say:'さかなをたべません',t:['さかなを','たべ',['ません','k']],ro:'sakana o tabemasen',pt:'Eu não como peixe.',g:[['さかな','魚'],['を'],['たべ','食べ'],['ません']]},
-  fogo:{pedido:'Ela oferece carne. Você não come carne. Diga: eu não como carne.',say:'にくをたべません',t:['にくを','たべ',['ません','k']],ro:'niku o tabemasen',pt:'Eu não como carne.',g:[['にく','肉'],['を'],['たべ','食べ'],['ません']]},
-  terra:{pedido:'Diga o que você NÃO come ou NÃO bebe, com ません. Faça 1 frase sua.',itens:['sakana','niku','tamago','gyunyu','sake','ocha'],suf:{_:['ません']},exemplo:'さかなをたべません',exemploRo:'sakana o tabemasen',key:'ません'},
+   H(P_SIGN,'iki','とうきょうにいきません',[TOK.tokyo,'に','いき',['ません','k']],'Tōkyō ni ikimasen','Eu não vou para Tóquio.','I do not go to Tokyo.'),
+   H(P_TRAIN,'nori','でんしゃにのりません',['でんしゃに','のり',['ません','k']],'densha ni norimasen','Eu não pego o trem.','I do not take the train.'),
+   H(P_ONI,'tabe','おにぎりをたべません',['おにぎりを','たべ',['ません','k']],'onigiri o tabemasen','Eu não como o onigiri.','I do not eat the onigiri.'),
+   H(P_WATER,'nomi','みずをのみません',['みずを','のみ',['ません','k']],'mizu o nomimasen','Eu não bebo água.','I do not drink water.'),
+   H(P_WC,'iki2','トイレにいきません',['トイレに','いき',['ません','k']],'toire ni ikimasen','Eu não vou ao banheiro.','I do not go to the restroom.'),
+   H(P_TICKET,'kai','きっぷをかいません',['きっぷを','かい',['ません','k']],'kippu o kaimasen','Eu não compro o bilhete.','I do not buy the ticket.')],
+  agua:{say:'おにぎりをたべません',t:['おにぎりを','たべ',['ません','k']],ro:'onigiri o tabemasen',pt:'Eu não como o onigiri.',g:[['おにぎり'],['を'],['たべ','食べ'],['ません']]},
+  fogo:{pedido:'Oferecem a água, mas você não quer. Diga: eu não bebo água.',say:'みずをのみません',t:['みずを','のみ',['ません','k']],ro:'mizu o nomimasen',pt:'Eu não bebo água.',g:[['みず','水','おみず','お水'],['を'],['のみ','飲み'],['ません']]},
+  terra:{pedido:'Diga o que você NÃO faz, com ません. Faça 1 frase sua.',itens:['iki','nori','tabe','nomi','iki2','kai'],suf:{_:['ません']},exemplo:'おにぎりをたべません',exemploRo:'onigiri o tabemasen',key:'ません'},
   ganho:'Agora você sabe dizer o que não faz.',dia:'Com ません você diz o que não come nem bebe, e evita um susto no restaurante.'},
 
  {n:5,jp:'ください',ico:'🤲',
@@ -615,7 +614,7 @@ function desenhaBarra(){
 }
 function trocaCena(){
   const pr=S.passo==='prontas'?(PRONTAS[S.p||0]||{}).scene:null;
-  const kon=!pr&&S.passo!=='chegada'&&(S.k>=3||S.passo==='prontas'||S.passo==='final'||S.passo==='fim');
+  const kon=!pr&&S.passo!=='chegada'&&(S.k>=4||S.passo==='prontas'||S.passo==='final'||S.passo==='fim');
   const cl=S.passo==='clipe';
   const mostra={imgEst:!cl&&!kon&&!pr,placaEst:!cl&&!kon&&!pr,svgEst:false,svgKon:!cl&&kon,svgWc:!cl&&pr==='wc',svgProd:!cl&&(pr==='wasabi'||pr==='niku'),svgClip:cl};
   if(!cl){const av=$('clAv');if(av)av.hidden=true;}
@@ -625,7 +624,7 @@ function trocaCena(){
 }
 function desenhaHot(){
   trocaCena();
-  { const sc=document.querySelector('.scene'); if(sc) sc.classList.toggle('pb',S.passo==='terra'&&CHAVES[S.k]&&S.k<3); }
+  { const sc=document.querySelector('.scene'); if(sc) sc.classList.toggle('pb',S.passo==='terra'&&CHAVES[S.k]&&S.k<4); }
   { const ic=$('imgEstCor'); if(ic) ic.hidden=true; }
   hsBox.innerHTML='';const av=$('avatarNao');if(av){av.hidden=true;av.classList.remove('vai','apresenta');}
   if(S.passo==='chegada'||S.passo==='fim'||S.passo==='final'||S.passo==='prontas'||S.passo==='clipe'||S.passo==='retoma'){$('dicaCena').hidden=true;return;}
@@ -636,13 +635,13 @@ function desenhaHot(){
     const b=document.createElement('button');b.type='button';b.className='hs'+(usado?' usado':(S.visto.has(c.n+'-'+i)?' visto':''));
     b.style.left=h.x+'%';b.style.top=h.y+'%';b.setAttribute('aria-label',usado?'Já usado':'Tocar para ouvir: '+h.pt);b.innerHTML='<span>'+(usado?'✓':'♪')+'</span>';
     if(usado)b.disabled=true;
-    const riscaNao=(quieto)=>{const x=document.createElement('span');x.className='xitem'+(quieto?' quieto':'');x.textContent='✕';x.style.left=h.x+'%';x.setAttribute('aria-hidden','true');hsBox.appendChild(x);};
+    const riscaNao=(quieto)=>{const x=document.createElement('span');x.className='xitem'+(quieto?' quieto':'');x.textContent='✕';x.style.left=h.x+'%';x.style.top=h.y+'%';x.setAttribute('aria-hidden','true');hsBox.appendChild(x);};
     if(c.n===4&&S.visto.has(c.n+'-'+i)&&S.passo!=='terra')riscaNao(true);
     b.onclick=()=>{const jaVisto=S.visto.has(c.n+'-'+i);S.visto.add(c.n+'-'+i);b.classList.add('visto');pilula.hidden=false;
       if(c.n===4||c.n===5){if(c.n===4&&!jaVisto)riscaNao(false);const av=$('avatarNao');if(av){av.classList.toggle('sim',c.n===5);{const bl=av.querySelector('.balao');bl.textContent='Quero!';bl.hidden=c.n!==5;}av.hidden=false;av.classList.remove('vai');void av.offsetWidth;av.classList.add('vai');}}
       pilula.innerHTML=`<div class="pilula"><div class="jpl" lang="ja">${html(h.t)}</div><div class="ro">${h.ro}</div><p class="pt">${h.pt}</p><p class="en">${h.en}</p><p class="gram">${c.gram}</p>${h.resp?`<p class="gram"><button type="button" class="btn small" id="ouveResp">💬 Resposta: <span lang="ja">${h.resp.ja}</span> · ${h.resp.pt}</button></p>`:''}${h.num?`<p class="gram"><a href="/idiomas/numeros/#${h.num}" target="_blank" rel="noopener"><b>🔢 Aprender os números ↗</b></a> (${h.numTxt||''})</p>`:''}</div>`;
       if(h.resp){const br=$('ouveResp');if(br)br.onclick=()=>fala(h.resp.ja);}
-      if(c.n===4){const nomi=['gyunyu','sake','ocha'].includes(h.item);const pl=pilula.querySelector('.pilula');if(pl)pl.insertAdjacentHTML('beforeend','<p class="gram verbo">'+(nomi?'のみもの':'たべもの')+' → <b>'+(nomi?'のみ':'たべ')+'</b>ません</p>');}
+      if(c.n===4){const V={iki:'いき',nori:'のり',tabe:'たべ',nomi:'のみ',iki2:'いき',kai:'かい'}[h.item];const pl=pilula.querySelector('.pilula');if(pl&&V)pl.insertAdjacentHTML('beforeend','<p class="gram verbo">'+V+'<b>ます</b> → '+V+'<b>ません</b></p>');}
       fala(h.say);if(!jaVisto)magia(h);luzToque(jaVisto?null:c.n+'-'+i);if(S.passo==='toque')atualizaToque(!jaVisto);};
     hsBox.appendChild(b);
   });
