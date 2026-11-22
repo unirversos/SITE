@@ -198,6 +198,8 @@ body[data-etapa="ar"] .painel{--el:var(--gold)}
 .ro-in{display:none;color:var(--muted);font-weight:500;font-size:.85em}body.ver-ro .ro-in{display:inline}
 .scene.pb svg{filter:grayscale(1) contrast(1.05);transition:filter .4s}
 .scene svg{transition:filter .4s}
+.scene #avatarNao.apresenta{width:30%;left:3%;bottom:3%;animation:piscaFace .9s ease-in-out infinite;border-radius:50%}
+#avatarNao.apresenta .balao{left:70%;top:0;border-color:var(--terra);color:var(--terra);font-size:16px}
 .nome-card{display:flex;align-items:center;gap:14px;justify-content:center;margin:10px auto;padding:12px 18px;max-width:340px;border:2px solid var(--terra);border-radius:18px;background:#fff;animation:puxa .6s ease-out}
 .nc-av{width:84px;height:84px;border-radius:50%;overflow:hidden;animation:piscaFace .9s ease-in-out infinite}
 .nc-av svg{width:100%;height:100%;display:block}
@@ -596,7 +598,7 @@ function trocaCena(){
 function desenhaHot(){
   trocaCena();
   { const sc=document.querySelector('.scene'); if(sc) sc.classList.toggle('pb',S.passo==='terra'&&CHAVES[S.k]&&CHAVES[S.k].n===1); }
-  hsBox.innerHTML='';const av=$('avatarNao');if(av){av.hidden=true;av.classList.remove('vai');}
+  hsBox.innerHTML='';const av=$('avatarNao');if(av){av.hidden=true;av.classList.remove('vai','apresenta');}
   if(S.passo==='chegada'||S.passo==='fim'||S.passo==='final'||S.passo==='prontas'||S.passo==='clipe'||S.passo==='retoma'){$('dicaCena').hidden=true;return;}
   $('dicaCena').hidden=false;
   const c=CHAVES[S.k];
@@ -1168,12 +1170,12 @@ function telaTerra(c){
   painel.innerHTML=`<span class="elem terra"><i></i>Chave ${String(c.n).padStart(2,'0')} · Terra · gravar</span>
    <h2>${faseNome?'Agora é a sua vez: apresente-se. Diga seu nome com です.':alvoPisca?'Uma coisa da cena está piscando. Diga o que é, com です.':t.pedido}</h2>
    ${c.n===1?`<div class="contagem" id="cont" aria-label="${S.t1.i} de ${totalRod+1}">${Array.from({length:totalRod+1},(_,i)=>`<i class="${i<S.t1.i?'on':''}"></i>`).join('')}</div>`:`<div class="contagem" id="cont" aria-label="${feitos} de 1">${[0].map(i=>`<i class="${i<feitos?'on':''}"></i>`).join('')}</div>`}
-   ${faseNome?'<div class="nome-card" id="nomeCard"><div class="nc-av" id="ncAv"></div><div class="nc-t"><b id="ncNome"></b><span>です</span></div></div>':''}
+
    <div class="moldebox"><div class="jpl" lang="ja">${c.molde}</div><div class="ro">${c.moldeRo}</div></div>
    ${c.n===3?'<p class="ptdica">👆 Toque no <span class="pt o">を</span> ou no <span class="pt ni">に</span> para ver a diferença.</p>':''}
    <div class="acoes" id="acoes"></div><div class="estado" id="estado"></div><div class="ouvi" id="ouvi"></div>
    <div id="escrita"></div><div id="reforco" class="acoes" style="flex-direction:column;align-items:flex-start"></div>`;
-  if(faseNome){ try{ const A=window.UtopiaAvatar,a=A&&A.load(); const sel=(a&&a.sel)||(A&&A.DEFAULT); if(A&&sel) $('ncAv').innerHTML=A.svg(sel,{viewBox:'40 46 160 160',still:true,label:'Seu avatar'}); const pf=(a&&a.profile)||{}; $('ncNome').textContent=(pf.kata||pf.name||'').trim()||'？？？'; }catch(e){} }
+  if(faseNome){ try{ const av=$('avatarNao'); if(av){ const A=window.UtopiaAvatar,a=A&&A.load(),pf=(a&&a.profile)||{}; const cab=av.querySelector('.cabeca'); const sel=(a&&a.sel)||(A&&A.DEFAULT); if(A&&sel&&cab) cab.innerHTML=A.svg(sel,{viewBox:'40 46 160 160',still:true,label:'Seu avatar'}); const bl=av.querySelector('.balao'); bl.textContent=((pf.kata||pf.name||'').trim()||'？？？')+'です'; bl.hidden=false; av.querySelector('.bracos').innerHTML=''; av.classList.remove('sim','vai'); av.classList.add('apresenta'); av.hidden=false; } }catch(e){} }
   const JA=/^[぀-ゟ゠-ヿ一-鿿]+$/;
   /* sufixos aceitos (do mais longo para o mais curto); cada um pode pedir um tipo de palavra */
   const sufs=[];
