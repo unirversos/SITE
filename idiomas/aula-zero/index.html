@@ -26,6 +26,8 @@ body{margin:0;background:var(--paper);color:var(--ink);font-family:var(--f-body)
   background-image:radial-gradient(var(--line) 1.2px,transparent 1.3px);background-size:22px 22px;
   padding:16px max(14px,env(safe-area-inset-right)) 48px max(14px,env(safe-area-inset-left))}
 .wrap{max-width:860px;margin:0 auto;display:grid;gap:18px}
+/* tablet: as abas do canto (Dicionário, Baú, Caderno) ocupam a borda direita; reserva o espaço para não cobrirem a cena */
+@media (min-width:701px) and (max-width:1100px){body{padding-right:84px}}
 button{font:inherit;color:inherit;cursor:pointer}
 button:focus-visible{outline:3px solid var(--lavender);outline-offset:2px}
 ruby rt{font-size:.5em;color:var(--muted);font-weight:500}
