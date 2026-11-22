@@ -378,6 +378,12 @@ body.m-edit{padding-bottom:96px}
 body.m-edit .passe-sec{display:none}
 body.m-cart .c-intro{display:none}
 .nome-box{margin-bottom:12px}
+#dice{width:100%;justify-content:center;background:var(--ink);color:var(--paper);border-color:var(--ink)}
+.btn-curio{border:0;background:none;color:var(--muted);text-decoration:underline;font-size:13px;box-shadow:none;padding:2px 6px}
+.tab-mais{border-style:dashed;color:var(--muted)}
+.credito-voz{display:none!important}
+.sobre-vozes{margin:24px auto 0;max-width:560px;text-align:center;font-size:12.5px;color:var(--muted)}
+.sobre-vozes summary{cursor:pointer}
 @media (max-width:700px){.pronto-bar{bottom:calc(70px + env(safe-area-inset-bottom,0px))}}
 
 </style>
@@ -575,6 +581,7 @@ body.m-cart .c-intro{display:none}
     <p class="note" id="voiceNote">Áudio: por enquanto, a voz japonesa do próprio aparelho.</p>
   </section>
 </div>
+<details class="sobre-vozes"><summary>ℹ️ Sobre as vozes</summary><p id="sobreVozesTxt">Vozes sintéticas. Aos poucos, as gravações da professora vão substituindo.</p></details>
 <div class="lv-toast" id="lvToast" role="status" hidden></div>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
@@ -731,10 +738,12 @@ function stepSpeech(delta){
 }
 
 /* ---------- estúdio ---------- */
+const AVANC=['acc','traits','bg']; let maisOp=false;
 function renderTabs(){
-  $('tabs').innerHTML=CATS.map(c=>{const n=c.opts.filter(o=>state.learned[o.id]).length;
+  if(AVANC.includes(state.cat)) maisOp=true;
+  $('tabs').innerHTML=CATS.filter(c=>maisOp||!AVANC.includes(c.key)).map(c=>{const n=c.opts.filter(o=>state.learned[o.id]).length;
     return `<button class="tab" role="tab" type="button" data-cat="${c.key}" aria-selected="${state.cat===c.key}">
-      <span class="j">${ruby(c)}</span><span class="p">${c.pt}</span>${n>=c.opts.length?'<span class="count" aria-label="completo">✓</span>':`<span class="count">${n}/${c.opts.length}</span>`}</button>`}).join('');
+      <span class="j">${ruby(c)}</span><span class="p">${c.pt}</span>${n>=c.opts.length?'<span class="count" aria-label="completo">✓</span>':`<span class="count">${n}/${c.opts.length}</span>`}</button>`}).join('')+(maisOp?'':'<button class="tab tab-mais" type="button" data-mais="1"><span class="j">＋</span><span class="p">mais opções</span></button>');
 }
 function renderOpts(){
   const cat=CATS.find(c=>c.key===state.cat);
@@ -850,7 +859,7 @@ $('curioToggle').onclick=()=>{
 document.addEventListener('keydown',e=>{
   if(e.key==='Escape'&&speechOpen){ speechOpen=false; tipOpen=false; stopAudio(); renderSpeech(); $('avatarCard').focus(); }
 });
-$('tabs').addEventListener('click',e=>{const b=e.target.closest('.tab'); if(!b) return; state.cat=b.dataset.cat;
+$('tabs').addEventListener('click',e=>{const b=e.target.closest('.tab'); if(!b) return; if(b.dataset.mais){ maisOp=true; renderTabs(); return; } state.cat=b.dataset.cat;
   const cat=CATS.find(c=>c.key===state.cat); const v=state.sel[cat.key]; state.focus=cat.multi?(v[v.length-1]||cat.opts[0].id):v; renderAll(null,true); });
 $('opts').addEventListener('click',e=>{
   const b=e.target.closest('.opt'); if(!b) return; const cat=CATS.find(c=>c.key===state.cat), id=b.dataset.id;
@@ -968,9 +977,12 @@ const trOuve=()=>speak(sentences()[trI].jp);
 $('trJp').onclick=$('trOuvir').onclick=trOuve;
 $('trVer').onclick=()=>{ trVis=!trVis; renderTreino(); };
 $('trAnt').onclick=()=>{ if(trI>0){ trI--; renderTreino(); } };
-$('trProx').onclick=()=>{ if(trI<sentences().length-1){ trI++; renderTreino(); trOuve(); } else { trI=0; trVisto=new Set(); modo('cart'); } };
+$('trProx').onclick=()=>{ if(trI<sentences().length-1){ trI++; renderTreino(); trOuve(); } else { const hoje=new Date().toISOString().slice(0,10); let msg='';
+  if(g.treinoDia!==hoje){ g.treinoDia=hoje; gain(10); save(); msg='Treino completo! +10 XP ✓'; } else msg='Treino completo ✓';
+  trI=0; trVisto=new Set(); modo('cart'); avisa(msg); } };
 $('trTodas').onclick=()=>speak(sentences().map(l=>l.jp).join(' '));
 (function(){ const f=document.querySelector('.passe-form'); if(f){ f.classList.add('nome-box'); $('tabs').parentNode.insertBefore(f,$('tabs')); } })();
+if(window.AUDIO_CREDITO) $('sobreVozesTxt').textContent='Vozes sintéticas: '+window.AUDIO_CREDITO+'. Aos poucos, as gravações da professora vão substituindo.';
 function modo(m,semHist){
   document.body.classList.remove('m-cart','m-edit','m-treino'); document.body.classList.add('m-'+m);
   if(m==='edit') marcaFeito();
@@ -986,7 +998,7 @@ if(!feito) document.body.classList.add('novo');
 modo(modoDoHash(),true);
 /* nas abas do editor: tocar na aba fala a frase daquele assunto; tocar no avatar também */
 function falaAssunto(k){ const i=idxTopico(k==='clothColor'?'clothes':k); const l=sentences()[i]; if(l) speakCard(l.jp,false); }
-$('tabs').addEventListener('click',e=>{ const b=e.target.closest('.tab'); if(b) setTimeout(()=>falaAssunto(state.cat),0); });
+$('tabs').addEventListener('click',e=>{ const b=e.target.closest('.tab'); if(b&&!b.dataset.mais) setTimeout(()=>falaAssunto(state.cat),0); });
 </script>
 <script defer src="/caderno-flutuante.js?v=21"></script>
 </body>
