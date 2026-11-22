@@ -690,7 +690,7 @@ function render(){
     const nav=document.createElement('div');nav.className='nav-ex';
     const v=document.createElement('button');v.type='button';v.className='btn ghost voltaBtn';v.textContent='← Voltar';v.setAttribute('aria-label','Voltar ao exercício anterior');v.onclick=voltaPasso;nav.appendChild(v);
     const pu=[...painel.querySelectorAll('button.btn.ghost')].find(b=>/^Pular/.test(b.textContent.trim()));
-    if(pu){const rot=pu.textContent.trim();pu.setAttribute('aria-label',rot.replace(/→/,'').trim());pu.textContent='Pular →';pu.classList.add('pulaBtn');pu.hidden=S.erros<2;nav.appendChild(pu);}
+    if(pu){const rot=pu.textContent.trim();pu.setAttribute('aria-label',rot.replace(/→/,'').trim());pu.textContent='Pular →';pu.classList.add('pulaBtn');nav.appendChild(pu);}
     painel.appendChild(nav);
   }
 }
@@ -1123,7 +1123,7 @@ function montaEntrada(c,trata){
     if(!usaMic)inp.focus({preventScroll:true});
   }
   const E={
-    falha(dito,msg){S.erros++;document.querySelectorAll('.pulaBtn').forEach(b=>{b.hidden=S.erros<2;});painel.querySelectorAll('.ouvir-alvo[hidden]').forEach(b=>b.hidden=false);est.className='estado erro';est.textContent=msg;ouvi.textContent=dito?'Ouvi: “'+dito+'”':'';reforco();},
+    falha(dito,msg){S.erros++;painel.querySelectorAll('.ouvir-alvo[hidden]').forEach(b=>b.hidden=false);est.className='estado erro';est.textContent=msg;ouvi.textContent=dito?'Ouvi: “'+dito+'”':'';reforco();},
     aviso(msg,dito){est.className='estado erro';est.textContent=msg;ouvi.textContent=dito?'Você escreveu: “'+dito+'”':'';},
     ok(dito,msg){pararMic();est.className='estado ok';est.textContent=msg||'✓ Isso!';ouvi.textContent=dito?'Você disse: '+dito:'';ac.innerHTML='';esc.innerHTML='';ref.innerHTML='';}
   };
