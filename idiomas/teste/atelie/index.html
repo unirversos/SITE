@@ -199,7 +199,7 @@ h1 .jp{font-family:var(--f-body);font-weight:700;font-size:.5em;color:var(--pink
   background:repeating-radial-gradient(circle at 85% 20%,transparent 0 9px,rgba(142,106,31,.09) 9px 10px),var(--card);display:grid}
 .c-top{display:flex;justify-content:space-between;align-items:center;gap:10px;background:var(--ink);color:var(--paper);padding:9px 16px;font-size:12px;letter-spacing:.14em}
 .c-top b{font-family:var(--f-body);letter-spacing:.06em;font-size:15px;color:var(--gold)}
-.c-top .lv{font-family:var(--f-display);font-weight:800;letter-spacing:0;font-size:15px}
+.c-top .c-lv{font-family:var(--f-display);font-weight:800;letter-spacing:0;font-size:15px}
 .c-body{display:grid;grid-template-columns:minmax(0,150px) minmax(0,1fr);gap:16px;padding:16px}
 @media (max-width:480px){.c-body{grid-template-columns:minmax(0,108px) minmax(0,1fr);gap:12px}}
 .c-photo{border-radius:10px;overflow:hidden;border:3px solid var(--card);box-shadow:0 0 0 1.5px var(--line);aspect-ratio:240/300;align-self:start}
@@ -336,6 +336,11 @@ h1{font-size:clamp(24px,4vw,30px)}
 [hidden]{display:none!important}
 /* ===== três telas: carteirinha (entrada), editar, treinar ===== */
 .modos{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+.modos.so-cart{justify-content:center;max-width:640px;margin:0 auto;width:100%}
+#cName{cursor:pointer}.c-photo{cursor:pointer}
+.c-top .c-lv{color:#f6d9a8}
+#sayIntro{padding-block:12px}
+summary ruby{line-height:1}
 .modos .btn{min-height:42px}
 .so-edit,.so-treino,.so-cart{display:none}
 body.m-edit .so-edit,body.m-treino .so-treino{display:flex}
@@ -530,7 +535,7 @@ body.m-cart .c-intro{display:none}
         </div>
         <div style="display:grid;gap:10px">
           <article class="card" id="card" aria-label="Carteirinha de aventureiro">
-            <header class="c-top"><span>PLANETA UTOPIA</span><b><ruby>冒険者証<rt>ぼうけんしゃしょう</rt></ruby></b><span class="lv" id="cLv"></span></header>
+            <header class="c-top"><span>PLANETA UTOPIA</span><b><ruby>冒険者証<rt>ぼうけんしゃしょう</rt></ruby></b><span class="c-lv" id="cLv"></span></header>
             <div class="c-body">
               <div class="c-photo"><svg id="cardAvatar" viewBox="0 0 240 300" role="img" aria-label="Foto do avatar"></svg></div>
               <dl class="c-data">
@@ -595,7 +600,7 @@ body.m-cart .c-intro{display:none}
     <p class="note" id="voiceNote">Áudio: por enquanto, a voz japonesa do próprio aparelho.</p>
   </section>
 </div>
-<details class="sobre-vozes"><summary>ℹ️ Sobre as vozes</summary><p id="sobreVozesTxt">Vozes sintéticas. Aos poucos, as gravações da professora vão substituindo.</p></details>
+<details class="sobre-vozes"><summary>ⓘ Sobre as vozes</summary><p id="sobreVozesTxt">Vozes sintéticas. Aos poucos, as gravações da professora vão substituindo.</p></details>
 <div class="lv-toast" id="lvToast" role="status" hidden></div>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
@@ -1003,6 +1008,8 @@ if(window.AUDIO_CREDITO) $('sobreVozesTxt').textContent='Vozes sintéticas: '+wi
   b.onclick=()=>{ const ab=pop.hidden; pop.hidden=!ab; b.setAttribute('aria-expanded',ab); if(ab) ler(); };
   r.oninput=()=>{ if(window.UniVel) UniVel.set(+r.value); o.textContent=rot(+r.value); };
   document.addEventListener('click',e=>{ if(!pop.hidden&&!e.target.closest('.cfg-wrap')){ pop.hidden=true; b.setAttribute('aria-expanded','false'); } }); })();
+$('cName').addEventListener('click',()=>{ modo('edit'); setTimeout(()=>{ const i=$('pName'); if(i){ i.scrollIntoView({block:'center'}); i.focus(); } },60); });
+document.querySelector('.c-photo').addEventListener('click',()=>$('sayIntro').click());
 function modo(m,semHist){
   document.body.classList.remove('m-cart','m-edit','m-treino'); document.body.classList.add('m-'+m);
   if(m==='edit') marcaFeito();
