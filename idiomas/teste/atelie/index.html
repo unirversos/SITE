@@ -551,7 +551,7 @@ body.m-cart .c-intro{display:none}
             <footer class="c-foot">
               <div class="qr" id="qr" title="Abre o Planeta Utopia"></div>
               <div class="c-meta">
-                <span class="qr-note">QR: abre o seu <ruby>単語帳<rt>たんごちょう</rt></ruby> (Minhas palavras)</span>
+                <span class="qr-note">QR: abre o seu caderno de palavras</span>
               <span><span data-ro="hakkōbi"><ruby>発行日<rt>はっこうび</rt></ruby></span>: <b id="cDate"></b></span>
                 <span id="cXp"></span>
                 <div class="bar"><i id="cBar"></i></div>
@@ -824,7 +824,7 @@ function renderCard(){
   const S=state.sel,p=state.profile;
   $('cLv').textContent='★ Lv. '+g.level;
   const nm=(p.kata||'').trim(), lat=(p.name||'').trim();
-  $('cName').innerHTML=nm||lat?esc(nm||lat)+(nm&&lat?`<small>${esc(lat)}</small>`:''):'<small>toque em ✏️ Editar avatar para escrever seu nome</small>';
+  $('cName').innerHTML=nm||lat?esc(nm||lat)+(nm&&lat?`<small>${esc(lat)}</small>`:''):'<small>Sem nome ainda — toque aqui para escrever</small>';
   $('cAge').innerHTML=`<ruby>${S.age}歳<rt>${ageInfo(S.age).kana}</rt></ruby><span class="ro">${kana2ro(ageInfo(S.age).kana)}</span>`;
   $('cTitle').innerHTML=`${AV.titleHTML(g.level)} <span class="ro">${kana2ro(AV.title(g.level)[1])}</span><small>${AV.title(g.level)[2]}</small>`;
   const f=[];
