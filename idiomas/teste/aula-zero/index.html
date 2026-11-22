@@ -383,6 +383,7 @@ body.ver-ro .ro-svg{paint-order:stroke;stroke:#3a2b38;stroke-width:3px;stroke-li
       <g id="pW" transform="translate(130 20)"><rect x="46" y="0" width="28" height="22" rx="6" fill="#fff" stroke="#9aa89a" stroke-width="3"/><path d="M26 22h68l8 150H18z" fill="#6fb36f" stroke="#4f8f4f" stroke-width="4" stroke-linejoin="round"/><rect x="28" y="62" width="64" height="62" rx="6" fill="#fff"/><text x="60" y="97" text-anchor="middle" font-family="Zen Maru Gothic, sans-serif" font-size="20" font-weight="800" fill="#2f6b2f">ワサビ</text><text class="ro-svg" x="60" y="113" text-anchor="middle" font-family="Zen Maru Gothic, sans-serif" font-size="12" font-weight="700" fill="#2f6b2f">wasabi</text></g>
       <g id="pN" style="display:none"><rect x="90" y="50" width="220" height="110" rx="14" fill="#fff" stroke="#cfc3c9" stroke-width="4"/><text x="200" y="138" text-anchor="middle" font-size="96">🍖</text></g>
     </svg>
+    <video id="clVid" muted playsinline preload="auto" poster="/idiomas/video/kaimasu.jpg" aria-label="Clipe: comprar o bilhete" style="display:none;width:100%;height:auto"></video>
     <svg id="svgClip" viewBox="0 0 400 250" role="img" aria-label="Clipe: o seu avatar faz as ações" style="display:none">
       <rect width="400" height="250" fill="#fbf3ea"/>
       <g id="clKai"><path d="M0 0h400v200H0z" fill="#eef3f7"/><path d="M0 200h400v50H0z" fill="#e2d6c8"/>
@@ -633,7 +634,7 @@ function trocaCena(){
   const kon=!pr&&S.passo!=='chegada'&&(S.k>=5||S.passo==='prontas'||S.passo==='final'||S.passo==='fim');
   const cl=S.passo==='clipe';
   const mostra={imgEst:!cl&&!kon&&!pr,placaEst:!cl&&!kon&&!pr,svgEst:false,svgKon:!cl&&kon,svgWc:!cl&&pr==='wc',svgProd:!cl&&(pr==='wasabi'||pr==='niku'),svgClip:cl};
-  if(!cl){const av=$('clAv');if(av)av.hidden=true;}
+  if(!cl){const av=$('clAv');if(av)av.hidden=true;const v=$('clVid');if(v){try{v.pause();}catch(e){}v.style.display='none';}}
   for(const id in mostra){const el=$(id);if(el)el.style.display=mostra[id]?'':'none';}
   if(pr==='wasabi'||pr==='niku'){const w=$('pW'),n=$('pN');if(w)w.style.display=pr==='wasabi'?'':'none';if(n)n.style.display=pr==='niku'?'':'none';}
   const sc=document.querySelector('.scene');if(sc)sc.setAttribute('aria-label',pr==='wc'?'Corredor com a porta do banheiro':pr?'Um produto na sua mão':kon?'Konbini, vista em primeira pessoa':'Plataforma da estação, vista em primeira pessoa');
@@ -990,7 +991,7 @@ function telaFalaFix(c){
 }
 /* ---------- clipe da chave 03: o avatar faz cada ação, um verbo por vez ---------- */
 const CLIP=[
- {cena:'clKai',prop:'',say:'きっぷをかいます',t:['きっぷを',['かいます','k']],ro:'kippu o kaimasu',pt:'Eu compro o bilhete.'},
+ {cena:'clKai',video:'/idiomas/video/kaimasu.mp4',vt:2.6,prop:'',say:'きっぷをかいます',t:['きっぷを',['かいます','k']],ro:'kippu o kaimasu',pt:'Eu compro o bilhete.'},
  {cena:'clBanco',prop:'🍙',say:'おにぎりをたべます',t:['おにぎりを',['たべます','k']],ro:'onigiri o tabemasu',pt:'Eu como o onigiri.',som:'もぐもぐ'},
  {cena:'clBanco',prop:'🍵',say:'おちゃをのみます',t:['おちゃを',['のみます','k']],ro:'ocha o nomimasu',pt:'Eu bebo o chá.',som:'ごくごく'},
  {cena:'clTrem',prop:'',say:'でんしゃにのります',t:['でんしゃに',['のります','k']],ro:'densha ni norimasu',pt:'Eu pego o trem.'},
@@ -1010,11 +1011,22 @@ function telaClipe(c){
   $('clProx').onclick=()=>{if(i+1<CLIP.length){S.cl=i+1;parar();render();}else sai();};
   $('clDeNovo').onclick=()=>{parar();roda();};
   let anims=[],tms=[],vivo=true;
-  function parar(){vivo=false;anims.forEach(a=>{try{a.cancel();}catch(e){}});anims=[];tms.forEach(clearTimeout);tms=[];}
+  function parar(){vivo=false;try{const v=$('clVid');if(v)v.pause();}catch(e){}anims.forEach(a=>{try{a.cancel();}catch(e){}});anims=[];tms.forEach(clearTimeout);tms=[];}
   const espera=ms=>vivo?new Promise(r=>tms.push(setTimeout(r,ms))):Promise.resolve();
   const an=(el,kf,o)=>{if(!vivo||!el||!el.animate)return Promise.resolve();const a=el.animate(kf,Object.assign({fill:'forwards',easing:'ease-in-out'},o));anims.push(a);return a.finished.catch(()=>{});};
   async function roda(){
     vivo=true;
+    const vd=$('clVid'),sv=$('svgClip');
+    if(vd){try{vd.pause();}catch(e){}vd.onended=null;vd.ontimeupdate=null;}
+    if(k.video&&vd){
+      sv.style.display='none';vd.style.display='block';$('clAv').hidden=true;
+      const leg=$('clLeg');leg.style.visibility='hidden';
+      let ja=false;const mostra=()=>{if(ja||!vivo)return;ja=true;leg.style.visibility='visible';fala(k.say);};
+      vd.src=k.video;vd.currentTime=0;vd.ontimeupdate=()=>{if(vd.currentTime>=k.vt)mostra();};vd.onended=mostra;
+      const p=vd.play();if(p&&p.catch)p.catch(()=>{mostra();});
+      return;
+    }
+    if(vd){vd.style.display='none';sv.style.display='';}
     ['clKai','clBanco','clTrem','clWc'].forEach(id=>{const g=$(id);if(g)g.style.display=id===k.cena?'':'none';});
     const av=$('clAv'),br=av.querySelector('.cl-braco'),pr=av.querySelector('.cl-prop'),som=av.querySelector('.cl-som'),leg=$('clLeg');
     av.hidden=false;av.style.opacity=1;av.style.transform='';av.classList.remove('anda');
