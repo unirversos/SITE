@@ -730,13 +730,13 @@ function stepSpeech(delta){
 function renderTabs(){
   $('tabs').innerHTML=CATS.map(c=>{const n=c.opts.filter(o=>state.learned[o.id]).length;
     return `<button class="tab" role="tab" type="button" data-cat="${c.key}" aria-selected="${state.cat===c.key}">
-      <span class="j">${ruby(c)}</span><span class="ro">${kana2ro(c.kana)}</span><span class="p">${c.pt} · <i lang="en">${c.en||''}</i></span><span class="count">${n}/${c.opts.length}</span></button>`}).join('');
+      <span class="j">${ruby(c)}</span><span class="p">${c.pt}</span>${n>=c.opts.length?'<span class="count" aria-label="completo">✓</span>':`<span class="count">${n}/${c.opts.length}</span>`}</button>`}).join('');
 }
 function renderOpts(){
   const cat=CATS.find(c=>c.key===state.cat);
   $('multiNote').hidden=!cat.multi;
   $('opts').innerHTML=cat.opts.map(o=>`<button class="opt" type="button" data-id="${o.id}" aria-pressed="${isSel(cat,o.id)}">
-     ${state.learned[o.id]?'<span class="done" title="Aprendida"></span>':`<span class="badge">+${WORD_XP}</span>`}
+     ${state.learned[o.id]?'':`<span class="badge">+${WORD_XP}</span>`}
      ${cat.color?`<span class="sw" style="background:${o.hex}"></span>`:''}
      <span class="j">${ruby(o)}</span><span class="ro">${o.ro}</span><span class="p">${o.pt}</span><span class="p en" lang="en">${o.en||''}</span></button>`).join('');
 }
