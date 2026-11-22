@@ -176,6 +176,11 @@ h1{font-family:var(--f-display);font-weight:800;font-size:clamp(30px,5.2vw,46px)
 @keyframes nao{0%,100%{transform:rotate(0)}15%{transform:rotate(-14deg)}35%{transform:rotate(14deg)}55%{transform:rotate(-12deg)}75%{transform:rotate(10deg)}}
 @keyframes aparece{from{transform:translateY(12px);opacity:0}to{transform:none;opacity:1}}
 @media (prefers-reduced-motion:reduce){#avatarNao.vai .cabeca,#avatarNao.vai,.xitem{animation:none}}
+#avatarNao.pergunta .bracos{display:none}
+#avatarNao.pergunta .balao{border-color:#3d6fa8;color:#3d6fa8}
+#avatarNao.pergunta.vai .cabeca{animation:duvida .9s ease-in-out}
+@keyframes duvida{0%,100%{transform:rotate(0)}25%{transform:rotate(-12deg)}55%{transform:rotate(9deg)}80%{transform:rotate(-5deg)}}
+@media (prefers-reduced-motion:reduce){#avatarNao.pergunta.vai .cabeca{animation:none}}
 #avatarNao.sim .balao{border-color:#2f8f5b;color:#2f8f5b}
 #avatarNao.sim.vai .cabeca{animation:sim .7s ease-in-out}
 @keyframes sim{0%,100%{transform:translateY(0)}25%{transform:translateY(7px)}50%{transform:translateY(0)}75%{transform:translateY(6px)}}
@@ -565,18 +570,15 @@ const CHAVES=[
   ganho:'Agora você sabe dizer o que não faz.',dia:'Com ません você diz o que não come nem bebe, e evita um susto no restaurante.'},
 
  {n:5,jp:'か',ico:'❓',
-  gram:'<b>か</b> no fim da frase vira <b>pergunta</b>: たべます → たべます<b>か</b>. Em japonês não se escreve “?”: a voz sobe no fim.',
-  molde:'<em>coisa</em> を <em>ação</em> ます<b>か</b>',moldeRo:'[coisa] o [ação]-masu ka?',
+  gram:'<b>これはなんですか</b> = “o que é isto?”. <b>なん</b> é a palavra da dúvida e <b>か</b> fecha a pergunta (sem “?”: a voz sobe no fim). A resposta é a chave 01: <em>coisa</em> + <b>です</b>.',
+  molde:'これは <b>なん</b>ですか。→ <em>coisa</em> です',moldeRo:'kore wa nan desu ka? → [coisa] desu',
   hot:[
-   H(P_SIGN,'iki','とうきょうにいきますか',[TOK.tokyo,'に','いき','ます',['か','k']],'Tōkyō ni ikimasu ka?','Você vai para Tóquio?','Do you go to Tokyo?'),
-   H(P_TRAIN,'nori','でんしゃにのりますか',['でんしゃに','のり','ます',['か','k']],'densha ni norimasu ka?','Você pega o trem?','Do you take the train?'),
-   H(P_ONI,'tabe','おにぎりをたべますか',['おにぎりを','たべ','ます',['か','k']],'onigiri o tabemasu ka?','Você come o onigiri?','Do you eat the onigiri?'),
-   H(P_WATER,'nomi','みずをのみますか',['みずを','のみ','ます',['か','k']],'mizu o nomimasu ka?','Você bebe água?','Do you drink water?'),
-   H(P_WC,'iki2','トイレにいきますか',['トイレに','いき','ます',['か','k']],'toire ni ikimasu ka?','Você vai ao banheiro?','Do you go to the restroom?'),
-   H(P_TICKET,'kai','きっぷをかいますか',['きっぷを','かい','ます',['か','k']],'kippu o kaimasu ka?','Você compra o bilhete?','Do you buy the ticket?')],
-  agua:{say:'おにぎりをたべますか',t:['おにぎりを','たべ','ます',['か','k']],ro:'onigiri o tabemasu ka?',pt:'Você come o onigiri?',g:[['おにぎり'],['を'],['たべ','食べ'],['ますか']]},
-  fogo:{pedido:'Você quer saber se ela bebe água. Pergunte: você bebe água?',say:'みずをのみますか',t:['みずを','のみ','ます',['か','k']],ro:'mizu o nomimasu ka?',pt:'Você bebe água?',g:[['みず','水','おみず','お水'],['を'],['のみ','飲み'],['ますか']]},
-  terra:{pedido:'Faça uma pergunta com ますか. Use uma frase inteira.',itens:['iki','nori','tabe','nomi','iki2','kai'],suf:{_:['ますか']},exemplo:'おにぎりをたべますか',exemploRo:'onigiri o tabemasu ka?',key:'ますか'},
+   H(P_ONI,'onigiri','これはなんですか。おにぎりです',['これは',['なん','k'],'ですか。おにぎり',['です','k']],'kore wa nan desu ka? onigiri desu','O que é isto? É um onigiri.','What is this? It\'s an onigiri.'),
+   H(P_TICKET,'kippu','これはなんですか。きっぷです',['これは',['なん','k'],'ですか。きっぷ',['です','k']],'kore wa nan desu ka? kippu desu','O que é isto? É o bilhete.','What is this? It\'s the ticket.'),
+   H(P_WATER,'mizu','これはなんですか。みずです',['これは',['なん','k'],'ですか。みず',['です','k']],'kore wa nan desu ka? mizu desu','O que é isto? É água.','What is this? It\'s water.')],
+  agua:{say:'これはなんですか。おにぎりです',t:['これは',['なん','k'],'ですか。おにぎり',['です','k']],ro:'kore wa nan desu ka? onigiri desu',pt:'O que é isto? É um onigiri.',g:[['これ'],['は','わ'],['なん','なに','何'],['ですか'],['おにぎり'],['です']]},
+  fogo:{pedido:'Você pegou um objeto e não sabe o que é. Pergunte e responda: o que é isto? É o bilhete.',say:'これはなんですか。きっぷです',t:['これは',['なん','k'],'ですか。きっぷ',['です','k']],ro:'kore wa nan desu ka? kippu desu',pt:'O que é isto? É o bilhete.',g:[['これ'],['は','わ'],['なん','なに','何'],['ですか'],['きっぷ','切符'],['です']]},
+  terra:{pedido:'Pergunte o que é isto e responda.',itens:['onigiri','kippu','mizu'],suf:{_:['ですか']},exemplo:'これはなんですか',exemploRo:'kore wa nan desu ka?',key:'ですか'},
   ganho:'Agora você sabe perguntar. As 5 chaves estão acesas.',dia:'Com か você pergunta. É a chave que abre as conversas.'}
 ];
 
@@ -640,7 +642,7 @@ function desenhaHot(){
     const riscaNao=(quieto)=>{const x=document.createElement('span');x.className='xitem'+(quieto?' quieto':'');x.textContent='✕';x.style.left=h.x+'%';x.style.top=h.y+'%';x.setAttribute('aria-hidden','true');hsBox.appendChild(x);};
     if(c.n===4&&S.visto.has(c.n+'-'+i)&&S.passo!=='terra')riscaNao(true);
     b.onclick=()=>{const jaVisto=S.visto.has(c.n+'-'+i);S.visto.add(c.n+'-'+i);b.classList.add('visto');pilula.hidden=false;
-      if(c.n===4){if(!jaVisto)riscaNao(false);const av=$('avatarNao');if(av){av.classList.toggle('sim',c.n===5);{const bl=av.querySelector('.balao');bl.textContent='Quero!';bl.hidden=c.n!==5;}av.hidden=false;av.classList.remove('vai');void av.offsetWidth;av.classList.add('vai');}}
+      if(c.n===4||c.n===5){if(c.n===4&&!jaVisto)riscaNao(false);const av=$('avatarNao');if(av){av.classList.toggle('pergunta',c.n===5);{const bl=av.querySelector('.balao');bl.textContent=c.n===5?'これは なん？':'';bl.hidden=c.n!==5;}av.hidden=false;av.classList.remove('vai');void av.offsetWidth;av.classList.add('vai');}}
       pilula.innerHTML=`<div class="pilula"><div class="jpl" lang="ja">${html(h.t)}</div><div class="ro">${h.ro}</div><p class="pt">${h.pt}</p><p class="en">${h.en}</p><p class="gram">${c.gram}</p>${h.resp?`<p class="gram"><button type="button" class="btn small" id="ouveResp">💬 Resposta: <span lang="ja">${h.resp.ja}</span> · ${h.resp.pt}</button></p>`:''}${h.num?`<p class="gram"><a href="/idiomas/numeros/#${h.num}" target="_blank" rel="noopener"><b>🔢 Aprender os números ↗</b></a> (${h.numTxt||''})</p>`:''}</div>`;
       if(h.resp){const br=$('ouveResp');if(br)br.onclick=()=>fala(h.resp.ja);}
       if(c.n===4){const V={iki:'いき',nori:'のり',tabe:'たべ',nomi:'のみ',iki2:'いき',kai:'かい'}[h.item];const pl=pilula.querySelector('.pilula');if(pl&&V)pl.insertAdjacentHTML('beforeend','<p class="gram verbo">'+V+'<b>ます</b> → '+V+'<b>ません</b></p>');}
@@ -914,7 +916,7 @@ const FIX={
  2:[['🍙','Não é chá.','','','おちゃ','ocha','chá','じゃない','janai'],['🚆','Não é água.','','','みず','mizu','água','じゃない','janai'],['🍵','Não é onigiri.','','','おにぎり','onigiri','bolinho de arroz','じゃない','janai'],['💧','Não é trem.','','','でんしゃ','densha','trem','じゃない','janai'],['🍙','Não é bilhete.','','','きっぷ','kippu','bilhete','じゃない','janai']],
  3:[['🍙','Eu como o onigiri.','','','おにぎり','onigiri','bolinho de arroz','をたべます','o tabemasu'],['🍵','Eu bebo o chá.','','','おちゃ','ocha','chá','をのみます','o nomimasu'],['🚉','Eu vou para Tóquio.','','','とうきょう','Tōkyō','Tóquio','にいきます','ni ikimasu'],['💧','Eu bebo a água.','','','みず','mizu','água','をのみます','o nomimasu'],['🚻','Eu vou ao banheiro.','','','トイレ','toire','banheiro','にいきます','ni ikimasu']],
  4:[['🥩','Não como carne.','','','にく','niku','carne','をたべません','o tabemasen'],['🍵','Não bebo chá.','','','おちゃ','ocha','chá','をのみません','o nomimasen'],['🐟','Não como peixe.','','','さかな','sakana','peixe','をたべません','o tabemasen'],['💧','Não bebo água.','','','みず','mizu','água','をのみません','o nomimasen'],['🍙','Não como onigiri.','','','おにぎり','onigiri','bolinho de arroz','をたべません','o tabemasen']],
- 5:[['🍙','Você come o onigiri?','','','おにぎり','onigiri','bolinho de arroz','をたべますか','o tabemasu ka?'],['💧','Você bebe água?','','','みず','mizu','água','をのみますか','o nomimasu ka?'],['🚃','Você vai para Tóquio?','','','とうきょう','Tōkyō','Tóquio','にいきますか','ni ikimasu ka?'],['🚻','Você vai ao banheiro?','','','トイレ','toire','banheiro','にいきますか','ni ikimasu ka?'],['🍙','Você come onigiri?','','','おにぎり','onigiri','bolinho de arroz','をたべますか','o tabemasu ka?']]
+ 5:[['🍙','O que é isto? É um onigiri.','これはなんですか。','kore wa nan desu ka? ','おにぎり','onigiri','bolinho de arroz','です','desu'],['🎫','O que é isto? É o bilhete.','これはなんですか。','kore wa nan desu ka? ','きっぷ','kippu','bilhete','です','desu'],['💧','O que é isto? É água.','これはなんですか。','kore wa nan desu ka? ','みず','mizu','água','です','desu'],['🍙','O que é isto? É onigiri.','これはなんですか。','kore wa nan desu ka? ','おにぎり','onigiri','bolinho de arroz','です','desu'],['🎫','O que é isto? É o bilhete.','これはなんですか。','kore wa nan desu ka? ','きっぷ','kippu','bilhete','です','desu']]
 };
 function plim(ok){
   try{const AC=window.AudioContext||window.webkitAudioContext;if(!AC)return;const a=new AC(),t=a.currentTime;
@@ -1184,7 +1186,7 @@ function telaResposta(c,tipo,titulo,pedido,alvo){
 /* ---------- prova final: as 5 chaves de uma vez ---------- */
 const FINAL=[
  {pedido:'Você precisa achar o banheiro. Pergunte onde fica.',say:'トイレはどこですか',t:['トイレは',['どこ','k'],'ですか'],ro:'toire wa doko desu ka?',pt:'Onde fica o banheiro?',g:[['トイレ','といれ'],['は','わ'],['どこ'],['ですか']],molde:'<em>coisa</em> は <b>どこ</b>ですか',moldeRo:'[coisa] wa doko desu ka?'},
- {pedido:'Ela segura um onigiri. Pergunte: você come o onigiri?',say:'おにぎりをたべますか',t:['おにぎりを','たべ','ます',['か','k']],ro:'onigiri o tabemasu ka?',pt:'Você come o onigiri?',g:[['おにぎり'],['を'],['たべ','食べ'],['ますか']],molde:'<em>coisa</em> を <em>ação</em> ます<b>か</b>',moldeRo:'[coisa] o [ação]-masu ka?'},
+ {pedido:'Você pegou um objeto e não sabe o que é. Pergunte e responda: o que é isto? É a água.',say:'これはなんですか。みずです',t:['これは',['なん','k'],'ですか。みず',['です','k']],ro:'kore wa nan desu ka? mizu desu',pt:'O que é isto? É água.',g:[['これ'],['は','わ'],['なん','なに','何'],['ですか'],['みず','水'],['です']],molde:'これは <b>なん</b>ですか。→ <em>coisa</em> です',moldeRo:'kore wa nan desu ka? → [coisa] desu'},
  {pedido:'Ela aponta a água e pergunta: “のみますか？” (você bebe?). Responda: eu bebo a água.',say:'みずをのみます',t:['みずを','のみ',['ます','k']],ro:'mizu o nomimasu',pt:'Eu bebo água.',g:[['みず','水','おみず','お水'],['を'],['のみ','飲み'],['ます']],molde:'<em>ação</em> <b>ます</b>',moldeRo:'[ação]-masu'},
  {pedido:'Ela mostra a água e pergunta: “おちゃ？” (é chá?). Diga que não é.',say:'おちゃじゃない',t:['おちゃ',['じゃない','k']],ro:'ocha janai',pt:'Não é chá.',g:[['おちゃ','お茶'],['じゃない','じゃないです','じゃありません','ではありません']],molde:'<em>coisa</em> <b>じゃない</b>',moldeRo:'[coisa] janai'},
  {pedido:'Ela oferece peixe. Você não come peixe. Diga: eu não como peixe.',say:'さかなをたべません',t:['さかなを','たべ',['ません','k']],ro:'sakana o tabemasen',pt:'Eu não como peixe.',g:[['さかな','魚'],['を'],['たべ','食べ'],['ません']],molde:'<em>coisa</em> を <em>ação</em> <b>ません</b>',moldeRo:'[coisa] o [ação]-masen'}
