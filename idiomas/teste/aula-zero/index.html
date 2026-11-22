@@ -759,11 +759,11 @@ function luzToque(novo){
 }
 /* acende os objetos da cena que pertencem às chaves já acesas; o fundo ganha cor aos poucos */
 function luzCena(novo){
-  const n=Math.min(S.acesas.length,5);
+  const n=5; /* cena sempre colorida: não vai acendendo */
   { const im=document.getElementById('imgEst'); if(im) im.style.setProperty('--sat',1); }
   document.querySelectorAll('.fundo').forEach(g=>{if(n>=5)g.removeAttribute('filter');else g.setAttribute('filter','url(#sat'+n+')');});
   document.querySelectorAll('[data-luz]').forEach(g=>{
-    const k=+g.dataset.luz,on=S.acesas.includes(k);
+    const k=+g.dataset.luz,on=true;
     g.classList.toggle('on',on);
     if(on)g.removeAttribute('filter');else g.setAttribute('filter','url(#cinza)');
     if(novo===k&&on){g.classList.add('luz-pisca');setTimeout(()=>g.classList.remove('luz-pisca'),1400);}
@@ -803,7 +803,7 @@ function telaToque(c){
   const M=c.hot.length;
   painel.innerHTML=`<span class="elem agua"><i></i>Chave ${String(c.n).padStart(2,'0')} · Toque e ouça</span>
    <h2>Toque em cada círculo da cena e ouça.</h2>
-   <p>Cada um que você toca acende a cena. Quando todos estiverem acesos, o exercício abre.</p>
+   <p>Toque em todos os círculos para ouvir cada frase. Depois, o exercício abre.</p>
    <div class="contagem" id="ctg"></div><p class="gram" id="ctgTxt"></p>
    <div class="acoes"><button class="btn pri" type="button" id="abreEx" disabled>Abrir o exercício →</button></div>`;
   $('abreEx').onclick=()=>{S.toqueOk[S.k]=true;vai('agua');};
@@ -814,7 +814,7 @@ function atualizaToque(novo){
   const ctg=$('ctg');if(!ctg)return;
   ctg.setAttribute('aria-label',n+' de '+M);
   ctg.innerHTML=c.hot.map((h,i)=>`<i class="${S.visto.has(c.n+'-'+i)?'on':''}"></i>`).join('');
-  $('ctgTxt').textContent=n<M?n+' de '+M+' acesos':'Tudo aceso! ✨';
+  $('ctgTxt').textContent='';
   const b=$('abreEx');b.disabled=n<M;if(n>=M&&novo){b.classList.add('libera');claraoFinal();}
 }
 function telaChegada(){
