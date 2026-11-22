@@ -533,10 +533,10 @@ const CHAVES=[
   gram:'<b>じゃない</b> é o “não é” do dia a dia. Com <b>です</b> no fim (じゃないです) continua educado.',
   molde:'<em>coisa</em> <b>じゃない</b>',moldeRo:'[coisa] janai',
   hot:[
-   H(P_SIGN,'osaka','おおさかじゃない。とうきょうです',['おおさか',['じゃない','k'],'. ',TOK.tokyo,['です','k']],'Ōsaka janai. Tōkyō desu','Não é Osaka. É Tóquio.',"It's not Osaka. It's Tokyo."),
-   H(P_TRAIN,'basu','バスじゃない。でんしゃです',['バス',['じゃない','k'],'. でんしゃ',['です','k']],'basu janai. densha desu','Não é ônibus. É um trem.',"It's not a bus. It's a train."),
-   H(P_TICKET,'pasu','パスポートじゃない。きっぷです',['パスポート',['じゃない','k'],'. きっぷ',['です','k']],'pasupōto janai. kippu desu','Não é o passaporte. É o bilhete.',"It's not the passport. It's the ticket."),
-   H(P_ONI,'sushi','すしじゃない。おにぎりです',['すし',['じゃない','k'],'. おにぎり',['です','k']],'sushi janai. onigiri desu','Não é sushi. É um onigiri.',"It's not sushi. It's an onigiri.")],
+   Object.assign(H(P_SIGN,'osaka','おおさかじゃない。とうきょうです',['おおさか',['じゃない','k'],'. ',TOK.tokyo,['です','k']],'Ōsaka janai. Tōkyō desu','Não é Osaka. É Tóquio.',"It's not Osaka. It's Tokyo."),{neg:{say:'おおさかじゃない',t:['おおさか',['じゃない','k']],ro:'Ōsaka janai',pt:'Não é Osaka.'}}),
+   Object.assign(H(P_TRAIN,'basu','バスじゃない。でんしゃです',['バス',['じゃない','k'],'. でんしゃ',['です','k']],'basu janai. densha desu','Não é ônibus. É um trem.',"It's not a bus. It's a train."),{neg:{say:'バスじゃない',t:['バス',['じゃない','k']],ro:'basu janai',pt:'Não é ônibus.'}}),
+   Object.assign(H(P_TICKET,'pasu','パスポートじゃない。きっぷです',['パスポート',['じゃない','k'],'. きっぷ',['です','k']],'pasupōto janai. kippu desu','Não é o passaporte. É o bilhete.',"It's not the passport. It's the ticket."),{neg:{say:'パスポートじゃない',t:['パスポート',['じゃない','k']],ro:'pasupōto janai',pt:'Não é o passaporte.'}}),
+   Object.assign(H(P_ONI,'sushi','すしじゃない。おにぎりです',['すし',['じゃない','k'],'. おにぎり',['です','k']],'sushi janai. onigiri desu','Não é sushi. É um onigiri.',"It's not sushi. It's an onigiri."),{neg:{say:'すしじゃない',t:['すし',['じゃない','k']],ro:'sushi janai',pt:'Não é sushi.'}})],
   agua:{say:'パスポートじゃない',t:['パスポート',['じゃない','k']],ro:'pasupōto janai',pt:'Não é o passaporte.',g:[['パスポート'],['じゃない','じゃないです','じゃありません','ではありません']]},
   fogo:{pedido:'Alguém aponta para o seu onigiri e pergunta: “すし？” (é sushi?). Diga que não é sushi e diga o que é.',say:'すしじゃない。おにぎりです',t:['すし',['じゃない','k'],'。おにぎり',['です','k']],ro:'sushi janai. onigiri desu',pt:'Não é sushi. É um onigiri.',g:[['すし','寿司'],['じゃない','じゃないです','じゃありません','ではありません'],['おにぎり'],['です']]},
   terra:{pedido:'Diga o que NÃO é com じゃない: 1 frase, com a palavra que você quiser.',itens:['osaka','basu','pasu','sushi','mizu','densha'],suf:{_:['じゃない','じゃないです','じゃありません','ではありません']},exemplo:'バスじゃない',exemploRo:'basu janai',key:'じゃない'},
@@ -1229,7 +1229,8 @@ function telaTerraPisca(c){
   desenhaHot();
   if(!S.t1||S.t1.k!==c.n){ const ix=c.hot.map((_,i)=>i); for(let i=ix.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[ix[i],ix[j]]=[ix[j],ix[i]];} S.t1={ordem:ix,i:0,k:c.n}; }
   const T=S.t1,total=T.ordem.length,e=T.ordem[T.i],h=c.hot[e];
-  const alvo={say:h.say,t:h.t,ro:h.ro,pt:h.pt,g:[[h.say]],diag:()=>'Quase. Toque no ♪ que pisca (ou em 🔊 Ouvir) e repita a frase inteira.',
+  const hh=(c.n===2&&h.neg)?Object.assign({},h,h.neg):h;
+  const alvo={say:hh.say,t:hh.t,ro:hh.ro,pt:hh.pt,g:[[hh.say]],diag:()=>'Quase. Toque no ♪ que pisca (ou em 🔊 Ouvir) e repita.',
     depois:()=>{plim(true);T.i++;if(T.i>=total){S.t1=null;S.conquista=true;vai(c.n===3?'quiz':'ganho');}else telaTerra(c);}};
   telaResposta(c,'terra','Terra · gravar','Uma coisa da cena está piscando. Diga a frase dela.',alvo);
   const h2=painel.querySelector('h2');
