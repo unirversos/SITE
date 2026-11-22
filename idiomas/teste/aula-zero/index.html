@@ -564,18 +564,20 @@ const CHAVES=[
   terra:{pedido:'Diga o que você NÃO faz, com ません. Faça 1 frase sua.',itens:['iki','nori','tabe','nomi','iki2','kai'],suf:{_:['ません']},exemplo:'おにぎりをたべません',exemploRo:'onigiri o tabemasen',key:'ません'},
   ganho:'Agora você sabe dizer o que não faz.',dia:'Com ません você diz o que não come nem bebe, e evita um susto no restaurante.'},
 
- {n:5,jp:'ください',ico:'🤲',
-  gram:'Chame com <b>すみません</b>. Depois, <b>を</b> (lido “o”) marca o que você pede e <b>ください</b> é o “por favor, me dê”.',
-  molde:'すみません、<em>coisa</em> <b>を ください</b>',moldeRo:'sumimasen, [coisa] o kudasai',
+ {n:5,jp:'か',ico:'❓',
+  gram:'<b>か</b> no fim da frase vira <b>pergunta</b>: さかなです → さかなです<b>か</b>. Em japonês não se escreve “?”: a voz sobe no fim.',
+  molde:'<em>coisa</em> <b>ですか</b>',moldeRo:'[coisa] desu ka?',
   hot:[
-   H(P_ONI,'onigiri','おにぎりをください',['おにぎりを',['ください','k']],'onigiri o kudasai','Um onigiri, por favor.','An onigiri, please.'),
-   H(P_WATER,'mizu','みずをください',['みずを',['ください','k']],'mizu o kudasai','Água, por favor.','Water, please.'),
-   H({x:68,y:76},'ocha','おちゃをください',['おちゃを',['ください','k']],'ocha o kudasai','Chá, por favor.','Tea, please.'),
-   H(K_TAMAGO,'tamago','たまごをください',['たまごを',['ください','k']],'tamago o kudasai','Um ovo, por favor.','An egg, please.')],
-  agua:{say:'すみません、みずをください',t:['すみません、','みずを',['ください','k']],ro:'sumimasen, mizu o kudasai',pt:'Com licença, água por favor.',g:[['すみません'],['みず','水'],['を'],['ください','下さい']]},
-  fogo:{pedido:'A atendente oferece peixe. Você não come peixe. Recuse e peça um onigiri.',say:'さかなをたべません。おにぎりをください',t:['さかなを','たべ',['ません','k'],'。おにぎりを',['ください','k']],ro:'sakana o tabemasen. onigiri o kudasai',pt:'Não como peixe. Um onigiri, por favor.',g:[['さかな','魚'],['を'],['たべ','食べ'],['ません'],['おにぎり'],['を'],['ください','下さい']]},
-  terra:{pedido:'Peça com ください. Pode começar com すみません. Use qualquer palavra que você quiser. Faça 1 pedido seu.',itens:['onigiri','mizu','tamago','ocha'],suf:{_:['をください','を下さい']},exemplo:'おちゃをください',exemploRo:'ocha o kudasai',key:'を ください'},
-  ganho:'Agora você sabe pedir. As 5 chaves estão acesas.',dia:'Com ください você pede. É a chave que abre os balcões.'}
+   H(K_SAKANA,'sakana','さかなですか',['さかな',['です','k'],['か','k']],'sakana desu ka?','É peixe?','Is it fish?'),
+   H(K_NIKU,'niku','にくですか',['にく',['です','k'],['か','k']],'niku desu ka?','É carne?','Is it meat?'),
+   H(K_TAMAGO,'tamago','たまごですか',['たまご',['です','k'],['か','k']],'tamago desu ka?','É ovo?','Is it egg?'),
+   H(K_LEITE,'gyunyu','ぎゅうにゅうですか',['ぎゅうにゅう',['です','k'],['か','k']],'gyūnyū desu ka?','É leite?','Is it milk?'),
+   H(K_CHA,'ocha','おちゃですか',['おちゃ',['です','k'],['か','k']],'ocha desu ka?','É chá?','Is it tea?'),
+   H(K_PAN,'pan','パンですか',['パン',['です','k'],['か','k']],'pan desu ka?','É pão?','Is it bread?')],
+  agua:{say:'さかなですか',t:['さかな',['です','k'],['か','k']],ro:'sakana desu ka?',pt:'É peixe?',g:[['さかな','魚'],['です'],['か']]},
+  fogo:{pedido:'A atendente mostra uma bandeja e você não sabe o que é. Pergunte: é carne?',say:'にくですか',t:['にく',['です','k'],['か','k']],ro:'niku desu ka?',pt:'É carne?',g:[['にく','肉'],['です'],['か']]},
+  terra:{pedido:'Faça uma pergunta com ですか. Use qualquer palavra que você quiser.',itens:['sakana','niku','tamago','gyunyu','ocha','pan'],suf:{_:['ですか']},exemplo:'さかなですか',exemploRo:'sakana desu ka?',key:'ですか'},
+  ganho:'Agora você sabe perguntar. As 5 chaves estão acesas.',dia:'Com か você pergunta. É a chave que abre as conversas.'}
 ];
 
 /* ---------- estado ---------- */
@@ -609,7 +611,7 @@ const ETAPAS=['agua','fogo','terra','ganho'];
 function desenhaBarra(){
   barra.innerHTML=CHAVES.map((c,i)=>{
     const on=S.acesas.includes(c.n),now=(i===S.k&&S.passo!=='chegada'&&S.passo!=='fim'&&S.passo!=='final'&&!on);
-    return `<${LIVRE?'button type="button" data-i="'+i+'"':'div'} class="chave ${on?'on':''} ${now?'now':''}"${LIVRE?' aria-label="Ir para a chave '+c.n+': '+c.jp+'"':''}><span class="ico" aria-hidden="true">${c.ico}</span><span class="jp">${c.jp}</span><span class="ro-bar">${({'です':'desu','じゃない':'janai','ます':'masu','ません':'masen','ください':'kudasai'})[c.jp]||''}</span><small>${String(c.n).padStart(2,'0')}</small></${LIVRE?'button':'div'}>`;
+    return `<${LIVRE?'button type="button" data-i="'+i+'"':'div'} class="chave ${on?'on':''} ${now?'now':''}"${LIVRE?' aria-label="Ir para a chave '+c.n+': '+c.jp+'"':''}><span class="ico" aria-hidden="true">${c.ico}</span><span class="jp">${c.jp}</span><span class="ro-bar">${({'です':'desu','じゃない':'janai','ます':'masu','ません':'masen','か':'ka'})[c.jp]||''}</span><small>${String(c.n).padStart(2,'0')}</small></${LIVRE?'button':'div'}>`;
   }).join('');
 }
 function trocaCena(){
@@ -638,7 +640,7 @@ function desenhaHot(){
     const riscaNao=(quieto)=>{const x=document.createElement('span');x.className='xitem'+(quieto?' quieto':'');x.textContent='✕';x.style.left=h.x+'%';x.style.top=h.y+'%';x.setAttribute('aria-hidden','true');hsBox.appendChild(x);};
     if(c.n===4&&S.visto.has(c.n+'-'+i)&&S.passo!=='terra')riscaNao(true);
     b.onclick=()=>{const jaVisto=S.visto.has(c.n+'-'+i);S.visto.add(c.n+'-'+i);b.classList.add('visto');pilula.hidden=false;
-      if(c.n===4||c.n===5){if(c.n===4&&!jaVisto)riscaNao(false);const av=$('avatarNao');if(av){av.classList.toggle('sim',c.n===5);{const bl=av.querySelector('.balao');bl.textContent='Quero!';bl.hidden=c.n!==5;}av.hidden=false;av.classList.remove('vai');void av.offsetWidth;av.classList.add('vai');}}
+      if(c.n===4){if(!jaVisto)riscaNao(false);const av=$('avatarNao');if(av){av.classList.toggle('sim',c.n===5);{const bl=av.querySelector('.balao');bl.textContent='Quero!';bl.hidden=c.n!==5;}av.hidden=false;av.classList.remove('vai');void av.offsetWidth;av.classList.add('vai');}}
       pilula.innerHTML=`<div class="pilula"><div class="jpl" lang="ja">${html(h.t)}</div><div class="ro">${h.ro}</div><p class="pt">${h.pt}</p><p class="en">${h.en}</p><p class="gram">${c.gram}</p>${h.resp?`<p class="gram"><button type="button" class="btn small" id="ouveResp">💬 Resposta: <span lang="ja">${h.resp.ja}</span> · ${h.resp.pt}</button></p>`:''}${h.num?`<p class="gram"><a href="/idiomas/numeros/#${h.num}" target="_blank" rel="noopener"><b>🔢 Aprender os números ↗</b></a> (${h.numTxt||''})</p>`:''}</div>`;
       if(h.resp){const br=$('ouveResp');if(br)br.onclick=()=>fala(h.resp.ja);}
       if(c.n===4){const V={iki:'いき',nori:'のり',tabe:'たべ',nomi:'のみ',iki2:'いき',kai:'かい'}[h.item];const pl=pilula.querySelector('.pilula');if(pl&&V)pl.insertAdjacentHTML('beforeend','<p class="gram verbo">'+V+'<b>ます</b> → '+V+'<b>ません</b></p>');}
@@ -810,7 +812,7 @@ function atualizaToque(novo){
 function telaChegada(){
   painel.innerHTML=`<span class="elem ganho"><i></i>Chegada</span>
    <h2>${S.acesas.length?S.acesas.length+' de 5 chaves acesas.':'Cinco chaves apagadas.'}</h2>
-   <p>Em 15 minutos você aprende a afirmar, negar e pedir em japonês.</p>
+   <p>Em 15 minutos você aprende a afirmar, negar e perguntar em japonês.</p>
    <div class="acoes"><button class="btn pri" type="button" id="go">${S.acesas.length&&S.acesas.length<5?'Continuar →':'Acender a primeira chave →'}</button></div>`;
   $('go').onclick=()=>{fala('とうきょうです');S.k=S.primeiraApagada?S.primeiraApagada():0;vai('agua');};
 }
@@ -912,7 +914,7 @@ const FIX={
  2:[['🍙','Não é chá.','','','おちゃ','ocha','chá','じゃない','janai'],['🚆','Não é água.','','','みず','mizu','água','じゃない','janai'],['🍵','Não é onigiri.','','','おにぎり','onigiri','bolinho de arroz','じゃない','janai'],['💧','Não é trem.','','','でんしゃ','densha','trem','じゃない','janai'],['🍙','Não é bilhete.','','','きっぷ','kippu','bilhete','じゃない','janai']],
  3:[['🍙','Eu como o onigiri.','','','おにぎり','onigiri','bolinho de arroz','をたべます','o tabemasu'],['🍵','Eu bebo o chá.','','','おちゃ','ocha','chá','をのみます','o nomimasu'],['🚉','Eu vou para Tóquio.','','','とうきょう','Tōkyō','Tóquio','にいきます','ni ikimasu'],['💧','Eu bebo a água.','','','みず','mizu','água','をのみます','o nomimasu'],['🚻','Eu vou ao banheiro.','','','トイレ','toire','banheiro','にいきます','ni ikimasu']],
  4:[['🥩','Não como carne.','','','にく','niku','carne','をたべません','o tabemasen'],['🍵','Não bebo chá.','','','おちゃ','ocha','chá','をのみません','o nomimasen'],['🐟','Não como peixe.','','','さかな','sakana','peixe','をたべません','o tabemasen'],['💧','Não bebo água.','','','みず','mizu','água','をのみません','o nomimasen'],['🍙','Não como onigiri.','','','おにぎり','onigiri','bolinho de arroz','をたべません','o tabemasen']],
- 5:[['🍙','Um onigiri, por favor.','すみません、','sumimasen, ','おにぎり','onigiri','bolinho de arroz','をください','o kudasai'],['💧','Água, por favor.','すみません、','sumimasen, ','みず','mizu','água','をください','o kudasai'],['🍵','Chá, por favor.','すみません、','sumimasen, ','おちゃ','ocha','chá','をください','o kudasai'],['🥚','Um ovo, por favor.','すみません、','sumimasen, ','たまご','tamago','ovo','をください','o kudasai'],['🍙','Onigiri, por favor.','すみません、','sumimasen, ','おにぎり','onigiri','bolinho de arroz','をください','o kudasai']]
+ 5:[['🐟','É peixe?','','','さかな','sakana','peixe','ですか','desu ka?'],['🥩','É carne?','','','にく','niku','carne','ですか','desu ka?'],['🥚','É ovo?','','','たまご','tamago','ovo','ですか','desu ka?'],['🍵','É chá?','','','おちゃ','ocha','chá','ですか','desu ka?'],['🥛','É leite?','','','ぎゅうにゅう','gyunyu','leite','ですか','desu ka?']]
 };
 function plim(ok){
   try{const AC=window.AudioContext||window.webkitAudioContext;if(!AC)return;const a=new AC(),t=a.currentTime;
@@ -951,7 +953,7 @@ const FALA_N=2;
 function telaFalaFix(c){
   const R=FIX[c.n].slice(0,FALA_N),i=S.ff||0,r=R[i];
   const [em,pt,pre,preRo,w,wRo,wpt,pos,posRo]=r;
-  const m=/^(を|に)?(たべ|のみ|いき)?(です|じゃない|ます|ません|ください)$/.exec(pos)||[];
+  const m=/^(を|に)?(たべ|のみ|いき)?(ですか|です|じゃない|ます|ません)$/.exec(pos)||[];
   const STEM={たべ:['たべ','食べ'],のみ:['のみ','飲み'],いき:['いき','行き']};
   const ID=Object.keys(ITEM).find(k=>ITEM[k].includes(w));
   const g=[ID?ITEM[ID].slice(0,4):[w]];
@@ -1182,7 +1184,7 @@ function telaResposta(c,tipo,titulo,pedido,alvo){
 /* ---------- prova final: as 5 chaves de uma vez ---------- */
 const FINAL=[
  {pedido:'Você precisa achar o banheiro. Pergunte onde fica.',say:'トイレはどこですか',t:['トイレは',['どこ','k'],'ですか'],ro:'toire wa doko desu ka?',pt:'Onde fica o banheiro?',g:[['トイレ','といれ'],['は','わ'],['どこ'],['ですか']],molde:'<em>coisa</em> は <b>どこ</b>ですか',moldeRo:'[coisa] wa doko desu ka?'},
- {pedido:'Ela aponta o fundo da loja. Antes de ir, peça um onigiri.',say:'おにぎりをください',t:['おにぎりを',['ください','k']],ro:'onigiri o kudasai',pt:'Um onigiri, por favor.',g:[['おにぎり'],['を'],['ください','下さい']],molde:'<em>coisa</em> <b>を ください</b>',moldeRo:'[coisa] o kudasai'},
+ {pedido:'Ela mostra uma bandeja na prateleira. Pergunte: é carne?',say:'にくですか',t:['にく',['です','k'],['か','k']],ro:'niku desu ka?',pt:'É carne?',g:[['にく','肉'],['です'],['か']],molde:'<em>coisa</em> <b>ですか</b>',moldeRo:'[coisa] desu ka?'},
  {pedido:'Ela aponta a água e pergunta: “のみますか？” (você bebe?). Responda: eu bebo a água.',say:'みずをのみます',t:['みずを','のみ',['ます','k']],ro:'mizu o nomimasu',pt:'Eu bebo água.',g:[['みず','水','おみず','お水'],['を'],['のみ','飲み'],['ます']],molde:'<em>ação</em> <b>ます</b>',moldeRo:'[ação]-masu'},
  {pedido:'Ela mostra a água e pergunta: “おちゃ？” (é chá?). Diga que não é.',say:'おちゃじゃない',t:['おちゃ',['じゃない','k']],ro:'ocha janai',pt:'Não é chá.',g:[['おちゃ','お茶'],['じゃない','じゃないです','じゃありません','ではありません']],molde:'<em>coisa</em> <b>じゃない</b>',moldeRo:'[coisa] janai'},
  {pedido:'Ela oferece peixe. Você não come peixe. Diga: eu não como peixe.',say:'さかなをたべません',t:['さかなを','たべ',['ません','k']],ro:'sakana o tabemasen',pt:'Eu não como peixe.',g:[['さかな','魚'],['を'],['たべ','食べ'],['ません']],molde:'<em>coisa</em> を <em>ação</em> <b>ません</b>',moldeRo:'[coisa] o [ação]-masen'}
@@ -1305,8 +1307,7 @@ function telaTerra(c){
     const n=norm(dito);
     let msg='Escreva uma palavra em kana ou romaji e feche com '+t.key+'.';
     if(sufs.some(sf=>n.endsWith(sf))){msg='Falta uma palavra antes do '+t.key+'.';}
-    else if(c.n===5&&(n==='ください'||n==='下さい')){msg='Falta uma palavra e o を antes do ください.';}
-    else if(c.n===5&&n.endsWith('ください')&&!/お(ください|下さい)$/.test(n)){msg='Faltou o を antes do ください.';}
+    else if(c.n===5&&n==='ですか'){msg='Falta uma palavra antes do ですか.';}
     else if(n.length>1){msg='Faltou o '+t.key+' no final.';}
     E.falha(dito,msg);
   });
