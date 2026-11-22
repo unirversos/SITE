@@ -196,6 +196,8 @@ body[data-etapa="ar"] .painel{--el:var(--gold)}
 .ro-svg{display:none}body.ver-ro .ro-svg{display:inline}
 .ro-bar{display:none;font-size:10px;color:var(--muted);line-height:1}body.ver-ro .ro-bar{display:block}
 .ro-in{display:none;color:var(--muted);font-weight:500;font-size:.85em}body.ver-ro .ro-in{display:inline}
+.scene.pb svg{filter:grayscale(1) contrast(1.05);transition:filter .4s}
+.scene svg{transition:filter .4s}
 .hs.pisca{animation:piscaHs .8s ease-in-out infinite;z-index:4}
 @keyframes piscaHs{0%,100%{transform:translate(-50%,-50%) scale(1);box-shadow:0 0 0 0 rgba(194,63,94,.0)}50%{transform:translate(-50%,-50%) scale(1.35);box-shadow:0 0 0 12px rgba(194,63,94,.35)}}
 @media (prefers-reduced-motion:reduce){.hs.pisca{animation:none;outline:4px solid #c23f5e}}
@@ -586,6 +588,7 @@ function trocaCena(){
 }
 function desenhaHot(){
   trocaCena();
+  { const sc=document.querySelector('.scene'); if(sc) sc.classList.toggle('pb',S.passo==='terra'&&CHAVES[S.k]&&CHAVES[S.k].n===1); }
   hsBox.innerHTML='';const av=$('avatarNao');if(av){av.hidden=true;av.classList.remove('vai');}
   if(S.passo==='chegada'||S.passo==='fim'||S.passo==='final'||S.passo==='prontas'||S.passo==='clipe'||S.passo==='retoma'){$('dicaCena').hidden=true;return;}
   $('dicaCena').hidden=false;
