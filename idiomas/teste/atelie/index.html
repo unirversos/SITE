@@ -394,6 +394,10 @@ body.m-cart .c-intro{display:none}
 .btn-curio{border:0;background:none;color:var(--muted);text-decoration:underline;font-size:13px;box-shadow:none;padding:2px 6px}
 .chip small{margin-left:6px}
 .card .c-pt,.card dd small,.card .c-tr{display:none}
+body.show-pt .card .c-pt{display:inline}body.show-pt .card dd small{display:inline}
+body.show-pt .c-tt::after,body.show-pt .c-feat-i::after{display:none}
+body.show-pt #cTitle small{display:block}
+.cfg-pt{display:flex;align-items:center;gap:8px;font-size:13.5px;font-weight:600}
 .c-vazio{font-weight:500;color:var(--muted);font-size:13px}
 .c-tt{position:relative;cursor:help;outline:none}
 .c-tt::after,.c-feat-i::after{content:attr(data-tr);position:absolute;left:0;top:100%;z-index:6;background:var(--ink);color:var(--paper);font:600 12.5px/1.35 var(--f-body);padding:6px 10px;border-radius:10px;white-space:pre-line;max-width:260px;width:max-content;opacity:0;transform:translateY(-3px);pointer-events:none;transition:.15s}
@@ -425,6 +429,7 @@ body.m-cart .c-intro{display:none}
       <button class="btn" id="cfgBtn" type="button" aria-expanded="false" aria-controls="cfgPop" aria-label="Ajustes">⚙️ Ajustes</button>
       <div class="cfg-pop" id="cfgPop" hidden>
         <button class="btn ro-toggle" id="roToggle" type="button" aria-pressed="false" title="Mostrar romaji embaixo do japonês">ローマ<ruby>字<rt>じ</rt></ruby> · Romaji</button>
+        <label class="cfg-pt"><input type="checkbox" id="cfgPt"> Mostrar português na carteirinha</label>
         <label class="cfg-vel">Velocidade da voz <b id="cfgVelO"></b>
           <input type="range" id="cfgVel" min="0.5" max="1.2" step="0.05" aria-label="Velocidade da voz"></label>
       </div>
@@ -856,7 +861,8 @@ function renderAvatar(changed){ $('avatar').innerHTML=AV.markup(state.sel,{chang
 let qr=null, lastQR='';
 function updateQR(){ const url=cadernoURL({name:displayName(),learned:state.learned,sel:state.sel}); if(url===lastQR) return; lastQR=url;
   try{ if(!qr) qr=new QRCode($('qr'),{text:url,width:160,height:160,colorDark:'#3a2b38',colorLight:'#ffffff',correctLevel:QRCode.CorrectLevel.L}); else qr.makeCode(url); $('qr').title='Abre as suas palavras'; }catch(e){ $('qr').hidden=true; } }
-function applyRomaji(){ document.body.classList.toggle('show-ro',!!state.profile.romaji); const b=$('roToggle'); if(b) b.setAttribute('aria-pressed',!!state.profile.romaji); }
+function applyPt(){ const on=state.profile.pt!==false; document.body.classList.toggle('show-pt',on); const c=$('cfgPt'); if(c) c.checked=on; }
+function applyRomaji(){ applyPt(); document.body.classList.toggle('show-ro',!!state.profile.romaji); const b=$('roToggle'); if(b) b.setAttribute('aria-pressed',!!state.profile.romaji); }
 document.querySelectorAll('[data-ro]').forEach(el=>el.insertAdjacentHTML('beforeend',` <span class="ro">${el.dataset.ro}</span>`));
 if($('roToggle')) $('roToggle').onclick=()=>{ state.profile.romaji=!state.profile.romaji; applyRomaji(); save(); };
 function renderAll(changed,animate){ applyRomaji(); renderCard(); renderProns(); renderAge(); renderAvatar(changed); renderSpeech(); renderTabs(); renderOpts(); renderWord(animate); renderXP(); renderChips(); renderSkins(); save(); }
@@ -1015,6 +1021,8 @@ $('trProx').onclick=()=>{ if(trI<sentences().length-1){ trI++; renderTreino(); t
 $('trTodas').onclick=()=>speak(sentences().map(l=>l.jp).join(' '));
 (function(){ const f=document.querySelector('.passe-form'); if(f){ f.classList.add('nome-box'); $('tabs').parentNode.insertBefore(f,$('tabs')); } })();
 if(window.AUDIO_CREDITO) $('sobreVozesTxt').textContent='Vozes sintéticas: '+window.AUDIO_CREDITO+'. Aos poucos, as gravações da professora vão substituindo.';
+$('cfgPt').onchange=e=>{ state.profile.pt=e.target.checked; applyPt(); save(); if(!e.target.checked) dicaPt(true); };
+function dicaPt(force){ try{ if(!force&&localStorage.getItem('uniDicaPt')) return; localStorage.setItem('uniDicaPt','1'); }catch(e){} avisa('Toque nos campos da carteirinha para ver a tradução.'); }
 (function(){ const b=$('cfgBtn'),pop=$('cfgPop'),r=$('cfgVel'),o=$('cfgVelO');
   const rot=v=>v===1?'normal':'×'+v.toFixed(2).replace(/0$/,'');
   function ler(){ const v=(window.UniVel&&UniVel.get())||1; r.value=v; o.textContent=rot(+v); }
