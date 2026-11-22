@@ -707,7 +707,7 @@ function voltaPasso(){
   if(p==='toque'){ if(CHAVES[S.k].n===3&&S.clipeVisto){S.cl=CLIP.length-1;S.clipeRever=false;vai('clipe');} else if(S.k>0){S.k--;vai('terra');} else vai('chegada'); }
   else if(p==='agua'){ if((S.ai||0)>0){S.ai--;vai('agua');} else vai('toque'); }
   else if(p==='fixa'){ S.__ai=Math.max(0,CHAVES[S.k].hot.length-1); vai('agua'); }
-  else if(p==='falafix'){ vai('fixa'); }
+  else if(p==='falafix'){ vai(CHAVES[S.k].n===3?'agua':'fixa'); }
   else if(p==='fogo'){ S.ff=0; vai('falafix'); }
   else if(p==='terra'){ vai('fogo'); }
   window.scrollTo(0,0);
@@ -716,6 +716,7 @@ function render0(){
   { const gc=document.getElementById('ganhoCena'); if(gc) gc.remove(); }
   window.__render=render;
   if(S.passo==='retoma'&&S.k<1)S.passo='agua';
+  if(S.passo==='fixa'&&CHAVES[S.k].n===3){S.passo='falafix';S.ff=0;}
   if(S.passo==='agua'&&!toqueCompleto(CHAVES[S.k])&&!S.toqueOk[S.k])S.passo='toque';
   if(S.passo==='toque'&&CHAVES[S.k].n===3&&!S.clipeVisto&&!S.toqueOk[S.k]){S.passo='clipe';S.cl=0;S.clipeRever=false;}
   desenhaBarra();desenhaHot();
@@ -729,6 +730,7 @@ function render0(){
   if(S.passo==='clipe')return telaClipe(c);
   if(S.passo==='chegada')return telaChegada();
   if(S.passo==='fim')return telaFim();
+  if(S.passo==='agua'&&c.n===3)return telaFixaClipe(c);
   if(S.passo==='agua')return telaAgua(c);
   if(S.passo==='fogo')return telaResposta(c,'fogo','Fogo · a fechadura',c.fogo.pedido,c.fogo);
   if(S.passo==='terra')return telaTerra(c);
@@ -942,7 +944,6 @@ function plim(ok){
     setTimeout(()=>{try{a.close();}catch(e){}},1500);}catch(e){}
 }
 function telaFixa(c){
-  if(c.n===3)return telaFixaClipe(c);
   const R=FIX[c.n].slice(),n0=R.length,refeito=new Set();let q=0,trava=false;
   const banco=[];R.forEach(r=>{if(!banco.find(b=>b[0]===r[4]))banco.push([r[4],r[5],r[6],({'でんしゃ':'🚆','おにぎり':'🍙','きっぷ':'🎫','おちゃ':'🍵','みず':'💧','とうきょう':'🚉','にく':'🥩','さかな':'🐟','トイレ':'🚻'})[r[4]]||'']);});
   const emb=a=>{a=a.slice();for(let i=a.length-1;i>0;i--){const j=(i*7+3)%(i+1);[a[i],a[j]]=[a[j],a[i]];}return a;};
@@ -981,14 +982,15 @@ function telaFixaClipe(c){
   const fim=()=>{S.ff=0;vai('falafix');};
   function mostra(){
     const k=CLIP[R[q]];
-    painel.innerHTML=`<span class="elem fogo"><i></i>Chave 03 · Fixação · ouça, repita e escolha${q>=n0?' · revendo as que errou':''}</span>
+    painel.innerHTML=`<span class="elem agua"><i></i>Chave 03 · Água · ouça, repita e escolha${q>=n0?' · revendo as que errou':''}</span>
      <h2><button type="button" class="btn ghost small" id="fxOuve" aria-label="Ouvir a frase">🔊 Ouvir de novo</button></h2>
      <div class="contagem" aria-label="${q} de ${R.length}">${R.map((_,i)=>`<i class="${i<q?'on':''}"></i>`).join('')}</div>
      <p class="nota"><b>Ouça e repita em voz alta.</b> Depois toque na imagem que mostra a ação.</p>
      <div class="fx-img" id="fxBt">${OPC.map(j=>`<button type="button" class="fx-quadro" data-j="${j}" aria-label="${CLIP[j].pt}"><img src="${CLIP[j].video.replace('.mp4','_acao.jpg')}" alt="" loading="eager"></button>`).join('')}</div>
      <div class="estado" id="estado"></div>
-     <div class="acoes"><button class="btn ghost" type="button" id="fxPula">Pular fixação →</button></div>`;
-    $('fxPula').onclick=()=>{pararMic();vai('fogo');};
+     <div class="acoes"><button class="btn ghost" type="button" id="clRever2">🎬 Rever o clipe</button><button class="btn ghost" type="button" id="fxPula">Pular →</button></div>`;
+    $('fxPula').onclick=()=>{pararMic();fim();};
+    $('clRever2').onclick=()=>{pararMic();S.cl=0;S.clipeRever=true;S.passo='clipe';render();};
     $('fxOuve').onclick=()=>{fala(frase(k));};
     setTimeout(()=>{if(!trava)fala(frase(k));},500);
     $('fxBt').onclick=e=>{const b=e.target.closest('[data-j]');if(!b||trava)return;const est=$('estado'),j=+b.dataset.j;
