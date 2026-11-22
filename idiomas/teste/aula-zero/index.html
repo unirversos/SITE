@@ -86,6 +86,7 @@ h1{font-family:var(--f-display);font-weight:800;font-size:clamp(30px,5.2vw,46px)
 .chave.dica{animation:dicaCh .9s ease-in-out infinite;position:relative;z-index:1}
 @keyframes dicaCh{0%,100%{box-shadow:0 0 0 0 rgba(194,63,94,0);transform:scale(1)}50%{box-shadow:0 0 0 6px rgba(194,63,94,.32);transform:scale(1.05)}}
 @media (prefers-reduced-motion:reduce){.chave.dica{animation:none;outline:3px solid #c23f5e}}
+.pulaBtn[hidden]{display:none!important}
 .nav-ex{display:flex;gap:10px;margin-top:16px}
 .nav-ex .btn{flex:1 1 0;min-width:0;margin:0;justify-content:center;text-align:center}
 .nav-ex:has(.voltaBtn:only-child) .btn{flex:0 1 calc(50% - 5px)}
@@ -689,8 +690,7 @@ function render(){
     const nav=document.createElement('div');nav.className='nav-ex';
     const v=document.createElement('button');v.type='button';v.className='btn ghost voltaBtn';v.textContent='← Voltar';v.setAttribute('aria-label','Voltar ao exercício anterior');v.onclick=voltaPasso;nav.appendChild(v);
     const pu=[...painel.querySelectorAll('button.btn.ghost')].find(b=>/^Pular/.test(b.textContent.trim()));
-    if(pu){pu.remove();}
-    if(false){const rot=pu.textContent.trim();pu.setAttribute('aria-label',rot.replace(/→/,'').trim());pu.textContent='Pular →';nav.appendChild(pu);}
+    if(pu){const rot=pu.textContent.trim();pu.setAttribute('aria-label',rot.replace(/→/,'').trim());pu.textContent='Pular →';pu.classList.add('pulaBtn');pu.hidden=S.erros<2;nav.appendChild(pu);}
     painel.appendChild(nav);
   }
 }
@@ -1123,7 +1123,7 @@ function montaEntrada(c,trata){
     if(!usaMic)inp.focus({preventScroll:true});
   }
   const E={
-    falha(dito,msg){S.erros++;painel.querySelectorAll('.ouvir-alvo[hidden]').forEach(b=>b.hidden=false);est.className='estado erro';est.textContent=msg;ouvi.textContent=dito?'Ouvi: “'+dito+'”':'';reforco();},
+    falha(dito,msg){S.erros++;document.querySelectorAll('.pulaBtn').forEach(b=>{b.hidden=S.erros<2;});painel.querySelectorAll('.ouvir-alvo[hidden]').forEach(b=>b.hidden=false);est.className='estado erro';est.textContent=msg;ouvi.textContent=dito?'Ouvi: “'+dito+'”':'';reforco();},
     aviso(msg,dito){est.className='estado erro';est.textContent=msg;ouvi.textContent=dito?'Você escreveu: “'+dito+'”':'';},
     ok(dito,msg){pararMic();est.className='estado ok';est.textContent=msg||'✓ Isso!';ouvi.textContent=dito?'Você disse: '+dito:'';ac.innerHTML='';esc.innerHTML='';ref.innerHTML='';}
   };
