@@ -41,7 +41,8 @@ Não peça a mesma tarefa a duas IAs ao mesmo tempo: uma desfaz a outra.
 - Para abrir o Firebase, o GitHub ou qualquer site em nome da Aline, **use sempre o navegador embutido do app Claude**, na conta **UnirVersos Idiomas** (unirversos.idiomas@gmail.com).
 - **Nunca** use o Chrome da Aline, nem a conta li.kikuti@gmail.com, nem a conta da SENSU.
 - O acesso a todos os serviços do site (Firebase, projeto `unirversos-site`, Google Drive, GitHub etc.) é sempre pela conta **unirversos.idiomas@gmail.com**. É nela que a arquitetura do site é gerenciada. Então não diga que "não tem acesso" antes de tentar abrir o serviço no navegador embutido, já logado nessa conta.
-- Se o serviço realmente não abrir (sessão deslogada, pedido de senha ou de código), pare e avise a Aline. Não troque de conta por conta própria.
+- Se um serviço abrir logado na conta **li.kikuti@gmail.com**, **troque sempre para a unirversos.idiomas@gmail.com** (pelo seletor de contas do Google ou abrindo o endereço com `?authuser=unirversos.idiomas@gmail.com`). Não saia da conta li.kikuti: só troque.
+- Se a unirversos.idiomas não estiver entrada no navegador, ou o serviço realmente não abrir (sessão deslogada, pedido de senha ou de código), pare e avise a Aline. Não digite senha nem entre em outra conta por conta própria.
 - No Firebase, só **leia**; qualquer mudança de regras ou dados só com o ok da Aline (ver seção 2).
 - Nunca digite senhas nem coloque chaves ou acessos do Firebase no repositório (ele é público). Se faltar acesso, peça para a Aline colar o texto aqui.
 
