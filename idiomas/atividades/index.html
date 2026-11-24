@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="robots" content="noindex">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Atividades · Unirversos</title>
+<title>Atividades de japonês · Unirversos</title>
 <style>html[data-login="obrigatorio"]:not(.uni-ok) body>*:not(#uni-gate){visibility:hidden}</style>
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@600;700;800&family=Zen+Maru+Gothic:wght@400;500;700&display=swap">
@@ -21,20 +21,16 @@ h1{font-family:"Baloo 2",sans-serif;font-size:34px;line-height:1.1;margin:6px 0 
 .sub{margin:0;color:var(--muted);max-width:40em}
 .pill{display:inline-block;font-size:12px;font-weight:700;border-radius:999px;padding:2px 10px;background:var(--gold-s);color:var(--gold);margin-top:14px}
 .trava{background:#fff;border:1.5px dashed #d9c6cb;border-radius:16px;padding:14px 18px;margin-top:18px}.trava b{display:block}
-.lista{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px;margin-top:22px}
-@media(max-width:760px){.lista{grid-template-columns:1fr}}
-.at{background:#fff;border:1.5px solid var(--line);border-left:4px solid var(--c,var(--gold));border-radius:16px;padding:16px 18px;display:flex;flex-direction:column;gap:8px;text-decoration:none;color:inherit;transition:transform .15s,border-color .15s}
-a.at:hover{transform:translateY(-2px);border-color:#d9c6cb;border-left-color:var(--c,var(--gold))}
-.at .top{display:flex;justify-content:space-between;align-items:center;gap:8px;font-size:12px;color:var(--muted)}
-.at .cab{display:flex;align-items:center;gap:10px}
-.at .ic{width:46px;height:46px;border-radius:50%;display:grid;place-items:center;font-family:"Zen Maru Gothic",sans-serif;font-weight:700;font-size:23px;color:var(--c,var(--gold));background:#fff;border:2px solid var(--c,var(--gold));box-shadow:inset 0 0 0 3px #fff,inset 0 0 0 40px color-mix(in srgb,var(--c,var(--gold)) 10%,#fff)}
-.at .nu{font-family:"Baloo 2",sans-serif;font-size:22px;color:var(--c,var(--gold));line-height:1}
-.at h2{margin:0;font-family:"Baloo 2",sans-serif;font-size:21px;line-height:1.25}
-.at p{margin:0;font-size:14px;color:#5c4c58}
-.at .ir{margin-top:auto;font-weight:700;font-size:13.5px;color:var(--pink-d)}
-.at.lock{opacity:.6}
-.tr{display:flex;height:8px;background:#f1e8ea;border-radius:999px;overflow:hidden}.tr i{display:block;height:100%;background:var(--sage)}
-.prog{font-size:12.5px;color:var(--muted)}
+.lista{display:grid;grid-template-columns:repeat(auto-fill,minmax(190px,1fr));gap:14px;margin-top:22px}
+@media(max-width:480px){.lista{grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}}
+.at{position:relative;display:flex;flex-direction:column;align-items:center;text-align:center;gap:6px;background:linear-gradient(180deg,var(--s) 0 58px,#fff 58px);border:1.5px solid var(--line);border-bottom:4px solid var(--c);border-radius:20px;padding:16px 12px 14px;text-decoration:none;color:inherit;transition:transform .15s,box-shadow .15s}
+a.at:hover{transform:translateY(-3px);box-shadow:0 10px 22px -14px rgba(58,43,56,.45)}
+.at .ic{width:66px;height:66px;border-radius:50%;display:grid;place-items:center;font-size:32px;background:#fff;box-shadow:0 0 0 4px var(--s),0 6px 14px -8px rgba(58,43,56,.4)}
+.at .tag{position:absolute;top:9px;right:10px;font-size:11px;font-weight:700;color:var(--c);background:#fff;border-radius:999px;padding:1px 8px}
+.at .n{font-family:"Zen Maru Gothic",sans-serif;font-weight:700;font-size:19px;line-height:1.2;margin-top:4px}
+.at .d{font-size:12.5px;color:var(--muted);line-height:1.3}
+.at .pb{width:70%;height:6px;background:#f1e8ea;border-radius:999px;overflow:hidden;margin-top:4px}.at .pb i{display:block;height:100%;background:var(--c)}
+.at.lock{opacity:.55}
 .faixa-t{background:#fbf1de;color:#7a5418;font-size:13px;text-align:center;padding:6px 12px}
 </style>
 <link rel="stylesheet" href="/estilo-celular.css?v=3">
@@ -45,15 +41,15 @@ a.at:hover{transform:translateY(-2px);border-color:#d9c6cb;border-left-color:var
 <body>
 <div class="w">
   <a class="voltar" href="/aluno/">← Área do aluno</a>
-  <p class="ey">✦ Atividades Unirversos</p>
-  <h1>Sala de atividades</h1><div class="bar0"></div>
-  <p class="sub">Escolha uma atividade. Cada uma guarda o seu progresso e as correções da professora.</p>
+  <p class="ey">✦ <span lang="ja">日本語</span> · Atividades Unirversos</p>
+  <h1>Atividades de japonês</h1><div class="bar0"></div>
+  <p class="sub">Escolha uma atividade de japonês. Cada uma guarda o seu progresso e as correções da professora.</p>
   <span class="pill" id="selo" hidden></span>
   <div id="trava"></div>
   <div class="lista" id="lista"></div>
 </div>
 <script src="/caderno-dados.js?v=2"></script>
-<script type="module" src="/idiomas/atividades/atividades.js?v=3"></script>
+<script type="module" src="/idiomas/atividades/atividades.js?v=5"></script>
 <script defer src="/caderno-flutuante.js?v=21"></script>
 </body>
 </html>

@@ -11,10 +11,10 @@ const esc = s => String(s == null ? '' : s).replace(/[&<>"']/g, c => ({ '&':'&am
 
 /* id = o mesmo id usado no Firestore (atividades/{e-mail} → { [id]: respostas }); livro = documento biblioteca/{livro} com os itens */
 const ATIVIDADES = [
-  { id: 'n2gram', livro: 'n2gram', num: '01', ic: '文', icT: 'gramática', nivel: 'N2', t: 'Gramática N2 · 8 semanas', d: 'Uma estrutura por vez: entenda a nuance, veja o exemplo e escreva a sua frase.', url: '/idiomas/atividades/gramatica-n2/', cor: 'var(--gold)' },
-  { id: 'verbos', livro: 'verbos', num: '02', ic: '動', icT: 'verbo', nivel: 'N5–N3', t: 'Verbos transitivos e intransitivos', d: '75 pares (150 verbos): compare 他動詞 e 自動詞, veja o exemplo e escreva a sua frase.', url: '/idiomas/atividades/verbos/', cor: 'var(--sage)', por: 2 },
-  { id: 'adjetivos', livro: 'adjetivos', num: '03', ic: '形', icT: 'adjetivo', nivel: 'N5–N2', t: 'Adjetivos e opostos', d: '60 pares (120 adjetivos い e な): um adjetivo e o seu oposto, com exemplo e a sua frase.', url: '/idiomas/atividades/adjetivos/', cor: 'var(--terra)', por: 2 },
-  { id: 'karamade', livro: 'karamade', num: '04', ic: '迄', icT: 'から e まで', nivel: 'N5', t: 'から e まで: de onde, até onde', d: '11 questões com correção na hora: lacunas, leitura de placa e montar a frase.', url: '/idiomas/atividades/kara-made/', cor: 'var(--lav)', quiz: true }
+  { id: 'n2gram', livro: 'n2gram', num: '01', ic: '📚', s: '#fbf1de', jp: '文法 N2', cur: 'Gramática N2 · 8 semanas', nivel: 'N2', t: 'Gramática N2 · 8 semanas', d: 'Uma estrutura por vez: entenda a nuance, veja o exemplo e escreva a sua frase.', url: '/idiomas/atividades/gramatica-n2/', cor: 'var(--gold)' },
+  { id: 'verbos', livro: 'verbos', num: '02', ic: '🚪', s: '#e8efe8', jp: '他動詞と自動詞', cur: 'Verbos transitivos e intransitivos', nivel: 'N5–N3', t: 'Verbos transitivos e intransitivos', d: '75 pares (150 verbos): compare 他動詞 e 自動詞, veja o exemplo e escreva a sua frase.', url: '/idiomas/atividades/verbos/', cor: 'var(--sage)', por: 2 },
+  { id: 'adjetivos', livro: 'adjetivos', num: '03', ic: '⚖️', s: '#f8e6de', jp: '形容詞と反対語', cur: 'Adjetivos e opostos', nivel: 'N5–N2', t: 'Adjetivos e opostos', d: '60 pares (120 adjetivos い e な): um adjetivo e o seu oposto, com exemplo e a sua frase.', url: '/idiomas/atividades/adjetivos/', cor: 'var(--terra)', por: 2 },
+  { id: 'karamade', livro: 'karamade', num: '04', ic: '🚆', s: '#f3f0fa', jp: '「から」と「まで」', cur: 'De onde, até onde', nivel: 'N5', t: 'から e まで', d: '11 questões com correção na hora: lacunas, leitura de placa e montar a frase.', url: '/idiomas/atividades/kara-made/', cor: 'var(--lav)', quiz: true }
 ];
 
 /* mesma regra da galeria: "feito" só conta depois de aprovado pela professora */
@@ -25,9 +25,12 @@ function pinta(liberado, souProf, resp, totais){
     const trava = !liberado && !souProf, breve = !!a.breve;
     const R = resp[a.id] || {}, tot = totais[a.id] || 0;
     const feitas = a.quiz ? (R.acertos || 0) : Object.keys(R).filter(n => feita(R[n])).length;
-    const prog = !souProf && !trava && tot ? `<div class="tr" role="img" aria-label="${feitas} de ${tot} estruturas feitas"><i style="width:${Math.round(feitas / tot * 100)}%"></i></div><span class="prog">${feitas} de ${tot} ${a.quiz ? 'certas' : 'feitas'}</span>` : '';
-    const corpo = `<div class="top"><span class="cab"><span class="ic" lang="ja" title="${esc(a.icT)}" aria-hidden="true">${esc(a.ic)}</span><span class="nu">${esc(a.num)}</span></span><span>${breve ? 'em breve' : trava ? '🔒 alunos' : esc(a.nivel)}</span></div><h2>${esc(a.t)}</h2><p>${esc(a.d)}</p>${prog}<span class="ir">${breve ? 'Em construção' : trava ? 'Libera com a professora' : 'Abrir →'}</span>`;
-    return trava || breve ? `<div class="at lock" style="--c:${a.cor}">${corpo}</div>` : `<a class="at" style="--c:${a.cor}" href="${esc(a.url)}">${corpo}</a>`;
+    const pct = tot ? Math.round(feitas / tot * 100) : 0;
+    const prog = !souProf && !trava && tot ? `<span class="pb" role="img" aria-label="${feitas} de ${tot} ${a.quiz ? 'certas' : 'feitas'}"><i style="width:${pct}%"></i></span>` : '';
+    const tag = breve ? 'em breve' : trava ? '🔒' : esc(a.nivel);
+    const corpo = `<span class="tag">${tag}</span><span class="ic" aria-hidden="true">${a.ic}</span><b class="n" lang="ja">${esc(a.jp)}</b><span class="d">${esc(a.cur)}</span>${prog}`;
+    const at = `class="at${trava || breve ? ' lock' : ''}" style="--c:${a.cor};--s:${a.s}" title="${esc(a.d)}"`;
+    return trava || breve ? `<div ${at}>${corpo}</div>` : `<a ${at} href="${esc(a.url)}">${corpo}</a>`;
   }).join('');
 }
 
