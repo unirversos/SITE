@@ -34,7 +34,7 @@ const questao = t => { const l = String(t || '').split('\n').map(x => x.trim()).
 const gabarito = t => { const m = String(t || '').match(/正解[：:]\s*([1-4１-４])/); const n = m ? '1234１２３４'.indexOf(m[1]) % 4 + 1 : 0;
   return { n, ex: String(t || '').replace(/^.*?正解[：:]\s*[1-4１-４]\s*/s, '').replace(/^【解説】\s*/, '').trim() }; };
 const itens = A.itens.map((r, n) => ({ n, s: r[0], d: r[1], tm: r[2], tipo: r[3], es: r[4], vo: r[5], q: r[6], min: r[7], tx: r[8] || '', qq: questao(r[9]), gb: gabarito(r[10]), xt: r[11] }));
-let oculta = (() => { try { return localStorage.getItem('uniAtivOculta') !== '0'; } catch (e) { return true; } })(), abertosEx = new Set();
+let oculta = (() => { try { return localStorage.getItem('uniAtivOcultaEstr') !== '0'; } catch (e) { return true; } })(), abertosEx = new Set();
 let R = {}, alvo = '', souProf = false, nuvem = true, filtro = { sem: 0, st: 'praticar', q: '' }, abertosPt = new Set();
 
 $('tit').textContent = A.titulo; $('sub').textContent = A.sub;
@@ -116,7 +116,7 @@ $('sems').onclick = e => { const b = e.target.closest('[data-sem]'); if (!b) ret
 
 /* ---------- filtros ---------- */
 function pintaChips(){
-  $('oc').textContent = oculta ? '👁 Mostrar explicações' : '🙈 Ocultar explicações'; $('oc').setAttribute('aria-pressed', oculta);
+  $('oc').textContent = oculta ? '👁 Mostrar estratégias' : '🙈 Ocultar estratégias'; $('oc').setAttribute('aria-pressed', oculta);
   const nPr = itens.filter(i => PRATICAR.includes(stDe(i.n))).length, nRev = itens.filter(i => stDe(i.n) === 'revisao').length, nNov = itens.filter(i => novo(i.n)).length;
   const ch = (k, t, cls = '') => `<button type="button" class="chip${cls}${filtro.st === k ? ' on' : ''}" data-st="${k}">${t}</button>`;
   $('chips').innerHTML = [
@@ -125,7 +125,7 @@ function pintaChips(){
     ch('praticar', `A praticar (${nPr})`), ch('feito', `Feito ✓ (${itens.length - nPr})`), ch('', 'Todas')
   ].join(' ');
 }
-$('oc').onclick = () => { oculta = !oculta; abertosEx.clear(); try { localStorage.setItem('uniAtivOculta', oculta ? '1' : '0'); } catch (e) {} pintaChips(); pintaCards(); };
+$('oc').onclick = () => { oculta = !oculta; abertosEx.clear(); try { localStorage.setItem('uniAtivOcultaEstr', oculta ? '1' : '0'); } catch (e) {} pintaChips(); pintaCards(); };
 $('chips').onclick = e => { const b = e.target.closest('[data-st]'); if (!b) return; filtro.st = b.dataset.st; pintaChips(); pintaCards(); };
 $('q').oninput = () => { filtro.q = $('q').value.trim().toLowerCase(); pintaCards(); };
 const passa = i => { const st = stDe(i.n);
@@ -167,7 +167,7 @@ function card(i){
     <div class="top"><span>${SEM(i.s)} · ${DIA(i.d)}${i.min ? ` · ⏱ ${i.min} min` : ''}</span><span>${novo(i.n) ? `<button type="button" class="novo" data-visto="${i.n}" title="Marcar como visto">nova correção · ✓ vi</button> ` : ''}<span class="pill p-${st}">${ST[st]}</span></span></div>
     <h3><span lang="ja">${esc(i.tm)}</span></h3>
     <p class="tipo">${esc(i.tipo)}</p>
-    <div class="estr"><b>Estratégia</b>${esc(i.es)}</div>
+    ${oculta && !abertosEx.has(i.n) ? `<button type="button" class="verex" data-ex="${i.n}">👁 ver estratégia</button>` : `<div class="estr"><b>Estratégia</b>${esc(i.es)}${oculta ? ` <button type="button" class="verpt" data-ex="${i.n}">ocultar</button>` : ''}</div>`}
     ${i.tx ? `<div class="texto"><div class="tx-top"><b>Texto</b><button type="button" class="som" data-som="${i.n}" aria-label="Ouvir o texto" title="Ouvir o texto">🔊</button></div><div class="jp tx" lang="ja">${window.FraseJP ? FraseJP.html(i.xt, i.tx) : esc(i.tx)}</div></div>` : ''}
     ${i.qq.ops.length === 4 ? blocoQuestao(i, r) : ''}
     <p class="voc"><b>Vocabulário</b> <span lang="ja">${esc(i.vo)}</span></p>
