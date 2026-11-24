@@ -20,8 +20,23 @@ const ATIVIDADES = [
 /* mesma regra da galeria: "feito" só conta depois de aprovado pela professora */
 const feita = r => r && ((r.st === 'feito' && r.ap) || r.st === 'dominado');
 
+/* filtro de nível: "N5–N3" vale para N5, N4 e N3; a escolha fica guardada no aparelho */
+const NIVEIS = ['N5', 'N4', 'N3', 'N2', 'N1'];
+const niveisDe = a => { const m = a.nivel.match(/N(\d)(?:\s*[–-]\s*N(\d))?/); if (!m) return []; const x = +m[1], y = +(m[2] || m[1]);
+  return NIVEIS.filter(n => { const k = +n[1]; return k <= Math.max(x, y) && k >= Math.min(x, y); }); };
+let nivel = (() => { try { return localStorage.getItem('uniAtivNivel') || ''; } catch (e) { return ''; } })();
+let ultimo = null;
+function pintaFiltro(){
+  $('niv').innerHTML = ['', ...NIVEIS].map(n => `<button type="button" class="chip${nivel === n ? ' on' : ''}" data-n="${n}" aria-pressed="${nivel === n}">${n || 'Todos'}</button>`).join('');
+}
+$('niv').onclick = e => { const b = e.target.closest('[data-n]'); if (!b) return; nivel = b.dataset.n; try { localStorage.setItem('uniAtivNivel', nivel); } catch (er) {} pintaFiltro(); if (ultimo) pinta(...ultimo); };
+pintaFiltro();
+
 function pinta(liberado, souProf, resp, totais){
-  $('lista').innerHTML = ATIVIDADES.map(a => {
+  ultimo = [liberado, souProf, resp, totais];
+  const lista = ATIVIDADES.filter(a => !nivel || niveisDe(a).includes(nivel));
+  if (!lista.length) { $('lista').innerHTML = `<p class="vazio">Ainda não há atividades de ${esc(nivel)}. Em breve a sensei coloca aqui.</p>`; return; }
+  $('lista').innerHTML = lista.map(a => {
     const trava = !liberado && !souProf, breve = !!a.breve;
     const R = resp[a.id] || {}, tot = totais[a.id] || 0;
     const feitas = a.quiz ? (R.acertos || 0) : Object.keys(R).filter(n => feita(R[n])).length;
