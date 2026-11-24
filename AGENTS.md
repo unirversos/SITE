@@ -36,3 +36,9 @@ Só um mexe por vez, e a Aline avisa o outro antes.
 
 ## 6. Uma tarefa por vez
 Não peça a mesma tarefa a duas IAs ao mesmo tempo: uma desfaz a outra.
+
+## 7. Navegador e contas (regra da Aline)
+- Para abrir o Firebase, o GitHub ou qualquer site em nome da Aline, **use sempre o navegador embutido do app Claude**, na conta **UnirVersos Idiomas** (unirversos.idiomas@gmail.com).
+- **Nunca** use o Chrome da Aline, nem a conta li.kikuti@gmail.com, nem a conta da SENSU.
+- No Firebase, só **leia**; qualquer mudança de regras ou dados só com o ok da Aline (ver seção 2).
+- Nunca digite senhas nem coloque chaves ou acessos do Firebase no repositório (ele é público). Se faltar acesso, peça para a Aline colar o texto aqui.
