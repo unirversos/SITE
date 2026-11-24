@@ -96,7 +96,7 @@ function barra(lista){
 }
 function pintaNums(){
   const tot = itens.length, c = k => itens.filter(i => stDe(i.n) === k).length, f = c('feito');
-  $('nums').innerHTML = `<div class="prog"><div class="prog-t"><b>${f} de ${tot}</b> ${CFG.un[1]} feitas <span>${Math.round(100 * f / tot)}%</span></div>
+  $('nums').innerHTML = `<div class="prog"><div class="prog-t"><b>${f} de ${tot}</b> ${CFG.un[1]} ${CFG.feitas || 'feitas'} <span>${Math.round(100 * f / tot)}%</span></div>
     <div class="prog-b">${barra(itens)}</div>
     <div class="leg"><span><i class="b-feito"></i>Feitas ✓ ${f}</span><span><i class="b-revisao"></i>Aguardando a professora ${c('revisao')}</span><span><i class="b-corrigir"></i>Para corrigir ${c('corrigir')}</span><span><i class="b-pendente"></i>Ainda sem frase ${c('pendente')}</span></div></div>`;
   const sems = [...new Set(itens.map(i => i.s))];
@@ -150,9 +150,9 @@ function card(i){
     <div class="top"><span>${SEM(i.s)} · ${DIA(i.d)}${i.tm ? ` · <span lang="ja">${esc(i.tm)}</span>` : ''}</span><span>${novo(i.n) ? `<button type="button" class="novo" data-visto="${i.n}" title="Marcar como visto">nova correção · ✓ vi</button> ` : ''}<span class="pill p-${st}">${ST[st]}</span></span></div>
     <h3><span lang="ja">${esc(est)}</span> ${ro ? `<small>${esc(ro)}</small>` : ''} <button type="button" class="som som-p" data-palavra="${i.n}" aria-label="Ouvir a palavra" title="Ouvir a palavra">🔊</button></h3>
     ${oculta && !abertosEx.has(i.n) ? `<button type="button" class="verex" data-ex="${i.n}">👁 ver explicação</button>` : `<p class="nu">${esc(i.nu)}${oculta ? ` <button type="button" class="verpt" data-ex="${i.n}">ocultar</button>` : ''}</p>`}
-    ${`<div class="ex"><button type="button" class="som" data-som="${i.n}" aria-label="Ouvir o exemplo">🔊</button><p><span class="jp" lang="ja">${FraseJP.html(i.xt, i.x)}</span><br>${pt ? `<span class="pt">${esc(i.tr)}</span> <button type="button" class="verpt" data-pt="${i.n}">ocultar tradução</button>` : `<button type="button" class="verpt" data-pt="${i.n}">ver tradução</button>`}</p></div>`}
+    ${`<div class="ex"><button type="button" class="som" data-som="${i.n}" aria-label="Ouvir o exemplo">🔊</button><p><span class="jp" lang="ja">${FraseJP.html(i.xt, i.x)}</span>${!i.tr ? '' : `<br>${pt ? `<span class="pt">${esc(i.tr)}</span> <button type="button" class="verpt" data-pt="${i.n}">ocultar tradução</button>` : `<button type="button" class="verpt" data-pt="${i.n}">ver tradução</button>`}`}</p></div>`}
     <label class="l" for="f${i.n}">${souProf ? 'FRASE DO ALUNO' : 'MINHA FRASE'}</label>
-    <textarea id="f${i.n}" data-f="${i.n}" rows="2" lang="ja" placeholder="${souProf ? 'O aluno ainda não escreveu' : 'Escreva uma frase sua com ' + (CFG.un[0] === 'palavra' ? 'essa palavra' : 'essa estrutura')}" ${souProf ? 'readonly' : ''}>${esc(r.f)}</textarea>
+    <textarea id="f${i.n}" data-f="${i.n}" rows="2" lang="ja" placeholder="${souProf ? 'O aluno ainda não escreveu' : (CFG.ph || ('Escreva uma frase sua com ' + (CFG.un[0] === 'palavra' ? 'essa palavra' : 'essa estrutura')))}" ${souProf ? 'readonly' : ''}>${esc(r.f)}</textarea>
     ${corr}
     ${blocoHist(r)}
     <div class="pe"><span class="acoes">${acoes}</span><span class="salvo" id="ok${i.n}" aria-live="polite"></span></div>
