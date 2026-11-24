@@ -1,14 +1,16 @@
-/* Unirversos · Atividades ✦ — Verbos transitivos e intransitivos (75 pares, 150 verbos).
-   Mesmo modelo da Gramática N2: o conteúdo fica no Firestore (biblioteca/verbos, só liberados leem; o repositório é público).
-   Respostas: Firestore atividades/{e-mail} → { verbos: { "<par>t" | "<par>i": {f, st, c, m, ap, cm, h} } }.
-   Cada verbo tem a sua frase, o seu status e a sua correção. O aluno escreve; a professora corrige e aprova. */
+/* Unirversos · Atividades ✦ — galeria de PARES (verbos transitivos/intransitivos, adjetivos e opostos…).
+   Cada página define window.PARES_CFG antes de carregar este arquivo (id, título, rótulos dos dois lados, filtro).
+   Mesmo modelo da Gramática N2: o conteúdo fica no Firestore (biblioteca/{id}, só liberados leem; o repositório é público).
+   Respostas: Firestore atividades/{e-mail} → { [id]: { "<par>t" | "<par>i": {f, st, c, m, ap, cm, h} } }.
+   Cada palavra tem a sua frase, o seu status e a sua correção. O aluno escreve; a professora corrige e aprova. */
 import { auth, db } from "/idiomas/dados/conta.js?v=6";
 import { doc, getDoc, setDoc, collection, getDocs, onSnapshot } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
 import { onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
 
 const PROFS = ['unirversos.idiomas@gmail.com', 'li.kikuti@gmail.com'];
 const $ = id => document.getElementById(id);
-const BASE = { id: 'verbos', titulo: 'Verbos transitivos e intransitivos', sub: 'Dois verbos, uma mesma cena: quem age (他動詞 · を) e o que acontece sozinho (自動詞 · が). Leia o par, veja o exemplo e escreva a sua frase.', itens: [] };
+const CFG = window.PARES_CFG;
+const BASE = { id: CFG.id, titulo: CFG.titulo, sub: CFG.sub, itens: [] };
 const A = await new Promise(res => {
   let pronto = false;
   const off = onAuthStateChanged(auth, async u => {
@@ -21,14 +23,17 @@ const A = await new Promise(res => {
 const esc = s => String(s == null ? '' : s).replace(/[&<>"']/g, c => ({ '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;' }[c]));
 const ST = { pendente: 'A praticar', revisao: 'Aguardando a professora', corrigir: 'Corrigir', feito: 'Feito ✓' };
 const PRATICAR = ['pendente', 'revisao', 'corrigir'];
-const KIND = { t: { rot: '他動詞 · を', nome: 'Transitivo', cls: 'k-t' }, i: { rot: '自動詞 · が', nome: 'Intransitivo', cls: 'k-i' } };
+const KIND = { t: Object.assign({ cls: 'k-t' }, CFG.lados.t), i: Object.assign({ cls: 'k-i' }, CFG.lados.i) };
+const UN = CFG.unidade; /* ex.: ['verbo', 'verbos'] */
 
 /* cada par vira dois verbos; a chave é "<par>t" ou "<par>i" */
 const pares = A.itens;
 const verbos = {}; pares.forEach(p => { verbos[p.n + 't'] = Object.assign({ k: p.n + 't', p, tipo: 't' }, p.t); verbos[p.n + 'i'] = Object.assign({ k: p.n + 'i', p, tipo: 'i' }, p.i); });
 const chaves = Object.keys(verbos);
 const NIVEIS = [...new Set(pares.map(p => p.nv))].sort();
-const TEMAS = [...new Set(pares.map(p => p.t.tema))];
+/* segundo filtro: tema (verbos) ou tipo い/な (adjetivos); vale se qualquer lado do par combinar */
+const campo2 = CFG.filtro2.campo, valores2 = p => [...new Set([p.t[campo2], p.i[campo2]])];
+const TEMAS = [...new Set(pares.flatMap(valores2))].sort((a, b) => a.localeCompare(b, 'pt'));
 let oculta = false, R = {}, alvo = '', souProf = false, nuvem = true, liberado = false, filtro = { st: 'praticar', nv: '', tema: '', q: '' }, abertosPt = new Set();
 
 $('tit').textContent = A.titulo; $('sub').textContent = A.sub;
@@ -92,7 +97,7 @@ function barra(lista){
 }
 function pintaNums(){
   const tot = chaves.length, c = s => chaves.filter(k => stDe(k) === s).length, f = c('feito');
-  $('nums').innerHTML = `<div class="prog"><div class="prog-t"><b>${f} de ${tot}</b> verbos feitos <span>${tot ? Math.round(100 * f / tot) : 0}%</span></div>
+  $('nums').innerHTML = `<div class="prog"><div class="prog-t"><b>${f} de ${tot}</b> ${UN[1]} feitos <span>${tot ? Math.round(100 * f / tot) : 0}%</span></div>
     <div class="prog-b">${barra(chaves)}</div>
     <div class="leg"><span><i class="b-feito"></i>Feitos ✓ ${f}</span><span><i class="b-revisao"></i>Aguardando a professora ${c('revisao')}</span><span><i class="b-corrigir"></i>Para corrigir ${c('corrigir')}</span><span><i class="b-pendente"></i>Ainda sem frase ${c('pendente')}</span></div></div>`;
 }
@@ -100,8 +105,8 @@ function pintaNums(){
 /* ---------- filtros ---------- */
 const parPassaSt = p => ['t', 'i'].some(t => { const k = p.n + t, st = stDe(k);
   return !filtro.st || (filtro.st === 'novas' ? novo(k) : filtro.st === 'praticar' ? PRATICAR.includes(st) : st === filtro.st); });
-const visiveis = () => pares.filter(p => (!filtro.nv || p.nv === filtro.nv) && (!filtro.tema || p.t.tema === filtro.tema) && parPassaSt(p)
-  && (!filtro.q || [p.t.j, p.t.ro, p.t.sig, p.t.x, p.t.tr, p.i.j, p.i.ro, p.i.sig, p.i.x, p.i.tr, resp(p.n + 't').f, resp(p.n + 'i').f].join(' ').toLowerCase().includes(filtro.q)));
+const visiveis = () => pares.filter(p => (!filtro.nv || p.nv === filtro.nv) && (!filtro.tema || valores2(p).includes(filtro.tema)) && parPassaSt(p)
+  && (!filtro.q || [p.t.j, p.t.ka, p.t.ro, p.t.sig, p.t.x, p.t.tr, p.i.j, p.i.ka, p.i.ro, p.i.sig, p.i.x, p.i.tr, resp(p.n + 't').f, resp(p.n + 'i').f].join(' ').toLowerCase().includes(filtro.q)));
 function pintaChips(){
   const nRev = chaves.filter(k => stDe(k) === 'revisao').length, nNov = chaves.filter(novo).length;
   const nPr = chaves.filter(k => PRATICAR.includes(stDe(k))).length;
@@ -140,9 +145,9 @@ function lado(v){
        : (r.f || '').trim() ? `<button type="button" class="mini ok" data-acao="aprova" data-k="${k}">✓ Aprovar</button><button type="button" class="mini" data-acao="corrige" data-k="${k}">✎ Pedir correção</button>` : '<span class="salvo">Ainda sem frase do aluno.</span>')
     : (st === 'revisao' ? '<span class="salvo">Enviada · a professora vai ver</span>' : st === 'corrigir' ? '<span class="salvo">Reescreva a frase com a correção</span>' : '');
   return `<div class="lado ${K.cls} s-${st}" data-k="${k}">
-    <div class="tp"><span class="tag">${K.nome} · <span lang="ja">${K.rot}</span></span><span class="pill p-${st}">${ST[st]}</span></div>
-    <h3><span lang="ja">${esc(v.j)}</span> <small>${esc(v.ro)} · ${esc(v.g)}</small></h3>
-    <p class="sig"><b>${esc(v.sig)}</b> <span>· ${esc(v.nu)}</span></p>
+    <div class="tp"><span class="tag">${esc(K.nome)}${K.rot ? ` · <span lang="ja">${esc(K.rot)}</span>` : ''}</span><span class="pill p-${st}">${ST[st]}</span></div>
+    <h3><span lang="ja">${esc(v.j)}</span> <small>${[v.ka, v.ro, v.g].filter(Boolean).map(esc).join(' · ')}</small></h3>
+    <p class="sig"><b>${esc(v.sig)}</b>${v.nu ? ` <span>· ${esc(v.nu)}</span>` : ''}</p>
     <div class="ex"><button type="button" class="som" data-som="${k}" aria-label="Ouvir o exemplo">🔊</button><p><span class="jp" lang="ja">${esc(v.x)}</span><br>${pt ? `<span class="pt">${esc(v.tr)}</span> <button type="button" class="verpt" data-pt="${k}">ocultar tradução</button>` : `<button type="button" class="verpt" data-pt="${k}">ver tradução</button>`}</p></div>
     <label class="l" for="f${k}">${souProf ? 'FRASE DO ALUNO' : 'MINHA FRASE'}</label>
     <textarea id="f${k}" data-f="${k}" rows="2" lang="ja" placeholder="${souProf ? 'O aluno ainda não escreveu' : 'Escreva uma frase sua com ' + esc(v.j)}" ${souProf ? 'readonly' : ''}>${esc(r.f)}</textarea>
@@ -151,7 +156,7 @@ function lado(v){
     <div class="pe"><span class="acoes">${acoes}${novo(k) ? ` <button type="button" class="novo" data-visto="${k}" title="Marcar como visto">nova correção · ✓ vi</button>` : ''}</span><span class="salvo" id="ok${k}" aria-live="polite"></span></div>
   </div>`;
 }
-const cardPar = p => `<article class="par" data-n="${p.n}"><div class="top"><span>Par ${String(p.n).padStart(2, '0')} · ${esc(p.nv)}</span><span>${esc(p.t.tema)}</span></div><div class="lados">${lado(verbos[p.n + 't'])}${lado(verbos[p.n + 'i'])}</div></article>`;
+const cardPar = p => `<article class="par" data-n="${p.n}"><div class="top"><span>Par ${String(p.n).padStart(2, '0')} · ${esc(p.nv)}</span><span>${esc([...new Set([p.t.tema, p.i.tema])].join(' · '))}</span></div><div class="lados">${lado(verbos[p.n + 't'])}${lado(verbos[p.n + 'i'])}</div></article>`;
 function pintaCards(){
   const v = visiveis();
   $('mostra').textContent = `Mostrando ${v.length} de ${pares.length} pares`;

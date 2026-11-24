@@ -174,7 +174,7 @@ function pinta(){
   if (a.recado) c += `<div class="bloco"><p class="eyebrow verde">${t('recado')}${tagNovo(novos.recado)}</p><p class="pre">${comLinks(a.recado)}</p></div>`;
   if (a.tarefa) c += `<div class="bloco"><p class="eyebrow">${t('tarefa')}${tagNovo(novos.tarefa)}</p><label class="tarefa${feita ? ' feita' : ''}"><input type="checkbox" id="feita"${feita ? ' checked' : ''}><span class="pre">${comLinks(a.tarefa)}</span></label><p class="mut peq" id="st-t" aria-live="polite">${feita ? t('feita') : ''}</p></div>`;
   c += blocoPlan(a);
-  if (temAtiv) c += `<div class="bloco"><p class="eyebrow">✦ ${EN() ? 'Your activities' : 'Suas atividades'}</p><a class="mini-b" href="/idiomas/atividades/gramatica-n2/" style="align-self:flex-start">${EN() ? 'N2 Grammar · 8 weeks' : 'Gramática N2 · 8 semanas'} →</a></div>`;
+  if (temAtiv) c += `<div class="bloco"><p class="eyebrow">✦ ${EN() ? 'Your activities' : 'Suas atividades'}</p><a class="mini-b" href="/idiomas/atividades/" style="align-self:flex-start">${EN() ? 'Open the activities room' : 'Abrir a sala de atividades'} →</a></div>`;
   if (p) c += `<button type="button" class="remarcar" id="anotar" style="align-self:flex-start">${t('anotar')}</button>`;
 
   /* detalhes: materiais, gravações, próximas aulas e remarcação */

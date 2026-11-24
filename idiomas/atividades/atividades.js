@@ -12,7 +12,8 @@ const esc = s => String(s == null ? '' : s).replace(/[&<>"']/g, c => ({ '&':'&am
 /* id = o mesmo id usado no Firestore (atividades/{e-mail} → { [id]: respostas }); livro = documento biblioteca/{livro} com os itens */
 const ATIVIDADES = [
   { id: 'n2gram', livro: 'n2gram', num: '01', nivel: 'N2', t: 'Gramática N2 · 8 semanas', d: 'Uma estrutura por vez: entenda a nuance, veja o exemplo e escreva a sua frase.', url: '/idiomas/atividades/gramatica-n2/', cor: 'var(--gold)' },
-  { id: 'verbos', livro: 'verbos', num: '02', nivel: 'N5–N3', t: 'Verbos transitivos e intransitivos', d: '75 pares (150 verbos): compare 他動詞 e 自動詞, veja o exemplo e escreva a sua frase.', url: '/idiomas/teste/verbos/', cor: 'var(--sage)', por: 2 }
+  { id: 'verbos', livro: 'verbos', num: '02', nivel: 'N5–N3', t: 'Verbos transitivos e intransitivos', d: '75 pares (150 verbos): compare 他動詞 e 自動詞, veja o exemplo e escreva a sua frase.', url: '/idiomas/atividades/verbos/', cor: 'var(--sage)', por: 2 },
+  { id: 'adjetivos', livro: 'adjetivos', num: '03', nivel: 'N5–N2', t: 'Adjetivos e opostos', d: '60 pares (120 adjetivos い e な): um adjetivo e o seu oposto, com exemplo e a sua frase.', url: '/idiomas/atividades/adjetivos/', cor: 'var(--terra)', por: 2 }
 ];
 
 /* mesma regra da galeria: "feito" só conta depois de aprovado pela professora */

@@ -71,7 +71,7 @@ function lista(){
       <span class="info"><b>${esc(a.nome || 'Sem nome')}</b><span class="mut peq">${esc(a.id)}</span></span>
       <span class="prox">${p && (a.gravar || []).includes(chave(p.ini)) ? '<em class="tag rec">gravar a próxima</em> ' : ''}${a.tarefa && a.tarefaFeita === a.tarefa ? '<em class="tag">tarefa feita</em> ' : ''}${a.ativo === false ? '<em class="tag">pausado</em>' : p ? 'próxima: ' + esc(quando(p.ini)) : '<span class="mut">sem aula marcada</span>'}</span></button>`;
   }).join('');
-  area.innerHTML = blocoHoje() + `<div class="topo"><h2>Seus alunos <span class="mut">(${alunos.length})</span></h2><div class="linha"><a class="btn claro" href="/idiomas/atividades/gramatica-n2/">✦ Atividades</a><button type="button" class="btn claro" id="todos">📚 Mandar para todos</button><button type="button" class="btn" id="novo">+ Novo aluno</button></div></div>
+  area.innerHTML = blocoHoje() + `<div class="topo"><h2>Seus alunos <span class="mut">(${alunos.length})</span></h2><div class="linha"><a class="btn claro" href="/idiomas/atividades/">✦ Atividades</a><button type="button" class="btn claro" id="todos">📚 Mandar para todos</button><button type="button" class="btn" id="novo">+ Novo aluno</button></div></div>
     <div class="alunos">${cards || '<p class="mut">Nenhum aluno ainda. Clique em "+ Novo aluno" para começar.</p>'}</div>`;
   $('novo').onclick = () => ficha(null); $('todos').onclick = mandarTodos;
   area.querySelectorAll('.aluno').forEach(b => b.onclick = () => ficha(alunos.find(a => a.id === b.dataset.id)));
