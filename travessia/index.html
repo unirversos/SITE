@@ -300,5 +300,6 @@ new IntersectionObserver(function(e){var x=e[0];f.classList.toggle('on',!x.isInt
   try{ var c=JSON.parse(localStorage.getItem('uniCalendario1')||'null'); if(c&&c.ini&&c.fim){ var f=function(x){var p=x.split('-');return p[2]+'/'+p[1];}; document.getElementById('calResumo').textContent='· '+f(c.ini)+' a '+f(c.fim)+(Array.isArray(c.ev)&&c.ev.length?' · '+c.ev.length+' eventos':''); } }catch(e){}
 })();
 </script>
+<script src="/medir.js?v=1" defer></script>
 </body>
 </html>
