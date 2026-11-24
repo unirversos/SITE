@@ -44,3 +44,10 @@ Não peça a mesma tarefa a duas IAs ao mesmo tempo: uma desfaz a outra.
 - Se o serviço realmente não abrir (sessão deslogada, pedido de senha ou de código), pare e avise a Aline. Não troque de conta por conta própria.
 - No Firebase, só **leia**; qualquer mudança de regras ou dados só com o ok da Aline (ver seção 2).
 - Nunca digite senhas nem coloque chaves ou acessos do Firebase no repositório (ele é público). Se faltar acesso, peça para a Aline colar o texto aqui.
+
+## 8. Anotações da Aline (vault do Obsidian)
+- As anotações dos projetos ficam num vault do Obsidian no Google Drive da conta unirversos.idiomas@gmail.com (pasta `Obsidian › QG DAKIKUTI`). As notas do site ficam em `10 - Projetos › 11 - UNIRVERSOS`.
+- Uma nota é uma foto do que já sincronizou e pode estar velha. **O que a Aline disser na conversa vale mais que a nota.** Se a nota e a conversa se contradisserem, avise a Aline e deixe ela escolher.
+- Só escreva ou altere notas quando a Aline pedir (por exemplo, "vira nota"), usando as palavras dela.
+- Quem não tiver acesso ao Drive não deve procurar outro jeito: peça para a Aline colar o texto da nota aqui.
+- O conteúdo pessoal das notas nunca vai para este repositório (ele é público).
