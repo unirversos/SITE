@@ -9,7 +9,9 @@ const PROFS = ['unirversos.idiomas@gmail.com', 'li.kikuti@gmail.com'];
 const $ = id => document.getElementById(id);
 /* o conteúdo da atividade fica no Firestore (biblioteca/n2gram), que só alunos liberados e professoras leem.
    Quem não tem acesso recebe só o título: as frases não estão em nenhum arquivo público do site. */
-const BASE = { id: 'n2gram', titulo: 'Gramática N2 · 8 semanas', sub: 'Uma estrutura por vez: entenda a nuance, veja o exemplo e escreva a sua frase.', itens: [] };
+/* outras galerias no mesmo formato (ex.: Vocabulário N2) definem window.GALERIA_CFG antes de carregar este arquivo */
+const CFG = Object.assign({ id: 'n2gram', titulo: 'Gramática N2 · 8 semanas', sub: 'Uma estrutura por vez: entenda a nuance, veja o exemplo e escreva a sua frase.', un: ['estrutura', 'estruturas'] }, window.GALERIA_CFG || {});
+const BASE = { id: CFG.id, titulo: CFG.titulo, sub: CFG.sub, itens: [] };
 const A = await new Promise(res => {
   let pronto = false;
   const off = onAuthStateChanged(auth, async u => {
@@ -24,7 +26,7 @@ const esc = s => String(s == null ? '' : s).replace(/[&<>"']/g, c => ({ '&':'&am
 const ST = { pendente: 'A praticar', revisao: 'Aguardando a professora', corrigir: 'Corrigir', feito: 'Feito ✓' };
 const PRATICAR = ['pendente', 'revisao', 'corrigir'];
 const DIA = n => n + '日目', SEM = n => '第' + n + '週';
-const itens = A.itens.map((r, n) => ({ n, s: r[0], d: r[1], e: r[2], nu: r[3], x: r[4], tr: r[5] }));
+const itens = A.itens.map((r, n) => ({ n, s: r[0], d: r[1], e: r[2], nu: r[3], x: r[4], tr: r[5], tm: r[6] || '' }));
 let oculta = (() => { try { return localStorage.getItem('uniAtivOculta') !== '0'; } catch (e) { return true; } })(), abertosEx = new Set();
 let R = {}, alvo = '', souProf = false, nuvem = true, filtro = { sem: 0, st: 'praticar', q: '' }, abertosPt = new Set();
 
@@ -94,7 +96,7 @@ function barra(lista){
 }
 function pintaNums(){
   const tot = itens.length, c = k => itens.filter(i => stDe(i.n) === k).length, f = c('feito');
-  $('nums').innerHTML = `<div class="prog"><div class="prog-t"><b>${f} de ${tot}</b> estruturas feitas <span>${Math.round(100 * f / tot)}%</span></div>
+  $('nums').innerHTML = `<div class="prog"><div class="prog-t"><b>${f} de ${tot}</b> ${CFG.un[1]} feitas <span>${Math.round(100 * f / tot)}%</span></div>
     <div class="prog-b">${barra(itens)}</div>
     <div class="leg"><span><i class="b-feito"></i>Feitas ✓ ${f}</span><span><i class="b-revisao"></i>Aguardando a professora ${c('revisao')}</span><span><i class="b-corrigir"></i>Para corrigir ${c('corrigir')}</span><span><i class="b-pendente"></i>Ainda sem frase ${c('pendente')}</span></div></div>`;
   const sems = [...new Set(itens.map(i => i.s))];
@@ -145,12 +147,12 @@ function card(i){
        : (r.f || '').trim() ? `<button type="button" class="mini ok" data-acao="aprova" data-n="${i.n}">✓ Aprovar</button><button type="button" class="mini" data-acao="corrige" data-n="${i.n}">✎ Pedir correção</button>` : '<span class="salvo">Ainda sem frase do aluno.</span>')
     : (st === 'revisao' ? '<span class="salvo">Enviada · a professora vai ver</span>' : st === 'corrigir' ? '<span class="salvo">Reescreva a frase com a correção</span>' : '');
   return `<article class="card s-${st}" data-n="${i.n}">
-    <div class="top"><span>${SEM(i.s)} · ${DIA(i.d)}</span><span>${novo(i.n) ? `<button type="button" class="novo" data-visto="${i.n}" title="Marcar como visto">nova correção · ✓ vi</button> ` : ''}<span class="pill p-${st}">${ST[st]}</span></span></div>
+    <div class="top"><span>${SEM(i.s)} · ${DIA(i.d)}${i.tm ? ` · <span lang="ja">${esc(i.tm)}</span>` : ''}</span><span>${novo(i.n) ? `<button type="button" class="novo" data-visto="${i.n}" title="Marcar como visto">nova correção · ✓ vi</button> ` : ''}<span class="pill p-${st}">${ST[st]}</span></span></div>
     <h3><span lang="ja">${esc(est)}</span> ${ro ? `<small>${esc(ro)}</small>` : ''}</h3>
     ${oculta && !abertosEx.has(i.n) ? `<button type="button" class="verex" data-ex="${i.n}">👁 ver explicação</button>` : `<p class="nu">${esc(i.nu)}${oculta ? ` <button type="button" class="verpt" data-ex="${i.n}">ocultar</button>` : ''}</p>`}
     ${`<div class="ex"><button type="button" class="som" data-som="${i.n}" aria-label="Ouvir o exemplo">🔊</button><p><span class="jp" lang="ja">${esc(i.x)}</span><br>${pt ? `<span class="pt">${esc(i.tr)}</span> <button type="button" class="verpt" data-pt="${i.n}">ocultar tradução</button>` : `<button type="button" class="verpt" data-pt="${i.n}">ver tradução</button>`}</p></div>`}
     <label class="l" for="f${i.n}">${souProf ? 'FRASE DO ALUNO' : 'MINHA FRASE'}</label>
-    <textarea id="f${i.n}" data-f="${i.n}" rows="2" lang="ja" placeholder="${souProf ? 'O aluno ainda não escreveu' : 'Escreva uma frase sua com essa estrutura'}" ${souProf ? 'readonly' : ''}>${esc(r.f)}</textarea>
+    <textarea id="f${i.n}" data-f="${i.n}" rows="2" lang="ja" placeholder="${souProf ? 'O aluno ainda não escreveu' : 'Escreva uma frase sua com ' + (CFG.un[0] === 'palavra' ? 'essa palavra' : 'essa estrutura')}" ${souProf ? 'readonly' : ''}>${esc(r.f)}</textarea>
     ${corr}
     ${blocoHist(r)}
     <div class="pe"><span class="acoes">${acoes}</span><span class="salvo" id="ok${i.n}" aria-live="polite"></span></div>
@@ -158,7 +160,7 @@ function card(i){
 }
 function pintaCards(){
   const v = visiveis();
-  $('mostra').textContent = `Mostrando ${v.length} de ${itens.length} estruturas`;
+  $('mostra').textContent = `Mostrando ${v.length} de ${itens.length} ${CFG.un[1]}`;
   $('cards').innerHTML = v.map(card).join('') || `<p class="sub">${filtro.st === 'revisao' ? 'Tudo aprovado por aqui ✓' : filtro.st === 'praticar' ? 'Nada para praticar com esse filtro 🎉' : 'Nenhuma estrutura com esse filtro.'}</p>`;
 }
 /* depois de mudar o status: atualiza números e, se o card não cabe mais no filtro, ele sai da tela */
@@ -166,7 +168,7 @@ function depois(n){
   pintaNums(); pintaChips();
   const c = $('cards').querySelector(`.card[data-n="${n}"]`); if (!c) return;
   if (passa(itens[n])) { c.outerHTML = card(itens[n]); return; }
-  c.classList.add('saindo'); setTimeout(() => { c.remove(); if (!$('cards').querySelector('.card')) pintaCards(); else $('mostra').textContent = `Mostrando ${visiveis().length} de ${itens.length} estruturas`; }, 420);
+  c.classList.add('saindo'); setTimeout(() => { c.remove(); if (!$('cards').querySelector('.card')) pintaCards(); else $('mostra').textContent = `Mostrando ${visiveis().length} de ${itens.length} ${CFG.un[1]}`; }, 420);
 }
 $('cards').addEventListener('input', e => {
   const t = e.target;
