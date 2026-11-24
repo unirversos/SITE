@@ -1390,11 +1390,18 @@ function telaTerra(c){
   });
 }
 
-$('btnRecom').onclick=()=>{
-  if(!confirm('Recomeçar a Aula Zero? Suas chaves ativadas voltarão a ficar desativadas.'))return;
-  S.acesas=[];S.k=0;S.conquista=false;S.visto=new Set();S.toqueOk={};salva();
+$('btnRecom').onclick=function(){
+  /* sem janela nativa (confirm), que alguns navegadores do celular bloqueiam: confirma tocando de novo */
+  const b=this;
+  if(!b.dataset.pronto){b.dataset.pronto='1';b.textContent='Toque de novo para confirmar';setTimeout(()=>{delete b.dataset.pronto;b.textContent='↺ Recomeçar';},4000);return;}
+  delete b.dataset.pronto;b.textContent='↺ Recomeçar';
+  S.acesas=[];S.k=0;S.conquista=false;S.visto=new Set();S.toqueOk={};
+  S.clipeVisto=false;S.clipeRever=false;S.cl=0;S.ai=0;S.ff=0;S.t1=0;S.__ai=0;S.erros=0;S.ditas={};S.retomado={};S.feitos=[];S.f=0;
+  salva();
+  try{localStorage.removeItem('aulaZeroCompleted');}catch(e){}
   try{pararMic();}catch(e){}
-  vai('chegada');window.scrollTo(0,0);
+  try{const d=document.querySelector('details.mais');if(d)d.open=false;}catch(e){}
+  S.passo='chegada';render();window.scrollTo(0,0);
 };
 /* ---------- romaji ---------- */
 $('btnRo').onclick=function(){const on=document.body.classList.toggle('ver-ro');this.setAttribute('aria-pressed',on);this.textContent='Romaji: '+(on?'sim':'não');};
