@@ -13,7 +13,8 @@ const esc = s => String(s == null ? '' : s).replace(/[&<>"']/g, c => ({ '&':'&am
 const ATIVIDADES = [
   { id: 'n2gram', livro: 'n2gram', num: '01', ic: '文', icT: 'gramática', nivel: 'N2', t: 'Gramática N2 · 8 semanas', d: 'Uma estrutura por vez: entenda a nuance, veja o exemplo e escreva a sua frase.', url: '/idiomas/atividades/gramatica-n2/', cor: 'var(--gold)' },
   { id: 'verbos', livro: 'verbos', num: '02', ic: '動', icT: 'verbo', nivel: 'N5–N3', t: 'Verbos transitivos e intransitivos', d: '75 pares (150 verbos): compare 他動詞 e 自動詞, veja o exemplo e escreva a sua frase.', url: '/idiomas/atividades/verbos/', cor: 'var(--sage)', por: 2 },
-  { id: 'adjetivos', livro: 'adjetivos', num: '03', ic: '形', icT: 'adjetivo', nivel: 'N5–N2', t: 'Adjetivos e opostos', d: '60 pares (120 adjetivos い e な): um adjetivo e o seu oposto, com exemplo e a sua frase.', url: '/idiomas/atividades/adjetivos/', cor: 'var(--terra)', por: 2 }
+  { id: 'adjetivos', livro: 'adjetivos', num: '03', ic: '形', icT: 'adjetivo', nivel: 'N5–N2', t: 'Adjetivos e opostos', d: '60 pares (120 adjetivos い e な): um adjetivo e o seu oposto, com exemplo e a sua frase.', url: '/idiomas/atividades/adjetivos/', cor: 'var(--terra)', por: 2 },
+  { id: 'karamade', livro: 'karamade', num: '04', ic: '迄', icT: 'から e まで', nivel: 'N5', t: 'から e まで: de onde, até onde', d: '11 questões com correção na hora: lacunas, leitura de placa e montar a frase.', url: '/idiomas/atividades/kara-made/', cor: 'var(--lav)', quiz: true }
 ];
 
 /* mesma regra da galeria: "feito" só conta depois de aprovado pela professora */
@@ -23,8 +24,8 @@ function pinta(liberado, souProf, resp, totais){
   $('lista').innerHTML = ATIVIDADES.map(a => {
     const trava = !liberado && !souProf, breve = !!a.breve;
     const R = resp[a.id] || {}, tot = totais[a.id] || 0;
-    const feitas = Object.keys(R).filter(n => feita(R[n])).length;
-    const prog = !souProf && !trava && tot ? `<div class="tr" role="img" aria-label="${feitas} de ${tot} estruturas feitas"><i style="width:${Math.round(feitas / tot * 100)}%"></i></div><span class="prog">${feitas} de ${tot} feitas</span>` : '';
+    const feitas = a.quiz ? (R.acertos || 0) : Object.keys(R).filter(n => feita(R[n])).length;
+    const prog = !souProf && !trava && tot ? `<div class="tr" role="img" aria-label="${feitas} de ${tot} estruturas feitas"><i style="width:${Math.round(feitas / tot * 100)}%"></i></div><span class="prog">${feitas} de ${tot} ${a.quiz ? 'certas' : 'feitas'}</span>` : '';
     const corpo = `<div class="top"><span class="cab"><span class="ic" lang="ja" title="${esc(a.icT)}" aria-hidden="true">${esc(a.ic)}</span><span class="nu">${esc(a.num)}</span></span><span>${breve ? 'em breve' : trava ? '🔒 alunos' : esc(a.nivel)}</span></div><h2>${esc(a.t)}</h2><p>${esc(a.d)}</p>${prog}<span class="ir">${breve ? 'Em construção' : trava ? 'Libera com a professora' : 'Abrir →'}</span>`;
     return trava || breve ? `<div class="at lock" style="--c:${a.cor}">${corpo}</div>` : `<a class="at" style="--c:${a.cor}" href="${esc(a.url)}">${corpo}</a>`;
   }).join('');
@@ -39,7 +40,7 @@ onAuthStateChanged(auth, async u => {
   }
   if (liberado && !souProf) {
     for (const a of ATIVIDADES) {
-      try { const s = await getDoc(doc(db, 'biblioteca', a.livro)); if (s.exists()) totais[a.id] = JSON.parse(s.data().itens || '[]').length * (a.por || 1); } catch (e) { console.warn(e); }
+      try { const s = await getDoc(doc(db, 'biblioteca', a.livro)); if (s.exists()) { const it = JSON.parse(s.data().itens || '[]'); totais[a.id] = a.quiz ? (it.lacunas.length + it.vf.length + it.montar.length) : it.length * (a.por || 1); } } catch (e) { console.warn(e); }
     }
   }
   $('selo').hidden = false;
