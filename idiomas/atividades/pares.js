@@ -148,7 +148,7 @@ function lado(v){
     <div class="tp"><span class="tag">${esc(K.nome)}${K.rot ? ` · <span lang="ja">${esc(K.rot)}</span>` : ''}</span><span class="pill p-${st}">${ST[st]}</span></div>
     <h3><span lang="ja">${esc(v.j)}</span> <small>${[v.ka, v.ro, v.g].filter(Boolean).map(esc).join(' · ')}</small></h3>
     <p class="sig"><b>${esc(v.sig)}</b>${v.nu ? ` <span>· ${esc(v.nu)}</span>` : ''}</p>
-    <div class="ex"><button type="button" class="som" data-som="${k}" aria-label="Ouvir o exemplo">🔊</button><p><span class="jp" lang="ja">${esc(v.x)}</span><br>${pt ? `<span class="pt">${esc(v.tr)}</span> <button type="button" class="verpt" data-pt="${k}">ocultar tradução</button>` : `<button type="button" class="verpt" data-pt="${k}">ver tradução</button>`}</p></div>
+    <div class="ex"><button type="button" class="som" data-som="${k}" aria-label="Ouvir o exemplo">🔊</button><p><span class="jp" lang="ja">${FraseJP.html(v.xt, v.x)}</span><br>${pt ? `<span class="pt">${esc(v.tr)}</span> <button type="button" class="verpt" data-pt="${k}">ocultar tradução</button>` : `<button type="button" class="verpt" data-pt="${k}">ver tradução</button>`}</p></div>
     <label class="l" for="f${k}">${souProf ? 'FRASE DO ALUNO' : 'MINHA FRASE'}</label>
     <textarea id="f${k}" data-f="${k}" rows="2" lang="ja" placeholder="${souProf ? 'O aluno ainda não escreveu' : 'Escreva uma frase sua com ' + esc(v.j)}" ${souProf ? 'readonly' : ''}>${esc(r.f)}</textarea>
     ${corr}

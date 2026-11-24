@@ -26,7 +26,7 @@ const esc = s => String(s == null ? '' : s).replace(/[&<>"']/g, c => ({ '&':'&am
 const ST = { pendente: 'A praticar', revisao: 'Aguardando a professora', corrigir: 'Corrigir', feito: 'Feito ✓' };
 const PRATICAR = ['pendente', 'revisao', 'corrigir'];
 const DIA = n => n + '日目', SEM = n => '第' + n + '週';
-const itens = A.itens.map((r, n) => ({ n, s: r[0], d: r[1], e: r[2], nu: r[3], x: r[4], tr: r[5], tm: r[6] || '' }));
+const itens = A.itens.map((r, n) => ({ n, s: r[0], d: r[1], e: r[2], nu: r[3], x: r[4], tr: r[5], tm: r[6] || '', xt: r[7] }));
 let oculta = (() => { try { return localStorage.getItem('uniAtivOculta') !== '0'; } catch (e) { return true; } })(), abertosEx = new Set();
 let R = {}, alvo = '', souProf = false, nuvem = true, filtro = { sem: 0, st: 'praticar', q: '' }, abertosPt = new Set();
 
@@ -150,7 +150,7 @@ function card(i){
     <div class="top"><span>${SEM(i.s)} · ${DIA(i.d)}${i.tm ? ` · <span lang="ja">${esc(i.tm)}</span>` : ''}</span><span>${novo(i.n) ? `<button type="button" class="novo" data-visto="${i.n}" title="Marcar como visto">nova correção · ✓ vi</button> ` : ''}<span class="pill p-${st}">${ST[st]}</span></span></div>
     <h3><span lang="ja">${esc(est)}</span> ${ro ? `<small>${esc(ro)}</small>` : ''}</h3>
     ${oculta && !abertosEx.has(i.n) ? `<button type="button" class="verex" data-ex="${i.n}">👁 ver explicação</button>` : `<p class="nu">${esc(i.nu)}${oculta ? ` <button type="button" class="verpt" data-ex="${i.n}">ocultar</button>` : ''}</p>`}
-    ${`<div class="ex"><button type="button" class="som" data-som="${i.n}" aria-label="Ouvir o exemplo">🔊</button><p><span class="jp" lang="ja">${esc(i.x)}</span><br>${pt ? `<span class="pt">${esc(i.tr)}</span> <button type="button" class="verpt" data-pt="${i.n}">ocultar tradução</button>` : `<button type="button" class="verpt" data-pt="${i.n}">ver tradução</button>`}</p></div>`}
+    ${`<div class="ex"><button type="button" class="som" data-som="${i.n}" aria-label="Ouvir o exemplo">🔊</button><p><span class="jp" lang="ja">${FraseJP.html(i.xt, i.x)}</span><br>${pt ? `<span class="pt">${esc(i.tr)}</span> <button type="button" class="verpt" data-pt="${i.n}">ocultar tradução</button>` : `<button type="button" class="verpt" data-pt="${i.n}">ver tradução</button>`}</p></div>`}
     <label class="l" for="f${i.n}">${souProf ? 'FRASE DO ALUNO' : 'MINHA FRASE'}</label>
     <textarea id="f${i.n}" data-f="${i.n}" rows="2" lang="ja" placeholder="${souProf ? 'O aluno ainda não escreveu' : 'Escreva uma frase sua com ' + (CFG.un[0] === 'palavra' ? 'essa palavra' : 'essa estrutura')}" ${souProf ? 'readonly' : ''}>${esc(r.f)}</textarea>
     ${corr}
@@ -205,11 +205,11 @@ function fcPinta(){
   const i = fcLista[fcI];
   o.innerHTML = `<div class="fc-box"><div class="fc-nav"><b>Flashcard · ${fcI + 1} de ${fcLista.length}</b><button type="button" class="chip" id="fc-x">Fechar ×</button></div>
     <div class="fc-c" id="fc-c" tabindex="0">${fcVira
-      ? `<p class="nu" style="font-weight:700">${esc(i.nu)}</p><p lang="ja" style="font-size:18px;margin:0">${esc(i.x)}</p><p class="pt" style="margin:0;color:var(--muted)">${esc(i.tr)}</p>${resp(i.n).f ? `<p style="margin:6px 0 0;font-size:14px">Sua frase: <span lang="ja">${esc(resp(i.n).f)}</span></p>` : ''}`
+      ? `<p class="nu" style="font-weight:700">${esc(i.nu)}</p><p lang="ja" style="font-size:18px;margin:0">${FraseJP.html(i.xt, i.x)}</p><p class="pt" style="margin:0;color:var(--muted)">${esc(i.tr)}</p>${resp(i.n).f ? `<p style="margin:6px 0 0;font-size:14px">Sua frase: <span lang="ja">${esc(resp(i.n).f)}</span></p>` : ''}`
       : `<p class="dica">${SEM(i.s)} · ${DIA(i.d)}</p><h3 lang="ja">${esc(i.e)}</h3><p class="dica">Lembra o sentido? Toque para virar.</p>`}</div>
     <div class="fc-nav"><button type="button" class="chip" id="fc-ant">← Anterior</button>${fcVira ? `<span><button type="button" class="chip" id="fc-rev">Revisar de novo</button> <button type="button" class="btn" id="fc-sei" style="background:var(--sage)">Já sei ✓</button></span>` : `<button type="button" class="som" id="fc-som" aria-label="Ouvir">🔊</button>`}<button type="button" class="chip" id="fc-prox">Próximo →</button></div></div>`;
   const vai = d => { fcI = (fcI + d + fcLista.length) % fcLista.length; fcVira = false; fcPinta(); };
-  $('fc-c').onclick = () => { fcVira = !fcVira; fcPinta(); };
+  $('fc-c').onclick = e => { if (e.target.closest('.tk')) return; fcVira = !fcVira; fcPinta(); };
   $('fc-x').onclick = () => { o.remove(); pintaCards(); };
   $('fc-ant').onclick = () => vai(-1); $('fc-prox').onclick = () => vai(1);
   if ($('fc-som')) $('fc-som').onclick = () => fala(i.x);

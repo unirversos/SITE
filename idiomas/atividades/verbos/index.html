@@ -139,6 +139,7 @@ textarea:focus,input:focus,select:focus{outline:2px solid #b7a6dc;outline-offset
   <div class="ferr">
     <label class="sr" for="q">Buscar</label><input id="q" type="search" placeholder="Buscar verbo, significado ou exemplo…">
     <span id="chips"></span>
+    <button type="button" class="chip" id="furi" aria-pressed="false">ふりがな</button>
   </div>
   <div class="fil"><span class="rot">NÍVEL</span><span id="niv"></span></div>
   <div class="fil"><span class="rot">TEMA</span><span id="tem"></span></div>
@@ -146,8 +147,10 @@ textarea:focus,input:focus,select:focus{outline:2px solid #b7a6dc;outline-offset
   <div class="cards" id="cards"></div>
 </div>
 <script src="/caderno-dados.js?v=2"></script>
+<script src="/idiomas/atividades/frase-jp.js?v=1"></script>
 <script>window.PARES_CFG={id:'verbos',titulo:'Verbos transitivos e intransitivos',sub:'Dois verbos, uma mesma cena: quem age (他動詞 · を) e o que acontece sozinho (自動詞 · が). Leia o par, veja o exemplo e escreva a sua frase.',lados:{t:{nome:'Transitivo',rot:'他動詞 · を'},i:{nome:'Intransitivo',rot:'自動詞 · が'}},unidade:['verbo','verbos'],filtro2:{campo:'tema',rot:'TEMA'}};</script>
-<script type="module" src="/idiomas/atividades/pares.js?v=1"></script>
+<script type="module" src="/idiomas/atividades/pares.js?v=2"></script>
+<script>FraseJP.botao('furi')</script>
 <script defer src="/caderno-flutuante.js?v=21"></script>
 </body>
 </html>
