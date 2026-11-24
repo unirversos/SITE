@@ -77,5 +77,108 @@
     'html.furi .jp,html.furi .fc-c p[lang=ja]{line-height:2.1}';
   document.head.appendChild(css);
   aplica();
-  window.FraseJP = { html: html, botao: botao, busca: busca };
+  /* voz em japonês: espera as vozes do aparelho carregarem e escolhe uma japonesa;
+     sem voz japonesa no aparelho, avisa em vez de ler com sotaque de outra língua */
+  var vozes = [];
+  function carregaVozes() { try { vozes = speechSynthesis.getVoices() || []; } catch (e) { vozes = []; } }
+  try { carregaVozes(); speechSynthesis.addEventListener('voiceschanged', carregaVozes); } catch (e) {}
+  function vozJa() {
+    var ja = vozes.filter(function (v) { return /^ja/i.test(v.lang) || /japan|日本/i.test(v.name); });
+    return ja.find(function (v) { return /google/i.test(v.name); }) || ja.find(function (v) { return v.localService; }) || ja[0] || null;
+  }
+  function aviso(t) {
+    var b = document.getElementById('voz-av'); if (!b) { b = document.createElement('div'); b.id = 'voz-av'; b.setAttribute('role', 'status');
+      b.style.cssText = 'position:fixed;left:50%;bottom:16px;transform:translateX(-50%);z-index:90;background:#fbf1de;color:#6b4b14;border:1.5px solid #e6c98a;border-radius:14px;padding:10px 14px;font-size:14px;max-width:min(560px,calc(100% - 24px))';
+      document.body.appendChild(b); }
+    b.textContent = t; clearTimeout(b._t); b._t = setTimeout(function () { b.remove(); }, 6000);
+  }
+  function fala(t) {
+    if (!t || !window.speechSynthesis) return;
+    var vai = function () {
+      speechSynthesis.cancel();
+      var v = vozJa();
+      if (!v) { aviso('Este aparelho não tem voz em japonês instalada. No Android: Configurações › Idioma › Saída de texto para fala › instale o japonês.'); return; }
+      var u = new SpeechSynthesisUtterance(t); u.lang = v.lang || 'ja-JP'; u.voice = v; u.rate = .9;
+      speechSynthesis.speak(u);
+    };
+    if (vozes.length) vai(); else { carregaVozes(); setTimeout(function () { carregaVozes(); vai(); }, vozes.length ? 0 : 400); }
+  }
+  function cala() { try { speechSynthesis.cancel(); } catch (e) {} }
+  /* romaji simples (Hepburn, sem macron) → hiragana, para a voz ler 開く como あく e não ひらく.
+     Com ō/ū ou algo que não entende, devolve '' e a voz lê o kanji. */
+  var SIL = { kya:'きゃ',kyu:'きゅ',kyo:'きょ',sha:'しゃ',shu:'しゅ',sho:'しょ',cha:'ちゃ',chu:'ちゅ',cho:'ちょ',nya:'にゃ',nyu:'にゅ',nyo:'にょ',hya:'ひゃ',hyu:'ひゅ',hyo:'ひょ',mya:'みゃ',myu:'みゅ',myo:'みょ',rya:'りゃ',ryu:'りゅ',ryo:'りょ',gya:'ぎゃ',gyu:'ぎゅ',gyo:'ぎょ',ja:'じゃ',ju:'じゅ',jo:'じょ',bya:'びゃ',byu:'びゅ',byo:'びょ',pya:'ぴゃ',pyu:'ぴゅ',pyo:'ぴょ',
+    shi:'し',chi:'ち',tsu:'つ',ji:'じ',fu:'ふ',ka:'か',ki:'き',ku:'く',ke:'け',ko:'こ',sa:'さ',su:'す',se:'せ',so:'そ',ta:'た',te:'て',to:'と',na:'な',ni:'に',nu:'ぬ',ne:'ね',no:'の',ha:'は',hi:'ひ',he:'へ',ho:'ほ',ma:'ま',mi:'み',mu:'む',me:'め',mo:'も',ya:'や',yu:'ゆ',yo:'よ',ra:'ら',ri:'り',ru:'る',re:'れ',ro:'ろ',wa:'わ',wo:'を',
+    ga:'が',gi:'ぎ',gu:'ぐ',ge:'げ',go:'ご',za:'ざ',zu:'ず',ze:'ぜ',zo:'ぞ',da:'だ',de:'で',do:'ど',ba:'ば',bi:'び',bu:'ぶ',be:'べ',bo:'ぼ',pa:'ぱ',pi:'ぴ',pu:'ぷ',pe:'ぺ',po:'ぽ',a:'あ',i:'い',u:'う',e:'え',o:'お' };
+  function kana(ro) {
+    var t = String(ro || '').toLowerCase().replace(/[\s'-]/g, ''), out = '';
+    if (!t || /[^a-z]/.test(t)) return '';
+    for (var i = 0; i < t.length;) {
+      if (t[i] === 'n' && (i + 1 === t.length || !/[aiueoy]/.test(t[i + 1]))) { out += 'ん'; i++; continue; }
+      if (i + 1 < t.length && t[i] === t[i + 1] && !/[aiueon]/.test(t[i])) { out += 'っ'; i++; continue; }
+      var ok = false;
+      for (var n = 3; n >= 1; n--) { var s = t.substr(i, n); if (SIL[s]) { out += SIL[s]; i += n; ok = true; break; } }
+      if (!ok) return '';
+    }
+    return out;
+  }
+  /* "促す (うながす / unagasu)" → うながす ; "〜っぽい (ppoi)" → っぽい */
+  function leituraDe(e) {
+    var m = String(e || '').match(/[（(]\s*([\u3040-\u30ff・ー]+)/);
+    return m ? m[1] : String(e || '').replace(/[（(].*$/, '').replace(/[〜～~]/g, '').trim();
+  }
+
+  /* ---------- só a professora: "Preparar leituras" ----------
+     Separa as palavras das frases de exemplo (com leitura e forma de dicionário) e grava junto da atividade no Firebase.
+     O analisador (kuromoji, ~18 MB) só é baixado aqui, quando a professora toca no botão; os alunos não baixam nada. */
+  var KURO = 'https://cdn.jsdelivr.net/npm/kuromoji@0.1.2/';
+  function carregaKuromoji() {
+    return new Promise(function (ok, no) {
+      var go = function () { window.kuromoji.builder({ dicPath: KURO + 'dict/' }).build(function (e, t) { e ? no(e) : ok(t); }); };
+      if (window.kuromoji) return go();
+      var sc = document.createElement('script'); sc.src = KURO + 'build/kuromoji.js'; sc.onload = go; sc.onerror = function () { no(new Error('não carregou o analisador')); };
+      document.head.appendChild(sc);
+    });
+  }
+  function separa(tok, frase) {
+    return tok.tokenize(String(frase || '')).map(function (x) {
+      var s = x.surface_form;
+      if (x.pos === '記号') return [s, '', '-'];
+      var r = KANJI.test(s) && x.reading && x.reading !== '*' ? hira(x.reading) : '';
+      var l = x.basic_form && x.basic_form !== '*' && x.basic_form !== s ? x.basic_form : '';
+      return [s, r, l];
+    });
+  }
+  /* tipo 'galeria': linhas [s, d, palavra, nuance, exemplo, tradução, tema] → exemplo na posição 4, palavras na 7
+     tipo 'pares': { t: {x}, i: {x} } → t.xt e i.xt */
+  async function preparar(id, tipo, st) {
+    var m = await import('/idiomas/dados/conta.js?v=6');
+    var fs = await import('https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js');
+    st('lendo a atividade…');
+    var snap = await fs.getDoc(fs.doc(m.db, 'biblioteca', id));
+    if (!snap.exists()) throw new Error('atividade não encontrada');
+    var itens = JSON.parse(snap.data().itens || '[]');
+    st('baixando o analisador (só desta vez, pode levar um minuto)…');
+    var tok = await carregaKuromoji();
+    st('separando as palavras…');
+    if (tipo === 'pares') itens.forEach(function (p) { p.t.xt = separa(tok, p.t.x); p.i.xt = separa(tok, p.i.x); });
+    else itens.forEach(function (r) { while (r.length < 7) r.push(''); r[7] = separa(tok, r[4]); });
+    st('gravando…');
+    await fs.setDoc(fs.doc(m.db, 'biblioteca', id), { itens: JSON.stringify(itens), leituras: new Date().toISOString() }, { merge: true });
+    return itens.length;
+  }
+  function botaoProf(id, tipo, depoisDe) {
+    if (document.getElementById('prep-l')) return;
+    var b = document.createElement('button'); b.type = 'button'; b.className = 'chip'; b.id = 'prep-l';
+    b.textContent = '⚙︎ Preparar leituras'; b.title = 'Só você vê: separa as palavras das frases para o toque e o ふりがな';
+    var ref = document.getElementById(depoisDe || 'furi'); if (!ref) return;
+    ref.insertAdjacentElement('afterend', b);
+    b.onclick = function () {
+      b.disabled = true;
+      var st = function (t) { b.textContent = '⏳ ' + t; };
+      preparar(id, tipo, st).then(function (n) { b.textContent = '✓ ' + n + ' itens prontos · recarregando'; setTimeout(function () { location.reload(); }, 1200); },
+        function (e) { console.warn(e); b.disabled = false; b.textContent = '⚠️ Não deu: ' + (e && e.message || e) + ' · tocar de novo'; });
+    };
+  }
+
+  window.FraseJP = { html: html, botao: botao, busca: busca, fala: fala, cala: cala, leituraDe: leituraDe, botaoProf: botaoProf, kana: kana };
 })();

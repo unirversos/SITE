@@ -146,7 +146,7 @@ function lado(v){
     : (st === 'revisao' ? '<span class="salvo">Enviada · a professora vai ver</span>' : st === 'corrigir' ? '<span class="salvo">Reescreva a frase com a correção</span>' : '');
   return `<div class="lado ${K.cls} s-${st}" data-k="${k}">
     <div class="tp"><span class="tag">${esc(K.nome)}${K.rot ? ` · <span lang="ja">${esc(K.rot)}</span>` : ''}</span><span class="pill p-${st}">${ST[st]}</span></div>
-    <h3><span lang="ja">${esc(v.j)}</span> <small>${[v.ka, v.ro, v.g].filter(Boolean).map(esc).join(' · ')}</small></h3>
+    <h3><span lang="ja">${esc(v.j)}</span> <small>${[v.ka, v.ro, v.g].filter(Boolean).map(esc).join(' · ')}</small> <button type="button" class="som som-p" data-palavra="${k}" aria-label="Ouvir a palavra" title="Ouvir a palavra">🔊</button></h3>
     <p class="sig"><b>${esc(v.sig)}</b>${v.nu ? ` <span>· ${esc(v.nu)}</span>` : ''}</p>
     <div class="ex"><button type="button" class="som" data-som="${k}" aria-label="Ouvir o exemplo">🔊</button><p><span class="jp" lang="ja">${FraseJP.html(v.xt, v.x)}</span><br>${pt ? `<span class="pt">${esc(v.tr)}</span> <button type="button" class="verpt" data-pt="${k}">ocultar tradução</button>` : `<button type="button" class="verpt" data-pt="${k}">ver tradução</button>`}</p></div>
     <label class="l" for="f${k}">${souProf ? 'FRASE DO ALUNO' : 'MINHA FRASE'}</label>
@@ -186,9 +186,11 @@ $('cards').addEventListener('click', e => {
     depois(k); return; }
   const vv = e.target.closest('[data-visto]'); if (vv) { marcaVisto(vv.dataset.visto); vv.remove(); pintaChips(); return; }
   const p = e.target.closest('[data-pt]'); if (p) { const k = p.dataset.pt; abertosPt.has(k) ? abertosPt.delete(k) : abertosPt.add(k); repinta(k); return; }
+  const pw = e.target.closest('[data-palavra]'); if (pw) { const v = verbos[pw.dataset.palavra]; return fala(v.ka || (window.FraseJP && FraseJP.kana(v.ro)) || v.j); }
   const s = e.target.closest('[data-som]'); if (s) fala(verbos[s.dataset.som].x);
 });
 function fala(t){
+  if (window.FraseJP) return FraseJP.fala(t);
   try { speechSynthesis.cancel(); const u = new SpeechSynthesisUtterance(t); u.lang = 'ja-JP'; u.rate = .9;
     const v = speechSynthesis.getVoices().find(v => /^ja/i.test(v.lang)); if (v) u.voice = v; speechSynthesis.speak(u); } catch (e) {}
 }
@@ -255,6 +257,7 @@ onAuthStateChanged(auth, async u => {
   if (!u) return;
   const eu = (u.email || '').toLowerCase(); souProf = PROFS.includes(eu);
   const pedido = (new URLSearchParams(location.search).get('aluno') || '').toLowerCase();
+  if (souProf && window.FraseJP && FraseJP.botaoProf) FraseJP.botaoProf(A.id, 'pares');
   if (!souProf) { $('quem').innerHTML = ''; return abre(eu); }
   let alunos = [];
   try { alunos = (await getDocs(collection(db, 'aulas'))).docs.map(d => ({ id: d.id, nome: d.data().nome || d.id })).sort((a, b) => a.nome.localeCompare(b.nome)); } catch (e) {}

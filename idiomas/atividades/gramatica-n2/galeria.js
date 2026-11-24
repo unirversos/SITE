@@ -148,7 +148,7 @@ function card(i){
     : (st === 'revisao' ? '<span class="salvo">Enviada · a professora vai ver</span>' : st === 'corrigir' ? '<span class="salvo">Reescreva a frase com a correção</span>' : '');
   return `<article class="card s-${st}" data-n="${i.n}">
     <div class="top"><span>${SEM(i.s)} · ${DIA(i.d)}${i.tm ? ` · <span lang="ja">${esc(i.tm)}</span>` : ''}</span><span>${novo(i.n) ? `<button type="button" class="novo" data-visto="${i.n}" title="Marcar como visto">nova correção · ✓ vi</button> ` : ''}<span class="pill p-${st}">${ST[st]}</span></span></div>
-    <h3><span lang="ja">${esc(est)}</span> ${ro ? `<small>${esc(ro)}</small>` : ''}</h3>
+    <h3><span lang="ja">${esc(est)}</span> ${ro ? `<small>${esc(ro)}</small>` : ''} <button type="button" class="som som-p" data-palavra="${i.n}" aria-label="Ouvir a palavra" title="Ouvir a palavra">🔊</button></h3>
     ${oculta && !abertosEx.has(i.n) ? `<button type="button" class="verex" data-ex="${i.n}">👁 ver explicação</button>` : `<p class="nu">${esc(i.nu)}${oculta ? ` <button type="button" class="verpt" data-ex="${i.n}">ocultar</button>` : ''}</p>`}
     ${`<div class="ex"><button type="button" class="som" data-som="${i.n}" aria-label="Ouvir o exemplo">🔊</button><p><span class="jp" lang="ja">${FraseJP.html(i.xt, i.x)}</span><br>${pt ? `<span class="pt">${esc(i.tr)}</span> <button type="button" class="verpt" data-pt="${i.n}">ocultar tradução</button>` : `<button type="button" class="verpt" data-pt="${i.n}">ver tradução</button>`}</p></div>`}
     <label class="l" for="f${i.n}">${souProf ? 'FRASE DO ALUNO' : 'MINHA FRASE'}</label>
@@ -189,12 +189,16 @@ $('cards').addEventListener('click', e => {
   const vv = e.target.closest('[data-visto]'); if (vv) { marcaVisto(Number(vv.dataset.visto)); vv.remove(); pintaChips(); if (filtro.st === 'novas' && !itens.some(i => novo(i.n))) { filtro.st = 'praticar'; pintaChips(); pintaCards(); } return; }
   const x = e.target.closest('[data-ex]'); if (x) { const k = Number(x.dataset.ex); abertosEx.has(k) ? abertosEx.delete(k) : abertosEx.add(k); const c = x.closest('.card'); c.outerHTML = card(itens[Number(x.dataset.ex)]); return; }
   const p = e.target.closest('[data-pt]'); if (p) { const k = Number(p.dataset.pt); abertosPt.has(k) ? abertosPt.delete(k) : abertosPt.add(k); p.closest('.card').outerHTML = card(itens[k]); return; }
+  const pw = e.target.closest('[data-palavra]'); if (pw) return fala(palavraDe(itens[Number(pw.dataset.palavra)]));
   const s = e.target.closest('[data-som]'); if (s) fala(itens[Number(s.dataset.som)].x);
 });
 function fala(t){
+  if (window.FraseJP) return FraseJP.fala(t);
   try { speechSynthesis.cancel(); const u = new SpeechSynthesisUtterance(t); u.lang = 'ja-JP'; u.rate = .9;
     const v = speechSynthesis.getVoices().find(v => /^ja/i.test(v.lang)); if (v) u.voice = v; speechSynthesis.speak(u); } catch (e) {}
 }
+const cala = () => { try { speechSynthesis.cancel(); } catch (e) {} };
+const palavraDe = i => window.FraseJP ? FraseJP.leituraDe(i.e) : i.e;
 
 /* ---------- flashcard ---------- */
 let fcLista = [], fcI = 0, fcVira = false;
@@ -207,19 +211,20 @@ function fcPinta(){
     <div class="fc-c" id="fc-c" tabindex="0">${fcVira
       ? `<p class="nu" style="font-weight:700">${esc(i.nu)}</p><p lang="ja" style="font-size:18px;margin:0">${FraseJP.html(i.xt, i.x)}</p><p class="pt" style="margin:0;color:var(--muted)">${esc(i.tr)}</p>${resp(i.n).f ? `<p style="margin:6px 0 0;font-size:14px">Sua frase: <span lang="ja">${esc(resp(i.n).f)}</span></p>` : ''}`
       : `<p class="dica">${SEM(i.s)} · ${DIA(i.d)}</p><h3 lang="ja">${esc(i.e)}</h3><p class="dica">Lembra o sentido? Toque para virar.</p>`}</div>
-    <div class="fc-nav"><button type="button" class="chip" id="fc-ant">← Anterior</button>${fcVira ? `<span><button type="button" class="chip" id="fc-rev">Revisar de novo</button> <button type="button" class="btn" id="fc-sei" style="background:var(--sage)">Já sei ✓</button></span>` : `<button type="button" class="som" id="fc-som" aria-label="Ouvir">🔊</button>`}<button type="button" class="chip" id="fc-prox">Próximo →</button></div></div>`;
-  const vai = d => { fcI = (fcI + d + fcLista.length) % fcLista.length; fcVira = false; fcPinta(); };
-  $('fc-c').onclick = e => { if (e.target.closest('.tk')) return; fcVira = !fcVira; fcPinta(); };
-  $('fc-x').onclick = () => { o.remove(); pintaCards(); };
+    <div class="fc-nav"><button type="button" class="chip" id="fc-ant">← Anterior</button>${fcVira ? `<span><button type="button" class="som" id="fc-som-ex" aria-label="Ouvir o exemplo" title="Ouvir o exemplo">🔊</button> <button type="button" class="chip" id="fc-rev">Revisar de novo</button> <button type="button" class="btn" id="fc-sei" style="background:var(--sage)">Já sei ✓</button></span>` : `<button type="button" class="som" id="fc-som" aria-label="Ouvir a palavra" title="Ouvir a palavra">🔊</button>`}<button type="button" class="chip" id="fc-prox">Próximo →</button></div></div>`;
+  const vai = d => { cala(); fcI = (fcI + d + fcLista.length) % fcLista.length; fcVira = false; fcPinta(); };
+  $('fc-c').onclick = e => { if (e.target.closest('.tk')) return; cala(); fcVira = !fcVira; fcPinta(); };
+  $('fc-x').onclick = () => { cala(); o.remove(); pintaCards(); };
   $('fc-ant').onclick = () => vai(-1); $('fc-prox').onclick = () => vai(1);
-  if ($('fc-som')) $('fc-som').onclick = () => fala(i.x);
+  if ($('fc-som')) $('fc-som').onclick = () => fala(palavraDe(i));
+  if ($('fc-som-ex')) $('fc-som-ex').onclick = () => fala(i.x);
   if ($('fc-sei')) $('fc-sei').onclick = () => vai(1);
   if ($('fc-rev')) $('fc-rev').onclick = () => vai(1);
-  o.onclick = e => { if (e.target === o) { o.remove(); pintaCards(); } };
+  o.onclick = e => { if (e.target === o) { cala(); o.remove(); pintaCards(); } };
 }
 document.addEventListener('keydown', e => {
   if (!$('fc')) return;
-  if (e.key === 'Escape') { $('fc').remove(); pintaCards(); }
+  if (e.key === 'Escape') { cala(); $('fc').remove(); pintaCards(); }
   else if (e.key === ' ' && document.activeElement === $('fc-c')) { e.preventDefault(); $('fc-c').click(); }
   else if (e.key === 'ArrowRight') $('fc-prox').click(); else if (e.key === 'ArrowLeft') $('fc-ant').click();
 });
@@ -286,6 +291,7 @@ onAuthStateChanged(auth, async u => {
   if (!u) return;
   const eu = (u.email || '').toLowerCase(); souProf = PROFS.includes(eu);
   const pedido = (new URLSearchParams(location.search).get('aluno') || '').toLowerCase();
+  if (souProf && window.FraseJP && FraseJP.botaoProf) FraseJP.botaoProf(A.id, 'galeria');
   if (!souProf) { $('quem').innerHTML = ''; return abre(eu); }
   let alunos = [];
   try { alunos = (await getDocs(collection(db, 'aulas'))).docs.map(d => ({ id: d.id, nome: d.data().nome || d.id })).sort((a, b) => a.nome.localeCompare(b.nome)); } catch (e) {}
