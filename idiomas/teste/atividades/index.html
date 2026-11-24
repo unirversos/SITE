@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="pt-BR" data-login="obrigatorio">
+<head>
+<meta charset="UTF-8">
+<meta name="robots" content="noindex">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Atividades · Unirversos</title>
+<style>html[data-login="obrigatorio"]:not(.uni-ok) body>*:not(#uni-gate){visibility:hidden}</style>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@600;700;800&family=Zen+Maru+Gothic:wght@400;500;700&display=swap">
+<style>
+:root{--ink:#3a2b38;--muted:#7a6a76;--line:#efe3e5;--bg:#fdf8f6;--pink:#c23f5e;--pink-d:#a8324f;--sage:#517158;--sage-s:#e8efe8;--gold:#a0712a;--gold-s:#fbf1de;--terra:#b0583a;--lav:#6f5fa8}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font:15px/1.6 "Zen Maru Gothic",system-ui,sans-serif;-webkit-font-smoothing:antialiased}
+.w{max-width:980px;margin:0 auto;padding:28px 20px 80px}
+@media(min-width:760px){.w{padding-right:70px}}
+a{color:inherit}.voltar{font-size:13px;color:var(--muted);text-decoration:none}
+.ey{font-size:12px;letter-spacing:.14em;text-transform:uppercase;font-weight:700;color:var(--gold);margin:16px 0 0}
+h1{font-family:"Baloo 2",sans-serif;font-size:34px;line-height:1.1;margin:6px 0 0}
+.bar0{height:3px;width:56px;background:var(--sage);border-radius:2px;margin:10px 0 10px}
+.sub{margin:0;color:var(--muted);max-width:40em}
+.pill{display:inline-block;font-size:12px;font-weight:700;border-radius:999px;padding:2px 10px;background:var(--gold-s);color:var(--gold);margin-top:14px}
+.trava{background:#fff;border:1.5px dashed #d9c6cb;border-radius:16px;padding:14px 18px;margin-top:18px}.trava b{display:block}
+.lista{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px;margin-top:22px}
+@media(max-width:760px){.lista{grid-template-columns:1fr}}
+.at{background:#fff;border:1.5px solid var(--line);border-left:4px solid var(--c,var(--gold));border-radius:16px;padding:16px 18px;display:flex;flex-direction:column;gap:8px;text-decoration:none;color:inherit;transition:transform .15s,border-color .15s}
+a.at:hover{transform:translateY(-2px);border-color:#d9c6cb;border-left-color:var(--c,var(--gold))}
+.at .top{display:flex;justify-content:space-between;align-items:center;gap:8px;font-size:12px;color:var(--muted)}
+.at .nu{font-family:"Baloo 2",sans-serif;font-size:22px;color:var(--c,var(--gold));line-height:1}
+.at h2{margin:0;font-family:"Baloo 2",sans-serif;font-size:21px;line-height:1.25}
+.at p{margin:0;font-size:14px;color:#5c4c58}
+.at .ir{margin-top:auto;font-weight:700;font-size:13.5px;color:var(--pink-d)}
+.at.lock{opacity:.6}
+.tr{display:flex;height:8px;background:#f1e8ea;border-radius:999px;overflow:hidden}.tr i{display:block;height:100%;background:var(--sage)}
+.prog{font-size:12.5px;color:var(--muted)}
+.faixa-t{background:#fbf1de;color:#7a5418;font-size:13px;text-align:center;padding:6px 12px}
+</style>
+<link rel="stylesheet" href="/estilo-celular.css?v=3">
+<link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<script type="module" src="/idiomas/dados/conta.js?v=6"></script>
+<script>setTimeout(function(){var h=document.documentElement;if(!h.classList.contains('uni-ok')&&!document.getElementById('uni-gate'))h.classList.add('uni-ok')},10000)</script>
+</head>
+<body>
+<div class="faixa-t">Versão de teste · Sala de atividades</div>
+<div class="w">
+  <a class="voltar" href="/aluno/">← Área do aluno</a>
+  <p class="ey">✦ Atividades Unirversos</p>
+  <h1>Sala de atividades</h1><div class="bar0"></div>
+  <p class="sub">Escolha uma atividade. Cada uma guarda o seu progresso e as correções da professora.</p>
+  <span class="pill" id="selo" hidden></span>
+  <div id="trava"></div>
+  <div class="lista" id="lista"></div>
+</div>
+<script src="/caderno-dados.js?v=2"></script>
+<script type="module" src="/idiomas/teste/atividades/atividades.js?v=1"></script>
+<script defer src="/caderno-flutuante.js?v=21"></script>
+</body>
+</html>
