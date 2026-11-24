@@ -146,6 +146,16 @@ const icoGrav = '<svg width="15" height="15" viewBox="0 0 24 24" fill="none" str
 const btnGravar = (v, a) => { const on = (a.gravar || []).includes(chave(v.ini));
   return `<button type="button" class="gravar${on ? ' on' : ''}" data-gravar="${chave(v.ini)}" aria-pressed="${on}">${icoGrav}${on ? t('gravPedida') : t('pedirGrav')}</button>`; };
 
+/* "Receber os links no meu WhatsApp": abre o WhatsApp sem número, o aluno escolhe a própria conversa e toca em enviar */
+function zapHref(a, p){
+  const mats = (a.material || []).filter(m => m && m.t && linkOk(m.url)).map(m => '• ' + m.t + ': ' + m.url);
+  const linhas = [t('zapTit'), t('zapProx', { q: quando(p.ini) })];
+  if (linkOk(a.meet)) linhas.push('', t('zapMeet'), a.meet);
+  if (mats.length) linhas.push('', t('zapMat'), ...mats);
+  linhas.push('', t('zapArea'), 'https://unirversos.com/aluno/');
+  return 'https://wa.me/?text=' + encodeURIComponent(linhas.join('\n'));
+}
+
 function pinta(){
   const a = aula, prox = proximas(a, 5), agora = Date.now(), p = prox[0], feita = !!a.tarefa && a.tarefaFeita === a.tarefa;
   /* cartão principal: próxima aula, entrar, gravação, recado e tarefa */
@@ -160,6 +170,7 @@ function pinta(){
         : `<p class="mut">${t('faltam', { f: falta(p.ini - agora) })}</p><span class="btn grande off" aria-disabled="true">${t('entrar')}</span>`);
     if (agora < p.ini) c += `<div class="linha">${btnGravar(p, a)}<span class="mut peq">${t('gravDica')}</span></div>`;
   }
+  if (p) c += `<a class="remarcar" id="zap-links" href="${esc(zapHref(a, p))}" target="_blank" rel="noopener" style="align-self:flex-start">💬 ${t('zapBtn')}</a>`;
   if (a.recado) c += `<div class="bloco"><p class="eyebrow verde">${t('recado')}${tagNovo(novos.recado)}</p><p class="pre">${comLinks(a.recado)}</p></div>`;
   if (a.tarefa) c += `<div class="bloco"><p class="eyebrow">${t('tarefa')}${tagNovo(novos.tarefa)}</p><label class="tarefa${feita ? ' feita' : ''}"><input type="checkbox" id="feita"${feita ? ' checked' : ''}><span class="pre">${comLinks(a.tarefa)}</span></label><p class="mut peq" id="st-t" aria-live="polite">${feita ? t('feita') : ''}</p></div>`;
   c += blocoPlan(a);

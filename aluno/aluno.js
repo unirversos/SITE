@@ -18,7 +18,7 @@ function perfil(u){
   if (a && a.sel) {
     $('av').innerHTML = A.svg(a.sel, { viewBox: '40 46 160 160', still: true, label: 'Avatar' });
     const lv = g.level || 1;
-    $('nivel').innerHTML = t('nv') + ' ' + lv + ' · ' + (A.titleHTML ? A.titleHTML(lv) : '') + `<a href="/idiomas/avatar/">${t('editarAvatar')}</a>`;
+    $('nivel').innerHTML = t('nv') + ' ' + lv + `<a href="/idiomas/avatar/">${t('editarAvatar')}</a>`;
   } else {
     $('av').textContent = '🎨';
     $('nivel').innerHTML = t('semAvatar') + `<a href="/idiomas/avatar/">${t('criarAvatar')}</a>`;
