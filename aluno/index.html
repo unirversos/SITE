@@ -95,6 +95,15 @@ a:focus-visible,button:focus-visible,input:focus-visible,select:focus-visible,te
 .cad-i:hover{border-color:var(--pink)}
 .cad-i b{font-size:15px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;min-width:0}.cad-i small{color:var(--muted);font-size:12.5px;white-space:nowrap}
 .cad-abrir{font-size:14px;font-weight:700;color:var(--pink-deep);text-decoration:none}
+/* cartão da professora: mesmo visual dos outros cartões (borda lateral, texto em coluna, link sem sublinhado) */
+.prof-card{flex-direction:row;align-items:center;justify-content:space-between;gap:16px;text-decoration:none;color:inherit;border-left:6px solid var(--sage);transition:transform .2s ease,box-shadow .2s ease}
+.prof-card>span:first-child{display:flex;flex-direction:column;gap:2px;min-width:0}
+.prof-card b{font-family:'Baloo 2','Zen Maru Gothic',sans-serif;font-weight:700;font-size:19px;line-height:1.25;color:var(--ink)}
+.prof-go{flex:none;font-size:14px;font-weight:700;color:var(--pink-deep);white-space:nowrap}
+.prof-card:hover,.prof-card:focus-visible{transform:translateY(-2px);box-shadow:0 12px 24px -16px rgba(58,43,56,.35)}
+.prof-card:hover .prof-go{text-decoration:underline}
+@media(prefers-reduced-motion:reduce){.prof-card{transition:none}.prof-card:hover,.prof-card:focus-visible{transform:none}}
+@media(max-width:480px){.prof-card{flex-direction:column;align-items:flex-start;gap:8px}}
 .atalhos{grid-template-columns:repeat(6,minmax(0,1fr))!important;gap:12px}
 @media(max-width:900px){.atalhos{grid-template-columns:repeat(3,minmax(0,1fr))!important}}
 @media(max-width:480px){.atalhos{grid-template-columns:repeat(2,minmax(0,1fr))!important}}
