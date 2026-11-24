@@ -26,7 +26,14 @@ const esc = s => String(s == null ? '' : s).replace(/[&<>"']/g, c => ({ '&':'&am
 const ST = { pendente: 'A praticar', revisao: 'Aguardando a professora', corrigir: 'Corrigir', feito: 'Feito ✓' };
 const PRATICAR = ['pendente', 'revisao', 'corrigir'];
 const DIA = n => n + '日目', SEM = n => '第' + n + '週';
-const itens = A.itens.map((r, n) => ({ n, s: r[0], d: r[1], tm: r[2], tipo: r[3], es: r[4], vo: r[5], q: r[6], min: r[7] }));
+/* posições: 0 semana, 1 dia, 2 tema, 3 tipo, 4 estratégia, 5 vocabulário, 6 pedido da síntese, 7 minutos,
+   8 texto de leitura, 9 questão (pergunta + 4 alternativas), 10 gabarito e explicação, 11 palavras do texto (Preparar leituras) */
+const questao = t => { const l = String(t || '').split('\n').map(x => x.trim()).filter(Boolean);
+  const ops = l.filter(x => /^[1-4１-４][\.．]/.test(x)).map(x => x.replace(/^[1-4１-４][\.．]\s*/, ''));
+  return { p: l.filter(x => !/^[1-4１-４][\.．]/.test(x)).join(' '), ops }; };
+const gabarito = t => { const m = String(t || '').match(/正解[：:]\s*([1-4１-４])/); const n = m ? '1234１２３４'.indexOf(m[1]) % 4 + 1 : 0;
+  return { n, ex: String(t || '').replace(/^.*?正解[：:]\s*[1-4１-４]\s*/s, '').replace(/^【解説】\s*/, '').trim() }; };
+const itens = A.itens.map((r, n) => ({ n, s: r[0], d: r[1], tm: r[2], tipo: r[3], es: r[4], vo: r[5], q: r[6], min: r[7], tx: r[8] || '', qq: questao(r[9]), gb: gabarito(r[10]), xt: r[11] }));
 let oculta = (() => { try { return localStorage.getItem('uniAtivOculta') !== '0'; } catch (e) { return true; } })(), abertosEx = new Set();
 let R = {}, alvo = '', souProf = false, nuvem = true, filtro = { sem: 0, st: 'praticar', q: '' }, abertosPt = new Set();
 
@@ -124,7 +131,7 @@ $('q').oninput = () => { filtro.q = $('q').value.trim().toLowerCase(); pintaCard
 const passa = i => { const st = stDe(i.n);
   return !filtro.st || (filtro.st === 'novas' ? novo(i.n) : filtro.st === 'praticar' ? PRATICAR.includes(st) : st === filtro.st); };
 const visiveis = () => itens.filter(i => (!filtro.sem || i.s === filtro.sem) && passa(i)
-  && (!filtro.q || [i.tm, i.tipo, i.es, i.vo, i.q, resp(i.n).f].join(' ').toLowerCase().includes(filtro.q)));
+  && (!filtro.q || [i.tm, i.tipo, i.es, i.vo, i.q, i.tx, resp(i.n).f].join(' ').toLowerCase().includes(filtro.q)));
 
 /* ---------- histórico de correções (fica no card para o aluno rever) ---------- */
 const hist = (n, e) => (resp(n).h || []).concat(Object.assign({ t: Date.now() }, e)).slice(-20);
@@ -136,6 +143,16 @@ function blocoHist(r){
 }
 
 /* ---------- cards ---------- */
+/* questão: o aluno escolhe; a resposta e a explicação aparecem depois da escolha */
+function blocoQuestao(i, r){
+  const esc2 = esc, op = r.op, certo = i.gb.n;
+  const bt = (t, k) => { const n = k + 1; let c = '';
+    if (op) c = n === certo ? ' ok' : n === op ? ' erro' : '';
+    return `<button type="button" class="op${c}" data-op="${i.n}" data-k="${n}" ${souProf || op ? 'disabled' : ''}><b>${n}</b><span lang="ja">${esc2(t)}</span></button>`; };
+  const fim = op ? `<p class="fb ${op === certo ? 'ok' : 'erro'}">${op === certo ? '✓ Certo!' : `✗ A resposta é a ${certo}.`}</p>${i.gb.ex ? `<div class="expl" lang="ja">${esc2(i.gb.ex)}</div>` : ''}${souProf ? '' : '<button type="button" class="verpt" data-refaz="' + i.n + '">responder de novo</button>'}`
+    : souProf ? '<span class="salvo">O aluno ainda não respondeu.</span>' : '';
+  return `<div class="questao"><p class="qp" lang="ja">❓ ${esc2(i.qq.p)}</p><div class="ops">${i.qq.ops.map(bt).join('')}</div>${fim}</div>`;
+}
 function card(i){
   const r = resp(i.n), st = stDe(i.n);
   const corr = souProf
@@ -151,6 +168,8 @@ function card(i){
     <h3><span lang="ja">${esc(i.tm)}</span></h3>
     <p class="tipo">${esc(i.tipo)}</p>
     <div class="estr"><b>Estratégia</b>${esc(i.es)}</div>
+    ${i.tx ? `<div class="texto"><div class="tx-top"><b>Texto</b><button type="button" class="som" data-som="${i.n}" aria-label="Ouvir o texto" title="Ouvir o texto">🔊</button></div><div class="jp tx" lang="ja">${window.FraseJP ? FraseJP.html(i.xt, i.tx) : esc(i.tx)}</div></div>` : ''}
+    ${i.qq.ops.length === 4 ? blocoQuestao(i, r) : ''}
     <p class="voc"><b>Vocabulário</b> <span lang="ja">${esc(i.vo)}</span></p>
     <p class="perg">✍️ ${esc(i.q)}</p>
     <label class="l" for="f${i.n}">${souProf ? 'SÍNTESE DO ALUNO' : 'MINHA SÍNTESE'}</label>
@@ -193,9 +212,12 @@ $('cards').addEventListener('click', e => {
   const vv = e.target.closest('[data-visto]'); if (vv) { marcaVisto(Number(vv.dataset.visto)); vv.remove(); pintaChips(); if (filtro.st === 'novas' && !itens.some(i => novo(i.n))) { filtro.st = 'praticar'; pintaChips(); pintaCards(); } return; }
   const x = e.target.closest('[data-ex]'); if (x) { const k = Number(x.dataset.ex); abertosEx.has(k) ? abertosEx.delete(k) : abertosEx.add(k); const c = x.closest('.card'); c.outerHTML = card(itens[Number(x.dataset.ex)]); return; }
   const p = e.target.closest('[data-pt]'); if (p) { const k = Number(p.dataset.pt); abertosPt.has(k) ? abertosPt.delete(k) : abertosPt.add(k); p.closest('.card').outerHTML = card(itens[k]); return; }
-  const s = e.target.closest('[data-som]'); if (s) fala(itens[Number(s.dataset.som)].x);
+  const ob = e.target.closest('[data-op]'); if (ob && !souProf) { const n = Number(ob.dataset.op); grava(n, { op: Number(ob.dataset.k), opm: Date.now() }, $('ok' + n)); const c = $('cards').querySelector(`.card[data-n="${n}"]`); if (c) c.outerHTML = card(itens[n]); return; }
+  const rf = e.target.closest('[data-refaz]'); if (rf && !souProf) { const n = Number(rf.dataset.refaz); grava(n, { op: 0 }, $('ok' + n)); const c = $('cards').querySelector(`.card[data-n="${n}"]`); if (c) c.outerHTML = card(itens[n]); return; }
+  const s = e.target.closest('[data-som]'); if (s) fala(itens[Number(s.dataset.som)].tx);
 });
 function fala(t){
+  if (window.FraseJP) return FraseJP.fala(t);
   try { speechSynthesis.cancel(); const u = new SpeechSynthesisUtterance(t); u.lang = 'ja-JP'; u.rate = .9;
     const v = speechSynthesis.getVoices().find(v => /^ja/i.test(v.lang)); if (v) u.voice = v; speechSynthesis.speak(u); } catch (e) {}
 }
@@ -290,6 +312,7 @@ onAuthStateChanged(auth, async u => {
   if (!u) return;
   const eu = (u.email || '').toLowerCase(); souProf = PROFS.includes(eu);
   const pedido = (new URLSearchParams(location.search).get('aluno') || '').toLowerCase();
+  if (souProf && window.FraseJP && FraseJP.botaoProf) FraseJP.botaoProf(A.id, 'dokkai');
   if (!souProf) { $('quem').innerHTML = ''; return abre(eu); }
   let alunos = [];
   try { alunos = (await getDocs(collection(db, 'aulas'))).docs.map(d => ({ id: d.id, nome: d.data().nome || d.id })).sort((a, b) => a.nome.localeCompare(b.nome)); } catch (e) {}

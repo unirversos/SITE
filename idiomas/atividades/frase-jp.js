@@ -161,6 +161,7 @@
     var tok = await carregaKuromoji();
     st('separando as palavras…');
     if (tipo === 'pares') itens.forEach(function (p) { p.t.xt = separa(tok, p.t.x); p.i.xt = separa(tok, p.i.x); });
+    else if (tipo === 'dokkai') itens.forEach(function (r) { while (r.length < 11) r.push(''); r[11] = separa(tok, r[8]); });
     else itens.forEach(function (r) { while (r.length < 7) r.push(''); r[7] = separa(tok, r[4]); });
     st('gravando…');
     await fs.setDoc(fs.doc(m.db, 'biblioteca', id), { itens: JSON.stringify(itens), leituras: new Date().toISOString() }, { merge: true });

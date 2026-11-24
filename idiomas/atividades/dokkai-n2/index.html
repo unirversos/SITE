@@ -110,6 +110,17 @@ textarea:focus,input:focus,select:focus{outline:2px solid #b7a6dc;outline-offset
 .voc{margin:0;font-size:14px}.voc b{font-size:11.5px;letter-spacing:.06em;text-transform:uppercase;color:var(--gold);margin-right:4px}
 .perg{margin:0;font-size:14px;font-weight:700;color:#5c4c58}
 .num2{display:flex;gap:10px;flex-wrap:wrap}.num2 label{display:flex;flex-direction:column;gap:3px;font-size:12px;font-weight:700;color:var(--muted)}
+.cards{grid-template-columns:1fr!important}
+.texto{background:#fffdf8;border:1.5px solid #f0e3c4;border-radius:14px;padding:10px 14px}
+.tx-top{display:flex;justify-content:space-between;align-items:center}.tx-top b{font-size:11.5px;letter-spacing:.06em;text-transform:uppercase;color:var(--gold)}
+.tx{white-space:pre-wrap;font-size:17px;line-height:1.9;margin-top:4px}
+.questao{border:1.5px solid var(--line);border-radius:14px;padding:10px 14px}.qp{margin:0 0 8px;font-size:16px;font-weight:700}
+.ops{display:flex;flex-direction:column;gap:6px}
+.op{font:inherit;font-size:15.5px;text-align:left;display:flex;gap:10px;align-items:flex-start;background:#fff;border:1.5px solid var(--line);border-radius:12px;padding:8px 12px;cursor:pointer;color:var(--ink)}
+.op b{flex:none;width:24px;height:24px;border-radius:50%;display:grid;place-items:center;background:var(--bg);font-size:13px}
+.op:disabled{cursor:default}.op.ok{border-color:var(--sage);background:var(--sage-s)}.op.erro{border-color:var(--terra);background:var(--terra-s)}
+.fb{font-weight:700;margin:8px 0 4px}.fb.ok{color:var(--sage)}.fb.erro{color:var(--terra)}
+.expl{background:var(--sage-s);border-radius:12px;padding:8px 12px;font-size:15px;line-height:1.8}
 .num2 input{font:inherit;font-size:15px;width:120px;padding:6px 10px;border:1.5px solid var(--line);border-radius:12px;background:#fff}
 </style>
 <link rel="stylesheet" href="/estilo-celular.css?v=3">
@@ -130,6 +141,7 @@ textarea:focus,input:focus,select:focus{outline:2px solid #b7a6dc;outline-offset
   <div class="ferr">
     <label class="sr" for="q">Buscar</label><input id="q" type="search" placeholder="Buscar tema, estratégia ou vocabulário…">
     <span id="chips"></span>
+    <button type="button" class="chip" id="furi" aria-pressed="false">ふりがな</button>
     
     <button type="button" class="chip" id="oc" aria-pressed="false" hidden></button>
     <button type="button" class="btn" id="fc-abre" hidden>▶ Modo flashcard</button>
@@ -138,8 +150,10 @@ textarea:focus,input:focus,select:focus{outline:2px solid #b7a6dc;outline-offset
   <div class="cards" id="cards"></div>
 </div>
 <script src="/caderno-dados.js?v=2"></script>
+<script src="/idiomas/atividades/frase-jp.js?v=4"></script>
 <script>window.GALERIA_CFG={id:'n2dokkai',titulo:'Leitura N2 · 6 semanas',sub:'Um texto por dia do 総まとめ N2 読解: leia com a estratégia do dia, marque acertos e tempo e escreva a sua síntese.',un:['texto','textos']};</script>
-<script type="module" src="/idiomas/atividades/dokkai-n2/dokkai.js?v=1"></script>
+<script type="module" src="/idiomas/atividades/dokkai-n2/dokkai.js?v=2"></script>
+<script>FraseJP.botao('furi')</script>
 <script defer src="/caderno-flutuante.js?v=21"></script>
 </body>
 </html>
