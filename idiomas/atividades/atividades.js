@@ -11,9 +11,9 @@ const esc = s => String(s == null ? '' : s).replace(/[&<>"']/g, c => ({ '&':'&am
 
 /* id = o mesmo id usado no Firestore (atividades/{e-mail} → { [id]: respostas }); livro = documento biblioteca/{livro} com os itens */
 const ATIVIDADES = [
-  { id: 'n2gram', livro: 'n2gram', num: '01', nivel: 'N2', t: 'Gramática N2 · 8 semanas', d: 'Uma estrutura por vez: entenda a nuance, veja o exemplo e escreva a sua frase.', url: '/idiomas/atividades/gramatica-n2/', cor: 'var(--gold)' },
-  { id: 'verbos', livro: 'verbos', num: '02', nivel: 'N5–N3', t: 'Verbos transitivos e intransitivos', d: '75 pares (150 verbos): compare 他動詞 e 自動詞, veja o exemplo e escreva a sua frase.', url: '/idiomas/atividades/verbos/', cor: 'var(--sage)', por: 2 },
-  { id: 'adjetivos', livro: 'adjetivos', num: '03', nivel: 'N5–N2', t: 'Adjetivos e opostos', d: '60 pares (120 adjetivos い e な): um adjetivo e o seu oposto, com exemplo e a sua frase.', url: '/idiomas/atividades/adjetivos/', cor: 'var(--terra)', por: 2 }
+  { id: 'n2gram', livro: 'n2gram', num: '01', ic: '文', icT: 'gramática', nivel: 'N2', t: 'Gramática N2 · 8 semanas', d: 'Uma estrutura por vez: entenda a nuance, veja o exemplo e escreva a sua frase.', url: '/idiomas/atividades/gramatica-n2/', cor: 'var(--gold)' },
+  { id: 'verbos', livro: 'verbos', num: '02', ic: '動', icT: 'verbo', nivel: 'N5–N3', t: 'Verbos transitivos e intransitivos', d: '75 pares (150 verbos): compare 他動詞 e 自動詞, veja o exemplo e escreva a sua frase.', url: '/idiomas/atividades/verbos/', cor: 'var(--sage)', por: 2 },
+  { id: 'adjetivos', livro: 'adjetivos', num: '03', ic: '形', icT: 'adjetivo', nivel: 'N5–N2', t: 'Adjetivos e opostos', d: '60 pares (120 adjetivos い e な): um adjetivo e o seu oposto, com exemplo e a sua frase.', url: '/idiomas/atividades/adjetivos/', cor: 'var(--terra)', por: 2 }
 ];
 
 /* mesma regra da galeria: "feito" só conta depois de aprovado pela professora */
@@ -25,7 +25,7 @@ function pinta(liberado, souProf, resp, totais){
     const R = resp[a.id] || {}, tot = totais[a.id] || 0;
     const feitas = Object.keys(R).filter(n => feita(R[n])).length;
     const prog = !souProf && !trava && tot ? `<div class="tr" role="img" aria-label="${feitas} de ${tot} estruturas feitas"><i style="width:${Math.round(feitas / tot * 100)}%"></i></div><span class="prog">${feitas} de ${tot} feitas</span>` : '';
-    const corpo = `<div class="top"><span class="nu">${esc(a.num)}</span><span>${breve ? 'em breve' : trava ? '🔒 alunos' : esc(a.nivel)}</span></div><h2>${esc(a.t)}</h2><p>${esc(a.d)}</p>${prog}<span class="ir">${breve ? 'Em construção' : trava ? 'Libera com a professora' : 'Abrir →'}</span>`;
+    const corpo = `<div class="top"><span class="cab"><span class="ic" lang="ja" title="${esc(a.icT)}" aria-hidden="true">${esc(a.ic)}</span><span class="nu">${esc(a.num)}</span></span><span>${breve ? 'em breve' : trava ? '🔒 alunos' : esc(a.nivel)}</span></div><h2>${esc(a.t)}</h2><p>${esc(a.d)}</p>${prog}<span class="ir">${breve ? 'Em construção' : trava ? 'Libera com a professora' : 'Abrir →'}</span>`;
     return trava || breve ? `<div class="at lock" style="--c:${a.cor}">${corpo}</div>` : `<a class="at" style="--c:${a.cor}" href="${esc(a.url)}">${corpo}</a>`;
   }).join('');
 }
