@@ -2,37 +2,35 @@
 <html lang="pt-BR">
 <head>
 <meta charset="UTF-8">
-<meta name="robots" content="noindex">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-<title>Unirversos Travessia · ferramentas para planejar e viver o Japão</title>
-<meta name="description" content="Ferramentas gratuitas para a sua viagem ao Japão: calendário da viagem, ingressos (quando comprar e em que pé está), burocracia de entrada, deslocamento entre cidades e mini guia de sobrevivência.">
+<meta name="robots" content="noindex">
+<title>Unirversos Travessia · organize sua viagem ao Japão do começo ao fim</title>
+<meta name="description" content="Sistema gratuito para organizar sua viagem ao Japão do começo ao fim: datas, endereço de cada dia, cronograma de ingressos e loterias, burocracia, trens e guia de sobrevivência.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@500;700;800&family=Zen+Maru+Gothic:wght@400;500;700&display=swap">
+<link rel="stylesheet" href="./cosmos.css?v=1">
 <style>
-:root{
-  --paper:#fdf6f4; --card:#ffffff; --ink:#3a2b38; --muted:#6b5a67; --line:#ecdadd;
-  --pink:#c23f5e; --pink-d:#a8344f; --gold:#8e6a1f; --gold-soft:#fbf2df; --sage:#517158; --sage-soft:#e8efe8; --lavender:#b7a6dc;
-  --f-display:"Baloo 2","Zen Maru Gothic",system-ui,sans-serif;
-  --f-body:"Zen Maru Gothic","Hiragino Maru Gothic ProN","Noto Sans JP",system-ui,sans-serif;
-  --r:20px;
-  --s1:8px; --s2:16px; --s3:24px; --s4:40px; --s5:56px; /* escala de espaços */
-}
 *{box-sizing:border-box}
 html{scroll-behavior:smooth;-webkit-text-size-adjust:100%}
 @media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}*{transition:none!important}}
-body{margin:0;background:var(--paper);color:var(--ink);font-family:var(--f-body);font-size:16px;line-height:1.7;
-  background-image:radial-gradient(var(--line) 1.2px,transparent 1.3px);background-size:22px 22px;
-  padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));padding-block:18px 40px}
+body{
+  margin:0; background:var(--paper); color:var(--ink); font-family:var(--f-body);
+  font-size:15.5px; line-height:1.62;
+  background-image:radial-gradient(color-mix(in srgb,var(--line) 75%,transparent) 1.1px,transparent 1.2px);
+  background-size:24px 24px;
+  padding-left:max(14px,env(safe-area-inset-left,0px));
+  padding-right:max(14px,env(safe-area-inset-right,0px));
+  padding-block:14px 48px;
+}
 a{color:inherit}
-a:focus-visible,button:focus-visible{outline:3px solid var(--lavender);outline-offset:3px;border-radius:8px}
-.pular{position:absolute;left:-999px;top:8px;background:var(--ink);color:#fff;padding:10px 16px;border-radius:999px;z-index:100;text-decoration:none}
-.pular:focus{left:16px}
-.wrap{max-width:1060px;margin:0 auto;display:grid;gap:var(--s5)}
+a:focus-visible,button:focus-visible,input:focus-visible{outline:3px solid var(--lavender);outline-offset:2px;border-radius:8px}
+[hidden]{display:none!important}
+.wrap{max-width:1060px;margin:0 auto;display:grid;gap:24px}
 .wrap>*{min-width:0}
 
 /* barra do site */
-.sitebar{display:flex;flex-wrap:wrap;justify-content:space-between;align-items:center;gap:var(--s1) 18px}
+.sitebar{display:flex;flex-wrap:wrap;justify-content:space-between;align-items:center;gap:8px 18px}
 .logo{font-family:var(--f-display);font-weight:800;font-size:19px;letter-spacing:.14em;text-decoration:none;display:inline-flex;align-items:center;min-height:44px}
 .logo span{color:var(--pink)}
 .navlinks{display:flex;flex-wrap:wrap;align-items:center;gap:0 18px;font-size:15px}
@@ -40,168 +38,360 @@ a:focus-visible,button:focus-visible{outline:3px solid var(--lavender);outline-o
 .navlinks a:hover{color:var(--pink)}
 .navlinks a[aria-current="page"]{color:var(--ink);border-bottom:2px solid var(--pink)}
 
-/* botões Instalar/Entrar (injetados pelo site todo) com área de toque confortável */
-.uni-chip button,.uni-inst button{min-height:44px;padding-inline:16px!important}
-.navlinks{row-gap:0}
+/* botões */
+.btn{
+  font:inherit; font-family:var(--f-display); font-weight:700; font-size:15px;
+  cursor:pointer; display:inline-flex; align-items:center; justify-content:center; gap:6px;
+  text-decoration:none; padding:9px 18px; min-height:44px; border-radius:999px;
+  border:1.5px solid var(--line); background:var(--card); color:var(--ink); line-height:1.2;
+  transition:border-color .15s,background .15s,transform .1s;
+}
+.btn:hover{border-color:var(--pink)}
+.btn:active{transform:translateY(1px)}
+.btn.pri{background:var(--pink);border-color:var(--pink);color:#fff;box-shadow:0 8px 18px -10px rgba(194,63,94,.75)}
+.btn.pri:hover{background:var(--pink-d);border-color:var(--pink-d)}
+.btn.soft{background:var(--pink-soft);border-color:transparent;color:var(--pink-d)}
+.btn.soft:hover{border-color:var(--pink)}
+.btn.sm{min-height:36px;padding:5px 13px;font-size:13.5px}
+.btn.xs{min-height:30px;padding:3px 10px;font-size:12.5px}
 
 /* topo */
-.hero{display:grid;gap:14px;padding-top:var(--s1)}
-.eyebrow{font-size:12px;letter-spacing:.2em;text-transform:uppercase;color:var(--gold);font-weight:700;margin:0}
-h1{font-family:var(--f-display);font-weight:800;font-size:clamp(38px,6.4vw,62px);line-height:1.04;margin:0;text-wrap:balance;letter-spacing:-.01em}
+.hero{display:grid;gap:6px}
+.eyebrow{font-size:12px;letter-spacing:.18em;text-transform:uppercase;color:var(--gold);font-weight:700;margin:0}
+h1{font-family:var(--f-display);font-weight:800;font-size:clamp(32px,5.2vw,48px);line-height:1.06;margin:0;text-wrap:balance}
 h1 em{font-style:normal;color:var(--pink)}
-.lede{font-size:clamp(17px,2vw,19px);font-weight:500;margin:0;max-width:58ch}
-.lede2{margin:0;max-width:58ch;color:var(--muted)}
-.acts{display:flex;flex-wrap:wrap;gap:10px;margin-top:6px}
-.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;min-height:48px;text-decoration:none;font-family:var(--f-display);font-weight:700;font-size:16px;padding:10px 22px;border-radius:999px;border:1.5px solid var(--pink);transition:filter .15s,transform .15s}
-.btn.pri{background:var(--pink);color:#fff;box-shadow:0 6px 16px -8px rgba(194,63,94,.7)}
-.btn.sec{background:var(--card);color:var(--pink)}
-.btn:hover{filter:brightness(.96)}
-.btn:active{transform:translateY(1px)}
+.lede{margin:0;color:var(--muted);max-width:60ch;font-size:16.5px}
 
-/* títulos de seção */
-.sec-h{display:grid;gap:4px;margin-bottom:var(--s2)}
-.sec-h h2{font-family:var(--f-display);font-weight:800;font-size:clamp(26px,3.6vw,34px);line-height:1.15;margin:0}
-.sec-h p{margin:0;color:var(--muted);max-width:62ch}
+/* setup inicial (quando não tem viagem ainda) */
+.setup-card{
+  background:linear-gradient(135deg,#fff 0%,var(--gold-soft) 100%);
+  border:1.5px solid var(--line); border-left:6px solid var(--pink);
+  border-radius:22px; padding:clamp(18px,3.2vw,28px); box-shadow:var(--shadow);
+  display:grid; gap:14px;
+}
+.setup-card h2{font-family:var(--f-display);font-weight:800;font-size:clamp(21px,3vw,26px);margin:0;line-height:1.15}
+.setup-card p.sub{margin:0;color:var(--muted);font-size:15px}
+.campos{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:12px}
+.f{display:grid;gap:4px;font-size:13.5px;color:var(--muted);font-weight:500}
+.f input{
+  font:inherit;font-size:15.5px;color:var(--ink);border:1.5px solid var(--line);
+  border-radius:12px;padding:9px 12px;background:#fff;min-height:44px;width:100%;
+}
+.f input:focus{outline:none;border-color:var(--pink)}
+.barra{display:flex;flex-wrap:wrap;gap:10px;align-items:center}
+.erro{margin:0;color:var(--red);font-weight:700;font-size:14px}
+.erro:empty{display:none}
 
+/* cabine de comando (quando já tem viagem) */
+.cabine{display:grid;gap:16px}
+.trip-banner{
+  background:var(--card); border:1.5px solid var(--line); border-left:6px solid var(--pink);
+  border-radius:22px; padding:18px 20px; box-shadow:var(--shadow);
+  display:flex; flex-wrap:wrap; gap:12px 18px; justify-content:space-between; align-items:center;
+}
+.trip-title{display:grid;gap:3px}
+.trip-title h2{font-family:var(--f-display);font-weight:800;font-size:clamp(22px,3vw,28px);margin:0;line-height:1.15}
+.trip-meta-line{display:flex;flex-wrap:wrap;gap:6px 10px;align-items:center;font-size:14.5px;color:var(--muted)}
+.trip-acts{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
 
-/* onde estou / próximo passo (só aparece quando há dados neste aparelho) */
-.onde{background:var(--sage-soft);border-left:6px solid var(--sage);border-radius:var(--r);padding:16px 20px;display:grid;gap:4px;max-width:760px}
-.onde[hidden]{display:none}
-.onde strong.t{font-family:var(--f-display);font-weight:800;font-size:17px}
-.onde p{margin:0;font-size:15px}
-.onde a{font-family:var(--f-display);font-weight:700;color:var(--pink);text-decoration:none;display:inline-flex;align-items:center;min-height:44px}
-.onde a:hover{text-decoration:underline}
+/* 4 indicadores vivos */
+.vivo-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}
+@media (max-width:720px){.vivo-grid{grid-template-columns:1fr}}
+.vivo-card{
+  background:var(--card); border:1.5px solid var(--line); border-left:5px solid var(--gold);
+  border-radius:var(--r); padding:16px 18px; box-shadow:var(--shadow);
+  display:grid; gap:8px; align-content:space-between;
+}
+.vivo-card.verde{border-left-color:var(--sage)}
+.vivo-card.rosa{border-left-color:var(--pink)}
+.vivo-card.ouro{border-left-color:var(--gold)}
+.vivo-card.azul{border-left-color:var(--blue)}
+.vivo-top{display:flex;align-items:center;justify-content:space-between;gap:8px}
+.vivo-k{font-size:12px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--muted)}
+.vivo-val{font-family:var(--f-display);font-weight:800;font-size:18.5px;line-height:1.25;margin:0}
+.vivo-sub{margin:0;font-size:14px;color:var(--muted);line-height:1.45}
+.vivo-foot{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin-top:4px}
+.vivo-link{font-family:var(--f-display);font-weight:700;font-size:14.5px;color:var(--pink);text-decoration:none}
+.vivo-link:hover{text-decoration:underline}
 
-.onde{padding:8px 14px;display:flex;flex-wrap:wrap;align-items:center;gap:0 12px;border-radius:14px;border-left-width:4px;margin-top:-30px;max-width:none;width:fit-content}
-.onde strong.t{font-size:15px}.onde p{font-size:14px}.onde a{min-height:36px;font-size:14px}
-/* destaque: calendário */
-.destaque{display:grid;gap:12px;justify-items:start;background:linear-gradient(135deg,#fff 0%,var(--gold-soft) 100%);border:2px solid var(--pink);border-radius:28px;padding:clamp(22px,4vw,38px);box-shadow:0 18px 40px -24px rgba(194,63,94,.55)}
-.destaque .tag{font-size:12px;letter-spacing:.16em;text-transform:uppercase;font-weight:700;color:#fff;background:var(--pink);border-radius:999px;padding:3px 12px}
-.destaque h2{font-family:var(--f-display);font-weight:800;font-size:clamp(28px,4.6vw,44px);line-height:1.1;margin:0;text-wrap:balance}
-.vant{list-style:none;margin:6px 0 10px;padding:0;display:grid;gap:14px;width:100%;grid-template-columns:repeat(3,minmax(0,1fr))}
-.vant li{display:flex;gap:12px;align-items:flex-start;background:rgba(255,255,255,.7);border-left:4px solid var(--gold);border-radius:14px;padding:14px 16px}
-.vant .vi{font-size:24px;line-height:1.2;flex:none}
-.vant strong{display:block;font-family:var(--f-display);font-weight:800;font-size:17px;line-height:1.25;margin-bottom:2px}
-.vant div span{display:block;color:var(--muted);font-size:15px;line-height:1.5}
-@media (max-width:820px){.vant{grid-template-columns:1fr}}
-.btn.big{font-size:clamp(18px,3vw,22px);padding:14px 30px;min-height:56px;box-shadow:0 12px 26px -12px rgba(194,63,94,.8)}
+/* fases da jornada */
+.fases{display:grid;gap:24px}
+.fase{display:grid;gap:12px}
+.fase-h{display:flex;flex-wrap:wrap;align-items:baseline;gap:6px 12px}
+.fase-num{
+  font-family:var(--f-display); font-weight:800; font-size:12px; letter-spacing:.14em;
+  text-transform:uppercase; padding:2px 10px; border-radius:999px;
+  background:var(--gold-soft); color:var(--gold);
+}
+.fase-num.f2{background:var(--pink-soft);color:var(--pink-d)}
+.fase-num.f3{background:var(--sage-soft);color:var(--sage)}
+.fase-h h2{font-family:var(--f-display);font-weight:800;font-size:clamp(20px,2.8vw,25px);margin:0;line-height:1.2}
+.fase-h p{margin:0;color:var(--muted);font-size:14.5px}
 
-/* ferramentas */
-.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(min(100%,300px),1fr));gap:18px}
-.tool{position:relative;background:var(--card);border:1.5px solid var(--line);border-left:6px solid var(--gold);border-radius:var(--r);padding:20px;display:grid;gap:8px;align-content:start;box-shadow:0 10px 24px -18px rgba(58,43,56,.35);transition:transform .15s,box-shadow .15s}
-.tool:hover{transform:translateY(-2px);box-shadow:0 16px 30px -18px rgba(58,43,56,.45)}
-.tool:focus-within{outline:3px solid var(--lavender);outline-offset:3px}
-.tool .n{font-family:var(--f-display);font-weight:800;font-size:15px;color:var(--gold);letter-spacing:.08em;display:flex;align-items:center;gap:10px}
-.tool .n .ico{font-size:28px;line-height:1;letter-spacing:0}
-.tool h3{font-family:var(--f-display);font-weight:800;font-size:21px;line-height:1.2;margin:0}
-.tool p{margin:0;color:var(--muted);font-size:15px}
-.tool .go{margin-top:6px;display:flex;align-items:center;min-height:48px;text-decoration:none;font-family:var(--f-display);font-weight:700;color:var(--pink)}
-/* o card inteiro é clicável, sem duplicar links para o leitor de tela */
-.tool .go::after{content:"";position:absolute;inset:0;border-radius:var(--r)}
-.tool .go:hover{text-decoration:underline}
-/* card importante: borda rosa e selo */
-.tool.importante{border-left-color:var(--pink);background:linear-gradient(135deg,#fff 60%,#fbeef0 100%)}
-.selo-imp{margin-left:auto;font-family:var(--f-body);font-size:11px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:#fff;background:var(--pink);border-radius:999px;padding:3px 12px;line-height:1.5}
-.tool.breve{border-left-color:var(--line);border-style:dashed;border-left-style:dashed;background:transparent;box-shadow:none}
-.tool.breve:hover{transform:none;box-shadow:none}
-.tool.breve .n{color:var(--muted)}
+.tool-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,290px),1fr));gap:14px}
+.tool{
+  position:relative; background:var(--card); border:1.5px solid var(--line);
+  border-left:5px solid var(--gold); border-radius:var(--r); padding:18px 18px 16px;
+  display:grid; gap:6px; align-content:start; box-shadow:var(--shadow);
+  transition:transform .15s,box-shadow .15s;
+}
+.tool:hover{transform:translateY(-2px);box-shadow:0 14px 28px -18px rgba(58,43,56,.45)}
+.tool.rosa{border-left-color:var(--pink)}
+.tool.verde{border-left-color:var(--sage)}
+.tool.azul{border-left-color:var(--blue)}
+.tool.destaque-f{background:linear-gradient(135deg,#fff 65%,var(--pink-soft) 100%)}
+.tool.depois{border-style:dashed;border-left-style:dashed;border-left-color:var(--line);background:transparent;box-shadow:none}
+.tool.depois:hover{transform:none;box-shadow:none}
+.tool-head{display:flex;align-items:center;gap:10px}
+.tool-ico{font-size:24px;line-height:1}
+.tool h3{font-family:var(--f-display);font-weight:800;font-size:19px;margin:0;line-height:1.2}
+.tool h3 a{text-decoration:none}
+.tool h3 a::after{content:"";position:absolute;inset:0;border-radius:var(--r)}
+.tool:hover h3{color:var(--pink)}
+.tool p{margin:0;color:var(--muted);font-size:14.5px;line-height:1.5}
+.tool-foot{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:8px;margin-top:6px}
+.tool-go{font-family:var(--f-display);font-weight:700;font-size:14.5px;color:var(--pink)}
 
-
-/* ícones desenhados */
-.objs{display:grid;gap:10px;width:100%;max-width:620px;pointer-events:none}
-.objs.n3{grid-template-columns:repeat(3,minmax(0,1fr))}
-.objs .o{display:grid;justify-items:center;gap:4px;text-align:center}
-.objs .ob svg{width:64px;height:64px;display:block}
-.objs b{font-family:var(--f-display);font-weight:800;font-size:15px;line-height:1.2}
-.tool{text-align:center;justify-items:center;padding:18px 14px 10px;border-left-width:1.5px;border-top:5px solid var(--gold)}
-.tool.importante{border-top-color:var(--pink)}
-.tool .tico svg{width:64px;height:64px;display:block}
-.tool h3{font-size:19px}
-.tool p{font-size:14.5px}
-.tool .go{justify-content:center;min-height:44px;margin-top:0;font-size:15px}
-.tool .selo-imp{position:absolute;top:10px;right:10px;margin:0;font-size:10px;padding:2px 9px}
-.grid{grid-template-columns:repeat(3,minmax(0,1fr));gap:16px}
-@media (max-width:720px){.grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}.tool{padding:14px 10px 6px}.tool h3{font-size:16px}.tool p{font-size:13.5px;line-height:1.45}.tool .tico svg,.objs .ob svg{width:52px;height:52px}.objs b{font-size:13px}.tool .selo-imp{position:static;justify-self:center}}
-
-.tool h3 .go{display:inline;min-height:0;margin:0;font:inherit;color:inherit;text-decoration:none}.tool h3 .go:hover{text-decoration:none}.tool:hover h3{color:var(--pink)}
-
-/* datas da viagem */
-.viagem{display:grid;gap:6px;margin-top:6px}
-.vf{display:flex;flex-wrap:wrap;align-items:center;gap:10px 14px;background:var(--card);border:1.5px solid var(--line);border-radius:20px;padding:12px 16px;width:fit-content;max-width:100%}
-.vf .vq{font-family:var(--f-display);font-weight:800;font-size:17px}
-.vf label{display:flex;align-items:center;gap:8px;font-size:15px;color:var(--muted)}
-.vf input{font:inherit;color:var(--ink);min-height:44px;padding:6px 10px;border:1.5px solid var(--line);border-radius:12px;background:#fff}
-.vf .btn{min-height:44px;padding:8px 18px;font-size:15px}
-.vok{margin:0;display:flex;flex-wrap:wrap;align-items:center;gap:4px 12px;font-weight:700;font-family:var(--f-display);font-size:17px}
-.vok a{color:var(--pink);text-decoration:none;font-size:15px;min-height:44px;display:inline-flex;align-items:center}
-.vok a:hover{text-decoration:underline}
-.verr{margin:0;color:var(--pink-d);font-size:14px;min-height:0}
-.verr:empty{display:none}.vf[hidden],.vok[hidden]{display:none}
-@media (max-width:640px){.vf{width:100%;gap:6px 10px;padding:10px 12px;border-radius:16px}.vf .vq{flex:1 1 100%;font-size:15px}.vf label{flex:1 1 0;min-width:0;flex-direction:column;align-items:stretch;gap:2px;font-size:12px}.vf input{min-width:0;width:100%;min-height:40px;padding:4px 8px;font-size:14px}.vf .btn{flex:1 1 100%;min-height:40px;font-size:14px;padding:6px 14px}}
-.vprazo{margin:0;font-size:14.5px;color:var(--muted)}.vprazo[hidden]{display:none}.vprazo a{color:var(--pink);font-weight:700;text-decoration:none;margin-left:4px}.vprazo a:hover{text-decoration:underline}
-.tool .bd{font-style:normal;font-size:12px;font-weight:700;color:var(--sage);background:var(--sage-soft);border-radius:999px;padding:1px 10px;line-height:1.6;margin-bottom:6px}
-.tool.depois{border-style:dashed;border-color:var(--line);border-top:5px dashed var(--line);background:transparent;box-shadow:none}.tool.depois .tico{opacity:.8}
-/* pontes */
-.pontes{display:grid;gap:12px;grid-template-columns:repeat(auto-fit,minmax(min(100%,320px),1fr))}
-.ponte{display:grid;gap:4px;background:var(--card);border:1.5px solid var(--line);border-radius:16px;padding:16px 18px;align-content:start}
-.ponte p{margin:0;color:var(--muted);font-size:15px}
-.ponte a{font-family:var(--f-display);font-weight:700;color:var(--pink);text-decoration:none;display:inline-flex;align-items:center;min-height:44px}
-.ponte a:hover{text-decoration:underline}
-
-footer{display:flex;flex-wrap:wrap;gap:0 20px;justify-content:space-between;align-items:center;color:var(--muted);font-size:14px;border-top:1.5px solid var(--line);padding-top:var(--s2)}
-footer a{color:var(--pink);text-decoration:none;display:inline-flex;align-items:center;min-height:44px;margin-right:12px}
-
-/* celular: barra fixa embaixo, ao alcance do polegar */
+/* barra fixa mobile */
 .fixo{display:none}
 @media (max-width:640px){
-  body{padding-bottom:96px}
-  .wrap{gap:var(--s4)}
-  .acts .btn{flex:1 1 100%}
-  .destaque .btn.big{width:100%}
-  .fixo.on{display:flex}
-  .fixo{position:fixed;left:max(12px,env(safe-area-inset-left,0px));right:max(12px,env(safe-area-inset-right,0px));bottom:max(12px,env(safe-area-inset-bottom,0px));z-index:50;gap:8px;padding:8px;background:rgba(255,255,255,.96);border:1.5px solid var(--line);border-radius:999px;box-shadow:0 10px 30px -10px rgba(58,43,56,.5);backdrop-filter:blur(6px)}
-  .fixo .btn{flex:1 1 0;font-size:15px;padding:8px 10px}
+  body{padding-bottom:92px}
+  .fixo{
+    display:flex; position:fixed;
+    left:max(12px,env(safe-area-inset-left,0px));
+    right:max(12px,env(safe-area-inset-right,0px));
+    bottom:max(12px,env(safe-area-inset-bottom,0px));
+    z-index:50; gap:8px; padding:7px;
+    background:rgba(255,255,255,.96); border:1.5px solid var(--line);
+    border-radius:999px; box-shadow:0 10px 30px -10px rgba(58,43,56,.45);
+    backdrop-filter:blur(6px);
+  }
+  .fixo .btn{flex:1 1 0;min-height:42px;padding:7px 10px;font-size:14px}
 }
 
-/* proposta: o calendário mora na própria Travessia, recolhível */
-.cal-emb{background:#fff;border:1.5px solid var(--line,#ecdadd);border-radius:20px;margin:6px 0 22px;overflow:hidden;box-shadow:0 10px 26px -20px rgba(58,43,56,.4)}
-.cal-emb summary{list-style:none;display:flex;align-items:center;justify-content:space-between;gap:10px;padding:12px 16px;cursor:pointer;font-size:16px}
-.cal-emb summary::-webkit-details-marker{display:none}
-.cal-emb summary small{color:var(--muted,#705f6c);font-size:13px;margin-left:6px}
-.cal-acoes{display:flex;align-items:center;gap:12px}.cal-acoes a{font-size:13.5px;font-weight:700;color:var(--pink-d,#a8344f);text-decoration:none}
-.cal-ab{width:28px;height:28px;border-radius:50%;border:1.5px solid var(--line,#ecdadd);display:grid;place-items:center}
-.cal-ab::before{content:"▾";font-size:13px}.cal-emb:not([open]) .cal-ab::before{content:"▸"}
-#calIf{display:block;width:100%;height:min(82vh,860px);border:0;border-top:1.5px solid var(--line,#ecdadd);background:var(--paper,#fdf6f4)}
-.cal-emb:not([open]){margin-bottom:14px}
-.faixa-t{background:#fbf1de;color:#7a5418;font-size:13px;text-align:center;padding:6px 12px}
+footer{
+  display:flex;flex-wrap:wrap;gap:8px 20px;justify-content:space-between;align-items:center;
+  color:var(--muted);font-size:14px;border-top:1.5px solid var(--line);padding-top:16px;margin-top:8px;
+}
+footer a{color:var(--pink);text-decoration:none;margin-right:12px}
+footer a:hover{text-decoration:underline}
 </style>
-<link rel="icon" href="/favicon.svg" type="image/svg+xml"><link rel="icon" href="/favicon.ico" sizes="48x48"><link rel="apple-touch-icon" href="/apple-touch-icon.png"><link rel="manifest" href="/manifest.webmanifest"><meta name="theme-color" content="#3a2b38"><meta name="mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-title" content="Unirversos"><script src="/app.js" defer></script><style id="uni-logo">.logo,.brand,.sitebar .brand{font-family:"Baloo 2","Zen Maru Gothic",system-ui,sans-serif!important;font-weight:800!important;font-size:19px!important;letter-spacing:.14em!important;text-transform:none!important;text-decoration:none!important}.logo span,.brand span{color:#c23f5e!important;font:inherit!important;letter-spacing:inherit!important;margin:0!important}</style></head>
+<link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<link rel="icon" href="/favicon.ico" sizes="48x48">
+<link rel="apple-touch-icon" href="/apple-touch-icon.png">
+<link rel="manifest" href="/manifest.webmanifest">
+<meta name="theme-color" content="#3a2b38">
+<script src="/app.js" defer></script>
+</head>
 <body>
-<div class="faixa-t">Proposta de teste · Travessia com o calendário na própria página</div>
-<a class="pular" href="#ferramentas">Pular para as ferramentas</a>
 <div class="wrap">
   <div class="sitebar" role="navigation" aria-label="Site">
     <a href="/" class="logo">UNI<span>R</span>VERSOS</a>
-    <span class="navlinks"><a href="/idiomas/">idiomas</a><a href="/travessia/" aria-current="page">travessia</a><a href="/loja/">tesouros</a><span class="nav-sep" aria-hidden="true" style="opacity:.3">|</span><a href="/paralelos/">paralelos</a><a href="/sobre/">sobre</a></span>
+    <span class="navlinks">
+      <a href="/idiomas/">idiomas</a>
+      <a href="/travessia/" aria-current="page">travessia</a>
+      <a href="/loja/">tesouros</a>
+      <span aria-hidden="true" style="opacity:.3">|</span>
+      <a href="/paralelos/">paralelos</a>
+      <a href="/sobre/">sobre</a>
+    </span>
   </div>
 
-  <header class="hero">
-    <h1>Sua viagem <em>já começou!</em></h1>
-    <p class="lede">Do começo ao fim, tudo nas suas mãos. Tudo gratuito.</p>
-  </header>
-  <details class="cal-emb" id="calEmb" open>
-    <summary><span>🗓️ <b>Seu calendário</b> <small id="calResumo"></small></span><span class="cal-acoes"><a href="/travessia/calendario/" onclick="event.stopPropagation()">Tela cheia ↗</a><span class="cal-ab" aria-hidden="true"></span></span></summary>
-    <iframe id="calIf" src="/travessia/calendario/?embed=1" title="Seu calendário de viagem" loading="eager"></iframe>
-  </details>
+  <div class="cosmos-teste-bar">
+    <span>🧪 Área de teste da nova Travessia (Cosmos)</span>
+    <a href="/travessia/">Ver versão oficial atual</a>
+  </div>
 
-  <section aria-label="Ferramentas da travessia" id="ferramentas">
-    <div class="grid">
-      <article class="tool importante"><span class="selo-imp">Importante</span><span class="tico"><svg viewBox="0 0 28 28" aria-hidden="true"><ellipse cx="14" cy="26" rx="10" ry="1.3" fill="#4A4149" opacity=".15"/><g transform="rotate(-4 14 14)"><rect x="6" y="3" width="16" height="21.500" rx="2" fill="#b5514d" stroke="#7d3532" stroke-width="1.200"/><circle cx="14" cy="11.500" r="4.200" fill="none" stroke="#F3E3B8" stroke-width="1.200"/><path d="M9.800 11.500h8.400M14 7.300c-2 2.500-2 5.900 0 8.400M14 7.300c2 2.500 2 5.900 0 8.400" stroke="#F3E3B8" stroke-width=".9" fill="none"/><path d="M9.500 19.500h9" stroke="#F3E3B8" stroke-width="1.300" stroke-linecap="round"/></g></svg></span><h3><a class="go" href="/travessia/burocracia/">Burocracia de entrada</a></h3><p>Visto, Visit Japan Web e Suica, antes de pousar.</p></article>
-      <article class="tool"><span class="tico"><svg viewBox="0 0 28 28" aria-hidden="true"><ellipse cx="14" cy="26" rx="10" ry="1.3" fill="#4A4149" opacity=".15"/><g transform="rotate(-6 14 14)"><path d="M3 8.5h22v4a1.800 1.800 0 0 0 0 3.600V20H3v-3.900a1.800 1.800 0 0 0 0-3.600Z" fill="#F3E3B8" stroke="#a08a5a" stroke-width="1.200" stroke-linejoin="round"/><path d="M18 9v11" stroke="#a08a5a" stroke-width="1" stroke-dasharray="1.600 1.600"/><path d="M6.500 12.500h8M6.500 15.500h5.500" stroke="#8e6a1f" stroke-width="1.300" stroke-linecap="round"/><circle cx="21.500" cy="14.200" r="1.500" fill="#b5514d"/></g></svg></span><h3><a class="go" href="/travessia/ingressos/">Ingressos</a></h3><p>Personalize sua experiência.</p></article>
-      <article class="tool"><span class="tico"><svg viewBox="0 0 28 28" aria-hidden="true"><ellipse cx="14" cy="26" rx="10" ry="1.3" fill="#4A4149" opacity=".15"/><rect x="4.500" y="5.500" width="19" height="18" rx="2.500" fill="#fffdf9" stroke="#a08a5a" stroke-width="1.200"/><path d="M4.500 8a2.500 2.500 0 0 1 2.500-2.500h14A2.500 2.500 0 0 1 23.500 8v3h-19Z" fill="#8e6a1f"/><path d="M9.500 3.500v4M18.500 3.500v4" stroke="#5d4c42" stroke-width="1.500" stroke-linecap="round"/><g fill="#d9c9a0"><circle cx="9" cy="15" r="1.200"/><circle cx="14" cy="15" r="1.200"/><circle cx="19" cy="15" r="1.200"/><circle cx="9" cy="19.500" r="1.200"/><circle cx="19" cy="19.500" r="1.200"/></g><circle cx="14" cy="19.500" r="2.200" fill="#b5514d"/></svg></span><h3><a class="go" href="/travessia/calendario/">Calendário de viagem</a></h3><p>Adicione seus endereços e eventos.</p></article>
-      <article class="tool"><span class="tico"><svg viewBox="0 0 28 28" aria-hidden="true"><ellipse cx="14" cy="26" rx="10" ry="1.3" fill="#4A4149" opacity=".15"/><rect x="5" y="4" width="18" height="16" rx="6" fill="#fffdf9" stroke="#517158" stroke-width="1.300"/><rect x="8" y="7.500" width="12" height="6" rx="2" fill="#E1EDE5" stroke="#517158" stroke-width="1"/><path d="M5 16.500h18" stroke="#b5514d" stroke-width="1.500"/><circle cx="9.500" cy="18" r="1.100" fill="#8e6a1f"/><circle cx="18.500" cy="18" r="1.100" fill="#8e6a1f"/><path d="M8 24l2-4M20 24l-2-4M8 24h12" stroke="#517158" stroke-width="1.300" stroke-linecap="round" fill="none"/></svg></span><h3><a class="go" href="/travessia/deslocamento/">Deslocamentos e aplicativos</a></h3><p>Trens, passagens e passo a passo.</p></article>
-      <article class="tool"><span class="tico"><svg viewBox="0 0 28 28" aria-hidden="true"><ellipse cx="14" cy="26" rx="10" ry="1.3" fill="#4A4149" opacity=".15"/><g transform="rotate(4 14 14)"><rect x="6.500" y="3.500" width="15.500" height="21" rx="1.800" fill="#6b8f72" stroke="#44614b" stroke-width="1.200"/><rect x="6.500" y="3.500" width="3" height="21" rx="1.200" fill="#44614b"/><circle cx="15.500" cy="11.500" r="4" fill="#F6EBCB" stroke="#44614b" stroke-width="1"/><path d="M15.500 8.500l1.300 3-3 1.300 1.700-4.300Z" fill="#b5514d"/><path d="M11.500 19.500h8" stroke="#F6EBCB" stroke-width="1.300" stroke-linecap="round"/></g></svg></span><h3><a class="go" href="/travessia/guia-sobrevivencia/">Guia de sobrevivência</a></h3><p>Coisas que você precisa saber<br>e coisas que você precisa saber falar.</p></article>
-      <article class="tool depois"><span class="tico"><svg viewBox="0 0 28 28" aria-hidden="true"><ellipse cx="14" cy="26" rx="10" ry="1.3" fill="#4A4149" opacity=".15"/><g transform="rotate(-4 14 14)"><rect x="6" y="3.500" width="16" height="21" rx="1.500" fill="#fffdf9" stroke="#a08a5a" stroke-width="1.200"/><rect x="8" y="5.500" width="12" height="3.200" rx=".8" fill="#b5514d"/><rect x="8" y="10.500" width="12" height="7" rx=".8" fill="#E1EDE5"/><path d="M8 17.500l3.500-3.500 2.500 2.500 2-2 4 3Z" fill="#8fb59a"/><path d="M8 20.500h12M8 22.500h7" stroke="#d9c9a0" stroke-width="1.100" stroke-linecap="round"/></g></svg></span><h3><a class="go" href="/loja/revista/">Revista Memórias</a></h3><p>Para guardar depois da viagem.</p></article>
+  <nav class="trav-nav" aria-label="Seções da Travessia">
+    <a href="./" aria-current="page">🧭 Painel</a>
+    <a href="./calendario/">📅 Calendário &amp; Endereços</a>
+    <a href="./ingressos/">🎟️ Ingressos</a>
+    <span class="trav-sep" aria-hidden="true"></span>
+    <a href="./burocracia/">🛂 Burocracia</a>
+    <a href="./deslocamento/">🚆 Deslocamento</a>
+    <a href="./guia-sobrevivencia/">📖 Guia</a>
+  </nav>
+
+  <header class="hero">
+    <p class="eyebrow">Unirversos Travessia · organizador de viagem ao Japão</p>
+    <h1>Sua viagem <em>do começo ao fim.</em></h1>
+    <p class="lede">Datas, endereço de cada dia, cronograma de ingressos e loterias, burocracia e trens — tudo conectado num só lugar, gratuito e salvo no seu aparelho (ou na sua conta).</p>
+  </header>
+
+  <!-- SETUP INICIAL (aparece se não há datas salvas ou ao clicar em Editar datas) -->
+  <section class="setup-card" id="secSetup" hidden aria-labelledby="tSetup">
+    <div>
+      <h2 id="tSetup">Quando é a sua viagem ao Japão?</h2>
+      <p class="sub">Coloque as datas de ida e volta uma única vez. O sistema monta automaticamente seu calendário e o cronograma de abertura de ingressos em horário de Brasília.</p>
+    </div>
+    <form id="fSetup" novalidate>
+      <div class="campos">
+        <label class="f">Nome da viagem (opcional)
+          <input type="text" id="sTitulo" maxlength="80" placeholder="ex.: Japão · outono 2026" autocomplete="off">
+        </label>
+        <label class="f">Data de ida
+          <input type="date" id="sIni" required>
+        </label>
+        <label class="f">Data de volta
+          <input type="date" id="sFim" required>
+        </label>
+      </div>
+      <p class="erro" id="sErr" role="alert"></p>
+      <div class="barra" style="margin-top:12px">
+        <button class="btn pri" type="submit" id="sBtn">✨ Montar minha travessia</button>
+        <button class="btn" type="button" id="sCancel" hidden>Cancelar</button>
+        <button class="btn sm" type="button" id="sExemplo" style="margin-left:auto">👀 Testar com viagem de exemplo</button>
+      </div>
+    </form>
+  </section>
+
+  <!-- CABINE DE COMANDO (aparece quando já há viagem configurada) -->
+  <section class="cabine" id="secCabine" hidden aria-label="Resumo da sua viagem">
+    <div class="trip-banner">
+      <div class="trip-title">
+        <h2 id="cTitulo">Minha viagem ao Japão</h2>
+        <div class="trip-meta-line">
+          <span id="cDatas"></span>
+          <span class="c-badge rosa" id="cStatus"></span>
+        </div>
+      </div>
+      <div class="trip-acts">
+        <button class="btn sm" type="button" id="bEditarDatas">✏️ Datas</button>
+        <a class="btn pri sm" href="./calendario/">📅 Abrir calendário →</a>
+      </div>
+    </div>
+
+    <div class="vivo-grid">
+      <!-- Card 1: Endereço de cada dia / Hospedagem -->
+      <article class="vivo-card verde">
+        <div>
+          <div class="vivo-top">
+            <span class="vivo-k" id="vHospK">🏨 Hospedagem &amp; endereço</span>
+            <span class="c-badge verde" id="vHospBd" hidden></span>
+          </div>
+          <p class="vivo-val" id="vHospVal">Nenhuma hospedagem cadastrada</p>
+          <p class="vivo-sub" id="vHospSub">Cadastre onde você vai dormir em cada dia para ter o endereço e o Google Maps sempre à mão.</p>
+        </div>
+        <div class="vivo-foot" id="vHospFoot">
+          <a class="vivo-link" href="./calendario/#logistica">Cadastrar hospedagens →</a>
+        </div>
+      </article>
+
+      <!-- Card 2: Ingressos & Loterias -->
+      <article class="vivo-card rosa">
+        <div>
+          <div class="vivo-top">
+            <span class="vivo-k">🎟️ Ingressos &amp; loterias</span>
+            <span class="c-badge rosa" id="vIngBd" hidden></span>
+          </div>
+          <p class="vivo-val" id="vIngVal">Cronograma pronto para as suas datas</p>
+          <p class="vivo-sub" id="vIngSub">Veja quando abrem as vendas e loterias no horário de Brasília e marque o que você quer visitar.</p>
+        </div>
+        <div class="vivo-foot">
+          <a class="vivo-link" href="./ingressos/">Abrir ingressos &amp; loterias →</a>
+        </div>
+      </article>
+
+      <!-- Card 3: Próximo compromisso -->
+      <article class="vivo-card ouro">
+        <div>
+          <div class="vivo-top">
+            <span class="vivo-k">📅 Próximo compromisso</span>
+            <span class="c-badge ouro" id="vEvBd" hidden></span>
+          </div>
+          <p class="vivo-val" id="vEvVal">Seu roteiro está livre</p>
+          <p class="vivo-sub" id="vEvSub">Adicione voos, trens, passeios e reservas ou importe confirmações no calendário.</p>
+        </div>
+        <div class="vivo-foot">
+          <a class="vivo-link" href="./calendario/">Ver roteiro dia a dia →</a>
+        </div>
+      </article>
+
+      <!-- Card 4: Burocracia -->
+      <article class="vivo-card azul">
+        <div>
+          <div class="vivo-top">
+            <span class="vivo-k">🛂 Burocracia de entrada</span>
+            <span class="c-badge azul" id="vBurBd" hidden></span>
+          </div>
+          <p class="vivo-val" id="vBurVal">Antes de embarcar</p>
+          <p class="vivo-sub" id="vBurSub">Passaporte, visto, Visit Japan Web e Welcome Suica — confira o passo a passo oficial.</p>
+        </div>
+        <div class="vivo-foot">
+          <a class="vivo-link" href="./burocracia/">Abrir checklist →</a>
+        </div>
+      </article>
+    </div>
+  </section>
+
+  <!-- JORNADA EM 3 FASES -->
+  <section class="fases" aria-label="Fases da organização">
+    <!-- Fase 1 -->
+    <div class="fase">
+      <div class="fase-h">
+        <span class="fase-num">Fase 1</span>
+        <h2>Antes de embarcar</h2>
+        <p>Resolva papéis e garanta os ingressos que esgotam meses antes.</p>
+      </div>
+      <div class="tool-grid">
+        <article class="tool rosa">
+          <div class="tool-head"><span class="tool-ico">🛂</span><h3><a href="./burocracia/">Burocracia de entrada</a></h3></div>
+          <p>Passaporte, visto para brasileiros, Visit Japan Web e Suica — com links oficiais e checklist salvo.</p>
+          <div class="tool-foot"><span class="c-badge rosa" id="bBurCard">Essencial</span><span class="tool-go">Abrir →</span></div>
+        </article>
+        <article class="tool">
+          <div class="tool-head"><span class="tool-ico">🎟️</span><h3><a href="./ingressos/">Ingressos: Cronograma &amp; Agendados</a></h3></div>
+          <p>Datas de loterias e aberturas em horário de Brasília + controle dos seus ingressos já comprados.</p>
+          <div class="tool-foot"><span class="c-badge ouro" id="bIngCard">Loterias e aberturas</span><span class="tool-go">Abrir →</span></div>
+        </article>
+      </div>
+    </div>
+
+    <!-- Fase 2 -->
+    <div class="fase">
+      <div class="fase-h">
+        <span class="fase-num f2">Fase 2</span>
+        <h2>Sua viagem dia a dia</h2>
+        <p>O coração do sistema: onde você dorme, o que faz e que horas precisa estar lá.</p>
+      </div>
+      <div class="tool-grid">
+        <article class="tool rosa destaque-f">
+          <div class="tool-head"><span class="tool-ico">📅</span><h3><a href="./calendario/">Calendário &amp; Endereços</a></h3></div>
+          <p>Roteiro por mês ou lista dia a dia, endereço da hospedagem de cada noite, ingressos agendados, importador de reservas e Google Agenda.</p>
+          <div class="tool-foot"><span class="c-badge rosa" id="bCalCard">Principal</span><span class="tool-go">Abrir calendário →</span></div>
+        </article>
+        <article class="tool verde">
+          <div class="tool-head"><span class="tool-ico">🏨</span><h3><a href="./calendario/#logistica">Endereços, Trens &amp; Passes</a></h3></div>
+          <p>Todas as suas hospedagens com link do Google Maps, passagens de Shinkansen e comparador de JR Pass.</p>
+          <div class="tool-foot"><span class="c-badge verde" id="bLogCard">Logística</span><span class="tool-go">Ver endereços →</span></div>
+        </article>
+      </div>
+    </div>
+
+    <!-- Fase 3 -->
+    <div class="fase">
+      <div class="fase-h">
+        <span class="fase-num f3">Fase 3</span>
+        <h2>Lá no Japão (e na volta)</h2>
+        <p>Referência rápida para consultar no celular andando pela rua.</p>
+      </div>
+      <div class="tool-grid">
+        <article class="tool verde">
+          <div class="tool-head"><span class="tool-ico">🚆</span><h3><a href="./deslocamento/">Deslocamento e aplicativos</a></h3></div>
+          <p>Como se mover entre cidades, comprar bilhetes, usar IC card e rotas passo a passo.</p>
+          <div class="tool-foot"><span class="tool-go">Abrir →</span></div>
+        </article>
+        <article class="tool verde">
+          <div class="tool-head"><span class="tool-ico">📖</span><h3><a href="./guia-sobrevivencia/">Guia de sobrevivência</a></h3></div>
+          <p>Etiqueta prática, konbini, restaurantes e frases essenciais para falar na hora.</p>
+          <div class="tool-foot"><span class="tool-go">Abrir →</span></div>
+        </article>
+        <article class="tool depois">
+          <div class="tool-head"><span class="tool-ico">📔</span><h3><a href="/loja/revista/">Revista Memórias</a></h3></div>
+          <p>Para transformar fotos e lembranças em revista depois da viagem.</p>
+          <div class="tool-foot"><span class="tool-go">Conhecer →</span></div>
+        </article>
+      </div>
     </div>
   </section>
 
@@ -213,94 +403,301 @@ footer a{color:var(--pink);text-decoration:none;display:inline-flex;align-items:
     </span>
   </footer>
 </div>
-<nav class="fixo" id="fixo" aria-label="Atalhos">
-  <a class="btn pri" href="/travessia/calendario/">📅 Calendário</a>
-  <a class="btn sec" href="/travessia/ingressos/">🎟️ Ingressos</a>
+
+<!-- Modal de endereço em tela cheia (para mostrar ao taxista) -->
+<dialog class="taxi-dlg" id="dlgTaxi" aria-labelledby="taxiNome">
+  <div class="taxi-in">
+    <div style="display:flex;justify-content:space-between;align-items:center;gap:10px">
+      <strong id="taxiNome" style="font-family:var(--f-display);font-size:19px">Endereço</strong>
+      <button class="btn sm" type="button" id="taxiFecha">Fechar</button>
+    </div>
+    <p class="taxi-sub">Mostre esta tela para o taxista ou na recepção:</p>
+    <div class="taxi-addr" id="taxiAddr"></div>
+    <div class="barra">
+      <button class="btn pri sm" type="button" id="taxiCopiar">📋 Copiar endereço</button>
+      <a class="btn sm" id="taxiMaps" href="#" target="_blank" rel="noopener">🗺️ Abrir no Google Maps</a>
+    </div>
+  </div>
+</dialog>
+
+<nav class="fixo" aria-label="Atalhos rápidos">
+  <a class="btn pri" href="./calendario/">📅 Calendário</a>
+  <a class="btn" href="./ingressos/">🎟️ Ingressos</a>
 </nav>
+
+<script src="/travessia/agendamentos/regras.js?v=3"></script>
+<script src="/travessia/calendario/avisos.js?v=4"></script>
 <script>
-/* Datas da viagem: se o calendário já existe neste aparelho, só mostra o período (lê uniCalendario1, sem gravar).
-   Se não existe, guarda as datas em uniViagemDatas1 e o calendário abre com elas já preenchidas. */
 (function(){
-  function ler(k){try{return JSON.parse(localStorage.getItem(k)||'null');}catch(e){return null;}}
-  function ok(d){return typeof d==='string'&&/^\d{4}-\d{2}-\d{2}$/.test(d)&&!isNaN(new Date(d+'T00:00:00Z'));}
-  function br(d){var p=d.split('-');return p[2]+'/'+p[1]+'/'+p[0].slice(2);}
-  function dias(a,b){return Math.round((new Date(b+'T00:00:00Z')-new Date(a+'T00:00:00Z'))/864e5)+1;}
-  var f=document.getElementById('viagem'),form=document.getElementById('vForm'),vok=document.getElementById('vOk'),er=document.getElementById('vErr'),
-      i=document.getElementById('vIni'),j=document.getElementById('vFim');
-  if(!f)return;
-  var cal=ler('uniCalendario1'),pd=ler('uniViagemDatas1');
-  if(cal&&ok(cal.ini)&&ok(cal.fim)&&cal.fim>=cal.ini){
-    form.hidden=true;vok.hidden=false;
-    var hj=new Date(),hs=hj.getFullYear()+'-'+String(hj.getMonth()+1).padStart(2,'0')+'-'+String(hj.getDate()).padStart(2,'0');
-    var st=hs<cal.ini?'faltam '+(dias(hs,cal.ini)-1)+(dias(hs,cal.ini)-1===1?' dia':' dias'):(hs<=cal.fim?'viagem em andamento':'viagem concluída');
-    var nev=Array.isArray(cal.ev)?cal.ev.length:0;
-    vok.appendChild(document.createTextNode('📅 '+br(cal.ini)+' a '+br(cal.fim)+' · '+st+(nev?' · '+nev+(nev===1?' evento':' eventos'):'')));
-    var a=document.createElement('a');a.href='/travessia/calendario/';a.textContent='Abrir calendário →';vok.appendChild(a);
+'use strict';
+var D = /^\d{4}-\d{2}-\d{2}$/;
+var MES = ['jan','fev','mar','abr','mai','jun','jul','ago','set','out','nov','dez'];
+
+function $(s){ return document.querySelector(s); }
+function ler(k){ try{ return JSON.parse(localStorage.getItem(k)||'null'); }catch(e){ return null; } }
+function ok(d){ return typeof d==='string' && D.test(d) && !isNaN(new Date(d+'T00:00:00Z')); }
+function br(d){ var p=d.split('-'); return p[2]+'/'+p[1]+'/'+p[0].slice(2); }
+function brCurto(d){ var p=d.split('-'); return (+p[2])+' '+MES[+p[1]-1]; }
+function diasEntre(a,b){ return Math.round((new Date(b+'T00:00:00Z') - new Date(a+'T00:00:00Z'))/864e5); }
+function hojeIso(){ var h=new Date(); return h.getFullYear()+'-'+String(h.getMonth()+1).padStart(2,'0')+'-'+String(h.getDate()).padStart(2,'0'); }
+function limpaCoord(l){ return String(l||'').replace(/\s*@-?\d+\.\d+,-?\d+\.\d+.*$/,'').trim(); }
+function mapsUrl(l){ return 'https://www.google.com/maps/search/?api=1&query='+encodeURIComponent(limpaCoord(l)||l); }
+
+function lerViagem(){
+  var cal = ler('uniCalendario1');
+  if(cal && ok(cal.ini) && ok(cal.fim) && cal.fim >= cal.ini) return {fonte:'cal', cal:cal, ini:cal.ini, fim:cal.fim, titulo:cal.titulo||''};
+  var st = ler('travessiaStatusV1');
+  if(st && ok(st.ida) && ok(st.volta) && st.volta >= st.ida) return {fonte:'st', cal:cal, ini:st.ida, fim:st.volta, titulo:''};
+  var pd = ler('uniViagemDatas1');
+  if(pd && ok(pd.ini) && ok(pd.fim) && pd.fim >= pd.ini) return {fonte:'pd', cal:cal, ini:pd.ini, fim:pd.fim, titulo:pd.titulo||''};
+  return null;
+}
+
+function salvarDatasTodas(titulo, ini, fim){
+  try{ localStorage.setItem('uniViagemDatas1', JSON.stringify({titulo:titulo, ini:ini, fim:fim})); }catch(e){}
+  try{
+    var cal = ler('uniCalendario1') || {titulo:'', ini:'', fim:'', fuso:'auto', chegada:'', atualizado:'', ev:[], orc:{cot:'',pax:1,t:{}}, ok:{}, pas:[], lista:[], qi:{}};
+    cal.titulo = titulo || cal.titulo || '';
+    cal.ini = ini; cal.fim = fim;
+    cal.atualizado = new Date().toISOString();
+    localStorage.setItem('uniCalendario1', JSON.stringify(cal));
+  }catch(e){}
+  try{
+    var st = ler('travessiaStatusV1') || {itens:{}};
+    st.ida = ini; st.volta = fim;
+    if(!st.itens) st.itens = {};
+    localStorage.setItem('travessiaStatusV1', JSON.stringify(st));
+  }catch(e){}
+}
+
+function abrirTaxi(nome, endereco){
+  var dlg = $('#dlgTaxi');
+  $('#taxiNome').textContent = '🏨 ' + (nome || 'Hospedagem');
+  $('#taxiAddr').textContent = endereco;
+  $('#taxiMaps').href = mapsUrl(endereco);
+  $('#taxiCopiar').onclick = function(){
+    var b = this;
+    if(navigator.clipboard && navigator.clipboard.writeText){
+      navigator.clipboard.writeText(endereco).then(function(){ b.textContent='Copiado ✓'; setTimeout(function(){ b.textContent='📋 Copiar endereço'; }, 1800); });
+    }
+  };
+  if(dlg.showModal) dlg.showModal(); else dlg.setAttribute('open','');
+}
+$('#taxiFecha').addEventListener('click', function(){ var d=$('#dlgTaxi'); if(d.close) d.close(); else d.removeAttribute('open'); });
+$('#dlgTaxi').addEventListener('click', function(e){ if(e.target === this) this.close(); });
+
+function render(){
+  var v = lerViagem();
+  var setup = $('#secSetup'), cab = $('#secCabine');
+  if(!v){
+    setup.hidden = false; cab.hidden = true;
+    $('#sCancel').hidden = true;
+    $('#sExemplo').hidden = false;
     return;
   }
-  if(pd&&ok(pd.ini)&&ok(pd.fim)){i.value=pd.ini;j.value=pd.fim;}
-  f.addEventListener('submit',function(ev){
-    ev.preventDefault();
-    if(!ok(i.value)||!ok(j.value)){er.textContent='Escolha o primeiro e o último dia da viagem.';return;}
-    if(j.value<i.value){er.textContent='O último dia precisa ser igual ou depois do primeiro.';return;}
-    if(dias(i.value,j.value)>541){er.textContent='Escolha um período de até 18 meses.';return;}
-    er.textContent='';
-    try{localStorage.setItem('uniViagemDatas1',JSON.stringify({ini:i.value,fim:j.value}));}catch(e){}
-    location.href='/travessia/calendario/';
-  });
-})();
-</script>
-<script>
-/* Só leitura: lê o que o calendário, os ingressos e a burocracia já guardaram NESTE aparelho. Não grava nada. Tudo entra na tela com textContent. */
-(function(){
-  function ler(k){try{return JSON.parse(localStorage.getItem(k)||'null');}catch(e){return null;}}
-  var D=/^\d{4}-\d{2}-\d{2}$/;
-  var cal=ler('uniCalendario1'),st=ler('travessiaStatusV1'),bur=ler('travessiaBurocracia1');
-  var ev=cal&&Array.isArray(cal.ev)?cal.ev.filter(function(e){return e&&D.test(e.data);}):[];
-  var itens=st&&st.itens&&typeof st.itens==='object'?st.itens:{};
-  var h=new Date(),hojeS=h.getFullYear()+'-'+String(h.getMonth()+1).padStart(2,'0')+'-'+String(h.getDate()).padStart(2,'0');
-  var qi=cal&&cal.qi&&typeof cal.qi==='object'&&Object.keys(cal.qi).length?cal.qi:(ler('agQueroIr')||{});
-  var pz={};
-  Object.keys(itens).forEach(function(id){var i=itens[id];if(i&&i.status==='ganhei'&&D.test(i.prazo||''))pz[id]=i.prazo;});
-  Object.keys(qi).forEach(function(id){var q=qi[id];if(!q)return;if(q.st==='ganhei'&&D.test(q.prazo||''))pz[id]=q.prazo;else if(q.st)delete pz[id];});
-  var prazos=Object.keys(pz).filter(function(id){return pz[id]>=hojeS;}).map(function(id){return {id:id,prazo:pz[id]};}).sort(function(a,b){return a.prazo<b.prazo?-1:1;});
-  function br(d){var p=d.split('-');return p[2]+'/'+p[1];}
-  function selo(card,txt){var c=document.querySelector('.tool a[href="'+card+'"]');if(!c||!txt)return;var t=c.closest('.tool'),e=document.createElement('em');e.className='bd';e.textContent=txt;t.appendChild(e);}
-  /* selos nos cards */
-  if(ev.length)selo('/travessia/calendario/',ev.length+(ev.length===1?' evento':' eventos'));
-  var nb=bur?Object.keys(bur).filter(function(k){return bur[k];}).length:0;
-  if(nb)selo('/travessia/burocracia/',nb+(nb===1?' item feito':' itens feitos'));
-  var nq=Object.keys(qi).filter(function(k){return qi[k]&&qi[k].st;}).length;
-  if(prazos.length)selo('/travessia/ingressos/',prazos.length===1?'prazo em '+br(prazos[0].prazo):prazos.length+' prazos · o 1º em '+br(prazos[0].prazo));
-  else if(nq)selo('/travessia/ingressos/',nq+(nq===1?' na sua lista':' na sua lista'));
-  /* linha do prazo mais próximo, perto das datas */
-  if(prazos.length){
-    var pe=document.getElementById('onde-prazo');
-    function mostrar(nome){
-      pe.textContent='🎟️ Prazo de pagamento mais próximo: '+(nome?nome+' · ':'')+br(prazos[0].prazo)+(prazos.length>1?' (+'+(prazos.length-1)+' depois) ':' ');
-      var a=document.createElement('a');a.href='/travessia/ingressos/';a.textContent='Abrir meus ingressos →';pe.appendChild(a);pe.hidden=false;
-    }
-    mostrar('');
-    var s=document.createElement('script');s.src='/travessia/agendamentos/regras.js?v=3';
-    s.onload=function(){var a=(window.AGENDA_REGRAS||[]).filter(function(x){return x.id===prazos[0].id;})[0];if(a&&a.nome)mostrar(a.nome);};
-    document.head.appendChild(s);
+  setup.hidden = true; cab.hidden = false;
+
+  var hj = hojeIso();
+  var dur = diasEntre(v.ini, v.fim) + 1;
+  $('#cTitulo').textContent = v.titulo || 'Minha viagem ao Japão';
+  $('#cDatas').textContent = '📅 ' + br(v.ini) + ' a ' + br(v.fim) + ' · ' + dur + (dur===1?' dia':' dias');
+
+  var stEl = $('#cStatus');
+  if(hj < v.ini){
+    var faltam = diasEntre(hj, v.ini);
+    stEl.textContent = faltam === 1 ? 'Falta 1 dia!' : 'Faltam ' + faltam + ' dias';
+    stEl.className = 'c-badge rosa';
+  } else if(hj <= v.fim){
+    var diaN = diasEntre(v.ini, hj) + 1;
+    stEl.textContent = '✈️ Em andamento · Dia ' + diaN + ' de ' + dur;
+    stEl.className = 'c-badge verde';
+  } else {
+    stEl.textContent = '✓ Viagem concluída';
+    stEl.className = 'c-badge ouro';
   }
+
+  var cal = v.cal || {};
+  var evs = Array.isArray(cal.ev) ? cal.ev.filter(function(e){ return e && ok(e.data); }) : [];
+
+  /* 1. Hospedagem / Endereço de hoje ou próxima */
+  var hosps = evs.filter(function(e){ return e.tipo === 'hosp'; }).sort(function(a,b){ return a.data < b.data ? -1 : 1; });
+  var hospAtiva = hosps.find(function(e){ return e.data <= hj && hj < (e.dataFim || e.data) || (e.data === hj && !e.dataFim); });
+  var hospProx = hospAtiva || hosps.find(function(e){ return e.data >= hj; }) || hosps[0];
+  var hFoot = $('#vHospFoot');
+  hFoot.innerHTML = '';
+  if(hospProx){
+    var addr = limpaCoord(hospProx.local || '');
+    $('#vHospK').textContent = hospAtiva ? '🏨 Onde você dorme hoje' : '🏨 Próxima hospedagem';
+    $('#vHospBd').hidden = false;
+    $('#vHospBd').textContent = hosps.length + (hosps.length===1 ? ' estadia' : ' estadias');
+    $('#vHospVal').textContent = hospProx.titulo || 'Hospedagem';
+    $('#vHospSub').textContent = (addr ? addr + ' · ' : '') + brCurto(hospProx.data) + (hospProx.dataFim ? ' → ' + brCurto(hospProx.dataFim) : '');
+    if(addr){
+      var bTax = document.createElement('button'); bTax.type='button'; bTax.className='btn xs soft'; bTax.textContent='🚕 Mostrar endereço';
+      bTax.onclick = function(){ abrirTaxi(hospProx.titulo, addr); };
+      hFoot.appendChild(bTax);
+      var aMap = document.createElement('a'); aMap.className='btn xs'; aMap.href=mapsUrl(addr); aMap.target='_blank'; aMap.rel='noopener'; aMap.textContent='🗺️ Maps';
+      hFoot.appendChild(aMap);
+    }
+    var aLog = document.createElement('a'); aLog.className='vivo-link'; aLog.href='./calendario/#logistica'; aLog.textContent='Ver todas →';
+    hFoot.appendChild(aLog);
+    $('#bLogCard').textContent = hosps.length + (hosps.length===1 ? ' endereço salvo' : ' endereços salvos');
+  } else {
+    $('#vHospK').textContent = '🏨 Hospedagem & endereço';
+    $('#vHospBd').hidden = true;
+    $('#vHospVal').textContent = 'Nenhuma hospedagem cadastrada';
+    $('#vHospSub').textContent = 'Cadastre onde você vai dormir em cada dia para ter o endereço sempre à mão.';
+    var aAdd = document.createElement('a'); aAdd.className='vivo-link'; aAdd.href='./calendario/'; aAdd.textContent='➕ Adicionar no calendário →';
+    hFoot.appendChild(aAdd);
+  }
+
+  /* 2. Ingressos & Loterias */
+  var qi = (cal.qi && Object.keys(cal.qi).length) ? cal.qi : (ler('agQueroIr') || {});
+  var stOld = ler('travessiaStatusV1');
+  var itensOld = (stOld && stOld.itens && typeof stOld.itens === 'object') ? stOld.itens : {};
+  var regras = window.AGENDA_REGRAS || [];
+  var nomeRegra = function(id){ var r = regras.find(function(x){ return x.id===id; }); return r ? r.nome : id; };
+
+  var prazos = [], verifs = [], comprados = 0, acomp = 0;
+  var vistos = {};
+  Object.keys(qi).forEach(function(id){
+    var q = qi[id]; if(!q) return;
+    vistos[id] = 1;
+    if(q.ir || q.st) acomp++;
+    if(q.st === 'comprado') comprados++;
+    if(q.st === 'ganhei' && ok(q.prazo) && q.prazo >= hj) prazos.push({id:id, data:q.prazo});
+    if(q.st === 'inscrito' && ok(q.verif) && q.verif >= hj) verifs.push({id:id, data:q.verif});
+  });
+  Object.keys(itensOld).forEach(function(id){
+    if(vistos[id]) return;
+    var i = itensOld[id]; if(!i) return;
+    if(i.status) acomp++;
+    if(i.status === 'comprado') comprados++;
+    if(i.status === 'ganhei' && ok(i.prazo) && i.prazo >= hj) prazos.push({id:id, data:i.prazo});
+  });
+  var ingCal = evs.filter(function(e){ return e.tipo === 'ingresso'; }).length;
+  prazos.sort(function(a,b){ return a.data < b.data ? -1 : 1; });
+  verifs.sort(function(a,b){ return a.data < b.data ? -1 : 1; });
+
+  if(prazos.length){
+    $('#vIngBd').hidden = false; $('#vIngBd').className = 'c-badge urg'; $('#vIngBd').textContent = 'Prazo correndo';
+    $('#vIngVal').textContent = nomeRegra(prazos[0].id) + ' · até ' + brCurto(prazos[0].data);
+    $('#vIngSub').textContent = 'Você foi sorteado! Garanta o pagamento antes do prazo.' + (prazos.length>1 ? ' (+'+(prazos.length-1)+' prazo depois)' : '');
+    $('#bIngCard').textContent = 'Prazo em ' + brCurto(prazos[0].data);
+    $('#bIngCard').className = 'c-badge urg';
+  } else if(verifs.length){
+    $('#vIngBd').hidden = false; $('#vIngBd').className = 'c-badge ouro'; $('#vIngBd').textContent = 'Na fila do sorteio';
+    $('#vIngVal').textContent = 'Conferir ' + nomeRegra(verifs[0].id) + ' até ' + brCurto(verifs[0].data);
+    $('#vIngSub').textContent = comprados + ' em mãos · ' + acomp + ' acompanhando no cronograma.';
+    $('#bIngCard').textContent = acomp + ' acompanhando';
+  } else if(acomp || ingCal){
+    var totEmMaos = comprados + ingCal;
+    $('#vIngBd').hidden = false; $('#vIngBd').className = 'c-badge verde'; $('#vIngBd').textContent = totEmMaos + ' agendado' + (totEmMaos===1?'':'s');
+    $('#vIngVal').textContent = acomp ? (acomp + ' atraç' + (acomp===1?'ão':'ões') + ' no seu cronograma') : (ingCal + ' ingresso' + (ingCal===1?'':'s') + ' no calendário');
+    $('#vIngSub').textContent = 'Acompanhe aberturas em horário de Brasília e status de cada ingresso.';
+    $('#bIngCard').textContent = (acomp || ingCal) + ' na sua lista';
+  } else {
+    $('#vIngBd').hidden = true;
+    $('#vIngVal').textContent = 'Cronograma pronto para as suas datas';
+    $('#vIngSub').textContent = 'Veja quando abrem loterias e vendas (em Brasília) para os meses da sua viagem.';
+  }
+
+  /* 3. Próximo compromisso no calendário */
+  var evFut = evs.filter(function(e){ return e.data >= hj && e.tipo !== 'hosp'; })
+    .sort(function(a,b){ return (a.data + (a.hora||'99:99')) < (b.data + (b.hora||'99:99')) ? -1 : 1; });
+  if(evFut.length){
+    var p = evFut[0];
+    $('#vEvBd').hidden = false; $('#vEvBd').textContent = evs.length + (evs.length===1?' item':' itens');
+    $('#vEvVal').textContent = p.titulo;
+    $('#vEvSub').textContent = brCurto(p.data) + (p.hora ? ' às ' + p.hora : '') + (p.local ? ' · ' + limpaCoord(p.local) : '');
+    $('#bCalCard').textContent = evs.length + (evs.length===1?' evento':' eventos');
+  } else if(evs.length){
+    $('#vEvBd').hidden = false; $('#vEvBd').textContent = evs.length + ' itens';
+    $('#vEvVal').textContent = evs.length + ' evento' + (evs.length===1?'':'s') + ' registrado' + (evs.length===1?'':'s');
+    $('#vEvSub').textContent = 'Abra o calendário para ver sua linha do tempo completa.';
+    $('#bCalCard').textContent = evs.length + ' eventos';
+  } else {
+    $('#vEvBd').hidden = true;
+    $('#vEvVal').textContent = 'Seu roteiro está pronto para preencher';
+    $('#vEvSub').textContent = 'Adicione voos, trens, passeios e reservas ou importe confirmações.';
+  }
+
+  /* 4. Burocracia */
+  var bur = ler('travessiaBurocracia1');
+  var nb = bur ? Object.keys(bur).filter(function(k){ return !!bur[k]; }).length : 0;
+  if(nb){
+    $('#vBurBd').hidden = false; $('#vBurBd').textContent = nb + (nb===1?' feito':' feitos');
+    $('#vBurVal').textContent = nb + (nb===1?' item resolvido':' itens resolvidos');
+    $('#vBurSub').textContent = 'Continue conferindo passaporte, visto, Visit Japan Web e Welcome Suica.';
+    $('#bBurCard').textContent = nb + (nb===1?' feito':' feitos');
+    $('#bBurCard').className = 'c-badge verde';
+  } else {
+    $('#vBurBd').hidden = true;
+    $('#vBurVal').textContent = 'Checklist antes de embarcar';
+    $('#vBurSub').textContent = 'Passaporte, visto, Visit Japan Web e Welcome Suica — com links oficiais.';
+  }
+}
+
+/* Form de setup / editar datas */
+$('#fSetup').addEventListener('submit', function(ev){
+  ev.preventDefault();
+  var tit = ($('#sTitulo').value || '').trim();
+  var ini = $('#sIni').value, fim = $('#sFim').value;
+  var err = $('#sErr');
+  if(!ok(ini) || !ok(fim)){ err.textContent = 'Escolha a data de ida e a data de volta.'; return; }
+  if(fim < ini){ err.textContent = 'A data de volta precisa ser igual ou depois da ida.'; return; }
+  if(diasEntre(ini, fim) > 540){ err.textContent = 'Escolha um período de até 18 meses.'; return; }
+  err.textContent = '';
+  salvarDatasTodas(tit, ini, fim);
+  render();
+});
+
+$('#bEditarDatas').addEventListener('click', function(){
+  var v = lerViagem();
+  if(v){ $('#sTitulo').value = v.titulo || ''; $('#sIni').value = v.ini; $('#sFim').value = v.fim; }
+  $('#tSetup').textContent = 'Ajustar datas da viagem';
+  $('#sBtn').textContent = 'Salvar alterações';
+  $('#sCancel').hidden = false;
+  $('#sExemplo').hidden = true;
+  $('#secSetup').hidden = false;
+  $('#secCabine').hidden = true;
+});
+
+$('#sCancel').addEventListener('click', function(){ render(); });
+
+/* Exemplo genérico para qualquer pessoa testar o sistema sem dados pessoais */
+$('#sExemplo').addEventListener('click', function(){
+  var base = new Date(); base.setDate(base.getDate() + 75);
+  var iso = function(d){ return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0'); };
+  var dAdd = function(n){ var x = new Date(base.getTime()); x.setDate(x.getDate()+n); return iso(x); };
+  var ini = dAdd(0), fim = dAdd(9);
+  var ex = {
+    titulo: 'Japão de Exemplo (10 dias)',
+    ini: ini, fim: fim, fuso: 'auto', chegada: 'ex-voo', atualizado: new Date().toISOString(),
+    ev: [
+      {id:'ex-voo', titulo:'Chegada no Aeroporto de Haneda', tipo:'voo', data:ini, hora:'14:30', fuso:'jp', local:'Haneda Airport Terminal 3, Tóquio', detalhes:'Retirar Welcome Suica / ativar eSIM.'},
+      {id:'ex-h1', titulo:'Hotel em Shinjuku (Exemplo)', tipo:'hosp', data:ini, dataFim:dAdd(5), hora:'15:00', fuso:'jp', local:'Shinjuku-ku, Tokyo 160-0022, Japão', detalhes:'5 noites em Tóquio.'},
+      {id:'ex-i1', titulo:'Shibuya Sky (Pôr do sol)', tipo:'ingresso', data:dAdd(2), hora:'16:30', fuso:'jp', local:'渋谷スカイ, Tóquio', detalhes:'Chegar 15 min antes com o QR code.'},
+      {id:'ex-tr', titulo:'Shinkansen Tóquio → Kyoto', tipo:'transp', data:dAdd(5), hora:'09:30', fuso:'jp', local:'Tokyo Station → Kyoto Station', detalhes:'Assento lado E para tentar ver o Monte Fuji.'},
+      {id:'ex-h2', titulo:'Hotel perto da Estação de Kyoto (Exemplo)', tipo:'hosp', data:dAdd(5), dataFim:fim, hora:'15:00', fuso:'jp', local:'Shimogyo Ward, Kyoto 600-8216, Japão', detalhes:'4 noites em Kyoto.'}
+    ],
+    orc:{cot:'',pax:1,t:{}}, ok:{}, pas:[], lista:[],
+    qi:{ 'shibuya-sky':{ir:true, data:dAdd(2), st:'comprado', salvo:true, t:Date.now()}, 'ghibli-mitaka':{ir:true, data:dAdd(3), t:Date.now()} }
+  };
+  try{
+    localStorage.setItem('uniCalendario1', JSON.stringify(ex));
+    localStorage.setItem('uniViagemDatas1', JSON.stringify({titulo:ex.titulo, ini:ini, fim:fim}));
+    localStorage.setItem('travessiaStatusV1', JSON.stringify({ida:ini, volta:fim, itens:{}}));
+  }catch(e){}
+  render();
+});
+
+window.addEventListener('storage', render);
+render();
 })();
 </script>
-<script>
-/* Barra de atalhos do celular: só aparece depois que a pessoa passou do bloco do calendário, para não repetir o botão. */
-(function(){var f=document.getElementById('fixo'),d=document.querySelector('.destaque');if(!f||!d||!('IntersectionObserver' in window))return;
-new IntersectionObserver(function(e){var x=e[0];f.classList.toggle('on',!x.isIntersecting&&x.boundingClientRect.top<0);}).observe(d);})();
-</script>
-<script defer src="/menu-ativo.js?v=2"></script><script defer src="/voltar-global.js?v=5"></script>
+<script defer src="/menu-ativo.js?v=2"></script>
+<script defer src="/voltar-global.js?v=5"></script>
 <script src="/entrar.js" defer></script>
-<script>
-(function(){
-  var d=document.getElementById('calEmb'); if(!d)return;
-  try{ if(localStorage.getItem('uniCalEmbAberto')==='0')d.open=false; }catch(e){}
-  d.addEventListener('toggle',function(){ try{localStorage.setItem('uniCalEmbAberto',d.open?'1':'0');}catch(e){} });
-  try{ var c=JSON.parse(localStorage.getItem('uniCalendario1')||'null'); if(c&&c.ini&&c.fim){ var f=function(x){var p=x.split('-');return p[2]+'/'+p[1];}; document.getElementById('calResumo').textContent='· '+f(c.ini)+' a '+f(c.fim)+(Array.isArray(c.ev)&&c.ev.length?' · '+c.ev.length+' eventos':''); } }catch(e){}
-})();
-</script>
 </body>
 </html>

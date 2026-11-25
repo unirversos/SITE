@@ -1,0 +1,2000 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="robots" content="noindex">
+<title>Calendário &amp; Endereços · Unirversos Travessia</title>
+<meta name="description" content="Monte o calendário da sua viagem ao Japão, dia a dia, com endereço de cada hospedagem e ingressos agendados.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@500;700;800&family=Zen+Maru+Gothic:wght@400;500;700&display=swap">
+<link rel="stylesheet" href="../cosmos.css?v=1">
+<style>
+:root{
+  --paper:#fdf6f4; --card:#ffffff; --ink:#3a2b38; --muted:#6b5a67; --line:#ecdadd;
+  --pink:#c23f5e; --pink-d:#a8344f; --pink-soft:#fbeef0;
+  --gold:#8e6a1f; --gold-soft:#fbf2df;
+  --sage:#4f7461; --sage-soft:#e8efe8;
+  --lavender:#b7a6dc; --red:#a8344f;
+  --f-display:"Baloo 2","Zen Maru Gothic",system-ui,sans-serif;
+  --f-body:"Zen Maru Gothic","Hiragino Maru Gothic ProN","Noto Sans JP",system-ui,sans-serif;
+  --r:18px;
+  --shadow:0 8px 22px -18px rgba(58,43,56,.35);
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth;-webkit-text-size-adjust:100%}
+@media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}*{transition:none!important}}
+body{
+  margin:0; background:var(--paper); color:var(--ink); font-family:var(--f-body);
+  font-size:15.5px; line-height:1.58;
+  background-image:radial-gradient(color-mix(in srgb,var(--line) 75%,transparent) 1.1px,transparent 1.2px);
+  background-size:24px 24px;
+  padding-left:max(14px,env(safe-area-inset-left,0px));
+  padding-right:max(14px,env(safe-area-inset-right,0px));
+  padding-block:14px 40px;
+}
+a{color:inherit}
+a:focus-visible,button:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-visible,summary:focus-visible{
+  outline:3px solid var(--lavender); outline-offset:2px; border-radius:8px;
+}
+[hidden]{display:none!important}
+.wrap{max-width:1100px; margin:0 auto; display:grid; gap:18px}
+.wrap>*{min-width:0}
+
+/* barra do site */
+.sitebar{display:flex; flex-wrap:wrap; justify-content:space-between; align-items:center; gap:8px 18px}
+.logo{font-family:var(--f-display); font-weight:800; font-size:19px; letter-spacing:.14em; text-decoration:none; display:inline-flex; align-items:center; min-height:40px}
+.logo span{color:var(--pink)}
+.navlinks{display:flex; flex-wrap:wrap; align-items:center; gap:6px 18px; font-size:14px}
+.navlinks a{text-decoration:none; color:var(--muted); white-space:nowrap}
+.navlinks a:hover{color:var(--pink)}
+.navlinks a[aria-current="page"]{color:var(--ink); border-bottom:2px solid var(--pink)}
+
+.crumb{margin:0; font-size:13.5px; color:var(--muted)}
+.crumb a{color:var(--pink); text-decoration:none; font-weight:700}
+.crumb a:hover{text-decoration:underline}
+
+/* hero (só aparece no setup inicial) */
+.hero{display:grid; gap:8px; max-width:700px}
+.eyebrow{font-size:12px; letter-spacing:.18em; text-transform:uppercase; color:var(--gold); font-weight:700; margin:0}
+h1{font-family:var(--f-display); font-weight:800; font-size:clamp(30px,5vw,46px); line-height:1.06; margin:0; text-wrap:balance}
+h1 em{font-style:normal; color:var(--pink)}
+.lede{margin:0; max-width:58ch; color:var(--muted)}
+
+/* botões */
+.btn{
+  font:inherit; font-family:var(--f-display); font-weight:700; font-size:14.5px;
+  cursor:pointer; display:inline-flex; align-items:center; justify-content:center; gap:6px;
+  text-decoration:none; padding:8px 15px; min-height:40px; border-radius:999px;
+  border:1.5px solid var(--line); background:var(--card); color:var(--ink); line-height:1.25;
+  transition:border-color .15s,background .15s,transform .1s;
+}
+.btn:hover{border-color:var(--pink)}
+.btn:active{transform:translateY(1px)}
+.btn.pri{background:var(--pink); border-color:var(--pink); color:#fff}
+.btn.pri:hover{background:var(--pink-d); border-color:var(--pink-d)}
+.btn.soft{background:var(--pink-soft); border-color:transparent; color:var(--pink-d)}
+.btn.soft:hover{border-color:var(--pink)}
+.btn.sm{padding:4px 11px; min-height:34px; font-size:13px}
+.btn.xs{padding:2px 9px; min-height:28px; font-size:12px}
+.btn.perigo{color:var(--red)}
+.btn[aria-pressed="true"]{background:var(--ink); border-color:var(--ink); color:#fff}
+.btn[disabled]{opacity:.45; cursor:not-allowed}
+
+/* painéis e formulários */
+.painel{background:var(--card); border:1.5px solid var(--line); border-radius:var(--r); padding:18px; display:grid; gap:14px; box-shadow:var(--shadow)}
+.painel h2{font-family:var(--f-display); font-weight:800; font-size:22px; line-height:1.2; margin:0}
+.campos{display:grid; grid-template-columns:repeat(auto-fit,minmax(190px,1fr)); gap:12px}
+.f{display:grid; gap:4px; font-size:13.5px; color:var(--muted); min-width:0}
+.f input,.f select,.f textarea{font:inherit; font-size:15.5px; color:var(--ink); border:1.5px solid var(--line); border-radius:12px; padding:8px 11px; background:#fff; min-width:0; width:100%}
+.f textarea{min-height:84px; resize:vertical}
+.f small{font-size:12.5px; color:var(--muted)}
+.erro{color:var(--red); font-weight:700; font-size:13.5px; margin:0; min-height:0}
+.erro:empty{display:none}
+.barra{display:flex; flex-wrap:wrap; gap:8px; align-items:center}
+.nota{font-size:13.5px; color:var(--muted); margin:0}
+
+/* CABEÇALHO COMPACTO DA VIAGEM */
+.trip-head{
+  display:flex; flex-wrap:wrap; gap:10px 16px; justify-content:space-between; align-items:center;
+  background:var(--card); border:1.5px solid var(--line); border-radius:var(--r);
+  padding:12px 16px; box-shadow:var(--shadow);
+}
+.trip-info{display:grid; gap:2px; min-width:0}
+.trip-info b{font-family:var(--f-display); font-weight:800; font-size:clamp(19px,2.4vw,23px); line-height:1.15}
+.trip-info span{font-size:13.5px; color:var(--muted)}
+.trip-meta{display:flex; flex-wrap:wrap; gap:8px; align-items:center}
+#nuvem{
+  font-size:12.5px; color:var(--muted); background:var(--paper); border:1px solid var(--line);
+  border-radius:999px; padding:4px 11px; display:inline-flex; align-items:center; gap:6px; flex-wrap:wrap;
+}
+#nuvem:empty{display:none}
+#nuvem button,#nuvemSetup button{
+  font:inherit; font-size:12.5px; font-weight:700; color:var(--pink-d);
+  background:none; border:0; padding:0; cursor:pointer; text-decoration:underline;
+}
+
+/* FAIXA DE PULSO (RESUMO CLICÁVEL DE 1 LINHA) */
+.pulso{display:flex; flex-wrap:wrap; gap:7px; align-items:center}
+.pulso:empty{display:none}
+.pill{
+  font:inherit; font-size:13px; font-weight:700; cursor:pointer;
+  display:inline-flex; align-items:center; gap:5px;
+  border:1.5px solid var(--line); background:var(--card); color:var(--ink);
+  border-radius:999px; padding:4px 12px; min-height:34px; transition:border-color .15s,background .15s;
+}
+.pill:hover{border-color:var(--pink)}
+.pill.urg{background:#fbe6eb; border-color:#e89db0; color:var(--red)}
+.pill.est{background:#eef6f1; border-color:#c6ddd0; color:#2f5d46}
+.pill.pas{background:var(--gold-soft); border-color:#e5d3a3; color:#745414}
+
+/* BARRA PRINCIPAL: ABAS INTERNAS + AÇÕES RÁPIDAS */
+.appbar{
+  display:flex; flex-wrap:wrap; gap:10px 14px; align-items:center; justify-content:space-between;
+  position:sticky; top:0; z-index:20; padding:8px 0;
+  background:color-mix(in srgb,var(--paper) 92%,transparent); backdrop-filter:blur(6px);
+}
+/* "Quero fazer" dentro da aba Ideias: o título não é cabeçalho de janela */
+#ideiasListaBox .dlg-top{position:static; background:none; border:0; padding:0; top:auto}
+#ideiasListaBox .dlg-top h2{font-size:20px; margin:0}
+.tabs{
+  display:inline-grid; grid-auto-flow:column; grid-auto-columns:minmax(0,1fr); gap:4px;
+  background:color-mix(in srgb,var(--line) 48%,#fff); border:1.5px solid var(--line);
+  border-radius:999px; padding:4px;
+}
+.tab{
+  font:inherit; font-family:var(--f-display); font-weight:700; font-size:14px;
+  border:0; background:transparent; color:var(--muted); cursor:pointer;
+  padding:7px 14px; min-height:38px; border-radius:999px;
+  display:inline-flex; align-items:center; justify-content:center; gap:6px; white-space:nowrap;
+  transition:background .15s,color .15s,box-shadow .15s;
+}
+.tab:hover{color:var(--ink)}
+.tab[aria-selected="true"]{background:var(--card); color:var(--ink); box-shadow:0 3px 10px -6px rgba(58,43,56,.45)}
+.tab .bd{
+  font-size:11px; font-weight:800; line-height:1; padding:2px 6px; border-radius:999px;
+  background:var(--pink-soft); color:var(--pink-d);
+}
+.tab .bd.urg{background:var(--pink); color:#fff}
+.tab .bd:empty{display:none}
+.quick-desk{display:flex; gap:8px; align-items:center}
+
+/* CONTEÚDO DAS ABAS */
+.tabpane{display:grid; gap:14px}
+
+/* SUB-BARRA DO ROTEIRO */
+.rot-bar{
+  display:grid; grid-template-columns:auto 1fr auto; gap:10px 14px; align-items:center;
+  background:var(--card); border:1.5px solid var(--line); border-radius:16px; padding:8px 12px;
+}
+.seg{display:inline-flex; background:var(--paper); border:1px solid var(--line); border-radius:999px; padding:3px; gap:2px}
+.seg .btn{border:0; background:transparent; min-height:32px; padding:4px 12px; font-size:13.5px}
+.seg .btn[aria-pressed="true"]{background:var(--ink); color:#fff}
+.nav{display:flex; align-items:center; justify-content:center; gap:10px}
+.nav h2{font-family:var(--f-display); font-weight:800; font-size:clamp(19px,2.4vw,24px); margin:0; text-align:center; line-height:1.15; min-width:170px}
+.nav .btn{min-width:36px; min-height:36px; padding:0}
+.nav h2::first-letter,.dlg-in h2::first-letter,.lista h3::first-letter{text-transform:uppercase}
+
+/* LEGENDA RECOLHÍVEL */
+.leg-drop{position:relative}
+.leg-drop summary{
+  list-style:none; cursor:pointer; font-family:var(--f-display); font-weight:700; font-size:13.5px;
+  color:var(--muted); padding:6px 12px; border-radius:999px; border:1.5px solid var(--line); background:var(--paper);
+  display:inline-flex; align-items:center; gap:5px; user-select:none;
+}
+.leg-drop summary::-webkit-details-marker{display:none}
+.leg-drop[open] summary{border-color:var(--pink); color:var(--ink)}
+.leg-pop{
+  margin-top:8px; background:var(--card); border:1.5px solid var(--line); border-radius:14px;
+  padding:10px 14px; display:grid; gap:6px;
+}
+.legenda{display:flex; flex-wrap:wrap; gap:6px 14px; font-size:13px; color:var(--muted)}
+.legenda i{display:inline-block; width:10px; height:10px; border-radius:3px; background:var(--c); margin-right:5px; vertical-align:-1px}
+
+/* GRADE DO MÊS */
+.mes-card{background:var(--card); border:1.5px solid var(--line); border-radius:var(--r); padding:12px; box-shadow:var(--shadow)}
+.mes{display:grid; grid-template-columns:repeat(7,minmax(0,1fr)); gap:5px}
+.mh{text-align:center; font-size:11.5px; font-weight:700; color:var(--muted); text-transform:uppercase; letter-spacing:.06em; padding-bottom:4px}
+.dia{
+  font:inherit; text-align:left; cursor:pointer; color:var(--ink);
+  background:var(--card); border:1.5px solid color-mix(in srgb,var(--line) 80%,#fff);
+  border-radius:12px; min-height:106px; padding:6px; display:flex; flex-direction:column; gap:3px; overflow:hidden; min-width:0;
+  transition:border-color .12s,transform .12s;
+}
+.dia:hover{border-color:var(--pink); transform:translateY(-1px)}
+.dia.dentro{background:var(--pink-soft); border-color:#e9ccd3}
+.dia.outro{background:transparent; border-style:dashed; color:var(--muted); opacity:.72}
+.dia.hoje{border-color:var(--pink); border-width:2.5px}
+.dia .n{display:flex; justify-content:space-between; align-items:baseline; gap:4px; font-weight:700; font-size:13.5px}
+.dia .n small{font-weight:500; font-size:10.5px; color:var(--muted)}
+.chip{display:block; font-size:11.5px; line-height:1.35; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; border-left:3px solid var(--c); background:color-mix(in srgb,var(--c) 12%,#fff); border-radius:5px; padding:1px 5px; color:var(--ink)}
+.hband{display:block; font-size:11px; line-height:1.3; background:#e3efe8; color:#2f5d46; border-radius:5px; padding:1px 5px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis}
+.mais-n{font-size:11px; font-weight:700; color:var(--pink-d)}
+.dots{display:none; flex-wrap:wrap; gap:3px; margin-top:auto}
+.dots i{width:7px; height:7px; border-radius:50%; background:var(--c)}
+
+/* VISÃO EM LISTA + CARDS ENXUTOS */
+.lista{display:grid; gap:16px}
+.lista .grp{display:grid; gap:8px}
+.lista h3{font-family:var(--f-display); font-weight:800; font-size:18px; margin:0; padding-bottom:4px; border-bottom:1px solid var(--line)}
+.vazio{border:1.5px dashed var(--line); border-radius:16px; padding:24px 16px; text-align:center; color:var(--muted); background:rgba(255,255,255,.55)}
+
+.evc{
+  border:1.5px solid var(--line); border-left:5px solid var(--c); border-radius:14px;
+  background:#fff; padding:10px 13px; display:grid; gap:4px;
+}
+.evc-top{display:flex; justify-content:space-between; align-items:flex-start; gap:8px}
+.evc-main{display:grid; gap:3px; min-width:0; flex:1}
+.evc .hora{font-size:12.5px; font-weight:700; color:var(--muted); display:flex; flex-wrap:wrap; gap:6px; align-items:center}
+.evc .tag-cheg{background:var(--sage-soft); color:var(--sage); padding:1px 8px; border-radius:999px; font-size:11.5px}
+.evc h4{font-family:var(--f-display); font-weight:700; font-size:17px; line-height:1.25; margin:0}
+.evc .loc-row{display:flex; flex-wrap:wrap; gap:4px 8px; align-items:center; font-size:13.5px; color:var(--muted)}
+.evc .loc-row a{color:var(--pink-d); font-weight:700; text-decoration:none; white-space:nowrap}
+.evc .loc-row a:hover{text-decoration:underline}
+
+/* ACORDEÃO INTERNO DO CARD DE EVENTO */
+.ev-acc{margin-top:4px; border-top:1px dashed var(--line); padding-top:5px}
+.ev-acc summary{
+  list-style:none; cursor:pointer; font-size:12.5px; font-weight:700; color:var(--muted);
+  display:flex; align-items:center; justify-content:space-between; gap:8px; padding:2px 0; user-select:none;
+}
+.ev-acc summary::-webkit-details-marker{display:none}
+.ev-acc summary:hover{color:var(--pink-d)}
+.ev-acc summary::after{content:"▾"; font-size:13px; transition:transform .15s}
+.ev-acc[open] summary::after{transform:rotate(180deg)}
+.ev-acc-body{display:grid; gap:8px; padding-top:8px}
+.ev-acc .det{margin:0; font-size:14px; color:var(--ink); background:var(--paper); border-radius:10px; padding:8px 10px; overflow-wrap:anywhere; white-space:normal}
+.ev-acc .det a{color:var(--pink-d)}
+.evb{display:flex; flex-wrap:wrap; gap:6px}
+
+/* CONECTOR DE TRAJETO (.lig) ENXUTO COM ACORDEÃO */
+.lig{font-size:13px; color:var(--muted); min-height:2px; padding:0 4px 0 12px; line-height:1.4}
+.lig a{color:var(--pink-d); text-decoration:underline}
+.lig-acc{
+  background:rgba(255,255,255,.72); border:1px dashed var(--line); border-radius:12px;
+  padding:5px 10px; margin:2px 0;
+}
+.lig-acc summary{
+  list-style:none; cursor:pointer; display:flex; align-items:center; justify-content:space-between;
+  gap:8px; font-size:13px; color:var(--muted); user-select:none;
+}
+.lig-acc summary::-webkit-details-marker{display:none}
+.lig-sum{display:flex; flex-wrap:wrap; align-items:center; gap:4px 8px; min-width:0; flex:1}
+.lig-sum b{color:var(--ink)}
+.lig-right{display:inline-flex; align-items:center; gap:6px; flex:none}
+.lig-caret{font-size:12px; color:var(--muted); transition:transform .15s}
+.lig-acc[open] .lig-caret{transform:rotate(180deg)}
+.lig-body{padding-top:8px; margin-top:6px; border-top:1px dashed var(--line); display:grid; gap:6px; font-size:13px}
+.lig-links{display:flex; flex-wrap:wrap; gap:6px 10px; align-items:center}
+
+.tgl{display:flex; gap:6px; align-items:center; flex-wrap:wrap; font-size:13px; color:var(--muted)}
+
+/* LOGÍSTICA: ACORDEÕES PADRONIZADOS */
+.log-grid{display:grid; gap:12px}
+.log-acts{display:flex; flex-wrap:wrap; gap:8px; align-items:center}
+.av,.estq,.pasp{
+  background:var(--card); border:1.5px solid var(--line); border-radius:16px;
+  padding:10px 14px; margin:0; box-shadow:var(--shadow);
+}
+.av{background:var(--gold-soft); border-color:#e8d39f}
+.estq{background:#f3f9f5; border-color:#cbe0d4; display:grid; gap:6px}
+.av summary,.pasp summary,.estq summary{
+  cursor:pointer; font-family:var(--f-display); font-weight:800; font-size:16px;
+  list-style:none; display:flex; gap:8px; align-items:center; justify-content:space-between; min-height:34px;
+}
+.av summary::-webkit-details-marker,.pasp summary::-webkit-details-marker,.estq summary::-webkit-details-marker{display:none}
+.av summary::after,.pasp summary::after,.estq summary::after{content:"▾"; color:var(--muted); font-size:14px; transition:transform .15s}
+.av[open] summary::after,.pasp[open] summary::after,.estq[open] summary::after{transform:rotate(180deg)}
+.estq summary i{font-style:normal; font-weight:700; background:#d8e6dd; border-radius:999px; padding:1px 8px; font-size:12px}
+.estq summary span{flex:1; overflow:hidden; text-overflow:ellipsis; white-space:nowrap}
+
+.av-lista{display:grid; gap:8px; margin-top:10px}
+.av-i{background:#fff; border:1.5px solid var(--line); border-radius:12px; padding:10px 12px; font-size:14px}
+.av-i.urg{border-color:var(--pink)}
+.av-i p{margin:4px 0 8px; color:var(--muted); font-size:13.5px}
+.av-c{display:inline-block; font-size:12px; font-weight:700; border-radius:999px; padding:1px 9px; background:var(--sage-soft); color:var(--sage)}
+.av-c.agora{background:#fbe3e8; color:var(--red)}
+.av-b{display:flex; gap:8px; flex-wrap:wrap}
+.av-i.cp{padding:0; overflow:hidden}
+.av-i.cp summary{list-style:none; cursor:pointer; display:grid; grid-template-columns:1fr auto; align-items:center; column-gap:10px; row-gap:4px; padding:10px 12px; min-height:44px; font-family:var(--f-body); font-size:14.5px}
+.av-i.cp summary::after{content:"›"; grid-column:2; grid-row:1 / span 2; font-size:20px; line-height:1; color:var(--muted)}
+.av-i.cp[open] summary::after{transform:rotate(90deg)}
+.av-i.cp .av-c{justify-self:start}
+.av-i.cp .corpo{padding:0 12px 12px; border-top:1px dashed var(--line)}
+.av-i.cp .corpo .nota{margin:8px 0 0; font-size:13px}
+.av .lkb{font:inherit; font-size:13px; font-weight:700; color:var(--pink-d); background:none; border:0; padding:0; cursor:pointer; text-decoration:underline}
+
+.est-i{display:flex; justify-content:space-between; align-items:center; gap:10px; padding:8px 0; border-top:1px solid #d8e6dd}
+.est-i:first-of-type{border-top:0}
+.est-i>div{display:grid; gap:2px}
+.rh-i{padding:8px 0; border-top:1px solid var(--line)}
+.rh-i b{display:block}
+.rh .lig{margin-top:6px; padding-left:0}
+
+.pasp .tots{display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:8px; margin:10px 0}
+.pasp .tots div{background:var(--paper); border-radius:10px; padding:8px 10px}
+.pasp .tots small{display:block; color:var(--muted); font-size:12px}
+.pasp .pas{border-top:1px solid var(--line); padding:10px 0; display:grid; gap:6px}
+.pasp .pas.comprado{opacity:.85}
+.pasp .pas.cancelado{opacity:.55; text-decoration:line-through}
+.pasp .ph{display:flex; justify-content:space-between; gap:8px; flex-wrap:wrap}
+.pasp .md2{font-size:13px; color:var(--muted)}
+.pasp .pr{display:flex; gap:8px; flex-wrap:wrap; align-items:end}
+.pasp .pr label{display:grid; gap:2px; font-size:12px; color:var(--muted)}
+.pasp .pr select,.pasp .pr input{font:inherit; font-size:14px; padding:6px 8px; border:1.5px solid var(--line); border-radius:8px}
+.pasp .aviso{background:#fff7e0; border-radius:8px; padding:6px 10px; font-size:13px}
+.pasp .onde{font-size:13px}
+.pasp .onde small{display:block; color:var(--muted); margin-top:2px}
+
+/* ABA IDEIAS & INGRESSOS */
+.qi-card{
+  background:linear-gradient(135deg,#fff 60%,var(--gold-soft) 100%);
+  border:1.5px solid #e6d2a2; border-radius:16px; padding:14px 16px;
+  display:flex; flex-wrap:wrap; gap:10px 16px; align-items:center; justify-content:space-between;
+}
+.qi-card h3{font-family:var(--f-display); font-weight:800; font-size:18px; margin:0 0 2px}
+.lq-wrap{background:var(--card); border:1.5px solid var(--line); border-radius:16px; padding:14px 16px; display:grid; gap:12px; box-shadow:var(--shadow)}
+.lq-add{border:1.5px dashed var(--pink); border-radius:14px; padding:10px 12px; background:var(--pink-soft)}
+.lq-add summary{cursor:pointer; font-family:var(--f-display); font-weight:800; color:var(--pink-d); list-style:none; display:flex; align-items:center; justify-content:space-between}
+.lq-add summary::-webkit-details-marker{display:none}
+.lq-add summary::after{content:"▾"}
+.lq-add[open] summary::after{content:"▴"}
+.lq-add[open] summary{margin-bottom:10px}
+.lq{list-style:none; margin:0; padding:0; display:grid; gap:8px}
+.lq-c{margin:10px 0 4px; font-size:16px; color:#7a4a2a; border-bottom:1px solid var(--line); padding-bottom:4px; cursor:pointer; font-weight:700; list-style:none; display:flex; justify-content:space-between}
+.lq-c::-webkit-details-marker{display:none}
+.lq-c::after{content:'▾'}
+.lq-cd:not([open])>.lq-c::after{content:'▸'}
+.lq-h{margin:8px 0 4px; font-size:14.5px}
+.lq-i{display:grid; gap:4px; padding:10px 12px; border:1px solid var(--line); border-radius:12px; background:#fff}
+
+/* BLOCO SEM DIA RECOLHÍVEL NA LISTA */
+.qf-acc{background:#f3effc; border:1.5px dashed #9d8ed4; border-radius:14px; padding:8px 12px}
+.qf-acc summary{cursor:pointer; font-family:var(--f-display); font-weight:800; color:#4b3a8a; list-style:none; display:flex; justify-content:space-between; align-items:center}
+.qf-acc summary::-webkit-details-marker{display:none}
+.qf-acc summary::after{content:"▾"}
+.qf-acc[open] summary::after{content:"▴"}
+.qf{background:#efe9fb; border:1.5px dashed #9d8ed4; border-radius:14px; padding:10px 12px}
+.qf h3{color:#4b3a8a; margin:0 0 6px; font-size:16px}
+.qf-i{display:flex; justify-content:space-between; align-items:center; gap:10px; padding:8px 0; border-top:1px dashed #cdc3ee}
+.qf-i:first-of-type{border-top:0}
+.qf-i>div{display:grid; gap:2px}
+.otim{border:1.5px solid var(--line); border-left:5px solid var(--sage); border-radius:14px; background:#f3f7f1; padding:10px 14px; font-size:14px; line-height:1.5}
+.otim b{display:block; margin-bottom:2px}
+.otim ol{margin:6px 0 4px 20px; padding:0}
+
+/* ABA MAIS (EXPORTAR / COMPARTILHAR / BACKUP) */
+.mais-grid{display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:12px}
+.acao-card{
+  background:var(--card); border:1.5px solid var(--line); border-radius:16px;
+  padding:14px 16px; display:grid; gap:8px; align-content:start; box-shadow:var(--shadow);
+}
+.acao-card h3{font-family:var(--f-display); font-weight:800; font-size:17.5px; margin:0}
+.acao-card p{margin:0; font-size:13.5px; color:var(--muted)}
+.zona-risco{
+  background:var(--card); border:1.5px dashed var(--line); border-radius:14px; padding:10px 14px;
+}
+.zona-risco summary{cursor:pointer; font-family:var(--f-display); font-weight:700; font-size:14.5px; color:var(--muted); list-style:none; display:flex; justify-content:space-between}
+.zona-risco summary::-webkit-details-marker{display:none}
+.zona-risco summary::after{content:"▾"}
+.zona-risco[open] summary::after{content:"▴"}
+.zona-risco .barra{margin-top:10px}
+
+/* DIALOGS + ABAS DO DIA + ACORDEÃO DO FORMULÁRIO */
+dialog{border:none; border-radius:20px; padding:0; width:min(620px,calc(100% - 16px)); max-height:92vh; color:var(--ink); background:var(--paper); box-shadow:0 30px 70px -20px rgba(58,43,56,.55)}
+dialog::backdrop{background:rgba(58,43,56,.45)}
+.dlg-in{padding:16px 16px 20px; display:grid; gap:12px; overflow:auto; max-height:92vh}
+.dlg-top{display:flex; justify-content:space-between; align-items:start; gap:10px; position:sticky; top:-16px; background:var(--paper); padding:4px 0 8px; z-index:2; border-bottom:1px solid var(--line)}
+.dlg-in h2{font-family:var(--f-display); font-weight:800; font-size:20px; line-height:1.2; margin:0}
+.day-tabs{display:inline-flex; gap:4px; background:color-mix(in srgb,var(--line) 45%,#fff); padding:3px; border-radius:999px; border:1px solid var(--line); justify-self:start}
+.day-tabs button{border:0; background:transparent; font:inherit; font-family:var(--f-display); font-weight:700; font-size:13.5px; padding:5px 12px; border-radius:999px; cursor:pointer; color:var(--muted)}
+.day-tabs button[aria-selected="true"]{background:#fff; color:var(--ink); box-shadow:0 2px 6px -3px rgba(58,43,56,.35)}
+.day-bridge{background:#fff; border:1px dashed var(--line); border-radius:12px; padding:6px 10px; font-size:13px}
+.day-bridge summary{cursor:pointer; font-weight:700; color:var(--muted); list-style:none; display:flex; justify-content:space-between; align-items:center}
+.day-bridge summary::-webkit-details-marker{display:none}
+.day-bridge summary::after{content:"▾"}
+.day-bridge[open] summary::after{transform:rotate(180deg)}
+
+.ev-extra{border:1.5px solid var(--line); border-radius:14px; background:#fff; padding:10px 12px}
+.ev-extra summary{cursor:pointer; font-family:var(--f-display); font-weight:700; font-size:14.5px; color:var(--ink); list-style:none; display:flex; justify-content:space-between; align-items:center}
+.ev-extra summary::-webkit-details-marker{display:none}
+.ev-extra summary::after{content:"▾"; color:var(--muted)}
+.ev-extra[open] summary::after{content:"▴"}
+.ev-extra-in{display:grid; gap:10px; margin-top:10px; padding-top:10px; border-top:1px dashed var(--line)}
+
+.par2{display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:10px}
+.passos{margin:0; padding-left:1.2em; display:grid; gap:6px; font-size:14.5px}
+.trj{width:100%; height:72vh; border:0; border-radius:12px; background:#fff}
+.lk-box{width:100%; font:inherit; font-size:14px; border:1.5px solid var(--line); border-radius:12px; padding:8px 10px; background:#fff; color:var(--ink)}
+.drop{display:grid; gap:4px; text-align:center; border:2px dashed var(--pink); border-radius:16px; padding:18px; cursor:pointer; background:#fff; font-size:14.5px}
+.drop span{color:var(--muted); font-size:13.5px}
+.drop.sobre{background:var(--pink-soft)}
+.ou{text-align:center; color:var(--muted); font-size:12.5px; letter-spacing:2px; text-transform:uppercase}
+.previa{background:var(--sage-soft); border-radius:14px; padding:12px 14px; display:grid; gap:6px; font-size:14px}
+.previa .tg{display:inline-block; font-size:12px; font-weight:700; border-radius:999px; padding:1px 10px; margin:2px 2px 2px 0; background:#fff; color:#3f6b55}
+.previa .tg.no{color:var(--muted); background:#eee}
+.previa .lkb{font:inherit; font-size:13.5px; font-weight:700; color:var(--pink-d); background:none; border:0; padding:0; cursor:pointer; text-decoration:underline; justify-self:start}
+.dois{display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:10px}
+.dois .evc{align-content:start}
+
+#verBanner{background:#eef3fb; border:1px solid #c9d8ef; border-radius:14px; padding:10px 12px; display:flex; gap:10px; align-items:center; justify-content:space-between; flex-wrap:wrap; font-size:14px}
+.toast{position:fixed; left:50%; bottom:18px; transform:translateX(-50%); max-width:calc(100% - 28px); margin:0; padding:8px 18px; border-radius:999px; background:#fff; border:1.5px solid var(--sage); color:var(--sage); font-weight:700; font-size:14px; text-align:center; pointer-events:none; box-shadow:0 8px 20px -10px rgba(58,43,56,.5); z-index:40}
+.toast:empty{display:none}
+
+/* MODO SOMENTE LEITURA (.ver) */
+.ver #bNovo,.ver #bImport,.ver #bNovoMob,.ver #bImportMob,.ver .mob-fab,.ver #lqF,.ver .lq-add,.ver [data-lq],.ver #bCompart,.ver #bDesloc,.ver [data-act=edit],.ver [data-act=del],.ver [data-act=novo],.ver [data-act=novohosp],.ver [data-act=trajeto],.ver [data-act=trecho],.ver [data-act=qlista],.ver [data-act=qusar],.ver .zona-risco,.ver #bAjustar,.ver #nuvem,.ver #nuvemSetup,.ver .qpd,.ver [data-ok],.ver [data-undo],.ver [data-qok],.ver [data-qundo],.ver #qPre,.ver #qPerto{display:none!important}
+
+footer{display:flex; flex-wrap:wrap; gap:6px 20px; justify-content:space-between; color:var(--muted); font-size:13.5px; border-top:1.5px solid var(--line); padding-top:14px}
+footer a{color:var(--pink); text-decoration:none; margin-right:12px}
+
+/* BARRA FIXA MOBILE (390px) */
+.mob-fab{display:none}
+
+/* RESPONSIVO: MOBILE (390px) */
+@media (max-width:720px){
+  body{padding-bottom:88px}
+  .sitebar{gap:4px 10px}
+  .navlinks{flex-wrap:nowrap; overflow-x:auto; max-width:100%; padding-bottom:4px; gap:14px; scrollbar-width:none}
+  .navlinks::-webkit-scrollbar{display:none}
+  .quick-desk{display:none}
+  .tabs{width:100%; border-radius:16px}
+  .tab{flex-direction:column; gap:2px; font-size:12px; padding:6px 4px; min-height:48px; border-radius:12px}
+  .rot-bar{grid-template-columns:1fr auto; gap:8px}
+  .rot-bar .nav{grid-column:1 / -1; justify-content:space-between; order:3}
+  .rot-bar .nav h2{min-width:0; font-size:19px}
+  .mes-card{padding:8px}
+  .mes{gap:3px}
+  .dia{min-height:58px; padding:4px; border-radius:10px}
+  .dia .n{font-size:13px}
+  .dia .n small,.chip,.hband,.mais-n{display:none}
+  .dots{display:flex}
+  .mh{font-size:10.5px; letter-spacing:0}
+  .mais-grid,.par2,.dois{grid-template-columns:minmax(0,1fr)}
+  .pasp .tots{grid-template-columns:repeat(3,minmax(0,1fr)); gap:6px}
+  .pasp .tots div{padding:6px 7px; font-size:13px}
+  .mob-fab.on{display:flex}
+  .mob-fab{
+    position:fixed; left:max(12px,env(safe-area-inset-left,0px)); right:max(12px,env(safe-area-inset-right,0px));
+    bottom:max(10px,env(safe-area-inset-bottom,0px)); z-index:30; gap:8px; padding:7px;
+    background:rgba(255,255,255,.95); border:1.5px solid var(--line); border-radius:999px;
+    box-shadow:0 12px 28px -12px rgba(58,43,56,.5); backdrop-filter:blur(8px);
+  }
+  .mob-fab .btn{flex:1 1 0; min-height:44px; font-size:14px; padding:8px 10px}
+  .toast{bottom:78px}
+  body:has(.mob-fab.on){padding-bottom:calc(84px + env(safe-area-inset-bottom,0px))}
+}
+
+/* IMPRESSÃO: ABRE TUDO LIMPO */
+@media print{
+  body{background:#fff; padding:0}
+  .sitebar,.crumb,.hero,#setup,.appbar,.pulso,.rot-bar,.mob-fab,#tabLogistica,#tabIdeias,#tabMais,#vMes,footer,dialog,.evb,.no-print,.toast{display:none!important}
+  #tabRoteiro,#vLista{display:grid!important}
+  .evc{break-inside:avoid}
+  .ev-acc summary{display:none}
+}
+</style>
+<link rel="icon" href="/favicon.svg" type="image/svg+xml"><link rel="icon" href="/favicon.ico" sizes="48x48"><link rel="apple-touch-icon" href="/apple-touch-icon.png"><link rel="manifest" href="/manifest.webmanifest"><meta name="theme-color" content="#3a2b38"><meta name="mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-title" content="Unirversos"><script src="/app.js" defer></script><style id="uni-logo">.logo,.brand,.sitebar .brand{font-family:"Baloo 2","Zen Maru Gothic",system-ui,sans-serif!important;font-weight:800!important;font-size:19px!important;letter-spacing:.14em!important;text-transform:none!important;text-decoration:none!important}.logo span,.brand span{color:#c23f5e!important;font:inherit!important;letter-spacing:inherit!important;margin:0!important}</style>
+<script>if(/[?&]embed=1/.test(location.search))document.documentElement.classList.add("embed");</script>
+<style>html.embed .sitebar,html.embed footer,html.embed #cc-js,html.embed #uv-chip,html.embed .uni-voltar,html.embed .uni-conta,html.embed .uni-inst{display:none!important}html.embed body{padding-block:6px 20px;background-image:none}html.embed .hero{display:none}</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="sitebar" role="navigation" aria-label="Site">
+    <a href="/" class="logo">UNI<span>R</span>VERSOS</a>
+    <span class="navlinks"><a href="/idiomas/">idiomas</a><a href="/travessia/" aria-current="page">travessia</a><a href="/loja/">tesouros</a><span class="nav-sep" aria-hidden="true" style="opacity:.3">|</span><a href="/paralelos/">paralelos</a><a href="/sobre/">sobre</a></span>
+  </div>
+
+  <div class="cosmos-teste-bar no-print">
+    <span>🧪 Área de teste · Calendário &amp; Endereços (Cosmos)</span>
+    <a href="/travessia/calendario/">Ver versão oficial atual</a>
+  </div>
+
+  <nav class="trav-nav no-print" aria-label="Seções da Travessia">
+    <a href="../">🧭 Painel</a>
+    <a href="./" aria-current="page">📅 Calendário &amp; Endereços</a>
+    <a href="../ingressos/">🎟️ Ingressos</a>
+    <span class="trav-sep" aria-hidden="true"></span>
+    <a href="../burocracia/">🛂 Burocracia</a>
+    <a href="../deslocamento/">🚆 Deslocamento</a>
+    <a href="../guia-sobrevivencia/">📖 Guia</a>
+  </nav>
+
+
+  <header class="hero" id="hero">
+    <p class="eyebrow">Unirversos Travessia · calendário</p>
+    <h1>Sua viagem <em>já começou</em></h1>
+    <p class="lede">Monte o calendário da sua viagem ao Japão, dia a dia. Quando quiser, leve tudo para o Google Agenda.</p>
+  </header>
+
+  <section class="painel" id="setup" aria-labelledby="t-setup">
+    <h2 id="t-setup">Quando é a sua viagem?</h2>
+    <form id="fSetup" novalidate>
+      <div class="campos">
+        <label class="f">Nome da viagem (opcional)<input id="sTitulo" maxlength="80" placeholder="ex.: Japão com a família" autocomplete="off"></label>
+        <label class="f">Primeiro dia<input type="date" id="sIni" required></label>
+        <label class="f">Último dia<input type="date" id="sFim" required></label>
+        <label class="f">Fuso dos horários<select id="sFuso"></select><small>Automático é o mais prático: Brasília até o evento marcado como chegada ao Japão, Japão depois.</small></label>
+      </div>
+      <p class="erro" id="sErr" role="alert"></p>
+      <div class="barra"><button class="btn pri" type="submit" id="sBtn">Criar meu calendário</button><button class="btn" type="button" id="sCancel" hidden>Cancelar</button></div>
+    </form>
+    <p class="nota no-print" id="nuvemSetup"></p>
+  </section>
+
+  <section id="app" hidden aria-label="Meu calendário">
+    <div class="wrap" style="gap:14px">
+      <!-- Cabeçalho enxuto da viagem -->
+      <div class="trip-head no-print">
+        <div class="trip-info">
+          <b id="fTitulo"></b>
+          <span id="fDatas"></span>
+        </div>
+        <div class="trip-meta">
+          <span id="nuvem" role="status"></span>
+          <button class="btn sm" type="button" id="bAjustar" aria-label="Ajustar datas">✏️ Datas</button>
+        </div>
+      </div>
+
+      <div id="verBanner" class="no-print" hidden></div>
+
+      <!-- Barra de abas internas + botões rápidos desktop -->
+      <div class="appbar no-print">
+        <div class="tabs" role="tablist" aria-label="Áreas do calendário">
+          <button class="tab" type="button" role="tab" id="tRoteiro" data-tab="roteiro" aria-selected="true" aria-controls="tabRoteiro"><span>🗓️ Roteiro</span></button>
+          <button class="tab" type="button" role="tab" id="tLogistica" data-tab="logistica" aria-selected="false" aria-controls="tabLogistica"><span>🏨 Endereços &amp; Trens</span><span class="bd" id="bdLog"></span></button>
+          <button class="tab" type="button" role="tab" id="tIdeias" data-tab="ideias" aria-selected="false" aria-controls="tabIdeias"><span>🎟️ Ingressos &amp; Ideias</span><span class="bd" id="bdIdeias"></span></button>
+          <button class="tab" type="button" role="tab" id="tMais" data-tab="mais" aria-selected="false" aria-controls="tabMais"><span>📤 Exportar</span></button>
+        </div>
+        <div class="quick-desk">
+          <button class="btn pri" type="button" id="bNovo">➕ Novo evento</button>
+          <button class="btn" type="button" id="bImport">📥 Importar reserva</button>
+        </div>
+      </div>
+
+      <!-- ABA 1: ROTEIRO (Mês / Lista) -->
+      <div class="tabpane" id="tabRoteiro" role="tabpanel" aria-labelledby="tRoteiro">
+        <!-- Pílulas rápidas clicáveis (só aparecem quando há avisos/estadias/passagens) -->
+        <div class="pulso no-print" id="pulso" aria-label="Resumo rápido"></div>
+
+        <div class="rot-bar no-print">
+          <div class="seg" role="group" aria-label="Formato de exibição">
+            <button class="btn" type="button" id="vbMes" aria-pressed="true">🗓️ Mês</button>
+            <button class="btn" type="button" id="vbLista" aria-pressed="false">📋 Lista</button>
+          </div>
+          <div class="nav" id="mesNav">
+            <button class="btn" type="button" id="mPrev" aria-label="Mês anterior">‹</button>
+            <h2 id="mTitulo" aria-live="polite"></h2>
+            <button class="btn" type="button" id="mNext" aria-label="Próximo mês">›</button>
+          </div>
+          <details class="leg-drop" id="legDrop">
+            <summary>🎨 Legenda</summary>
+          </details>
+        </div>
+
+        <div class="leg-pop no-print" id="legPop" hidden>
+          <div class="legenda" id="legenda"></div>
+          <p class="nota">Clique em um dia para ver e anotar os eventos dele. Dias com fundo rosado estão dentro da sua viagem.</p>
+        </div>
+
+        <div id="vMes" class="mes-card">
+          <div class="mes" id="grade" role="group" aria-label="Dias do mês"></div>
+        </div>
+
+        <div id="vLista" class="lista" hidden></div>
+      </div>
+
+      <!-- ABA 2: LOGÍSTICA (Avisos + Estadias + Passagens + Passes + De→Para) -->
+      <div class="tabpane no-print" id="tabLogistica" role="tabpanel" aria-labelledby="tLogistica" hidden>
+        <div class="log-acts">
+          <button class="btn soft" type="button" id="bPasses">🚆 Comparar passes (JR Pass / Metrô)</button>
+          <a class="btn" href="../deslocamento/" id="bDesloc">🧭 Abrir De → para</a>
+        </div>
+        <div class="log-grid">
+          <div id="avisos"></div>
+          <div id="estadias"></div>
+          <div id="passagensPainel"></div>
+          <p class="nota" id="logVazio" hidden>Assim que você adicionar hospedagens, passagens de trem-bala ou atrações com venda antecipada, elas aparecem organizadas aqui.</p>
+        </div>
+      </div>
+
+      <!-- ABA 3: IDEIAS & INGRESSOS (Quero ir + Quero fazer inline) -->
+      <div class="tabpane no-print" id="tabIdeias" role="tabpanel" aria-labelledby="tIdeias" hidden>
+        <div class="qi-card">
+          <div>
+            <h3>🎟️ Quero ir: ingressos com antecedência</h3>
+            <p class="nota" id="qiResumo">Acompanhe loterias, datas de abertura e prazos de pagamento no horário de Brasília.</p>
+          </div>
+          <a class="btn pri" href="../ingressos/">Abrir Ingressos &amp; Loterias →</a>
+        </div>
+        <div class="lq-wrap" id="ideiasListaBox"></div>
+      </div>
+
+      <!-- ABA 4: MAIS (Exportar, Compartilhar, Backup, Impressão, Exemplo/Limpar) -->
+      <div class="tabpane no-print" id="tabMais" role="tabpanel" aria-labelledby="tMais" hidden>
+        <div class="mais-grid">
+          <div class="acao-card">
+            <h3>📤 Levar para o Google Agenda</h3>
+            <p>Baixe o arquivo .ics completo ou envie evento por evento para o Google Agenda, Apple Calendário ou Outlook.</p>
+            <div class="barra"><button class="btn pri sm" type="button" id="bGoogle">Abrir exportação →</button></div>
+          </div>
+          <div class="acao-card">
+            <h3>🔗 Compartilhar calendário</h3>
+            <p>Envie uma cópia por link, crie um link curto ou compartilhe um link ao vivo (somente leitura).</p>
+            <div class="barra"><button class="btn sm" type="button" id="bCompart">Opções de link →</button></div>
+          </div>
+          <div class="acao-card">
+            <h3>🖨️ Imprimir a lista</h3>
+            <p>Gera uma versão limpa da lista de eventos com todos os detalhes abertos, pronta para PDF ou papel.</p>
+            <div class="barra"><button class="btn sm" type="button" id="bImprimir">Imprimir a lista</button></div>
+          </div>
+          <div class="acao-card">
+            <h3>💾 Cópia de segurança (arquivo)</h3>
+            <p>Salve uma cópia (.json) neste aparelho ou abra uma cópia salva anteriormente.</p>
+            <div class="barra">
+              <button class="btn sm" type="button" id="bSalvar">💾 Salvar uma cópia</button>
+              <button class="btn sm" type="button" id="bAbrir">📂 Abrir uma cópia</button>
+              <input type="file" id="fAbrir" accept=".json,application/json" hidden>
+            </div>
+          </div>
+        </div>
+
+        <details class="zona-risco">
+          <summary>⚙️ Teste e limpeza (exemplo / apagar tudo)</summary>
+          <div class="barra">
+            <button class="btn sm" type="button" id="bExemplo">✨ Preencher com exemplo</button>
+            <button class="btn sm perigo" type="button" id="bLimpar">🗑️ Apagar tudo</button>
+          </div>
+          <p class="nota" style="margin-top:8px">O calendário fica salvo só neste navegador, neste aparelho (ou na sua conta gratuita se você entrar). Para levar para outro aparelho sem conta, salve uma cópia ou use o Google Agenda.</p>
+        </details>
+      </div>
+    </div>
+  </section>
+
+  <footer>
+    <span>unirversos — tudo conectado · Aline Kikuti</span>
+    <span><a href="../">← Painel</a> · <a href="../ingressos/">Ingressos →</a></span>
+  </footer>
+</div>
+
+<!-- Barra rápida mobile (390px) -->
+<nav class="mob-fab no-print" id="mobFab" aria-label="Ações rápidas">
+  <button class="btn pri" type="button" id="bNovoMob">➕ Novo evento</button>
+  <button class="btn" type="button" id="bImportMob">📥 Importar</button>
+</nav>
+
+<dialog id="dlgQI" aria-label="Ingressos com antecedência"><div class="dlg-in"><div class="dlg-top"><h2>🎟️ Ingressos com antecedência</h2><button class="btn sm" type="button" id="qiFecha">Fechar</button></div><iframe id="qiFrame" title="Ingressos com antecedência" style="width:100%;height:70vh;border:0;border-radius:12px;background:#fff"></iframe></div></dialog>
+<dialog id="dlg" aria-labelledby="dlgT"><div class="dlg-in" id="dlgIn"></div></dialog>
+<p class="toast" id="msg" role="status"></p>
+
+<script src="/travessia/calendario/leitor.js?v=2"></script>
+<script src="/travessia/agendamentos/regras.js?v=3"></script>
+<script src="/travessia/calendario/geo.js?v=7"></script>
+<script src="/travessia/calendario/avisos.js?v=4"></script>
+<script>/* Painéis recolhíveis: ao abrir o site começam sempre recolhidos; o que a pessoa abre fica aberto só nesta visita. */
+window.UNI_ABERTAS=window.UNI_ABERTAS||{};
+document.addEventListener("toggle",function(ev){
+  var d=ev.target; if(!d||!d.classList)return;
+  var k=d.classList.contains("av")?"av":d.classList.contains("pasp")?"pasp":d.classList.contains("lq-cd")?"lq:"+d.dataset.c:"";
+  if(k)window.UNI_ABERTAS[k]=d.open;
+},true);
+</script>
+<script src="/travessia/calendario/passagens.js?v=2"></script>
+<script src="/travessia/calendario/lista.js?v=14"></script>
+<script src="/travessia/calendario/passes.js?v=1"></script>
+<script>
+(function(){
+'use strict';
+var KEY='uniCalendario1';
+var MESES=['janeiro','fevereiro','março','abril','maio','junho','julho','agosto','setembro','outubro','novembro','dezembro'];
+var DIAS=['domingo','segunda-feira','terça-feira','quarta-feira','quinta-feira','sexta-feira','sábado'];
+var DSEM=['dom','seg','ter','qua','qui','sex','sáb'];
+var TIPOS={
+  passeio:['⛩️','Passeio','#c23f5e'], ingresso:['🎟️','Ingresso ou reserva','#8e6a1f'], hosp:['🏨','Hospedagem','#4f7461'],
+  transp:['🚄','Transporte','#3b6ea5'], voo:['✈️','Voo','#6b5aa8'], comida:['🍜','Refeição','#a85a1c'], outro:['📝','Outro','#6b5a67']
+};
+/* Japão e Brasília não têm horário de verão hoje, então o deslocamento é fixo (minutos em relação ao UTC). */
+var FUSOS={ auto:['Automático: Brasília até a chegada ao Japão, Japão depois',null], jp:['Horário do Japão',540], br:['Horário de Brasília',-180], dev:['Fuso do meu aparelho',null] };
+
+function $(s){return document.querySelector(s);}
+function esc(s){return String(s==null?'':s).replace(/[&<>"']/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c];});}
+function pad(n){return String(n).padStart(2,'0');}
+function okData(s){return typeof s==='string'&&/^\d{4}-\d{2}-\d{2}$/.test(s)&&D(U(s))===s;}
+function okHora(s){return typeof s==='string'&&/^([01]\d|2[0-3]):[0-5]\d$/.test(s);}
+function U(s){var p=s.split('-').map(Number);return Date.UTC(p[0],p[1]-1,p[2]);}
+function D(ms){var t=new Date(ms);return t.getUTCFullYear()+'-'+pad(t.getUTCMonth()+1)+'-'+pad(t.getUTCDate());}
+function add(s,n){return D(U(s)+n*864e5);}
+function diff(a,b){return Math.round((U(b)-U(a))/864e5);}
+function wd(s){return new Date(U(s)).getUTCDay();}
+function longo(s){return DIAS[wd(s)]+', '+(+s.slice(8))+' de '+MESES[+s.slice(5,7)-1]+' de '+s.slice(0,4);}
+function curto(s){return (+s.slice(8))+' '+MESES[+s.slice(5,7)-1].slice(0,3)+' '+s.slice(0,4);}
+function hojeStr(){var t=new Date();return t.getFullYear()+'-'+pad(t.getMonth()+1)+'-'+pad(t.getDate());}
+function uid(){return 'e'+Date.now().toString(36)+Math.random().toString(36).slice(2,8);}
+function limpaCoord(l){var t=String(l||'').replace(/\s*@-?\d+\.\d+,-?\d+\.\d+.*$/,'').trim(); return t||'Local salvo no mapa';}
+
+var S={titulo:'',ini:'',fim:'',fuso:'auto',chegada:'',atualizado:'',ev:[],orc:{cot:'',pax:1,t:{}},ok:{},pas:[],qi:{}};
+var CURTO={jp:'horário do Japão',br:'horário de Brasília',dev:'fuso do aparelho'};
+function fusoDe(e){
+  if(e.fuso!=='auto')return e.fuso;
+  var ch=S.ev.find(function(z){return z.id===S.chegada;});
+  return ch&&e.data<ch.data?'br':'jp';
+}
+var mes='', visao='mes', abaAtiva='roteiro', salvouOk=true, estAberta=false;
+
+/* ---------- abas internas ---------- */
+var ABAS=['roteiro','logistica','ideias','mais'];
+function trocarAba(tab,semHistorico){
+  if(ABAS.indexOf(tab)<0)tab='roteiro';
+  if(!semHistorico&&tab!==abaAtiva){ try{ history.pushState({aba:tab},'',location.pathname+location.search+'#'+tab); }catch(e){} }
+  abaAtiva=tab;
+  ['roteiro','logistica','ideias','mais'].forEach(function(k){
+    var p=$('#tab'+k.charAt(0).toUpperCase()+k.slice(1));
+    var b=$('#t'+k.charAt(0).toUpperCase()+k.slice(1));
+    if(p)p.hidden=k!==tab;
+    if(b)b.setAttribute('aria-selected',k===tab?'true':'false');
+  });
+  if(tab==='logistica'&&estAberta)preencheLig($('#estadias .rh'),true);
+  if(tab==='ideias')desenharIdeias();
+}
+document.querySelectorAll('.tabs [role="tab"]').forEach(function(b){
+  b.addEventListener('click',function(){
+    trocarAba(b.dataset.tab);
+    /* trocou de aba lá embaixo: volta para o começo da aba (as abas continuam grudadas no topo) */
+    var th=document.querySelector('.trip-head'); if(th){ var y=th.getBoundingClientRect().bottom+window.scrollY; if(window.scrollY>y)window.scrollTo({top:y,behavior:'smooth'}); }
+  });
+});
+window.addEventListener('popstate',function(){ var h=(location.hash||'').slice(1); trocarAba(ABAS.indexOf(h)>=0?h:'roteiro',true); });
+(function(){ var h=(location.hash||'').slice(1); if(ABAS.indexOf(h)>=0&&h!=='roteiro')setTimeout(function(){trocarAba(h,true);},0); })();
+
+/* legenda recolhível */
+$('#legDrop').addEventListener('toggle',function(){
+  $('#legPop').hidden=!this.open;
+});
+
+/* ---------- salvar e abrir ---------- */
+function limpaPas(a){
+  var out=[]; if(!Array.isArray(a))return out;
+  a.slice(0,200).forEach(function(p){ if(!p||typeof p!=='object')return;
+    var v=Math.round(+p.v), n=parseInt(p.pax,10); if(!isFinite(v)||v<0||v>99999999)v=0; if(!(n>=1&&n<=20))n=1;
+    var t=function(x,m){return typeof x==='string'?x.slice(0,m):'';};
+    out.push({id:t(p.id,40)||uid(),evId:t(p.evId,40),de:t(p.de,120),para:t(p.para,120),deLocal:t(p.deLocal,600),paraLocal:t(p.paraLocal,600),
+      modo:/^(pe|trem|onibus|taxi|aviao)$/.test(p.modo)?p.modo:'trem',rapido:!!p.rapido,data:okData(p.data)?p.data:'',hora:okHora(p.hora)?p.hora:'',
+      v:v,pax:n,estado:/^(comprar|comprado|cancelado)$/.test(p.estado)?p.estado:'comprar',codigo:t(p.codigo,60),link:(typeof p.link==='string'&&/^https?:\/\/\S+$/i.test(p.link.trim()))?p.link.trim().slice(0,500):''});});
+  return out;
+}
+function limpaOrc(o,r){
+  if(!o||typeof o!=='object')return;
+  var c=parseFloat(o.cot); if(isFinite(c)&&c>0&&c<1000)r.cot=c;
+  var n=parseInt(o.pax,10); if(n>=1&&n<=20)r.pax=n;
+  if(o.m&&typeof o.m==='object'){r.m={};Object.keys(o.m).slice(0,600).forEach(function(k){if(k.length<=700&&/^(pe|trem|onibus|taxi|aviao)$/.test(o.m[k]))r.m[k]=o.m[k];});}
+  if(o.r&&typeof o.r==='object'){r.r={};Object.keys(o.r).slice(0,600).forEach(function(k){var x=o.r[k]; if(k.length>700||!x||typeof x!=='object')return; var y={}, mn=Math.round(+x.min), kk=+x.km;
+    if(mn>0&&mn<=3000)y.min=mn; if(kk>0&&kk<=5000)y.km=Math.round(kk*10)/10; if(/^\d\d:\d\d$/.test(x.s))y.s=x.s; if(/^\d\d:\d\d$/.test(x.c))y.c=x.c; if(Object.keys(y).length)r.r[k]=y;});}
+  if(o.um&&typeof o.um==='object'){r.um={};Object.keys(o.um).slice(0,300).forEach(function(k){var x=o.um[k]; if(k.length>700||!x||typeof x!=='object')return; var y={sh:String(x.sh||'').slice(0,300),on:String(x.on||'').slice(0,300)}; if(y.sh||y.on)r.um[k]=y;});}
+  var ps=parseFloat(o.passe); if(isFinite(ps)&&ps>0&&ps<=9999999)r.passe=Math.round(ps);
+  if(o.t&&typeof o.t==='object')Object.keys(o.t).slice(0,600).forEach(function(k){
+    var v=o.t[k]&&+o.t[k].v; if(k.length<=700&&isFinite(v)&&v>=0&&v<=99999999)r.t[k]={v:Math.round(v),c:1};});
+}
+function limpaQi(q){
+  var r={}; if(!q||typeof q!=='object')return r;
+  Object.keys(q).slice(0,120).forEach(function(k){
+    var x=q[k]; if(!/^[a-z0-9-]{1,60}$/.test(k)||!x||typeof x!=='object')return;
+    var y={}; if(x.ir===true)y.ir=true; if(x.salvo===true)y.salvo=true;
+    if(okData(x.data))y.data=x.data; if(okData(x.verif))y.verif=x.verif; if(okData(x.prazo))y.prazo=x.prazo;
+    if(['inscrito','ganhei','comprado','perdi','pulei'].indexOf(x.st)>-1)y.st=x.st;
+    ['link','local'].forEach(function(f){if(typeof x[f]==='string'&&x[f].trim())y[f]=x[f].trim().slice(0,f==='link'?500:300);});
+    if(typeof x.num==='string'&&x.num.trim())y.num=x.num.trim().slice(0,80);
+    if(typeof x.obs==='string'&&x.obs.trim())y.obs=x.obs.trim().slice(0,500);
+    y.t=isFinite(+x.t)&&+x.t>0?Math.round(+x.t):0;
+    if(Object.keys(y).length>1||y.t)r[k]=y;
+  });
+  return r;
+}
+function juntaQi(a,b){
+  var m={}; a=a||{};b=b||{};
+  Object.keys(a).forEach(function(i){m[i]=a[i];});
+  Object.keys(b).forEach(function(i){if(!m[i]||(b[i].t||0)>(m[i].t||0))m[i]=b[i];});
+  return m;
+}
+function limpar(o){
+  var r={titulo:'',ini:'',fim:'',fuso:'auto',chegada:'',atualizado:'',ev:[],orc:{cot:'',pax:1,t:{}},ok:{},pas:[],lista:[],qi:{}};
+  if(!o||typeof o!=='object')return r;
+  r.qi=limpaQi(o.qi);
+  limpaOrc(o.orc,r.orc);
+  r.pas=limpaPas(o.pas);
+  r.lista=window.CalLista?CalLista.limpa(o.lista):[];
+  if(o.ok&&typeof o.ok==='object')Object.keys(o.ok).slice(0,600).forEach(function(k){if(k.length<=40&&o.ok[k])r.ok[k]=1;});
+  r.titulo=typeof o.titulo==='string'?o.titulo.slice(0,80):'';
+  if(okData(o.ini)&&okData(o.fim)&&o.fim>=o.ini){r.ini=o.ini;r.fim=o.fim;}
+  r.fuso=FUSOS[o.fuso]?o.fuso:'auto';
+  r.atualizado=typeof o.atualizado==='string'?o.atualizado.slice(0,40):'';
+  if(o.vivo&&typeof o.vivo.c==='string'&&/^[a-z0-9]{6,16}$/.test(o.vivo.c))r.vivo={c:o.vivo.c,det:!!o.vivo.det,lista:!!o.vivo.lista};
+  (Array.isArray(o.ev)?o.ev:[]).slice(0,2000).forEach(function(e){
+    if(!e||typeof e.titulo!=='string'||!okData(e.data))return;
+    var x={id:typeof e.id==='string'&&e.id?e.id.slice(0,40):uid(),titulo:e.titulo.slice(0,160),tipo:TIPOS[e.tipo]?e.tipo:'outro',data:e.data,
+      dataFim:okData(e.dataFim)&&e.dataFim>e.data?e.dataFim:'',hora:okHora(e.hora)?e.hora:'',horaFim:'',fuso:FUSOS[e.fuso]?e.fuso:r.fuso,
+      local:typeof e.local==='string'?e.local.slice(0,600):'',detalhes:typeof e.detalhes==='string'?e.detalhes.slice(0,4000):''};
+    if(x.hora&&okHora(e.horaFim))x.horaFim=e.horaFim;
+    if(x.tipo==='hosp'){var vl=Math.round(+e.valor); if(isFinite(vl)&&vl>0&&vl<=99999999){x.valor=vl;x.moeda=e.moeda==='brl'?'brl':'jpy';}}
+    r.ev.push(x);
+  });
+  if(typeof o.chegada==='string'&&r.ev.some(function(z){return z.id===o.chegada;}))r.chegada=o.chegada;
+  return r;
+}
+function carregar(){try{S=limpar(JSON.parse(localStorage.getItem(KEY)||'null'));}catch(e){S=limpar(null);}}
+var VER=null,tViv=null,urgVisto={};
+function gravarLocal(){
+  if(VER)return;
+  try{localStorage.setItem(KEY,JSON.stringify(S));salvouOk=true;}
+  catch(e){salvouOk=false;aviso('Seu navegador não deixou salvar. Use "Salvar uma cópia" na aba Mais para não perder nada.');}
+}
+function gravar(){if(VER)return;S.atualizado=new Date().toISOString();gravarLocal();try{if(S.ini&&S.fim){localStorage.setItem('uniViagemDatas1',JSON.stringify({titulo:S.titulo||'',ini:S.ini,fim:S.fim}));var st=JSON.parse(localStorage.getItem('travessiaStatusV1')||'null')||{itens:{}};st.ida=S.ini;st.volta=S.fim;if(!st.itens)st.itens={};localStorage.setItem('travessiaStatusV1',JSON.stringify(st));}}catch(e){}agendarNuvem();agendarVivo();}
+function agendarVivo(){
+  if(VER||!S.vivo||!usuario||!window.CalNuvem||!CalNuvem.atualizarVivo)return;
+  clearTimeout(tViv);tViv=setTimeout(async function(){
+    if(!S.vivo)return;
+    try{await CalNuvem.atualizarVivo(S.vivo.c,await empacotar(S.vivo.det,S.vivo.lista));}catch(e){}
+  },2500);
+}
+var tMsg;
+function aviso(t){var m=$('#msg');m.textContent=t;clearTimeout(tMsg);tMsg=setTimeout(function(){m.textContent='';},4200);}
+
+/* ---------- eventos ---------- */
+function doDia(d){
+  return S.ev.filter(function(e){return e.data<=d&&d<=(e.dataFim||e.data);})
+    .sort(function(a,b){return (a.hora||'')<(b.hora||'')?-1:(a.hora||'')>(b.hora||'')?1:a.titulo.localeCompare(b.titulo);});
+}
+function horaTxt(e){
+  var t=e.hora?(e.hora+(e.horaFim?' – '+e.horaFim:'')):'Dia todo';
+  if(e.dataFim)t+=' · até '+curto(e.dataFim);
+  return t;
+}
+function mapaUrl(l){var c=window.CalGeo&&CalGeo.coordDe(l); return 'https://www.google.com/maps/search/?api=1&query='+(c?c.lat+','+c.lon:encodeURIComponent(l));}
+/* link do Google Maps colado no Local: guarda só o nome + coordenadas exatas (@lat,lon) */
+function compactaLocal(t){
+  t=String(t||'').trim(); if(!/https?:\/\//i.test(t)||!window.CalGeo)return t;
+  var c=CalGeo.coordDe(t); if(!c)return t;
+  var m=t.match(/\/place\/([^\/@?]+)/), nome=''; try{nome=m?decodeURIComponent(m[1].replace(/\+/g,' ')):'';}catch(e){nome=m?m[1].replace(/\+/g,' '):'';}
+  return (nome?nome.slice(0,80)+' ':'')+'@'+c.lat.toFixed(6)+','+c.lon.toFixed(6);
+}
+function estadoLocal(t){
+  t=String(t||'').trim();
+  if(!t)return '⚠ Sem Local, não calculo deslocamento nem passagens. Escreva o endereço à mão ou cole o link do Google Maps.';
+  if(!window.CalGeo)return '';
+  if(CalGeo.coordDe(t))return '✓ Localização exata reconhecida. Já dá para calcular o deslocamento.';
+  if(CalGeo.soLinkCurto(t))return '⚠ Esse link curto (maps.app.goo.gl) não dá para ler aqui. No computador, abra o lugar no Google Maps e copie o link da barra de endereços (tem @latitude,longitude). No celular, toque e segure o ponto e copie as coordenadas.';
+  return '⚠ Localização escrita à mão: vou procurar no mapa e calcular com ela, mas confira o ponto achado. Não é tão exata quanto o link do Google Maps.';
+}
+
+/* ---------- Google Agenda e .ics ---------- */
+function utcMs(d,h,fuso){
+  var a=d.split('-').map(Number),b=h.split(':').map(Number),off=FUSOS[fuso][1];
+  if(off==null)return new Date(a[0],a[1]-1,a[2],b[0],b[1]).getTime();
+  return Date.UTC(a[0],a[1]-1,a[2],b[0],b[1])-off*60000;
+}
+function zulu(ms){return new Date(ms).toISOString().replace(/[-:]/g,'').replace(/\.\d{3}/,'');}
+function intervalo(e){
+  if(!e.hora){return {dia:true,a:e.data.replace(/-/g,''),b:add(e.dataFim||e.data,1).replace(/-/g,'')};}
+  var fz=fusoDe(e),ini=utcMs(e.data,e.hora,fz),fim=e.horaFim?utcMs(e.dataFim||e.data,e.horaFim,fz):ini+36e5;
+  return {dia:false,a:zulu(ini),b:zulu(fim)};
+}
+function urlGoogle(e){
+  var i=intervalo(e);
+  var u='https://calendar.google.com/calendar/render?action=TEMPLATE&text='+encodeURIComponent(e.titulo)+'&dates='+i.a+'/'+i.b;
+  if(e.local)u+='&location='+encodeURIComponent(e.local);
+  if(e.detalhes)u+='&details='+encodeURIComponent(e.detalhes);
+  return u;
+}
+function icsTxt(s){return String(s).replace(/\\/g,'\\\\').replace(/;/g,'\\;').replace(/,/g,'\\,').replace(/\r?\n/g,'\\n');}
+function dobrar(l){
+  var enc=new TextEncoder(),out='',cur='',n=0;
+  for(var ch of l){var b=enc.encode(ch).length;if(n+b>75){out+=cur+'\r\n';cur=' ';n=1;}cur+=ch;n+=b;}
+  return out+cur;
+}
+function montarIcs(){
+  var agora=zulu(Date.now()),L=['BEGIN:VCALENDAR','VERSION:2.0','PRODID:-//Unirversos//Travessia Calendario//PT','CALSCALE:GREGORIAN','METHOD:PUBLISH','X-WR-CALNAME:'+icsTxt(S.titulo||'Minha viagem')];
+  S.ev.forEach(function(e){
+    var i=intervalo(e);
+    L.push('BEGIN:VEVENT','UID:'+e.id+'@calendario.unirversos.com','DTSTAMP:'+agora);
+    if(i.dia){L.push('DTSTART;VALUE=DATE:'+i.a,'DTEND;VALUE=DATE:'+i.b);}else{L.push('DTSTART:'+i.a,'DTEND:'+i.b);}
+    L.push('SUMMARY:'+icsTxt(e.titulo));
+    if(e.local)L.push('LOCATION:'+icsTxt(e.local));
+    if(e.detalhes)L.push('DESCRIPTION:'+icsTxt(e.detalhes));
+    L.push('CATEGORIES:'+icsTxt(TIPOS[e.tipo][1]),'END:VEVENT');
+  });
+  L.push('END:VCALENDAR');
+  return L.map(dobrar).join('\r\n')+'\r\n';
+}
+function baixar(nome,conteudo,tipo){
+  var b=new Blob([conteudo],{type:tipo}),a=document.createElement('a');
+  a.href=URL.createObjectURL(b);a.download=nome;document.body.appendChild(a);a.click();
+  setTimeout(function(){URL.revokeObjectURL(a.href);a.remove();},800);
+}
+function slug(){return (S.titulo||'viagem').toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'').replace(/[^a-z0-9]+/g,'-').replace(/^-|-$/g,'').slice(0,40)||'viagem';}
+
+/* ---------- tela: datas ---------- */
+function preencherFusos(){
+  $('#sFuso').innerHTML=Object.keys(FUSOS).map(function(k){return '<option value="'+k+'">'+FUSOS[k][0]+'</option>';}).join('');
+}
+function mostrarApp(on){
+  $('#app').hidden=!on;
+  $('#hero').hidden=on;
+  $('#mobFab').classList.toggle('on',on&&!VER);
+}
+function mostrarSetup(edit){
+  $('#setup').hidden=false;
+  $('#hero').hidden=!!edit;
+  $('#t-setup').textContent=edit?'Ajustar as datas':'Quando é a sua viagem?';
+  $('#sBtn').textContent=edit?'Salvar datas':'Criar meu calendário';
+  $('#sCancel').hidden=!edit;
+  $('#sTitulo').value=S.titulo;$('#sIni').value=S.ini;$('#sFim').value=S.fim;$('#sFuso').value=S.fuso;$('#sErr').textContent='';
+  if(!edit&&!S.ini){try{var pd=JSON.parse(localStorage.getItem('uniViagemDatas1')||'null');if(pd&&okData(pd.ini)&&okData(pd.fim)&&pd.fim>=pd.ini){$('#sIni').value=pd.ini;$('#sFim').value=pd.fim;}}catch(e){}}
+  if(edit)$('#sIni').focus();
+}
+$('#fSetup').addEventListener('submit',function(ev){
+  ev.preventDefault();
+  var ini=$('#sIni').value,fim=$('#sFim').value,er=$('#sErr');
+  if(!okData(ini)||!okData(fim)){er.textContent='Escolha o primeiro e o último dia da viagem.';return;}
+  if(fim<ini){er.textContent='O último dia precisa ser igual ou depois do primeiro.';return;}
+  if(diff(ini,fim)>540){er.textContent='Escolha um período de até 18 meses.';return;}
+  function criar(){
+    S.titulo=$('#sTitulo').value.trim();S.ini=ini;S.fim=fim;S.fuso=$('#sFuso').value;
+    var h=hojeStr();mes=(h>=ini&&h<=fim?h:ini).slice(0,7);
+    gravar();$('#setup').hidden=true;mostrarApp(true);tudo();
+  }
+  /* Sem conta: antes de criar, convida a entrar (é grátis). Pode seguir sem conta. */
+  if(!usuario&&window.CalNuvem&&!window.__semConta){
+    abrir('<div class="dlg-top"><h2 id="dlgT" style="text-transform:none">Guarde tudo na sua conta — é grátis</h2><button class="btn sm" type="button" data-act="fechar" aria-label="Fechar">✕</button></div>'+
+      '<p>Com a conta, o seu calendário, os ingressos que você marcou, os números de inscrição e as observações ficam guardados e aparecem em qualquer aparelho em que você entrar.</p>'+
+      '<p class="nota">Sem conta, tudo fica salvo só neste aparelho: se você trocar de celular ou limpar o navegador, perde.</p>'+
+      '<div class="barra"><button class="btn pri" type="button" id="cvEntrar">Entrar ou criar conta grátis</button></div>'+
+      '<div class="barra"><button class="btn" type="button" id="cvSem">Criar sem conta (só neste aparelho)</button></div>');
+    $('#cvEntrar').onclick=function(){fechar();pedirLogin();aviso('Depois de entrar, toque em “Criar meu calendário”.');};
+    $('#cvSem').onclick=function(){window.__semConta=true;fechar();criar();};
+    return;
+  }
+  criar();
+});
+$('#sCancel').onclick=function(){$('#setup').hidden=true;};
+$('#bAjustar').onclick=function(){mostrarSetup(true);$('#setup').scrollIntoView({behavior:'smooth',block:'center'});};
+
+/* ---------- tela: calendário & pulso ---------- */
+var resumoLog={avisos:0,urg:0,est:0,estNome:'',pas:0,pasPend:0};
+function tudo(){
+  $('#fTitulo').textContent=S.titulo||'Minha viagem';
+  var n=diff(S.ini,S.fim)+1;
+  $('#fDatas').textContent=curto(S.ini)+' a '+curto(S.fim)+' ('+n+' dias) · '+S.ev.length+' '+(S.ev.length===1?'evento':'eventos');
+  $('#legenda').innerHTML=Object.keys(TIPOS).map(function(k){return '<span><i style="--c:'+TIPOS[k][2]+'"></i>'+TIPOS[k][0]+' '+TIPOS[k][1]+'</span>';}).join('');
+  desenharMes();desenharLista();desenharEstadias();desenharAvisos();desenharPassagens();atualizarPulso();
+  if(abaAtiva==='ideias')desenharIdeias();
+}
+function atualizarPulso(){
+  var bdLog=$('#bdLog');
+  var nLog=resumoLog.avisos+resumoLog.pasPend;
+  bdLog.textContent=resumoLog.urg?String(resumoLog.urg):nLog?String(nLog):'';
+  bdLog.classList.toggle('urg',resumoLog.urg>0);
+
+  var nId=(S.lista||[]).length;
+  $('#bdIdeias').textContent=nId?String(nId):'';
+
+  var temLog=Boolean($('#avisos').innerHTML||$('#passagensPainel').innerHTML||resumoLog.est>0);
+  $('#logVazio').hidden=temLog;
+
+  var p=[];
+  if(resumoLog.avisos){
+    p.push('<button type="button" class="pill'+(resumoLog.urg?' urg':'')+'" data-jump="avisos">⏰ '+resumoLog.avisos+(resumoLog.avisos===1?' aviso':' avisos')+(resumoLog.urg?' ('+resumoLog.urg+' agora)':'')+'</button>');
+  }
+  if(resumoLog.est){
+    p.push('<button type="button" class="pill est" data-jump="estadias">🏨 '+esc(resumoLog.estNome)+(resumoLog.est>1?' +'+(resumoLog.est-1):'')+'</button>');
+  }
+  if(resumoLog.pas){
+    p.push('<button type="button" class="pill pas" data-jump="passagens">🎫 '+resumoLog.pas+(resumoLog.pas===1?' passagem':' passagens')+(resumoLog.pasPend?' · '+resumoLog.pasPend+' a comprar':'')+'</button>');
+  }
+  $('#pulso').innerHTML=p.join('');
+}
+$('#pulso').addEventListener('click',function(ev){
+  var b=ev.target.closest('[data-jump]'); if(!b)return;
+  var j=b.dataset.jump;
+  trocarAba('logistica');
+  var sel=j==='avisos'?'#avisos details':j==='estadias'?'#estadias details':'#passagensPainel details';
+  var d=$(sel);
+  if(d){d.open=true; if(j==='estadias'){estAberta=true; preencheLig($('#estadias .rh'),true);} d.scrollIntoView({behavior:'smooth',block:'nearest'});}
+});
+
+/* ---------- passagens ---------- */
+function desenharPassagens(){
+  var box=$('#passagensPainel'); if(!box||!window.CalPas||!window.CalGeo)return;
+  var L=Array.isArray(S.pas)?S.pas:[];
+  resumoLog.pas=L.length;
+  resumoLog.pasPend=L.filter(function(p){return p.estado==='comprar';}).length;
+  var ab=box.querySelector('details'), aberto=ab?ab.open:null;
+  box.innerHTML=CalPas.html(S,CalGeo);
+  if(aberto!==null&&box.querySelector('details'))box.querySelector('details').open=aberto;
+}
+if(window.CalPas&&window.CalGeo)CalPas.ligar($('#passagensPainel'),function(){return S;},CalGeo,function(){gravar();tudo();});
+
+/* ---------- avisos ---------- */
+function desenharAvisos(){
+  var box=$('#avisos'); if(!box||!window.CalAvisos)return;
+  var hoje=new Date().toISOString().slice(0,10);
+  var lista=[],feitos=[];
+  S.ev.forEach(function(e){ if(e.data<hoje)return; var a=CalAvisos.para(e); if(!a)return; var st=CalAvisos.situacao(a);
+    (S.ok&&S.ok[e.id]?feitos:lista).push({e:e,a:a,st:st}); });
+  lista.sort(function(x,y){return x.a.abre-y.a.abre;});
+  var qc=window.CalLista?CalLista.paraComprar(S):{pend:[],ok:[]};
+  var urg=lista.filter(function(x){return x.st.est!=='futuro';}).length;
+  resumoLog.avisos=lista.length+qc.pend.length;
+  resumoLog.urg=urg;
+  if(!lista.length&&!feitos.length&&!qc.pend.length&&!qc.ok.length){box.innerHTML='';return;}
+  function chip(st){return st.est==='passou'?'<span class="av-c agora">inscrição encerrada: procure sobras</span>':st.est==='aberto'?'<span class="av-c agora">já abriu: compre agora</span>':st.est==='hoje'?'<span class="av-c agora">abre hoje</span>':st.est==='logo'?'<span class="av-c agora">faltam '+st.dias+(st.dias===1?' dia':' dias')+'</span>':'<span class="av-c">faltam '+st.dias+' dias</span>';}
+  function cardCompacto(x){return '<details class="av-i cp'+(x.st.est==='futuro'?'':' urg')+'"><summary><b>'+esc(x.a.nome)+'</b>'+chip(x.st)+'</summary><div class="corpo"><p class="nota">'+esc(x.e.titulo)+' · '+esc(curto(x.e.data))+'</p><p>'+x.a.texto+'</p><div class="av-b">'+
+      (x.a.url?'<a class="btn sm" href="'+esc(x.a.url)+'" target="_blank" rel="noopener">Abrir o site de venda</a> ':'')+'<button type="button" class="btn sm" data-ok="'+esc(x.e.id)+'">✓ Já comprei</button></div></div></details>';}
+  box.innerHTML='<details class="av"'+(window.UNI_ABERTAS.av?' open':'')+'><summary><span>⏰ Compre com antecedência'+(resumoLog.avisos?' · '+resumoLog.avisos+(resumoLog.avisos===1?' aviso':' avisos'):'')+(urg?' · <b style="color:var(--red)">'+urg+(urg===1?' pede atenção':' pedem atenção')+'</b>':'')+'</span></summary><div class="av-lista">'+
+    lista.map(cardCompacto).join('')+
+    qc.pend.map(function(r){return '<details class="av-i cp"><summary><b>🛒 '+esc(r.x.nome)+'</b><span class="av-c">Quero fazer · '+(r.data?esc(curto(r.data)):'ainda sem dia')+'</span></summary><div class="corpo"><p>Marcado para comprar antes.'+(r.x.nota?' 📝 '+esc(r.x.nota.length>160?r.x.nota.slice(0,159)+'…':r.x.nota):'')+'</p><div class="av-b"><button type="button" class="btn sm" data-qok="'+esc(r.x.id)+'">✓ Já comprei</button></div></div></details>';}).join('')+
+    (qc.ok.length?'<p class="nota">Já comprados (Quero fazer): '+qc.ok.map(function(r){return esc(r.x.nome)+' <button type="button" class="lkb" data-qundo="'+esc(r.x.id)+'">desfazer</button>';}).join(' · ')+'</p>':'')+
+    (feitos.length?'<p class="nota">Já resolvidos: '+feitos.map(function(x){return esc(x.e.titulo)+' <button type="button" class="lkb" data-undo="'+esc(x.e.id)+'">desfazer</button>';}).join(' · ')+'</p>':'')+'</div></details>';
+  var u=lista.filter(function(x){return x.st.est==='aberto'||x.st.est==='hoje';});
+  if(u.length&&!VER&&$('#app')&&!$('#app').hidden&&!document.querySelector('dialog[open]')){
+    var k=u.map(function(x){return x.e.id+x.st.est;}).join('|');
+    if(!urgVisto[k]){urgVisto[k]=1;
+      abrir('<div class="urgPop"><div class="dlg-top"><h2 id="dlgT">⏰ '+(u.length===1?'Esta compra pede atenção agora':'Estas compras pedem atenção agora')+'</h2><button class="btn sm" type="button" data-urgfecha="1" aria-label="Fechar">✕</button></div>'+u.map(cardCompacto).join('')+'<div class="barra" style="margin-top:10px"><button class="btn" type="button" data-urgfecha="1">Fechar</button></div></div>');}
+  }
+}
+$('#dlgIn').addEventListener('click',function(ev){
+  var f=ev.target.closest('[data-urgfecha]'); if(f){dlg.close();return;}
+  var b=ev.target.closest('.urgPop [data-ok]'); if(!b)return;
+  if(!S.ok)S.ok={}; S.ok[b.dataset.ok]=1; gravar();
+  var card=b.closest('.av-i'); if(card)card.remove();
+  if(!document.querySelector('.urgPop .av-i'))dlg.close();
+  desenharAvisos();atualizarPulso();
+});
+$('#avisos').addEventListener('click',function(ev){
+  var q=ev.target.closest('[data-qok],[data-qundo]');
+  if(q){var it=(S.lista||[]).find(function(z){return z.id===(q.dataset.qok||q.dataset.qundo);}); if(it){it.comprar=q.dataset.qok?'ok':'sim'; gravar(); desenharAvisos();atualizarPulso(); if(window.CalLista&&$('#vLista'))desenharLista();} return;}
+  var b=ev.target.closest('[data-ok],[data-undo]'); if(!b)return; if(!S.ok)S.ok={};
+  if(b.dataset.ok)S.ok[b.dataset.ok]=1; else delete S.ok[b.dataset.undo]; gravar(); desenharAvisos();atualizarPulso();
+});
+
+/* ---------- grade mensal ---------- */
+function desenharMes(){
+  var y=+mes.slice(0,4),m=+mes.slice(5,7),primeiro=y+'-'+pad(m)+'-01',off=wd(primeiro),dm=new Date(Date.UTC(y,m,0)).getUTCDate();
+  var linhas=Math.ceil((off+dm)/7),ini=add(primeiro,-off),h=hojeStr();
+  $('#mTitulo').textContent=MESES[m-1]+' de '+y;
+  var html=DSEM.map(function(d){return '<div class="mh" aria-hidden="true">'+d+'</div>';}).join('');
+  for(var i=0;i<linhas*7;i++){
+    var d=add(ini,i),evs=doDia(d),cls='dia';
+    if(d.slice(0,7)!==mes)cls+=' outro';
+    if(d>=S.ini&&d<=S.fim)cls+=' dentro';
+    if(d===h)cls+=' hoje';
+    var num=+d.slice(8),dn=(d>=S.ini&&d<=S.fim)?'<small>dia '+(diff(S.ini,d)+1)+'</small>':'';
+    var hs=evs.filter(function(e){return e.tipo==='hosp';}).sort(function(x,y){return x.data<y.data?-1:x.data>y.data?1:0;}), evs0=evs; evs=evs.filter(function(e){return e.tipo!=='hosp';});
+    var band=hs.slice(0,2).map(function(x){return '<span class="hband">🏨 '+esc(nomeEst(x))+'</span>';}).join('')+(hs.length>2?'<span class="mais-n">+'+(hs.length-2)+' estadia'+(hs.length>3?'s':'')+'</span>':'');
+    var chips=evs.slice(0,3).map(function(e){return '<span class="chip" style="--c:'+TIPOS[e.tipo][2]+'">'+(e.hora?esc(e.hora)+' ':'')+esc(e.titulo)+'</span>';}).join('');
+    var mais=evs.length>3?'<span class="mais-n">+'+(evs.length-3)+' mais</span>':'';
+    evs=evs0; var dots=evs.length?'<span class="dots">'+evs.slice(0,6).map(function(e){return '<i style="--c:'+TIPOS[e.tipo][2]+'"></i>';}).join('')+'</span>':'';
+    var rotulo=longo(d)+(evs.length?', '+evs.length+(evs.length===1?' evento':' eventos'):', sem eventos');
+    html+='<button type="button" class="'+cls+'" data-d="'+d+'" aria-label="'+esc(rotulo)+'"><span class="n"><span>'+num+'</span>'+dn+'</span>'+band+chips+mais+dots+'</button>';
+  }
+  $('#grade').innerHTML=html;
+}
+
+/* ---------- card enxuto de evento com acordeão ---------- */
+function cartao(e){
+  var t=TIPOS[e.tipo];
+  var temDet=Boolean(e.detalhes&&e.detalhes.trim());
+  var locLimpo=e.local?limpaCoord(e.local):'';
+  var detHtml=temDet?'<p class="det">'+esc(e.detalhes).replace(/(https?:\/\/[^\s<]+)/g,'<a href="$1" target="_blank" rel="noopener">$1</a>').replace(/\n/g,'<br>')+'</p>':'';
+  return '<article class="evc" style="--c:'+t[2]+'">'+
+    '<div class="evc-top"><div class="evc-main">'+
+      '<span class="hora"><span>'+esc(horaTxt(e))+(e.hora?' · '+CURTO[fusoDe(e)]:'')+'</span>'+(e.id===S.chegada?'<span class="tag-cheg">🛬 Chegada ao Japão: dali em diante, horário de lá</span>':'')+'</span>'+
+      '<h4>'+t[0]+' '+esc(e.titulo)+'</h4>'+
+      (e.local?'<div class="loc-row"><span>📍 '+esc(locLimpo)+'</span><a href="'+mapaUrl(e.local)+'" target="_blank" rel="noopener">ver no mapa ↗</a></div>':'')+
+    '</div></div>'+
+    '<details class="ev-acc"><summary><span>'+(temDet?'📝 Detalhes e ações':'Ações do evento')+'</span></summary>'+
+      '<div class="ev-acc-body">'+
+        detHtml+
+        '<div class="evb"><button type="button" class="btn sm" data-act="edit" data-id="'+esc(e.id)+'">✏️ Editar</button>'+
+        '<a class="btn sm" href="'+esc(urlGoogle(e))+'" target="_blank" rel="noopener">➕ Google Agenda</a>'+
+        '<button type="button" class="btn sm perigo" data-act="del" data-id="'+esc(e.id)+'">Excluir</button></div>'+
+      '</div>'+
+    '</details></article>';
+}
+
+/* ---------- estadias ---------- */
+function nomeEst(h){return (h.titulo||'').replace(/\s*@-?\d+\.\d+,-?\d+\.\d+.*$/,'').trim()||'Hospedagem';}
+function moedaTxt(v,m){return (m==='brl'?'R$ ':'¥')+v.toLocaleString('pt-BR');}
+function totalEst(hs){var t={jpy:0,brl:0};hs.forEach(function(h){if(h.valor)t[h.moeda==='brl'?'brl':'jpy']+=h.valor;});var p=[];if(t.jpy)p.push(moedaTxt(t.jpy,'jpy'));if(t.brl)p.push(moedaTxt(t.brl,'brl'));return p.join(' + ');}
+function roteiroHosp(hs){
+  if(hs.length<2)return '';
+  var it=[], fimDe=function(x){return x.dataFim||x.data;};
+  for(var i=1;i<hs.length;i++){
+    var b=hs[i], a=null, ant=hs.filter(function(x){return x!==b&&x.data<b.data;});
+    var ja=ant.filter(function(x){return fimDe(x)<=b.data;});
+    if(ja.length){a=ja.reduce(function(m,x){return fimDe(x)>fimDe(m)||(fimDe(x)===fimDe(m)&&x.data<m.data)?x:m;});}
+    else if(ant.length){a=ant.reduce(function(m,x){return x.data>m.data?x:m;});}
+    if(!a)continue;
+    var tit='<b>'+esc(nomeEst(a))+' → '+esc(nomeEst(b))+'</b><small class="nota">troca em '+esc(curto(b.data))+'</small>';
+    if(!a.local||!b.local){it.push('<div class="rh-i">'+tit+'<small class="nota" style="color:#8a5a00">⚠ falta o endereço de '+esc(!a.local?nomeEst(a):nomeEst(b))+': não calculo este trecho</small></div>');continue;}
+    if(window.CalGeo&&CalGeo.chave(a.local)===CalGeo.chave(b.local))continue;
+    it.push('<div class="rh-i">'+tit+'<div class="lig" data-a="'+esc(a.id)+'" data-b="'+esc(b.id)+'"><small class="nota">calculando…</small></div></div>');
+  }
+  return it.length?'<div class="rh"><p class="nota" style="margin:10px 0 4px"><b>🚆 Deslocamento entre hospedagens</b></p>'+it.join('')+'</div>':'';
+}
+function desenharEstadias(){
+  var el=$('#estadias'); if(!el)return;
+  var hs=S.ev.filter(function(e){return e.tipo==='hosp';}).sort(function(a,b){return a.data<b.data?-1:a.data>b.data?1:0;});
+  var hj=hojeStr(),dest=hs.filter(function(h){return h.data<=hj&&(h.dataFim||h.data)>=hj;})[0]||hs.filter(function(h){return h.data>hj;})[0]||hs[0];
+  resumoLog.est=hs.length;
+  resumoLog.estNome=dest?nomeEst(dest):'';
+  var resumo=hs.length?esc(nomeEst(dest))+(hs.length>1?' <i>+'+(hs.length-1)+'</i>':''):'Sem estadia · adicionar';
+  el.innerHTML='<details class="estq"'+(estAberta?' open':'')+'><summary><span>🏨 '+resumo+'</span></summary>'+(hs.length?hs.map(function(h){
+    var n=h.dataFim?diff(h.data,h.dataFim):0, nome=limpaCoord(h.local).slice(0,70);
+    return '<div class="est-i"><div><b>'+esc(nomeEst(h))+'</b><small class="nota">'+esc(curto(h.data))+(h.dataFim?' → '+esc(curto(h.dataFim))+' ('+n+(n===1?' noite':' noites')+')':'')+'</small>'+
+      (h.valor?'<small class="nota">💰 '+moedaTxt(h.valor,h.moeda)+'</small>':'')+(h.local?'<small class="nota">📍 '+esc(nome)+' · <a href="'+mapaUrl(h.local)+'" target="_blank" rel="noopener">ver no mapa ↗</a></small>':'<small class="nota" style="color:#8a5a00">⚠ sem endereço: não calculo trajetos a partir daqui</small>')+'</div>'+
+      '<button type="button" class="btn sm" data-act="edit" data-id="'+esc(h.id)+'">✏️ Editar</button></div>';}).join(''):'<p class="nota" style="margin:0">Ainda sem estadia. Cadastre o hotel para eu usar o endereço dele como base dos trajetos.</p>')+
+    (totalEst(hs)?'<p class="nota" style="margin:8px 0 0"><b>💰 Total das estadias: '+totalEst(hs)+'</b></p>':'')+
+    roteiroHosp(hs)+
+    '<div class="barra" style="margin-top:8px"><button type="button" class="btn sm" data-act="novohosp">➕ Adicionar estadia</button></div></details>';
+  var d=el.querySelector('details');
+  if(d)d.addEventListener('toggle',function(){estAberta=d.open; if(d.open)preencheLig(el.querySelector('.rh'),true);});
+  if(estAberta)preencheLig(el.querySelector('.rh'),true);
+}
+
+/* ---------- aba ideias inline ---------- */
+function desenharIdeias(){
+  var nq=Object.keys(S.qi||{}).filter(function(k){return S.qi[k]&&(S.qi[k].ir||S.qi[k].st);}).length;
+  $('#qiResumo').textContent=nq
+    ? nq+(nq===1?' atração acompanhada':' atrações acompanhadas')+' · confira abertura de lotes, sorteios e prazos de pagamento.'
+    : 'Acompanhe loterias, datas de abertura e prazos de pagamento no horário de Brasília.';
+  var box=$('#ideiasListaBox'); if(!box||!window.CalLista)return;
+  box.innerHTML=CalLista.html(S.lista||[],S.ev);
+  var top=box.querySelector('.dlg-top'); if(top){var fb=top.querySelector('[data-act="fechar"]'); if(fb)fb.remove();}
+  var form=box.querySelector('#lqF');
+  if(form&&!VER){
+    var det=document.createElement('details');
+    det.className='lq-add';
+    det.id='lqAdd';
+    if(!(S.lista&&S.lista.length))det.open=true;
+    var sum=document.createElement('summary');
+    sum.textContent='➕ Adicionar novo lugar ou rolê';
+    form.parentNode.insertBefore(det,form);
+    det.appendChild(sum);
+    det.appendChild(form);
+  }
+  if(VER){var pn=box.querySelector('p.nota'); if(pn)pn.textContent='Lugares e rolês que quem compartilhou quer fazer. Só leitura.'; return;}
+  CalLista.ligar(box,function(){return S;},gravar,compactaLocal,usarDaLista,function(){desenharLista();desenharAvisos();atualizarPulso();desenharIdeias();});
+}
+$('#ideiasListaBox').addEventListener('click',function(ev){
+  if(ev.target.closest('[data-lq="edit"]')){
+    var d=$('#lqAdd'); if(d)d.open=true;
+  }
+},true);
+
+/* ---------- visão em lista ---------- */
+function desenharLista(){
+  var datas={}; S.ev.forEach(function(e){datas[e.data]=1;});
+  var ks=Object.keys(datas).sort();
+  var qhRaw=window.CalLista?CalLista.semDia(S.lista,S.ev):'';
+  var qh='';
+  if(qhRaw){
+    var nSem=(S.lista||[]).filter(function(x){return !x.evId||!S.ev.some(function(e){return e.id===x.evId;});}).length;
+    qh='<details class="qf-acc no-print"><summary>⭐ Quero fazer · sem dia ('+nSem+')</summary><div style="margin-top:8px">'+qhRaw.replace(/<section class="grp qf"><h3>.*?<\/h3>/,'<div>').replace(/<\/section>$/,'</div>')+'</div></details>';
+  }
+  if(!ks.length){$('#vLista').innerHTML=qh+'<div class="vazio">Nada anotado ainda. Clique em <b>Novo evento</b> ou em um dia do calendário.</div>';return;}
+  $('#vLista').innerHTML=trajToggle()+qh+ks.map(function(d){
+    var evs=S.ev.filter(function(e){return e.data===d;}).sort(function(a,b){return (a.hora||'')<(b.hora||'')?-1:(a.hora||'')>(b.hora||'')?1:0;});
+    var prox=ks[ks.indexOf(d)+1], pe=prox?ordemDia(prox)[0]:null;
+    var hDia=hospDoDia(d);
+    var hBar=hDia?'<div class="estq" style="margin-bottom:6px"><div class="est-i"><div><b>🏨 Onde você dorme: '+esc(nomeEst(hDia))+'</b>'+(hDia.local?'<small class="nota" style="display:block">'+esc(limpaCoord(hDia.local))+'</small>':'')+'</div>'+(hDia.local?'<div style="display:flex;gap:6px;flex-wrap:wrap"><button type="button" class="btn xs soft" data-taxi-nome="'+esc(nomeEst(hDia))+'" data-taxi-addr="'+esc(limpaCoord(hDia.local))+'">🚕 Taxista</button><a class="btn xs" href="https://www.google.com/maps/search/?api=1&query='+encodeURIComponent(limpaCoord(hDia.local))+'" target="_blank" rel="noopener">🗺️ Maps</a></div>':'')+'</div></div>':'';
+    return '<section class="grp"><h3>'+esc(longo(d))+'</h3>'+hBar+comLig(evs,d)+ligHtml(evs[evs.length-1],pe)+'<div class="qpd" data-d="'+d+'"></div></section>';
+  }).join('');
+  preencheLig($('#vLista'),false);
+  if(window.CalLista)CalLista.marcarPerto($('#vLista'),S,doDia,abrirDia);
+}
+
+/* ---------- tempo entre paradas do dia (conector enxuto com acordeão) ---------- */
+function ligHtml(a,b){
+  if(a&&b&&a.local&&b.local&&window.CalGeo&&CalGeo.chave(a.local)!==CalGeo.chave(b.local))return '<div class="lig" data-a="'+esc(a.id)+'" data-b="'+esc(b.id)+'"></div>';
+  return '';
+}
+function ordemDia(d){return S.ev.filter(function(e){return e.data===d;}).sort(function(a,b){return (a.hora||'')<(b.hora||'')?-1:(a.hora||'')>(b.hora||'')?1:0;});}
+var modoTraj='hosp'; try{modoTraj=localStorage.getItem('uniCalTraj')==='seq'?'seq':'hosp';}catch(e){}
+function hospDoDia(d){
+  var c=S.ev.filter(function(e){return e.tipo==='hosp'&&e.local&&e.data<=d&&d<=(e.dataFim||e.data);});
+  c.sort(function(a,b){return a.data<b.data?1:a.data>b.data?-1:0;}); return c[0]||null;
+}
+function trajToggle(){
+  function b(m,t){return '<button type="button" class="btn sm" data-act="traj" data-m="'+m+'" aria-pressed="'+(modoTraj===m)+'">'+t+'</button>';}
+  return '<div class="tgl no-print" role="group" aria-label="Como calcular os trajetos do dia"><span>Trajetos:</span>'+b('hosp','🏨 Da hospedagem')+b('seq','↔ Evento a evento')+'</div>';
+}
+function comLig(evs,d){
+  var h=(modoTraj==='hosp'&&d&&window.CalGeo)?hospDoDia(d):null;
+  if(h)return evs.map(function(e){
+    var lig=(e.id!==h.id&&e.tipo!=='hosp'&&e.local&&CalGeo.chave(e.local)!==CalGeo.chave(h.local))?'<div class="lig" data-h="1" data-a="'+esc(h.id)+'" data-b="'+esc(e.id)+'"></div>':'';
+    return lig+cartao(e);
+  }).join('');
+  return evs.map(function(e,i){
+    var n=evs[i+1], lig='';
+    if(n&&e.local&&n.local&&window.CalGeo&&CalGeo.chave(e.local)!==CalGeo.chave(n.local))lig='<div class="lig" data-a="'+esc(e.id)+'" data-b="'+esc(n.id)+'"></div>';
+    return cartao(e)+lig;
+  }).join('');
+}
+var cadeia=Promise.resolve(), obsLig=null;
+function localDoEv(id){var e=S.ev.filter(function(x){return x.id===id;})[0];return e?e.local:'';}
+function umaLig(el){
+  var a=localDoEv(el.dataset.a), b=localDoEv(el.dataset.b);
+  return Promise.all([CalGeo.geocodificar(a),CalGeo.geocodificar(b)]).then(function(r){
+    if(!el.isConnected)return;
+    if(!r[0]||!r[1]){
+      var nm=function(id){return (S.ev.filter(function(x){return x.id===id;})[0]||{}).titulo||'';};
+      var falta=!r[0]&&!r[1]?'“'+nm(el.dataset.a)+'” e “'+nm(el.dataset.b)+'”':'“'+nm(!r[0]?el.dataset.a:el.dataset.b)+'”';
+      el.innerHTML='<details class="lig-acc"><summary><span class="lig-sum">⚠ Sem tempo estimado para '+esc(falta)+'</span><span class="lig-caret">▾</span></summary><div class="lig-body"><span>Não achei '+esc(falta)+' no mapa (no Local, escreva o nome com a cidade, o endereço ou cole as coordenadas).</span></div></details>'; return;
+    }
+    var d=CalGeo.km(r[0],r[1]); if(d<0.05)return;
+    var rk=[CalGeo.chave(a),CalGeo.chave(b)].sort().join('>'), m=(S.orc&&S.orc.m&&S.orc.m[rk])||CalGeo.modoPadrao(d), E=CalGeo.estModo(m,d,CalGeo.rotaCache(r[0],r[1],CalGeo.perfilDe(m)),S.orc&&S.orc.r&&S.orc.r[rk+'|'+m]);
+    var ea=S.ev.filter(function(x){return x.id===el.dataset.a;})[0]||{}, eb=S.ev.filter(function(x){return x.id===el.dataset.b;})[0]||{};
+    var de=ea.titulo||'', pa=eb.titulo||'';
+    var manual=function(x){return !/^coordenadas/.test(x.nome||'');}, temManual=manual(r[0])||manual(r[1]), avisoHtml='';
+    if(temManual){
+      var q=[]; if(manual(r[0]))q.push('“'+de+'” (achei: '+String(r[0].nome).split(',').slice(0,3).join(',')+')'); if(manual(r[1]))q.push('“'+pa+'” (achei: '+String(r[1].nome).split(',').slice(0,3).join(',')+')');
+      avisoHtml='<small class="nota" style="color:#8a5a00">⚠ Confira: '+esc(q.join(' e '))+' foi localizado pelo texto escrito à mão. Não confie 100% neste tempo; para ficar exato, cole o link do Google Maps no Local.</small>';
+    }
+    var longoTrecho=d>30&&window.CalPas&&(m==='trem'||m==='aviao');
+    var trechoHtml=longoTrecho?(CalPas.jaSalvo(S,ea,eb)?'<span class="nota">✓ trecho nas Passagens</span>':'<button type="button" class="btn xs" data-act="trecho" data-a="'+esc(ea.id)+'" data-b="'+esc(eb.id)+'">🎫 Salvar este trecho nas Passagens</button>'):'';
+    var linksExternos=(function(){
+      var LL=CalGeo.linksRota(m,r[0],r[1],{de:de,para:pa,data:eb.data||''}).links;
+      var ls=m==='trem'?[LL[0],LL.filter(function(x){return /Jorudan/.test(x.t);}).pop()||LL[LL.length-1]]:[LL[0]];
+      return ls.map(function(L){return '<a href="'+esc(L.u)+'" target="_blank" rel="noopener">'+esc(L.t)+' ↗</a>';}).join('');
+    })();
+    el.innerHTML=
+      '<details class="lig-acc"><summary>'+
+        '<span class="lig-sum"><span>↓ <b>'+CalGeo.MODOS[m]+'</b> · ~'+CalGeo.fmtMin(E.min)+(E.minTag==='conf'?' ✓ conferido':'')+' · '+(E.kmTag==='conf'?'':'~')+CalGeo.fmtKm(E.km)+(temManual?' ⚠':'')+'</span></span>'+
+        '<span class="lig-right"><button type="button" class="btn xs" data-act="trajeto" data-a="'+esc(ea.id)+'" data-b="'+esc(eb.id)+'">🧭 Trajeto</button><span class="lig-caret">▾</span></span>'+
+      '</summary>'+
+      '<div class="lig-body">'+
+        (el.dataset.h?'<span class="nota">🏨 da hospedagem “'+esc(de)+'”</span>':'')+
+        '<div class="lig-links">'+linksExternos+'<a href="../deslocamento/?de='+encodeURIComponent(de.slice(0,120))+'&para='+encodeURIComponent(pa.slice(0,120))+'">ajustar no De → Para ↗</a>'+trechoHtml+'</div>'+
+        avisoHtml+
+      '</div></details>';
+  }).catch(function(){});
+}
+function preencheLig(root,ja){
+  if(!window.CalGeo||!root)return;
+  var els=[].slice.call(root.querySelectorAll('.lig[data-a]'));
+  if(!ja&&'IntersectionObserver' in window){
+    if(obsLig)obsLig.disconnect();
+    obsLig=new IntersectionObserver(function(es){es.forEach(function(x){if(x.isIntersecting){obsLig.unobserve(x.target);cadeia=cadeia.then(function(){return umaLig(x.target);});}});});
+    els.forEach(function(el){obsLig.observe(el);});
+  }else els.forEach(function(el){cadeia=cadeia.then(function(){return umaLig(el);});});
+}
+
+/* ---------- sugestão de ordem ---------- */
+function sugereOrdem(evs,onReady){
+  var box=$('#otim'); if(!box||!window.CalGeo)return;
+  var it=evs.filter(function(e){return e.local;}); if(it.length<3||it.length>12)return;
+  var dia=diaAberto;
+  Promise.all(it.map(function(e){return CalGeo.geocodificar(e.local);})).then(function(pos){
+    if(diaAberto!==dia||!box.isConnected)return;
+    var P=[]; it.forEach(function(e,i){if(pos[i])P.push({e:e,p:pos[i]});});
+    if(P.length<3)return;
+    function D(a,b){return CalGeo.km(a.p,b.p);}
+    function tot(o){var t=0;for(var i=0;i<o.length-1;i++)t+=D(o[i],o[i+1]);return t;}
+    function minutos(o){var t=0;for(var i=0;i<o.length-1;i++){var d=D(o[i],o[i+1]);if(d>=0.05)t+=CalGeo.estModo(CalGeo.modoPadrao(d),d).min;}return t;}
+    var atual=P.slice(), melhor=atual.slice(), mk=tot(atual);
+    if(P.length<=8){
+      (function perm(pre,resto){ if(!resto.length){var k=tot(pre);if(k<mk-1e-9){mk=k;melhor=pre.slice();}return;}
+        for(var i=0;i<resto.length;i++){var r=resto.slice();var x=r.splice(i,1)[0];perm(pre.concat([x]),r);} })([P[0]],P.slice(1));
+    }else{
+      var rest=P.slice(1), cur=[P[0]];
+      while(rest.length){var bi=0,bd=1e9;rest.forEach(function(x,i){var d=D(cur[cur.length-1],x);if(d<bd){bd=d;bi=i;}});cur.push(rest.splice(bi,1)[0]);}
+      if(tot(cur)<mk){mk=tot(cur);melhor=cur;}
+    }
+    var temManual=P.some(function(x){return !/^coordenadas/.test(x.p.nome||'');}), avM=temManual?' <br>⚠ Alguns lugares foram localizados pelo texto escrito à mão: confira antes de confiar.':'';
+    var ka=tot(atual), poupa=ka-mk;
+    if(poupa<1||poupa<ka*0.1){ box.innerHTML='<div class="otim"><b>✓ A ordem dos lugares já está boa</b>Não achei um jeito bem mais curto de visitar esses pontos.</div>'; if(onReady)onReady(); return; }
+    var dm=minutos(atual)-minutos(melhor);
+    box.innerHTML='<div class="otim"><b>💡 Dá para encurtar o dia</b>Ordem sugerida (começando em “'+esc(melhor[0].e.titulo)+'”):<ol>'+melhor.map(function(x){return '<li>'+esc(x.e.titulo)+'</li>';}).join('')+'</ol>De '+CalGeo.fmtKm(ka)+' para '+CalGeo.fmtKm(mk)+' de distância aproximada entre os pontos'+(dm>0?' (cerca de '+CalGeo.fmtMin(dm)+' a menos de deslocamento)':'')+'. É só uma sugestão: não mudei seus horários, e se algo tem hora marcada, ele manda na ordem.'+avM+'</div>';
+    if(onReady)onReady();
+  }).catch(function(){});
+}
+
+/* ---------- popup do trajeto: tela De → Para dentro do Calendário ---------- */
+var trajetoAberto=false;
+function recarregaDoDisco(){
+  trajetoAberto=false; var at=S.atualizado;
+  carregar(); if(S.atualizado!==at)agendarNuvem(); tudo();
+}
+function abrirTrajeto(ida,idb){
+  var ea=S.ev.filter(function(x){return x.id===ida;})[0], eb=S.ev.filter(function(x){return x.id===idb;})[0]; if(!ea||!eb)return;
+  var q='embed=1&de='+encodeURIComponent(ea.titulo.slice(0,120))+'&para='+encodeURIComponent(eb.titulo.slice(0,120))+'&dl='+encodeURIComponent(ea.local.slice(0,600))+'&pl='+encodeURIComponent(eb.local.slice(0,600))+'&dt='+eb.data;
+  trajetoAberto=true;
+  abrir('<div class="dlg-top"><h2 id="dlgT">🧭 Definir trajeto</h2><button class="btn sm" type="button" data-act="voltar">← Voltar</button></div><iframe class="trj" title="Definir trajeto" src="../deslocamento/?'+q+'"></iframe>');
+}
+window.addEventListener('message',function(ev){ if(ev.origin!==location.origin||!ev.data||ev.data.uni!=='pas-salva')return; });
+function salvaTrecho(ida,idb){
+  var ea=S.ev.filter(function(x){return x.id===ida;})[0], eb=S.ev.filter(function(x){return x.id===idb;})[0];
+  if(!ea||!eb||!window.CalPas||CalPas.jaSalvo(S,ea,eb))return;
+  Promise.all([CalGeo.geocodificar(ea.local),CalGeo.geocodificar(eb.local)]).then(function(r){
+    if(!r[0]||!r[1])return;
+    var d=CalGeo.km(r[0],r[1]), rk=[CalGeo.chave(ea.local),CalGeo.chave(eb.local)].sort().join('>'), m=(S.orc&&S.orc.m&&S.orc.m[rk])||CalGeo.modoPadrao(d), E=CalGeo.estModo(m,d,CalGeo.rotaCache(r[0],r[1],CalGeo.perfilDe(m)),S.orc&&S.orc.r&&S.orc.r[rk+'|'+m]);
+    var tv=S.orc&&S.orc.t&&S.orc.t[rk+'|'+m], v=(tv&&isFinite(+tv.v))?+tv.v:E.fare;
+    CalPas.nova(S,CalGeo,{de:ea.titulo.slice(0,120),para:eb.titulo.slice(0,120),deLocal:ea.local.slice(0,600),paraLocal:eb.local.slice(0,600),modo:m,rapido:m==='trem'&&d>100&&d<=700,data:eb.data,hora:'',v:Math.round(v),pax:(S.orc&&S.orc.pax)||1});
+    gravar(); tudo(); aviso('Trecho salvo nas Passagens.'); if(diaAberto&&dlg.open)abrirDia(diaAberto);
+  });
+}
+
+function trocarVisao(v){
+  visao=v;
+  $('#vMes').hidden=v!=='mes';
+  $('#mesNav').hidden=v!=='mes';
+  $('#legDrop').hidden=v!=='mes';
+  if(v!=='mes'){$('#legDrop').open=false; $('#legPop').hidden=true;}
+  $('#vLista').hidden=v!=='lista';
+  $('#vbMes').setAttribute('aria-pressed',v==='mes');
+  $('#vbLista').setAttribute('aria-pressed',v==='lista');
+}
+$('#vbMes').onclick=function(){trocarVisao('mes');};
+$('#vbLista').onclick=function(){trocarVisao('lista');};
+function moverMes(n){var y=+mes.slice(0,4),m=+mes.slice(5,7)-1+n;mes=new Date(Date.UTC(y,m,1)).toISOString().slice(0,7);desenharMes();}
+$('#mPrev').onclick=function(){moverMes(-1);};
+$('#mNext').onclick=function(){moverMes(1);};
+$('#grade').addEventListener('click',function(ev){var b=ev.target.closest('[data-d]');if(b)abrirDia(b.dataset.d);});
+$('#vLista').addEventListener('click',acaoEvento);
+$('#estadias').addEventListener('click',acaoEvento);
+
+/* ---------- janela do dia com abas internas ---------- */
+var dlg=$('#dlg'),dlgIn=$('#dlgIn'),diaAberto='',voltarPara='';
+function abrir(html){dlgIn.innerHTML=html;if(!dlg.open)dlg.showModal();}
+function fechar(){if(dlg.open)dlg.close();}
+dlg.addEventListener('close',function(){
+  if(!pendLink)return;
+  pendLink=false;if(!linkOk&&!VER&&usuario)sincronizar();
+});
+dlg.addEventListener('click',function(ev){if(ev.target===dlg)fechar();});
+dlg.addEventListener('close',function(){
+  if(trajetoAberto)recarregaDoDisco();
+  if(diaAberto){var b=$('#grade [data-d="'+diaAberto+'"]');if(b&&visao==='mes')b.focus();}
+  diaAberto='';
+});
+function abrirDia(d){
+  diaAberto=d;
+  var todos=doDia(d), hs=todos.filter(function(e){return e.tipo==='hosp'&&e.data!==d;}), evs=todos.filter(function(e){return !(e.tipo==='hosp'&&e.data!==d);});
+  var ant=Object.keys(S.ev.reduce(function(o,e){if(e.data<d)o[e.data]=1;return o;},{})).sort().pop(), ultAnt=ant?ordemDia(ant).pop():null;
+  var dep=Object.keys(S.ev.reduce(function(o,e){if(e.data>d)o[e.data]=1;return o;},{})).sort()[0], primDep=dep?ordemDia(dep)[0]:null, ultHoje=evs[evs.length-1];
+  var bridgeAnt=(evs.length&&ultAnt&&evs[0].local)?'<details class="day-bridge"><summary>↩ Vindo de “'+esc(ultAnt.titulo)+'” ('+esc(curto(ant))+')</summary><div style="margin-top:6px">'+ligHtml(ultAnt,evs[0])+'</div></details>':'';
+  var bridgeDep=(primDep&&ultHoje&&ultHoje.local&&primDep.local)?'<details class="day-bridge"><summary>↪ Próximo destino: “'+esc(primDep.titulo)+'” ('+esc(curto(dep))+')</summary><div style="margin-top:6px">'+ligHtml(ultHoje,primDep)+'</div></details>':'';
+
+  abrir(
+    '<div class="dlg-top"><div><h2 id="dlgT">'+esc(longo(d))+'</h2><p class="nota">'+(d>=S.ini&&d<=S.fim?'Dia '+(diff(S.ini,d)+1)+' da viagem':'Fora das datas da viagem')+'</p></div>'+
+    '<div class="barra" style="flex:none"><button class="btn pri sm" type="button" data-act="novo" data-d="'+d+'">➕ Novo</button><button class="btn sm" type="button" data-act="fechar" aria-label="Fechar">✕</button></div></div>'+
+    '<div class="day-tabs" role="tablist"><button type="button" role="tab" id="dtAg" aria-selected="true">📅 Agenda ('+evs.length+')</button><button type="button" role="tab" id="dtSug" aria-selected="false" hidden>✨ Sugestões</button></div>'+
+    '<div id="dayAgenda" style="display:grid;gap:10px">'+
+      (evs.length>1||(evs.length&&hospDoDia(d))?trajToggle():'')+
+      hs.map(function(h){var ad=limpaCoord(h.local||''); return '<div class="estq"><div class="est-i"><div><b>🏨 Onde você dorme: '+esc(nomeEst(h))+'</b>'+(ad?'<small class="nota" style="display:block">'+esc(ad)+'</small>':'')+'<small class="nota">'+esc(curto(h.data))+(h.dataFim?' → '+esc(curto(h.dataFim)):'')+'</small></div><div style="display:flex;gap:6px;flex-wrap:wrap">'+(ad?'<button type="button" class="btn sm soft" data-taxi-nome="'+esc(nomeEst(h))+'" data-taxi-addr="'+esc(ad)+'">🚕 Taxista</button><a class="btn sm" href="https://www.google.com/maps/search/?api=1&query='+encodeURIComponent(ad)+'" target="_blank" rel="noopener">🗺️ Maps</a>':'')+'<button type="button" class="btn sm" data-act="edit" data-id="'+esc(h.id)+'">✏️ Editar</button></div></div></div>';}).join('')+
+      bridgeAnt+
+      (evs.length?comLig(evs,d):'<div class="vazio">Nenhum evento neste dia.</div>')+
+      bridgeDep+
+    '</div>'+
+    '<div id="daySug" hidden style="display:grid;gap:10px"><div id="otim"></div><div id="qPre"></div><div id="qPerto"></div></div>'
+  );
+
+  var bAg=$('#dtAg'), bSug=$('#dtSug'), pAg=$('#dayAgenda'), pSug=$('#daySug');
+  bAg.onclick=function(){bAg.setAttribute('aria-selected','true');bSug.setAttribute('aria-selected','false');pAg.hidden=false;pSug.hidden=true;};
+  bSug.onclick=function(){bSug.setAttribute('aria-selected','true');bAg.setAttribute('aria-selected','false');pSug.hidden=false;pAg.hidden=true;};
+
+  function checaSug(){
+    if(!bSug||!bSug.isConnected)return;
+    var n=($('#otim').innerHTML?1:0)+($('#qPre').innerHTML?1:0)+($('#qPerto').innerHTML?1:0);
+    if(n){bSug.hidden=false; bSug.textContent='✨ Sugestões ('+n+')';}
+  }
+  preencheLig(dlgIn,true);
+  sugereOrdem(evs,checaSug);
+  if(window.CalLista){
+    CalLista.preencherPerto($('#qPerto'),S,d,evs,usarDaLista);
+    CalLista.preencherPre($('#qPre'),S,d,evs,usarDaLista);
+    var mo=new MutationObserver(checaSug);
+    mo.observe($('#daySug'),{childList:true,subtree:true});
+  }
+}
+
+/* ---------- formulário de evento com acordeão "Mais opções" ---------- */
+var usadoLista='';
+function usarDaLista(x,dia){
+  voltarPara='';
+  formEvento({id:'',titulo:x.nome,tipo:CalLista.CATS[x.cat][2],data:dia||S.ini,dataFim:'',hora:'',horaFim:'',fuso:S.fuso,local:x.local,detalhes:x.nota||''},dia||S.ini,'<p class="nota">⭐ Vindo da sua lista'+(x.achouPeloNome?': endereço achado pelo nome, confira.':'.')+'</p>',x.id);
+}
+function formEvento(e,dataPadrao,topo,idLista){
+  var novo=!e||!e.id; usadoLista=idLista||'';
+  e=e||{id:'',titulo:'',tipo:'passeio',data:dataPadrao||S.ini,dataFim:'',hora:'',horaFim:'',fuso:S.fuso,local:'',detalhes:''};
+  var tipos=Object.keys(TIPOS).map(function(k){return '<option value="'+k+'"'+(k===e.tipo?' selected':'')+'>'+TIPOS[k][0]+' '+TIPOS[k][1]+'</option>';}).join('');
+  var fusos=Object.keys(FUSOS).map(function(k){return '<option value="'+k+'"'+(k===e.fuso?' selected':'')+'>'+FUSOS[k][0]+'</option>';}).join('');
+  var abreExtra=Boolean(e.dataFim||e.horaFim||e.detalhes||e.valor||(e.id&&e.id===S.chegada)||(e.fuso&&e.fuso!==S.fuso)||e.tipo==='hosp');
+  abrir('<div class="dlg-top"><h2 id="dlgT">'+(novo?'Novo evento':'Editar evento')+'</h2><button class="btn sm" type="button" data-act="fechar" aria-label="Fechar">✕</button></div>'+(topo||'')+
+    '<form id="fEv" novalidate class="wrap" style="gap:11px">'+
+    (novo&&S.lista&&S.lista.length&&window.CalLista?'<label class="f">⭐ Puxar da minha lista<select id="evLista"><option value="">— escolher —</option>'+CalLista.opcoes(S.lista)+'</select></label>':'')+
+    '<label class="f">O que vai acontecer?<input name="titulo" required maxlength="160" value="'+esc(e.titulo)+'" placeholder="ex.: teamLab, jantar, Shinkansen para Quioto" autocomplete="off"></label>'+
+    '<div class="par2"><label class="f">Tipo<select name="tipo">'+tipos+'</select></label>'+
+    '<label class="f">Dia<input type="date" name="data" required value="'+esc(e.data)+'"></label></div>'+
+    '<div class="par2"><label class="f">Hora de início<input type="time" name="hora" value="'+esc(e.hora)+'"><small>Deixe vazio para o dia todo.</small></label>'+
+    '<label class="f">Local<input name="local" maxlength="600" value="'+esc(e.local)+'" placeholder="link do Google Maps, nome do lugar ou endereço" autocomplete="off"></label></div>'+
+    '<small id="locSt" class="nota" role="status"></small>'+
+    '<details class="ev-extra"'+(abreExtra?' open':'')+'><summary>⚙️ Mais opções (término, fuso, valor, detalhes)</summary><div class="ev-extra-in">'+
+      '<div class="par2"><label class="f">Termina em outro dia?<input type="date" name="dataFim" value="'+esc(e.dataFim)+'"><small>Para estadias e viagens longas. Deixe vazio se for no mesmo dia.</small></label>'+
+      '<label class="f">Hora de término<input type="time" name="horaFim" value="'+esc(e.horaFim)+'"></label></div>'+
+      '<label class="f">Fuso do horário<select name="fuso">'+fusos+'</select><small>Automático: Brasília antes da chegada ao Japão, Japão depois.</small></label>'+
+      '<label class="f" style="display:flex;gap:10px;align-items:center;flex-direction:row;font-size:14.5px;color:var(--ink)"><input type="checkbox" name="chegada" style="width:auto"'+(e.id&&e.id===S.chegada?' checked':'')+'> 🛬 Este evento é a chegada ao Japão (os dias seguintes ficam no horário de lá)</label>'+
+      '<div class="par2" id="evValorBox"'+(e.tipo==='hosp'?'':' hidden')+'><label class="f">Valor da estadia (opcional)<input name="valor" type="number" inputmode="numeric" min="0" step="1" value="'+(e.valor?esc(String(e.valor)):'')+'" placeholder="total das noites"><small>Some o gasto total no painel de estadias.</small></label>'+
+      '<label class="f">Moeda<select name="moeda"><option value="jpy"'+(e.moeda!=='brl'?' selected':'')+'>¥ ienes</option><option value="brl"'+(e.moeda==='brl'?' selected':'')+'>R$ reais</option></select></label></div>'+
+      '<label class="f">Detalhes<textarea name="detalhes" maxlength="4000" placeholder="código de reserva, como chegar, o que levar…">'+esc(e.detalhes)+'</textarea></label>'+
+    '</div></details>'+
+    '<p class="erro" id="evErr" role="alert"></p>'+
+    '<div class="barra"><button class="btn pri" type="submit">'+(novo?'Adicionar':'Salvar')+'</button><button class="btn" type="button" data-act="voltar">Cancelar</button></div></form>');
+  var f=$('#fEv');
+  if($('#evLista'))$('#evLista').onchange=function(){
+    var x=(S.lista||[]).find(function(z){return z.id===this.value;}.bind(this)); if(!x)return;
+    usadoLista=x.id; f.querySelector('[name=titulo]').value=x.nome; f.querySelector('[name=tipo]').value=CalLista.CATS[x.cat][2]; var li=f.querySelector('[name=local]'); li.value=x.local; li.dispatchEvent(new Event('input'));
+    if(x.nota){var dt=f.querySelector('[name=detalhes]'); if(dt&&!dt.value.trim()){dt.value=x.nota; f.querySelector('.ev-extra').open=true;}}
+    $('#locSt').textContent=x.local?'⭐ Da sua lista'+(x.achouPeloNome?': endereço achado pelo nome ('+x.achado.split(',').slice(0,3).join(',')+'). Confira se é o lugar certo.':': ponto vindo do link ou endereço que você colou.'):'⚠ Este item da lista está sem endereço: não calculo deslocamento. Escreva o endereço ou cole o link do Google Maps.';
+  };
+  (function(){var li=f.querySelector('[name=local]'), st=$('#locSt');
+    function mostra(){st.textContent=estadoLocal(li.value);}
+    li.addEventListener('input',mostra); li.addEventListener('change',function(){var c=compactaLocal(li.value); if(c!==li.value)li.value=c; mostra();
+      var t=li.value.trim(); if(t&&window.CalGeo&&!CalGeo.coordDe(t)&&!CalGeo.soLinkCurto(t)){ var v=t;
+        st.textContent+=' Procurando no mapa…';
+        CalGeo.geocodificar(t).then(function(r){ if(li.value.trim()!==v)return;
+          st.textContent=r?'⚠ Localização escrita à mão. Achei: “'+r.nome+'”. Confira se é o lugar certo; se não for, escreva com a cidade ou cole o link do Google Maps.':'⚠ Não achei esse endereço no mapa. Escreva com a cidade, ou cole o link do Google Maps.'; }).catch(function(){}); } }); mostra();})();
+  (function(){var tp=f.querySelector('[name=tipo]'),bx=$('#evValorBox'),ex=f.querySelector('.ev-extra'); tp.addEventListener('change',function(){bx.hidden=tp.value!=='hosp'; if(tp.value==='hosp')ex.open=true;});})();
+  f.querySelector('[name=titulo]').focus();
+  f.onsubmit=function(ev){
+    ev.preventDefault();
+    var x=Object.fromEntries(new FormData(f).entries()),er=$('#evErr');
+    x.titulo=x.titulo.trim();
+    if(!x.titulo){er.textContent='Dê um nome ao evento.';return;}
+    if(!okData(x.data)){er.textContent='Escolha o dia do evento.';return;}
+    if(x.dataFim&&(!okData(x.dataFim)||x.dataFim<x.data)){er.textContent='O dia de término precisa ser depois do dia de início.';return;}
+    if(x.dataFim===x.data)x.dataFim='';
+    if(x.horaFim&&!x.hora){er.textContent='Para usar hora de término, preencha também a de início.';return;}
+    if(x.hora&&x.horaFim&&!x.dataFim&&x.horaFim<=x.hora){er.textContent='A hora de término precisa ser depois da de início.';return;}
+    var o={id:e.id||uid(),titulo:x.titulo,tipo:TIPOS[x.tipo]?x.tipo:'outro',data:x.data,dataFim:x.dataFim,hora:x.hora,horaFim:x.hora?x.horaFim:'',
+      fuso:FUSOS[x.fuso]?x.fuso:S.fuso,local:compactaLocal(x.local).slice(0,600),detalhes:x.detalhes.trim()};
+    var vlr=Math.round(+x.valor); if(o.tipo==='hosp'&&isFinite(vlr)&&vlr>0&&vlr<=99999999){o.valor=vlr;o.moeda=x.moeda==='brl'?'brl':'jpy';}
+    if(x.chegada)S.chegada=o.id;else if(S.chegada===o.id)S.chegada='';
+    var i=S.ev.findIndex(function(z){return z.id===o.id;});
+    if(i>=0)S.ev[i]=o;else S.ev.push(o);
+    if(novo&&usadoLista){var qi=(S.lista||[]).find(function(z){return z.id===usadoLista;}); if(qi)qi.evId=o.id;} usadoLista='';
+    gravar();tudo();
+    if(salvouOk)aviso(novo?'Evento adicionado.':'Evento salvo.');
+    if(o.data.slice(0,7)!==mes&&visao==='mes'){mes=o.data.slice(0,7);desenharMes();}
+    if(voltarPara==='lista'){fechar();}else{abrirDia(o.data);}
+  };
+}
+
+function acaoEvento(ev){
+  var b=ev.target.closest('[data-act]');if(!b)return;
+  var a=b.dataset.act,id=b.dataset.id;
+  if(a==='trajeto'){ev.preventDefault();ev.stopPropagation();}
+  if(trajetoAberto&&(a==='fechar'||a==='voltar')){recarregaDoDisco();}
+  if(a==='fechar'){fechar();return;}
+  if(a==='qlista'){fechar();trocarAba('ideias');return;}
+  if(a==='qusar'){var qx=(S.lista||[]).find(function(z){return z.id===id;}); if(qx)usarDaLista(qx); return;}
+  if(a==='novohosp'){voltarPara='';formEvento({id:'',titulo:'',tipo:'hosp',data:S.ini,dataFim:'',hora:'',horaFim:'',fuso:S.fuso,local:'',detalhes:''},S.ini);return;}
+  if(a==='trajeto'){abrirTrajeto(b.dataset.a,b.dataset.b);return;}
+  if(a==='traj'){ modoTraj=b.dataset.m==='seq'?'seq':'hosp'; try{localStorage.setItem('uniCalTraj',modoTraj);}catch(e){} desenharLista(); if(dlg.open&&diaAberto)abrirDia(diaAberto); return; }
+  if(a==='trecho'){ salvaTrecho(b.dataset.a,b.dataset.b); return; }
+  if(a==='voltar'){if(voltarPara==='lista'||!diaAberto)fechar();else abrirDia(diaAberto);return;}
+  if(a==='novo'){voltarPara='';formEvento(null,b.dataset.d);return;}
+  if(a==='edit'){
+    var e=S.ev.find(function(z){return z.id===id;});if(!e)return;
+    voltarPara=dlg.open?'':'lista';if(!dlg.open)diaAberto='';
+    formEvento(e);return;
+  }
+  if(a==='del'){
+    if(b.dataset.sure!=='1'){b.dataset.sure='1';b.textContent='Confirmar exclusão?';setTimeout(function(){if(b.isConnected){b.dataset.sure='';b.textContent='Excluir';}},4000);return;}
+    var d=diaAberto;
+    S.ev=S.ev.filter(function(z){return z.id!==id;});
+    if(S.chegada===id)S.chegada='';
+    gravar();tudo();aviso('Evento excluído.');
+    if(dlg.open&&d)abrirDia(d);
+  }
+}
+dlg.addEventListener('click',acaoEvento);
+
+function abrirNovo(){
+  voltarPara=visao==='lista'?'lista':'';diaAberto='';
+  var h=hojeStr();formEvento(null,h>=S.ini&&h<=S.fim?h:S.ini);
+}
+$('#bNovo').onclick=abrirNovo;
+$('#bNovoMob').onclick=abrirNovo;
+
+/* ---------- Google Agenda ---------- */
+$('#bGoogle').onclick=function(){
+  var n=S.ev.length;
+  abrir('<div class="dlg-top"><h2 id="dlgT" style="text-transform:none">Levar para o Google Agenda</h2><button class="btn sm" type="button" data-act="fechar" aria-label="Fechar">✕</button></div>'+
+    (n?'':'<div class="vazio">Você ainda não tem eventos. Adicione alguns e volte aqui.</div>')+
+    '<p><b>Todos de uma vez ('+n+' '+(n===1?'evento':'eventos')+'):</b></p>'+
+    '<ol class="passos"><li>Baixe o arquivo abaixo.</li>'+
+    '<li>No computador, abra <b>calendar.google.com</b> e vá em <b>Configurações → Importar e exportar → Importar</b>.</li>'+
+    '<li>Escolha o arquivo e o calendário de destino. Se quiser testar antes, crie um calendário novo só para a viagem.</li></ol>'+
+    '<div class="barra"><button class="btn pri" type="button" data-act="ics"'+(n?'':' disabled')+'>📥 Baixar arquivo para o Google Agenda (.ics)</button></div>'+
+    '<p><b>Um evento por vez:</b> abra o dia, expanda <b>Detalhes e ações</b> e use o botão <b>➕ Google Agenda</b> do evento. O Google abre com tudo preenchido e você só confirma.</p>'+
+    '<p class="nota">O Google mostra os horários no fuso da sua agenda: no Brasil, um evento às 10h do Japão aparece às 22h do dia anterior, e é isso mesmo.</p>'+
+    '<p class="nota">O arquivo também funciona no Apple Calendário e no Outlook. Cada evento leva um código fixo, o que costuma fazer o Google reconhecer o mesmo evento se você importar de novo; se aparecer duplicado, apague os antigos antes. Mudanças feitas depois dentro do Google Agenda não voltam para este calendário.</p>');
+};
+dlg.addEventListener('click',function(ev){
+  var b=ev.target.closest('[data-act="ics"]');if(!b)return;
+  baixar('calendario-'+slug()+'.ics',montarIcs(),'text/calendar;charset=utf-8');
+  aviso('Arquivo baixado.');
+});
+
+/* ---------- cópia, exemplo, apagar, imprimir ---------- */
+$('#bImprimir').onclick=function(){
+  var aAnt=abaAtiva, vAnt=visao;
+  trocarAba('roteiro'); trocarVisao('lista');
+  var ab=[]; document.querySelectorAll('#vLista details.ev-acc').forEach(function(d){if(!d.open){d.open=true;ab.push(d);}});
+  window.print();
+  ab.forEach(function(d){d.open=false;});
+  trocarVisao(vAnt); trocarAba(aAnt);
+};
+$('#bSalvar').onclick=function(){baixar('calendario-'+slug()+'.json',JSON.stringify(S,null,1),'application/json');aviso('Cópia salva no seu aparelho.');};
+$('#bAbrir').onclick=function(){$('#fAbrir').click();};
+$('#fAbrir').onchange=function(){
+  var f=this.files&&this.files[0];this.value='';if(!f)return;
+  var r=new FileReader();
+  r.onload=function(){
+    var novo;try{novo=limpar(JSON.parse(r.result));}catch(e){novo=null;}
+    if(!novo||!novo.ini){aviso('Esse arquivo não parece ser uma cópia do calendário.');return;}
+    abrir('<div class="dlg-top"><h2 id="dlgT" style="text-transform:none">Abrir esta cópia?</h2><button class="btn sm" type="button" data-act="fechar" aria-label="Fechar">✕</button></div><p>A cópia tem <b>'+novo.ev.length+'</b> '+(novo.ev.length===1?'evento':'eventos')+', de '+esc(curto(novo.ini))+' a '+esc(curto(novo.fim))+'. Ela vai <b>substituir</b> o calendário que está aqui agora ('+S.ev.length+' '+(S.ev.length===1?'evento':'eventos')+').</p>'+
+      '<div class="barra"><button class="btn pri" type="button" id="okAbrir">Substituir</button><button class="btn" type="button" data-act="fechar">Cancelar</button></div>');
+    $('#okAbrir').onclick=function(){S=novo;mes=S.ini.slice(0,7);gravar();fechar();$('#setup').hidden=true;mostrarApp(true);tudo();trocarAba('roteiro');aviso('Cópia aberta.');};
+  };
+  r.readAsText(f);
+};
+$('#bExemplo').onclick=function(){
+  var se=S.ev.length?'<p>Isso <b>acrescenta</b> 6 eventos de exemplo aos que você já tem. Dá para apagar cada um depois.</p>':'<p>Vai colocar 6 eventos de exemplo no seu calendário, só para você ver como fica. Dá para apagar cada um depois.</p>';
+  abrir('<div class="dlg-top"><h2 id="dlgT" style="text-transform:none">Preencher com exemplo?</h2><button class="btn sm" type="button" data-act="fechar" aria-label="Fechar">✕</button></div>'+se+'<div class="barra"><button class="btn pri" type="button" id="okEx">Preencher</button><button class="btn" type="button" data-act="fechar">Cancelar</button></div>');
+  $('#okEx').onclick=function(){
+    var span=diff(S.ini,S.fim),nota='Evento de exemplo: edite ou apague.';
+    [[0,'Chegada ao Japão','voo','14:00','','Aeroporto de Tóquio'],[0,'Check-in no hotel','hosp','15:00','','Nome do hotel, cidade'],[1,'Passeio pelo bairro de Asakusa','passeio','10:00','13:00','Asakusa, Tóquio'],
+     [1,'Jantar','comida','19:00','20:30','Restaurante a escolher'],[Math.min(3,span),'Shinkansen para Quioto','transp','09:30','12:00','Estação de Tóquio'],[Math.min(5,span),'Check-out do hotel','hosp','11:00','','']]
+    .forEach(function(x){S.ev.push({id:uid(),titulo:x[1],tipo:x[2],data:add(S.ini,x[0]),dataFim:'',hora:x[3],horaFim:x[4],fuso:S.fuso,local:x[5],detalhes:nota});});
+    if(!S.chegada){var c=S.ev.find(function(z){return z.titulo==='Chegada ao Japão';});if(c)S.chegada=c.id;}
+    gravar();fechar();tudo();trocarAba('roteiro');aviso('Exemplo adicionado.');
+  };
+};
+$('#bLimpar').onclick=function(){
+  abrir('<div class="dlg-top"><h2 id="dlgT" style="text-transform:none">Apagar tudo?</h2><button class="btn sm" type="button" data-act="fechar" aria-label="Fechar">✕</button></div><p>Vai apagar as datas e os <b>'+S.ev.length+'</b> '+(S.ev.length===1?'evento':'eventos')+' deste navegador'+(usuario&&syncPronto?' <b>e da sua conta</b>':'')+'. Se quiser guardar, salve uma cópia antes.</p>'+
+    '<div class="barra"><button class="btn perigo" type="button" id="okLimpa">Apagar tudo</button><button class="btn" type="button" data-act="fechar">Cancelar</button></div>');
+  $('#okLimpa').onclick=function(){
+    var naConta=usuario&&syncPronto&&window.CalNuvem;
+    S=limpar(null);try{localStorage.removeItem(KEY);}catch(e){}
+    if(naConta){CalNuvem.apagar().catch(function(){aviso('Apaguei aqui, mas não consegui apagar na conta. Tente de novo mais tarde.');});}
+    fechar();mostrarApp(false);mostrarSetup(false);nuvemUI();aviso('Tudo apagado.');
+  };
+};
+
+/* ---------- conta (guardar online) ---------- */
+var pendLink=/^#(c|l)=/.test(location.hash), linkOk=false;
+var usuario=null, syncPronto=false, estadoNuvem='', ultimoSalvo=null, tNuv=null;
+function igual(a,b){
+  function ord(v){if(Array.isArray(v))return v.map(ord);if(v&&typeof v==='object'){var r={};Object.keys(v).sort().forEach(function(q){if(v[q]!==undefined)r[q]=ord(v[q]);});return r;}return v;}
+  function k(o){return JSON.stringify(ord({t:o.titulo,i:o.ini,f:o.fim,u:o.fuso,c:o.chegada,e:o.ev,o:o.orc,k:o.ok,p:o.pas,l:(o.lista||[]).map(function(x){return [x.id,x.nome,x.cat,x.evId,x.nota,x.local,x.comprar||''];})}));}
+  return k(a)===k(b);
+}
+function nome(u){return (u&&(u.email||u.displayName)||'sua conta').split('@')[0];}
+function hhmm(d){return pad(d.getHours())+':'+pad(d.getMinutes());}
+function nuvemUI(){
+  var a=$('#nuvem'),b=$('#nuvemSetup'),t='',ts='';
+  if(!usuario){
+    t='☁️ Só neste aparelho · <button type="button" data-nuv="entrar">Entrar para guardar online</button>';
+    ts='☁️ Entre com a sua conta — é grátis — para guardar tudo online e abrir em qualquer aparelho. Já criou um calendário? Ele aparece ao entrar. <button type="button" data-nuv="entrar">Entrar ou criar conta grátis</button>';
+  }else if(estadoNuvem==='erro'){
+    t='⚠️ Sem sync · <button type="button" data-nuv="tentar">Tentar de novo</button>';
+    ts='⚠️ Não consegui falar com a conta agora. O calendário continua salvo neste aparelho. <button type="button" data-nuv="tentar">Tentar de novo</button>';
+  }else if(estadoNuvem==='salvando'||estadoNuvem==='sync'){
+    t='☁️ Sincronizando…';ts='☁️ Sincronizando com a sua conta…';
+  }else if(!syncPronto){
+    t='☁️ Falta escolher · <button type="button" data-nuv="tentar">Escolher agora</button>';
+    ts='☁️ Falta escolher qual calendário vale. <button type="button" data-nuv="tentar">Escolher agora</button>';
+  }else{
+    t='☁️ '+esc(nome(usuario))+(ultimoSalvo?' · salvo às '+hhmm(ultimoSalvo):'');
+    ts='☁️ Você entrou como '+esc(nome(usuario))+'. Ainda não há calendário guardado na conta.';
+  }
+  a.innerHTML=t;b.innerHTML=ts;
+}
+function pedirLogin(){
+  if(!window.CalNuvem){aviso('O login não carregou. Confira a internet e recarregue a página.');return;}
+  CalNuvem.entrar({titulo:'Entre para guardar seu calendário online',texto:'Com a conta, o calendário da viagem fica guardado e aparece em qualquer aparelho em que você entrar.',peq:'Guardamos o seu e-mail e os dados do calendário que você criar.'});
+}
+document.addEventListener('click',function(ev){
+  var b=ev.target.closest('[data-nuv]');if(!b)return;
+  if(b.dataset.nuv==='entrar')pedirLogin();else{syncPronto?salvarNuvem():sincronizar();}
+});
+
+/* ---------- Quero ir (iframe) + uniCalPend ---------- */
+function aplicarPend(){
+  if(VER||!S.ini)return false;
+  var pend; try{pend=JSON.parse(localStorage.getItem('uniCalPend')||'[]');}catch(e){pend=[];}
+  if(!Array.isArray(pend)||!pend.length)return true;
+  var c=limpar({ini:S.ini,fim:S.fim,fuso:'jp',ev:pend.filter(function(p){return p&&typeof p.id==='string'&&p.id.indexOf('qi-')===0;}).map(function(p){
+    return {id:p.id,titulo:p.titulo,tipo:p.tipo,data:p.data,dataFim:'',hora:p.hora||'',horaFim:'',fuso:p.fuso||'jp',local:typeof p.local==='string'?p.local:'',detalhes:p.detalhes||''};})});
+  var ids={},gr=[]; c.ev.forEach(function(e){ids[e.id]=1;}); pend.forEach(function(p){if(p&&!p.upd&&typeof p.grupo==='string'&&p.grupo.indexOf('qi-')===0&&gr.indexOf(p.grupo)<0)gr.push(p.grupo);});
+  S.ev=S.ev.filter(function(e){return !ids[e.id]&&!gr.some(function(g){return e.id.indexOf(g)===0;});}).concat(c.ev);
+  gravar();tudo();try{localStorage.removeItem('uniCalPend');}catch(e){}aviso(c.ev.length+(c.ev.length===1?' item entrou':' itens entraram')+' no calendário (Quero ir e avisos).');
+  return true;
+}
+window.UniQI={
+  estado:function(){
+    if(!usuario)return {t:'sem',txt:'☁️ Você não está logada: as escolhas ficam só neste aparelho.',bt:'Entrar (grátis)'};
+    if(estadoNuvem==='erro')return {t:'erro',txt:'⚠️ Não consegui salvar na sua conta agora. As escolhas continuam neste aparelho.',bt:'Tentar de novo'};
+    if(estadoNuvem==='salvando'||estadoNuvem==='sync')return {t:'sync',txt:'☁️ Sincronizando com a sua conta…',bt:''};
+    if(!syncPronto)return {t:'pend',txt:'⚠️ Ainda não sincronizou com a conta: falta escolher qual calendário vale.',bt:'Escolher agora'};
+    return {t:'ok',txt:'☁️ Guardado na conta de '+nome(usuario)+(ultimoSalvo?' · salvo às '+hhmm(ultimoSalvo):''),bt:''};
+  },
+  agir:function(){var e=this.estado();if(e.t==='sem')pedirLogin();else if(e.t==='erro'||e.t==='pend')document.getElementById('qiFecha').click(),syncPronto?salvarNuvem():sincronizar();},
+  get:function(){return JSON.parse(JSON.stringify(S.qi||{}));},
+  set:function(obj){
+    if(VER)return; var novo=limpaQi(obj), ant=S.qi||{};
+    Object.keys(novo).forEach(function(k){ if(JSON.stringify(Object.assign({},novo[k],{t:0}))!==JSON.stringify(Object.assign({},ant[k]||{},{t:0})))novo[k].t=Date.now(); else novo[k].t=(ant[k]&&ant[k].t)||novo[k].t; });
+    if(JSON.stringify(novo)===JSON.stringify(ant))return;
+    S.qi=novo; gravar(); if(abaAtiva==='ideias')desenharIdeias();
+  }
+};
+function avisaQi(){var f=document.getElementById('qiFrame');try{if(f&&f.contentWindow)f.contentWindow.postMessage({uniQi:1},location.origin);}catch(e){}}
+var pendIv=null;
+function vigiaPend(){
+  if(pendIv)return; var t0=Date.now();
+  pendIv=setInterval(function(){
+    var tem; try{tem=(JSON.parse(localStorage.getItem('uniCalPend')||'[]')||[]).length;}catch(e){tem=0;}
+    if(!tem||Date.now()-t0>25000){clearInterval(pendIv);pendIv=null;return;}
+    if(!$('#app')||$('#app').hidden||document.querySelector('#dlg[open]'))return;
+    if(syncPronto||(!usuario&&Date.now()-t0>(window.__pendRapido?0:6000))){clearInterval(pendIv);pendIv=null;aplicarPend();}
+  },800);
+}
+vigiaPend();
+
+(function(){var d=document.getElementById('dlgQI'),f=document.getElementById('qiFrame'),b=document.getElementById('bQI');if(!d||!b)return;
+  b.addEventListener('click',function(){window.__pendRapido=true;avisaQi();if(!f.getAttribute('src'))f.src='/travessia/ingressos/?embed=1&v=4';if(d.showModal)d.showModal();else d.setAttribute('open','');});
+  document.getElementById('qiFecha').addEventListener('click',function(){d.close();vigiaPend();});
+  d.addEventListener('close',vigiaPend);
+  window.addEventListener('storage',function(e){if(e.key==='uniCalPend')vigiaPend();});
+})();
+
+document.addEventListener('uni-conta',function(ev){
+  usuario=(ev.detail&&ev.detail.user)||null;syncPronto=false;estadoNuvem='';
+  nuvemUI();if(usuario){sincronizar();setTimeout(agendarVivo,4000);}
+});
+function adotar(c){
+  if(VER)return;
+  S=c;gravarLocal();var h=hojeStr();mes=(h>=S.ini&&h<=S.fim?h:S.ini).slice(0,7);
+  $('#setup').hidden=true;mostrarApp(true);tudo();
+}
+function lerBase(){try{return localStorage.getItem('uniCalBase')||'';}catch(e){return '';}}
+function gravaBase(v){try{if(v)localStorage.setItem('uniCalBase',v);}catch(e){}}
+async function sincronizar(){
+  if(VER||pendLink)return;
+  if(!usuario||!window.CalNuvem)return;
+  estadoNuvem='sync';nuvemUI();
+  var nuvem;
+  try{nuvem=await CalNuvem.carregar();}catch(e){estadoNuvem='erro';nuvemUI();return;}
+  if(VER||pendLink)return;
+  var c=nuvem?limpar(nuvem):null;if(c&&!c.ini)c=null;
+  estadoNuvem='';
+  if(!c){if(S.ini){await salvarNuvem();}else{syncPronto=true;nuvemUI();}return;}
+  var qiNuvem=JSON.stringify(c.qi||{}); c.qi=juntaQi(c.qi,S.qi); var subirQi=JSON.stringify(c.qi)!==qiNuvem;
+  if(!S.ini){adotar(c);gravaBase(c.atualizado);syncPronto=true;nuvemUI();aviso('Calendário buscado da sua conta.');return;}
+  if(igual(c,S)){
+    if(JSON.stringify(c.qi)!==JSON.stringify(S.qi||{})){S.qi=c.qi;gravarLocal();avisaQi();}
+    syncPronto=true;
+    if(subirQi)salvarNuvem(); else nuvemUI();
+    gravaBase(S.atualizado);
+    return;
+  }
+  var base=lerBase();
+  if(base&&S.atualizado===base&&c.atualizado&&c.atualizado!==base){adotar(c);gravaBase(c.atualizado);syncPronto=true;nuvemUI();avisaQi();aviso('Atualizei com o que você mudou em outro aparelho.');if(subirQi)salvarNuvem();return;}
+  if(base&&c.atualizado===base&&S.atualizado&&S.atualizado!==base){S.qi=c.qi;gravarLocal();await salvarNuvem();return;}
+  escolherVersao(c,subirQi);
+}
+function resumo(o,rot){
+  return '<article class="evc" style="--c:#8e6a1f"><h4>'+rot+'</h4><p>'+(o.titulo?esc(o.titulo)+' · ':'')+esc(curto(o.ini))+' a '+esc(curto(o.fim))+'</p><p class="nota">'+o.ev.length+' '+(o.ev.length===1?'evento':'eventos')+' · '+(o.lista||[]).length+' no Quero fazer'+(o.atualizado?' · alterado em '+esc(curto(o.atualizado.slice(0,10)))+' às '+esc(hhmm(new Date(o.atualizado))):'')+'</p></article>';
+}
+function juntarVersoes(c,d){
+  var m=JSON.parse(JSON.stringify(c)), n=function(x){return String(x||'').trim().toLowerCase();};
+  var idsEv={}, mapa={}; m.ev.forEach(function(e){idsEv[e.id]=1;});
+  var chaveEv=function(e){return [e.tipo,n(e.titulo),e.data].join('|');}, chaves={};
+  m.ev.forEach(function(e){chaves[chaveEv(e)]=e.id;});
+  d.ev.forEach(function(e){
+    if(idsEv[e.id])return;
+    if(chaves[chaveEv(e)]){mapa[e.id]=chaves[chaveEv(e)];return;}
+    m.ev.push(JSON.parse(JSON.stringify(e))); idsEv[e.id]=1; chaves[chaveEv(e)]=e.id;
+  });
+  var idsL={}, nomes={}; (m.lista||[]).forEach(function(x){idsL[x.id]=1;nomes[n(x.nome)]=1;});
+  (d.lista||[]).forEach(function(x){ if(idsL[x.id]||nomes[n(x.nome)])return; var y=JSON.parse(JSON.stringify(x)); if(y.evId&&mapa[y.evId])y.evId=mapa[y.evId]; m.lista.push(y); idsL[x.id]=1; nomes[n(x.nome)]=1; });
+  var idsP={}, chP={}, kp=function(x){return [n(x.de),n(x.para),x.data].join('|');}; (m.pas||[]).forEach(function(x){idsP[x.id]=1;chP[kp(x)]=1;});
+  (d.pas||[]).forEach(function(x){ if(idsP[x.id]||chP[kp(x)])return; var y=JSON.parse(JSON.stringify(x)); if(y.evId&&mapa[y.evId])y.evId=mapa[y.evId]; m.pas.push(y); idsP[x.id]=1; chP[kp(x)]=1; });
+  Object.keys(d.ok||{}).forEach(function(k){m.ok[k]=1;});
+  m.qi=juntaQi(c.qi,d.qi);
+  if(d.ini<m.ini)m.ini=d.ini; if(d.fim>m.fim)m.fim=d.fim;
+  if(!m.titulo)m.titulo=d.titulo;
+  if(!m.chegada&&d.chegada&&idsEv[d.chegada])m.chegada=mapa[d.chegada]||d.chegada;
+  m.atualizado=new Date().toISOString();
+  return limpar(m);
+}
+function escolherVersao(c,subirQi){
+  try{localStorage.setItem('uniCalBackupConta',JSON.stringify(c));localStorage.setItem('uniCalBackupAparelho',JSON.stringify(S));}catch(e){}
+  abrir('<div class="dlg-top"><h2 id="dlgT" style="text-transform:none">Qual calendário vale?</h2><button class="btn sm" type="button" data-act="fechar" aria-label="Fechar">✕</button></div>'+
+    '<p>Existe um calendário guardado na sua conta e outro diferente neste aparelho. Escolha qual manter, ou junte os dois para não perder nada.</p>'+
+    '<div class="dois">'+resumo(c,'Da sua conta')+resumo(S,'Deste aparelho')+'</div>'+
+    '<div class="barra"><button class="btn pri" type="button" id="juntaDois">🔀 Juntar os dois (não perde nada)</button></div>'+
+    '<div class="barra"><button class="btn" type="button" id="usaConta">Usar só o da conta</button><button class="btn" type="button" id="usaAparelho">Usar só o deste aparelho</button></div>'+
+    '<p class="nota">“Juntar” soma os eventos, as ideias do Quero fazer e as passagens dos dois. Se você apagou algo em um dos lados, isso pode voltar.</p>'+
+    '<p class="nota">Dica: se tiver dúvida, feche esta janela, vá na aba Mais e salve uma cópia do deste aparelho antes de escolher.</p>');
+  $('#juntaDois').onclick=function(){var j=juntarVersoes(c,S);fechar();adotar(j);syncPronto=true;gravarLocal();salvarNuvem();nuvemUI();aviso('Juntei os dois: '+j.ev.length+' eventos e '+(j.lista||[]).length+' no Quero fazer.');};
+  $('#usaConta').onclick=function(){adotar(c);gravaBase(c.atualizado);syncPronto=true;fechar();nuvemUI();avisaQi();aviso('Usando o calendário da conta.');if(subirQi)salvarNuvem();};
+  $('#usaAparelho').onclick=function(){fechar();S.qi=c.qi;S.atualizado=new Date().toISOString();gravarLocal();salvarNuvem();};
+}
+async function salvarNuvem(){
+  if(VER)return;
+  if(!usuario||!window.CalNuvem||!S.ini)return;
+  clearTimeout(tNuv);tNuv=null;estadoNuvem='salvando';nuvemUI();
+  try{await CalNuvem.salvar(JSON.parse(JSON.stringify(S)));syncPronto=true;ultimoSalvo=new Date();estadoNuvem='';gravaBase(S.atualizado);}
+  catch(e){estadoNuvem='erro';}
+  nuvemUI();
+}
+function agendarNuvem(){
+  if(VER)return;
+  if(!usuario||!syncPronto||!window.CalNuvem)return;
+  clearTimeout(tNuv);tNuv=setTimeout(salvarNuvem,1200);
+}
+document.addEventListener('visibilitychange',function(){if(document.visibilityState==='hidden'&&tNuv){salvarNuvem();}});
+
+/* ---------- link de compartilhar ---------- */
+function b64u(bytes){var s='';for(var i=0;i<bytes.length;i+=0x8000)s+=String.fromCharCode.apply(null,bytes.subarray(i,i+0x8000));return btoa(s).replace(/\+/g,'-').replace(/\//g,'_').replace(/=+$/,'');}
+function unb64u(t){t=t.replace(/-/g,'+').replace(/_/g,'/');while(t.length%4)t+='=';var s=atob(t),u=new Uint8Array(s.length);for(var i=0;i<s.length;i++)u[i]=s.charCodeAt(i);return u;}
+async function passa(bytes,Stream,modo){
+  var st=new Stream(modo),w=st.writable.getWriter();w.write(bytes);w.close();
+  return new Uint8Array(await new Response(st.readable).arrayBuffer());
+}
+async function empacotar(detalhes,comLista){
+  var o={v:1,titulo:S.titulo,ini:S.ini,fim:S.fim,fuso:S.fuso,chegada:S.chegada,orc:S.orc,ok:S.ok,pas:S.pas,ev:S.ev.map(function(e){var x=Object.assign({},e);if(!detalhes)x.detalhes='';return x;})};
+  if(comLista&&S.lista&&S.lista.length)o.lista=S.lista.map(function(q){var x=Object.assign({},q);if(!detalhes)x.nota='';return x;});
+  var bytes=new TextEncoder().encode(JSON.stringify(o));
+  if(window.CompressionStream)return 'g'+b64u(await passa(bytes,CompressionStream,'gzip'));
+  return 'j'+b64u(bytes);
+}
+async function desempacotar(tok){
+  var k=tok.charAt(0),bytes=unb64u(tok.slice(1));
+  if(k==='g')bytes=await passa(bytes,DecompressionStream,'gzip');
+  else if(k!=='j')throw new Error('formato');
+  return limpar(JSON.parse(new TextDecoder().decode(bytes)));
+}
+$('#bCompart').onclick=function(){
+  if(!S.ev.length){abrir('<div class="dlg-top"><h2 id="dlgT" style="text-transform:none">Compartilhar o calendário</h2><button class="btn sm" type="button" data-act="fechar" aria-label="Fechar">✕</button></div><div class="vazio">Adicione alguns eventos primeiro. O link leva uma cópia do que estiver no calendário.</div>');return;}
+  abrir('<div class="dlg-top"><h2 id="dlgT" style="text-transform:none">Compartilhar o calendário</h2><button class="btn sm" type="button" data-act="fechar" aria-label="Fechar">✕</button></div>'+
+    '<p>O link leva uma <b>cópia</b> do calendário de agora. Quem abrir recebe os eventos no navegador dele, prontos para editar e levar ao Google Agenda.</p>'+
+    '<label style="display:flex;gap:10px;align-items:center"><input type="checkbox" id="cDet" checked style="width:auto"> Incluir os detalhes dos eventos (códigos de reserva e anotações)</label>'+
+    (S.lista&&S.lista.length?'<label style="display:flex;gap:10px;align-items:center"><input type="checkbox" id="cLista" checked style="width:auto"> Incluir a lista “Quero fazer” ('+S.lista.length+(S.lista.length===1?' item':' itens')+')</label>':'')+
+    '<input class="lk-box" id="lkTxt" readonly aria-label="Link do calendário" value="Gerando o link…">'+
+    '<div class="barra"><button class="btn pri" type="button" id="lkCopia" disabled>📋 Copiar link</button><button class="btn" type="button" id="lkCurto" disabled>🔗 Criar link curto</button>'+(navigator.share?'<button class="btn" type="button" id="lkEnvia" disabled>📲 Enviar…</button>':'')+'</div>'+
+    '<div id="vivoBox" style="display:grid;gap:8px"></div><p class="nota" id="lkNota"></p>'+
+    '<p class="nota">Quem tiver o link vê tudo o que estiver nele. O link é uma foto de hoje: se você mudar algo depois, gere e mande outro. O link comprido leva os eventos dentro dele e não guarda nada no site. O link curto guarda uma cópia no site.</p>');
+  async function gerar(){
+    var tok=await empacotar($('#cDet').checked,$('#cLista')?$('#cLista').checked:false),url=location.origin+location.pathname+'#c='+tok;
+    $('#lkTxt').value=url;$('#lkCopia').disabled=false;$('#lkCurto').disabled=false;if($('#lkEnvia'))$('#lkEnvia').disabled=false;
+    $('#lkNota').textContent=url.length>6000?'Este link ficou longo ('+url.length+' caracteres) e alguns aplicativos podem cortá-lo. Se quem receber não conseguir abrir, use "Salvar uma cópia" na aba Mais e mande o arquivo.':'';
+  }
+  function vivoUI(){
+    var bx=$('#vivoBox');if(!bx)return;
+    if(S.vivo){
+      var u=location.origin+location.pathname+'#l='+S.vivo.c;
+      bx.innerHTML='<p class="nota" style="margin:0">📡 <b>Link ao vivo ativo.</b> Quem abrir só vê, e a tela dessa pessoa se atualiza sozinha quando você mexe no calendário.</p><input class="lk-box" id="vvTxt" readonly aria-label="Link ao vivo" value="'+esc(u)+'"><div class="barra"><button class="btn pri sm" type="button" id="vvCopia">📋 Copiar link ao vivo</button><button class="btn perigo sm" type="button" id="vvPara">⛔ Parar de compartilhar</button></div>';
+      $('#vvCopia').onclick=async function(){var t=$('#vvTxt');try{await navigator.clipboard.writeText(t.value);aviso('Link copiado.');}catch(e){t.focus();t.select();aviso('Selecione e copie o link manualmente.');}};
+      $('#vvPara').onclick=async function(){var c=S.vivo.c;try{await CalNuvem.pararVivo(c);}catch(e){aviso('Não consegui parar agora. Tente de novo.');return;} S.vivo=null;gravar();vivoUI();aviso('Parei de compartilhar. O link deixou de funcionar.');};
+    }else{
+      bx.innerHTML='<button class="btn sm" type="button" id="vvCria">📡 Criar link ao vivo (só ver)</button>';
+      $('#vvCria').onclick=async function(){
+        if(!usuario){pedirLogin();aviso('Entre na sua conta para criar o link ao vivo.');return;}
+        if(!window.CalNuvem||!CalNuvem.criarVivo){aviso('O login não carregou. Recarregue a página.');return;}
+        var bt=this,det=$('#cDet').checked,lis=$('#cLista')?$('#cLista').checked:false;bt.disabled=true;bt.textContent='Criando…';
+        try{var cod=await CalNuvem.criarVivo(await empacotar(det,lis));S.vivo={c:cod,det:det,lista:lis};gravar();vivoUI();}
+        catch(e){bt.disabled=false;bt.textContent='📡 Criar link ao vivo (só ver)';aviso('Não consegui criar o link ao vivo.');}
+      };
+    }
+  }
+  vivoUI();
+  $('#lkCurto').onclick=async function(){
+    if(!usuario){pedirLogin();aviso('Entre na sua conta para criar o link curto.');return;}
+    if(!window.CalNuvem||!CalNuvem.criarCurto){aviso('O login não carregou. Recarregue a página.');return;}
+    var bt=this,tok=$('#lkTxt').value.split('#c=')[1];if(!tok)return;
+    bt.disabled=true;bt.textContent='Criando…';
+    try{
+      var cod=await CalNuvem.criarCurto(tok);
+      $('#lkTxt').value=location.origin+location.pathname+'#l='+cod;
+      $('#lkNota').textContent='Link curto criado. Ele guarda uma cópia deste calendário no site; quem tiver o link vê tudo o que estiver nele.';
+      bt.textContent='🔗 Link curto criado';
+    }catch(e){bt.disabled=false;bt.textContent='🔗 Criar link curto';aviso('Não consegui criar o link curto. Use o link comprido.');}
+  };
+  $('#cDet').onchange=gerar;if($('#cLista'))$('#cLista').onchange=gerar;gerar();
+  $('#lkCopia').onclick=async function(){var t=$('#lkTxt');try{await navigator.clipboard.writeText(t.value);aviso('Link copiado.');}catch(e){t.focus();t.select();aviso('Selecione e copie o link manualmente.');}};
+  if($('#lkEnvia'))$('#lkEnvia').onclick=function(){navigator.share({title:S.titulo||'Calendário da viagem',text:'Calendário da viagem',url:$('#lkTxt').value}).catch(function(){});};
+};
+function esperaNuvem(){
+  return new Promise(function(ok,no){
+    if(window.CalNuvem)return ok(window.CalNuvem);
+    var t=setTimeout(function(){no(new Error('nuvem'));},8000);
+    document.addEventListener('cal-nuvem-pronto',function(){clearTimeout(t);ok(window.CalNuvem);},{once:true});
+  });
+}
+function receberLink(){
+  var m=/^#c=([A-Za-z0-9_-]+)$/.exec(location.hash),c=/^#l=([a-z0-9]{6,16})$/.exec(location.hash);if(!m&&!c)return;
+  function limpaHash(){try{history.replaceState(null,'',location.pathname+location.search);}catch(e){}}
+  if(c){
+    esperaNuvem().then(function(n){return n.lerDoc(c[1]);}).then(function(d){
+      if(!d||!d.t)throw new Error('nao achei');
+      if(d.vivo)return entrarVer(c[1],d);
+      return desempacotar(d.t).then(oferecer);
+    }).catch(falhou);
+    return;
+  }
+  desempacotar(m[1]).then(oferecer).catch(falhou);
+  function oferecer(novo){
+    if(!novo.ini)throw new Error('vazio');
+    abrir('<div class="dlg-top"><h2 id="dlgT" style="text-transform:none">Abrir este calendário?</h2><button class="btn sm" type="button" data-act="fechar" aria-label="Fechar">✕</button></div>'+
+      '<p>Alguém compartilhou um calendário com você'+(novo.titulo?': <b>'+esc(novo.titulo)+'</b>':'')+'. Ele tem <b>'+novo.ev.length+'</b> '+(novo.ev.length===1?'evento':'eventos')+', de '+esc(curto(novo.ini))+' a '+esc(curto(novo.fim))+'.</p>'+
+      (novo.lista&&novo.lista.length?'<p>Vem também a lista “Quero fazer” ('+novo.lista.length+(novo.lista.length===1?' item':' itens')+').</p>':'')+
+      (S.ev.length?'<p>Ao abrir, ele <b>substitui</b> o calendário que você tem aqui ('+S.ev.length+' '+(S.ev.length===1?'evento':'eventos')+')'+(usuario?' e o guardado na sua conta':'')+'. Se quiser guardar o seu, feche esta janela, salve uma cópia na aba Mais e abra o link de novo.</p>':'')+
+      '<div class="barra"><button class="btn pri" type="button" id="okLink">Abrir</button><button class="btn" type="button" id="noLink">Agora não</button></div>');
+    $('#okLink').onclick=function(){var minhaLista=S.lista; S=novo; if(!(novo.lista&&novo.lista.length)&&minhaLista)S.lista=minhaLista; S.atualizado='';linkOk=true;gravar();if(usuario)salvarNuvem();var h=hojeStr();mes=(h>=S.ini&&h<=S.fim?h:S.ini).slice(0,7);$('#setup').hidden=true;mostrarApp(true);tudo();fechar();limpaHash();aviso('Calendário aberto.');};
+    $('#noLink').onclick=function(){fechar();limpaHash();};
+  }
+  function falhou(){
+    abrir('<div class="dlg-top"><h2 id="dlgT" style="text-transform:none">Não consegui abrir o link</h2><button class="btn sm" type="button" data-act="fechar" aria-label="Fechar">✕</button></div><p>O link parece estar incompleto ou cortado. Peça para a pessoa mandar de novo, ou use o arquivo de cópia (aba Mais → Salvar uma cópia).</p><div class="barra"><button class="btn" type="button" data-act="fechar">Fechar</button></div>');
+    limpaHash();
+  }
+}
+var tVer=null,verUlt='';
+function entrarVer(cod,d){
+  return desempacotar(d.t).then(function(novo){
+    if(!novo.ini)throw new Error('vazio');
+    VER={cod:cod};pendLink=false;verUlt=d.atualizado||'';S=novo;
+    document.documentElement.classList.add('ver');
+    var h=hojeStr();mes=(h>=S.ini&&h<=S.fim?h:S.ini).slice(0,7);
+    $('#setup').hidden=true;mostrarApp(true);tudo();verBanner('');
+    clearInterval(tVer);tVer=setInterval(atualizaVer,30000);
+    document.addEventListener('visibilitychange',function(){if(document.visibilityState==='visible')atualizaVer();});
+  });
+}
+function verBanner(extra){
+  var b=$('#verBanner');b.hidden=false;
+  b.innerHTML='<span>👀 Você está vendo o calendário'+(S.titulo?' <b>'+esc(S.titulo)+'</b>':'')+' <b>ao vivo</b>: só leitura, atualiza sozinho. '+extra+'</span><button class="btn sm" type="button" id="verCopia">Salvar uma cópia minha</button>';
+  $('#verCopia').onclick=async function(){var tok=await empacotar(true,true);VER=null;document.documentElement.classList.remove('ver');clearInterval(tVer);location.hash='#c='+tok;location.reload();};
+}
+async function atualizaVer(){
+  if(!VER)return;
+  try{
+    var d=await CalNuvem.lerDoc(VER.cod);
+    if(!d){clearInterval(tVer);verBanner('⚠️ O link foi desativado por quem compartilhou. O que está na tela é a última versão.');return;}
+    if((d.atualizado||'')!==verUlt){verUlt=d.atualizado||'';S=await desempacotar(d.t);tudo();verBanner('Atualizado às '+hhmm(new Date())+'.');}
+  }catch(e){}
+}
+
+/* ---------- importar reserva (Booking, e-mail, PDF, .ics) ---------- */
+var ATRN={pokepark:'PokéPark Kanto','ghibli-park':'Ghibli Park','ghibli-mitaka':'Museu Ghibli','pokemon-cafe':'Pokémon Café',kirby:'Kirby Café',disney:'Disney',doraemon:'Museu Fujiko F. Fujio',usj:'Universal Studios Japan',harrypotter:'Warner Bros. Studio Tour',biovortex:'Biovortex','teamlab-tokyo':'teamLab','nintendo-museum':'Nintendo Museum',toyosu:'Toyosu','shibuya-sky':'Shibuya Sky',saihoji:'Saihō-ji',katsura:'Katsura / Shūgakuin',comiket:'Comiket',jumpfesta:'Jump Festa',sumo:'Sumô'};
+function dePedido(r){
+  var hotel=r.tipo==='hotel',det=[];
+  if(r.reserva)det.push('Reserva nº '+r.reserva);
+  if(r.pin)det.push('Código PIN: '+r.pin);
+  if(r.voucher&&r.voucher!==r.reserva)det.push('Código: '+r.voucher);
+  if(r.plataforma)det.push('Reservado em: '+r.plataforma);
+  if(r.telefone)det.push('Telefone: '+r.telefone);
+  if(r.pagarLocal)det.push('Pagamento no local');
+  if(hotel){
+    var end=r.enderecoLat||r.endereco||'';
+    return {id:'',titulo:r.nome||'Hospedagem',tipo:'hosp',data:r.entrada||'',dataFim:(r.saida&&r.entrada&&r.saida>r.entrada)?r.saida:'',hora:r.checkin||'',horaFim:r.checkin?(r.checkout||''):'',fuso:S.fuso,local:[r.nome,end].filter(Boolean).join(', ')||r.cidade||'',detalhes:det.join('\n')};
+  }
+  return {id:'',titulo:r.nome||ATRN[r.atr]||'Ingresso',tipo:'ingresso',data:r.data||'',dataFim:'',hora:r.hora||'',horaFim:'',fuso:S.fuso,local:ATRN[r.atr]||r.cidade||'',detalhes:det.join('\n')};
+}
+function revisar(r,forcado){
+  if(forcado)r.tipo=forcado;
+  var e=dePedido(r),hotel=r.tipo==='hotel';
+  var campos=hotel?[['Nome',e.titulo!=='Hospedagem'],['Entrada',!!e.data],['Saída',!!e.dataFim],['Hora do check-in',!!e.hora],['Hora do check-out',!!e.horaFim],['Nº da reserva',!!r.reserva],['Endereço',!!(r.enderecoLat||r.endereco)]]
+    :[['Nome',!!r.nome||!!r.atr],['Dia',!!e.data],['Hora',!!e.hora],['Código',!!(r.voucher||r.reserva)]];
+  var tem=campos.filter(function(c){return c[1];}),falta=campos.filter(function(c){return !c[1];});
+  var topo='<div class="previa"><p style="margin:0"><b>✨ Li como '+(hotel?'hospedagem':'ingresso ou atividade')+'.</b> <button type="button" class="lkb" id="trocaTipo">Na verdade é '+(hotel?'um ingresso ou atividade':'uma hospedagem')+'</button></p>'+
+    '<p style="margin:0">Encontrei: '+(tem.length?tem.map(function(c){return '<span class="tg">'+c[0]+'</span>';}).join(''):'quase nada')+'</p>'+
+    (falta.length?'<p style="margin:0">Não encontrei: '+falta.map(function(c){return '<span class="tg no">'+c[0]+'</span>';}).join('')+'</p>':'')+
+    '<p style="margin:0;color:var(--muted)">A leitura automática pode errar, principalmente datas e nomes. Confira os campos abaixo antes de salvar.</p></div>';
+  voltarPara='';diaAberto='';
+  formEvento(e,null,topo);
+  $('#trocaTipo').onclick=function(){revisar(r,hotel?'ingresso':'hotel');};
+}
+function listaIcs(evs){
+  abrir('<div class="dlg-top"><h2 id="dlgT" style="text-transform:none">O arquivo tem '+evs.length+' eventos</h2><button class="btn sm" type="button" data-act="fechar" aria-label="Fechar">✕</button></div><p>Qual você quer importar?</p>'+
+    evs.slice(0,30).map(function(e,i){return '<button class="btn" type="button" style="justify-content:flex-start;border-radius:12px" data-ics="'+i+'">'+esc(e.titulo)+(e.ini?' · '+esc(curto(e.ini.data)):'')+'</button>';}).join(''));
+  dlgIn.querySelectorAll('[data-ics]').forEach(function(b){b.onclick=function(){revisar(LeitorReserva.icsParaDados(evs[+b.dataset.ics]));};});
+}
+function lerArq(f){
+  var er=$('#impErr'),go=$('#impGo');er.textContent='';
+  function volta(){go.disabled=false;go.textContent='Identificar dados ✨';}
+  if(/\.pdf$/i.test(f.name)||f.type==='application/pdf'){
+    go.disabled=true;go.textContent='Lendo o PDF…';
+    LeitorReserva.textoDoPDF(f).then(function(t){
+      if(t.replace(/\s/g,'').length<30){volta();er.textContent='Esse PDF não tem texto: ele foi salvo como imagem, o que acontece com "Microsoft Print to PDF". Abra a confirmação do Booking, selecione e copie o texto e cole na caixa abaixo. Ou gere o PDF de novo pelo Chrome, em Imprimir → "Salvar como PDF".';return;}
+      revisar(LeitorReserva.lerTexto(t));
+    }).catch(function(e){volta();er.textContent=e&&e.message==='rede'?'Não consegui abrir o leitor de PDF, que precisa de internet. Copie o texto do PDF e cole na caixa.':'Não consegui ler esse PDF. Copie o texto dele e cole na caixa.';});
+    return;
+  }
+  var fr=new FileReader();
+  fr.onload=function(){
+    var evs=LeitorReserva.lerICS(String(fr.result||''));
+    if(!evs.length){er.textContent='Não achei nenhum evento nesse arquivo. Ele é mesmo um .ics de calendário?';return;}
+    if(evs.length===1)revisar(LeitorReserva.icsParaDados(evs[0]));else listaIcs(evs);
+  };
+  fr.readAsText(f);
+}
+function abrirImport(){
+  if(!window.LeitorReserva){aviso('O leitor de reservas não carregou. Recarregue a página.');return;}
+  diaAberto='';
+  abrir('<div class="dlg-top"><h2 id="dlgT" style="text-transform:none">Importar reserva</h2><button class="btn sm" type="button" data-act="fechar" aria-label="Fechar">✕</button></div>'+
+    '<p class="nota">Funciona com a confirmação do Booking, Agoda, Airbnb e similares. A leitura acontece aqui, no seu navegador: o texto e o PDF não são enviados para lugar nenhum. Antes de salvar, você confere tudo.</p>'+
+    '<label class="drop" id="drop"><input type="file" id="impFile" accept=".pdf,.ics,application/pdf,text/calendar" hidden><b>📁 Escolher o PDF da reserva (ou um arquivo .ics)</b><span>ou arraste o arquivo para cá</span></label>'+
+    '<div class="ou">ou</div>'+
+    '<label class="f">Cole o texto do e-mail de confirmação<textarea id="impTxt" rows="6" placeholder="Abra o e-mail, selecione tudo, copie e cole aqui."></textarea></label>'+
+    '<p class="erro" id="impErr" role="alert"></p>'+
+    '<div class="barra"><button class="btn pri" type="button" id="impGo">Identificar dados ✨</button></div>');
+  var d=$('#drop');
+  $('#impFile').onchange=function(){var f=this.files[0];if(f)lerArq(f);};
+  ['dragenter','dragover'].forEach(function(n){d.addEventListener(n,function(e){e.preventDefault();d.classList.add('sobre');});});
+  ['dragleave','drop'].forEach(function(n){d.addEventListener(n,function(e){e.preventDefault();d.classList.remove('sobre');});});
+  d.addEventListener('drop',function(e){var f=e.dataTransfer.files[0];if(f)lerArq(f);});
+  $('#impGo').onclick=function(){
+    var t=$('#impTxt').value.trim();
+    if(t.length<20){$('#impErr').textContent='Cole o texto do e-mail inteiro: quanto mais texto, mais coisa eu acho.';return;}
+    revisar(LeitorReserva.lerTexto(t));
+  };
+}
+$('#bImport').onclick=abrirImport;
+$('#bImportMob').onclick=abrirImport;
+$('#bPasses').onclick=function(){ if(!window.CalPasses){aviso('Os passes não carregaram. Recarregue a página.');return;} CalPasses.abrir(S,abrir,dlgIn); };
+
+/* ---------- início ---------- */
+preencherFusos();carregar();
+if(S.ini){var h0=hojeStr();mes=(h0>=S.ini&&h0<=S.fim?h0:S.ini).slice(0,7);$('#setup').hidden=true;mostrarApp(true);tudo();}
+else{mostrarApp(false);mostrarSetup(false);}
+nuvemUI();receberLink();
+})();
+</script>
+<dialog class="taxi-dlg" id="dlgTaxi" aria-labelledby="taxiNome">
+  <div class="taxi-in">
+    <div style="display:flex;justify-content:space-between;align-items:center;gap:10px">
+      <strong id="taxiNome" style="font-family:var(--f-display);font-size:19px">Endereço</strong>
+      <button class="btn sm" type="button" id="taxiFecha">Fechar</button>
+    </div>
+    <p class="taxi-sub">Mostre esta tela para o taxista ou na recepção:</p>
+    <div class="taxi-addr" id="taxiAddr"></div>
+    <div class="barra">
+      <button class="btn pri sm" type="button" id="taxiCopiar">📋 Copiar endereço</button>
+      <a class="btn sm" id="taxiMaps" href="#" target="_blank" rel="noopener">🗺️ Abrir no Google Maps</a>
+    </div>
+  </div>
+</dialog>
+<script>
+(function(){
+  var d=document.getElementById('dlgTaxi'); if(!d)return;
+  document.addEventListener('click',function(e){
+    var b=e.target.closest('[data-taxi-addr]'); if(!b)return;
+    var nome=b.getAttribute('data-taxi-nome')||'Hospedagem', addr=b.getAttribute('data-taxi-addr')||'';
+    document.getElementById('taxiNome').textContent='🏨 '+nome;
+    document.getElementById('taxiAddr').textContent=addr;
+    document.getElementById('taxiMaps').href='https://www.google.com/maps/search/?api=1&query='+encodeURIComponent(addr);
+    document.getElementById('taxiCopiar').onclick=function(){var btn=this; if(navigator.clipboard)navigator.clipboard.writeText(addr).then(function(){btn.textContent='Copiado ✓';setTimeout(function(){btn.textContent='📋 Copiar endereço';},1800);});};
+    if(d.showModal)d.showModal(); else d.setAttribute('open','');
+  });
+  document.getElementById('taxiFecha').onclick=function(){if(d.close)d.close(); else d.removeAttribute('open');};
+  d.addEventListener('click',function(e){if(e.target===d)d.close();});
+})();
+</script>
+<script type="module" src="/travessia/calendario/nuvem.js?v=3"></script>
+<script defer src="/menu-ativo.js?v=2"></script><script defer src="/voltar-global.js?v=5"></script>
+<script src="/medir.js?v=1" defer></script>
+</body>
+</html>
