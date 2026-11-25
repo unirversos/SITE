@@ -8,9 +8,19 @@
    Depende de window.UniCaderno (caderno-dados.js). */
 (function () {
   if (window.UniLivro) return;
-  var W = 2000, H = 2800, CORES = ['#3a2b38', '#c23f5e', '#517158', '#4f46a5'], NOMES = ['Tinta escura', 'Rosa', 'Verde', 'Roxo'],
+  var W = 2000, H = 2800,
+    CORES = ['#3a2b38', '#c23f5e', '#517158', '#4f46a5', '#d97706', '#0284c7'],
+    NOMES = ['Tinta escura', 'Rosa', 'Verde', 'Roxo', 'Âmbar', 'Azul'],
     ESP = [5, 9, 16], ENOMES = ['Fina', 'Média', 'Grossa'],
+    PAPEIS = [
+      { id: 'pautado', nome: 'Pautado' },
+      { id: 'kanji', nome: 'Kanji' },
+      { id: 'pontilhado', nome: 'Pontilhado' },
+      { id: 'branco', nome: 'Branco' }
+    ],
     SEM = [['月', 'げつ', 'segunda-feira'], ['火', 'か', 'terça-feira'], ['水', 'すい', 'quarta-feira'], ['木', 'もく', 'quinta-feira'], ['金', 'きん', 'sexta-feira'], ['土', 'ど', 'sábado'], ['日', 'にち', 'domingo']];
+
+  var KANJI_SVG = "url(\"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='48' height='48' viewBox='0 0 48 48'%3E%3Crect x='0.5' y='0.5' width='47' height='47' fill='none' stroke='%23e5cfd4' stroke-width='1'/%3E%3Cline x1='24' y1='0' x2='24' y2='48' stroke='%23f1e2e5' stroke-width='1' stroke-dasharray='3 3'/%3E%3Cline x1='0' y1='24' x2='48' y2='24' stroke='%23f1e2e5' stroke-width='1' stroke-dasharray='3 3'/%3E%3C/svg%3E\")";
 
   var css = document.createElement('style');
   css.textContent = [
@@ -27,15 +37,19 @@
     '.lv-fer .cor{width:30px;min-width:30px;height:30px;border-radius:50%;padding:0;border-width:2px}.lv-fer .cor i{display:block;width:16px;height:16px;border-radius:50%}',
     '.lv-fer .esp i{display:block;border-radius:50%;background:#3a2b38}.lv-sep{width:1px;height:24px;background:#ecdadd;margin:0 2px}',
     '.lv button:focus-visible,.lv input:focus-visible,.lv textarea:focus-visible{outline:3px solid #b7a6dc;outline-offset:2px}',
-    '.lv-fotoBt{font:inherit;cursor:pointer;border:1.5px solid #ecdadd;background:#fff;color:#3a2b38;font-weight:700;font-size:13.5px;padding:5px 14px;border-radius:99px;min-height:40px}',
-    '.lv-fotoBt:disabled{opacity:.5;cursor:default}',
+    '.lv-fotoBt,.lv-dlBt{font:inherit;cursor:pointer;border:1.5px solid #ecdadd;background:#fff;color:#3a2b38;font-weight:700;font-size:13.5px;padding:5px 14px;border-radius:99px;min-height:40px;display:inline-flex;align-items:center;gap:6px}',
+    '.lv-fotoBt:disabled,.lv-dlBt:disabled{opacity:.5;cursor:default}',
+    '.lv-papSel{font:inherit;cursor:pointer;border:1.5px solid #ecdadd;background:#fff;color:#3a2b38;font-weight:700;font-size:13.5px;padding:5px 12px;border-radius:99px;min-height:40px}',
     '.lv-img{position:absolute;inset:0;width:100%;height:100%;object-fit:contain;z-index:0;background:#fff}',
     '.lv-pg.c-foto .lv-tx{position:relative;z-index:1;background:none}',
     '.lv-fmsg{position:absolute;left:8%;right:8%;top:42%;z-index:1;text-align:center;font-size:13px;color:#705f6c}',
     '.lv-rf{position:absolute;top:calc(var(--u,4px)*1.6);left:calc(var(--u,4px)*1.6);z-index:4;font:inherit;cursor:pointer;border:1.5px solid #ecdadd;background:#fff;color:#705f6c;border-radius:99px;font-size:12px;font-weight:700;padding:3px 10px;min-height:28px}',
-    '.lv.caneta .lv-rf{display:none}.lv.leitura .lv-rf,.lv.leitura .lv-fotoBt{display:none!important}',
-    /* livro aberto */
-    '.lv-livro{position:relative;display:grid;grid-template-columns:1fr;gap:0;perspective:1800px;touch-action:pan-y}',
+    '.lv.caneta .lv-rf{display:none}.lv.leitura .lv-rf,.lv.leitura .lv-fotoBt,.lv.leitura .lv-papSel,.lv.leitura .lv-dlBt{display:none!important}',
+    /* livro aberto + palco de zoom/pan */
+    '.lv-stage{position:relative;overflow:hidden;border-radius:16px}',
+    '.lv-livro{position:relative;display:grid;grid-template-columns:1fr;gap:0;perspective:1800px;touch-action:pan-y;transform-origin:0 0;will-change:transform}',
+    '.lv.zoom .lv-stage{cursor:grab}.lv.zoom .lv-livro{touch-action:none}',
+    '.lv-fer .zm{min-width:46px;font-size:12px;padding:0 6px}',
     '.lv.dupla .lv-livro{grid-template-columns:1fr 1fr}',
     '.lv.dupla .lv-livro::after{content:"";position:absolute;top:2%;bottom:2%;left:50%;width:22px;margin-left:-11px;pointer-events:none;background:linear-gradient(90deg,transparent,rgba(58,43,56,.10) 45%,rgba(58,43,56,.16) 50%,rgba(58,43,56,.10) 55%,transparent);z-index:3}',
     '.lv-pg{position:relative;aspect-ratio:2000/2800;background:#fff;border:1.5px solid #ecdadd;display:flex;flex-direction:column;padding:6% 7% 7%;overflow:hidden;box-shadow:0 14px 30px -22px rgba(58,43,56,.45)}',
@@ -47,14 +61,14 @@
     '.lv.dupla .lv-pg.p1.dir{border-left:1.5px solid #ecdadd}',
     /* cabeçalho japonês (página 1) */
     '.lv-dia{display:flex;flex-wrap:wrap;align-items:flex-end;justify-content:space-between;gap:calc(var(--u,4px)*1) calc(var(--u,4px)*3);padding-bottom:calc(var(--u,4px)*2);border-bottom:1.5px dashed #ecdadd}',
-    '.lv-dt{display:flex;align-items:flex-end;gap:.calc(var(--u,4px)*6)}',
+    '.lv-dt{display:flex;align-items:flex-end;gap:calc(var(--u,4px)*1.2)}',
     '.lv-dt input{font:inherit;font-family:"Baloo 2",system-ui,sans-serif;font-weight:700;font-size:max(15px,calc(var(--u,4px)*4.4));text-align:center;color:#3a2b38;border:0;border-bottom:2px solid #ecdadd;background:transparent;border-radius:0;padding:0;height:1.5em;-moz-appearance:textfield}',
     '.lv-dt input::-webkit-outer-spin-button,.lv-dt input::-webkit-inner-spin-button{-webkit-appearance:none;margin:0}',
     '.lv-dt input:focus{outline:none;border-bottom-color:#c23f5e}',
     '.lv-dt .a{width:4.2ch}.lv-dt .o,.lv-dt .d{width:2.6ch}',
     '.lv-dt ruby,.lv-sem ruby{font-family:"Baloo 2",system-ui,sans-serif;font-weight:700;font-size:max(15px,calc(var(--u,4px)*4.4));margin-right:calc(var(--u,4px)*1.2)}',
     '.lv-dt rt,.lv-sem rt{font-family:"Zen Maru Gothic",system-ui,sans-serif;font-size:max(8px,calc(var(--u,4px)*1.9));font-weight:500;color:#705f6c}',
-    '.lv-sem{display:flex;gap:.calc(var(--u,4px)*4)}',
+    '.lv-sem{display:flex;gap:calc(var(--u,4px)*0.8)}',
     '.lv-sem button{font:inherit;cursor:pointer;position:relative;min-width:0;flex:0 1 auto;width:max(22px,calc(var(--u,4px)*7.6));height:max(32px,calc(var(--u,4px)*7.6));border:0;background:transparent;color:#3a2b38;display:grid;place-items:center;padding:0}',
     '.lv-sem button ruby{margin:0;display:grid;justify-items:center;font-size:max(12px,calc(var(--u,4px)*4))}',
     '.lv-sem button::before{content:"";position:absolute;inset:0;border:2.5px solid #c23f5e;border-radius:52% 48% 55% 45%/48% 55% 45% 52%;transform:rotate(-6deg) scale(.6);opacity:0;transition:opacity .15s,transform .15s}',
@@ -62,8 +76,11 @@
     '.lv-sem button:hover::before{opacity:.35;transform:rotate(-6deg) scale(1)}.lv-sem button[aria-pressed="true"]:hover::before{opacity:1}',
     '.lv-tit{font-family:"Baloo 2",system-ui,sans-serif;font-weight:800;font-size:max(18px,calc(var(--u,4px)*5.4));border:0;border-bottom:1.5px dashed #ecdadd;background:transparent;color:#3a2b38;padding:calc(var(--u,4px)*1.4) 0 calc(var(--u,4px)*1.6);width:100%;margin-bottom:calc(var(--u,4px)*1)}',
     '.lv-tit:focus{outline:none;border-bottom-color:#c23f5e}',
-    /* folha pautada */
+    /* folha pautada e variações de papel */
     '.lv-tx{flex:1;min-height:0;width:100%;resize:none;overflow:hidden;border:0;padding:0;color:#3a2b38;font:inherit;font-size:max(14px,calc(var(--u,4px)*3.7));line-height:max(27px,calc(var(--u,4px)*6.6));background:repeating-linear-gradient(transparent 0 calc(max(27px,calc(var(--u,4px)*6.6)) - 1px),#ecdadd calc(max(27px,calc(var(--u,4px)*6.6)) - 1px) max(27px,calc(var(--u,4px)*6.6)));background-attachment:local}',
+    '.lv-pg.pap-kanji .lv-tx{background-image:' + KANJI_SVG + ';background-size:calc(max(36px,calc(var(--u,4px)*11))) calc(max(36px,calc(var(--u,4px)*11)));background-repeat:repeat;background-attachment:local}',
+    '.lv-pg.pap-pontilhado .lv-tx{background-image:radial-gradient(#d8c1c7 1.35px,transparent 1.45px);background-size:calc(max(18px,calc(var(--u,4px)*4.8))) calc(max(18px,calc(var(--u,4px)*4.8)));background-attachment:local}',
+    '.lv-pg.pap-branco .lv-tx{background:none}',
     '.lv-tx:focus{outline:none}',
     /* a dica some ao tocar (teclado) e também ao tocar com a caneta */
     '.lv-tit:focus::placeholder,.lv-tx:focus::placeholder,.lv-pg.tocou .lv-tit::placeholder,.lv-pg.tocou .lv-tx::placeholder{color:transparent}',
@@ -75,9 +92,10 @@
     /* no modo Caneta, rolar com a caneta virava risco: botões para ir à folha de cima e à próxima */
     '.lv-rola{display:none}.lv.caneta .lv-rola{display:flex;flex-direction:column;gap:8px;position:sticky;bottom:12px;margin:-104px 8px 0 auto;width:max-content;z-index:5}',
     '.lv-rola button{font:inherit;font-size:16px;width:46px;height:46px;border-radius:50%;border:1.5px solid #ecdadd;background:#fff;color:#3a2b38;cursor:pointer;box-shadow:0 8px 18px -10px rgba(58,43,56,.45)}.lv-rola button:disabled{opacity:.35;cursor:default}',
-    /* caneta por cima */
+    /* caneta por cima (duplo canvas: bg para traços salvos, fg para traço ativo) */
     '.lv-pg canvas{position:absolute;inset:0;width:100%;height:100%;z-index:2;pointer-events:none;touch-action:none;display:block}',
-    '.lv.caneta .lv-pg canvas{pointer-events:auto;cursor:crosshair}.lv.caneta.borracha .lv-pg canvas{cursor:cell}',
+    '.lv-pg canvas.lv-cv-fg{z-index:3}',
+    '.lv.caneta .lv-pg canvas.lv-cv-fg{pointer-events:auto;cursor:crosshair}.lv.caneta.borracha .lv-pg canvas.lv-cv-fg{cursor:cell}',
     '.lv.caneta .lv-tx,.lv.caneta .lv-dia,.lv.caneta .lv-tit{pointer-events:none}',
     /* navegação */
     '.lv-nav{display:flex;align-items:center;justify-content:center;gap:10px;flex-wrap:wrap}',
@@ -117,9 +135,12 @@
 
   var IC = {
     pen: '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 20l1-4L16.5 4.5a2.1 2.1 0 0 1 3 3L8 19z"/><path d="M14.5 6.5l3 3"/></svg>',
+    mar: '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 11l-6 6v3h9l3-3"/><path d="M22 12l-4.6 4.6a2 2 0 0 1-2.8 0l-5.2-5.2a2 2 0 0 1 0-2.8L14 4"/></svg>',
     bor: '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 20h11M5.5 14.5l8-8a2 2 0 0 1 2.8 0l2.2 2.2a2 2 0 0 1 0 2.8L11 19H8l-2.5-2.5a2 2 0 0 1 0-2z"/></svg>',
     und: '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 7L5 11l4 4"/><path d="M5 11h9a5 5 0 0 1 0 10h-3"/></svg>',
+    red: '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15 7l4 4-4 4"/><path d="M19 11h-9a5 5 0 0 0 0 10h3"/></svg>',
     cl: '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 7h14M10 7V5h4v2M7 7l1 12h8l1-12"/></svg>',
+    dl: '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 4v11M7.5 10.5L12 15l4.5-4.5M5 19.5h14"/></svg>',
     ant: '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15 5l-7 7 7 7"/></svg>',
     prox: '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 5l7 7-7 7"/></svg>'
   };
@@ -203,27 +224,43 @@
   function montar(el, opc) {
     opc = opc || {};
     var C = opc.C || window.UniCaderno, id = null, pags = [], ini = 0, dupla = false, pref = (function () { try { return localStorage.getItem('uniCadernoVista'); } catch (x) { return null; } })(), modo = 'txt', cor = 0, esp = 1, ferr = 'pen',
-      hist = [], penVisto = 0, ultimoM = 0, tSalva = null, pedeLimpar = false, ro = null;
+      hist = [], redo = [], penVisto = 0, ultimoM = 0, tSalva = null, pedeLimpar = false, ro = null;
 
     el.classList.add('lv'); if (opc.leitura) el.classList.add('leitura');
     el.innerHTML =
       '<div class="lv-bar">' +
       '<div class="lv-modo" role="group" aria-label="Como escrever"><button type="button" data-m="txt" aria-pressed="true">Texto</button><button type="button" data-m="pen" aria-pressed="false">Caneta</button></div>' +
+      '<select class="lv-papSel" aria-label="Modelo de papel da página" title="Modelo de papel">' +
+      PAPEIS.map(function (p) { return '<option value="' + p.id + '">📄 ' + p.nome + '</option>'; }).join('') + '</select>' +
       '<button type="button" class="lv-fotoBt" aria-label="Colocar uma foto numa página">📷 Foto</button><input type="file" class="lv-fotoIn" accept="image/*" hidden>' +
+      '<button type="button" class="lv-dlBt" aria-label="Baixar página como imagem PNG" title="Baixar página como imagem PNG">↓ PNG</button>' +
       '<div class="lv-fer" role="toolbar" aria-label="Ferramentas da caneta" hidden>' +
       '<button type="button" data-f="pen" aria-pressed="true" aria-label="Caneta" title="Caneta">' + IC.pen + '</button>' +
+      '<button type="button" data-f="mar" aria-pressed="false" aria-label="Marca-texto" title="Marca-texto">' + IC.mar + '</button>' +
       '<button type="button" data-f="bor" aria-pressed="false" aria-label="Borracha: passe sobre o traço para apagar" title="Borracha">' + IC.bor + '</button><span class="lv-sep"></span>' +
       CORES.map(function (c, i) { return '<button type="button" class="cor" data-c="' + i + '" aria-pressed="' + (i === 0) + '" aria-label="' + NOMES[i] + '" title="' + NOMES[i] + '"><i style="background:' + c + '"></i></button>'; }).join('') + '<span class="lv-sep"></span>' +
       ESP.map(function (w, i) { return '<button type="button" class="esp" data-e="' + i + '" aria-pressed="' + (i === 1) + '" aria-label="Espessura ' + ENOMES[i].toLowerCase() + '" title="' + ENOMES[i] + '"><i style="width:' + (4 + i * 4) + 'px;height:' + (4 + i * 4) + 'px"></i></button>'; }).join('') + '<span class="lv-sep"></span>' +
-      '<button type="button" data-f="und" aria-label="Desfazer" title="Desfazer" disabled>' + IC.und + '</button>' +
-      '<button type="button" data-f="cl" aria-label="Limpar os desenhos desta página" title="Limpar os desenhos desta página">' + IC.cl + '</button></div>' +
+      '<button type="button" data-f="und" aria-label="Desfazer" title="Desfazer (Ctrl+Z)" disabled>' + IC.und + '</button>' +
+      '<button type="button" data-f="red" aria-label="Refazer" title="Refazer (Ctrl+Y)" disabled>' + IC.red + '</button>' +
+      '<button type="button" data-f="cl" aria-label="Limpar os desenhos desta página" title="Limpar os desenhos desta página">' + IC.cl + '</button><span class="lv-sep"></span>' +
+      '<button type="button" data-f="z-" aria-label="Diminuir zoom" title="Diminuir zoom">−</button>' +
+      '<button type="button" class="zm" data-f="z0" aria-label="Restaurar zoom 100%" title="Restaurar zoom">100%</button>' +
+      '<button type="button" data-f="z+" aria-label="Aumentar zoom" title="Aumentar zoom">+</button></div>' +
       '</div>' +
-      '<div class="lv-livro" aria-live="off"></div>' +
+      '<div class="lv-stage"><div class="lv-livro" aria-live="off"></div></div>' +
       '<div class="lv-rola"><button type="button" data-r="-1" aria-label="Folha de cima" title="Folha de cima">▲</button><button type="button" data-r="1" aria-label="Próxima folha" title="Próxima folha">▼</button></div>' +
       '<div class="lv-nav"><button type="button" data-n="-1" aria-label="Página anterior">' + IC.ant + '</button><span class="lbl" aria-live="polite"></span><button type="button" data-n="1" aria-label="Próxima página">' + IC.prox + '</button><button type="button" class="mais" data-n="mais">+ página</button><button type="button" class="vst" data-n="vista" aria-label="Mudar entre uma página e duas páginas"></button></div>' +
       '<div class="lv-prof" hidden><button type="button" class="lv-pf" aria-pressed="false"></button><span class="lv-pfs" aria-live="polite"></span></div>' +
       '<p class="lv-dica" hidden>Com a caneta em uso, a palma da mão não risca a folha. Para virar a página, use as setas.</p>';
-    var fBt = el.querySelector('.lv-fotoBt'), fIn = el.querySelector('.lv-fotoIn');
+    var fBt = el.querySelector('.lv-fotoBt'), fIn = el.querySelector('.lv-fotoIn'), papSel = el.querySelector('.lv-papSel'), dlBt = el.querySelector('.lv-dlBt');
+    papSel.onchange = function () {
+      if (!id || !pags[ini]) return;
+      var v = papSel.value === 'pautado' ? null : papSel.value;
+      pags[ini].pap = v;
+      aplicaPapel(pg(ini), v);
+      salvaTudo();
+    };
+    dlBt.onclick = function () { if (!id || !pags[ini]) return; exportarPng(ini); };
     fBt.onclick = function () { if (!id) return; fIn.value = ''; fIn.click(); };
     fIn.onchange = function () {
       var f = fIn.files && fIn.files[0]; if (!f || !id) return;
@@ -232,14 +269,39 @@
         .then(function () { fBt.disabled = false; fBt.textContent = '📷 Foto'; });
     };
     Fotos.sincroniza();
-    var livro = el.querySelector('.lv-livro'), barra = el.querySelector('.lv-bar'), fer = el.querySelector('.lv-fer'), nav = el.querySelector('.lv-nav'),
-      lbl = nav.querySelector('.lbl'), btUnd = fer.querySelector('[data-f="und"]'), dica = el.querySelector('.lv-dica');
+    var stage = el.querySelector('.lv-stage'), livro = el.querySelector('.lv-livro'), barra = el.querySelector('.lv-bar'), fer = el.querySelector('.lv-fer'), nav = el.querySelector('.lv-nav'),
+      lbl = nav.querySelector('.lbl'), btUnd = fer.querySelector('[data-f="und"]'), btRed = fer.querySelector('[data-f="red"]'), btZm = fer.querySelector('[data-f="z0"]'), dica = el.querySelector('.lv-dica');
+    var zm = 1, panX = 0, panY = 0, emPinch = false;
+    function limitaPan() {
+      var sw = stage.clientWidth || 1, sh = stage.clientHeight || 1;
+      var minX = Math.min(0, sw - sw * zm), minY = Math.min(0, sh - sh * zm);
+      panX = Math.max(minX, Math.min(0, panX));
+      panY = Math.max(minY, Math.min(0, panY));
+    }
+    function aplicaZoom() {
+      limitaPan();
+      livro.style.transform = zm > 1.001 ? ('translate(' + panX.toFixed(1) + 'px,' + panY.toFixed(1) + 'px) scale(' + zm.toFixed(3) + ')') : '';
+      el.classList.toggle('zoom', zm > 1.001);
+      if (btZm) btZm.textContent = Math.round(zm * 100) + '%';
+    }
+    function setZoom(novo, cx, cy) {
+      var z0 = zm;
+      zm = Math.max(1, Math.min(3.5, novo));
+      if (zm <= 1.01) { zm = 1; panX = 0; panY = 0; aplicaZoom(); return; }
+      var r = stage.getBoundingClientRect();
+      var ox = cx != null ? (cx - r.left) : r.width / 2;
+      var oy = cy != null ? (cy - r.top) : r.height / 2;
+      panX = ox - (ox - panX) * (zm / z0);
+      panY = oy - (oy - panY) * (zm / z0);
+      aplicaZoom();
+    }
+    function resetaZoom() { zm = 1; panX = 0; panY = 0; emPinch = false; aplicaZoom(); }
 
     /* ---------- dados ---------- */
     function nota() { return id ? C.obter(id) : null; }
     function lePags(n) {
-      var p = [{ x: n.x || '', s: Array.isArray(n.s) ? n.s : [], f: n.f || null }];
-      (Array.isArray(n.pp) ? n.pp : []).forEach(function (q) { p.push({ x: (q && q.x) || '', s: (q && Array.isArray(q.s)) ? q.s : [], f: (q && q.f) || null }); });
+      var p = [{ x: n.x || '', s: Array.isArray(n.s) ? n.s : [], f: n.f || null, pap: n.pap || null }];
+      (Array.isArray(n.pp) ? n.pp : []).forEach(function (q) { p.push({ x: (q && q.x) || '', s: (q && Array.isArray(q.s)) ? q.s : [], f: (q && q.f) || null, pap: (q && q.pap) || null }); });
       return p;
     }
     function salva(campos) {
@@ -247,8 +309,13 @@
       if (opc.aoMudar) opc.aoMudar(n);
     }
     function salvaPag(i) { if (i === 0) salva({ x: pags[0].x, s: pags[0].s }); else salva({ pp: pags.slice(1).map(pp1) }); }
-    function pp1(q) { var o = { x: q.x, s: q.s }; if (q.f) o.f = q.f; return o; }
-    function salvaTudo() { salva({ x: pags[0].x, s: pags[0].s, f: pags[0].f || null, pp: pags.slice(1).map(pp1) }); }
+    function pp1(q) { var o = { x: q.x, s: q.s }; if (q.f) o.f = q.f; if (q.pap) o.pap = q.pap; return o; }
+    function salvaTudo() { salva({ x: pags[0].x, s: pags[0].s, f: pags[0].f || null, pap: pags[0].pap || null, pp: pags.slice(1).map(pp1) }); }
+    function aplicaPapel(d, pap) {
+      if (!d) return;
+      d.classList.remove('pap-kanji', 'pap-pontilhado', 'pap-branco');
+      if (pap && pap !== 'pautado') d.classList.add('pap-' + pap);
+    }
 
     /* ---------- páginas ---------- */
     function cabecalho(n) {
@@ -267,9 +334,11 @@
         var d = document.createElement('section');
         d.className = 'lv-pg' + (i === 0 ? ' p1' : ''); d.dataset.i = i; d.setAttribute('aria-label', 'Página ' + (i + 1));
         if (pg.f) d.classList.add('c-foto');
+        aplicaPapel(d, pg.pap);
         d.innerHTML = (pg.f ? '<img class="lv-img" alt="Foto da página ' + (i + 1) + '" hidden><span class="lv-fmsg" hidden></span>' : '') + (i === 0 ? cabecalho(n) : '') +
           '<textarea class="lv-tx" aria-label="Texto da página ' + (i + 1) + '" placeholder="' + (i === 0 ? 'Escreva aqui…' : '') + '"></textarea>' +
-          '<canvas aria-label="Desenho da página ' + (i + 1) + '"></canvas><span class="lv-num" aria-hidden="true">' + (i + 1) + '</span>' +
+          '<canvas class="lv-cv-bg" aria-hidden="true"></canvas>' +
+          '<canvas class="lv-cv-fg" aria-label="Desenho da página ' + (i + 1) + '"></canvas><span class="lv-num" aria-hidden="true">' + (i + 1) + '</span>' +
           (i > 0 ? '<button type="button" class="lv-del" aria-label="Apagar a página ' + (i + 1) + '">apagar página</button>' : '') +
           (pg.f ? '<button type="button" class="lv-rf" aria-label="Tirar a foto da página ' + (i + 1) + '">tirar foto</button>' : '');
         d.querySelector('textarea').value = pg.x;
@@ -313,6 +382,7 @@
       } else if (fan) fan.remove();
       var ult = Math.min(pags.length, ini + (dupla ? 2 : 1));
       lbl.textContent = (dupla && ult > ini + 1 ? 'páginas ' + (ini + 1) + '–' + ult : 'página ' + (ini + 1)) + ' de ' + pags.length;
+      if (papSel && pags[ini]) papSel.value = pags[ini].pap || 'pautado';
       nav.querySelector('[data-n="-1"]').disabled = ini <= 0;
       nav.querySelector('[data-n="1"]').disabled = ini + (dupla ? 2 : 1) >= pags.length;
       if (anim) { livro.classList.remove('vai', 'volta'); void livro.offsetWidth; livro.classList.add(anim > 0 ? 'vai' : 'volta'); }
@@ -321,6 +391,7 @@
     function vaiPara(i, foco) {
       i = Math.max(0, Math.min(pags.length - 1, i));
       var alvo = dupla ? i - (i % 2) : i; if (alvo === ini) return;
+      resetaZoom();
       var dir = alvo > ini ? 1 : -1; ini = alvo; mostra(dir);
       if (foco) { var t = pg(i).querySelector('.lv-tx'); t.focus(); }
     }
@@ -399,38 +470,154 @@
         if (!this.dataset.p) { this.dataset.p = '1'; this.textContent = 'apagar mesmo?'; var b = this; setTimeout(function () { b.dataset.p = ''; b.textContent = 'apagar página'; }, 3000); return; }
         pags.splice(i, 1); salvaTudo(); constroi(); vaiPara(Math.min(i, pags.length - 1));
       };
-      caneta(d.querySelector('canvas'), i);
+      caneta(d.querySelector('.lv-cv-fg'), i);
     }
 
-    /* ---------- caneta ---------- */
-    function larg(t, p) { return ESP[t.w] * (0.55 + 0.9 * (p / 9)); }
+    /* ---------- caneta (duplo canvas + O(1) + marca-texto + redo) ---------- */
+    function larg(t, p) {
+      var base = (ESP[t.w] || ESP[1]) * (0.55 + 0.9 * (p / 9));
+      return t.m ? base * 2.6 : base;
+    }
     function pts(t) { var o = [], x = 0, y = 0, d = t.d; for (var i = 0; i < d.length; i += 3) { x = i ? x + d[i] : d[i]; y = i ? y + d[i + 1] : d[i + 1]; o.push([x, y, d[i + 2]]); } return o; }
     function traco(ctx, t, s) {
-      var P = pts(t); ctx.strokeStyle = CORES[t.k] || CORES[0]; ctx.fillStyle = ctx.strokeStyle; ctx.lineCap = 'round'; ctx.lineJoin = 'round';
-      if (P.length === 1) { ctx.beginPath(); ctx.arc(P[0][0] * s, P[0][1] * s, larg(t, P[0][2]) * s / 2, 0, 6.2832); ctx.fill(); return; }
+      var P = pts(t); if (!P.length) return;
+      ctx.save();
+      ctx.strokeStyle = CORES[t.k] || CORES[0]; ctx.fillStyle = ctx.strokeStyle; ctx.lineCap = 'round'; ctx.lineJoin = 'round';
+      if (t.m) ctx.globalAlpha = 0.28;
+      if (P.length === 1) { ctx.beginPath(); ctx.arc(P[0][0] * s, P[0][1] * s, larg(t, P[0][2]) * s / 2, 0, 6.2832); ctx.fill(); ctx.restore(); return; }
+      if (t.m) {
+        /* marca-texto contínuo em um único path para não acumular opacidade entre segmentos */
+        ctx.lineWidth = larg(t, 5) * s;
+        ctx.beginPath(); ctx.moveTo(P[0][0] * s, P[0][1] * s);
+        for (var j = 1; j < P.length; j++) {
+          var pa = P[j - 1], pb = P[j], pm = [(pa[0] + pb[0]) / 2, (pa[1] + pb[1]) / 2];
+          ctx.quadraticCurveTo(pa[0] * s, pa[1] * s, pm[0] * s, pm[1] * s);
+        }
+        ctx.lineTo(P[P.length - 1][0] * s, P[P.length - 1][1] * s);
+        ctx.stroke(); ctx.restore(); return;
+      }
       for (var i = 1; i < P.length; i++) {
         var a = P[i - 1], b = P[i], m0 = i === 1 ? a : [(P[i - 2][0] + a[0]) / 2, (P[i - 2][1] + a[1]) / 2], m1 = [(a[0] + b[0]) / 2, (a[1] + b[1]) / 2];
         ctx.lineWidth = larg(t, b[2]) * s; ctx.beginPath(); ctx.moveTo(m0[0] * s, m0[1] * s); ctx.quadraticCurveTo(a[0] * s, a[1] * s, m1[0] * s, m1[1] * s); ctx.stroke();
       }
+      ctx.restore();
     }
-    function desenha(i, extra) {
-      { var pe0 = pg(i); if (pe0 && pags[i] && pags[i].s && pags[i].s.length) pe0.classList.add('tocou'); }
-      var p = pg(i); if (!p || p.classList.contains('fora')) return;
-      var c = p.querySelector('canvas'), r = c.getBoundingClientRect(); if (!r.width) return;
+    function syncCanvas(c) {
+      var r = c.getBoundingClientRect(); if (!r.width) return 0;
       var dpr = Math.min(window.devicePixelRatio || 1, 3), w = Math.round(r.width * dpr), h = Math.round(r.height * dpr);
       if (c.width !== w || c.height !== h) { c.width = w; c.height = h; }
-      var ctx = c.getContext('2d'), s = c.width / W; ctx.clearRect(0, 0, c.width, c.height);
-      pags[i].s.forEach(function (t) { traco(ctx, t, s); }); if (extra) traco(ctx, extra, s);
+      return c.width / W;
+    }
+    function desenha(i) {
+      { var pe0 = pg(i); if (pe0 && pags[i] && pags[i].s && pags[i].s.length) pe0.classList.add('tocou'); }
+      var p = pg(i); if (!p || p.classList.contains('fora')) return;
+      var cBg = p.querySelector('.lv-cv-bg'), cFg = p.querySelector('.lv-cv-fg');
+      var s = syncCanvas(cBg); if (!s) return;
+      syncCanvas(cFg);
+      var ctx = cBg.getContext('2d'); ctx.clearRect(0, 0, cBg.width, cBg.height);
+      pags[i].s.forEach(function (t) { traco(ctx, t, s); });
+      var ctxFg = cFg.getContext('2d'); ctxFg.clearRect(0, 0, cFg.width, cFg.height);
+    }
+    function desenhaAtivo(i, atual) {
+      var p = pg(i); if (!p || p.classList.contains('fora')) return;
+      var cFg = p.querySelector('.lv-cv-fg'), s = syncCanvas(cFg); if (!s) return;
+      var ctx = cFg.getContext('2d'); ctx.clearRect(0, 0, cFg.width, cFg.height);
+      if (atual) traco(ctx, atual, s);
+    }
+    function commitTraco(i, t) {
+      var p = pg(i); if (!p || p.classList.contains('fora')) return;
+      var cBg = p.querySelector('.lv-cv-bg'), cFg = p.querySelector('.lv-cv-fg');
+      var s = syncCanvas(cBg);
+      if (s) traco(cBg.getContext('2d'), t, s);
+      if (cFg.width) cFg.getContext('2d').clearRect(0, 0, cFg.width, cFg.height);
     }
     function desenhaVisiveis() { visiveis().forEach(function (i) { if (i < pags.length) desenha(i); }); }
-    function guardaHist(i) { hist.push({ i: i, s: JSON.stringify(pags[i].s) }); if (hist.length > 40) hist.shift(); btUnd.disabled = false; }
+    function atualizaHistBts() { btUnd.disabled = !hist.length; btRed.disabled = !redo.length; }
+    function guardaHist(i) { hist.push({ i: i, s: JSON.stringify(pags[i].s) }); if (hist.length > 40) hist.shift(); redo = []; atualizaHistBts(); }
+    function desfazer() {
+      if (!hist.length) return;
+      var h = hist.pop();
+      if (h.i < pags.length) {
+        redo.push({ i: h.i, s: JSON.stringify(pags[h.i].s) });
+        pags[h.i].s = JSON.parse(h.s); salvaPag(h.i); vaiPara(h.i); desenha(h.i);
+      }
+      atualizaHistBts();
+    }
+    function refazer() {
+      if (!redo.length) return;
+      var h = redo.pop();
+      if (h.i < pags.length) {
+        hist.push({ i: h.i, s: JSON.stringify(pags[h.i].s) });
+        pags[h.i].s = JSON.parse(h.s); salvaPag(h.i); vaiPara(h.i); desenha(h.i);
+      }
+      atualizaHistBts();
+    }
+    function exportarPng(i) {
+      var p = pags[i], n = nota(), dEl = pg(i); if (!p || !n) return;
+      var c = document.createElement('canvas'); c.width = W; c.height = H;
+      var ctx = c.getContext('2d');
+      ctx.fillStyle = '#ffffff'; ctx.fillRect(0, 0, W, H);
+      /* desenha papel de fundo */
+      var pap = p.pap || 'pautado';
+      if (!p.f) {
+        if (pap === 'pautado') {
+          ctx.strokeStyle = '#ecdadd'; ctx.lineWidth = 3;
+          for (var y = 360; y < H - 140; y += 92) { ctx.beginPath(); ctx.moveTo(120, y); ctx.lineTo(W - 120, y); ctx.stroke(); }
+        } else if (pap === 'kanji') {
+          var step = 160; ctx.strokeStyle = '#e5cfd4'; ctx.lineWidth = 2.5;
+          for (var xk = 120; xk <= W - 120; xk += step) { ctx.beginPath(); ctx.moveTo(xk, 280); ctx.lineTo(xk, H - 160); ctx.stroke(); }
+          for (var yk = 280; yk <= H - 160; yk += step) { ctx.beginPath(); ctx.moveTo(120, yk); ctx.lineTo(W - 120, yk); ctx.stroke(); }
+        } else if (pap === 'pontilhado') {
+          ctx.fillStyle = '#d8c1c7';
+          for (var xp = 140; xp < W - 120; xp += 72) for (var yp = 280; yp < H - 140; yp += 72) { ctx.beginPath(); ctx.arc(xp, yp, 3.5, 0, 6.2832); ctx.fill(); }
+        }
+      }
+      function finalizar() {
+        /* título e texto simples */
+        ctx.fillStyle = '#3a2b38';
+        var ty = 170;
+        if (i === 0 && n.t) {
+          ctx.font = '800 64px "Baloo 2", system-ui, sans-serif';
+          ctx.fillText(n.t.slice(0, 50), 140, ty);
+          ty += 110;
+        }
+        if (p.x) {
+          ctx.font = '500 44px "Zen Maru Gothic", system-ui, sans-serif';
+          var linhas = p.x.split('\n');
+          linhas.forEach(function (ln) {
+            if (ty < H - 140) { ctx.fillText(ln, 140, ty, W - 280); ty += 76; }
+          });
+        }
+        /* traços da caneta */
+        p.s.forEach(function (t) { traco(ctx, t, 1); });
+        c.toBlob(function (bl) {
+          if (!bl) return;
+          var a = document.createElement('a'); a.href = URL.createObjectURL(bl);
+          a.download = 'caderno-pagina-' + (i + 1) + '.png';
+          document.body.appendChild(a); a.click(); a.remove();
+          setTimeout(function () { URL.revokeObjectURL(a.href); }, 2000);
+        });
+      }
+      var imEl = dEl && dEl.querySelector('.lv-img');
+      if (p.f && imEl && imEl.complete && imEl.naturalWidth) {
+        var sc = Math.min(W / imEl.naturalWidth, H / imEl.naturalHeight);
+        var dw = imEl.naturalWidth * sc, dh = imEl.naturalHeight * sc;
+        ctx.drawImage(imEl, (W - dw) / 2, (H - dh) / 2, dw, dh);
+      }
+      finalizar();
+    }
     function caneta(c, i) {
-      var atual = null, apagando = false, borrou = false;
+      var atual = null, lx = 0, ly = 0, apagando = false, borrou = false;
       function pos(e) { var r = c.getBoundingClientRect(); return [Math.round((e.clientX - r.left) / r.width * W), Math.round((e.clientY - r.top) / r.height * H)]; }
       function adiciona(e) {
-        var p = pos(e), pr = e.pointerType === 'pen' ? Math.max(1, Math.round((e.pressure || .5) * 9)) : 5, d = atual.d, n = d.length;
-        if (n) { var lx = 0, ly = 0; for (var k = 0; k < n; k += 3) { lx = k ? lx + d[k] : d[k]; ly = k ? ly + d[k + 1] : d[k + 1]; } if (Math.abs(p[0] - lx) + Math.abs(p[1] - ly) < 3) return false; d.push(p[0] - lx, p[1] - ly, pr); }
-        else d.push(p[0], p[1], pr);
+        var p = pos(e), pr = e.pointerType === 'pen' ? Math.max(1, Math.round((e.pressure || .5) * 9)) : 5, d = atual.d;
+        if (d.length) {
+          if (Math.abs(p[0] - lx) + Math.abs(p[1] - ly) < 3) return false;
+          d.push(p[0] - lx, p[1] - ly, pr);
+        } else {
+          d.push(p[0], p[1], pr);
+        }
+        lx = p[0]; ly = p[1];
         return true;
       }
       function apaga(e) {
@@ -441,7 +628,7 @@
         pags[i].s = resto; desenha(i);
       }
       c.addEventListener('pointerdown', function (e) {
-        if (modo !== 'pen') return;
+        if (modo !== 'pen' || emPinch) return;
         if (e.pointerType === 'pen') penVisto = Date.now();
         if (e.pointerType === 'touch' && Date.now() - penVisto < 4000) return;
         if (e.pointerType === 'mouse' && e.button !== 0) return;
@@ -449,20 +636,25 @@
         { var pgEl = pg(i); if (pgEl) pgEl.classList.add('tocou'); }
         /* borracha: ferramenta escolhida, ponta de borracha (32) ou o botão lateral da caneta apertado (2, ex.: S Pen) */
         if (ferr === 'bor' || (e.pointerType === 'pen' && (e.buttons & 34))) { apagando = true; borrou = false; apaga(e); return; }
-        atual = { k: cor, w: esp, d: [] }; adiciona(e); desenha(i, atual);
+        atual = ferr === 'mar' ? { k: cor, w: esp, m: 1, d: [] } : { k: cor, w: esp, d: [] };
+        adiciona(e); desenhaAtivo(i, atual);
       });
       c.addEventListener('pointermove', function (e) {
+        if (emPinch) { if (atual) { atual = null; desenhaAtivo(i, null); } return; }
         if (e.pointerType === 'pen') penVisto = Date.now();
         if (!apagando && atual && e.pointerType === 'pen' && (e.buttons & 34)) { /* apertou o botão no meio do traço: guarda o traço e passa a apagar */
-          if (atual.d.length) { guardaHist(i); pags[i].s = pags[i].s.concat([atual]); } atual = null; desenha(i); salvaPag(i); apagando = true; borrou = false; }
+          if (atual.d.length) { guardaHist(i); pags[i].s = pags[i].s.concat([atual]); commitTraco(i, atual); } atual = null; salvaPag(i); apagando = true; borrou = false; }
         if (apagando) { var ev = e.getCoalescedEvents ? e.getCoalescedEvents() : [e]; if (!ev.length) ev = [e]; ev.forEach(apaga); return; }
         if (!atual) return; e.preventDefault();
         var ev2 = e.getCoalescedEvents ? e.getCoalescedEvents() : [e]; if (!ev2.length) ev2 = [e];
-        var novo = false; ev2.forEach(function (x) { if (adiciona(x)) novo = true; }); if (novo) desenha(i, atual);
+        var novo = false; ev2.forEach(function (x) { if (adiciona(x)) novo = true; }); if (novo) desenhaAtivo(i, atual);
       });
       function fim() {
         if (apagando) { apagando = false; if (borrou) salvaPag(i); borrou = false; return; }
-        if (!atual) return; if (atual.d.length) { guardaHist(i); pags[i].s = pags[i].s.concat([atual]); } atual = null; desenha(i); salvaPag(i);
+        if (!atual) return;
+        if (atual.d.length) { guardaHist(i); pags[i].s = pags[i].s.concat([atual]); commitTraco(i, atual); }
+        else desenhaAtivo(i, null);
+        atual = null; salvaPag(i);
       }
       c.addEventListener('pointerup', fim); c.addEventListener('pointercancel', fim);
       c.addEventListener('lostpointercapture', function () { if (atual) fim(); });
@@ -474,19 +666,21 @@
     function setModo(m) {
       modo = m; el.classList.toggle('caneta', m === 'pen'); fer.hidden = m !== 'pen'; dica.hidden = m !== 'pen';
       Array.prototype.forEach.call(barra.querySelectorAll('.lv-modo button'), function (b) { b.setAttribute('aria-pressed', String(b.dataset.m === m)); });
+      if (m !== 'pen') resetaZoom();
       if (m === 'pen' && document.activeElement && document.activeElement.blur) document.activeElement.blur();
     }
     barra.addEventListener('click', function (e) {
       var b = e.target.closest('button'); if (!b) return;
       if (b.dataset.m) { setModo(b.dataset.m); return; }
-      if (b.dataset.c != null) { cor = +b.dataset.c; ferr = 'pen'; pressiona('.cor', 'data-c', cor); pressiona('[data-f="pen"],[data-f="bor"]', 'data-f', 'pen'); el.classList.remove('borracha'); return; }
+      if (b.dataset.c != null) { cor = +b.dataset.c; if (ferr === 'bor') { ferr = 'pen'; pressiona('[data-f="pen"],[data-f="mar"],[data-f="bor"]', 'data-f', 'pen'); el.classList.remove('borracha'); } pressiona('.cor', 'data-c', cor); return; }
       if (b.dataset.e != null) { esp = +b.dataset.e; pressiona('.esp', 'data-e', esp); return; }
       var f = b.dataset.f;
-      if (f === 'pen' || f === 'bor') { ferr = f; pressiona('[data-f="pen"],[data-f="bor"]', 'data-f', f); el.classList.toggle('borracha', f === 'bor'); }
-      if (f === 'und' && hist.length) {
-        var h = hist.pop(); if (h.i < pags.length) { pags[h.i].s = JSON.parse(h.s); salvaPag(h.i); vaiPara(h.i); desenha(h.i); }
-        btUnd.disabled = !hist.length;
-      }
+      if (f === 'pen' || f === 'mar' || f === 'bor') { ferr = f; pressiona('[data-f="pen"],[data-f="mar"],[data-f="bor"]', 'data-f', f); el.classList.toggle('borracha', f === 'bor'); }
+      if (f === 'und') desfazer();
+      if (f === 'red') refazer();
+      if (f === 'z+') setZoom(zm + 0.35);
+      if (f === 'z-') setZoom(zm - 0.35);
+      if (f === 'z0') resetaZoom();
       if (f === 'cl') {
         var alvo = visiveis().filter(function (i) { return i < pags.length && pags[i].s.length; });
         if (!alvo.length) return;
@@ -495,6 +689,34 @@
         alvo.forEach(function (i) { guardaHist(i); pags[i].s = []; salvaPag(i); desenha(i); });
       }
     });
+    /* pinch-to-zoom + pan com 2 dedos no modo Caneta, e Ctrl+Scroll no desktop */
+    var pDist = 0, pMidX = 0, pMidY = 0;
+    stage.addEventListener('touchstart', function (e) {
+      if (modo === 'pen' && e.touches.length === 2) {
+        emPinch = true;
+        var a = e.touches[0], b = e.touches[1];
+        pDist = Math.hypot(b.clientX - a.clientX, b.clientY - a.clientY) || 1;
+        pMidX = (a.clientX + b.clientX) / 2; pMidY = (a.clientY + b.clientY) / 2;
+      }
+    }, { passive: true });
+    stage.addEventListener('touchmove', function (e) {
+      if (!emPinch || e.touches.length !== 2) return;
+      e.preventDefault();
+      var a = e.touches[0], b = e.touches[1];
+      var d = Math.hypot(b.clientX - a.clientX, b.clientY - a.clientY) || 1;
+      var mx = (a.clientX + b.clientX) / 2, my = (a.clientY + b.clientY) / 2;
+      panX += mx - pMidX; panY += my - pMidY;
+      setZoom(zm * (d / pDist), mx, my);
+      pDist = d; pMidX = mx; pMidY = my;
+    }, { passive: false });
+    stage.addEventListener('touchend', function (e) {
+      if (emPinch && e.touches.length < 2) setTimeout(function () { emPinch = false; }, 120);
+    }, { passive: true });
+    stage.addEventListener('wheel', function (e) {
+      if (modo !== 'pen' || !e.ctrlKey) return;
+      e.preventDefault();
+      setZoom(zm * (e.deltaY < 0 ? 1.12 : 0.89), e.clientX, e.clientY);
+    }, { passive: false });
     el.querySelector('.lv-rola').addEventListener('click', function (e) { var b = e.target.closest('[data-r]'); if (b) rola(+b.dataset.r); });
     nav.addEventListener('click', function (e) {
       var b = e.target.closest('button'); if (!b || b.disabled) return;
@@ -508,6 +730,11 @@
       if (Math.abs(dx) > 60 && Math.abs(dx) > Math.abs(dy) * 1.5) anda(dx < 0 ? 1 : -1);
     }, { passive: true });
     el.addEventListener('keydown', function (e) {
+      if (modo === 'pen' && (e.ctrlKey || e.metaKey)) {
+        var k = e.key.toLowerCase();
+        if (k === 'z' && !e.shiftKey) { e.preventDefault(); desfazer(); return; }
+        if (k === 'y' || (k === 'z' && e.shiftKey)) { e.preventDefault(); refazer(); return; }
+      }
       var tg = e.target, campo = tg && (tg.tagName === 'TEXTAREA' || tg.tagName === 'INPUT');
       if (campo && !(e.altKey)) return;
       if (e.key === 'ArrowRight' || e.key === 'PageDown') { e.preventDefault(); anda(1); }
@@ -543,9 +770,9 @@
 
     var api = {
       abrir: function (novoId, manter) {
-        var n = C.obter(novoId); if (!n) { id = null; pags = []; livro.innerHTML = ''; lbl.textContent = ''; cxProf.hidden = true; return; }
-        var mesmo = novoId === id; id = novoId; ultimoM = n.m || 0; pags = lePags(n); hist = []; btUnd.disabled = true;
-        if (!(mesmo && manter)) ini = 0; ini = Math.min(ini, pags.length - 1); if (dupla) ini -= ini % 2;
+        var n = C.obter(novoId); if (!n) { id = null; pags = []; livro.innerHTML = ''; lbl.textContent = ''; cxProf.hidden = true; resetaZoom(); return; }
+        var mesmo = novoId === id; id = novoId; ultimoM = n.m || 0; pags = lePags(n); hist = []; redo = []; atualizaHistBts();
+        if (!(mesmo && manter)) { ini = 0; resetaZoom(); } ini = Math.min(ini, pags.length - 1); if (dupla) ini -= ini % 2;
         constroi(); atualizaProf();
       },
       id: function () { return id; },

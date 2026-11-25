@@ -25,7 +25,7 @@
     tmr = setTimeout(some, ms || 9000); return el;
   }
   function carrega(src, fn) { var t = document.createElement('script'); t.src = src; t.onload = fn; t.onerror = function () { caixa('<span>Não consegui abrir o caderno agora.</span>', 4000); }; document.head.appendChild(t); }
-  function comCaderno(fn) { if (window.UniCaderno) fn(window.UniCaderno); else carrega('/caderno-dados.js?v=2', function () { fn(window.UniCaderno); }); }
+  function comCaderno(fn) { if (window.UniCaderno) fn(window.UniCaderno); else carrega('/caderno-dados.js?v=4', function () { fn(window.UniCaderno); }); }
 
   function guarda(texto) {
     comCaderno(function (C) {

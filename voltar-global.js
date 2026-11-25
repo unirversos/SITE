@@ -6,7 +6,7 @@
    Se o Baú abriu uma ferramenta, quem manda é a faixa dele (mesmo visual). */
 (function () {
   if (window.top !== window || window.UniVoltarGlobal) return; window.UniVoltarGlobal = true;
-  if (!document.getElementById('cc-js')) { var cs = document.createElement('script'); cs.id = 'cc-js'; cs.src = '/copiar-caderno.js?v=2'; cs.defer = true; document.head.appendChild(cs); }
+  if (!document.getElementById('cc-js')) { var cs = document.createElement('script'); cs.id = 'cc-js'; cs.src = '/copiar-caderno.js?v=3'; cs.defer = true; document.head.appendChild(cs); }
   var P = location.pathname, K = 'uni-last', path = P + location.search;
   if (P === '/' || P === '/index.html' || P.indexOf('/idiomas/aula-zero/') === 0 || P.indexOf('/idiomas/aula-zero-teste/') === 0) return;
 
