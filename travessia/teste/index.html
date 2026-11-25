@@ -113,7 +113,45 @@ h1 em{font-style:normal;color:var(--pink)}
 .panel-h{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:8px}
 .panel-k{font-size:11.5px;font-weight:700;letter-spacing:.16em;text-transform:uppercase;color:var(--muted)}
 
-/* Navegador do Roteiro do Dia */
+/* Navegador do Roteiro do Dia + Alternador Calendário */
+.view-seg{
+  display:inline-flex; background:var(--surface); border:1px solid var(--line);
+  border-radius:999px; padding:3px; gap:2px;
+}
+.view-seg button{
+  font:inherit; font-family:var(--f-display); font-weight:700; font-size:13px;
+  border:0; background:transparent; color:var(--muted); cursor:pointer;
+  padding:5px 12px; border-radius:999px; min-height:30px;
+}
+.view-seg button[aria-pressed="true"]{background:var(--card);color:var(--ink);box-shadow:0 2px 6px -3px rgba(52,38,50,.2)}
+
+/* Mini-calendário integrado no Painel */
+.mcal{display:grid;gap:10px}
+.mcal-nav{display:flex;align-items:center;justify-content:space-between;gap:8px}
+.mcal-nav strong{font-family:var(--f-display);font-weight:800;font-size:16.5px;text-transform:capitalize}
+.mcal-grid{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:4px}
+.mcal-h{text-align:center;font-size:11px;font-weight:700;color:var(--muted);text-transform:uppercase;padding-bottom:2px}
+.mcal-d{
+  font:inherit; border:1px solid transparent; background:transparent; color:var(--muted);
+  border-radius:12px; min-height:46px; padding:4px 2px; cursor:pointer;
+  display:flex; flex-direction:column; align-items:center; justify-content:center; gap:3px;
+  transition:border-color .12s, background .12s;
+}
+.mcal-d.in{background:var(--paper);color:var(--ink);border-color:var(--line)}
+.mcal-d.in:hover{border-color:var(--pink);background:var(--pink-soft)}
+.mcal-d.sel{background:var(--pink);color:#fff;border-color:var(--pink)}
+.mcal-d.sel .mcal-dots i{background:#fff!important}
+.mcal-d.out{opacity:.35;pointer-events:none}
+.mcal-num{font-family:var(--f-display);font-weight:800;font-size:14px;line-height:1}
+.mcal-dots{display:flex;gap:3px;height:6px;align-items:center}
+.mcal-dots i{width:5px;height:5px;border-radius:50%;display:block}
+.mcal-dots i.ev{background:var(--pink)}
+.mcal-dots i.ok{background:var(--sage)}
+.mcal-dots i.warn{background:var(--gold)}
+.mcal-leg{display:flex;flex-wrap:wrap;gap:8px 14px;font-size:12px;color:var(--muted);padding-top:2px}
+.mcal-leg span{display:inline-flex;align-items:center;gap:5px}
+.mcal-leg i{width:7px;height:7px;border-radius:50%;display:inline-block}
+
 .day-ctrl{display:flex;align-items:center;gap:6px}
 .day-select{
   font:inherit; font-family:var(--f-display); font-weight:800; font-size:15.5px; color:var(--ink);
@@ -237,6 +275,27 @@ h1 em{font-style:normal;color:var(--pink)}
 .pocket strong{font-family:var(--f-display);font-weight:800;font-size:15.5px;line-height:1.2}
 .pocket span{font-size:13px;color:var(--muted);line-height:1.4}
 
+/* Denpyō (formulário Takkyubin ilustrativo preenchido) */
+.denpyo{
+  background:#fffdf9; border:2px solid #d4b46a; border-radius:16px; padding:14px 16px;
+  display:grid; gap:10px; font-size:13.5px;
+}
+.denpyo-h{
+  display:flex; justify-content:space-between; align-items:center; gap:8px;
+  border-bottom:1.5px dashed #d4b46a; padding-bottom:8px;
+}
+.denpyo-h strong{font-family:var(--f-display);font-size:16px;color:#6d4f12}
+.denpyo-row{display:grid;grid-template-columns:115px minmax(0,1fr);gap:8px;align-items:baseline}
+@media (max-width:520px){.denpyo-row{grid-template-columns:1fr;gap:2px}}
+.denpyo-k{font-size:11.5px;font-weight:700;color:#8e6a1f;text-transform:uppercase;letter-spacing:.05em}
+.denpyo-v{font-weight:700;color:var(--ink);word-break:break-word}
+.jp-phrase{
+  background:var(--pink-soft); border-radius:14px; padding:12px 14px; display:grid; gap:4px;
+}
+.jp-phrase .jp{font-size:17px;font-weight:700;color:var(--ink);line-height:1.45}
+.jp-phrase .rom{font-size:13px;color:var(--pink-d);font-weight:500}
+.jp-phrase .pt{font-size:13px;color:var(--muted)}
+
 /* Cartão de Emergência */
 .sos-nums{display:grid;grid-template-columns:1fr 1fr;gap:10px}
 .sos-n{background:var(--pink-soft);border-radius:14px;padding:12px;text-align:center}
@@ -306,14 +365,19 @@ footer a:hover{text-decoration:underline}
   <header class="hero">
     <p class="eyebrow">Unirversos Travessia · Japão</p>
     <h1>Sua viagem <em>do caos ao cosmos.</em></h1>
-    <p class="lede">Datas, roteiro do dia com rotas de trem, endereço de cada noite, ficha de imigração e cronograma de ingressos — tudo sincronizado na sua conta gratuita.</p>
+    <p class="lede" id="heroLede">Datas, roteiro do dia com rotas de trem, endereço de cada noite, ficha de imigração e cronograma de ingressos — tudo sincronizado na sua conta gratuita.</p>
   </header>
 
   <!-- SETUP INICIAL -->
   <section class="setup-panel" id="secSetup" hidden aria-labelledby="tSetup">
     <div>
       <h2 id="tSetup">Quando é a sua viagem ao Japão?</h2>
-      <p class="sub">Coloque ida e volta uma única vez. O sistema organiza seu calendário, o roteiro de cada dia e o cronograma de ingressos em horário de Brasília.</p>
+      <p class="sub">Coloque ida e volta uma única vez — gratuito e sincronizado na sua conta.</p>
+    </div>
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:10px">
+      <div style="background:var(--paper);border-radius:14px;padding:11px 13px;font-size:13.5px"><strong style="display:block;font-family:var(--f-display);font-size:15px">📍 Roteiro + Rotas de trem</strong><span style="color:var(--muted)">Endereço de cada noite, rotas 1-clique no Maps e guia Takkyubin.</span></div>
+      <div style="background:var(--paper);border-radius:14px;padding:11px 13px;font-size:13.5px"><strong style="display:block;font-family:var(--f-display);font-size:15px">🎟️ Loterias em Brasília</strong><span style="color:var(--muted)">Datas de abertura calculadas para a sua viagem + controle de ingressos.</span></div>
+      <div style="background:var(--paper);border-radius:14px;padding:11px 13px;font-size:13.5px"><strong style="display:block;font-family:var(--f-display);font-size:15px">📄 Imigração &amp; JR Pass</strong><span style="color:var(--muted)">Ficha de endereços em PDF, cartão 🆘 de bolso e cálculo de JR Pass.</span></div>
     </div>
     <form id="fSetup" novalidate>
       <div class="campos">
@@ -362,26 +426,47 @@ footer a:hover{text-decoration:underline}
     <!-- 2 colunas: Roteiro do Dia + Radar do Cosmos -->
     <section class="cockpit" aria-label="Painel do dia e radar">
 
-      <!-- ESQUERDA: ROTEIRO DO DIA COM DESLOCAMENTO + ANOTAR RÁPIDO -->
+      <!-- ESQUERDA: ROTEIRO DO DIA ↔ MINI-CALENDÁRIO -->
       <div class="panel">
         <div class="panel-h">
-          <span class="panel-k">📍 Roteiro do dia</span>
-          <div class="day-ctrl">
+          <div class="view-seg" role="group" aria-label="Modo de visualização">
+            <button type="button" id="vBtnDia" aria-pressed="true">📍 Roteiro do dia</button>
+            <button type="button" id="vBtnCal" aria-pressed="false">🗓️ Calendário</button>
+          </div>
+          <div class="day-ctrl" id="dayCtrl">
             <button class="btn sm ico" type="button" id="dPrev" aria-label="Dia anterior">‹</button>
             <select class="day-select" id="dSel" aria-label="Escolher dia da viagem"></select>
             <button class="btn sm ico" type="button" id="dNext" aria-label="Próximo dia">›</button>
           </div>
         </div>
 
-        <div class="stay-bar" id="dayStay"></div>
-        <div class="tl" id="dayTimeline"></div>
+        <div id="viewDia" style="display:grid;gap:14px">
+          <div id="daySwap" class="stay-bar warn" hidden></div>
+          <div class="stay-bar" id="dayStay"></div>
+          <div class="tl" id="dayTimeline"></div>
 
-        <div class="day-foot">
-          <div style="display:flex;flex-wrap:wrap;gap:6px">
-            <button class="btn sm pri" type="button" id="bQuickAdd">➕ Anotar neste dia</button>
-            <a class="btn sm sage" id="bRotaDia" href="#" target="_blank" rel="noopener" hidden>🧭 Rota do dia ↗</a>
+          <div class="day-foot">
+            <div style="display:flex;flex-wrap:wrap;gap:6px">
+              <button class="btn sm pri" type="button" id="bQuickAdd">➕ Anotar neste dia</button>
+              <a class="btn sm sage" id="bRotaDia" href="#" target="_blank" rel="noopener" hidden>🧭 Rota do dia ↗</a>
+            </div>
+            <a class="btn sm" id="bEditCalDia" href="./calendario/">✏️ Abrir dia no calendário</a>
           </div>
-          <a class="btn sm" id="bEditCalDia" href="./calendario/">✏️ Abrir dia no calendário</a>
+        </div>
+
+        <div id="viewCal" class="mcal" hidden>
+          <div class="mcal-nav">
+            <button class="btn sm ico" type="button" id="mcPrev" aria-label="Mês anterior">‹</button>
+            <strong id="mcTit"></strong>
+            <button class="btn sm ico" type="button" id="mcNext" aria-label="Próximo mês">›</button>
+          </div>
+          <div class="mcal-grid" id="mcGrid"></div>
+          <div class="mcal-leg">
+            <span><i style="background:var(--pink)"></i> Tem eventos</span>
+            <span><i style="background:var(--sage)"></i> Hotel confirmado</span>
+            <span><i style="background:var(--gold)"></i> Sem hotel</span>
+            <span style="margin-left:auto">Toque em um dia para expandir</span>
+          </div>
         </div>
       </div>
 
@@ -543,6 +628,35 @@ footer a:hover{text-decoration:underline}
   </div>
 </dialog>
 
+<!-- Modal 5: Calculadora Automática de JR Pass -->
+<dialog class="taxi-dlg wide" id="dlgJR" aria-labelledby="jrTit">
+  <div class="taxi-in">
+    <div style="display:flex;justify-content:space-between;align-items:center;gap:10px">
+      <strong id="jrTit" style="font-family:var(--f-display);font-size:20px">🚆 Vale a pena o JR Pass no seu roteiro?</strong>
+      <button class="btn sm" type="button" data-close>Fechar</button>
+    </div>
+    <p class="taxi-sub">Calculado automaticamente pelos deslocamentos entre cidades detectados nas suas hospedagens e eventos (valores aproximados de Shinkansen / JR em ienes).</p>
+    <div id="jrBody" style="display:grid;gap:12px;max-height:60vh;overflow:auto"></div>
+    <div class="barra">
+      <a class="btn sm" href="./calendario/#logistica">Abrir comparador completo de passes →</a>
+      <button class="btn pri sm" type="button" data-close>Fechar</button>
+    </div>
+  </div>
+</dialog>
+
+<!-- Modal 6: Guia Takkyubin (Yamato) + Denpyō preenchido -->
+<dialog class="taxi-dlg wide" id="dlgTakkyu" aria-labelledby="tkTit">
+  <div class="taxi-in">
+    <div style="display:flex;justify-content:space-between;align-items:center;gap:10px">
+      <strong id="tkTit" style="font-family:var(--f-display);font-size:20px">📦 Enviar mala com Takkyubin (Yamato)</strong>
+      <button class="btn sm" type="button" data-close>Fechar</button>
+    </div>
+    <p class="taxi-sub">No Japão, você pode despachar a mala grande de um hotel para o próximo por cerca de <b>¥2.000 a ¥2.500</b> (chega no dia seguinte) e viajar de trem só com uma mochila!</p>
+    <div id="tkBody" style="display:grid;gap:12px;max-height:62vh;overflow:auto"></div>
+    <div class="barra" id="tkActs"></div>
+  </div>
+</dialog>
+
 <!-- Área dedicada à impressão limpa do Dossiê -->
 <div id="printDossie"></div>
 
@@ -648,7 +762,53 @@ function abrirTaxi(nome, endereco){
 }
 
 var diaSel = '';
+var mesCal = '';
+var modoPainel = 'dia';
 var V_ATUAL = null;
+var MES_LONG = ['janeiro','fevereiro','março','abril','maio','junho','julho','agosto','setembro','outubro','novembro','dezembro'];
+
+function trocarModoPainel(m){
+  modoPainel = m === 'cal' ? 'cal' : 'dia';
+  $('#vBtnDia').setAttribute('aria-pressed', modoPainel==='dia'?'true':'false');
+  $('#vBtnCal').setAttribute('aria-pressed', modoPainel==='cal'?'true':'false');
+  $('#viewDia').hidden = modoPainel!=='dia';
+  $('#dayCtrl').hidden = modoPainel!=='dia';
+  $('#viewCal').hidden = modoPainel!=='cal';
+  if(modoPainel==='cal') renderMiniCal();
+}
+
+function renderMiniCal(){
+  if(!V_ATUAL) return;
+  if(!mesCal) mesCal = (diaSel || V_ATUAL.ini).slice(0,7);
+  var y = +mesCal.slice(0,4), m = +mesCal.slice(5,7);
+  $('#mcTit').textContent = MES_LONG[m-1] + ' de ' + y;
+  var cal = V_ATUAL.cal || {};
+  var evs = Array.isArray(cal.ev) ? cal.ev.filter(function(e){return e&&ok(e.data);}) : [];
+  var hosps = evs.filter(function(e){return e.tipo==='hosp';});
+  var evPorDia = {};
+  evs.forEach(function(e){ if(e.tipo!=='hosp'||e.hora) evPorDia[e.data] = (evPorDia[e.data]||0) + 1; });
+
+  var primeiro = y+'-'+String(m).padStart(2,'0')+'-01';
+  var off = new Date(primeiro+'T00:00:00Z').getUTCDay();
+  var dm = new Date(Date.UTC(y, m, 0)).getUTCDate();
+  var h = DSEM.map(function(d){ return '<div class="mcal-h">'+d+'</div>'; }).join('');
+  for(var k=0; k<off; k++) h += '<div></div>';
+  for(var d=1; d<=dm; d++){
+    var iso = y+'-'+String(m).padStart(2,'0')+'-'+String(d).padStart(2,'0');
+    var dentro = iso >= V_ATUAL.ini && iso <= V_ATUAL.fim;
+    var sel = iso === diaSel;
+    var dots = '';
+    if(dentro){
+      if(evPorDia[iso]) dots += '<i class="ev"></i>';
+      if(iso < V_ATUAL.fim){
+        dots += hospNaData(hosps, iso) ? '<i class="ok"></i>' : '<i class="warn"></i>';
+      }
+    }
+    h += '<button type="button" class="mcal-d '+(dentro?'in':'out')+(sel?' sel':'')+'" data-mcd="'+iso+'">'+
+      '<span class="mcal-num">'+d+'</span><span class="mcal-dots">'+dots+'</span></button>';
+  }
+  $('#mcGrid').innerHTML = h;
+}
 
 function hospNaData(hosps, iso){
   return hosps.find(function(h){
@@ -672,6 +832,29 @@ function renderDia(){
   document.querySelectorAll('.stay-chip').forEach(function(el){
     el.classList.toggle('active', !!(hDia && el.dataset.hid === hDia.id));
   });
+
+  /* Aviso automático de Dia de Troca de Hotel + Takkyubin (Yamato) */
+  var swapEl = $('#daySwap');
+  var hSaindo = hosps.find(function(h){ return h.dataFim === diaSel; });
+  var hEntrando = hosps.find(function(h){ return h.data === diaSel && (!hSaindo || h.id !== hSaindo.id); });
+  if(hSaindo && hEntrando){
+    var nA = limpaTexto(hSaindo.titulo)||'Hotel anterior', nB = limpaTexto(hEntrando.titulo)||'Próximo hotel';
+    var qA = destinoMaps(hSaindo), qB = destinoMaps(hEntrando);
+    swapEl.hidden = false;
+    swapEl.innerHTML =
+      '<div class="stay-info">'+
+        '<span class="stay-label">🧳 Dia de troca de hotel · '+esc(nA)+' → '+esc(nB)+'</span>'+
+        '<span class="stay-addr" style="color:var(--ink)">Envie a mala grande com <b>Takkyubin (Yamato)</b> ou use um coin locker na estação para passear leve.</span>'+
+      '</div>'+
+      '<div class="stay-acts">'+
+        '<button type="button" class="btn xs pri" id="bAbrirTakkyu">📦 Como enviar (Denpyō)</button>'+
+        (qA && qB ? '<a class="btn xs" href="'+mapsTransit(qA, qB)+'" target="_blank" rel="noopener">🚆 Rota entre hotéis ↗</a>' : '')+
+      '</div>';
+    $('#bAbrirTakkyu').onclick = function(){ abrirTakkyubin(hSaindo, hEntrando); };
+  } else {
+    swapEl.hidden = true;
+    swapEl.innerHTML = '';
+  }
 
   var stayEl = $('#dayStay');
   if(hDia){
@@ -754,6 +937,104 @@ function renderDia(){
   } else rotaBtn.hidden = true;
 }
 
+/* ---------- Guia Takkyubin (Yamato) + Denpyō preenchido ---------- */
+function abrirTakkyubin(hSaindo, hEntrando){
+  var nA = limpaTexto(hSaindo.titulo)||'Hotel atual', aA = limpaTexto(hSaindo.local)||nA;
+  var nB = limpaTexto(hEntrando.titulo)||'Próximo hotel', aB = limpaTexto(hEntrando.local)||nB;
+  var cA = coordDe(hSaindo.local) || coordDe(hSaindo.titulo);
+  var urlPerto = cA
+    ? 'https://www.google.com/maps/search/Yamato+Transport+OR+7-Eleven/@'+cA+',16z'
+    : 'https://www.google.com/maps/search/?api=1&query='+encodeURIComponent('Yamato Transport 7-Eleven near '+aA);
+  var fraseJp = 'すみません、次のホテルへ荷物を送りたいのですが、こちらで宅急便をお願いできますか？';
+  var fraseRom = 'Sumimasen, tsugi no hoteru e nimotsu o okuritai no desu ga, kochira de takkyūbin o onegai dekimasu ka?';
+
+  $('#tkBody').innerHTML =
+    '<div class="jp-phrase">'+
+      '<span class="c-badge rosa">1. Pergunte na recepção do hotel (1 dia antes!)</span>'+
+      '<div class="jp" lang="ja">'+fraseJp+'</div>'+
+      '<div class="rom">'+fraseRom+'</div>'+
+      '<div class="pt">“Com licença, quero enviar minha mala para o próximo hotel. Vocês despacham Takkyubin aqui?”</div>'+
+      '<div style="margin-top:4px"><button type="button" class="btn xs soft" id="tkCopFrase">📋 Copiar frase em japonês</button></div>'+
+    '</div>'+
+    '<div class="denpyo">'+
+      '<div class="denpyo-h"><strong>📝 Exemplo de Denpyō (伝票) preenchido</strong><span class="c-badge ouro">Moto-barai · Pago no envio</span></div>'+
+      '<div class="denpyo-row"><span class="denpyo-k">お届け先<br>(Destino)</span><span class="denpyo-v">'+esc(nB)+'<br><span style="font-weight:400;color:var(--muted)">'+esc(aB)+'</span></span></div>'+
+      '<div class="denpyo-row"><span class="denpyo-k">ご依頼主<br>(Origem)</span><span class="denpyo-v">'+esc(nA)+'<br><span style="font-weight:400;color:var(--muted)">'+esc(aA)+'</span></span></div>'+
+      '<div class="denpyo-row"><span class="denpyo-k">品名 / Obs<br>(Conteúdo)</span><span class="denpyo-v">Suitcase / Clothes · Check-in: '+brFull(hEntrando.data)+' (Seu nome da reserva)</span></div>'+
+    '</div>'+
+    '<div class="radar-row">'+
+      '<strong>💡 Passo a passo sem erro</strong>'+
+      '<p>1) Despache na <b>manhã da véspera</b> ('+brCurto(addDia(hEntrando.data,-1))+') para a mala chegar no dia do check-in ('+brCurto(hEntrando.data)+').<br>'+
+      '2) Separe uma mochila com 1 troca de roupa e itens de higiene para a noite.<br>'+
+      '3) Se o seu hotel/Airbnb não fizer o envio, leve a mala até o <b>posto da Yamato (logo do gato preto)</b>, <b>7-Eleven</b> ou <b>FamilyMart</b> mais próximo — eles têm o formulário (Denpyō) no balcão!</p>'+
+    '</div>';
+
+  $('#tkActs').innerHTML =
+    '<a class="btn pri sm" href="'+urlPerto+'" target="_blank" rel="noopener">📍 Yamato / 7-Eleven mais próximo ↗</a>'+
+    '<button type="button" class="btn sm" data-close>Fechar</button>';
+
+  $('#tkCopFrase').onclick = function(){
+    if(navigator.clipboard) navigator.clipboard.writeText(fraseJp).then(function(){ toast('Frase copiada ✓'); });
+  };
+  $('#dlgTakkyu').showModal();
+}
+
+/* ---------- Calculadora Automática de JR Pass por Cidades ---------- */
+var TARIFAS_JR = {
+  'Tóquio|Kyoto': 14170, 'Tóquio|Osaka': 14720, 'Tóquio|Nagoya': 11300,
+  'Tóquio|Hiroshima': 19760, 'Tóquio|Kanazawa': 14380, 'Tóquio|Fukuoka': 23810,
+  'Tóquio|Fuji / Hakone': 4000, 'Tóquio|Hokkaido': 23430,
+  'Kyoto|Osaka': 580, 'Kyoto|Nara': 720, 'Osaka|Nara': 820,
+  'Kyoto|Nagoya': 5910, 'Osaka|Nagoya': 6680,
+  'Kyoto|Hiroshima': 11300, 'Osaka|Hiroshima': 10950,
+  'Kyoto|Kanazawa': 7700, 'Osaka|Kanazawa': 8400,
+  'Kyoto|Fukuoka': 16200, 'Osaka|Fukuoka': 15600,
+  'Nagoya|Hiroshima': 14500, 'Nagoya|Kanazawa': 7500, 'Hiroshima|Fukuoka': 9200
+};
+function tarifaEntre(c1, c2){
+  if(!c1 || !c2 || c1 === c2 || c1 === 'Japão' || c2 === 'Japão') return 0;
+  return TARIFAS_JR[c1+'|'+c2] || TARIFAS_JR[c2+'|'+c1] || 11000;
+}
+function analisarJRPass(hosps, evs){
+  var seq = [];
+  /* Usa hospedagens em ordem cronológica como espinha dorsal das cidades */
+  hosps.forEach(function(h){
+    var c = cidadeDe(h);
+    if(c === 'Japão') return;
+    if(!seq.length || seq[seq.length-1].c !== c) seq.push({c:c, data:h.data});
+  });
+  /* Complementa com trens/passeios em outras cidades (bate-voltas) */
+  var trechos = [];
+  for(var i=1; i<seq.length; i++){
+    var a = seq[i-1], b = seq[i];
+    var v = tarifaEntre(a.c, b.c);
+    if(v > 0) trechos.push({de:a.c, para:b.c, data:b.data, v:v});
+  }
+  var totalAvulso = trechos.reduce(function(s,x){ return s + x.v; }, 0);
+  var spanDias = trechos.length >= 2 ? (diasEntre(trechos[0].data, trechos[trechos.length-1].data) + 1) : (trechos.length ? 7 : 0);
+  var jrDias = spanDias <= 7 ? 7 : (spanDias <= 14 ? 14 : 21);
+  var jrPreco = jrDias === 7 ? 53000 : (jrDias === 14 ? 84000 : 105000);
+  var compensa = totalAvulso >= jrPreco;
+  return { trechos: trechos, totalAvulso: totalAvulso, spanDias: spanDias, jrDias: jrDias, jrPreco: jrPreco, compensa: compensa };
+}
+function abrirModalJR(analise){
+  var b = $('#jrBody');
+  var fmtY = function(n){ return '¥ ' + Math.round(n).toLocaleString('pt-BR'); };
+  if(!analise.trechos.length){
+    b.innerHTML = '<p class="taxi-sub">Ainda não detectei deslocamentos entre cidades diferentes (ex.: Tóquio → Kyoto → Osaka). Assim que você cadastrar hospedagens em 2 ou mais cidades, o cálculo aparece aqui automaticamente!</p>';
+  } else {
+    var diff = Math.abs(analise.jrPreco - analise.totalAvulso);
+    var veredicto = analise.compensa
+      ? '<div class="radar-row ok"><strong>✅ JR Pass de '+analise.jrDias+' dias pode compensar!</strong><p>Seus deslocamentos entre cidades somam cerca de <b>'+fmtY(analise.totalAvulso)+'</b> avulso, contra <b>'+fmtY(analise.jrPreco)+'</b> do JR Pass ('+analise.jrDias+' dias). Economia estimada: ~'+fmtY(diff)+'.</p></div>'
+      : '<div class="radar-row warn"><strong>💡 Comprar avulso compensa mais no seu roteiro</strong><p>Seus deslocamentos entre cidades somam cerca de <b>'+fmtY(analise.totalAvulso)+'</b> avulso, enquanto o JR Pass de '+analise.jrDias+' dias custa <b>'+fmtY(analise.jrPreco)+'</b>. Comprando avulso você economiza cerca de <b>'+fmtY(diff)+'</b> (e ainda pode pegar o Shinkansen Nozomi sem taxa extra!).</p></div>';
+    var tbl = '<table class="dos-tbl"><thead><tr><th>Data</th><th>Trecho detectado</th><th>Avulso aprox.</th></tr></thead><tbody>'+
+      analise.trechos.map(function(t){ return '<tr><td>'+brCurto(t.data)+'</td><td><b>'+esc(t.de)+' → '+esc(t.para)+'</b></td><td>'+fmtY(t.v)+'</td></tr>'; }).join('')+
+      '<tr><td colspan="2"><b>Total estimado avulso</b></td><td><b>'+fmtY(analise.totalAvulso)+'</b></td></tr></tbody></table>';
+    b.innerHTML = veredicto + tbl + '<p style="margin:0;font-size:12.5px;color:var(--muted)">* Valores aproximados de trem-bala/JR por pessoa (referência 2026: JR Pass 7d ¥53.000 · 14d ¥84.000 · 21d ¥105.000). Bate-voltas extras de Shinkansen (ex.: Hiroshima) podem alterar a conta.</p>';
+  }
+  $('#dlgJR').showModal();
+}
+
 function renderOrcamento(cal){
   var box = $('#orcBox');
   var evs = Array.isArray(cal.ev) ? cal.ev : [];
@@ -806,10 +1087,12 @@ function render(){
   V_ATUAL = v;
   if(!v){
     $('#secSetup').hidden = false; $('#secCockpit').hidden = true;
+    $('#heroLede').hidden = false;
     $('#sCancel').hidden = true; $('#sExemplo').hidden = false;
     return;
   }
   $('#secSetup').hidden = true; $('#secCockpit').hidden = false;
+  $('#heroLede').hidden = true;
 
   var hj = hojeIso();
   var dur = diasEntre(v.ini, v.fim) + 1;
@@ -817,8 +1100,15 @@ function render(){
   var evs = Array.isArray(cal.ev) ? cal.ev.filter(function(e){ return e && ok(e.data); }) : [];
   var hosps = evs.filter(function(e){ return e.tipo === 'hosp'; }).sort(function(a,b){ return a.data < b.data ? -1 : 1; });
 
-  $('#cTitulo').textContent = v.titulo || 'Minha viagem ao Japão';
-  $('#cDatas').textContent = br(v.ini) + ' → ' + br(v.fim) + ' · ' + dur + ' dias';
+  if(v.titulo && v.titulo.trim()){
+    $('#cTitulo').hidden = false;
+    $('#cTitulo').textContent = v.titulo.trim();
+    $('#cDatas').textContent = br(v.ini) + ' → ' + br(v.fim) + ' · ' + dur + ' dias';
+  } else {
+    $('#cTitulo').hidden = false;
+    $('#cTitulo').textContent = br(v.ini) + ' → ' + br(v.fim) + ' · ' + dur + ' dias';
+    $('#cDatas').textContent = '';
+  }
   var stEl = $('#cStatus'), faltam = diasEntre(hj, v.ini);
   if(hj < v.ini){ stEl.textContent = faltam===1?'Falta 1 dia!':'Faltam '+faltam+' dias'; stEl.className='c-badge rosa'; }
   else if(hj <= v.fim){ stEl.textContent = '✈️ Dia '+(diasEntre(v.ini,hj)+1)+' de '+dur; stEl.className='c-badge verde'; }
@@ -911,13 +1201,40 @@ function render(){
     rows.push('<div class="radar-row"><div class="radar-row-top"><strong>🛂 Burocracia &amp; Reta final</strong><span class="c-badge azul">'+nBur+' feitos</span></div><p>Visto, Visit Japan Web, eSIM, remédios e mala.</p><a href="./burocracia/">Abrir checklist →</a></div>');
   }
 
+  /* 4. Calculadora automática de JR Pass */
+  var analiseJR = analisarJRPass(hosps, evs);
+  if(analiseJR.trechos.length){
+    var fmtY = function(n){ return '¥ ' + Math.round(n).toLocaleString('pt-BR'); };
+    rows.push('<div class="radar-row '+(analiseJR.compensa?'ok':'')+'"><div class="radar-row-top"><strong>🚆 JR Pass: '+(analiseJR.compensa?'pode compensar!':'avulso sai mais barato')+'</strong><span class="c-badge '+(analiseJR.compensa?'verde':'azul')+'">'+analiseJR.trechos.length+' trechos</span></div><p>~'+fmtY(analiseJR.totalAvulso)+' avulso vs. '+fmtY(analiseJR.jrPreco)+' (JR Pass '+analiseJR.jrDias+'d).</p><button type="button" class="btn xs" id="bAbrirJR" style="width:fit-content;margin-top:4px">Ver cálculo por trecho →</button></div>');
+  }
+
   $('#radarList').innerHTML = rows.join('');
+  var bJR = $('#bAbrirJR');
+  if(bJR) bJR.onclick = function(){ abrirModalJR(analiseJR); };
   $('#radarBadge').textContent = urgN ? (urgN + (urgN===1?' ponto de atenção':' pontos de atenção')) : 'Tudo em ordem ✓';
   $('#radarBadge').className = urgN ? 'c-badge urg' : 'c-badge verde';
 
   renderOrcamento(cal);
   renderDia();
+  if(modoPainel==='cal') renderMiniCal();
 }
+
+$('#vBtnDia').addEventListener('click', function(){ trocarModoPainel('dia'); });
+$('#vBtnCal').addEventListener('click', function(){ mesCal = (diaSel || (V_ATUAL&&V_ATUAL.ini) || '').slice(0,7); trocarModoPainel('cal'); });
+$('#mcPrev').addEventListener('click', function(){
+  if(!mesCal) return; var y=+mesCal.slice(0,4), m=+mesCal.slice(5,7)-1;
+  if(m<1){ m=12; y--; } mesCal = y+'-'+String(m).padStart(2,'0'); renderMiniCal();
+});
+$('#mcNext').addEventListener('click', function(){
+  if(!mesCal) return; var y=+mesCal.slice(0,4), m=+mesCal.slice(5,7)+1;
+  if(m>12){ m=1; y++; } mesCal = y+'-'+String(m).padStart(2,'0'); renderMiniCal();
+});
+$('#mcGrid').addEventListener('click', function(e){
+  var b = e.target.closest('[data-mcd]'); if(!b) return;
+  diaSel = b.dataset.mcd;
+  renderDia();
+  trocarModoPainel('dia');
+});
 
 /* ---------- Anotar rápido no dia ---------- */
 $('#bQuickAdd').addEventListener('click', function(){

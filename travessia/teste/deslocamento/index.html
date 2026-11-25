@@ -131,6 +131,16 @@ body{background-image:none!important}
   font-family:var(--f-display);font-weight:700;font-size:14.5px;background:var(--pink);color:#fff;
   padding:9px 18px;border-radius:999px;width:fit-content;
 }
+.d-guia{display:grid;gap:14px;margin-top:20px}
+.d-guia h2{font-family:var(--f-display);font-weight:800;font-size:20px;margin:0}
+.d-apps{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:10px}
+.d-card{
+  background:#fff;border:1px solid var(--line);border-radius:16px;padding:14px 16px;
+  display:grid;gap:4px;align-content:start;box-shadow:var(--shadow);
+}
+.d-card strong{font-family:var(--f-display);font-weight:800;font-size:15.5px;line-height:1.2}
+.d-card p{margin:0;font-size:13.5px;color:var(--muted);line-height:1.45}
+.d-card.warn{background:var(--gold-soft);border-color:#e7d5a8}
 </style><link rel="stylesheet" href="../cosmos.css?v=4"></head>
 <body>
 <script>if(/[?&]embed=1/.test(location.search))document.documentElement.classList.add('embed');</script>
@@ -162,6 +172,34 @@ body{background-image:none!important}
   <div id="res" class="res" hidden></div>
   <div id="vazio" class="vazio"></div>
   <section id="minhas" class="minhas" hidden></section>
+
+  <section class="d-guia" aria-label="Guia prático de transporte no Japão">
+    <h2>📱 Os 3 apps que salvam no Japão</h2>
+    <div class="d-apps">
+      <div class="d-card">
+        <strong>🗺️ Google Maps</strong>
+        <p>Mostra a linha, a <b>plataforma exata</b>, o vagão mais perto da escada e o número da saída da estação.</p>
+      </div>
+      <div class="d-card">
+        <strong>🚆 Japan Travel (NAVITIME)</strong>
+        <p>Ideal para filtrar rotas cobertas pelo <b>JR Pass</b> e conferir tarifas exatas de Shinkansen e trens expressos.</p>
+      </div>
+      <div class="d-card">
+        <strong>🚄 SmartEX</strong>
+        <p>App oficial para comprar Shinkansen (Tóquio ↔ Kyoto ↔ Osaka) no celular e vincular direto ao seu <b>Suica</b>.</p>
+      </div>
+    </div>
+
+    <div class="d-card warn">
+      <strong>🧳 Regra da mala grande no Shinkansen (≥ 160 cm)</strong>
+      <p>Se a soma de <b>altura + largura + profundidade</b> da mala ficar entre 160 cm e 250 cm, o Tokaido/Sanyo/Kyushu Shinkansen exige reserva gratuita de <b>assento com espaço de bagagem (Oversized Baggage Seat)</b>. Sem reserva, cobram taxa de ¥1.000 no trem. Dica: para viajar leve, despache a mala com <b>Takkyubin (Yamato)</b>!</p>
+    </div>
+
+    <div class="d-card">
+      <strong>💳 Suica / Pasmo / ICOCA na prática</strong>
+      <p>Encoste o cartão (ou celular com Apple Pay) na catraca ao <b>entrar e ao sair</b> — o valor é calculado automaticamente. Vale para metrô, trens locais, ônibus, konbini e máquinas de bebida. <b>Atenção:</b> não serve sozinho para entrar no Shinkansen (a menos que você vincule o bilhete pelo SmartEX).</p>
+    </div>
+  </section>
 
   <footer class="rodape"><span>unirversos — tudo conectado · Aline Kikuti</span><span><a href="/travessia/navi/">Como usar o Navi</a><a href="/travessia/calendario/">Calendário</a></span></footer>
 </div>

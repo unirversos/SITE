@@ -279,6 +279,7 @@ footer a{color:var(--pink);text-decoration:none;margin-right:12px}
       <button class="btn pri sm" type="button" id="go">Atualizar datas</button>
     </div>
     <div style="display:flex;flex-wrap:wrap;gap:8px;align-items:center">
+      <button class="btn pri sm" type="button" id="bAddProprio">➕ Adicionar ingresso próprio</button>
       <button class="btn sm" type="button" id="btnCopiar">📋 Copiar resumo</button>
       <button class="btn sm" type="button" id="btnPrint">🖨️ Imprimir / PDF</button>
     </div>
@@ -350,6 +351,38 @@ footer a{color:var(--pink);text-decoration:none;margin-right:12px}
     <span><a href="../">← Voltar ao Painel</a> <a href="../calendario/">Abrir Calendário →</a></span>
   </footer>
 </div>
+
+<!-- Modal: Adicionar ingresso próprio (fora do catálogo) -->
+<dialog class="taxi-dlg" id="dlgIngProprio" aria-labelledby="ipTit">
+  <form class="taxi-in" id="fIngProprio" novalidate>
+    <div style="display:flex;justify-content:space-between;align-items:center;gap:10px">
+      <strong id="ipTit" style="font-family:var(--f-display);font-size:19px">🎟️ Adicionar ingresso próprio</strong>
+      <button class="btn sm" type="button" id="ipFecha">Fechar</button>
+    </div>
+    <p class="taxi-sub">Comprou um show, museu, observatório ou passeio fora das sugestões? Ele entra aqui em <b>Meus agendados</b> e também no seu Calendário.</p>
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:10px">
+      <label class="df" style="grid-column:1/-1">Nome da atração ou ingresso
+        <input type="text" id="ipNome" required maxlength="140" placeholder="ex.: Tokyo Skytree, Show em Shibuya...">
+      </label>
+      <label class="df">Data da visita
+        <input type="date" id="ipData" required>
+      </label>
+      <label class="df">Horário (opcional)
+        <input type="time" id="ipHora">
+      </label>
+      <label class="df" style="grid-column:1/-1">Local / endereço (opcional)
+        <input type="text" id="ipLocal" maxlength="250" placeholder="ex.: Sumida City, Tokyo">
+      </label>
+      <label class="df" style="grid-column:1/-1">Nº do pedido, link ou observações (opcional)
+        <input type="text" id="ipDet" maxlength="300" placeholder="ex.: Pedido #98765 · QR code no e-mail">
+      </label>
+    </div>
+    <div style="display:flex;flex-wrap:wrap;gap:8px;margin-top:4px">
+      <button class="btn pri sm" type="submit">Salvar ingresso</button>
+      <button class="btn sm" type="button" id="ipCancel">Cancelar</button>
+    </div>
+  </form>
+</dialog>
 
 <script src="/travessia/agendamentos/regras.js?v=3"></script>
 <script src="/travessia/calendario/geo.js?v=7"></script>
@@ -878,6 +911,36 @@ $('#btnCopiar').addEventListener('click', function(){
   });
   if(l.length===2) l.push('Nenhum ingresso marcado ainda.');
   if(navigator.clipboard) navigator.clipboard.writeText(l.join('\n')).then(function(){ b.textContent='Copiado ✓'; setTimeout(function(){ b.textContent='📋 Copiar resumo'; },2000); });
+});
+
+/* Adicionar ingresso próprio */
+var dlgIP = $('#dlgIngProprio');
+$('#bAddProprio').addEventListener('click', function(){
+  $('#ipNome').value = ''; $('#ipData').value = DT.ida || ''; $('#ipHora').value = ''; $('#ipLocal').value = ''; $('#ipDet').value = '';
+  dlgIP.showModal(); $('#ipNome').focus();
+});
+$('#ipFecha').onclick = function(){ dlgIP.close(); };
+$('#ipCancel').onclick = function(){ dlgIP.close(); };
+dlgIP.addEventListener('click', function(e){ if(e.target===dlgIP) dlgIP.close(); });
+$('#fIngProprio').addEventListener('submit', function(ev){
+  ev.preventDefault();
+  var nome = ($('#ipNome').value||'').trim(), data = $('#ipData').value;
+  if(!nome || !okIso(data)){ if(window.CosmosUI) CosmosUI.toast('Preencha o nome e a data da visita.', 'erro'); return; }
+  var cal = lerJson('uniCalendario1') || {titulo:'', ini:DT.ida||data, fim:DT.volta||data, fuso:'auto', chegada:'', atualizado:'', ev:[], orc:{cot:'',pax:1,t:{}}, ok:{}, pas:[], lista:[], qi:{}};
+  cal.ev = Array.isArray(cal.ev) ? cal.ev : [];
+  cal.ev.push({
+    id: 'ing-'+Date.now().toString(36)+Math.random().toString(36).slice(2,6),
+    titulo: nome, tipo: 'ingresso', data: data, dataFim: '',
+    hora: $('#ipHora').value || '', horaFim: '', fuso: 'jp',
+    local: ($('#ipLocal').value||'').trim(), detalhes: ($('#ipDet').value||'').trim()
+  });
+  cal.atualizado = new Date().toISOString();
+  try{ localStorage.setItem('uniCalendario1', JSON.stringify(cal)); }catch(e){}
+  if(window.CosmosSync) CosmosSync.salvar();
+  dlgIP.close();
+  trocarAba('meus');
+  renderAll();
+  if(window.CosmosUI) CosmosUI.toast('Ingresso salvo em Meus agendados e no Calendário ✓');
 });
 
 /* início */
