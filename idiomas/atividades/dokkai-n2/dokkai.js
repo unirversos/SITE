@@ -25,7 +25,9 @@ const esc = s => String(s == null ? '' : s).replace(/[&<>"']/g, c => ({ '&':'&am
 /* caminho de cada estrutura: A praticar → (aluno escreve) Aguardando a professora → Feito ✓ (aprovada) ou Corrigir (volta com a correção) */
 const ST = { pendente: 'A praticar', revisao: 'Aguardando a professora', corrigir: 'Corrigir', feito: 'Feito ✓' };
 const PRATICAR = ['pendente', 'revisao', 'corrigir'];
-const DIA = n => n + '日目', SEM = n => '第' + n + '週';
+/* rótulos dos grupos: semanas (padrão), módulos/histórias ou tipos de texto, conforme GALERIA_CFG */
+const SEM = n => CFG.grupos ? (CFG.grupos[n - 1] || n) : CFG.semRot ? CFG.semRot.replace('{n}', n) : '第' + n + '週';
+const DIA = n => CFG.diaRot ? CFG.diaRot.replace('{n}', n) : n + '日目';
 /* posições: 0 semana, 1 dia, 2 tema, 3 tipo, 4 estratégia, 5 vocabulário, 6 pedido da síntese, 7 minutos,
    8 texto de leitura, 9 questão (pergunta + 4 alternativas), 10 gabarito e explicação, 11 palavras do texto (Preparar leituras) */
 const questao = t => { const l = String(t || '').split('\n').map(x => x.trim()).filter(Boolean);

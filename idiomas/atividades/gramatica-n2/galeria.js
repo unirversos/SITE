@@ -25,7 +25,9 @@ const esc = s => String(s == null ? '' : s).replace(/[&<>"']/g, c => ({ '&':'&am
 /* caminho de cada estrutura: A praticar → (aluno escreve) Aguardando a professora → Feito ✓ (aprovada) ou Corrigir (volta com a correção) */
 const ST = { pendente: 'A praticar', revisao: 'Aguardando a professora', corrigir: 'Corrigir', feito: 'Feito ✓' };
 const PRATICAR = ['pendente', 'revisao', 'corrigir'];
-const DIA = n => n + '日目', SEM = n => '第' + n + '週';
+/* rótulos dos grupos: semanas (padrão), módulos/histórias ou tipos de texto, conforme GALERIA_CFG */
+const SEM = n => CFG.grupos ? (CFG.grupos[n - 1] || n) : CFG.semRot ? CFG.semRot.replace('{n}', n) : '第' + n + '週';
+const DIA = n => CFG.diaRot ? CFG.diaRot.replace('{n}', n) : n + '日目';
 const itens = A.itens.map((r, n) => ({ n, s: r[0], d: r[1], e: r[2], nu: r[3], x: r[4], tr: r[5], tm: r[6] || '', xt: r[7] }));
 let oculta = (() => { try { return localStorage.getItem('uniAtivOculta') !== '0'; } catch (e) { return true; } })(), abertosEx = new Set();
 let R = {}, alvo = '', souProf = false, nuvem = true, filtro = { sem: 0, st: 'praticar', q: '' }, abertosPt = new Set();
