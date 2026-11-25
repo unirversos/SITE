@@ -417,7 +417,6 @@ footer a:hover{text-decoration:underline}
           <button class="btn sm soft" type="button" id="bSOS">🆘 Estou no Japão</button>
           <button class="btn sm" type="button" id="bDossie">📄 Ficha Imigração</button>
           <button class="btn sm" type="button" id="bEditarDatas">✏️ Datas</button>
-          <a class="btn pri sm" href="./calendario/">📅 Calendário →</a>
         </div>
       </div>
       <div class="kpi-strip" id="cKpis"></div>
@@ -595,6 +594,11 @@ footer a:hover{text-decoration:underline}
     <div class="sos-nums">
       <div class="sos-n"><b>110</b><span>Polícia (Kōban)</span></div>
       <div class="sos-n"><b>119</b><span>Ambulância / Bombeiro</span></div>
+    </div>
+    <div class="radar-row warn" style="gap:6px">
+      <div class="radar-row-top"><strong>📲 App Safety tips (oficial do Japão)</strong><span class="c-badge ouro">Gratuito</span></div>
+      <p>Alertas em tempo real de terremoto, tufão, tsunami e mapa de abrigos (tem português/inglês). Instale antes de embarcar!</p>
+      <a href="https://www.jnto.go.jp/safety-tips/eng/app.html" target="_blank" rel="noopener">Baixar / página oficial JNTO ↗</a>
     </div>
     <div id="sosHotelBox" class="stay-bar"></div>
     <div class="campos">
@@ -1198,7 +1202,7 @@ function render(){
     var amostra = noitesSemHotel.slice(0,3).map(brCurto).join(', ') + (noitesSemHotel.length>3 ? ' (+'+(noitesSemHotel.length-3)+')' : '');
     rows.push('<div class="radar-row warn"><div class="radar-row-top"><strong>🏨 '+noitesSemHotel.length+(noitesSemHotel.length===1?' noite sem hotel':' noites sem hotel')+'</strong><span class="c-badge ouro">Atenção</span></div><p>Falta hospedagem em: '+esc(amostra)+'.</p><a href="./calendario/#logistica">Completar hospedagens →</a></div>');
   } else if(totalNoites > 0){
-    rows.push('<div class="radar-row ok"><div class="radar-row-top"><strong>🏨 Todas as '+totalNoites+' noites cobertas</strong><span class="c-badge verde">100%</span></div><p>Todas as noites já têm endereço de hospedagem.</p></div>');
+    rows.push('<div class="radar-row ok" style="padding:9px 14px"><div class="radar-row-top"><strong>🏨 Todas as '+totalNoites+' noites com hotel</strong><span class="c-badge verde">100% ✓</span></div></div>');
   }
 
   if(hj < v.ini && faltam <= 30 && nBur < 4){

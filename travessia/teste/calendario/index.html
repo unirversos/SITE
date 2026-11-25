@@ -659,7 +659,6 @@ footer a{color:var(--pink); text-decoration:none; margin-right:12px}
   <button class="btn" type="button" id="bImportMob">📥 Importar</button>
 </nav>
 
-<dialog id="dlgQI" aria-label="Ingressos com antecedência"><div class="dlg-in"><div class="dlg-top"><h2>🎟️ Ingressos com antecedência</h2><button class="btn sm" type="button" id="qiFecha">Fechar</button></div><iframe id="qiFrame" title="Ingressos com antecedência" style="width:100%;height:70vh;border:0;border-radius:12px;background:#fff"></iframe></div></dialog>
 <dialog id="dlg" aria-labelledby="dlgT"><div class="dlg-in" id="dlgIn"></div></dialog>
 <p class="toast" id="msg" role="status"></p>
 
@@ -1658,12 +1657,7 @@ function vigiaPend(){
 }
 vigiaPend();
 
-(function(){var d=document.getElementById('dlgQI'),f=document.getElementById('qiFrame'),b=document.getElementById('bQI');if(!d||!b)return;
-  b.addEventListener('click',function(){window.__pendRapido=true;avisaQi();if(!f.getAttribute('src'))f.src='/travessia/ingressos/?embed=1&v=4';if(d.showModal)d.showModal();else d.setAttribute('open','');});
-  document.getElementById('qiFecha').addEventListener('click',function(){d.close();vigiaPend();});
-  d.addEventListener('close',vigiaPend);
-  window.addEventListener('storage',function(e){if(e.key==='uniCalPend')vigiaPend();});
-})();
+window.addEventListener('storage',function(e){if(e.key==='uniCalPend')vigiaPend();});
 
 document.addEventListener('uni-conta',function(ev){
   usuario=(ev.detail&&ev.detail.user)||null;syncPronto=false;estadoNuvem='';
