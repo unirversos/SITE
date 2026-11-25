@@ -135,7 +135,14 @@
   var KURO = 'https://cdn.jsdelivr.net/npm/kuromoji@0.1.2/';
   function carregaKuromoji() {
     return new Promise(function (ok, no) {
-      var go = function () { window.kuromoji.builder({ dicPath: KURO + 'dict/' }).build(function (e, t) { e ? no(e) : ok(t); }); };
+      /* o kuromoji junta os caminhos com path.join, que estraga "https://" em "https:/" e faz o navegador
+         procurar o dicionário dentro do próprio site; enquanto ele carrega, o endereço é consertado */
+      var go = function () {
+        var X = XMLHttpRequest.prototype, abre = X.open;
+        X.open = function (m, u) { var a = Array.prototype.slice.call(arguments); if (typeof u === 'string') a[1] = u.replace(/^(https?):\/(?!\/)/, '$1://'); return abre.apply(this, a); };
+        var volta = function () { X.open = abre; };
+        window.kuromoji.builder({ dicPath: KURO + 'dict/' }).build(function (e, t) { volta(); e ? no(e) : ok(t); });
+      };
       if (window.kuromoji) return go();
       var sc = document.createElement('script'); sc.src = KURO + 'build/kuromoji.js'; sc.onload = go; sc.onerror = function () { no(new Error('não carregou o analisador')); };
       document.head.appendChild(sc);
