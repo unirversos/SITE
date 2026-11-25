@@ -23,7 +23,8 @@ h1{font-family:"Baloo 2",sans-serif;font-size:34px;line-height:1.1;margin:6px 0 
 .trava{background:#fff;border:1.5px dashed #d9c6cb;border-radius:16px;padding:14px 18px;margin-top:18px}.trava b{display:block}
 .lista{display:grid;grid-template-columns:repeat(auto-fill,minmax(190px,1fr));gap:14px;margin-top:14px}
 @media(max-width:480px){.lista{grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}}
-.at{position:relative;display:flex;flex-direction:column;align-items:center;text-align:center;gap:6px;background:linear-gradient(180deg,var(--s) 0 58px,#fff 58px);border:1.5px solid var(--line);border-bottom:4px solid var(--c);border-radius:20px;padding:16px 12px 14px;text-decoration:none;color:inherit;transition:transform .15s,box-shadow .15s}
+.at{position:relative;display:flex;flex-direction:column;align-items:center;text-align:center;gap:6px;background:linear-gradient(180deg,transparent 0 58px,#fff 58px),var(--topo);border:1.5px solid var(--line);overflow:hidden;border-radius:20px;padding:16px 12px 14px;text-decoration:none;color:inherit;transition:transform .15s,box-shadow .15s}
+.at::after{content:"";position:absolute;left:0;right:0;bottom:0;height:4px;background:var(--barra)}
 a.at:hover{transform:translateY(-3px);box-shadow:0 10px 22px -14px rgba(58,43,56,.45)}
 .at .ic{width:66px;height:66px;border-radius:50%;display:grid;place-items:center;font-size:32px;background:#fff;box-shadow:0 0 0 4px var(--s),0 6px 14px -8px rgba(58,43,56,.4)}
 .at .tag{position:absolute;top:9px;right:10px;font-size:11px;font-weight:700;color:var(--c);background:#fff;border-radius:999px;padding:1px 8px}
@@ -34,6 +35,8 @@ a.at:hover{transform:translateY(-3px);box-shadow:0 10px 22px -14px rgba(58,43,56
 .niv{display:flex;gap:8px;flex-wrap:wrap;margin-top:20px}
 .chip{font:inherit;font-size:14px;font-weight:700;border:1.5px solid var(--line);background:#fff;color:var(--ink);border-radius:999px;padding:6px 16px;min-height:38px;cursor:pointer}
 .chip.on{background:var(--ink);border-color:var(--ink);color:#fff}
+.chip[data-n]:not([data-n=""]){border-color:var(--ns);color:var(--nc);background:var(--ns)}
+.chip[data-n]:not([data-n=""]).on{background:var(--nc);border-color:var(--nc);color:#fff}
 .vazio{color:var(--muted);grid-column:1/-1;margin:8px 2px}
 .faixa-t{background:#fbf1de;color:#7a5418;font-size:13px;text-align:center;padding:6px 12px}
 </style>
@@ -54,7 +57,7 @@ a.at:hover{transform:translateY(-3px);box-shadow:0 10px 22px -14px rgba(58,43,56
   <div class="lista" id="lista"></div>
 </div>
 <script src="/caderno-dados.js?v=2"></script>
-<script type="module" src="/idiomas/atividades/atividades.js?v=9"></script>
+<script type="module" src="/idiomas/atividades/atividades.js?v=10"></script>
 <script defer src="/caderno-flutuante.js?v=21"></script>
 </body>
 </html>

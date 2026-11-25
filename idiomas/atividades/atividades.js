@@ -25,12 +25,15 @@ const feita = r => r && ((r.st === 'feito' && r.ap) || r.st === 'dominado');
 
 /* filtro de nível: "N5–N3" vale para N5, N4 e N3; a escolha fica guardada no aparelho */
 const NIVEIS = ['N5', 'N4', 'N3', 'N2', 'N1'];
+/* uma cor por nível; atividade com vários níveis fica com as cores de todos */
+const COR = { N5: ['#517158', '#e8efe8'], N4: ['#a0712a', '#fbf1de'], N3: ['#b0583a', '#f8e6de'], N2: ['#c23f5e', '#f9e3e8'], N1: ['#6f5fa8', '#f3f0fa'] };
+const faixa = (l, k) => l.length === 1 ? COR[l[0]][k] : `linear-gradient(90deg,${l.map(n => COR[n][k]).join(',')})`;
 const niveisDe = a => { const m = a.nivel.match(/N(\d)(?:\s*[–-]\s*N(\d))?/); if (!m) return []; const x = +m[1], y = +(m[2] || m[1]);
   return NIVEIS.filter(n => { const k = +n[1]; return k <= Math.max(x, y) && k >= Math.min(x, y); }); };
 let nivel = (() => { try { return localStorage.getItem('uniAtivNivel') || ''; } catch (e) { return ''; } })();
 let ultimo = null;
 function pintaFiltro(){
-  $('niv').innerHTML = ['', ...NIVEIS].map(n => `<button type="button" class="chip${nivel === n ? ' on' : ''}" data-n="${n}" aria-pressed="${nivel === n}">${n || 'Todos'}</button>`).join('');
+  $('niv').innerHTML = ['', ...NIVEIS].map(n => `<button type="button" class="chip${nivel === n ? ' on' : ''}" data-n="${n}" aria-pressed="${nivel === n}"${n ? ` style="--nc:${COR[n][0]};--ns:${COR[n][1]}"` : ''}>${n || 'Todos'}</button>`).join('');
 }
 $('niv').onclick = e => { const b = e.target.closest('[data-n]'); if (!b) return; nivel = b.dataset.n; try { localStorage.setItem('uniAtivNivel', nivel); } catch (er) {} pintaFiltro(); if (ultimo) pinta(...ultimo); };
 pintaFiltro();
@@ -47,7 +50,8 @@ function pinta(liberado, souProf, resp, totais){
     const prog = !souProf && !trava && tot ? `<span class="pb" role="img" aria-label="${feitas} de ${tot} ${a.quiz ? 'certas' : 'feitas'}"><i style="width:${pct}%"></i></span>` : '';
     const tag = breve ? 'em breve' : trava ? '🔒' : esc(a.nivel);
     const corpo = `<span class="tag">${tag}</span><span class="ic" aria-hidden="true">${a.ic}</span><b class="n" lang="ja">${esc(a.jp)}</b><span class="d">${esc(a.cur)}</span>${prog}`;
-    const at = `class="at${trava || breve ? ' lock' : ''}" style="--c:${a.cor};--s:${a.s}" title="${esc(a.d)}"`;
+    const nv = niveisDe(a).length ? niveisDe(a) : ['N5'];
+    const at = `class="at${trava || breve ? ' lock' : ''}" style="--c:${COR[nv[0]][0]};--s:${COR[nv[0]][1]};--topo:${faixa(nv, 1)};--barra:${faixa(nv, 0)}" title="${esc(a.d)}"`;
     return trava || breve ? `<div ${at}>${corpo}</div>` : `<a ${at} href="${esc(a.url)}">${corpo}</a>`;
   }).join('');
 }
