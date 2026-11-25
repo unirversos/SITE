@@ -42,11 +42,47 @@
       if (tenta++ < 20) setTimeout(vai, 100);
     })();
   }
+  /* quadradinho do dicionário: abre pequeno, à direita, sem cobrir a lição */
+  var caixa = null, dic = null;
+  function carregaDic(fn) {
+    if (window.UniDic) return fn();
+    var t = document.createElement('script'); t.src = '/caderno-dic.js?v=6'; t.onload = fn; document.head.appendChild(t);
+  }
+  function salvaNoCaderno(linha) {
+    var C = window.UniCaderno; if (!C) return;
+    var K = 'uniNotaPalavrasAtiv', id = null; try { id = localStorage.getItem(K); } catch (e) {}
+    var n = id && C.obter(id);
+    if (!n) { n = C.nova(); id = n.id; try { localStorage.setItem(K, id); } catch (e) {} n = C.obter(id) || n; if (!n.x) C.atualizar(id, { x: 'Palavras das atividades' }); n = C.obter(id) || n; }
+    C.atualizar(id, { x: (n.x ? n.x.replace(/\s+$/, '') + '\n' : '') + linha });
+  }
+  function fecha() { if (caixa) caixa.hidden = true; var a = document.querySelector('.tk.on'); if (a) a.classList.remove('on'); }
+  function quadradinho(p, el) {
+    if (!caixa) {
+      caixa = document.createElement('div'); caixa.className = 'pdic'; caixa.setAttribute('role', 'dialog'); caixa.setAttribute('aria-label', 'Dicionário');
+      caixa.innerHTML = '<div class="pd-top"><b lang="ja" class="pd-p"></b><span><button type="button" class="pd-mais" title="Abrir o Dicionário completo">⤢</button><button type="button" class="pd-x" aria-label="Fechar">×</button></span></div><div class="pd-r"></div>';
+      document.body.appendChild(caixa);
+      caixa.querySelector('.pd-x').onclick = fecha;
+      caixa.querySelector('.pd-mais').onclick = function () { var t = caixa.querySelector('.pd-p').textContent; fecha(); busca(t); };
+      dic = null;
+    }
+    caixa.hidden = false;
+    caixa.querySelector('.pd-p').textContent = p;
+    /* fica na altura da palavra tocada, sem sair da tela */
+    var r = el.getBoundingClientRect(), alto = Math.min(window.innerHeight * 0.6, 420);
+    if (window.innerWidth > 640) caixa.style.top = Math.max(12, Math.min(r.top - 20, window.innerHeight - alto - 12)) + 'px'; else caixa.style.top = '';
+    carregaDic(function () {
+      if (!dic) dic = window.UniDic.montar(caixa.querySelector('.pd-r'), { salvar: salvaNoCaderno });
+      var q = caixa.querySelector('.pd-r input'); if (!q || !q.form) return;
+      q.value = p; q.form.requestSubmit();
+    });
+  }
   function toca(el) {
     var ant = document.querySelector('.tk.on'); if (ant) ant.classList.remove('on');
     el.classList.add('on');
-    busca(el.getAttribute('data-l'));
+    quadradinho(el.getAttribute('data-l'), el);
   }
+  document.addEventListener('keydown', function (e) { if (e.key === 'Escape' && caixa && !caixa.hidden) fecha(); });
+  document.addEventListener('click', function (e) { if (caixa && !caixa.hidden && !caixa.contains(e.target) && !(e.target.closest && e.target.closest('.tk'))) fecha(); });
   document.addEventListener('click', function (e) {
     var el = e.target.closest && e.target.closest('.tk[data-l]');
     if (!el || (getSelection && String(getSelection()).length > 1)) return; /* quem selecionou texto usa o botão de seleção */
@@ -74,7 +110,12 @@
   css.textContent = '.tk{cursor:pointer;border-radius:4px;transition:background .15s}' +
     '.tk:hover,.tk:focus-visible{background:#f3f0fa;outline:none}.tk.on{background:#e7e1f6;box-shadow:0 2px 0 #6f5fa8}' +
     '.tk ruby rt{display:none;font-size:.55em;color:#7a6a76;font-weight:500}html.furi .tk ruby rt{display:revert}' +
-    'html.furi .jp,html.furi .fc-c p[lang=ja]{line-height:2.1}';
+    'html.furi .jp,html.furi .fc-c p[lang=ja]{line-height:2.1}' +
+    '.pdic{position:fixed;right:14px;top:90px;z-index:85;width:min(270px,calc(100vw - 28px));max-height:min(45vh,300px);overflow:auto;background:#fffaf8;border:1.5px solid #e7e1f6;border-left:4px solid #6f5fa8;border-radius:14px;padding:7px 9px;box-shadow:0 14px 30px -16px rgba(58,43,56,.55)}' +
+    '.pdic[hidden]{display:none}@media(min-width:760px){.pdic{right:76px}}@media(max-width:640px){.pdic{top:auto;bottom:76px}}' +
+    '.pd-top{display:flex;justify-content:space-between;align-items:center;gap:6px;margin-bottom:4px}.pd-p{font-size:15px}' +
+    '.pd-top button{font:inherit;font-size:12px;width:26px;height:26px;border-radius:50%;border:1.5px solid #ecdadd;background:#fff;cursor:pointer;margin-left:4px;color:#3a2b38}' +
+    '.pdic .dc form{display:none}.pdic .dc .it:nth-child(n+2){display:none}.pdic .dc > .nt{display:none}.pdic .dc .it{padding:6px 8px;gap:3px;border-radius:12px}.pdic .dc .jp{font-size:17px}.pdic .dc .rd{font-size:12px}.pdic .dc ol{font-size:13px;padding-left:16px}.pdic .dc .nt{font-size:11.5px}.pdic .dc .sv{font-size:12px;min-height:30px;padding:3px 10px}.pdic .dc .cm{font-size:10px}';
   document.head.appendChild(css);
   aplica();
   /* voz em japonês: espera as vozes do aparelho carregarem e escolhe uma japonesa;
