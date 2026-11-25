@@ -5,7 +5,7 @@ import { auth, db } from "/idiomas/dados/conta.js?v=6";
 import { doc, getDoc, setDoc } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
 import { onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
 
-const PROFS = ['unirversos.idiomas@gmail.com', 'li.kikuti@gmail.com'];
+const PROFS = ['unirversos.idiomas@gmail.com'];
 const $ = id => document.getElementById(id);
 const esc = s => String(s == null ? '' : s).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
 const NIVEIS = ['N5 · Começando', 'N4', 'N3', 'N2', 'N1', 'Geral'];

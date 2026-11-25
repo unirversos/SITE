@@ -5,7 +5,7 @@ import { auth, db } from "/idiomas/dados/conta.js?v=6";
 import { doc, getDoc, setDoc, collection, getDocs, onSnapshot } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
 import { onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
 
-const PROFS = ['unirversos.idiomas@gmail.com', 'li.kikuti@gmail.com'];
+const PROFS = ['unirversos.idiomas@gmail.com'];
 const $ = id => document.getElementById(id);
 /* o conteúdo da atividade fica no Firestore (biblioteca/n2gram), que só alunos liberados e professoras leem.
    Quem não tem acesso recebe só o título: as frases não estão em nenhum arquivo público do site. */

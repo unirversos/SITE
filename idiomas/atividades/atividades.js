@@ -5,7 +5,7 @@ import { auth, db } from "/idiomas/dados/conta.js?v=6";
 import { doc, getDoc } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
 import { onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
 
-const PROFS = ['unirversos.idiomas@gmail.com', 'li.kikuti@gmail.com'];
+const PROFS = ['unirversos.idiomas@gmail.com'];
 const $ = id => document.getElementById(id);
 const esc = s => String(s == null ? '' : s).replace(/[&<>"']/g, c => ({ '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;' }[c]));
 
@@ -17,6 +17,7 @@ const ATIVIDADES = [
   { id: 'n2dokkai', livro: 'n2dokkai', num: '06', ic: '📰', s: '#f3f0fa', jp: '読解 N2', cur: 'Leitura N2 · 6 semanas', nivel: 'N2', t: 'Leitura N2 · 6 semanas', d: '42 lições do 総まとめ N2 読解: estratégia do dia, acertos, tempo e a sua síntese.', url: '/idiomas/atividades/dokkai-n2/', cor: 'var(--lav)' },
   { id: 'n3gram', livro: 'n3gram', num: '08', ic: '📘', s: '#f8e6de', jp: '文法 N3', cur: 'Gramática N3 · 6 semanas', nivel: 'N3', t: 'Gramática N3 · 6 semanas', d: '103 estruturas do 総まとめ N3 文法: nuance, exemplo e a sua frase, com correção da professora.', url: '/idiomas/atividades/gramatica-n3/', cor: 'var(--terra)' },
   { id: 'n3voc', livro: 'n3voc', num: '09', ic: '🔑', s: '#f8e6de', jp: '語彙 N3', cur: 'Vocabulário N3 · 6 semanas', nivel: 'N3', t: 'Vocabulário N3 · 6 semanas', d: '108 palavras do 総まとめ N3 語彙: nuance, exemplo e a sua frase, com correção da professora.', url: '/idiomas/atividades/vocabulario-n3/', cor: 'var(--terra)' },
+  { id: 'n3kanji', livro: 'n3kanji', num: '10', ic: '✍️', s: '#f8e6de', jp: '漢字 N3', cur: 'Kanji N3 · 6 semanas', nivel: 'N3', t: 'Kanji N3 · 6 semanas', d: '108 kanji do 総まとめ N3 漢字: leituras on/kun, palavras-chave e a sua frase.', url: '/idiomas/atividades/kanji-n3/', cor: 'var(--terra)' },
   { id: 'verbos', livro: 'verbos', num: '02', ic: '🚪', s: '#e8efe8', jp: '他動詞と自動詞', cur: 'Verbos transitivos e intransitivos', nivel: 'N5–N3', t: 'Verbos transitivos e intransitivos', d: '75 pares (150 verbos): compare 他動詞 e 自動詞, veja o exemplo e escreva a sua frase.', url: '/idiomas/atividades/verbos/', cor: 'var(--sage)', por: 2 },
   { id: 'adjetivos', livro: 'adjetivos', num: '03', ic: '⚖️', s: '#f8e6de', jp: '形容詞と反対語', cur: 'Adjetivos e opostos', nivel: 'N5–N2', t: 'Adjetivos e opostos', d: '60 pares (120 adjetivos い e な): um adjetivo e o seu oposto, com exemplo e a sua frase.', url: '/idiomas/atividades/adjetivos/', cor: 'var(--terra)', por: 2 },
   { id: 'karamade', livro: 'karamade', num: '04', ic: '🚆', s: '#f3f0fa', jp: '「から」と「まで」', cur: 'De onde, até onde', nivel: 'N5', t: 'から e まで', d: '11 questões com correção na hora: lacunas, leitura de placa e montar a frase.', url: '/idiomas/atividades/kara-made/', cor: 'var(--lav)', quiz: true }

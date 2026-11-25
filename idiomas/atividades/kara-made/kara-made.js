@@ -6,7 +6,7 @@ import { doc, getDoc, setDoc, collection, getDocs } from "https://www.gstatic.co
 import { onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
 
 const ID = 'karamade';
-const PROFS = ['unirversos.idiomas@gmail.com', 'li.kikuti@gmail.com'];
+const PROFS = ['unirversos.idiomas@gmail.com'];
 const $ = id => document.getElementById(id);
 const esc = s => String(s == null ? '' : s).replace(/[&<>"']/g, c => ({ '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;' }[c]));
 /* compara frases sem ligar para espaços, números largos/estreitos e pontuação final */

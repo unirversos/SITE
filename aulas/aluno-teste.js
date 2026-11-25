@@ -21,7 +21,7 @@ const linkOk = u => /^https:\/\//.test(u || '');
 /* texto com links: o que começa com https:// vira link clicável (abre em nova aba) */
 const comLinks = s => esc(s).replace(/https:\/\/[^\s<]+[^\s<.,;:!?)\]'"]/g, u => `<a class="lk" href="${u}" target="_blank" rel="noopener">${u.replace(/^https:\/\/(www\.)?/, '').slice(0, 48)}${u.length > 56 ? '…' : ''} ↗</a>`);
 /* prévia: a professora abre /aluno/?ver=e-mail e vê a tela do aluno, só para olhar (nada é gravado) */
-const PROFS = ['unirversos.idiomas@gmail.com', 'li.kikuti@gmail.com'];
+const PROFS = ['unirversos.idiomas@gmail.com'];
 const PREVIA = (new URLSearchParams(location.search).get('ver') || '').trim().toLowerCase();
 let soLeitura = false;
 const grava = d => soLeitura ? Promise.resolve() : grava(d);
