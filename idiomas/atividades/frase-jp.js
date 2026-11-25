@@ -46,7 +46,7 @@
   var caixa = null, dic = null;
   function carregaDic(fn) {
     if (window.UniDic) return fn();
-    var t = document.createElement('script'); t.src = '/caderno-dic.js?v=7'; t.onload = fn; document.head.appendChild(t);
+    var t = document.createElement('script'); t.src = '/caderno-dic.js?v=8'; t.onload = fn; document.head.appendChild(t);
   }
   function salvaNoCaderno(linha) {
     var C = window.UniCaderno; if (!C) return;

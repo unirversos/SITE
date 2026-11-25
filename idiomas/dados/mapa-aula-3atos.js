@@ -192,7 +192,7 @@ function gravaNoCaderno(entry){
     try{ CD.agora(); }catch(_){}
   };
   if(window.UniCaderno) return vai();
-  const sc=document.createElement('script'); sc.src='/caderno-dados.js?v=4'; sc.onload=vai; document.head.appendChild(sc);
+  const sc=document.createElement('script'); sc.src='/caderno-dados.js?v=8'; sc.onload=vai; document.head.appendChild(sc);
 }
 function salvarNotaCaderno(conteudo){
   const txt=String(conteudo||'').trim(); if(!txt) return false;
