@@ -265,6 +265,18 @@
     n.del = true; n.t = ''; n.x = ''; n.s = []; n.pp = []; n.f = null; n.pap = null; n.cad = ''; n.fav = false; n.a = n.o = n.d = ''; n.w = null; n.m = Date.now(); gravarLocal([n]); agNuvem();
   }
   function agora() { gravarLocal(); }
+  function exportarBackup() {
+    return JSON.stringify({ versao: 2, app: 'Caderno Unirversos', exportadoEm: new Date().toISOString(), notas: vivas() }, null, 2);
+  }
+  function importarBackup(textoJson) {
+    var obj = JSON.parse(String(textoJson || ''));
+    var lista = Array.isArray(obj) ? obj : (obj && Array.isArray(obj.notas) ? obj.notas : null);
+    if (!lista) throw new Error('Arquivo de backup inválido');
+    var validas = lista.filter(function (n) { return n && typeof n.id === 'string'; });
+    notas = juntar(notas, validas);
+    gravarLocal(notas); agNuvem(); emitir('remoto');
+    return validas.length;
+  }
   function entrar() {
     var C = window.UniConta;
     if (C && C.entrar) C.entrar({ titulo: 'Guarde o seu caderno na conta', texto: 'Com a conta, as suas anotações e desenhos vão junto para qualquer celular, tablet ou computador.', peq: 'Guardamos só o seu e-mail e o que você escreve aqui e nos estudos.' });
@@ -289,7 +301,7 @@
     if (chave(j) !== antes) emitir('remoto');
   });
 
-  window.UniCaderno = { vivas: vivas, cadernos: cadernos, obter: obter, nova: nova, atualizar: atualizar, apagar: apagar, nome: nome, agora: agora, sincronizar: sincronizar, entrar: entrar,
+  window.UniCaderno = { vivas: vivas, cadernos: cadernos, obter: obter, nova: nova, atualizar: atualizar, apagar: apagar, nome: nome, agora: agora, exportarBackup: exportarBackup, importarBackup: importarBackup, sincronizar: sincronizar, entrar: entrar,
     estado: function () { return est; }, texto: texto, prof: { disponivel: function () { return !!profOk; }, estado: function () { return estProf; }, texto: textoProf }, on: function (f) { ouv.push(f); }, _remoto: remoto, _juntar: juntar, _recarregar: function () { notas = lerLocalSync(); } };
 
   document.addEventListener('uni-conta', function (e) { if (e.detail && e.detail.user) { leuLegado = false; sincronizar(); } else setEst('sem-login'); });

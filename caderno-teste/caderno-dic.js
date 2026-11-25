@@ -8,6 +8,38 @@
   /* endereço do intermediário (Cloudflare Worker); vazio = o navegador fala direto com os dicionários */
   var API = '';
   var CK = 'uniDicPt2', CR = 'uniDicRes1', CH = 'uniDicHist1';
+  /* mini-dicionário offline essencial (garante busca funcional mesmo sem internet na 1ª abertura) */
+  var OFFLINE_CORE = [
+    ['水','みず','água','water'],['お茶','おちゃ','chá','tea'],['ご飯','ごはん','arroz, refeição','rice, meal'],['食べる','たべる','comer','to eat'],
+    ['飲む','のむ','beber','to drink'],['行く','いく','ir','to go'],['来る','くる','vir','to come'],['帰る','かえる','voltar para casa','to return home'],
+    ['見る','みる','ver, assistir','to see, to watch'],['聞く','きく','ouvir, perguntar','to listen, to ask'],['話す','はなす','falar','to speak'],
+    ['読む','よむ','ler','to read'],['書く','かく','escrever','to write'],['買う','かう','comprar','to buy'],['勉強','べんきょう','estudo','study'],
+    ['先生','せんせい','professor, mestre','teacher'],['学生','がくせい','estudante','student'],['学校','がっこう','escola','school'],
+    ['本','ほん','livro','book'],['ノート','ノート','caderno','notebook'],['言葉','ことば','palavra, idioma','word, language'],
+    ['日本語','にほんご','língua japonesa','Japanese language'],['日本','にほん','Japão','Japan'],['友達','ともだち','amigo','friend'],
+    ['家族','かぞく','família','family'],['人','ひと','pessoa','person'],['名前','なまえ','nome','name'],['家','いえ','casa','house'],
+    ['駅','えき','estação de trem','station'],['電車','でんしゃ','trem','train'],['空港','くうこう','aeroporto','airport'],
+    ['ホテル','ホテル','hotel','hotel'],['店','みせ','loja','shop'],['お金','おかね','dinheiro','money'],['時間','じかん','tempo, hora','time'],
+    ['今日','きょう','hoje','today'],['明日','あした','amanhã','tomorrow'],['昨日','きのう','ontem','yesterday'],['毎日','まいにち','todos os dias','every day'],
+    ['朝','あさ','manhã','morning'],['昼','ひる','meio-dia, tarde','noon'],['夜','よる','noite','night'],['天気','てんき','clima, tempo','weather'],
+    ['雨','あめ','chuva','rain'],['花','はな','flor','flower'],['山','やま','montanha','mountain'],['海','うみ','mar','sea'],
+    ['大きい','おおきい','grande','big'],['小さい','ちいさい','pequeno','small'],['新しい','あたらしい','novo','new'],['古い','ふるい','antigo, velho','old'],
+    ['美味しい','おいしい','delicioso','delicious'],['楽しい','たのしい','divertido','fun'],['好き','すき','gostar','like, favorite'],
+    ['ありがとう','ありがとう','obrigado','thank you'],['すみません','すみません','com licença, desculpa','excuse me, sorry'],
+    ['おはよう','おはよう','bom dia','good morning'],['こんにちは','こんにちは','olá, boa tarde','hello'],['こんばんは','こんばんは','boa noite','good evening'],
+    ['さようなら','さようなら','adeus','goodbye'],['はい','はい','sim','yes'],['いいえ','いいえ','não','no'],['お願いします','おねがいします','por favor','please']
+  ];
+  function buscaOffline(q) {
+    var s = String(q || '').trim().toLowerCase(); if (!s) return [];
+    var out = [];
+    OFFLINE_CORE.forEach(function (it) {
+      var k = it[0], r = it[1], pt = it[2], en = it[3], rm = RM(r).toLowerCase();
+      if (k.indexOf(s) >= 0 || r.indexOf(s) >= 0 || rm.indexOf(s) >= 0 || pt.toLowerCase().indexOf(s) >= 0 || en.toLowerCase().indexOf(s) >= 0) {
+        out.push({ k: k === r ? '' : k, r: r, comum: true, pt: pt, s: [{ g: [en], pos: [] }] });
+      }
+    });
+    return out.slice(0, 10);
+  }
   function lerResCache() { try { return JSON.parse(localStorage.getItem(CR) || '{}'); } catch (e) { return {}; } }
   function gravaResCache(c) { try { var k = Object.keys(c); if (k.length > 150) k.slice(0, 50).forEach(function (x) { delete c[x]; }); localStorage.setItem(CR, JSON.stringify(c)); } catch (e) {} }
   function lerHist() { try { var v = JSON.parse(localStorage.getItem(CH) || '[]'); return Array.isArray(v) ? v : []; } catch (e) { return []; } }
@@ -146,7 +178,8 @@
       Array.prototype.forEach.call(R.querySelectorAll('.it'), function (card, i) {
         var x = rs[i], en = x.s[0].g.slice(0, 3).join(', '), ptEl = card.querySelector('.pt');
         function mostra(t) { t = t.split(/\s*[,;]\s*/).filter(function (w, i, l) { return w && l.map(function (z) { return z.toLowerCase(); }).indexOf(w.toLowerCase()) === i; }).join(', '); x.pt = t; ptEl.hidden = false; ptEl.textContent = 'PT (tradução automática): ' + t; }
-        if (cache[en]) mostra(cache[en]);
+        if (x.pt) mostra(x.pt);
+        else if (cache[en]) mostra(cache[en]);
         else if (i < 5 && navigator.onLine !== false) traduz(en, 'en', 'pt-BR').then(function (t) { var c = lerCache(); c[en] = t; gravaCache(c); mostra(t); }, function () {});
         card.querySelector('.sv').onclick = function () { var b = this; op.salvar(linhaSalvar(x, x.pt)); b.textContent = '✓ Salvo'; b.classList.add('ok'); setTimeout(function () { b.textContent = '+ Salvar no caderno'; b.classList.remove('ok'); }, 1800); };
         var sp = card.querySelector('.sp');
@@ -170,10 +203,14 @@
       ultima = t;
       var kCache = t.toLowerCase(), rc = lerResCache();
       addHist(t); pintaHist();
-      /* se estiver offline (ou já estiver em cache), mostra imediatamente do cache */
+      /* se estiver offline (ou já estiver em cache), mostra imediatamente do cache ou do glossário offline */
       if (rc[kCache] && rc[kCache].rs && rc[kCache].rs.length) {
         pinta(rc[kCache].rs, rc[kCache].tx + (navigator.onLine === false ? ' · modo offline (cache)' : ''));
         if (navigator.onLine === false) return;
+      } else if (navigator.onLine === false) {
+        var off0 = buscaOffline(t);
+        if (off0.length) { pinta(off0, 'Glossário offline essencial (conecte-se para busca completa).'); return; }
+        msg('Você está sem internet e "' + esc(t) + '" ainda não está no cache offline.'); return;
       } else {
         msg('Buscando…');
       }
@@ -186,6 +223,8 @@
         var a = Array.isArray(v[0]) ? v[0] : null, b = v[1] || [];
         if (!a && !b.length) {
           if (rc[kCache] && rc[kCache].rs && rc[kCache].rs.length) return;
+          var off1 = buscaOffline(t);
+          if (off1.length) { pinta(off1, 'Glossário offline essencial (sem acesso ao dicionário online agora).'); return; }
           msg('Não consegui falar com o dicionário agora (internet ou bloqueio do navegador). ' + links(t)); return;
         }
         var vistos = {}, rs = [];
