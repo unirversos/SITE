@@ -416,6 +416,25 @@
       }
       return esc(h.replace(/<[^>]*>/g, ''));
     }
+    /* só usa o h limpo se o texto puro dele bater com x (ignorando diferenças só de quebra de linha);
+       evita que um h antigo esconda edições feitas em versões que atualizam apenas x */
+    function textoDeH(hLimpo) {
+      if (!hLimpo) return '';
+      if (window.DOMParser) {
+        try {
+          var doc = new DOMParser().parseFromString(hLimpo, 'text/html');
+          if (doc && doc.body) return doc.body.textContent || '';
+        } catch (e) {}
+      }
+      return hLimpo.replace(/<br\s*\/?>/gi, '').replace(/<[^>]*>/g, '');
+    }
+    function hValido(h, x) {
+      var limpo = limpaH(h);
+      if (!limpo) return '';
+      var a = textoDeH(limpo).replace(/\r?\n/g, '');
+      var b = String(x || '').replace(/\r?\n/g, '');
+      return a === b ? limpo : '';
+    }
     function colocaCursorFim(elTx) {
       elTx.focus();
       try {
@@ -455,7 +474,7 @@
           '<canvas class="lv-cv-fg" aria-label="Desenho da página ' + (i + 1) + '"></canvas><span class="lv-num" aria-hidden="true">' + (i + 1) + '</span>' +
           (i > 0 ? '<button type="button" class="lv-del" aria-label="Apagar a página ' + (i + 1) + '">apagar página</button>' : '') +
           (pg.f ? '<button type="button" class="lv-rf" aria-label="Tirar a foto da página ' + (i + 1) + '">tirar foto</button>' : '');
-        var txEl = d.querySelector('.lv-tx'), hLimpo = limpaH(pg.h);
+        var txEl = d.querySelector('.lv-tx'), hLimpo = hValido(pg.h, pg.x);
         if (hLimpo) txEl.innerHTML = hLimpo; else txEl.textContent = pg.x;
         aplicaCorTexto(d, pg.tc);
         livro.appendChild(d);
@@ -717,7 +736,7 @@
       if (p.x || p.h) {
         ctx.font = '500 44px "Zen Maru Gothic", system-ui, sans-serif';
         var baseCor = CORES[p.tc || 0] || CORES[0];
-        var hLimpo = limpaH(p.h);
+        var hLimpo = hValido(p.h, p.x);
         if (hLimpo && window.DOMParser) {
           var docTmp = new DOMParser().parseFromString(hLimpo, 'text/html');
           var tmp = docTmp && docTmp.body;
