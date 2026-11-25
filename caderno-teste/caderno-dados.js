@@ -211,6 +211,7 @@
     var comp = notas.filter(function (n) { return !n.del && n.sp; }).map(function (n) {
       var o = { id: n.id, t: n.t || '', x: n.x || '', a: n.a || '', o: n.o || '', d: n.d || '', w: n.w == null ? null : n.w, s: n.s || [], pp: n.pp || [], m: n.m || 0 };
       if (n.f) o.f = n.f;
+      if (n.h) o.h = n.h;
       if (n.pap) o.pap = n.pap;
       if (n.tc) o.tc = n.tc;
       return o;
