@@ -375,17 +375,17 @@
     function textoDeEl(elTx) {
       return String(elTx.innerText || '').replace(/\r\n/g, '\n').replace(/\n$/, '');
     }
-    function sanitizaHtml(elTx) {
+    function sanitizaNo(raiz, exigeCor) {
       var temCor = false;
+      var IGNORA = { SCRIPT: 1, STYLE: 1, IFRAME: 1, OBJECT: 1, EMBED: 1, NOSCRIPT: 1, TEMPLATE: 1 };
       function andaNo(no, corAtual) {
-        if (no.nodeType === 3) {
-          var t = esc(no.nodeValue || '');
-          return t;
-        }
+        if (no.nodeType === 3) return esc(no.nodeValue || '');
         if (no.nodeType !== 1) return '';
         var tag = no.tagName;
+        if (IGNORA[tag]) return '';
         if (tag === 'BR') return '<br>';
         var c = normCorHex(no.style && no.style.color) || (tag === 'FONT' ? normCorHex(no.getAttribute('color')) : '');
+        if (c && !/^#[0-9a-f]{6}$/.test(c)) c = '';
         var dentro = '';
         for (var k = 0; k < no.childNodes.length; k++) dentro += andaNo(no.childNodes[k], c || corAtual);
         if (tag === 'DIV' || tag === 'P') {
@@ -400,8 +400,21 @@
         return dentro;
       }
       var res = '';
-      for (var i = 0; i < elTx.childNodes.length; i++) res += andaNo(elTx.childNodes[i], '');
-      return temCor ? res : '';
+      for (var i = 0; i < raiz.childNodes.length; i++) res += andaNo(raiz.childNodes[i], '');
+      return exigeCor ? (temCor ? res : '') : res;
+    }
+    function sanitizaHtml(elTx) { return sanitizaNo(elTx, true); }
+    /* limpa uma string HTML vinda do Firestore/professora/backup num documento inerte (DOMParser),
+       permitindo apenas texto escapado, <br> e <span style="color:#rrggbb"> */
+    function limpaH(h) {
+      if (typeof h !== 'string' || !h) return '';
+      if (window.DOMParser) {
+        try {
+          var doc = new DOMParser().parseFromString(h, 'text/html');
+          return doc && doc.body ? sanitizaNo(doc.body, false) : '';
+        } catch (e) {}
+      }
+      return esc(h.replace(/<[^>]*>/g, ''));
     }
     function colocaCursorFim(elTx) {
       elTx.focus();
@@ -442,8 +455,8 @@
           '<canvas class="lv-cv-fg" aria-label="Desenho da página ' + (i + 1) + '"></canvas><span class="lv-num" aria-hidden="true">' + (i + 1) + '</span>' +
           (i > 0 ? '<button type="button" class="lv-del" aria-label="Apagar a página ' + (i + 1) + '">apagar página</button>' : '') +
           (pg.f ? '<button type="button" class="lv-rf" aria-label="Tirar a foto da página ' + (i + 1) + '">tirar foto</button>' : '');
-        var txEl = d.querySelector('.lv-tx');
-        if (pg.h) txEl.innerHTML = pg.h; else txEl.textContent = pg.x;
+        var txEl = d.querySelector('.lv-tx'), hLimpo = limpaH(pg.h);
+        if (hLimpo) txEl.innerHTML = hLimpo; else txEl.textContent = pg.x;
         aplicaCorTexto(d, pg.tc);
         livro.appendChild(d);
         liga(d, i);
@@ -704,8 +717,10 @@
       if (p.x || p.h) {
         ctx.font = '500 44px "Zen Maru Gothic", system-ui, sans-serif';
         var baseCor = CORES[p.tc || 0] || CORES[0];
-        if (p.h) {
-          var tmp = document.createElement('div'); tmp.innerHTML = p.h;
+        var hLimpo = limpaH(p.h);
+        if (hLimpo && window.DOMParser) {
+          var docTmp = new DOMParser().parseFromString(hLimpo, 'text/html');
+          var tmp = docTmp && docTmp.body;
           var cx = 140;
           function desenhaNo(no, corAtual) {
             if (ty >= H - 140) return;
@@ -726,7 +741,7 @@
             var c = normCorHex(no.style && no.style.color) || corAtual;
             for (var k = 0; k < no.childNodes.length; k++) desenhaNo(no.childNodes[k], c);
           }
-          for (var j = 0; j < tmp.childNodes.length; j++) desenhaNo(tmp.childNodes[j], baseCor);
+          if (tmp) for (var j = 0; j < tmp.childNodes.length; j++) desenhaNo(tmp.childNodes[j], baseCor);
         } else {
           ctx.fillStyle = baseCor;
           var linhas = p.x.split('\n');

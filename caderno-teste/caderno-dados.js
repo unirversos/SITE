@@ -264,9 +264,50 @@
       if (Array.isArray(n.pp)) n.pp.forEach(function (q) { if (q && q.f) window.UniFotos.apagar(q.f); });
     }
     if (n.sp) n.sp = false; /* some também da vista da professora */
-    n.del = true; n.t = ''; n.x = ''; n.s = []; n.pp = []; n.f = null; n.pap = null; n.cad = ''; n.fav = false; n.a = n.o = n.d = ''; n.w = null; n.m = Date.now(); gravarLocal([n]); agNuvem();
+    n.del = true; n.t = ''; n.x = ''; n.h = ''; n.s = []; n.pp = []; n.f = null; n.pap = null; n.cad = ''; n.fav = false; n.a = n.o = n.d = ''; n.w = null; n.m = Date.now(); gravarLocal([n]); agNuvem();
   }
   function agora() { gravarLocal(); }
+  function escH(s) { return String(s == null ? '' : s).replace(/[&<>"]/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]; }); }
+  function normHex(col) {
+    if (!col) return '';
+    var s = String(col).trim().toLowerCase();
+    if (/^#[0-9a-f]{6}$/.test(s)) return s;
+    var m = s.match(/^rgba?\(\s*(\d+)\s*,\s*(\d+)\s*,\s*(\d+)/);
+    if (!m) return '';
+    var hex = function (v) { var h = Math.max(0, Math.min(255, +v)).toString(16); return h.length < 2 ? '0' + h : h; };
+    return '#' + hex(m[1]) + hex(m[2]) + hex(m[3]);
+  }
+  function limpaH(h) {
+    if (typeof h !== 'string' || !h) return '';
+    if (window.DOMParser) {
+      try {
+        var doc = new DOMParser().parseFromString(h, 'text/html');
+        if (!doc || !doc.body) return '';
+        var IGNORA = { SCRIPT: 1, STYLE: 1, IFRAME: 1, OBJECT: 1, EMBED: 1, NOSCRIPT: 1, TEMPLATE: 1 };
+        var anda = function (no, corAtual) {
+          if (no.nodeType === 3) return escH(no.nodeValue || '');
+          if (no.nodeType !== 1) return '';
+          var tag = no.tagName;
+          if (IGNORA[tag]) return '';
+          if (tag === 'BR') return '<br>';
+          var c = normHex(no.style && no.style.color) || (tag === 'FONT' ? normHex(no.getAttribute('color')) : '');
+          if (c && !/^#[0-9a-f]{6}$/.test(c)) c = '';
+          var dentro = '';
+          for (var k = 0; k < no.childNodes.length; k++) dentro += anda(no.childNodes[k], c || corAtual);
+          if (tag === 'DIV' || tag === 'P') {
+            var prev = no.previousSibling;
+            var pref = prev && !(prev.nodeType === 1 && prev.tagName === 'BR') ? '<br>' : '';
+            return pref + (c && c !== corAtual ? '<span style="color:' + c + '">' + dentro + '</span>' : dentro);
+          }
+          return (c && c !== corAtual) ? '<span style="color:' + c + '">' + dentro + '</span>' : dentro;
+        };
+        var out = '';
+        for (var i = 0; i < doc.body.childNodes.length; i++) out += anda(doc.body.childNodes[i], '');
+        return out;
+      } catch (e) {}
+    }
+    return escH(h.replace(/<[^>]*>/g, ''));
+  }
   function exportarBackup() {
     return JSON.stringify({ versao: 2, app: 'Caderno Unirversos', exportadoEm: new Date().toISOString(), notas: vivas() }, null, 2);
   }
@@ -274,7 +315,13 @@
     var obj = JSON.parse(String(textoJson || ''));
     var lista = Array.isArray(obj) ? obj : (obj && Array.isArray(obj.notas) ? obj.notas : null);
     if (!lista) throw new Error('Arquivo de backup inválido');
-    var validas = lista.filter(function (n) { return n && typeof n.id === 'string'; });
+    var validas = lista.filter(function (n) { return n && typeof n.id === 'string'; }).map(function (n) {
+      if (n.h != null) n.h = limpaH(n.h);
+      if (Array.isArray(n.pp)) {
+        n.pp.forEach(function (q) { if (q && q.h != null) q.h = limpaH(q.h); });
+      }
+      return n;
+    });
     notas = juntar(notas, validas);
     gravarLocal(notas); agNuvem(); emitir('remoto');
     return validas.length;
