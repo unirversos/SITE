@@ -9,7 +9,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@500;700;800&family=Zen+Maru+Gothic:wght@400;500;700&display=swap">
-<link rel="stylesheet" href="../cosmos.css?v=3">
+<link rel="stylesheet" href="../cosmos.css?v=4">
 <style>
 :root{
   --paper:#fdf6f4; --card:#ffffff; --ink:#3a2b38; --muted:#6b5a67; --line:#ecdadd;
@@ -486,24 +486,19 @@ footer a{color:var(--pink); text-decoration:none; margin-right:12px}
   </div>
 
   <div class="cosmos-teste-bar no-print">
-    <span>🧪 Área de teste · Calendário &amp; Endereços (Cosmos)</span>
+    <span>🧪 Área de teste · Calendário</span>
     <a href="/travessia/calendario/">Ver versão oficial atual</a>
   </div>
 
-  <nav class="trav-nav no-print" aria-label="Seções da Travessia">
-    <a href="../">🧭 Painel</a>
-    <a href="./" aria-current="page">📅 Calendário &amp; Endereços</a>
-    <a href="../ingressos/">🎟️ Ingressos</a>
-    <span class="trav-sep" aria-hidden="true"></span>
-    <a href="../burocracia/">🛂 Burocracia</a>
-    <a href="../deslocamento/">🚆 Deslocamento</a>
-    <a href="../guia-sobrevivencia/">📖 Guia</a>
-  </nav>
+  <div class="cosmos-back no-print">
+    <a class="cosmos-back-link" href="../">← Voltar ao Painel</a>
+    <span class="cosmos-back-here">📅 Calendário &amp; Endereços</span>
+  </div>
 
 
   <header class="hero" id="hero">
     <p class="eyebrow">Unirversos Travessia · calendário</p>
-    <h1>Sua viagem <em>já começou</em></h1>
+    <h1>Sua viagem <em>do caos ao cosmos</em></h1>
     <p class="lede">Monte o calendário da sua viagem ao Japão, dia a dia. Quando quiser, leve tudo para o Google Agenda.</p>
   </header>
 
@@ -532,6 +527,7 @@ footer a{color:var(--pink); text-decoration:none; margin-right:12px}
         </div>
         <div class="trip-meta">
           <span id="nuvem" role="status"></span>
+          <button class="btn sm bell-btn" type="button" id="bNotif" hidden aria-label="Ver pendências">🔔 <span class="bell-n" id="nNotif">0</span></button>
           <button class="btn sm" type="button" id="bAjustar" aria-label="Ajustar datas">✏️ Datas</button>
         </div>
       </div>
@@ -1034,13 +1030,23 @@ function desenharAvisos(){
     (qc.ok.length?'<p class="nota">Já comprados (Quero fazer): '+qc.ok.map(function(r){return esc(r.x.nome)+' <button type="button" class="lkb" data-qundo="'+esc(r.x.id)+'">desfazer</button>';}).join(' · ')+'</p>':'')+
     (feitos.length?'<p class="nota">Já resolvidos: '+feitos.map(function(x){return esc(x.e.titulo)+' <button type="button" class="lkb" data-undo="'+esc(x.e.id)+'">desfazer</button>';}).join(' · ')+'</p>':'')+'</div></details>';
   var u=lista.filter(function(x){return x.st.est==='aberto'||x.st.est==='hoje';});
-  if(u.length&&!VER&&$('#app')&&!$('#app').hidden&&!document.querySelector('dialog[open]')){
+  var bNotif=$('#bNotif'), nNotif=$('#nNotif');
+  if(bNotif&&nNotif){
+    bNotif.hidden=!u.length;
+    nNotif.textContent=u.length;
+    bNotif.onclick=function(){
+      abrir('<div class="urgPop"><div class="dlg-top"><h2 id="dlgT">🔔 '+(u.length===1?'1 pendência de compra':' '+u.length+' pendências de compra')+'</h2><button class="btn sm" type="button" data-urgfecha="1" aria-label="Fechar">✕</button></div>'+u.map(cardCompacto).join('')+'<div class="barra" style="margin-top:10px"><button class="btn sm" type="button" data-urgsil="1">🔕 Não mostrar popup automático</button><button class="btn pri sm" type="button" data-urgfecha="1">Fechar</button></div></div>');
+    };
+  }
+  var silenciado=false; try{silenciado=localStorage.getItem('uniUrgSilenciado')==='1';}catch(e){}
+  if(u.length&&!silenciado&&!VER&&$('#app')&&!$('#app').hidden&&!document.querySelector('dialog[open]')){
     var k=u.map(function(x){return x.e.id+x.st.est;}).join('|');
     if(!urgVisto[k]){urgVisto[k]=1;
-      abrir('<div class="urgPop"><div class="dlg-top"><h2 id="dlgT">⏰ '+(u.length===1?'Esta compra pede atenção agora':'Estas compras pedem atenção agora')+'</h2><button class="btn sm" type="button" data-urgfecha="1" aria-label="Fechar">✕</button></div>'+u.map(cardCompacto).join('')+'<div class="barra" style="margin-top:10px"><button class="btn" type="button" data-urgfecha="1">Fechar</button></div></div>');}
+      abrir('<div class="urgPop"><div class="dlg-top"><h2 id="dlgT">⏰ '+(u.length===1?'Esta compra pede atenção agora':'Estas compras pedem atenção agora')+'</h2><button class="btn sm" type="button" data-urgfecha="1" aria-label="Fechar">✕</button></div>'+u.map(cardCompacto).join('')+'<div class="barra" style="margin-top:10px"><button class="btn sm" type="button" data-urgsil="1">🔕 Não mostrar mais</button><button class="btn" type="button" data-urgfecha="1">Fechar</button></div></div>');}
   }
 }
 $('#dlgIn').addEventListener('click',function(ev){
+  var sil=ev.target.closest('[data-urgsil]'); if(sil){try{localStorage.setItem('uniUrgSilenciado','1');}catch(e){} dlg.close(); aviso('Aviso automático silenciado. Use o sininho 🔔 no topo quando quiser ver.'); return;}
   var f=ev.target.closest('[data-urgfecha]'); if(f){dlg.close();return;}
   var b=ev.target.closest('.urgPop [data-ok]'); if(!b)return;
   if(!S.ok)S.ok={}; S.ok[b.dataset.ok]=1; gravar();
