@@ -31,9 +31,13 @@ const ATIVIDADES = [
   { id: 'n1dokkai', livro: 'n1dokkai', num: '20', ic: '🌬️', s: '', jp: '読解 N1', cur: 'Leitura N1 · 8 semanas', nivel: 'N1', t: 'Leitura N1 · 8 semanas', d: '48 textos do 総まとめ N1 読解 com estratégia, questão, análise do gabarito e vocabulário.', url: '/idiomas/atividades/dokkai-n1/', cor: '' },
   { id: 'n1drill', livro: 'n1drill', num: '21', ic: '🔥', s: '', jp: 'パワードリル N1', cur: 'Power Drill N1 · 30 sessões', nivel: 'N1', t: 'Power Drill N1 · 30 sessões', d: 'Cronograma das 30 sessões do 日本語パワードリル N1 文法: pontos, tempo e anotações de erros.', url: '/idiomas/atividades/power-drill-n1/', cor: '' },
   { id: 'n1drillx', livro: 'n1drillx', num: '22', ic: '🔥', s: '', jp: '集中トレーニング N1', cur: 'Power Drill N1 · Treino intensivo', nivel: 'N1', t: 'Power Drill N1 · Treino intensivo', d: '30 estruturas dos blocos 集中①〜⑩: nuance, exemplo do livro e a sua frase.', url: '/idiomas/atividades/power-drill-n1-treino/', cor: '' },
+  { id: 'n5gram', livro: 'n5gram', num: '23', ic: '🔥', s: '', jp: '文法 N5', cur: 'Gramática N5 · 6 módulos', nivel: 'N5', t: 'Gramática N5 · 6 módulos', d: '78 estruturas do N5, lição por lição: nuance, exemplo e a sua frase.', url: '/idiomas/atividades/gramatica-n5/', cor: '' },
+  { id: 'n5dokkai', livro: 'n5dokkai', num: '24', ic: '🌬️', s: '', jp: '読解 N5', cur: 'Leitura N5 · 12 textos', nivel: 'N5', t: 'Leitura N5 · 12 textos', d: '12 textos N5 (curtos, médios e busca de informação) com questão, tradução e comentário.', url: '/idiomas/atividades/dokkai-n5/', cor: '' },
+  { id: 'n45kanji', livro: 'n45kanji', num: '25', ic: '🌱', s: '', jp: '漢字 N5・N4', cur: 'Kanji N5・N4 · 16 lições', nivel: 'N5–N4', t: 'Kanji N5・N4 · 16 lições', d: '110 kanji do にほんごチャレンジ 漢字: leituras on/kun, palavras-chave, exemplo e a sua frase.', url: '/idiomas/atividades/kanji-n4-n5/', cor: '' },
   { id: 'verbos', livro: 'verbos', num: '02', ic: '🏃', s: '#e8efe8', jp: '他動詞と自動詞', cur: 'Verbos transitivos e intransitivos', nivel: 'N5–N3', t: 'Verbos transitivos e intransitivos', d: '75 pares (150 verbos): compare 他動詞 e 自動詞, veja o exemplo e escreva a sua frase.', url: '/idiomas/atividades/verbos/', cor: 'var(--sage)', por: 2 },
   { id: 'adjetivos', livro: 'adjetivos', num: '03', ic: '☯️', s: '#f8e6de', jp: '形容詞と反対語', cur: 'Adjetivos e opostos', nivel: 'N5–N2', t: 'Adjetivos e opostos', d: '60 pares (120 adjetivos い e な): um adjetivo e o seu oposto, com exemplo e a sua frase.', url: '/idiomas/atividades/adjetivos/', cor: 'var(--terra)', por: 2 },
-  { id: 'karamade', livro: 'karamade', num: '04', ic: '🔥', s: '#f3f0fa', jp: '「から」と「まで」', cur: 'De onde, até onde', nivel: 'N5', t: 'から e まで', d: '11 questões com correção na hora: lacunas, leitura de placa e montar a frase.', url: '/idiomas/atividades/kara-made/', cor: 'var(--lav)', quiz: true }
+  { id: 'dias', livro: 'dias', num: '26', ic: '🪐', s: '', jp: '曜日 · 七曜', cur: 'Dias da semana e os 7 luminares', nivel: 'N5', t: 'Dias da semana', d: 'Os 7 dias e os astros que dão nome a eles: guia, cards para memorizar e um jogo de 10 perguntas.', url: '/idiomas/atividades/dias-da-semana/', cor: '', quiz: true },
+  { id: 'karamade', livro: 'karamade', num: '04', ic: '🚆', s: '#f3f0fa', jp: '「から」と「まで」', cur: 'De onde, até onde', nivel: 'N5', t: 'から e まで', d: '11 questões com correção na hora: lacunas, leitura de placa e montar a frase.', url: '/idiomas/atividades/kara-made/', cor: 'var(--lav)', quiz: true }
 ];
 
 /* mesma regra da galeria: "feito" só conta depois de aprovado pela professora */
@@ -92,7 +96,7 @@ onAuthStateChanged(auth, async u => {
   }
   if (liberado && !souProf) {
     for (const a of ATIVIDADES) {
-      try { const s = await getDoc(doc(db, 'biblioteca', a.livro)); if (s.exists()) { const it = JSON.parse(s.data().itens || '[]'); totais[a.id] = a.quiz ? (it.lacunas.length + it.vf.length + it.montar.length) : it.length * (a.por || 1); } } catch (e) { console.warn(e); }
+      try { const s = await getDoc(doc(db, 'biblioteca', a.livro)); if (s.exists()) { const it = JSON.parse(s.data().itens || '[]'); totais[a.id] = a.quiz ? (it.jogo ? it.jogo.length : it.lacunas.length + it.vf.length + it.montar.length) : it.length * (a.por || 1); } } catch (e) { console.warn(e); }
     }
   }
   $('selo').hidden = false;
