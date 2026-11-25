@@ -1,58 +1,48 @@
 /* Unirversos Travessia · Cosmos Design System (compartilhado em teste/) */
 :root{
-  --paper:#fdf6f4; --card:#ffffff; --ink:#3a2b38; --muted:#6b5a67; --line:#ecdadd;
-  --pink:#c23f5e; --pink-d:#a8344f; --pink-soft:#fbeef0;
-  --gold:#8e6a1f; --gold-soft:#fbf2df;
-  --sage:#4f7461; --sage-soft:#e8efe8;
-  --blue:#3b6ea5; --blue-soft:#edf4fb;
+  --paper:#fbf7f5; --surface:#f5ece8; --card:#ffffff; --ink:#342632; --muted:#73616f; --line:#eadad6;
+  --pink:#c23f5e; --pink-d:#a3314c; --pink-soft:#fceef1;
+  --gold:#8e6a1f; --gold-soft:#fbf3df;
+  --sage:#3f6a54; --sage-soft:#ebf3ee;
+  --blue:#356296; --blue-soft:#edf4fb;
   --lavender:#b7a6dc; --red:#a8344f;
   --f-display:"Baloo 2","Zen Maru Gothic",system-ui,sans-serif;
   --f-body:"Zen Maru Gothic","Hiragino Maru Gothic ProN","Noto Sans JP",system-ui,sans-serif;
   --r:18px;
-  --shadow:0 8px 22px -18px rgba(58,43,56,.35);
+  --shadow:0 2px 14px -6px rgba(52,38,50,.09);
+  --shadow-hover:0 10px 26px -14px rgba(52,38,50,.18);
 }
 
 /* Faixa discreta de área de teste */
 .cosmos-teste-bar{
-  background:var(--gold-soft); color:#6d4f12; font-size:12.5px; font-weight:700;
-  text-align:center; padding:6px 14px; border-radius:12px; border:1px solid #e7d5a8;
+  background:var(--gold-soft); color:#6d4f12; font-size:12px; font-weight:700;
+  text-align:center; padding:5px 14px; border-radius:999px; border:1px solid #ead9ae;
   display:flex; flex-wrap:wrap; align-items:center; justify-content:center; gap:6px 12px;
+  width:fit-content; margin:0 auto;
 }
 .cosmos-teste-bar a{color:var(--pink-d); text-decoration:underline}
 
 /* Sub-navegação unificada da Travessia */
 .trav-nav{
-  display:flex; gap:6px; overflow-x:auto; -webkit-overflow-scrolling:touch;
-  scrollbar-width:none; padding:4px 2px;
-  background:color-mix(in srgb,var(--line) 42%,#fff);
-  border:1.5px solid var(--line); border-radius:999px;
+  display:flex; gap:4px; overflow-x:auto; -webkit-overflow-scrolling:touch;
+  scrollbar-width:none; padding:4px;
+  background:var(--surface); border:1px solid var(--line); border-radius:999px;
 }
 .trav-nav::-webkit-scrollbar{display:none}
 .trav-nav a{
   flex:0 0 auto; text-decoration:none; font-family:var(--f-display); font-weight:700;
-  font-size:14px; color:var(--muted); padding:7px 14px; border-radius:999px;
-  display:inline-flex; align-items:center; gap:6px; white-space:nowrap; min-height:38px;
+  font-size:13.5px; color:var(--muted); padding:6px 14px; border-radius:999px;
+  display:inline-flex; align-items:center; gap:6px; white-space:nowrap; min-height:36px;
   transition:background .15s,color .15s,box-shadow .15s;
 }
-.trav-nav a:hover{color:var(--ink); background:rgba(255,255,255,.65)}
+.trav-nav a:hover{color:var(--ink); background:rgba(255,255,255,.7)}
 .trav-nav a[aria-current="page"]{
   background:var(--card); color:var(--ink);
-  box-shadow:0 3px 10px -6px rgba(58,43,56,.45);
+  box-shadow:0 2px 8px -3px rgba(52,38,50,.18);
 }
 .trav-nav .trav-sep{
-  align-self:center; width:1px; height:20px; background:var(--line); flex:0 0 1px; margin:0 2px;
+  align-self:center; width:1px; height:18px; background:var(--line); flex:0 0 1px; margin:0 3px;
 }
-
-/* Card padrão com borda lateral colorida */
-.c-card{
-  background:var(--card); border:1.5px solid var(--line); border-left:5px solid var(--gold);
-  border-radius:var(--r); padding:16px 18px; box-shadow:var(--shadow);
-  display:grid; gap:6px; align-content:start;
-}
-.c-card.rosa{border-left-color:var(--pink)}
-.c-card.verde{border-left-color:var(--sage)}
-.c-card.azul{border-left-color:var(--blue)}
-.c-card.neutro{border-left-color:var(--line)}
 
 /* Selos e tags */
 .c-badge{
@@ -66,12 +56,41 @@
 .c-badge.azul{background:var(--blue-soft); color:var(--blue)}
 .c-badge.urg{background:var(--pink); color:#fff}
 
-/* Modal de endereço em tela cheia (para mostrar ao taxista / recepção) */
-.taxi-dlg{
-  border:0; border-radius:22px; padding:0; max-width:min(540px,94vw); width:100%;
-  box-shadow:0 24px 60px -18px rgba(58,43,56,.55); background:#fff; color:var(--ink);
+/* Portão de login obrigatório (grátis, transparente) */
+.cosmos-gate{
+  position:fixed; inset:0; z-index:9000;
+  background:rgba(251,247,245,.94); backdrop-filter:blur(8px);
+  display:grid; place-items:center; padding:20px; overflow:auto;
 }
-.taxi-dlg::backdrop{background:rgba(58,43,56,.55); backdrop-filter:blur(4px)}
+.cg-box{
+  background:#fff; border:1px solid var(--line); border-radius:24px;
+  padding:28px 26px; max-width:430px; width:100%; display:grid; gap:14px;
+  box-shadow:0 20px 50px -22px rgba(52,38,50,.35); text-align:left;
+}
+.cg-box h2{font-family:var(--f-display);font-weight:800;font-size:25px;line-height:1.15;margin:0}
+.cg-box p{margin:0;font-size:14.5px;color:var(--muted);line-height:1.55}
+.cg-foot{font-size:12.5px!important;text-align:center}
+.cg-foot a{color:var(--pink)}
+
+/* Toast suave (substitui alert()) */
+.cosmos-toast{
+  position:fixed; left:50%; bottom:24px; transform:translate(-50%, 16px);
+  opacity:0; pointer-events:none; z-index:9500;
+  background:var(--ink); color:#fff; font-family:var(--f-display); font-weight:700;
+  font-size:14px; padding:10px 18px; border-radius:999px;
+  box-shadow:0 12px 30px -10px rgba(52,38,50,.55);
+  transition:opacity .2s, transform .2s; max-width:92vw; text-align:center;
+}
+.cosmos-toast.on{opacity:1; transform:translate(-50%, 0)}
+.cosmos-toast.erro{background:var(--pink-d)}
+
+/* Modais limpos (Taxista, Emergência, Dossiê, Anotar Rápido) */
+.taxi-dlg{
+  border:0; border-radius:22px; padding:0; max-width:min(580px,94vw); width:100%;
+  box-shadow:0 24px 60px -18px rgba(52,38,50,.45); background:#fff; color:var(--ink);
+}
+.taxi-dlg.wide{max-width:min(760px,95vw)}
+.taxi-dlg::backdrop{background:rgba(52,38,50,.5); backdrop-filter:blur(4px)}
 .taxi-in{padding:24px; display:grid; gap:14px}
 .taxi-addr{
   font-size:clamp(20px,4vw,28px); font-weight:700; line-height:1.35;
@@ -80,6 +99,11 @@
 }
 .taxi-sub{font-size:14px; color:var(--muted); margin:0}
 
+/* Tabela do Dossiê / Ficha de Imigração */
+.dos-tbl{width:100%;border-collapse:collapse;font-size:13.5px}
+.dos-tbl th,.dos-tbl td{border-bottom:1px solid var(--line);padding:8px 10px;text-align:left;vertical-align:top}
+.dos-tbl th{font-family:var(--f-display);font-weight:800;color:var(--muted);font-size:12px;text-transform:uppercase;letter-spacing:.08em}
+
 @media print{
-  .cosmos-teste-bar,.trav-nav,.no-print{display:none!important}
+  .cosmos-teste-bar,.trav-nav,.no-print,.cosmos-gate,.cosmos-toast,.fixo{display:none!important}
 }

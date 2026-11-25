@@ -9,7 +9,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@500;700;800&family=Zen+Maru+Gothic:wght@400;500;700&display=swap">
-<link rel="stylesheet" href="../cosmos.css?v=1">
+<link rel="stylesheet" href="../cosmos.css?v=3">
 <style>
 *{box-sizing:border-box}
 html{scroll-behavior:smooth;-webkit-text-size-adjust:100%}
@@ -456,6 +456,7 @@ function salvarQuero(){
     cal.qi = novo; cal.atualizado = new Date().toISOString();
     try{ localStorage.setItem('uniCalendario1', JSON.stringify(cal)); }catch(e){}
   }
+  if(window.CosmosSync) CosmosSync.salvar();
 }
 
 /* ---------- cálculo de cronograma ---------- */
@@ -862,12 +863,14 @@ document.querySelectorAll('.tabs [role="tab"]').forEach(function(b){
 /* datas + copiar + imprimir */
 $('#go').addEventListener('click', function(){
   var vi=$('#ida').value, vv=$('#volta').value;
-  if(!okIso(vi)||!okIso(vv)){ alert('Preencha as duas datas da viagem.'); return; }
-  if(vv < vi){ alert('A volta precisa ser igual ou depois da chegada.'); return; }
+  if(!okIso(vi)||!okIso(vv)){ if(window.CosmosUI) CosmosUI.toast('Preencha as duas datas da viagem.', 'erro'); return; }
+  if(vv < vi){ if(window.CosmosUI) CosmosUI.toast('A volta precisa ser igual ou depois da chegada.', 'erro'); return; }
   DT = {ida:vi, volta:vv};
   salvarDatas(vi, vv);
+  if(window.CosmosSync) CosmosSync.salvar();
   calcPlano();
   renderAll();
+  if(window.CosmosUI) CosmosUI.toast('Datas atualizadas e salvas na conta ✓');
 });
 $('#btnPrint').addEventListener('click', function(){ window.print(); });
 $('#btnCopiar').addEventListener('click', function(){
@@ -888,8 +891,13 @@ $('#ida').value = DT.ida;
 $('#volta').value = DT.volta;
 calcPlano();
 renderAll();
+document.addEventListener('cosmos-sync-ready', function(){
+  DT = lerDatas(); $('#ida').value = DT.ida; $('#volta').value = DT.volta;
+  quero = lerQuero(); calcPlano(); renderAll();
+});
 })();
 </script>
+<script type="module" src="../cosmos-sync.js?v=1"></script>
 <script defer src="/menu-ativo.js?v=2"></script>
 <script defer src="/voltar-global.js?v=5"></script>
 <script src="/entrar.js" defer></script>
