@@ -170,7 +170,7 @@ function card(i){
   return `<article class="card s-${st}" data-n="${i.n}">
     <div class="top"><span>${SEM(i.s)} · ${DIA(i.d)}${i.min ? ` · ⏱ ${i.min} min` : ''}</span><span>${novo(i.n) ? `<button type="button" class="novo" data-visto="${i.n}" title="Marcar como visto">nova correção · ✓ vi</button> ` : ''}<span class="pill p-${st}">${ST[st]}</span></span></div>
     <h3><span lang="ja">${esc(i.tm)}</span></h3>
-    <p class="tipo">${esc(i.tipo)}</p>
+    ${i.tipo ? `<p class="tipo">${esc(i.tipo)}</p>` : ''}
     ${!i.es ? '' : oculta && !abertosEx.has(i.n) ? `<button type="button" class="verex" data-ex="${i.n}">👁 ver estratégia</button>` : `<div class="estr"><b>Estratégia</b>${esc(i.es)}${oculta ? ` <button type="button" class="verpt" data-ex="${i.n}">ocultar</button>` : ''}</div>`}
     ${i.tx ? `<div class="texto"><div class="tx-top"><b>Texto</b><button type="button" class="som" data-som="${i.n}" aria-label="Ouvir o texto" title="Ouvir o texto">🔊</button></div><div class="jp tx" lang="ja">${window.FraseJP ? FraseJP.html(i.xt, i.tx) : esc(i.tx)}</div></div>` : ''}
     ${i.qq.ops.length === 4 ? blocoQuestao(i, r) : ''}
@@ -178,7 +178,7 @@ function card(i){
     ${i.q ? `<p class="perg">✍️ ${esc(i.q)}</p>` : ''}
     <label class="l" for="f${i.n}">${souProf ? 'SÍNTESE DO ALUNO' : 'MINHA SÍNTESE'}</label>
     <textarea id="f${i.n}" data-f="${i.n}" rows="3" placeholder="${souProf ? 'O aluno ainda não escreveu' : 'Escreva aqui, em português ou em japonês'}" ${ro}>${esc(r.f)}</textarea>
-    <div class="num2"><label>Acertos <input data-ac="${i.n}" value="${esc(r.ac)}" placeholder="ex.: 3/4" ${ro}></label><label>Tempo (min) <input data-tp="${i.n}" value="${esc(r.tp)}" inputmode="numeric" placeholder="${i.min || ''}" ${ro}></label></div>
+    <div class="num2"><label>${esc(CFG.acRot || 'Acertos')} <input data-ac="${i.n}" value="${esc(r.ac)}" placeholder="${esc(CFG.acPh || 'ex.: 3/4')}" ${ro}></label><label>Tempo (min) <input data-tp="${i.n}" value="${esc(r.tp)}" inputmode="numeric" placeholder="${i.min || ''}" ${ro}></label></div>
     ${corr}
     ${blocoHist(r)}
     <div class="pe"><span class="acoes">${acoes}</span><span class="salvo" id="ok${i.n}" aria-live="polite"></span></div>
