@@ -710,20 +710,89 @@ function destinoMaps(e){
 function mapsBusca(q){ return 'https://www.google.com/maps/search/?api=1&query='+encodeURIComponent(q); }
 function mapsTransit(orig, dest){ return 'https://www.google.com/maps/dir/?api=1&origin='+encodeURIComponent(orig)+'&destination='+encodeURIComponent(dest)+'&travelmode=transit'; }
 
-/* Detecta cidade aproximada para agrupar estadias */
+/* Detecta província / cidade pelas 47 prefeituras do Japão (romaji + kanji) e fallback por endereço/coordenada */
+var PROV_RE = [
+  ['Tóquio', /tokyo|toquio|shinjuku|shibuya|asakusa|ueno|uchikanda|kanda|ginza|akihabara|ikebukuro|minato|chiyoda|haneda|roppongi|odaiba|meguro|setagaya|shinagawa|sumida|taito|chuo-ku|東京都/],
+  ['Kyoto', /kyoto|quioto|arashiyama|gion|fushimi|shimogyo|kamigyo|nakagyo|higashiyama|uji\b|京都府/],
+  ['Osaka', /osaka|namba|umeda|shinsaibashi|dotonbori|shin-osaka|tennoji|usj|universal|大阪府/],
+  ['Hiroshima', /hiroshima|miyajima|hatsukaichi|onomichi|広島県/],
+  ['Hyogo (Kobe / Himeji)', /hyogo|kobe|himeji|kinosaki|arima|兵庫県/],
+  ['Nara', /\bnara\b|奈良県/],
+  ['Yamanashi (Fuji)', /yamanashi|kawaguchi|fujiyoshida|fuji view|yamanakako|山梨県/],
+  ['Kanagawa (Hakone / Yokohama)', /kanagawa|hakone|yokohama|kamakura|enoshima|odawara|kawasaki|神奈川県/],
+  ['Aichi (Nagoya)', /aichi|nagoya|inuyama|愛知県/],
+  ['Gifu (Takayama)', /\bgifu\b|takayama|shirakawa|gero|岐阜県/],
+  ['Ishikawa (Kanazawa)', /ishikawa|kanazawa|石川/],
+  ['Nagano', /nagano|matsumoto|karuizawa|hakuba|kamikochi|noza?wa|長野県/],
+  ['Shizuoka', /shizuoka|atami|izu\b|shimoda|hamamatsu|静岡県/],
+  ['Chiba', /chiba|narita|maihama|urayasu|makuhari|千葉県/],
+  ['Saitama', /saitama|kawagoe|omiya|埼玉県/],
+  ['Tochigi (Nikko)', /tochigi|nikko|utsunomiya|nasu|栃木県/],
+  ['Gunma', /gunma|kusatsu|ikaho|takasaki|群馬県/],
+  ['Ibaraki', /ibaraki|mito\b|tsukuba|茨城県/],
+  ['Okayama', /okayama|kurashiki|naoshima|岡山県/],
+  ['Kagawa', /kagawa|takamatsu|香川県/],
+  ['Ehime', /ehime|matsuyama|愛媛県/],
+  ['Tokushima', /tokushima|徳島県/],
+  ['Kochi', /\bkochi\b|高知県/],
+  ['Wakayama (Koyasan)', /wakayama|koyasan|shirahama|kumano|和歌山県/],
+  ['Mie', /\bmie\b|\bise\b|toba|shima|三重県/],
+  ['Shiga', /shiga|otsu|hikone|biwa|滋賀県/],
+  ['Fukui', /fukui|福井県/],
+  ['Toyama', /toyama|tateyama|富山県/],
+  ['Niigata', /niigata|yuzawa|sado|新潟県/],
+  ['Fukuoka', /fukuoka|hakata|tenjin|kitakyushu|福岡県/],
+  ['Nagasaki', /nagasaki|sasebo|長崎県/],
+  ['Kumamoto', /kumamoto|\baso\b|熊本県/],
+  ['Oita (Beppu)', /\boita\b|beppu|yufuin|大分県/],
+  ['Kagoshima', /kagoshima|yakushima|鹿児島県/],
+  ['Miyazaki', /miyazaki|takachiho|宮崎県/],
+  ['Saga', /\bsaga\b|arita|佐賀県/],
+  ['Yamaguchi', /yamaguchi|shimonoseki|iwakuni|山口県/],
+  ['Shimane', /shimane|matsue|izumo|島根県/],
+  ['Tottori', /tottori|鳥取県/],
+  ['Miyagi (Sendai)', /miyagi|sendai|matsushima|宮城県/],
+  ['Fukushima', /fukushima|aizu|福島県/],
+  ['Yamagata', /yamagata|ginzan|zao|山形県/],
+  ['Iwate', /iwate|morioka|hiraizumi|岩手県/],
+  ['Akita', /akita|kakunodate|秋田県/],
+  ['Aomori', /aomori|hirosaki|hakodate|青森県/],
+  ['Hokkaido', /hokkaido|sapporo|otaru|furano|niseko|asahikawa|noboribetsu|北海道/],
+  ['Okinawa', /okinawa|naha|ishigaki|miyakojima|沖縄県/]
+];
+var PROV_COORDS = [
+  ['Tóquio',35.68,139.77],['Kanagawa',35.36,139.25],['Chiba',35.61,140.12],['Saitama',35.86,139.65],
+  ['Yamanashi (Fuji)',35.50,138.76],['Shizuoka',34.98,138.38],['Tochigi (Nikko)',36.75,139.60],
+  ['Nagano',36.24,137.97],['Gifu (Takayama)',36.14,137.25],['Aichi (Nagoya)',35.18,136.91],
+  ['Ishikawa (Kanazawa)',36.56,136.66],['Kyoto',35.01,135.77],['Osaka',34.69,135.50],
+  ['Nara',34.68,135.80],['Hyogo (Kobe)',34.69,135.19],['Wakayama',34.23,135.17],
+  ['Okayama',34.66,133.92],['Hiroshima',34.39,132.46],['Fukuoka',33.59,130.40],
+  ['Nagasaki',32.75,129.88],['Kumamoto',32.80,130.71],['Oita (Beppu)',33.28,131.50],
+  ['Kagoshima',31.60,130.56],['Miyagi (Sendai)',38.27,140.87],['Hokkaido',43.06,141.35],['Okinawa',26.21,127.68]
+];
 function cidadeDe(h){
-  var t = (' '+(h.titulo||'')+' '+(h.local||'')).normalize('NFD').replace(/[\u0300-\u036f]/g,'').toLowerCase();
-  if(/kyoto|quioto|arashiyama|gion|fushimi|shimogyo|kamigyo/.test(t)) return 'Kyoto';
-  if(/osaka|namba|umeda|shinsaibashi|dotonbori|shin-osaka/.test(t)) return 'Osaka';
-  if(/hakone|kawaguchi|fuji/.test(t)) return 'Fuji / Hakone';
-  if(/nagoya|aichi/.test(t)) return 'Nagoya';
-  if(/hiroshima|miyajima/.test(t)) return 'Hiroshima';
-  if(/kanazawa/.test(t)) return 'Kanazawa';
-  if(/sapporo|hokkaido|otaru/.test(t)) return 'Hokkaido';
-  if(/fukuoka|hakata/.test(t)) return 'Fukuoka';
-  if(/nara\b/.test(t)) return 'Nara';
-  if(/tokyo|toquio|shinjuku|shibuya|asakusa|ueno|uchikanda|kanda|ginza|akihabara|ikebukuro|minato|chiyoda|haneda|narita|chiba|yokohama/.test(t)) return 'Tóquio';
-  return 'Japão';
+  var raw = (h.titulo||'') + ' ' + (h.local||'');
+  var t = ' ' + raw.normalize('NFD').replace(/[\u0300-\u036f]/g,'').toLowerCase() + ' ';
+  for(var i=0; i<PROV_RE.length; i++){
+    if(PROV_RE[i][1].test(t) || PROV_RE[i][1].test(raw)) return PROV_RE[i][0];
+  }
+  /* Tenta extrair "XXX Prefecture" ou "XXX-ken" do endereço */
+  var mPref = raw.match(/([A-Za-zÀ-ÿ-]+)\s+(?:Prefecture|ken\b)/i);
+  if(mPref) return mPref[1];
+  /* Fallback por coordenada @lat,lon (mais próxima) */
+  var c = coordDe(h.local) || coordDe(h.titulo);
+  if(c){
+    var p = c.split(',').map(Number), best = null, bestD = 999;
+    PROV_COORDS.forEach(function(x){
+      var d = Math.hypot(p[0]-x[1], p[1]-x[2]);
+      if(d < bestD){ bestD = d; best = x[0]; }
+    });
+    if(best && bestD < 1.8) return best;
+  }
+  /* Último recurso: pega a penúltima parte do endereço antes de Japan/Japão */
+  var parts = limpaTexto(h.local||'').split(',').map(function(s){return s.trim();}).filter(function(s){return s && !/^(japan|japão|japao|\d{3}-?\d{4})$/i.test(s);});
+  if(parts.length) return parts[parts.length-1].replace(/\d+/g,'').trim().slice(0,22) || 'Outra província';
+  return 'Outra província';
 }
 
 function lerViagem(){
@@ -1003,15 +1072,16 @@ var TARIFAS_JR = {
   'Nagoya|Hiroshima': 14500, 'Nagoya|Kanazawa': 7500, 'Hiroshima|Fukuoka': 9200
 };
 function tarifaEntre(c1, c2){
-  if(!c1 || !c2 || c1 === c2 || c1 === 'Japão' || c2 === 'Japão') return 0;
-  return TARIFAS_JR[c1+'|'+c2] || TARIFAS_JR[c2+'|'+c1] || 11000;
+  if(!c1 || !c2 || c1 === c2 || c1 === 'Outra província' || c2 === 'Outra província') return 0;
+  var k1 = c1.replace(/\s*\(.*\)$/,''), k2 = c2.replace(/\s*\(.*\)$/,'');
+  return TARIFAS_JR[c1+'|'+c2] || TARIFAS_JR[c2+'|'+c1] || TARIFAS_JR[k1+'|'+k2] || TARIFAS_JR[k2+'|'+k1] || 11000;
 }
 function analisarJRPass(hosps, evs){
   var seq = [];
   /* Usa hospedagens em ordem cronológica como espinha dorsal das cidades */
   hosps.forEach(function(h){
     var c = cidadeDe(h);
-    if(c === 'Japão') return;
+    if(c === 'Outra província') return;
     if(!seq.length || seq[seq.length-1].c !== c) seq.push({c:c, data:h.data});
   });
   /* Complementa com trens/passeios em outras cidades (bate-voltas) */

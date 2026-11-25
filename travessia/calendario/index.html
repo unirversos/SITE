@@ -3,11 +3,12 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-<title>Calendário da viagem · Unirversos Travessia</title>
-<meta name="description" content="Monte o calendário da sua viagem ao Japão, dia a dia, e guarde na sua conta gratuita para abrir em qualquer aparelho. Leve tudo para o Google Agenda quando quiser.">
+<title>Calendário &amp; Endereços · Unirversos Travessia</title>
+<meta name="description" content="Monte o calendário da sua viagem ao Japão, dia a dia, com endereço de cada hospedagem e ingressos agendados.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@500;700;800&family=Zen+Maru+Gothic:wght@400;500;700&display=swap">
+<link rel="stylesheet" href="../cosmos.css?v=4">
 <style>
 :root{
   --paper:#fdf6f4; --card:#ffffff; --ink:#3a2b38; --muted:#6b5a67; --line:#ecdadd;
@@ -483,10 +484,15 @@ footer a{color:var(--pink); text-decoration:none; margin-right:12px}
     <span class="navlinks"><a href="/idiomas/">idiomas</a><a href="/travessia/" aria-current="page">travessia</a><a href="/loja/">tesouros</a><span class="nav-sep" aria-hidden="true" style="opacity:.3">|</span><a href="/paralelos/">paralelos</a><a href="/sobre/">sobre</a></span>
   </div>
 
+  <div class="cosmos-back no-print">
+    <a class="cosmos-back-link" href="../">← Voltar ao Painel</a>
+    <span class="cosmos-back-here">📅 Calendário &amp; Endereços</span>
+  </div>
+
 
   <header class="hero" id="hero">
     <p class="eyebrow">Unirversos Travessia · calendário</p>
-    <h1>Sua viagem <em>já começou</em></h1>
+    <h1>Sua viagem <em>do caos ao cosmos</em></h1>
     <p class="lede">Monte o calendário da sua viagem ao Japão, dia a dia. Quando quiser, leve tudo para o Google Agenda.</p>
   </header>
 
@@ -515,6 +521,7 @@ footer a{color:var(--pink); text-decoration:none; margin-right:12px}
         </div>
         <div class="trip-meta">
           <span id="nuvem" role="status"></span>
+          <button class="btn sm bell-btn" type="button" id="bNotif" hidden aria-label="Ver pendências">🔔 <span class="bell-n" id="nNotif">0</span></button>
           <button class="btn sm" type="button" id="bAjustar" aria-label="Ajustar datas">✏️ Datas</button>
         </div>
       </div>
@@ -525,9 +532,9 @@ footer a{color:var(--pink); text-decoration:none; margin-right:12px}
       <div class="appbar no-print">
         <div class="tabs" role="tablist" aria-label="Áreas do calendário">
           <button class="tab" type="button" role="tab" id="tRoteiro" data-tab="roteiro" aria-selected="true" aria-controls="tabRoteiro"><span>🗓️ Roteiro</span></button>
-          <button class="tab" type="button" role="tab" id="tLogistica" data-tab="logistica" aria-selected="false" aria-controls="tabLogistica"><span>🧳 Logística</span><span class="bd" id="bdLog"></span></button>
-          <button class="tab" type="button" role="tab" id="tIdeias" data-tab="ideias" aria-selected="false" aria-controls="tabIdeias"><span>⭐ Ideias</span><span class="bd" id="bdIdeias"></span></button>
-          <button class="tab" type="button" role="tab" id="tMais" data-tab="mais" aria-selected="false" aria-controls="tabMais"><span>📤 Mais</span></button>
+          <button class="tab" type="button" role="tab" id="tLogistica" data-tab="logistica" aria-selected="false" aria-controls="tabLogistica"><span>🏨 Endereços &amp; Trens</span><span class="bd" id="bdLog"></span></button>
+          <button class="tab" type="button" role="tab" id="tIdeias" data-tab="ideias" aria-selected="false" aria-controls="tabIdeias"><span>🎟️ Ingressos &amp; Ideias</span><span class="bd" id="bdIdeias"></span></button>
+          <button class="tab" type="button" role="tab" id="tMais" data-tab="mais" aria-selected="false" aria-controls="tabMais"><span>📤 Exportar</span></button>
         </div>
         <div class="quick-desk">
           <button class="btn pri" type="button" id="bNovo">➕ Novo evento</button>
@@ -571,7 +578,7 @@ footer a{color:var(--pink); text-decoration:none; margin-right:12px}
       <div class="tabpane no-print" id="tabLogistica" role="tabpanel" aria-labelledby="tLogistica" hidden>
         <div class="log-acts">
           <button class="btn soft" type="button" id="bPasses">🚆 Comparar passes (JR Pass / Metrô)</button>
-          <a class="btn" href="/travessia/deslocamento/" id="bDesloc">🧭 Abrir De → para</a>
+          <a class="btn" href="../deslocamento/" id="bDesloc">🧭 Abrir De → para</a>
         </div>
         <div class="log-grid">
           <div id="avisos"></div>
@@ -588,7 +595,7 @@ footer a{color:var(--pink); text-decoration:none; margin-right:12px}
             <h3>🎟️ Quero ir: ingressos com antecedência</h3>
             <p class="nota" id="qiResumo">Acompanhe loterias, datas de abertura e prazos de pagamento no horário de Brasília.</p>
           </div>
-          <button class="btn pri" type="button" id="bQI">Abrir cronograma de ingressos →</button>
+          <a class="btn pri" href="../ingressos/">Abrir Ingressos &amp; Loterias →</a>
         </div>
         <div class="lq-wrap" id="ideiasListaBox"></div>
       </div>
@@ -636,7 +643,7 @@ footer a{color:var(--pink); text-decoration:none; margin-right:12px}
 
   <footer>
     <span>unirversos — tudo conectado · Aline Kikuti</span>
-    <span><a href="/travessia/ingressos/">Ingressos</a></span>
+    <span><a href="../">← Painel</a> · <a href="../ingressos/">Ingressos →</a></span>
   </footer>
 </div>
 
@@ -646,14 +653,13 @@ footer a{color:var(--pink); text-decoration:none; margin-right:12px}
   <button class="btn" type="button" id="bImportMob">📥 Importar</button>
 </nav>
 
-<dialog id="dlgQI" aria-label="Ingressos com antecedência"><div class="dlg-in"><div class="dlg-top"><h2>🎟️ Ingressos com antecedência</h2><button class="btn sm" type="button" id="qiFecha">Fechar</button></div><iframe id="qiFrame" title="Ingressos com antecedência" style="width:100%;height:70vh;border:0;border-radius:12px;background:#fff"></iframe></div></dialog>
 <dialog id="dlg" aria-labelledby="dlgT"><div class="dlg-in" id="dlgIn"></div></dialog>
 <p class="toast" id="msg" role="status"></p>
 
-<script src="./leitor.js?v=2"></script>
-<script src="../agendamentos/regras.js?v=3"></script>
-<script src="./geo.js?v=7"></script>
-<script src="./avisos.js?v=4"></script>
+<script src="/travessia/calendario/leitor.js?v=2"></script>
+<script src="/travessia/agendamentos/regras.js?v=3"></script>
+<script src="/travessia/calendario/geo.js?v=7"></script>
+<script src="/travessia/calendario/avisos.js?v=4"></script>
 <script>/* Painéis recolhíveis: ao abrir o site começam sempre recolhidos; o que a pessoa abre fica aberto só nesta visita. */
 window.UNI_ABERTAS=window.UNI_ABERTAS||{};
 document.addEventListener("toggle",function(ev){
@@ -662,9 +668,9 @@ document.addEventListener("toggle",function(ev){
   if(k)window.UNI_ABERTAS[k]=d.open;
 },true);
 </script>
-<script src="./passagens.js?v=2"></script>
-<script src="./lista.js?v=14"></script>
-<script src="./passes.js?v=1"></script>
+<script src="/travessia/calendario/passagens.js?v=2"></script>
+<script src="/travessia/calendario/lista.js?v=14"></script>
+<script src="/travessia/calendario/passes.js?v=1"></script>
 <script>
 (function(){
 'use strict';
@@ -810,7 +816,7 @@ function gravarLocal(){
   try{localStorage.setItem(KEY,JSON.stringify(S));salvouOk=true;}
   catch(e){salvouOk=false;aviso('Seu navegador não deixou salvar. Use "Salvar uma cópia" na aba Mais para não perder nada.');}
 }
-function gravar(){if(VER)return;S.atualizado=new Date().toISOString();gravarLocal();agendarNuvem();agendarVivo();}
+function gravar(){if(VER)return;S.atualizado=new Date().toISOString();gravarLocal();try{if(S.ini&&S.fim){localStorage.setItem('uniViagemDatas1',JSON.stringify({titulo:S.titulo||'',ini:S.ini,fim:S.fim}));var st=JSON.parse(localStorage.getItem('travessiaStatusV1')||'null')||{itens:{}};st.ida=S.ini;st.volta=S.fim;if(!st.itens)st.itens={};localStorage.setItem('travessiaStatusV1',JSON.stringify(st));}}catch(e){}agendarNuvem();agendarVivo();}
 function agendarVivo(){
   if(VER||!S.vivo||!usuario||!window.CalNuvem||!CalNuvem.atualizarVivo)return;
   clearTimeout(tViv);tViv=setTimeout(async function(){
@@ -1017,13 +1023,23 @@ function desenharAvisos(){
     (qc.ok.length?'<p class="nota">Já comprados (Quero fazer): '+qc.ok.map(function(r){return esc(r.x.nome)+' <button type="button" class="lkb" data-qundo="'+esc(r.x.id)+'">desfazer</button>';}).join(' · ')+'</p>':'')+
     (feitos.length?'<p class="nota">Já resolvidos: '+feitos.map(function(x){return esc(x.e.titulo)+' <button type="button" class="lkb" data-undo="'+esc(x.e.id)+'">desfazer</button>';}).join(' · ')+'</p>':'')+'</div></details>';
   var u=lista.filter(function(x){return x.st.est==='aberto'||x.st.est==='hoje';});
-  if(u.length&&!VER&&$('#app')&&!$('#app').hidden&&!document.querySelector('dialog[open]')){
+  var bNotif=$('#bNotif'), nNotif=$('#nNotif');
+  if(bNotif&&nNotif){
+    bNotif.hidden=!u.length;
+    nNotif.textContent=u.length;
+    bNotif.onclick=function(){
+      abrir('<div class="urgPop"><div class="dlg-top"><h2 id="dlgT">🔔 '+(u.length===1?'1 pendência de compra':' '+u.length+' pendências de compra')+'</h2><button class="btn sm" type="button" data-urgfecha="1" aria-label="Fechar">✕</button></div>'+u.map(cardCompacto).join('')+'<div class="barra" style="margin-top:10px"><button class="btn sm" type="button" data-urgsil="1">🔕 Não mostrar popup automático</button><button class="btn pri sm" type="button" data-urgfecha="1">Fechar</button></div></div>');
+    };
+  }
+  var silenciado=false; try{silenciado=localStorage.getItem('uniUrgSilenciado')==='1';}catch(e){}
+  if(u.length&&!silenciado&&!VER&&$('#app')&&!$('#app').hidden&&!document.querySelector('dialog[open]')){
     var k=u.map(function(x){return x.e.id+x.st.est;}).join('|');
     if(!urgVisto[k]){urgVisto[k]=1;
-      abrir('<div class="urgPop"><div class="dlg-top"><h2 id="dlgT">⏰ '+(u.length===1?'Esta compra pede atenção agora':'Estas compras pedem atenção agora')+'</h2><button class="btn sm" type="button" data-urgfecha="1" aria-label="Fechar">✕</button></div>'+u.map(cardCompacto).join('')+'<div class="barra" style="margin-top:10px"><button class="btn" type="button" data-urgfecha="1">Fechar</button></div></div>');}
+      abrir('<div class="urgPop"><div class="dlg-top"><h2 id="dlgT">⏰ '+(u.length===1?'Esta compra pede atenção agora':'Estas compras pedem atenção agora')+'</h2><button class="btn sm" type="button" data-urgfecha="1" aria-label="Fechar">✕</button></div>'+u.map(cardCompacto).join('')+'<div class="barra" style="margin-top:10px"><button class="btn sm" type="button" data-urgsil="1">🔕 Não mostrar mais</button><button class="btn" type="button" data-urgfecha="1">Fechar</button></div></div>');}
   }
 }
 $('#dlgIn').addEventListener('click',function(ev){
+  var sil=ev.target.closest('[data-urgsil]'); if(sil){try{localStorage.setItem('uniUrgSilenciado','1');}catch(e){} dlg.close(); aviso('Aviso automático silenciado. Use o sininho 🔔 no topo quando quiser ver.'); return;}
   var f=ev.target.closest('[data-urgfecha]'); if(f){dlg.close();return;}
   var b=ev.target.closest('.urgPop [data-ok]'); if(!b)return;
   if(!S.ok)S.ok={}; S.ok[b.dataset.ok]=1; gravar();
@@ -1167,7 +1183,9 @@ function desenharLista(){
   $('#vLista').innerHTML=trajToggle()+qh+ks.map(function(d){
     var evs=S.ev.filter(function(e){return e.data===d;}).sort(function(a,b){return (a.hora||'')<(b.hora||'')?-1:(a.hora||'')>(b.hora||'')?1:0;});
     var prox=ks[ks.indexOf(d)+1], pe=prox?ordemDia(prox)[0]:null;
-    return '<section class="grp"><h3>'+esc(longo(d))+'</h3>'+comLig(evs,d)+ligHtml(evs[evs.length-1],pe)+'<div class="qpd" data-d="'+d+'"></div></section>';
+    var hDia=hospDoDia(d);
+    var hBar=hDia?'<div class="estq" style="margin-bottom:6px"><div class="est-i"><div><b>🏨 Onde você dorme: '+esc(nomeEst(hDia))+'</b>'+(hDia.local?'<small class="nota" style="display:block">'+esc(limpaCoord(hDia.local))+'</small>':'')+'</div>'+(hDia.local?'<div style="display:flex;gap:6px;flex-wrap:wrap"><button type="button" class="btn xs soft" data-taxi-nome="'+esc(nomeEst(hDia))+'" data-taxi-addr="'+esc(limpaCoord(hDia.local))+'">🚕 Taxista</button><a class="btn xs" href="https://www.google.com/maps/search/?api=1&query='+encodeURIComponent(limpaCoord(hDia.local))+'" target="_blank" rel="noopener">🗺️ Maps</a></div>':'')+'</div></div>':'';
+    return '<section class="grp"><h3>'+esc(longo(d))+'</h3>'+hBar+comLig(evs,d)+ligHtml(evs[evs.length-1],pe)+'<div class="qpd" data-d="'+d+'"></div></section>';
   }).join('');
   preencheLig($('#vLista'),false);
   if(window.CalLista)CalLista.marcarPerto($('#vLista'),S,doDia,abrirDia);
@@ -1351,7 +1369,7 @@ function abrirDia(d){
     '<div class="day-tabs" role="tablist"><button type="button" role="tab" id="dtAg" aria-selected="true">📅 Agenda ('+evs.length+')</button><button type="button" role="tab" id="dtSug" aria-selected="false" hidden>✨ Sugestões</button></div>'+
     '<div id="dayAgenda" style="display:grid;gap:10px">'+
       (evs.length>1||(evs.length&&hospDoDia(d))?trajToggle():'')+
-      hs.map(function(h){return '<div class="estq"><div class="est-i"><div><b>🏨 Estadia: '+esc(nomeEst(h))+'</b><small class="nota">'+esc(curto(h.data))+(h.dataFim?' → '+esc(curto(h.dataFim)):'')+'</small></div><button type="button" class="btn sm" data-act="edit" data-id="'+esc(h.id)+'">✏️ Editar</button></div></div>';}).join('')+
+      hs.map(function(h){var ad=limpaCoord(h.local||''); return '<div class="estq"><div class="est-i"><div><b>🏨 Onde você dorme: '+esc(nomeEst(h))+'</b>'+(ad?'<small class="nota" style="display:block">'+esc(ad)+'</small>':'')+'<small class="nota">'+esc(curto(h.data))+(h.dataFim?' → '+esc(curto(h.dataFim)):'')+'</small></div><div style="display:flex;gap:6px;flex-wrap:wrap">'+(ad?'<button type="button" class="btn sm soft" data-taxi-nome="'+esc(nomeEst(h))+'" data-taxi-addr="'+esc(ad)+'">🚕 Taxista</button><a class="btn sm" href="https://www.google.com/maps/search/?api=1&query='+encodeURIComponent(ad)+'" target="_blank" rel="noopener">🗺️ Maps</a>':'')+'<button type="button" class="btn sm" data-act="edit" data-id="'+esc(h.id)+'">✏️ Editar</button></div></div></div>';}).join('')+
       bridgeAnt+
       (evs.length?comLig(evs,d):'<div class="vazio">Nenhum evento neste dia.</div>')+
       bridgeDep+
@@ -1633,12 +1651,7 @@ function vigiaPend(){
 }
 vigiaPend();
 
-(function(){var d=document.getElementById('dlgQI'),f=document.getElementById('qiFrame'),b=document.getElementById('bQI');if(!d||!b)return;
-  b.addEventListener('click',function(){window.__pendRapido=true;avisaQi();if(!f.getAttribute('src'))f.src='/travessia/ingressos/?embed=1&v=4';if(d.showModal)d.showModal();else d.setAttribute('open','');});
-  document.getElementById('qiFecha').addEventListener('click',function(){d.close();vigiaPend();});
-  d.addEventListener('close',vigiaPend);
-  window.addEventListener('storage',function(e){if(e.key==='uniCalPend')vigiaPend();});
-})();
+window.addEventListener('storage',function(e){if(e.key==='uniCalPend')vigiaPend();});
 
 document.addEventListener('uni-conta',function(ev){
   usuario=(ev.detail&&ev.detail.user)||null;syncPronto=false;estadoNuvem='';
@@ -1939,12 +1952,45 @@ $('#bPasses').onclick=function(){ if(!window.CalPasses){aviso('Os passes não ca
 
 /* ---------- início ---------- */
 preencherFusos();carregar();
-if(S.ini){var h0=hojeStr();mes=(h0>=S.ini&&h0<=S.fim?h0:S.ini).slice(0,7);$('#setup').hidden=true;mostrarApp(true);tudo();}
+var diaParam=(new URLSearchParams(location.search)).get('dia');
+if(S.ini){var h0=hojeStr();mes=(okData(diaParam)?diaParam:(h0>=S.ini&&h0<=S.fim?h0:S.ini)).slice(0,7);$('#setup').hidden=true;mostrarApp(true);tudo();if(okData(diaParam))setTimeout(function(){abrirDia(diaParam);},80);}
 else{mostrarApp(false);mostrarSetup(false);}
+document.addEventListener('cosmos-sync-ready',function(){carregar();if(S.ini){$('#setup').hidden=true;mostrarApp(true);tudo();}});
 nuvemUI();receberLink();
 })();
 </script>
-<script type="module" src="./nuvem.js?v=3"></script>
+<dialog class="taxi-dlg" id="dlgTaxi" aria-labelledby="taxiNome">
+  <div class="taxi-in">
+    <div style="display:flex;justify-content:space-between;align-items:center;gap:10px">
+      <strong id="taxiNome" style="font-family:var(--f-display);font-size:19px">Endereço</strong>
+      <button class="btn sm" type="button" id="taxiFecha">Fechar</button>
+    </div>
+    <p class="taxi-sub">Mostre esta tela para o taxista ou na recepção:</p>
+    <div class="taxi-addr" id="taxiAddr"></div>
+    <div class="barra">
+      <button class="btn pri sm" type="button" id="taxiCopiar">📋 Copiar endereço</button>
+      <a class="btn sm" id="taxiMaps" href="#" target="_blank" rel="noopener">🗺️ Abrir no Google Maps</a>
+    </div>
+  </div>
+</dialog>
+<script>
+(function(){
+  var d=document.getElementById('dlgTaxi'); if(!d)return;
+  document.addEventListener('click',function(e){
+    var b=e.target.closest('[data-taxi-addr]'); if(!b)return;
+    var nome=b.getAttribute('data-taxi-nome')||'Hospedagem', addr=b.getAttribute('data-taxi-addr')||'';
+    document.getElementById('taxiNome').textContent='🏨 '+nome;
+    document.getElementById('taxiAddr').textContent=addr;
+    document.getElementById('taxiMaps').href='https://www.google.com/maps/search/?api=1&query='+encodeURIComponent(addr);
+    document.getElementById('taxiCopiar').onclick=function(){var btn=this; if(navigator.clipboard)navigator.clipboard.writeText(addr).then(function(){btn.textContent='Copiado ✓';setTimeout(function(){btn.textContent='📋 Copiar endereço';},1800);});};
+    if(d.showModal)d.showModal(); else d.setAttribute('open','');
+  });
+  document.getElementById('taxiFecha').onclick=function(){if(d.close)d.close(); else d.removeAttribute('open');};
+  d.addEventListener('click',function(e){if(e.target===d)d.close();});
+})();
+</script>
+<script type="module" src="../cosmos-sync.js?v=1"></script>
+<script type="module" src="/travessia/calendario/nuvem.js?v=3"></script>
 <script defer src="/menu-ativo.js?v=2"></script><script defer src="/voltar-global.js?v=5"></script>
 <script src="/medir.js?v=1" defer></script>
 </body>

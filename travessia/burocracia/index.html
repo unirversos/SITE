@@ -160,20 +160,51 @@ footer a{color:var(--pink);text-decoration:none;display:inline-flex;align-items:
 .crumb{display:none!important}
 .faixa-t{background:#fbf1de;color:#7a5418;font-size:13px;text-align:center;padding:6px 12px;margin:0 -9999px 10px;padding-inline:9999px}
 .ey-t{font-size:12px;letter-spacing:.18em;text-transform:uppercase;color:#8e6a1f;font-weight:700;margin:0}
-</style></head>
+body{background-image:none!important}
+.reta-sec{display:grid;gap:12px}
+.reta-sec h2{font-family:var(--f-display);font-weight:800;font-size:clamp(22px,3.2vw,28px);margin:0}
+.reta-sec .sub{margin:0;color:var(--muted);font-size:15px}
+.reta-grid{display:grid;gap:10px}
+.item.reta{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:14px 16px;display:flex;gap:12px;align-items:flex-start}
+.item.reta.ok{background:var(--sage-soft);border-color:#c6ddd0}
+.item.reta input[type=checkbox]{width:20px;height:20px;margin-top:3px;accent-color:var(--sage);cursor:pointer;flex:none}
+.item.reta strong{display:block;font-family:var(--f-display);font-weight:800;font-size:16.5px;line-height:1.25}
+.item.reta p{margin:2px 0 0;font-size:14px;color:var(--muted);line-height:1.45}
+.acolhe{
+  background:linear-gradient(135deg,#fff 0%,var(--pink-soft) 55%,var(--gold-soft) 100%);
+  border:1px solid var(--line); border-radius:22px; padding:18px 22px;
+  display:grid; gap:10px; box-shadow:var(--shadow);
+}
+.acolhe p{margin:0;font-size:15px;color:var(--ink);line-height:1.55}
+.prog-wrap{display:grid;gap:6px}
+.prog-meta{display:flex;justify-content:space-between;align-items:center;font-size:13px;font-weight:700;color:var(--sage)}
+.prog-bar{height:10px;border-radius:999px;background:rgba(255,255,255,.85);border:1px solid var(--line);overflow:hidden}
+.prog-fill{height:100%;width:0;border-radius:999px;background:linear-gradient(90deg,var(--sage),#6fa084);transition:width .3s ease}
+</style><link rel="stylesheet" href="../cosmos.css?v=4"></head>
 <body>
 <div class="wrap">
   <div class="sitebar" role="navigation" aria-label="Site">
     <a href="/" class="logo">UNI<span>R</span>VERSOS</a>
     <span class="navlinks"><a href="/idiomas/">idiomas</a><a href="/travessia/" aria-current="page">travessia</a><a href="/loja/">tesouros</a><span class="nav-sep" aria-hidden="true" style="opacity:.3">|</span><a href="/paralelos/">paralelos</a><a href="/sobre/">sobre</a></span>
   </div>
-  <p class="crumb"><a href="/travessia/">← Travessia</a></p>
+  <div class="cosmos-back">
+    <a class="cosmos-back-link" href="../">← Voltar ao Painel</a>
+    <span class="cosmos-back-here">🛂 Burocracia &amp; Reta Final</span>
+  </div>
 
   <header class="hero">
     <p class="eyebrow">Unirversos Travessia · antes de embarcar</p>
-    <h1>O que resolver <em>antes de pousar</em></h1>
-    <p class="lede">Passaporte, formulário de imigração e transporte: o essencial, com os links oficiais.</p>
+    <h1>Um passo de cada vez <em>antes de pousar</em></h1>
+    <p class="lede">Respira fundo: a papelada para o Japão parece muita coisa de longe, mas aqui está tudo em ordem tranquila, com links oficiais e salvo na sua conta.</p>
   </header>
+
+  <section class="acolhe" aria-label="Seu progresso">
+    <p id="burMsg">Marque cada item conforme for resolvendo — sem pressa, no seu ritmo.</p>
+    <div class="prog-wrap">
+      <div class="prog-meta"><span id="burCont">0 itens resolvidos</span><span id="burPct">0%</span></div>
+      <div class="prog-bar"><div class="prog-fill" id="burFill"></div></div>
+    </div>
+  </section>
 
   <section class="lista" aria-label="Checklist de entrada">
     <details class="item ob" data-id="passaporte">
@@ -246,6 +277,31 @@ footer a{color:var(--pink);text-decoration:none;display:inline-flex;align-items:
     </ul>
   </section>
 
+  <section class="reta-sec" aria-labelledby="tReta">
+    <div>
+      <span class="c-badge rosa">Reta final · D-30 a D-1</span>
+      <h2 id="tReta" style="margin-top:6px">🧳 Mala e preparo antes de embarcar</h2>
+      <p class="sub">O que costuma derrubar viajantes na última semana. Tudo fica salvo na sua conta junto com a burocracia.</p>
+    </div>
+    <div class="reta-grid">
+      <label class="item reta" data-id="reta-esim"><input type="checkbox"><div><strong>📱 Internet no Japão (eSIM ou Pocket Wi-Fi)</strong><p>Compre e instale o eSIM antes de sair do Brasil (ou reserve a retirada do Pocket Wi-Fi no aeroporto). Sem internet no pouso fica difícil abrir o Visit Japan Web e o Google Maps.</p></div></label>
+      <label class="item reta" data-id="reta-cartao"><input type="checkbox"><div><strong>💳 Cartão internacional (Wise / Nomad) + dinheiro vivo e Suica</strong>
+        <p><b>O Japão ainda usa muito dinheiro vivo (¥) e Suica:</b> embora grandes lojas e redes aceitem cartão, templos, feiras, restaurantes tradicionais, máquinas de ramen e lojinhas de bairro muitas vezes só aceitam <b>espécie ou IC card (Suica / Pasmo / ICOCA)</b>.</p>
+        <p style="margin-top:6px"><b>Dica prática:</b> ative o aviso de viagem no Wise/Nomad antes de sair, saque ienes direto nos caixas <b>7-Eleven (Seven Bank)</b> no Japão (aceitam cartão estrangeiro sem dor de cabeça) e use o cartão para recarregar o <b>Suica no Apple Pay</b> (iPhone) ou no balcão/máquina da estação.</p>
+      </div></label>
+      <label class="item reta" data-id="reta-remedios"><input type="checkbox"><div><strong>💊 Remédios &amp; receita em inglês</strong><p>O Japão é rígido com vários remédios comuns no Brasil (descongestionantes com pseudoefedrina, alguns analgésicos e tarja preta). Leve na embalagem original com receita em inglês.</p></div></label>
+      <label class="item reta" data-id="reta-tomada"><input type="checkbox"><div><strong>🔌 Adaptador de tomada Tipo A (100V)</strong><p>As tomadas japonesas têm dois pinos chatos (padrão EUA) e 100V. Celulares e notebooks funcionam direto com adaptador; confira se secador/chapinha é bivolt.</p></div></label>
+      <label class="item reta" data-id="reta-safety"><input type="checkbox"><div><strong>📲 Instalar o app Safety tips (oficial do Japão)</strong>
+        <p>App gratuito da Agência de Turismo do Japão (JNTO) que envia <b>alertas oficiais em tempo real</b> de terremotos, tufões, chuvas fortes e indica abrigos próximos e o que fazer — disponível em <b>português e inglês</b>. <a href="https://www.jnto.go.jp/safety-tips/eng/app.html" target="_blank" rel="noopener" style="color:var(--pink);font-weight:700">Baixar na página oficial ↗</a></p>
+      </div></label>
+      <label class="item reta" data-id="reta-seguro"><input type="checkbox"><div><strong>🛡️ Seguro viagem para o Japão (essencial!)</strong>
+        <p><b>Não é exigido na imigração, mas é indispensável:</b> o Japão não tem saúde pública gratuita para turistas — uma consulta de emergência facilmente passa de ¥30.000 e uma internação pode custar dezenas de milhares de reais.</p>
+        <p style="margin-top:6px"><b>Seguro do cartão de crédito:</b> muitos cartões (Visa Infinite, Mastercard Black, Elo Nanquim) oferecem seguro gratuito se você comprou a passagem com o cartão — <b>mas é obrigatório emitir o certificado/apólice antes de embarcar</b>.</p>
+        <p style="margin-top:6px"><b>O que conferir na apólice:</b> cobertura médica (recomendado a partir de US$ 60.000), cobertura para neve/esportes se for esquiar, extravio de bagagem e atendimento 24h em português. Depois, salve o número da apólice e o telefone no botão <b>🆘 Estou no Japão</b> lá no <a href="../" style="color:var(--pink);font-weight:700">Painel</a>.</p>
+      </div></label>
+    </div>
+  </section>
+
   <footer>
     <span>unirversos — tudo conectado · Aline Kikuti</span>
     <span>
@@ -255,14 +311,34 @@ footer a{color:var(--pink);text-decoration:none;display:inline-flex;align-items:
   </footer>
 </div>
 <script>
-/* Marcar "já fiz" fica salvo só neste navegador (chave própria: travessiaBurocracia1). */
-(function(){var K='travessiaBurocracia1',s={};try{s=JSON.parse(localStorage.getItem(K)||'{}')||{};}catch(e){}
+/* Marcar "já fiz" salva localmente (travessiaBurocracia1) e sincroniza na conta via CosmosSync. */
+(function(){var K='travessiaBurocracia1';
+function atualizaBarra(){
+  var all=document.querySelectorAll('.item[data-id] input[type=checkbox]'), tot=all.length, ok=0;
+  all.forEach(function(c){if(c.checked)ok++;});
+  var pct=tot?Math.round((ok/tot)*100):0;
+  var f=document.getElementById('burFill'), ct=document.getElementById('burCont'), p=document.getElementById('burPct'), m=document.getElementById('burMsg');
+  if(f)f.style.width=pct+'%';
+  if(ct)ct.textContent=ok+' de '+tot+' itens prontos';
+  if(p)p.textContent=pct+'%';
+  if(m)m.textContent=ok===0?'Marque cada item conforme for resolvendo — sem pressa, no seu ritmo.':(ok===tot?'✨ Tudo pronto! Você já resolveu toda a burocracia e a reta final — agora é só aproveitar a viagem.':'Ótimo progresso! Falta pouco para deixar tudo pronto antes de embarcar.');
+}
+function aplicar(){var s={};try{s=JSON.parse(localStorage.getItem(K)||'{}')||{};}catch(e){}
 document.querySelectorAll('.item[data-id]').forEach(function(a){var c=a.querySelector('input[type=checkbox]');if(!c)return;var id=a.dataset.id;
  c.checked=!!s[id];a.classList.toggle('ok',c.checked);
- c.addEventListener('change',function(){s[id]=c.checked?1:0;a.classList.toggle('ok',c.checked);try{localStorage.setItem(K,JSON.stringify(s));}catch(e){}});});})();
+ if(c._lig)return; c._lig=1;
+ c.addEventListener('change',function(){var cur={};try{cur=JSON.parse(localStorage.getItem(K)||'{}')||{};}catch(e){}
+  cur[id]=c.checked?1:0;a.classList.toggle('ok',c.checked);
+  try{localStorage.setItem(K,JSON.stringify(cur));}catch(e){}
+  atualizaBarra();
+  if(window.CosmosSync)CosmosSync.salvar();
+ });});atualizaBarra();}
+aplicar();
+document.addEventListener('cosmos-sync-ready',aplicar);
+})();
 </script>
+<script type="module" src="../cosmos-sync.js?v=1"></script>
 <script defer src="/menu-ativo.js?v=2"></script><script defer src="/voltar-global.js?v=5"></script>
 <script src="/entrar.js" defer></script>
-<script src="/medir.js?v=1" defer></script>
 </body>
 </html>

@@ -111,9 +111,36 @@ html.embed .pagina{padding-top:8px}
 .ey-t{font-size:12px;letter-spacing:.18em;text-transform:uppercase;color:#8e6a1f;font-weight:700;margin:0}
 
 .pagina{max-width:1060px!important}
-.pagina>*:not(.sitebar):not(.rodape):not(footer){max-width:640px;width:100%}
+.pagina>*:not(.sitebar):not(.rodape):not(footer):not(.cosmos-back):not(.cosmos-teste-bar){max-width:640px;width:100%}
 .pagina h1{font-size:clamp(32px,5.4vw,50px)!important;line-height:1.06}
-</style></head>
+body{background-image:none!important}
+.pesq-bar{display:flex;gap:8px;align-items:center;margin-top:8px}
+.pesq-btn{
+  font-family:var(--f-display);font-weight:700;font-size:15px;cursor:pointer;
+  background:var(--pink);color:#fff;border:0;border-radius:999px;padding:10px 22px;min-height:44px;
+  display:inline-flex;align-items:center;gap:6px;box-shadow:0 6px 16px -10px rgba(194,63,94,.7);
+}
+.pesq-btn:hover{background:var(--pink-d)}
+.maps-fallback{
+  background:#fff;border:1px solid var(--line);border-radius:18px;padding:16px 18px;
+  display:grid;gap:8px;box-shadow:var(--shadow);margin-top:10px;
+}
+.maps-fallback a{
+  display:inline-flex;align-items:center;justify-content:center;gap:6px;text-decoration:none;
+  font-family:var(--f-display);font-weight:700;font-size:14.5px;background:var(--pink);color:#fff;
+  padding:9px 18px;border-radius:999px;width:fit-content;
+}
+.d-guia{display:grid;gap:14px;margin-top:20px}
+.d-guia h2{font-family:var(--f-display);font-weight:800;font-size:20px;margin:0}
+.d-apps{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:10px}
+.d-card{
+  background:#fff;border:1px solid var(--line);border-radius:16px;padding:14px 16px;
+  display:grid;gap:4px;align-content:start;box-shadow:var(--shadow);
+}
+.d-card strong{font-family:var(--f-display);font-weight:800;font-size:15.5px;line-height:1.2}
+.d-card p{margin:0;font-size:13.5px;color:var(--muted);line-height:1.45}
+.d-card.warn{background:var(--gold-soft);border-color:#e7d5a8}
+</style><link rel="stylesheet" href="../cosmos.css?v=4"></head>
 <body>
 <script>if(/[?&]embed=1/.test(location.search))document.documentElement.classList.add('embed');</script>
 <div class="pagina">
@@ -121,7 +148,10 @@ html.embed .pagina{padding-top:8px}
     <a href="/" class="logo">UNI<span>R</span>VERSOS</a>
     <span class="navlinks"><a href="/idiomas/">idiomas</a><a href="/travessia/" aria-current="page">travessia</a><a href="/loja/">tesouros</a><span class="nav-sep" aria-hidden="true" style="opacity:.3">|</span><a href="/paralelos/">paralelos</a><a href="/sobre/">sobre</a></span>
   </div>
-  <p class="crumb"><a href="/travessia/calendario/">← Calendário</a></p>
+  <div class="cosmos-back" style="width:100%;max-width:1060px">
+    <a class="cosmos-back-link" href="../">← Voltar ao Painel</a>
+    <span class="cosmos-back-here">🚆 Deslocamento</span>
+  </div>
   <p class="ey-t">Unirversos Travessia · Deslocamento</p>
   <h1>De <em>→</em> para</h1>
 
@@ -131,19 +161,83 @@ html.embed .pagina{padding-top:8px}
     <label>Para<input id="para" list="lugares" autocomplete="off" placeholder="onde quer ir"></label>
     <datalist id="lugares"></datalist>
   </div>
+  <div class="pesq-bar">
+    <button class="pesq-btn" type="button" id="bPesquisar">🔍 Pesquisar rota</button>
+  </div>
+  <div id="mapsFallback" class="maps-fallback" hidden></div>
   <div class="sug" id="sug" aria-label="Sugestões do seu calendário"></div>
 
   <div id="res" class="res" hidden></div>
   <div id="vazio" class="vazio"></div>
   <section id="minhas" class="minhas" hidden></section>
 
-  <footer class="rodape"><span>unirversos — tudo conectado · Aline Kikuti</span><span><a href="/travessia/navi/">Como usar o Navi</a><a href="/travessia/calendario/">Calendário</a></span></footer>
+  <section class="d-guia" aria-label="Guia prático de transporte no Japão">
+    <h2>📱 Os 4 apps que salvam no Japão</h2>
+    <div class="d-apps">
+      <div class="d-card">
+        <strong>🗺️ Google Maps</strong>
+        <p>Mostra a linha, a <b>plataforma exata</b>, o vagão mais perto da escada e o número da saída da estação.</p>
+      </div>
+      <div class="d-card">
+        <strong>🚆 Japan Travel (NAVITIME)</strong>
+        <p>Ideal para filtrar rotas cobertas pelo <b>JR Pass</b> e conferir tarifas exatas de Shinkansen e trens expressos.</p>
+      </div>
+      <div class="d-card">
+        <strong>🚄 SmartEX</strong>
+        <p>App oficial para comprar Shinkansen (Tóquio ↔ Kyoto ↔ Osaka) no celular e vincular direto ao seu <b>Suica</b>.</p>
+      </div>
+      <div class="d-card warn">
+        <strong>📲 Safety tips (JNTO)</strong>
+        <p>App oficial gratuito de <b>alertas de terremoto, tufão e abrigos</b> em português/inglês — essencial ter instalado no celular. <a href="https://www.jnto.go.jp/safety-tips/eng/app.html" target="_blank" rel="noopener" style="color:var(--pink-d);font-weight:700">Site oficial ↗</a></p>
+      </div>
+    </div>
+
+    <div class="d-card warn">
+      <strong>🧳 Regra da mala grande no Shinkansen (≥ 160 cm)</strong>
+      <p>Se a soma de <b>altura + largura + profundidade</b> da mala ficar entre 160 cm e 250 cm, o Tokaido/Sanyo/Kyushu Shinkansen exige reserva gratuita de <b>assento com espaço de bagagem (Oversized Baggage Seat)</b>. Sem reserva, cobram taxa de ¥1.000 no trem. Dica: para viajar leve, despache a mala com <b>Takkyubin (Yamato)</b>!</p>
+    </div>
+
+    <div class="d-card">
+      <strong>💳 Suica / Pasmo / ICOCA na prática</strong>
+      <p>Encoste o cartão (ou celular com Apple Pay) na catraca ao <b>entrar e ao sair</b> — o valor é calculado automaticamente. Vale para metrô, trens locais, ônibus, konbini e máquinas de bebida. <b>Atenção:</b> não serve sozinho para entrar no Shinkansen (a menos que você vincule o bilhete pelo SmartEX).</p>
+    </div>
+  </section>
+
+  <footer class="rodape"><span>unirversos — tudo conectado · Aline Kikuti</span><span><a href="../navi/">Como usar o Navi</a><a href="../calendario/">Calendário</a></span></footer>
 </div>
 <script src="/travessia/calendario/geo.js?v=7"></script>
 <script src="/travessia/agendamentos/regras.js?v=3"></script>
 <script src="/travessia/calendario/avisos.js?v=4"></script>
 <script src="/travessia/deslocamento/deslocamento.js?v=20"></script>
+<script>
+(function(){
+  var de=document.getElementById('de'), pa=document.getElementById('para'), bt=document.getElementById('bPesquisar'), fb=document.getElementById('mapsFallback'), res=document.getElementById('res');
+  if(!de||!pa||!bt)return;
+  function pesquisar(){
+    var o=(de.value||'').trim(), d=(pa.value||'').trim();
+    if(!o||!d){
+      if(window.CosmosUI) CosmosUI.toast('Preencha os campos "De" e "Para" para pesquisar.', 'erro');
+      return;
+    }
+    de.dispatchEvent(new Event('input',{bubbles:true}));
+    pa.dispatchEvent(new Event('input',{bubbles:true}));
+    de.dispatchEvent(new Event('change',{bubbles:true}));
+    pa.dispatchEvent(new Event('change',{bubbles:true}));
+    setTimeout(function(){
+      var url='https://www.google.com/maps/dir/?api=1&origin='+encodeURIComponent(o+', Japão')+'&destination='+encodeURIComponent(d+', Japão')+'&travelmode=transit';
+      fb.hidden=false;
+      fb.innerHTML='<strong>🚆 Rota em tempo real (trens e metrô)</strong>'+
+        '<span style="font-size:13.5px;color:var(--muted)">'+o.replace(/</g,'&lt;')+' → '+d.replace(/</g,'&lt;')+'</span>'+
+        '<a href="'+url+'" target="_blank" rel="noopener">Abrir trajeto no Google Maps ↗</a>';
+      if(res&&!res.hidden) res.scrollIntoView({behavior:'smooth',block:'nearest'});
+      else fb.scrollIntoView({behavior:'smooth',block:'nearest'});
+    }, 120);
+  }
+  bt.addEventListener('click', pesquisar);
+  [de,pa].forEach(function(inp){ inp.addEventListener('keydown',function(e){ if(e.key==='Enter'){ e.preventDefault(); pesquisar(); } }); });
+})();
+</script>
+<script type="module" src="../cosmos-sync.js?v=1"></script>
 <script src="/entrar.js" defer></script>
-<script src="/medir.js?v=1" defer></script>
 </body>
 </html>
