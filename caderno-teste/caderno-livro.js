@@ -36,6 +36,11 @@
     '.lv-fer button[aria-pressed="true"]{border-color:#c23f5e;background:#fdf1f4}.lv-fer button:disabled,.lv-nav button:disabled{opacity:.35;cursor:default}',
     '.lv-fer svg,.lv-nav svg{width:18px;height:18px;stroke:currentColor;fill:none;stroke-width:1.7;stroke-linecap:round;stroke-linejoin:round}',
     '.lv-fer .cor{width:30px;min-width:30px;height:30px;border-radius:50%;padding:0;border-width:2px}.lv-fer .cor i{display:block;width:16px;height:16px;border-radius:50%}',
+    '.lv-tcor{display:inline-flex;align-items:center;gap:5px;padding:3px 6px;border-radius:99px;background:#fff;border:1.5px solid #ecdadd;min-height:40px}',
+    '.lv-tcor button{cursor:pointer;display:inline-grid;place-items:center;width:26px;height:26px;border-radius:50%;border:2px solid transparent;background:transparent;padding:0}',
+    '.lv-tcor button i{display:block;width:15px;height:15px;border-radius:50%}',
+    '.lv-tcor button[aria-pressed="true"]{border-color:#c23f5e;background:#fdf1f4}',
+    '.lv.leitura .lv-tcor,.lv.caneta .lv-tcor{display:none!important}',
     '.lv-fer .esp i{display:block;border-radius:50%;background:#3a2b38}.lv-sep{width:1px;height:24px;background:#ecdadd;margin:0 2px}',
     '.lv button:focus-visible,.lv input:focus-visible,.lv textarea:focus-visible{outline:3px solid #b7a6dc;outline-offset:2px}',
     '.lv-fotoBt,.lv-dlBt,.lv-estBt{font:inherit;cursor:pointer;border:1.5px solid #ecdadd;background:#fff;color:#3a2b38;font-weight:700;font-size:13.5px;padding:5px 14px;border-radius:99px;min-height:40px;display:inline-flex;align-items:center;gap:6px}',
@@ -249,6 +254,8 @@
       '<div class="lv-modo" role="group" aria-label="Como escrever"><button type="button" data-m="txt" aria-pressed="true">Texto</button><button type="button" data-m="pen" aria-pressed="false">Caneta</button></div>' +
       '<select class="lv-papSel" aria-label="Modelo de papel da página" title="Modelo de papel">' +
       PAPEIS.map(function (p) { return '<option value="' + p.id + '">📄 ' + p.nome + '</option>'; }).join('') + '</select>' +
+      '<div class="lv-tcor" role="group" aria-label="Cor da fonte">' +
+      CORES.map(function (c, i) { return '<button type="button" data-tc="' + i + '" aria-pressed="' + (i === 0) + '" aria-label="Fonte ' + NOMES[i] + '" title="Cor da fonte: ' + NOMES[i] + '"><i style="background:' + c + '"></i></button>'; }).join('') + '</div>' +
       '<button type="button" class="lv-fotoBt" aria-label="Colocar uma foto numa página">📷 Foto</button><input type="file" class="lv-fotoIn" accept="image/*" hidden>' +
       '<button type="button" class="lv-estBt" aria-pressed="false" aria-label="Estudar palavras desta anotação como flashcards" title="Modo estudo / Flashcards">🧠 Estudar</button>' +
       '<button type="button" class="lv-dlBt" data-exp="png" aria-label="Baixar página como imagem PNG" title="Baixar página como imagem PNG">↓ PNG</button>' +
@@ -273,6 +280,7 @@
       '<div class="lv-prof" hidden><button type="button" class="lv-pf" aria-pressed="false"></button><span class="lv-pfs" aria-live="polite"></span></div>' +
       '<p class="lv-dica" hidden>Com a caneta em uso, a palma da mão não risca a folha. Para virar a página, use as setas.</p>';
     var fBt = el.querySelector('.lv-fotoBt'), fIn = el.querySelector('.lv-fotoIn'), papSel = el.querySelector('.lv-papSel'),
+      tcorBox = el.querySelector('.lv-tcor'),
       dlPng = el.querySelector('[data-exp="png"]'), dlPdf = el.querySelector('[data-exp="pdf"]'),
       estBt = el.querySelector('.lv-estBt'), estBox = el.querySelector('.lv-est');
     papSel.onchange = function () {
@@ -324,8 +332,8 @@
     /* ---------- dados ---------- */
     function nota() { return id ? C.obter(id) : null; }
     function lePags(n) {
-      var p = [{ x: n.x || '', s: Array.isArray(n.s) ? n.s : [], f: n.f || null, pap: n.pap || null }];
-      (Array.isArray(n.pp) ? n.pp : []).forEach(function (q) { p.push({ x: (q && q.x) || '', s: (q && Array.isArray(q.s)) ? q.s : [], f: (q && q.f) || null, pap: (q && q.pap) || null }); });
+      var p = [{ x: n.x || '', s: Array.isArray(n.s) ? n.s : [], f: n.f || null, pap: n.pap || null, tc: n.tc || 0 }];
+      (Array.isArray(n.pp) ? n.pp : []).forEach(function (q) { p.push({ x: (q && q.x) || '', s: (q && Array.isArray(q.s)) ? q.s : [], f: (q && q.f) || null, pap: (q && q.pap) || null, tc: (q && q.tc) || 0 }); });
       return p;
     }
     function salva(campos) {
@@ -333,12 +341,24 @@
       if (opc.aoMudar) opc.aoMudar(n);
     }
     function salvaPag(i) { if (i === 0) salva({ x: pags[0].x, s: pags[0].s }); else salva({ pp: pags.slice(1).map(pp1) }); }
-    function pp1(q) { var o = { x: q.x, s: q.s }; if (q.f) o.f = q.f; if (q.pap) o.pap = q.pap; return o; }
-    function salvaTudo() { salva({ x: pags[0].x, s: pags[0].s, f: pags[0].f || null, pap: pags[0].pap || null, pp: pags.slice(1).map(pp1) }); }
+    function pp1(q) { var o = { x: q.x, s: q.s }; if (q.f) o.f = q.f; if (q.pap) o.pap = q.pap; if (q.tc) o.tc = q.tc; return o; }
+    function salvaTudo() { salva({ x: pags[0].x, s: pags[0].s, f: pags[0].f || null, pap: pags[0].pap || null, tc: pags[0].tc || 0, pp: pags.slice(1).map(pp1) }); }
     function aplicaPapel(d, pap) {
       if (!d) return;
       d.classList.remove('pap-kanji', 'pap-cornell', 'pap-pontilhado', 'pap-branco');
       if (pap && pap !== 'pautado') d.classList.add('pap-' + pap);
+    }
+    function aplicaCorTexto(d, tc) {
+      if (!d) return;
+      var tx = d.querySelector('.lv-tx');
+      if (tx) tx.style.color = CORES[tc || 0] || CORES[0];
+    }
+    function syncCorTextoBar() {
+      if (!tcorBox || !pags[ini]) return;
+      var cur = pags[ini].tc || 0;
+      Array.prototype.forEach.call(tcorBox.querySelectorAll('button'), function (b) {
+        b.setAttribute('aria-pressed', String(+b.dataset.tc === cur));
+      });
     }
 
     /* ---------- páginas ---------- */
@@ -366,6 +386,7 @@
           (i > 0 ? '<button type="button" class="lv-del" aria-label="Apagar a página ' + (i + 1) + '">apagar página</button>' : '') +
           (pg.f ? '<button type="button" class="lv-rf" aria-label="Tirar a foto da página ' + (i + 1) + '">tirar foto</button>' : '');
         d.querySelector('textarea').value = pg.x;
+        aplicaCorTexto(d, pg.tc);
         livro.appendChild(d);
         liga(d, i);
         if (pg.f) carregaFoto(d, pg.f);
@@ -407,6 +428,7 @@
       var ult = Math.min(pags.length, ini + (dupla ? 2 : 1));
       lbl.textContent = (dupla && ult > ini + 1 ? 'páginas ' + (ini + 1) + '–' + ult : 'página ' + (ini + 1)) + ' de ' + pags.length;
       if (papSel && pags[ini]) papSel.value = pags[ini].pap || 'pautado';
+      syncCorTextoBar();
       nav.querySelector('[data-n="-1"]').disabled = ini <= 0;
       nav.querySelector('[data-n="1"]').disabled = ini + (dupla ? 2 : 1) >= pags.length;
       if (anim) { livro.classList.remove('vai', 'volta'); void livro.offsetWidth; livro.classList.add(anim > 0 ? 'vai' : 'volta'); }
@@ -615,6 +637,7 @@
         ty += 110;
       }
       if (p.x) {
+        ctx.fillStyle = CORES[p.tc || 0] || CORES[0];
         ctx.font = '500 44px "Zen Maru Gothic", system-ui, sans-serif';
         var linhas = p.x.split('\n');
         linhas.forEach(function (ln) {
@@ -787,6 +810,14 @@
     barra.addEventListener('click', function (e) {
       var b = e.target.closest('button'); if (!b) return;
       if (b.dataset.m) { setModo(b.dataset.m); return; }
+      if (b.dataset.tc != null) {
+        if (!id || !pags[ini]) return;
+        pags[ini].tc = +b.dataset.tc;
+        aplicaCorTexto(pg(ini), pags[ini].tc);
+        syncCorTextoBar();
+        salvaTudo();
+        return;
+      }
       if (b.dataset.c != null) { cor = +b.dataset.c; if (ferr === 'bor') { ferr = 'pen'; pressiona('[data-f="pen"],[data-f="mar"],[data-f="bor"]', 'data-f', 'pen'); el.classList.remove('borracha'); } pressiona('.cor', 'data-c', cor); return; }
       if (b.dataset.e != null) { esp = +b.dataset.e; pressiona('.esp', 'data-e', esp); return; }
       var f = b.dataset.f;
