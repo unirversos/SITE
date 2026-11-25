@@ -208,6 +208,19 @@ footer a{color:var(--pink);text-decoration:none;display:inline-flex;align-items:
 .wrap{max-width:1060px!important}
 .tape{display:none!important}
 body{background-image:none!important}
+.guia-acolhe{
+  background:linear-gradient(135deg,#fff 0%,var(--sage-soft) 55%,var(--gold-soft) 100%);
+  border:1px solid var(--line); border-radius:20px; padding:16px 20px;
+  display:grid; gap:10px; box-shadow:var(--shadow);
+}
+.guia-acolhe p{margin:0;font-size:14.5px;color:var(--ink);line-height:1.55}
+.guia-atalhos{display:flex;flex-wrap:wrap;gap:6px}
+.guia-atalhos button{
+  font:inherit; font-family:var(--f-display); font-weight:700; font-size:13px;
+  background:#fff; color:var(--ink); border:1px solid var(--line); border-radius:999px;
+  padding:5px 12px; cursor:pointer; min-height:32px;
+}
+.guia-atalhos button:hover{border-color:var(--pink);color:var(--pink-d);background:var(--pink-soft)}
 </style><link rel="stylesheet" href="../cosmos.css?v=4"></head>
 <body>
 <a class="pular" href="#dia">Pular para o guia</a>
@@ -229,6 +242,11 @@ body{background-image:none!important}
     <p class="lede">Da véspera ao último trem. <span class="so-tela">Toque num momento do dia para abrir.</span></p>
     <span class="selo" aria-hidden="true">旅</span>
   </header>
+
+  <section class="guia-acolhe no-print" aria-label="Boas-vindas e atalhos rápidos">
+    <p>🍵 <b>Fique tranquilo:</b> você não precisa falar japonês fluente nem decorar mil regras para ser bem recebido no Japão. Aqui está só o essencial do dia a dia — com carinho e frases prontas para mostrar ou falar na hora.</p>
+    <div class="guia-atalhos" id="guiaAtalhos"></div>
+  </section>
 
   <main class="dia" id="dia">
 
@@ -470,6 +488,19 @@ body{background-image:none!important}
 })();
 </script>
 <script defer src="/menu-ativo.js?v=2"></script><script defer src="/voltar-global.js?v=5"></script>
+<script>
+(function(){
+  var box=document.getElementById('guiaAtalhos'); if(!box)return;
+  document.querySelectorAll('details.parada').forEach(function(d){
+    var h=d.querySelector('h2'), e=d.querySelector('.selo.emo');
+    if(!h)return;
+    var b=document.createElement('button'); b.type='button';
+    b.textContent=(e?e.textContent.trim()+' ':'')+h.textContent.trim();
+    b.onclick=function(){ d.open=true; d.scrollIntoView({behavior:'smooth',block:'start'}); };
+    box.appendChild(b);
+  });
+})();
+</script>
 <script type="module" src="../cosmos-sync.js?v=1"></script>
 <script src="/entrar.js" defer></script>
 </body>

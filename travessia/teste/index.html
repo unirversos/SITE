@@ -465,7 +465,10 @@ footer a:hover{text-decoration:underline}
             <span><i style="background:var(--pink)"></i> Tem eventos</span>
             <span><i style="background:var(--sage)"></i> Hotel confirmado</span>
             <span><i style="background:var(--gold)"></i> Sem hotel</span>
-            <span style="margin-left:auto">Toque em um dia para expandir</span>
+          </div>
+          <div class="day-foot">
+            <span style="font-size:12.5px;color:var(--muted)">Toque em um dia para ver o roteiro</span>
+            <a class="btn sm pri" href="./calendario/">⛶ Expandir calendário →</a>
           </div>
         </div>
       </div>
@@ -779,7 +782,11 @@ function trocarModoPainel(m){
 
 function renderMiniCal(){
   if(!V_ATUAL) return;
-  if(!mesCal) mesCal = (diaSel || V_ATUAL.ini).slice(0,7);
+  var minMes = V_ATUAL.ini.slice(0,7), maxMes = V_ATUAL.fim.slice(0,7);
+  if(!mesCal || mesCal < minMes) mesCal = minMes;
+  if(mesCal > maxMes) mesCal = maxMes;
+  $('#mcPrev').disabled = (mesCal <= minMes);
+  $('#mcNext').disabled = (mesCal >= maxMes);
   var y = +mesCal.slice(0,4), m = +mesCal.slice(5,7);
   $('#mcTit').textContent = MES_LONG[m-1] + ' de ' + y;
   var cal = V_ATUAL.cal || {};
@@ -1222,11 +1229,17 @@ function render(){
 $('#vBtnDia').addEventListener('click', function(){ trocarModoPainel('dia'); });
 $('#vBtnCal').addEventListener('click', function(){ mesCal = (diaSel || (V_ATUAL&&V_ATUAL.ini) || '').slice(0,7); trocarModoPainel('cal'); });
 $('#mcPrev').addEventListener('click', function(){
-  if(!mesCal) return; var y=+mesCal.slice(0,4), m=+mesCal.slice(5,7)-1;
+  if(!mesCal || !V_ATUAL) return;
+  var minMes = V_ATUAL.ini.slice(0,7);
+  if(mesCal <= minMes) return;
+  var y=+mesCal.slice(0,4), m=+mesCal.slice(5,7)-1;
   if(m<1){ m=12; y--; } mesCal = y+'-'+String(m).padStart(2,'0'); renderMiniCal();
 });
 $('#mcNext').addEventListener('click', function(){
-  if(!mesCal) return; var y=+mesCal.slice(0,4), m=+mesCal.slice(5,7)+1;
+  if(!mesCal || !V_ATUAL) return;
+  var maxMes = V_ATUAL.fim.slice(0,7);
+  if(mesCal >= maxMes) return;
+  var y=+mesCal.slice(0,4), m=+mesCal.slice(5,7)+1;
   if(m>12){ m=1; y++; } mesCal = y+'-'+String(m).padStart(2,'0'); renderMiniCal();
 });
 $('#mcGrid').addEventListener('click', function(e){

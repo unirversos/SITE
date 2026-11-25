@@ -171,6 +171,16 @@ body{background-image:none!important}
 .item.reta input[type=checkbox]{width:20px;height:20px;margin-top:3px;accent-color:var(--sage);cursor:pointer;flex:none}
 .item.reta strong{display:block;font-family:var(--f-display);font-weight:800;font-size:16.5px;line-height:1.25}
 .item.reta p{margin:2px 0 0;font-size:14px;color:var(--muted);line-height:1.45}
+.acolhe{
+  background:linear-gradient(135deg,#fff 0%,var(--pink-soft) 55%,var(--gold-soft) 100%);
+  border:1px solid var(--line); border-radius:22px; padding:18px 22px;
+  display:grid; gap:10px; box-shadow:var(--shadow);
+}
+.acolhe p{margin:0;font-size:15px;color:var(--ink);line-height:1.55}
+.prog-wrap{display:grid;gap:6px}
+.prog-meta{display:flex;justify-content:space-between;align-items:center;font-size:13px;font-weight:700;color:var(--sage)}
+.prog-bar{height:10px;border-radius:999px;background:rgba(255,255,255,.85);border:1px solid var(--line);overflow:hidden}
+.prog-fill{height:100%;width:0;border-radius:999px;background:linear-gradient(90deg,var(--sage),#6fa084);transition:width .3s ease}
 </style><link rel="stylesheet" href="../cosmos.css?v=4"></head>
 <body>
 <div class="wrap">
@@ -186,9 +196,17 @@ body{background-image:none!important}
 
   <header class="hero">
     <p class="eyebrow">Unirversos Travessia · antes de embarcar</p>
-    <h1>O que resolver <em>antes de pousar</em></h1>
-    <p class="lede">Passaporte, formulário de imigração e transporte: o essencial, com os links oficiais.</p>
+    <h1>Um passo de cada vez <em>antes de pousar</em></h1>
+    <p class="lede">Respira fundo: a papelada para o Japão parece muita coisa de longe, mas aqui está tudo em ordem tranquila, com links oficiais e salvo na sua conta.</p>
   </header>
+
+  <section class="acolhe" aria-label="Seu progresso">
+    <p id="burMsg">Marque cada item conforme for resolvendo — sem pressa, no seu ritmo.</p>
+    <div class="prog-wrap">
+      <div class="prog-meta"><span id="burCont">0 itens resolvidos</span><span id="burPct">0%</span></div>
+      <div class="prog-bar"><div class="prog-fill" id="burFill"></div></div>
+    </div>
+  </section>
 
   <section class="lista" aria-label="Checklist de entrada">
     <details class="item ob" data-id="passaporte">
@@ -294,6 +312,16 @@ body{background-image:none!important}
 <script>
 /* Marcar "já fiz" salva localmente (travessiaBurocracia1) e sincroniza na conta via CosmosSync. */
 (function(){var K='travessiaBurocracia1';
+function atualizaBarra(){
+  var all=document.querySelectorAll('.item[data-id] input[type=checkbox]'), tot=all.length, ok=0;
+  all.forEach(function(c){if(c.checked)ok++;});
+  var pct=tot?Math.round((ok/tot)*100):0;
+  var f=document.getElementById('burFill'), ct=document.getElementById('burCont'), p=document.getElementById('burPct'), m=document.getElementById('burMsg');
+  if(f)f.style.width=pct+'%';
+  if(ct)ct.textContent=ok+' de '+tot+' itens prontos';
+  if(p)p.textContent=pct+'%';
+  if(m)m.textContent=ok===0?'Marque cada item conforme for resolvendo — sem pressa, no seu ritmo.':(ok===tot?'✨ Tudo pronto! Você já resolveu toda a burocracia e a reta final — agora é só aproveitar a viagem.':'Ótimo progresso! Falta pouco para deixar tudo pronto antes de embarcar.');
+}
 function aplicar(){var s={};try{s=JSON.parse(localStorage.getItem(K)||'{}')||{};}catch(e){}
 document.querySelectorAll('.item[data-id]').forEach(function(a){var c=a.querySelector('input[type=checkbox]');if(!c)return;var id=a.dataset.id;
  c.checked=!!s[id];a.classList.toggle('ok',c.checked);
@@ -301,8 +329,9 @@ document.querySelectorAll('.item[data-id]').forEach(function(a){var c=a.querySel
  c.addEventListener('change',function(){var cur={};try{cur=JSON.parse(localStorage.getItem(K)||'{}')||{};}catch(e){}
   cur[id]=c.checked?1:0;a.classList.toggle('ok',c.checked);
   try{localStorage.setItem(K,JSON.stringify(cur));}catch(e){}
+  atualizaBarra();
   if(window.CosmosSync)CosmosSync.salvar();
- });});}
+ });});atualizaBarra();}
 aplicar();
 document.addEventListener('cosmos-sync-ready',aplicar);
 })();
