@@ -161,7 +161,7 @@ function falaFila(itens,fallback){
   const cair=()=>{ if(parou) return; parou=true; audioAtual=null; speakTTS(fallback); };
   const prox=()=>{ if(parou) return; if(i>=itens.length){ audioAtual=null; return; } const it=itens[i++];
     if(it.tts){ if(!window.speechSynthesis) return prox(); const u=new SpeechSynthesisUtterance(it.tts); u.lang='ja-JP'; u.rate=.85*(window.UniVel?UniVel.get():1); if(jaVoice) u.voice=jaVoice; u.onend=prox; u.onerror=prox; speechSynthesis.speak(u); return; }
-    try{ const a=new Audio(base+it.id+'.mp3'); audioAtual=a; if(window.UniVel) UniVel.aplica(a); a.onerror=cair; a.onended=()=>{ if(audioAtual===a) prox(); }; const pr=a.play(); if(pr&&pr.catch) pr.catch(cair); }catch(e){ cair(); } };
+    try{ const a=new Audio(it.src||(base+it.id+'.mp3')); audioAtual=a; if(window.UniVel) UniVel.aplica(a); a.onerror=cair; a.onended=()=>{ if(audioAtual===a) prox(); }; const pr=a.play(); if(pr&&pr.catch) pr.catch(cair); }catch(e){ cair(); } };
   prox();
 }
 

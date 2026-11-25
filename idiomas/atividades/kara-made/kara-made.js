@@ -12,7 +12,7 @@ const esc = s => String(s == null ? '' : s).replace(/[&<>"']/g, c => ({ '&':'&am
 /* compara frases sem ligar para espaços, números largos/estreitos e pontuação final */
 const norm = s => String(s || '').replace(/[０-９]/g, d => String.fromCharCode(d.charCodeAt(0) - 0xFEE0)).replace(/[\s　、,。.！!]/g, '').trim();
 
-let C = null, R = {}, alvo = '', souProf = false, liberado = false, conferido = false, modoDig = {};
+let verTradPlaca = false, C = null, R = {}, alvo = '', souProf = false, liberado = false, conferido = false, modoDig = {};
 const total = () => C.lacunas.length + C.vf.length + C.montar.length;
 
 /* ---------- respostas e correção ---------- */
@@ -72,13 +72,14 @@ function pinta(){
       <p class="inst">Escolha <b lang="ja">から</b> ou <b lang="ja">まで</b> em cada lacuna.</p>${C.lacunas.map(lacuna).join('')}</section>
     <section class="sec" style="--c:var(--gold)"><div class="sec-h"><span class="n">02</span><h2>Contexto real: leia a placa</h2></div>
       <p class="inst">Veja o horário de uma cafeteria em Tóquio e marque Verdadeiro ou Falso.</p>
-      <div class="placa"><div class="tp">☕ <span lang="ja">${esc(p.nome)}</span> · ${esc(p.sub)}</div><h3 lang="ja">${esc(p.tit)}</h3>
-        <table>${p.linhas.map(l => `<tr><td><span lang="ja">${esc(l[0])}</span><small>${esc(l[1])}</small></td><td class="h" lang="ja">${esc(l[2])}</td></tr>`).join('')}</table></div>
+      <div class="placa${verTradPlaca ? ' com-trad' : ''}"><div class="tp">☕ <span lang="ja">${esc(p.nome)}</span> · ${esc(p.sub)}</div><h3 lang="ja">${esc(p.tit)}</h3>
+        <table>${p.linhas.map(l => `<tr><td><span lang="ja">${esc(l[0])}</span><small class="trd">${esc(l[1])}</small></td><td class="h" lang="ja">${esc(l[2])}</td></tr>`).join('')}</table><button type="button" class="ver" data-trp>${verTradPlaca ? 'ocultar tradução' : 'ver tradução'}</button></div>
       ${C.vf.map(verdFalso).join('')}</section>
     <section class="sec" style="--c:var(--terra)"><div class="sec-h"><span class="n">03</span><h2>Desafio: monte a frase em japonês</h2></div>
       <p class="inst">Toque nos blocos na ordem certa (ou digite, se preferir). Tem blocos sobrando de propósito.</p>${C.montar.map(montar).join('')}</section>
     <div id="nota"></div>
-    <div class="fim">${souProf ? '<span class="salvo">Você está vendo as respostas do aluno (só leitura).</span>' : `<button type="button" class="btn" id="verifica">✓ Verificar respostas</button><button type="button" class="btn claro" id="refaz">↺ Refazer</button><span class="salvo" id="st" aria-live="polite"></span>`}</div>`;
+    <div class="fim">${souProf ? '<span class="salvo">Você está vendo as respostas do aluno (só leitura).</span>' : `<button type="button" class="btn" id="verifica">✓ Verificar respostas</button><button type="button" class="btn claro" id="refaz">↺ Refazer</button><span class="salvo" id="st" aria-live="polite"></span>`}</div>
+    <p style="margin-top:18px"><a class="btn claro" href="/idiomas/atividades/" style="display:inline-block;text-decoration:none">← Voltar para a sala de atividades</a></p>`;
   pintaProg(); pintaNota();
   if ($('verifica')) $('verifica').onclick = verifica;
   if ($('refaz')) $('refaz').onclick = () => { if (!confirm('Apagar as respostas e começar de novo?')) return; R = {}; conferido = false; pinta(); guarda(); };
@@ -87,6 +88,25 @@ function pintaNota(){
   if (!conferido) { $('nota').innerHTML = ''; return; }
   const { ac } = contagem(), t = total();
   $('nota').innerHTML = `<div class="nota"><b>${ac} de ${t}</b> certas. ${ac === t ? 'Perfeito! 🎉' : 'Veja as correções em cada questão e tente de novo.'}</div>`;
+}
+
+/* ---------- chuva de sakura (ao acertar) ---------- */
+function chuvaSakura(n){
+  try { if (matchMedia('(prefers-reduced-motion: reduce)').matches) return; } catch (e) {}
+  if (!document.getElementById('sk-css')) {
+    const st = document.createElement('style'); st.id = 'sk-css';
+    st.textContent = '.sk-box{position:fixed;inset:0;pointer-events:none;overflow:hidden;z-index:60}.sk-p{position:absolute;top:-30px;background:linear-gradient(135deg,#f9c9d8,#ef8fae);border-radius:150% 0 150% 0;opacity:.9;animation:skCai linear forwards}@keyframes skCai{0%{transform:translate3d(0,0,0) rotate(0)}100%{transform:translate3d(var(--dx),110vh,0) rotate(var(--rot))}}';
+    document.head.appendChild(st);
+  }
+  const box = document.createElement('div'); box.className = 'sk-box'; box.setAttribute('aria-hidden', 'true');
+  let fim = 0;
+  for (let i = 0; i < n; i++) {
+    const p = document.createElement('i'), t = 3 + Math.random() * 3, d = Math.random() * 1.8, w = 9 + Math.random() * 10;
+    p.className = 'sk-p'; fim = Math.max(fim, t + d);
+    p.style.cssText = `left:${Math.random() * 100}%;width:${w}px;height:${w * .75}px;animation-duration:${t}s;animation-delay:${d}s;--dx:${(Math.random() * 160 - 80)}px;--rot:${(Math.random() * 720 - 360)}deg`;
+    box.appendChild(p);
+  }
+  document.body.appendChild(box); setTimeout(() => box.remove(), (fim + .5) * 1000);
 }
 
 /* ---------- interação (só o aluno) ---------- */
@@ -99,6 +119,7 @@ $('conteudo').addEventListener('input', e => {
 });
 $('conteudo').addEventListener('click', e => {
   if (e.target.closest('[data-ro]')) { e.target.closest('.q').classList.toggle('vis'); const b = e.target.closest('[data-ro]'); b.textContent = b.textContent === 'ver romaji' ? 'ocultar romaji' : 'ver romaji'; return; }
+  const tp = e.target.closest('[data-trp]'); if (tp) { verTradPlaca = !verTradPlaca; tp.closest('.placa').classList.toggle('com-trad', verTradPlaca); tp.textContent = verTradPlaca ? 'ocultar tradução' : 'ver tradução'; return; }
   if (souProf) return;
   const v = e.target.closest('[data-v]'); if (v) { R['v' + v.dataset.v] = v.dataset.val === 'true'; return mexeu(); }
   const po = e.target.closest('[data-poe]'); if (po) { const i = +po.dataset.poe; R['mb' + i] = usados(i).concat(+po.dataset.b); R['m' + i] = R['mb' + i].map(b => C.montar[i].blocos[b]).join(' '); return mexeu(); }
@@ -120,6 +141,7 @@ async function guarda(){
 }
 async function verifica(){
   conferido = true; pinta();
+  { const { ac } = contagem(), t = total(); if (ac > 0) chuvaSakura(ac === t ? 80 : Math.min(40, 8 + ac * 3)); }
   $('st').textContent = 'salvando…';
   $('st').textContent = (await guarda()) ? 'salvo ✓ a professora vê o resultado' : '⚠️ não salvou na nuvem · guardado neste aparelho';
   $('nota').scrollIntoView({ behavior: 'smooth', block: 'center' });

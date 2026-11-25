@@ -188,6 +188,12 @@ h1 .jp{font-family:var(--f-body);font-weight:700;font-size:.5em;color:var(--pink
 .passe-form h2{font-family:var(--f-display);font-size:22px;margin:0;line-height:1.2}
 .passe-form h2 span{display:block;font-family:var(--f-body);font-size:13px;color:var(--muted);font-weight:500}
 .field{display:grid;gap:4px;font-size:13px;color:var(--muted)}
+.minha-voz{display:grid;gap:8px;border:1.5px solid var(--line);border-left:4px solid var(--sage);border-radius:12px;padding:10px 12px;background:var(--paper)}
+.minha-voz b{color:var(--ink);font-size:14px}.minha-voz .mv-btns{display:flex;flex-wrap:wrap;gap:8px}
+.minha-voz .btn.gravando{background:var(--pink);border-color:var(--pink);color:#fff;animation:speakPulse 1.3s ease-in-out infinite}
+.minha-voz .mv-slot{display:grid;gap:6px;border-top:1px solid var(--line);padding-top:8px}.minha-voz .mv-tit{margin:0}.minha-voz .mv-tit small{color:var(--muted);font-size:12px;font-weight:500}
+.minha-voz .mv-uso{font-size:13px;display:flex;flex-wrap:wrap;gap:6px 14px;align-items:center}.minha-voz .mv-uso label{display:flex;gap:5px;align-items:center}
+.minha-voz .mv-st{font-size:12.5px;min-height:1.3em}.minha-voz .mv-modelo{font-size:13px;color:var(--ink);margin:0}
 .field input{font:inherit;font-size:16px;color:var(--ink);background:var(--paper);border:1.5px solid var(--line);border-radius:12px;padding:9px 12px;min-width:0}
 .field input:focus-visible{outline:3px solid var(--lavender);outline-offset:1px}
 .prons{display:flex;flex-wrap:wrap;gap:8px}
@@ -544,6 +550,24 @@ body.show-pt #cTitle small{display:block}
             <div class="prons" id="prons"></div>
           </div>
           <p class="tip" id="pronTip" style="margin:0"></p>
+          <div class="minha-voz" id="minhaVoz">
+            <b>🎙️ Sua voz</b>
+            <span>Grave com a sua própria voz, no lugar da voz de robô. Fica salva na sua conta. Escolha o que gravar:</span>
+            <div class="mv-slot" data-slot="completa">
+              <p class="mv-tit"><b>Apresentação completa</b> <small>até 30 s · toca no lugar de todo o 自己紹介</small></p>
+              <p class="mv-modelo" id="mvModelo" lang="ja" hidden></p>
+              <div class="mv-btns"><button class="btn" type="button" data-a="grava">⏺ Gravar</button><button class="btn" type="button" data-a="ouve" disabled>▶ Ouvir</button><button class="btn" type="button" data-a="apaga" disabled>🗑 Apagar</button></div>
+            </div>
+            <div class="mv-slot" data-slot="nome">
+              <p class="mv-tit"><b>Só o meu nome</b> <small>até 8 s · entra no meio da apresentação em japonês</small></p>
+              <div class="mv-btns"><button class="btn" type="button" data-a="grava">⏺ Gravar</button><button class="btn" type="button" data-a="ouve" disabled>▶ Ouvir</button><button class="btn" type="button" data-a="apaga" disabled>🗑 Apagar</button></div>
+            </div>
+            <div class="mv-uso" id="mvUso" hidden>Tocar no 自己紹介:
+              <label><input type="radio" name="mvUso" value="completa"> apresentação completa</label>
+              <label><input type="radio" name="mvUso" value="nome"> só o nome</label>
+            </div>
+            <span class="mv-st" id="mvSt" aria-live="polite"></span>
+          </div>
         </div>
         <div style="display:grid;gap:10px">
           <article class="card" id="card" aria-label="Carteirinha de aventureiro">
@@ -616,10 +640,10 @@ body.show-pt #cTitle small{display:block}
 <div class="lv-toast" id="lvToast" role="status" hidden></div>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
-<script src="/idiomas/dados/avatar.js?v=20261016d"></script>
+<script src="/idiomas/dados/avatar.js?v=20261125a"></script>
 <script src="/idiomas/dados/velocidade-voz.js?v=1"></script>
 <script src="/idiomas/dados/audio-mapa.js?v=4a8ffd4b"></script>
-<script src="/idiomas/dados/atelie-dados.js?v=20261112a"></script>
+<script src="/idiomas/dados/atelie-dados.js?v=20261125a"></script>
 <script>
 /* ---------- estado: avatar (utopiaAvatar1) + progresso do jogo (utopiaSave1) ---------- */
 const AV=UtopiaAvatar, GKEY='utopiaSave1'; AV.injectCSS();
@@ -925,10 +949,11 @@ $('prons').addEventListener('click',e=>{const b=e.target.closest('.pron'); if(!b
   if(isNew){const nb=$('prons').querySelector(`[data-id="${id}"]`); nb&&floatXP(nb,WORD_XP);} });
 /* 自己紹介 com a voz da もち子: partes gravadas + o nome na voz do aparelho (se a pessoa já escreveu o nome) */
 function speakIntro(){
+  if(window.minhaVoz&&minhaVoz.toca()) return;
   const M=window.AUDIO_MAP||{}, K=t=>M[chaveAudio(t)], pr=find(PRONS,state.profile.pron), nm=displayName(), age=ageInfo(state.sel.age).kana;
-  const fixas=['こんにちは！',pr.kana+'は',age+'です。','ユートピアで にほんごを べんきょうしています。','よろしく おねがいします！'].concat(nm?['です。']:[]);
+  const ns=window.minhaVoz&&minhaVoz.nomeSrc(); const fixas=['こんにちは！',pr.kana+'は',age+'です。','ユートピアで にほんごを べんきょうしています。','よろしく おねがいします！'].concat((nm||ns)?['です。']:[]);
   if(!window.AUDIO_MAP||!fixas.every(K)) return speak(introText());
-  const it=[{id:K(fixas[0])},{id:K(fixas[1])}]; if(nm) it.push({tts:nm},{id:K('です。')});
+  const it=[{id:K(fixas[0])},{id:K(fixas[1])}]; if(nm||ns) it.push(ns?{src:ns}:{tts:nm},{id:K('です。')});
   it.push({id:K(fixas[2])},{id:K(fixas[3])},{id:K(fixas[4])});
   falaFila(it,introText());
 }
@@ -1045,6 +1070,72 @@ modo(modoDoHash(),true);
 /* nas abas do editor: tocar na aba fala a frase daquele assunto; tocar no avatar também */
 function falaAssunto(k){ const i=idxTopico(k==='clothColor'?'clothes':k); const l=sentences()[i]; if(l) speakCard(l.jp,false); }
 $('tabs').addEventListener('click',e=>{ const b=e.target.closest('.tab'); if(b&&!b.dataset.mais) setTimeout(()=>falaAssunto(state.cat),0); });
+</script>
+<script>
+/* ---------- Sua voz: duas gravações (apresentação completa e só o nome); ficam no aparelho e na conta (progress/{uid}.vozAvatar) ---------- */
+(function(){
+const LKEY='utopiaVoz2', LIM={completa:30,nome:8}, MAX_CLIP=380000, MAX_TOTAL=600000;
+const el=id=>document.getElementById(id), box=el('minhaVoz');
+let V={completa:null,nome:null,uso:'',m:0}, rec=null, chunks=[], stream=null, timer=null, tocando=null, gravando='';
+try{ const o=JSON.parse(localStorage.getItem(LKEY)||'null'); if(o) V=Object.assign(V,o); }catch(e){}
+const slot=k=>box.querySelector('[data-slot="'+k+'"]'), btn=(k,a)=>slot(k).querySelector('[data-a="'+a+'"]');
+function st(msg,ok){ const s=el('mvSt'); s.textContent=msg||''; s.style.color=ok===false?'var(--terra)':'var(--sage)'; }
+function tem(k){ return !!(V[k]&&V[k].b64); }
+function pinta(){
+  ['completa','nome'].forEach(k=>{ const g=gravando===k, t=tem(k);
+    btn(k,'ouve').disabled=!t||!!gravando; btn(k,'apaga').disabled=!t||!!gravando; btn(k,'grava').disabled=!!gravando&&!g;
+    btn(k,'grava').textContent=g?'⏹ Parar':(t?'⏺ Gravar de novo':'⏺ Gravar'); btn(k,'grava').classList.toggle('gravando',g); });
+  if(!tem(V.uso)) V.uso=tem('completa')?'completa':(tem('nome')?'nome':'');
+  el('mvUso').hidden=!(tem('completa')&&tem('nome'));
+  box.querySelectorAll('[name="mvUso"]').forEach(r=>{ r.checked=r.value===V.uso; }); }
+function paraTudo(){ clearTimeout(timer); timer=null; try{ if(stream) stream.getTracks().forEach(t=>t.stop()); }catch(e){} stream=null; }
+const src=k=>'data:'+V[k].mime+';base64,'+V[k].b64;
+function tocar(k){ if(!tem(k)) return false;
+  try{ if(window.speechSynthesis) speechSynthesis.cancel(); if(tocando){ tocando.pause(); tocando=null; }
+    const a=new Audio(src(k)); tocando=a; a.onended=()=>{ if(tocando===a) tocando=null; }; const p=a.play(); if(p&&p.catch) p.catch(()=>{ tocando=null; st('Não consegui tocar a gravação neste aparelho.',false); }); return true; }catch(e){ return false; } }
+function tipo(){ if(!window.MediaRecorder) return ''; return ['audio/webm;codecs=opus','audio/mp4','audio/webm','audio/ogg;codecs=opus'].find(t=>{ try{ return MediaRecorder.isTypeSupported(t); }catch(e){ return false; } })||''; }
+const base64=blob=>new Promise((ok,er)=>{ const r=new FileReader(); r.onload=()=>ok(String(r.result).split(',')[1]||''); r.onerror=er; r.readAsDataURL(blob); });
+async function nuvem(acao){
+  const C=window.UniConta; if(!C||!C.auth||!C.auth.currentUser) return null; const u=C.auth.currentUser;
+  try{ const F=await import('https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js'); const ref=F.doc(C.db,'progress',u.uid);
+    if(acao==='puxa'){ const s=await F.getDoc(ref); return (s.exists()&&s.data().vozAvatar)||false; }
+    const vazio=!tem('completa')&&!tem('nome');
+    await F.setDoc(ref,{vozAvatar:vazio?F.deleteField():V},{merge:true}); return true;
+  }catch(e){ console.warn('voz não sincronizou',e); return null; } }
+async function guarda(){
+  V.m=Date.now();
+  try{ localStorage.setItem(LKEY,JSON.stringify(V)); }catch(e){ st('Gravação grande demais para guardar neste aparelho.',false); return; }
+  const logada=!!(window.UniConta&&UniConta.auth&&UniConta.auth.currentUser);
+  if((V.completa?V.completa.b64.length:0)+(V.nome?V.nome.b64.length:0)>MAX_TOTAL){ st('Salva neste aparelho. Juntas, as duas ficaram grandes demais para a conta: apague uma ou grave mais curto.',false); return; }
+  const r=await nuvem('salva');
+  st(r===true?'Salva na sua conta ✓':(!logada?'Salva neste aparelho. Entre na sua conta para guardar nela.':'Salva neste aparelho, mas não consegui enviar para a conta agora.'), r===true); }
+async function grava(k){
+  if(gravando===k&&rec&&rec.state==='recording'){ rec.stop(); return; }
+  if(!navigator.mediaDevices||!window.MediaRecorder){ st('Este navegador não grava áudio.',false); return; }
+  try{ stream=await navigator.mediaDevices.getUserMedia({audio:true}); }catch(e){ st('Não consegui usar o microfone. Confira a permissão do navegador.',false); return; }
+  const mt=tipo(); chunks=[];
+  try{ rec=new MediaRecorder(stream,Object.assign({audioBitsPerSecond:24000},mt?{mimeType:mt}:{})); }catch(e){ paraTudo(); st('Este navegador não grava áudio.',false); return; }
+  gravando=k;
+  rec.ondataavailable=e=>{ if(e.data&&e.data.size) chunks.push(e.data); };
+  rec.onstop=async()=>{ paraTudo(); const mime=(rec.mimeType||mt||'audio/webm').split(';')[0]; const blob=new Blob(chunks,{type:mime}); gravando=''; pinta();
+    if(!blob.size){ st('Não gravou nada. Tente de novo.',false); return; }
+    const b64=await base64(blob); if(b64.length>MAX_CLIP){ st('Ficou longa demais. Tente uma gravação mais curta.',false); return; }
+    V[k]={mime,b64}; V.uso=k; pinta(); st('Salvando…'); await guarda(); };
+  if(k==='completa'){ const mod=el('mvModelo'); try{ mod.textContent='Sugestão: '+introText(); mod.hidden=false; }catch(e){} }
+  rec.start(); pinta(); st('Gravando… toque em Parar quando terminar.'); timer=setTimeout(()=>{ if(rec&&rec.state==='recording') rec.stop(); },LIM[k]*1000);
+}
+box.addEventListener('click',async e=>{ const b=e.target.closest('[data-a]'); if(!b) return; const k=b.closest('[data-slot]').dataset.slot, a=b.dataset.a;
+  if(a==='grava') return grava(k);
+  if(a==='ouve'){ if(!tocar(k)) st('Nenhuma gravação ainda.',false); return; }
+  if(a==='apaga'){ if(!confirm('Apagar esta gravação?')) return; V[k]=null; pinta(); await guarda(); st('Gravação apagada.'); } });
+box.addEventListener('change',async e=>{ if(e.target.name!=='mvUso') return; V.uso=e.target.value; await guarda(); });
+pinta();
+/* ao entrar na conta, traz o que estiver lá (a versão mais nova vence) */
+(async function(){ for(let i=0;i<20&&!(window.UniConta&&UniConta.auth);i++) await new Promise(r=>setTimeout(r,300)); if(!window.UniConta) return;
+  let feito=false; const tenta=async()=>{ if(feito||!UniConta.auth.currentUser) return; feito=true; const r=await nuvem('puxa'); if(r&&(r.completa||r.nome)&&(r.m||0)>(V.m||0)){ V=Object.assign({completa:null,nome:null,uso:'',m:0},r); try{ localStorage.setItem(LKEY,JSON.stringify(V)); }catch(e){} pinta(); } };
+  try{ const A=await import('https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js'); A.onAuthStateChanged(UniConta.auth,u=>{ if(u) tenta(); }); }catch(e){} })();
+window.minhaVoz={toca:()=>V.uso==='completa'&&tocar('completa'),nomeSrc:()=>(V.uso==='nome'&&tem('nome'))?src('nome'):null,tem:()=>tem('completa')||tem('nome')};
+})();
 </script>
 <script defer src="/caderno-flutuante.js?v=23"></script>
 </body>

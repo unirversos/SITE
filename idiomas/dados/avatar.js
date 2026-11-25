@@ -32,7 +32,7 @@ function curls(cx,cy,r,from,to,step,size,fill){let s='';for(let a=from;a<=to;a+=
 function drawHairBack(style,h){
   const d=shade(h,-18);
   if(style==='nagai') return `<path d="M58 120 C48 190 50 250 72 268 L168 268 C190 250 192 190 182 120 Z" fill="${d}"/>`;
-  if(style==='pony') return `<path d="M164 92 C214 92 226 172 198 222 C202 172 186 130 158 112 Z" fill="${d}"/>`;
+  if(style==='pony') return `<path d="M164 92 C190 92 193 154 180 206 C181 164 174 130 158 112 Z" fill="${d}"/>`;
   if(style==='odango') return `<circle cx="120" cy="50" r="25" fill="${h}"/><path d="M106 70 Q120 62 134 70" stroke="${d}" stroke-width="3" fill="none"/>`;
   if(style==='kurukuru') return curls(120,124,64,190,350,20,21,d)+curls(120,150,66,10,170,40,18,d);
   if(style==='afuro') return `<circle cx="120" cy="112" r="80" fill="${d}"/>`+curls(120,112,80,0,345,15,15,d);
