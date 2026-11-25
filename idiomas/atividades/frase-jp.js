@@ -123,6 +123,8 @@
   }
   /* "促す (うながす / unagasu)" → うながす ; "〜っぽい (ppoi)" → っぽい */
   function leituraDe(e) {
+    /* "〜（ら）れる [~(ra)reru]" → られる ; "〜ないと / 〜なくちゃ [...]" → ないと、なくちゃ */
+    if (/\s\[[^\]]*\]\s*$/.test(String(e || ''))) return String(e).replace(/\s*\[[^\]]*\]\s*$/, '').replace(/[〜～~（）()]/g, '').replace(/\s*\/\s*/g, '、').trim();
     var m = String(e || '').match(/[（(]\s*([\u3040-\u30ff・ー]+)/);
     return m ? m[1] : String(e || '').replace(/[（(].*$/, '').replace(/[〜～~]/g, '').trim();
   }

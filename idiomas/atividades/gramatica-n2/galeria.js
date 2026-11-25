@@ -138,7 +138,8 @@ function blocoHist(r){
 /* ---------- cards ---------- */
 function card(i){
   const r = resp(i.n), st = stDe(i.n), pt = abertosPt.has(i.n);
-  const m = i.e.match(/^(.*?)\s*\(([^)]*)\)\s*$/), est = m ? m[1] : i.e, ro = m ? m[2] : '';
+  /* "促す (うながす / unagasu)" ou "〜（ら）れる [~(ra)reru]": a parte do fim vai pequena ao lado */
+  const m = i.e.match(/^(.*?)\s+\[([^\]]*)\]\s*$/) || i.e.match(/^(.*?)\s*\(([^)]*)\)\s*$/), est = m ? m[1] : i.e, ro = m ? m[2] : '';
   const corr = souProf
     ? `<div class="corr"><label class="l" for="c${i.n}">CORREÇÃO DA PROFESSORA</label><textarea id="c${i.n}" data-c="${i.n}" rows="2" placeholder="Escreva a frase corrigida ou um comentário">${esc(r.c)}</textarea></div>`
     : (r.c && st !== 'feito' ? `<div class="corr"><b>CORREÇÃO DA PROFESSORA</b><div style="white-space:pre-wrap">${esc(r.c)}</div></div>` : '');

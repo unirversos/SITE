@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="pt-BR" data-login="obrigatorio">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="robots" content="noindex">
+<title>Gramática N3 · Atividades Unirversos</title>
+<style>html[data-login="obrigatorio"]:not(.uni-ok) body>*:not(#uni-gate){visibility:hidden}</style>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@600;700;800&family=Zen+Maru+Gothic:wght@400;500;700&display=swap">
+<style>
+:root{--ink:#3a2b38;--muted:#7a6a76;--line:#efe3e5;--bg:#fdf8f6;--pink:#c23f5e;--pink-d:#a8324f;--sage:#517158;--sage-s:#e8efe8;--gold:#a0712a;--gold-s:#fbf1de;--terra:#b0583a;--terra-s:#f8e6de;--lav:#6f5fa8}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font:15px/1.6 "Zen Maru Gothic",system-ui,sans-serif;-webkit-font-smoothing:antialiased}
+.w{max-width:980px;margin:0 auto;padding:28px 20px 80px}
+@media(min-width:760px){.w{padding-right:70px}}
+a{color:inherit}.voltar{font-size:13px;color:var(--muted);text-decoration:none}
+.ey{font-size:12px;letter-spacing:.14em;text-transform:uppercase;font-weight:700;color:var(--gold)}
+h1{font-family:"Baloo 2",sans-serif;font-size:34px;line-height:1.1;margin:6px 0 0}
+.bar0{height:3px;width:56px;background:var(--sage);border-radius:2px;margin:10px 0 10px}
+.sub{margin:0;color:var(--muted);max-width:40em}
+.quem{display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin-top:14px;font-size:14px}
+.quem select{font:inherit;padding:6px 10px;border:1.5px solid var(--line);border-radius:999px;background:#fff}
+.pill{display:inline-block;font-size:12px;font-weight:700;border-radius:999px;padding:2px 10px}
+/* números */
+.nums{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px;margin-top:22px}
+.num{background:#fff;border:1.5px solid var(--line);border-left:4px solid var(--c);border-radius:14px;padding:12px 14px}
+.num b{display:block;font-family:"Baloo 2",sans-serif;font-size:28px;line-height:1.1;color:var(--c)}
+.num span{font-size:12.5px;color:var(--muted)}
+@media(max-width:640px){.nums{grid-template-columns:repeat(2,minmax(0,1fr))}}
+/* semanas */
+.sems{display:grid;grid-template-columns:repeat(8,minmax(0,1fr));gap:8px;margin-top:16px}
+.sem{font:inherit;background:#fff;border:1.5px solid var(--line);border-radius:12px;padding:8px 6px 7px;cursor:pointer;text-align:center;color:var(--ink)}
+.sem small{display:block;font-size:11px;color:var(--muted)}
+.sem .tr{height:5px;background:var(--line);border-radius:3px;margin-top:5px;overflow:hidden}.sem .tr i{display:block;height:100%;background:var(--sage)}
+.sem.on{border-color:var(--ink);box-shadow:0 0 0 1px var(--ink)}
+@media(max-width:640px){.sems{grid-template-columns:repeat(4,minmax(0,1fr))}}
+/* filtros */
+.ferr{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin:18px 0 6px}
+.ferr input{flex:1;min-width:200px;font:inherit;padding:9px 14px;border:1.5px solid var(--line);border-radius:999px;background:#fff}
+.chip{font:inherit;font-size:13px;font-weight:700;border:1.5px solid var(--line);background:#fff;color:var(--ink);border-radius:999px;padding:6px 13px;cursor:pointer;min-height:36px}
+.chip.on{background:var(--ink);border-color:var(--ink);color:#fff}
+.btn{font:inherit;font-weight:700;font-size:14px;border:0;border-radius:999px;padding:9px 18px;min-height:40px;cursor:pointer;background:var(--pink);color:#fff}
+.btn.claro{background:#fff;color:var(--ink);border:1.5px solid var(--line)}
+.mostra{font-size:12.5px;color:var(--muted);margin:8px 2px 12px}
+/* cards */
+.cards{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}
+@media(max-width:760px){.cards{grid-template-columns:1fr}}
+.card{background:#fff;border:1.5px solid var(--line);border-left:4px solid var(--st,var(--line));border-radius:16px;padding:14px 16px;display:flex;flex-direction:column;gap:8px}
+.card .top{display:flex;justify-content:space-between;gap:8px;align-items:center;font-size:12px;color:var(--muted)}
+.card h3{margin:0;font-family:"Baloo 2",sans-serif;font-size:20px;line-height:1.25}
+.card h3 small{font-family:"Zen Maru Gothic",sans-serif;font-size:13px;font-weight:500;color:var(--muted)}
+.nu{margin:0;font-size:14px;color:#5c4c58}
+.ex{background:var(--bg);border-radius:12px;padding:8px 12px;display:flex;gap:8px;align-items:flex-start}
+.ex p{margin:0;flex:1}.ex .jp{font-size:16px}.ex .pt{font-size:13px;color:var(--muted)}
+.som{flex:none;width:34px;height:34px;border-radius:50%;border:1.5px solid var(--line);background:#fff;cursor:pointer;font-size:14px}
+.novo{font:inherit;font-size:11.5px;font-weight:700;color:#fff;background:var(--terra);border:0;border-radius:999px;padding:2px 10px;cursor:pointer}
+.chip.novas{border-color:var(--terra);color:var(--terra)}.chip.novas.on{background:var(--terra);color:#fff}
+.verex{font:inherit;font-size:13.5px;font-weight:700;color:var(--lav);background:#f3f0fa;border:1.5px dashed #d8d0ee;border-radius:12px;padding:10px;cursor:pointer;text-align:left}
+.verpt{font:inherit;font-size:12.5px;color:var(--pink-d);background:none;border:0;padding:0;cursor:pointer;text-decoration:underline}
+label.l{font-size:12px;font-weight:700;color:var(--muted);letter-spacing:.04em}
+textarea{width:100%;font:inherit;font-size:15px;padding:8px 10px;border:1.5px solid var(--line);border-radius:12px;background:#fff;resize:vertical;min-height:44px}
+textarea:focus,input:focus,select:focus{outline:2px solid #b7a6dc;outline-offset:1px}
+.corr{background:var(--terra-s);border-radius:12px;padding:8px 12px;font-size:14.5px}
+.corr b{color:var(--terra);font-size:12px;letter-spacing:.04em}
+.corr textarea{background:#fff8f5}
+.pe{display:flex;justify-content:space-between;align-items:center;gap:8px;flex-wrap:wrap}
+.pe select{font:inherit;font-size:13px;font-weight:700;padding:5px 10px;border:1.5px solid var(--line);border-radius:999px;background:#fff;color:var(--ink)}
+.salvo{font-size:12px;color:var(--muted)}
+/* status */
+.s-pendente{--st:#e6d6da}.s-feito{--st:#c9a24b}.s-corrigir{--st:#b0583a}.s-dominado{--st:#517158}
+.p-pendente{background:#f4ecee;color:#7a6a76}.p-feito{background:var(--gold-s);color:var(--gold)}.p-corrigir{background:var(--terra-s);color:var(--terra)}.p-dominado{background:var(--sage-s);color:var(--sage)}
+/* flashcard */
+.fc{position:fixed;inset:0;background:rgba(58,43,56,.45);display:grid;place-items:center;padding:16px;z-index:60}
+.fc-box{background:#fff;border-radius:22px;max-width:560px;width:100%;padding:20px 22px;display:flex;flex-direction:column;gap:14px}
+.fc-c{min-height:260px;border:1.5px solid var(--line);border-radius:18px;padding:22px;display:flex;flex-direction:column;justify-content:center;gap:10px;text-align:center;cursor:pointer;background:var(--bg)}
+.fc-c h3{font-family:"Baloo 2",sans-serif;font-size:28px;margin:0;line-height:1.2}
+.fc-c .dica{font-size:12.5px;color:var(--muted)}
+.fc-nav{display:flex;justify-content:space-between;align-items:center;gap:8px;flex-wrap:wrap}
+.aviso{background:var(--gold-s);color:#7a5418;border-radius:12px;padding:10px 14px;font-size:14px;margin-top:16px}
+.sel-dic{position:absolute;z-index:70;font:inherit;font-size:13px;font-weight:700;background:var(--lav);color:#fff;border:0;border-radius:999px;padding:6px 12px;cursor:pointer;box-shadow:0 6px 16px rgba(58,43,56,.2)}
+/* progresso */
+.nums{display:block}
+.prog{background:#fff;border:1.5px solid var(--line);border-radius:16px;padding:14px 16px}
+.prog-t{display:flex;align-items:baseline;gap:8px;font-size:14px;color:var(--muted)}.prog-t b{font-family:"Baloo 2",sans-serif;font-size:24px;color:var(--ink)}.prog-t span{margin-left:auto;font-weight:700;color:var(--sage)}
+.prog-b,.sem .tr{display:flex;height:12px;background:#f1e8ea;border-radius:999px;overflow:hidden;margin-top:8px}
+.sem .tr{height:6px;margin-top:6px}
+.prog-b i,.sem .tr i{display:block;height:100%}
+.b-feito{background:var(--sage)}.b-revisao{background:#d9b25c}.b-corrigir{background:var(--terra)}.b-pendente{background:#f1e8ea;border:1px solid #e3d3d7}
+.leg{display:flex;flex-wrap:wrap;gap:6px 16px;margin-top:10px;font-size:12.5px;color:var(--muted)}.leg i{display:inline-block;width:10px;height:10px;border-radius:3px;margin-right:5px;vertical-align:-1px}
+.sem.cheia{border-color:var(--sage);background:var(--sage-s)}
+/* ações e saída */
+.acoes{display:flex;gap:6px;flex-wrap:wrap;align-items:center}
+.mini{font:inherit;font-size:13px;font-weight:700;border:1.5px solid var(--line);background:#fff;color:var(--ink);border-radius:999px;padding:6px 14px;min-height:36px;cursor:pointer}
+.mini.ok{background:var(--sage);border-color:var(--sage);color:#fff}
+.card{transition:opacity .4s,transform .4s}.card.saindo{opacity:0;transform:scale(.96)}
+.s-revisao{--st:#d9b25c}.p-revisao{background:var(--gold-s);color:var(--gold)}
+/* histórico */
+.hist{font-size:13.5px}.hist summary{cursor:pointer;color:var(--muted);font-weight:700;font-size:12.5px}
+.hist ol{margin:6px 0 0;padding-left:0;list-style:none;display:flex;flex-direction:column;gap:6px;border-left:2px solid var(--line);padding-left:10px}
+.hist li{display:flex;flex-direction:column}.hd{font-size:11.5px;color:var(--muted)}.hf{color:#7a6a76;text-decoration:line-through;text-decoration-color:#d6a99a}
+.hist li:has(.hok) .hf{text-decoration:none;color:var(--ink)}.hc{color:var(--terra)}.hok{color:var(--sage);font-weight:700;font-size:12.5px}
+.nuvem-av{position:fixed;left:50%;bottom:16px;transform:translateX(-50%);z-index:80;width:min(640px,calc(100% - 24px));background:#fbf1de;color:#6b4b14;border:1.5px solid #e6c98a;border-radius:14px;padding:10px 14px;font-size:14px;box-shadow:0 10px 24px -14px rgba(58,43,56,.5)}
+.card.chegou{box-shadow:0 0 0 3px #d9b25c}
+.teste-faixa{background:#fbf1de;color:#7a5418;font-size:13px;text-align:center;padding:6px 12px}
+.sr{position:absolute;left:-9999px}
+[hidden]{display:none!important}
+.som-p{width:30px;height:30px;font-size:12.5px;vertical-align:middle;margin-left:2px}
+</style>
+<link rel="stylesheet" href="/estilo-celular.css?v=3">
+<link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<script type="module" src="/idiomas/dados/conta.js?v=6"></script>
+<script>setTimeout(function(){var h=document.documentElement;if(!h.classList.contains('uni-ok')&&!document.getElementById('uni-gate'))h.classList.add('uni-ok')},10000)</script>
+</head>
+<body>
+<div class="w">
+  <a class="voltar" href="/idiomas/atividades/">← Atividades</a>
+  <p class="ey" style="margin-top:16px">✦ Atividades Unirversos</p>
+  <h1 id="tit">Gramática N3</h1><div class="bar0"></div>
+  <p class="sub" id="sub"></p>
+  <div class="quem" id="quem"></div>
+  <div id="aviso"></div>
+  <div class="nums" id="nums"></div>
+  <div class="sems" id="sems"></div>
+  <div class="ferr">
+    <label class="sr" for="q">Buscar</label><input id="q" type="search" placeholder="Buscar estrutura, significado ou exemplo…">
+    <span id="chips"></span>
+    <button type="button" class="chip" id="furi" aria-pressed="false">ふりがな</button>
+    <button type="button" class="chip" id="oc" aria-pressed="false"></button>
+    <button type="button" class="btn" id="fc-abre">▶ Modo flashcard</button>
+  </div>
+  <p class="mostra" id="mostra"></p>
+  <div class="cards" id="cards"></div>
+</div>
+<script src="/caderno-dados.js?v=2"></script>
+<script src="/idiomas/atividades/frase-jp.js?v=5"></script>
+<script>window.GALERIA_CFG={id:'n3gram',titulo:'Gramática N3 · 6 semanas',sub:'Uma estrutura por vez: entenda a nuance, veja o exemplo e escreva a sua frase.'};</script>
+<script type="module" src="/idiomas/atividades/gramatica-n2/galeria.js?v=10"></script>
+<script>FraseJP.botao('furi')</script>
+<script defer src="/caderno-flutuante.js?v=21"></script>
+</body>
+</html>
