@@ -31,8 +31,8 @@ const ATIVIDADES = [
   { id: 'n1dokkai', livro: 'n1dokkai', num: '20', ic: '🌬️', s: '', jp: '読解 N1', cur: 'Leitura N1 · 8 semanas', nivel: 'N1', t: 'Leitura N1 · 8 semanas', d: '48 textos do 総まとめ N1 読解 com estratégia, questão, análise do gabarito e vocabulário.', url: '/idiomas/atividades/dokkai-n1/', cor: '' },
   { id: 'n1drill', livro: 'n1drill', num: '21', ic: '🔥', s: '', jp: 'パワードリル N1', cur: 'Power Drill N1 · 30 sessões', nivel: 'N1', t: 'Power Drill N1 · 30 sessões', d: 'Cronograma das 30 sessões do 日本語パワードリル N1 文法: pontos, tempo e anotações de erros.', url: '/idiomas/atividades/power-drill-n1/', cor: '' },
   { id: 'n1drillx', livro: 'n1drillx', num: '22', ic: '🔥', s: '', jp: '集中トレーニング N1', cur: 'Power Drill N1 · Treino intensivo', nivel: 'N1', t: 'Power Drill N1 · Treino intensivo', d: '30 estruturas dos blocos 集中①〜⑩: nuance, exemplo do livro e a sua frase.', url: '/idiomas/atividades/power-drill-n1-treino/', cor: '' },
-  { id: 'verbos', livro: 'verbos', num: '02', ic: '💧', s: '#e8efe8', jp: '他動詞と自動詞', cur: 'Verbos transitivos e intransitivos', nivel: 'N5–N3', t: 'Verbos transitivos e intransitivos', d: '75 pares (150 verbos): compare 他動詞 e 自動詞, veja o exemplo e escreva a sua frase.', url: '/idiomas/atividades/verbos/', cor: 'var(--sage)', por: 2 },
-  { id: 'adjetivos', livro: 'adjetivos', num: '03', ic: '💧', s: '#f8e6de', jp: '形容詞と反対語', cur: 'Adjetivos e opostos', nivel: 'N5–N2', t: 'Adjetivos e opostos', d: '60 pares (120 adjetivos い e な): um adjetivo e o seu oposto, com exemplo e a sua frase.', url: '/idiomas/atividades/adjetivos/', cor: 'var(--terra)', por: 2 },
+  { id: 'verbos', livro: 'verbos', num: '02', ic: '🏃', s: '#e8efe8', jp: '他動詞と自動詞', cur: 'Verbos transitivos e intransitivos', nivel: 'N5–N3', t: 'Verbos transitivos e intransitivos', d: '75 pares (150 verbos): compare 他動詞 e 自動詞, veja o exemplo e escreva a sua frase.', url: '/idiomas/atividades/verbos/', cor: 'var(--sage)', por: 2 },
+  { id: 'adjetivos', livro: 'adjetivos', num: '03', ic: '☯️', s: '#f8e6de', jp: '形容詞と反対語', cur: 'Adjetivos e opostos', nivel: 'N5–N2', t: 'Adjetivos e opostos', d: '60 pares (120 adjetivos い e な): um adjetivo e o seu oposto, com exemplo e a sua frase.', url: '/idiomas/atividades/adjetivos/', cor: 'var(--terra)', por: 2 },
   { id: 'karamade', livro: 'karamade', num: '04', ic: '🔥', s: '#f3f0fa', jp: '「から」と「まで」', cur: 'De onde, até onde', nivel: 'N5', t: 'から e まで', d: '11 questões com correção na hora: lacunas, leitura de placa e montar a frase.', url: '/idiomas/atividades/kara-made/', cor: 'var(--lav)', quiz: true }
 ];
 
@@ -58,9 +58,11 @@ function pinta(liberado, souProf, resp, totais){
   ultimo = [liberado, souProf, resp, totais];
   /* em ordem de nível, do N5 ao N1 (a de vários níveis entra pelo mais básico) */
   const ordem = a => { const n = niveisDe(a); return n.length ? NIVEIS.indexOf(n[0]) : 9; };
-  const lista = ATIVIDADES.filter(a => !nivel || niveisDe(a).includes(nivel)).map((a, k) => [a, k]).sort((x, y) => ordem(x[0]) - ordem(y[0]) || x[1] - y[1]).map(x => x[0]);
+  /* dentro do nível, a ordem do Quadrado: 🔥 gramática, 💧 vocabulário, 🌱 kanji, 🌬️ leitura, depois os extras */
+  const tipo = a => /gram$/.test(a.id) ? 0 : /voc$/.test(a.id) ? 1 : /kanji$/.test(a.id) ? 2 : /dokkai$/.test(a.id) ? 3 : /drill/.test(a.id) ? 4 : 5;
+  const lista = ATIVIDADES.filter(a => !nivel || niveisDe(a).includes(nivel)).map((a, k) => [a, k]).sort((x, y) => (nivel ? 0 : ordem(x[0]) - ordem(y[0])) || tipo(x[0]) - tipo(y[0]) || x[1] - y[1]).map(x => x[0]);
   if (!lista.length) { $('lista').innerHTML = `<p class="vazio">Ainda não há atividades de ${esc(nivel)}. Em breve a sensei coloca aqui.</p>`; return; }
-  $('lista').innerHTML = lista.map(a => {
+  const cardDe = a => {
     const trava = !liberado && !souProf, breve = !!a.breve;
     const R = resp[a.id] || {}, tot = totais[a.id] || 0;
     const feitas = a.quiz ? (R.acertos || 0) : Object.keys(R).filter(n => feita(R[n])).length;
@@ -71,7 +73,14 @@ function pinta(liberado, souProf, resp, totais){
     const nv = niveisDe(a).length ? niveisDe(a) : ['N5'];
     const at = `class="at${trava || breve ? ' lock' : ''}" style="--c:${COR[nv[0]][0]};--s:${COR[nv[0]][1]};--topo:${faixa(nv, 1)};--barra:${faixa(nv, 0)}" title="${esc(a.d)}"`;
     return trava || breve ? `<div ${at}>${corpo}</div>` : `<a ${at} href="${esc(a.url)}">${corpo}</a>`;
-  }).join('');
+  };
+  /* em "Todos": uma seção por nível, com título na cor do nível; filtrado: só os cards */
+  if (nivel) { $('lista').className = 'lista'; $('lista').innerHTML = lista.map(cardDe).join(''); return; }
+  const porNivel = NIVEIS.map(n => [n, lista.filter(a => (niveisDe(a)[0] || 'N5') === n)]).filter(x => x[1].length);
+  $('lista').className = 'secoes';
+  $('lista').innerHTML = porNivel.map(([n, l]) => `<section class="sec-n" style="--nc:${COR[n][0]};--ns:${COR[n][1]}">
+    <h2 class="sec-t"><span class="sec-b">${n}</span><span class="sec-q">${l.length} ${l.length === 1 ? 'atividade' : 'atividades'}</span></h2>
+    <div class="lista">${l.map(cardDe).join('')}</div></section>`).join('');
 }
 
 onAuthStateChanged(auth, async u => {

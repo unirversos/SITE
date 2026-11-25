@@ -38,6 +38,13 @@ a.at:hover{transform:translateY(-3px);box-shadow:0 10px 22px -14px rgba(58,43,56
 .chip[data-n]:not([data-n=""]){border-color:var(--ns);color:var(--nc);background:var(--ns)}
 .chip[data-n]:not([data-n=""]).on{background:var(--nc);border-color:var(--nc);color:#fff}
 .vazio{color:var(--muted);grid-column:1/-1;margin:8px 2px}
+.secoes{margin-top:8px}
+.sec-n{margin-top:26px}
+.sec-t{display:flex;align-items:center;gap:12px;margin:0 0 2px;font-family:"Baloo 2",sans-serif}
+.sec-t::after{content:"";flex:1;height:2px;border-radius:2px;background:var(--ns)}
+.sec-b{font-size:18px;font-weight:800;color:#fff;background:var(--nc);border-radius:999px;padding:2px 14px}
+.sec-q{font-family:"Zen Maru Gothic",sans-serif;font-size:13px;font-weight:500;color:var(--muted)}
+.sec-n .lista{margin-top:12px}
 .faixa-t{background:#fbf1de;color:#7a5418;font-size:13px;text-align:center;padding:6px 12px}
 </style>
 <link rel="stylesheet" href="/estilo-celular.css?v=3">
@@ -57,7 +64,7 @@ a.at:hover{transform:translateY(-3px);box-shadow:0 10px 22px -14px rgba(58,43,56
   <div class="lista" id="lista"></div>
 </div>
 <script src="/caderno-dados.js?v=2"></script>
-<script type="module" src="/idiomas/atividades/atividades.js?v=19"></script>
+<script type="module" src="/idiomas/atividades/atividades.js?v=20"></script>
 <script defer src="/caderno-flutuante.js?v=21"></script>
 </body>
 </html>
