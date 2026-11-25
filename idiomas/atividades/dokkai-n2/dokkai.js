@@ -61,7 +61,7 @@ const leLocal = () => { try { return JSON.parse(localStorage.getItem(chaveLocal(
 const guardaLocal = () => { try { localStorage.setItem(chaveLocal(), JSON.stringify(R)); } catch (e) {} };
 async function carrega(){
   R = {}; liberado = false;
-  try { const s = await getDoc(doc(db, 'atividades', alvo)); liberado = s.exists(); R = (s.exists() && s.data()[A.id]) || {}; nuvem = true; }
+  try { const s = await getDoc(doc(db, 'atividades', alvo)); liberado = s.exists() || TESTE; R = (s.exists() && s.data()[A.id]) || {}; nuvem = true; }
   catch (e) { console.warn(e); nuvem = false; R = leLocal(); }
   if (nuvem && liberado) {
     const L = leLocal(), pend = {};
@@ -272,6 +272,18 @@ document.addEventListener('mouseup', () => setTimeout(() => {
 
 /* ---------- quem está vendo ---------- */
 /* acesso restrito: só quem a professora liberou (o documento atividades/{e-mail} é criado por ela) */
+/* ↺ Recomeçar tudo: apaga as respostas desta atividade (alternativas, sínteses, acertos, tempo e correções) */
+async function recomeca(){
+  if (souProf) return;
+  if (!confirm('Recomeçar tudo?\n\nIsso apaga as suas respostas desta atividade: alternativas, sínteses, acertos, tempo e as correções da professora. Não dá para desfazer.')) return;
+  const b = $('recomeca'); if (b) { b.disabled = true; b.textContent = 'apagando…'; }
+  try { await setDoc(doc(db, 'atividades', alvo), { [A.id]: {} }, { mergeFields: [A.id] }); }
+  catch (e) { console.warn(e); if (b) { b.disabled = false; b.textContent = '⚠️ não deu, tentar de novo'; } return; }
+  R = {}; try { localStorage.removeItem(chaveLocal()); } catch (e) {}
+  if (b) { b.disabled = false; b.textContent = '↺ Recomeçar tudo'; }
+  pintaNums(); pintaChips(); pintaCards();
+}
+function botaoRecomeca(){ const b = $('recomeca'); if (!b) return; b.hidden = souProf; b.onclick = recomeca; }
 const trava = on => document.querySelectorAll('#nums,#sems,.ferr,#mostra,#cards').forEach(el => el.hidden = on);
 /* ao vivo: o que o aluno (ou a professora) muda em outro aparelho aparece aqui sem recarregar. Só lê, nunca grava. */
 let pararVivo = null;
@@ -308,8 +320,10 @@ async function abre(email){
     return;
   }
   leVisto(); filtro.st = souProf ? (itens.some(i => stDe(i.n) === 'revisao') ? 'revisao' : 'praticar') : (itens.some(i => novo(i.n)) ? 'novas' : 'praticar');
-  trava(false); pintaNums(); pintaChips(); pintaCards();
+  trava(false); botaoRecomeca(); pintaNums(); pintaChips(); pintaCards();
 }
+/* "✎ Eu (testar)": a professora faz a atividade como aluna, na própria conta, sem misturar com os alunos */
+let TESTE = false;
 onAuthStateChanged(auth, async u => {
   if (!u) return;
   const eu = (u.email || '').toLowerCase(); souProf = PROFS.includes(eu);
@@ -319,7 +333,13 @@ onAuthStateChanged(auth, async u => {
   let alunos = [];
   try { alunos = (await getDocs(collection(db, 'aulas'))).docs.map(d => ({ id: d.id, nome: d.data().nome || d.id })).sort((a, b) => a.nome.localeCompare(b.nome)); } catch (e) {}
   const ini = pedido || (alunos[0] && alunos[0].id) || eu;
-  $('quem').innerHTML = `<span class="pill p-feito">Você está como professora</span><label for="al">Aluno:</label><select id="al">${alunos.map(a => `<option value="${esc(a.id)}"${a.id === ini ? ' selected' : ''}>${esc(a.nome)}</option>`).join('')}</select><span class="salvo">Você escreve as correções; a frase é do aluno.</span>`;
-  $('al').onchange = () => { history.replaceState(null, '', '?aluno=' + encodeURIComponent($('al').value)); abre($('al').value); };
-  abre(ini);
+  alunos = [{ id: eu, nome: '✎ Eu (testar)' }].concat(alunos.filter(a => a.id !== eu));
+  const nomeDe = id => (alunos.find(a => a.id === id) || { nome: id }).nome;
+  const modo = id => { const m = $('modo'); if (!m) return;
+    m.innerHTML = id === eu ? '<b>✎ Você está testando como aluna.</b> As suas respostas ficam só na sua conta.'
+      : `👁 Vendo as respostas de <b>${esc(nomeDe(id))}</b>: você escreve as correções. Para fazer a atividade, escolha “✎ Eu (testar)”.`; };
+  const trocaAlvo = id => { TESTE = id === eu; souProf = !TESTE; modo(id); abre(id); };
+  $('quem').innerHTML = `<span class="pill p-feito">Você está como professora</span><label for="al">Aluno:</label><select id="al">${alunos.map(a => `<option value="${esc(a.id)}"${a.id === ini ? ' selected' : ''}>${esc(a.nome)}</option>`).join('')}</select><p class="aviso" id="modo" style="flex-basis:100%;margin:6px 0 0"></p>`;
+  $('al').onchange = () => { history.replaceState(null, '', '?aluno=' + encodeURIComponent($('al').value)); trocaAlvo($('al').value); };
+  trocaAlvo(ini);
 });

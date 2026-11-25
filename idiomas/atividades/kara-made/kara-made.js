@@ -128,7 +128,7 @@ async function verifica(){
 /* ---------- quem está vendo ---------- */
 async function abre(email){
   alvo = email; R = {}; conferido = false; liberado = false; let nuvem = true;
-  try { const s = await getDoc(doc(db, 'atividades', alvo)); liberado = s.exists(); const d = (s.exists() && s.data()[ID]) || {}; R = d.r || {}; conferido = !!d.conferido;
+  try { const s = await getDoc(doc(db, 'atividades', alvo)); liberado = s.exists() || TESTE; const d = (s.exists() && s.data()[ID]) || {}; R = d.r || {}; conferido = !!d.conferido;
     const L = (() => { try { return JSON.parse(localStorage.getItem(chaveLocal()) || 'null'); } catch (e) { return null; } })();
     if (!souProf && L && (L.m || 0) > (d.m || 0)) { R = L.r || {}; conferido = false; } }
   catch (e) { console.warn(e); nuvem = false; }
@@ -145,6 +145,8 @@ async function abre(email){
   if (!C) { $('aviso').innerHTML = '<p class="aviso">O conteúdo desta atividade ainda não foi carregado.</p>'; return; }
   pinta();
 }
+/* "✎ Eu (testar)": a professora faz a atividade como aluna, na própria conta, sem misturar com os alunos */
+let TESTE = false;
 onAuthStateChanged(auth, async u => {
   if (!u) return;
   const eu = (u.email || '').toLowerCase(); souProf = PROFS.includes(eu);
@@ -154,7 +156,13 @@ onAuthStateChanged(auth, async u => {
   try { alunos = (await getDocs(collection(db, 'aulas'))).docs.map(d => ({ id: d.id, nome: d.data().nome || d.id })).sort((a, b) => a.nome.localeCompare(b.nome)); } catch (e) {}
   const pedido = (new URLSearchParams(location.search).get('aluno') || '').toLowerCase();
   const ini = pedido || (alunos[0] && alunos[0].id) || eu;
-  $('quem').innerHTML = `<span class="pill">Você está como professora</span><label for="al">Aluno:</label><select id="al">${alunos.map(a => `<option value="${esc(a.id)}"${a.id === ini ? ' selected' : ''}>${esc(a.nome)}</option>`).join('')}</select>`;
-  $('al').onchange = () => { history.replaceState(null, '', '?aluno=' + encodeURIComponent($('al').value)); abre($('al').value); };
-  abre(ini);
+  alunos = [{ id: eu, nome: '✎ Eu (testar)' }].concat(alunos.filter(a => a.id !== eu));
+  const nomeDe = id => (alunos.find(a => a.id === id) || { nome: id }).nome;
+  const modo = id => { const m = $('modo'); if (!m) return;
+    m.innerHTML = id === eu ? '<b>✎ Você está testando como aluna.</b> As suas respostas ficam só na sua conta.'
+      : `👁 Vendo as respostas de <b>${esc(nomeDe(id))}</b> (só leitura). Para responder, escolha “✎ Eu (testar)”.`; };
+  const trocaAlvo = id => { TESTE = id === eu; souProf = !TESTE; modo(id); abre(id); };
+  $('quem').innerHTML = `<span class="pill">Você está como professora</span><label for="al">Aluno:</label><select id="al">${alunos.map(a => `<option value="${esc(a.id)}"${a.id === ini ? ' selected' : ''}>${esc(a.nome)}</option>`).join('')}</select><p class="aviso" id="modo" style="flex-basis:100%;margin:6px 0 0"></p>`;
+  $('al').onchange = () => { history.replaceState(null, '', '?aluno=' + encodeURIComponent($('al').value)); trocaAlvo($('al').value); };
+  trocaAlvo(ini);
 });
