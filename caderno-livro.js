@@ -15,6 +15,7 @@
     PAPEIS = [
       { id: 'pautado', nome: 'Pautado' },
       { id: 'kanji', nome: 'Kanji' },
+      { id: 'cornell', nome: 'Vocabulário' },
       { id: 'pontilhado', nome: 'Pontilhado' },
       { id: 'branco', nome: 'Branco' }
     ],
@@ -37,14 +38,29 @@
     '.lv-fer .cor{width:30px;min-width:30px;height:30px;border-radius:50%;padding:0;border-width:2px}.lv-fer .cor i{display:block;width:16px;height:16px;border-radius:50%}',
     '.lv-fer .esp i{display:block;border-radius:50%;background:#3a2b38}.lv-sep{width:1px;height:24px;background:#ecdadd;margin:0 2px}',
     '.lv button:focus-visible,.lv input:focus-visible,.lv textarea:focus-visible{outline:3px solid #b7a6dc;outline-offset:2px}',
-    '.lv-fotoBt,.lv-dlBt{font:inherit;cursor:pointer;border:1.5px solid #ecdadd;background:#fff;color:#3a2b38;font-weight:700;font-size:13.5px;padding:5px 14px;border-radius:99px;min-height:40px;display:inline-flex;align-items:center;gap:6px}',
-    '.lv-fotoBt:disabled,.lv-dlBt:disabled{opacity:.5;cursor:default}',
+    '.lv-fotoBt,.lv-dlBt,.lv-estBt{font:inherit;cursor:pointer;border:1.5px solid #ecdadd;background:#fff;color:#3a2b38;font-weight:700;font-size:13.5px;padding:5px 14px;border-radius:99px;min-height:40px;display:inline-flex;align-items:center;gap:6px}',
+    '.lv-fotoBt:disabled,.lv-dlBt:disabled,.lv-estBt:disabled{opacity:.5;cursor:default}',
+    '.lv-estBt[aria-pressed="true"]{background:#517158;border-color:#517158;color:#fff}',
     '.lv-papSel{font:inherit;cursor:pointer;border:1.5px solid #ecdadd;background:#fff;color:#3a2b38;font-weight:700;font-size:13.5px;padding:5px 12px;border-radius:99px;min-height:40px}',
     '.lv-img{position:absolute;inset:0;width:100%;height:100%;object-fit:contain;z-index:0;background:#fff}',
     '.lv-pg.c-foto .lv-tx{position:relative;z-index:1;background:none}',
     '.lv-fmsg{position:absolute;left:8%;right:8%;top:42%;z-index:1;text-align:center;font-size:13px;color:#705f6c}',
     '.lv-rf{position:absolute;top:calc(var(--u,4px)*1.6);left:calc(var(--u,4px)*1.6);z-index:4;font:inherit;cursor:pointer;border:1.5px solid #ecdadd;background:#fff;color:#705f6c;border-radius:99px;font-size:12px;font-weight:700;padding:3px 10px;min-height:28px}',
-    '.lv.caneta .lv-rf{display:none}.lv.leitura .lv-rf,.lv.leitura .lv-fotoBt,.lv.leitura .lv-papSel,.lv.leitura .lv-dlBt{display:none!important}',
+    '.lv.caneta .lv-rf{display:none}.lv.leitura .lv-rf,.lv.leitura .lv-fotoBt,.lv.leitura .lv-papSel,.lv.leitura .lv-dlBt,.lv.leitura .lv-estBt{display:none!important}',
+    /* painel de estudo / flashcards */
+    '.lv-est{background:#fff;border:1.5px solid #ecdadd;border-radius:18px;padding:18px;display:grid;gap:14px;box-shadow:0 14px 30px -22px rgba(58,43,56,.45)}',
+    '.lv-est-h{display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap}',
+    '.lv-est-h b{font-family:"Baloo 2",system-ui,sans-serif;font-size:18px}',
+    '.lv-est-prg{font-size:13px;color:#705f6c;font-weight:700}',
+    '.lv-card{background:#fdf6f4;border:1.5px solid #ecdadd;border-radius:16px;padding:28px 20px;min-height:170px;display:grid;place-items:center;text-align:center;gap:12px;cursor:pointer;transition:border-color .15s}',
+    '.lv-card:hover{border-color:#c23f5e}',
+    '.lv-card-f{font-family:"Zen Maru Gothic",system-ui,sans-serif;font-size:clamp(22px,4vw,30px);font-weight:800;color:#3a2b38;word-break:break-word}',
+    '.lv-card-v{font-size:17px;color:#517158;font-weight:700;padding-top:10px;border-top:1.5px dashed #ecdadd;width:100%}',
+    '.lv-card-d{font-size:13px;color:#705f6c}',
+    '.lv-est-acts{display:flex;flex-wrap:wrap;justify-content:center;gap:8px}',
+    '.lv-est-acts button{font:inherit;cursor:pointer;border:1.5px solid #ecdadd;background:#fff;color:#3a2b38;border-radius:99px;padding:8px 16px;font-size:14px;font-weight:700;min-height:40px}',
+    '.lv-est-acts button.ok{background:#517158;border-color:#517158;color:#fff}',
+    '.lv-est-acts button.rv{border-color:#c23f5e;color:#c23f5e}',
     /* livro aberto + palco de zoom/pan */
     '.lv-stage{position:relative;overflow:hidden;border-radius:16px}',
     '.lv-livro{position:relative;display:grid;grid-template-columns:1fr;gap:0;perspective:1800px;touch-action:pan-y;transform-origin:0 0;will-change:transform}',
@@ -79,6 +95,7 @@
     /* folha pautada e variações de papel */
     '.lv-tx{flex:1;min-height:0;width:100%;resize:none;overflow:hidden;border:0;padding:0;color:#3a2b38;font:inherit;font-size:max(14px,calc(var(--u,4px)*3.7));line-height:max(27px,calc(var(--u,4px)*6.6));background:repeating-linear-gradient(transparent 0 calc(max(27px,calc(var(--u,4px)*6.6)) - 1px),#ecdadd calc(max(27px,calc(var(--u,4px)*6.6)) - 1px) max(27px,calc(var(--u,4px)*6.6)));background-attachment:local}',
     '.lv-pg.pap-kanji .lv-tx{background-image:' + KANJI_SVG + ';background-size:calc(max(36px,calc(var(--u,4px)*11))) calc(max(36px,calc(var(--u,4px)*11)));background-repeat:repeat;background-attachment:local}',
+    '.lv-pg.pap-cornell .lv-tx{background:linear-gradient(90deg,transparent 0 calc(36% - 1px),#e8bcc5 calc(36% - 1px) calc(36% + 1px),transparent calc(36% + 1px) 100%),repeating-linear-gradient(transparent 0 calc(max(27px,calc(var(--u,4px)*6.6)) - 1px),#ecdadd calc(max(27px,calc(var(--u,4px)*6.6)) - 1px) max(27px,calc(var(--u,4px)*6.6)));background-attachment:local}',
     '.lv-pg.pap-pontilhado .lv-tx{background-image:radial-gradient(#d8c1c7 1.35px,transparent 1.45px);background-size:calc(max(18px,calc(var(--u,4px)*4.8))) calc(max(18px,calc(var(--u,4px)*4.8)));background-attachment:local}',
     '.lv-pg.pap-branco .lv-tx{background:none}',
     '.lv-tx:focus{outline:none}',
@@ -233,7 +250,9 @@
       '<select class="lv-papSel" aria-label="Modelo de papel da página" title="Modelo de papel">' +
       PAPEIS.map(function (p) { return '<option value="' + p.id + '">📄 ' + p.nome + '</option>'; }).join('') + '</select>' +
       '<button type="button" class="lv-fotoBt" aria-label="Colocar uma foto numa página">📷 Foto</button><input type="file" class="lv-fotoIn" accept="image/*" hidden>' +
-      '<button type="button" class="lv-dlBt" aria-label="Baixar página como imagem PNG" title="Baixar página como imagem PNG">↓ PNG</button>' +
+      '<button type="button" class="lv-estBt" aria-pressed="false" aria-label="Estudar palavras desta anotação como flashcards" title="Modo estudo / Flashcards">🧠 Estudar</button>' +
+      '<button type="button" class="lv-dlBt" data-exp="png" aria-label="Baixar página como imagem PNG" title="Baixar página como imagem PNG">↓ PNG</button>' +
+      '<button type="button" class="lv-dlBt" data-exp="pdf" aria-label="Exportar anotação completa como PDF" title="Salvar anotação inteira em PDF">↓ PDF</button>' +
       '<div class="lv-fer" role="toolbar" aria-label="Ferramentas da caneta" hidden>' +
       '<button type="button" data-f="pen" aria-pressed="true" aria-label="Caneta" title="Caneta">' + IC.pen + '</button>' +
       '<button type="button" data-f="mar" aria-pressed="false" aria-label="Marca-texto" title="Marca-texto">' + IC.mar + '</button>' +
@@ -247,12 +266,15 @@
       '<button type="button" class="zm" data-f="z0" aria-label="Restaurar zoom 100%" title="Restaurar zoom">100%</button>' +
       '<button type="button" data-f="z+" aria-label="Aumentar zoom" title="Aumentar zoom">+</button></div>' +
       '</div>' +
+      '<div class="lv-est" hidden></div>' +
       '<div class="lv-stage"><div class="lv-livro" aria-live="off"></div></div>' +
       '<div class="lv-rola"><button type="button" data-r="-1" aria-label="Folha de cima" title="Folha de cima">▲</button><button type="button" data-r="1" aria-label="Próxima folha" title="Próxima folha">▼</button></div>' +
       '<div class="lv-nav"><button type="button" data-n="-1" aria-label="Página anterior">' + IC.ant + '</button><span class="lbl" aria-live="polite"></span><button type="button" data-n="1" aria-label="Próxima página">' + IC.prox + '</button><button type="button" class="mais" data-n="mais">+ página</button><button type="button" class="vst" data-n="vista" aria-label="Mudar entre uma página e duas páginas"></button></div>' +
       '<div class="lv-prof" hidden><button type="button" class="lv-pf" aria-pressed="false"></button><span class="lv-pfs" aria-live="polite"></span></div>' +
       '<p class="lv-dica" hidden>Com a caneta em uso, a palma da mão não risca a folha. Para virar a página, use as setas.</p>';
-    var fBt = el.querySelector('.lv-fotoBt'), fIn = el.querySelector('.lv-fotoIn'), papSel = el.querySelector('.lv-papSel'), dlBt = el.querySelector('.lv-dlBt');
+    var fBt = el.querySelector('.lv-fotoBt'), fIn = el.querySelector('.lv-fotoIn'), papSel = el.querySelector('.lv-papSel'),
+      dlPng = el.querySelector('[data-exp="png"]'), dlPdf = el.querySelector('[data-exp="pdf"]'),
+      estBt = el.querySelector('.lv-estBt'), estBox = el.querySelector('.lv-est');
     papSel.onchange = function () {
       if (!id || !pags[ini]) return;
       var v = papSel.value === 'pautado' ? null : papSel.value;
@@ -260,7 +282,9 @@
       aplicaPapel(pg(ini), v);
       salvaTudo();
     };
-    dlBt.onclick = function () { if (!id || !pags[ini]) return; exportarPng(ini); };
+    dlPng.onclick = function () { if (!id || !pags[ini]) return; exportarPng(ini); };
+    dlPdf.onclick = function () { if (!id || !pags.length) return; exportarPdf(); };
+    estBt.onclick = function () { alternarEstudo(); };
     fBt.onclick = function () { if (!id) return; fIn.value = ''; fIn.click(); };
     fIn.onchange = function () {
       var f = fIn.files && fIn.files[0]; if (!f || !id) return;
@@ -313,7 +337,7 @@
     function salvaTudo() { salva({ x: pags[0].x, s: pags[0].s, f: pags[0].f || null, pap: pags[0].pap || null, pp: pags.slice(1).map(pp1) }); }
     function aplicaPapel(d, pap) {
       if (!d) return;
-      d.classList.remove('pap-kanji', 'pap-pontilhado', 'pap-branco');
+      d.classList.remove('pap-kanji', 'pap-cornell', 'pap-pontilhado', 'pap-branco');
       if (pap && pap !== 'pautado') d.classList.add('pap-' + pap);
     }
 
@@ -552,17 +576,21 @@
       }
       atualizaHistBts();
     }
-    function exportarPng(i) {
-      var p = pags[i], n = nota(), dEl = pg(i); if (!p || !n) return;
+    function renderPaginaCanvas(i) {
+      var p = pags[i], n = nota(), dEl = pg(i); if (!p || !n) return null;
       var c = document.createElement('canvas'); c.width = W; c.height = H;
       var ctx = c.getContext('2d');
       ctx.fillStyle = '#ffffff'; ctx.fillRect(0, 0, W, H);
       /* desenha papel de fundo */
       var pap = p.pap || 'pautado';
       if (!p.f) {
-        if (pap === 'pautado') {
+        if (pap === 'pautado' || pap === 'cornell') {
           ctx.strokeStyle = '#ecdadd'; ctx.lineWidth = 3;
           for (var y = 360; y < H - 140; y += 92) { ctx.beginPath(); ctx.moveTo(120, y); ctx.lineTo(W - 120, y); ctx.stroke(); }
+          if (pap === 'cornell') {
+            ctx.strokeStyle = '#e8bcc5'; ctx.lineWidth = 4;
+            ctx.beginPath(); ctx.moveTo(Math.round(W * 0.36), 280); ctx.lineTo(Math.round(W * 0.36), H - 140); ctx.stroke();
+          }
         } else if (pap === 'kanji') {
           var step = 160; ctx.strokeStyle = '#e5cfd4'; ctx.lineWidth = 2.5;
           for (var xk = 120; xk <= W - 120; xk += step) { ctx.beginPath(); ctx.moveTo(xk, 280); ctx.lineTo(xk, H - 160); ctx.stroke(); }
@@ -572,40 +600,127 @@
           for (var xp = 140; xp < W - 120; xp += 72) for (var yp = 280; yp < H - 140; yp += 72) { ctx.beginPath(); ctx.arc(xp, yp, 3.5, 0, 6.2832); ctx.fill(); }
         }
       }
-      function finalizar() {
-        /* título e texto simples */
-        ctx.fillStyle = '#3a2b38';
-        var ty = 170;
-        if (i === 0 && n.t) {
-          ctx.font = '800 64px "Baloo 2", system-ui, sans-serif';
-          ctx.fillText(n.t.slice(0, 50), 140, ty);
-          ty += 110;
-        }
-        if (p.x) {
-          ctx.font = '500 44px "Zen Maru Gothic", system-ui, sans-serif';
-          var linhas = p.x.split('\n');
-          linhas.forEach(function (ln) {
-            if (ty < H - 140) { ctx.fillText(ln, 140, ty, W - 280); ty += 76; }
-          });
-        }
-        /* traços da caneta */
-        p.s.forEach(function (t) { traco(ctx, t, 1); });
-        c.toBlob(function (bl) {
-          if (!bl) return;
-          var a = document.createElement('a'); a.href = URL.createObjectURL(bl);
-          a.download = 'caderno-pagina-' + (i + 1) + '.png';
-          document.body.appendChild(a); a.click(); a.remove();
-          setTimeout(function () { URL.revokeObjectURL(a.href); }, 2000);
-        });
-      }
       var imEl = dEl && dEl.querySelector('.lv-img');
       if (p.f && imEl && imEl.complete && imEl.naturalWidth) {
         var sc = Math.min(W / imEl.naturalWidth, H / imEl.naturalHeight);
         var dw = imEl.naturalWidth * sc, dh = imEl.naturalHeight * sc;
         ctx.drawImage(imEl, (W - dw) / 2, (H - dh) / 2, dw, dh);
       }
-      finalizar();
+      /* título e texto */
+      ctx.fillStyle = '#3a2b38';
+      var ty = 170;
+      if (i === 0 && n.t) {
+        ctx.font = '800 64px "Baloo 2", system-ui, sans-serif';
+        ctx.fillText(n.t.slice(0, 50), 140, ty);
+        ty += 110;
+      }
+      if (p.x) {
+        ctx.font = '500 44px "Zen Maru Gothic", system-ui, sans-serif';
+        var linhas = p.x.split('\n');
+        linhas.forEach(function (ln) {
+          if (ty < H - 140) { ctx.fillText(ln, 140, ty, W - 280); ty += 76; }
+        });
+      }
+      /* traços da caneta */
+      p.s.forEach(function (t) { traco(ctx, t, 1); });
+      return c;
     }
+    function exportarPng(i) {
+      var c = renderPaginaCanvas(i); if (!c) return;
+      c.toBlob(function (bl) {
+        if (!bl) return;
+        var a = document.createElement('a'); a.href = URL.createObjectURL(bl);
+        a.download = 'caderno-pagina-' + (i + 1) + '.png';
+        document.body.appendChild(a); a.click(); a.remove();
+        setTimeout(function () { URL.revokeObjectURL(a.href); }, 2000);
+      });
+    }
+    function exportarPdf() {
+      var n = nota(); if (!n || !pags.length) return;
+      var imgs = [];
+      for (var i = 0; i < pags.length; i++) {
+        var c = renderPaginaCanvas(i);
+        if (c) imgs.push(c.toDataURL('image/png'));
+      }
+      if (!imgs.length) return;
+      var w = window.open('', '_blank');
+      if (!w) { window.print(); return; }
+      var tit = esc((n.t || 'Caderno de Unir Versos').trim());
+      w.document.write('<!DOCTYPE html><html lang="pt-BR"><head><meta charset="UTF-8"><title>' + tit + '</title><style>@page{size:A4 portrait;margin:0}body{margin:0;background:#fff}img{display:block;width:100vw;height:auto;page-break-after:always;break-after:page}img:last-child{page-break-after:auto;break-after:auto}</style></head><body>' +
+        imgs.map(function (src, idx) { return '<img src="' + src + '" alt="Página ' + (idx + 1) + '">'; }).join('') +
+        '<script>window.onload=function(){setTimeout(function(){window.print();},250);};<\/script></body></html>');
+      w.document.close();
+    }
+
+    /* ---------- modo estudo / flashcards automáticos ---------- */
+    var estudoOn = false, filaEst = [], totalEst = 0, acertosEst = 0, reveladoEst = false;
+    function extrairCartoes() {
+      var out = [];
+      pags.forEach(function (pg) {
+        String(pg.x || '').split('\n').forEach(function (ln) {
+          var t = ln.trim(); if (!t) return;
+          var m = t.match(/^(.+?)\s*(?:—|–|\s-\s|:\s+|=\s+)\s*(.+)$/);
+          if (m && m[1].trim() && m[2].trim()) out.push({ f: m[1].trim(), v: m[2].trim() });
+        });
+      });
+      return out;
+    }
+    function falarJaEst(txt) {
+      if (window.UniDic && window.UniDic.falar) { window.UniDic.falar(txt); return; }
+      if (!txt || !window.speechSynthesis) return;
+      try {
+        window.speechSynthesis.cancel();
+        var u = new SpeechSynthesisUtterance(String(txt)); u.lang = 'ja-JP'; u.rate = 0.92;
+        window.speechSynthesis.speak(u);
+      } catch (e) {}
+    }
+    function textoFala(frente) {
+      var m = frente.match(/\(([^·)]+)/);
+      return m ? m[1].trim() : frente.replace(/\([^)]*\)/g, '').trim();
+    }
+    function pintaEstudo() {
+      if (!estudoOn) { estBox.hidden = true; stage.hidden = false; nav.hidden = false; return; }
+      estBox.hidden = false; stage.hidden = true; nav.hidden = true;
+      if (!totalEst) {
+        estBox.innerHTML = '<div class="lv-est-h"><b>🧠 Modo Estudo</b><button type="button" class="lv-estBt" data-es="fechar">Voltar ao caderno</button></div>' +
+          '<p class="lv-card-d">Para gerar flashcards automáticos, escreva linhas no formato <b>termo — tradução</b> (ou use o botão <b>+ Salvar no caderno</b> do Dicionário!).</p>';
+        return;
+      }
+      if (!filaEst.length) {
+        estBox.innerHTML = '<div class="lv-est-h"><b>🧠 Revisão concluída!</b><button type="button" class="lv-estBt" data-es="fechar">Voltar ao caderno</button></div>' +
+          '<div class="lv-card"><div class="lv-card-f">✨ ' + acertosEst + ' de ' + totalEst + ' dominados!</div><div class="lv-card-d">Você revisou todos os cartões desta anotação.</div></div>' +
+          '<div class="lv-est-acts"><button type="button" class="ok" data-es="reiniciar">Estudar novamente</button><button type="button" data-es="fechar">Voltar ao caderno</button></div>';
+        return;
+      }
+      var cur = filaEst[0], temVoz = !!window.speechSynthesis;
+      estBox.innerHTML = '<div class="lv-est-h"><b>🧠 Modo Estudo</b><span class="lv-est-prg">Restam ' + filaEst.length + ' · ✓ ' + acertosEst + '/' + totalEst + '</span><button type="button" class="lv-estBt" data-es="fechar">Voltar ao caderno</button></div>' +
+        '<div class="lv-card" data-es="virar" role="button" tabindex="0" aria-label="Toque para revelar a tradução">' +
+        '<div class="lv-card-f">' + esc(cur.f) + '</div>' +
+        (reveladoEst ? '<div class="lv-card-v">' + esc(cur.v) + '</div>' : '<div class="lv-card-d">Toque no cartão para revelar a tradução</div>') +
+        '</div>' +
+        '<div class="lv-est-acts">' +
+        (temVoz ? '<button type="button" data-es="ouvir">🔊 Ouvir</button>' : '') +
+        (reveladoEst ? '<button type="button" class="rv" data-es="revisar">↺ Revisar de novo</button><button type="button" class="ok" data-es="acertei">✓ Sei essa</button>' : '<button type="button" class="ok" data-es="virar">Revelar tradução</button>') +
+        '</div>';
+    }
+    function alternarEstudo(forca) {
+      estudoOn = forca != null ? !!forca : !estudoOn;
+      estBt.setAttribute('aria-pressed', String(estudoOn));
+      if (estudoOn) {
+        filaEst = extrairCartoes(); totalEst = filaEst.length; acertosEst = 0; reveladoEst = false;
+      }
+      pintaEstudo();
+    }
+    estBox.addEventListener('click', function (e) {
+      var b = e.target.closest('[data-es]'); if (!b) return;
+      var a = b.dataset.es;
+      if (a === 'fechar') alternarEstudo(false);
+      else if (a === 'reiniciar') alternarEstudo(true);
+      else if (a === 'virar') { if (!reveladoEst) { reveladoEst = true; pintaEstudo(); } }
+      else if (a === 'ouvir' && filaEst[0]) falarJaEst(textoFala(filaEst[0].f));
+      else if (a === 'acertei' && filaEst.length) { filaEst.shift(); acertosEst++; reveladoEst = false; pintaEstudo(); }
+      else if (a === 'revisar' && filaEst.length) { var item = filaEst.shift(); filaEst.push(item); reveladoEst = false; pintaEstudo(); }
+    });
     function caneta(c, i) {
       var atual = null, lx = 0, ly = 0, apagando = false, borrou = false;
       function pos(e) { var r = c.getBoundingClientRect(); return [Math.round((e.clientX - r.left) / r.width * W), Math.round((e.clientY - r.top) / r.height * H)]; }
@@ -770,6 +885,7 @@
 
     var api = {
       abrir: function (novoId, manter) {
+        if (estudoOn) alternarEstudo(false);
         var n = C.obter(novoId); if (!n) { id = null; pags = []; livro.innerHTML = ''; lbl.textContent = ''; cxProf.hidden = true; resetaZoom(); return; }
         var mesmo = novoId === id; id = novoId; ultimoM = n.m || 0; pags = lePags(n); hist = []; redo = []; atualizaHistBts();
         if (!(mesmo && manter)) { ini = 0; resetaZoom(); } ini = Math.min(ini, pags.length - 1); if (dupla) ini -= ini % 2;

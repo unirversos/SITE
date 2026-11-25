@@ -140,7 +140,7 @@
       if (gaveta) setTimeout(function () { livro.reajustar(); }, 260);
       dp.classList.toggle('on', v); dab.setAttribute('aria-expanded', String(v)); marca(); dab.style.display = v ? 'none' : '';
       if (v) {
-        if (!dic) { var fazer = function () { dic = UniDic.montar($('cf-dm'), { salvar: salvaPalavra }); dic.foca(); }; if (window.UniDic) fazer(); else carrega('/caderno-dic.js?v=6', fazer); }
+        if (!dic) { var fazer = function () { dic = UniDic.montar($('cf-dm'), { salvar: salvaPalavra }); dic.foca(); }; if (window.UniDic) fazer(); else carrega('/caderno-dic.js?v=7', fazer); }
         else dic.foca();
       } else { dp.classList.remove('sheet'); p.style.top = ''; setTimeout(function () { livro.reajustar(); }, 260); dab.focus(); }
     }
@@ -160,7 +160,7 @@
   function carrega(src, fn) { var t = document.createElement('script'); t.src = src; t.onload = fn; document.head.appendChild(t); }
   function inicia() {
     function pronto() { C = window.UniCaderno; if (document.body) montar(); else document.addEventListener('DOMContentLoaded', montar); }
-    function com() { if (window.UniLivro) pronto(); else carrega('/caderno-livro.js?v=16', pronto); }
+    function com() { if (window.UniLivro) pronto(); else carrega('/caderno-livro.js?v=17', pronto); }
     if (window.UniCaderno) com(); else carrega('/caderno-dados.js?v=4', com);
   }
   inicia();

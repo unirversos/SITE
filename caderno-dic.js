@@ -7,7 +7,23 @@
   var TEM_JA = /[぀-ヿ㐀-鿿]/;
   /* endereço do intermediário (Cloudflare Worker); vazio = o navegador fala direto com os dicionários */
   var API = '';
-  var CK = 'uniDicPt2';
+  var CK = 'uniDicPt2', CR = 'uniDicRes1', CH = 'uniDicHist1';
+  function lerResCache() { try { return JSON.parse(localStorage.getItem(CR) || '{}'); } catch (e) { return {}; } }
+  function gravaResCache(c) { try { var k = Object.keys(c); if (k.length > 150) k.slice(0, 50).forEach(function (x) { delete c[x]; }); localStorage.setItem(CR, JSON.stringify(c)); } catch (e) {} }
+  function lerHist() { try { var v = JSON.parse(localStorage.getItem(CH) || '[]'); return Array.isArray(v) ? v : []; } catch (e) { return []; } }
+  function addHist(t) { try { var h = lerHist().filter(function (x) { return x.toLowerCase() !== t.toLowerCase(); }); h.unshift(t); localStorage.setItem(CH, JSON.stringify(h.slice(0, 8))); } catch (e) {} }
+  function falarJa(txt) {
+    if (!txt || !window.speechSynthesis) return;
+    try {
+      window.speechSynthesis.cancel();
+      var u = new SpeechSynthesisUtterance(String(txt));
+      u.lang = 'ja-JP'; u.rate = 0.92;
+      var vozes = window.speechSynthesis.getVoices ? window.speechSynthesis.getVoices() : [];
+      var vz = vozes.filter(function (v) { return v.lang && v.lang.toLowerCase().indexOf('ja') === 0; })[0];
+      if (vz) u.voice = vz;
+      window.speechSynthesis.speak(u);
+    } catch (e) {}
+  }
 
   /* kana → romaji (Hepburn), para mostrar a leitura em romaji */
   var RM = (function () {
@@ -95,32 +111,46 @@
   }
 
   var CSS = '.dc{display:flex;flex-direction:column;gap:10px}.dc form{display:flex;gap:8px}.dc input{flex:1;min-width:0;font:inherit;font-size:16px;border:1.5px solid #ecdadd;border-radius:12px;padding:9px 12px;background:#fff;color:#3a2b38}' +
-    '.dc .bt{font:inherit;font-size:14px;font-weight:700;border:1.5px solid #c23f5e;background:#c23f5e;color:#fff;border-radius:99px;padding:6px 16px;min-height:42px;cursor:pointer}.dc .bt:focus-visible,.dc input:focus-visible,.dc .sv:focus-visible{outline:3px solid #b7a6dc;outline-offset:2px}' +
+    '.dc .bt{font:inherit;font-size:14px;font-weight:700;border:1.5px solid #c23f5e;background:#c23f5e;color:#fff;border-radius:99px;padding:6px 16px;min-height:42px;cursor:pointer}.dc .bt:focus-visible,.dc input:focus-visible,.dc .sv:focus-visible,.dc .sp:focus-visible,.dc .hc:focus-visible{outline:3px solid #b7a6dc;outline-offset:2px}' +
+    '.dc .hist{display:flex;flex-wrap:wrap;gap:6px}.dc .hc{font:inherit;font-size:12.5px;font-weight:700;border:1.5px solid #ecdadd;background:#fdf6f4;color:#705f6c;border-radius:99px;padding:3px 10px;cursor:pointer}.dc .hc:hover{border-color:#c23f5e;color:#3a2b38}' +
     '.dc .it{background:#fff;border:1.5px solid #ecdadd;border-radius:16px;padding:12px 14px;display:flex;flex-direction:column;gap:6px}.dc .pal{display:flex;align-items:baseline;gap:10px;flex-wrap:wrap}.dc .jp{font:800 24px/1.2 "Zen Maru Gothic",system-ui,sans-serif}.dc .rd{font-size:14px;color:#705f6c}' +
     '.dc .cm{font-size:11px;font-weight:800;color:#a8324f;background:#fdeaee;border-radius:99px;padding:1px 8px}.dc ol{margin:0;padding-left:20px;font-size:14.5px}.dc li{margin:2px 0}.dc .en{font-size:12.5px;color:#705f6c}.dc .nt{font-size:12.5px;color:#705f6c}' +
-    '.dc .sv{align-self:flex-start;font:inherit;font-size:13.5px;font-weight:700;border:1.5px solid #c23f5e;background:#fff;color:#a8324f;border-radius:99px;padding:6px 14px;min-height:38px;cursor:pointer}.dc .sv.ok{background:#e8efe8;border-color:#9bb59b;color:#3f5a3f}' +
+    '.dc .acts{display:flex;flex-wrap:wrap;gap:8px;align-items:center}' +
+    '.dc .sv{font:inherit;font-size:13.5px;font-weight:700;border:1.5px solid #c23f5e;background:#fff;color:#a8324f;border-radius:99px;padding:6px 14px;min-height:38px;cursor:pointer}.dc .sv.ok{background:#e8efe8;border-color:#9bb59b;color:#3f5a3f}' +
+    '.dc .sp{font:inherit;font-size:13.5px;font-weight:700;border:1.5px solid #ecdadd;background:#fdf6f4;color:#3a2b38;border-radius:99px;padding:6px 12px;min-height:38px;cursor:pointer}.dc .sp:hover{border-color:#c23f5e}' +
     '.dc .ms{background:#fff;border:1.5px dashed #ecdadd;border-radius:16px;padding:18px 14px;text-align:center;color:#705f6c;font-size:14px}.dc .ms a{color:#a8324f;font-weight:700}';
 
   function montar(el, op) {
     if (!document.getElementById('dc-css')) { var st = document.createElement('style'); st.id = 'dc-css'; st.textContent = CSS; document.head.appendChild(st); }
-    el.innerHTML = '<div class="dc"><form role="search"><input type="search" id="dc-q" placeholder="水 · mizu · water · água" aria-label="Palavra para buscar" autocomplete="off" autocapitalize="off" spellcheck="false"><button class="bt" type="submit">Buscar</button></form><div id="dc-r" aria-live="polite"></div></div>';
-    var f = el.querySelector('form'), q = el.querySelector('#dc-q'), R = el.querySelector('#dc-r'), seq = 0;
+    el.innerHTML = '<div class="dc"><form role="search"><input type="search" id="dc-q" placeholder="水 · mizu · water · água" aria-label="Palavra para buscar" autocomplete="off" autocapitalize="off" spellcheck="false"><button class="bt" type="submit">Buscar</button></form><div class="hist" id="dc-h" hidden></div><div id="dc-r" aria-live="polite"></div></div>';
+    var f = el.querySelector('form'), q = el.querySelector('#dc-q'), H = el.querySelector('#dc-h'), R = el.querySelector('#dc-r'), seq = 0;
+    function pintaHist() {
+      var h = lerHist();
+      H.hidden = !h.length;
+      H.innerHTML = h.map(function (w) { return '<button type="button" class="hc">' + esc(w) + '</button>'; }).join('');
+    }
+    H.onclick = function (e) { var b = e.target.closest('.hc'); if (!b) return; q.value = b.textContent; buscar(); };
+    pintaHist();
     function msg(h) { R.innerHTML = '<div class="ms">' + h + '</div>'; }
     function links(t) { return 'Abrir "' + esc(t) + '" em <a href="https://jotoba.de/search/0/' + encodeURIComponent(t) + '" target="_blank" rel="noopener">Jotoba</a> ou <a href="https://jisho.org/search/' + encodeURIComponent(t) + '" target="_blank" rel="noopener">Jisho</a>.'; }
     function linhaSalvar(x, pt) { return (x.k ? x.k + (x.r ? ' (' + x.r + ' · ' + RM(x.r) + ')' : '') : x.r + ' (' + RM(x.r) + ')') + ' — ' + (pt || x.s[0].g.slice(0, 3).join(', ')); }
     function pinta(rs, texto) {
+      var temVoz = !!window.speechSynthesis;
       R.innerHTML = '<div class="dc">' + rs.map(function (x, i) {
         return '<div class="it" data-i="' + i + '"><div class="pal"><span class="jp">' + esc(x.k || x.r) + '</span>' + '<span class="rd">' + (x.k && x.r ? esc(x.r) + ' · ' : '') + '<b>' + esc(RM(x.r)) + '</b></span>' + (x.comum ? '<span class="cm">comum</span>' : '') + '</div>' +
           '<ol>' + x.s.slice(0, 3).map(function (s) { return '<li>' + esc(s.g.join('; ')) + '</li>'; }).join('') + '</ol>' +
-          '<div class="pt nt" hidden></div><button class="sv" type="button">+ Salvar no caderno</button></div>';
+          '<div class="pt nt" hidden></div><div class="acts"><button class="sv" type="button">+ Salvar no caderno</button>' +
+          (temVoz ? '<button class="sp" type="button" aria-label="Ouvir pronúncia em japonês">🔊 Ouvir</button>' : '') + '</div></div>';
       }).join('') + '<div class="nt">' + texto + '</div></div>';
       var cache = lerCache();
       Array.prototype.forEach.call(R.querySelectorAll('.it'), function (card, i) {
         var x = rs[i], en = x.s[0].g.slice(0, 3).join(', '), ptEl = card.querySelector('.pt');
         function mostra(t) { t = t.split(/\s*[,;]\s*/).filter(function (w, i, l) { return w && l.map(function (z) { return z.toLowerCase(); }).indexOf(w.toLowerCase()) === i; }).join(', '); x.pt = t; ptEl.hidden = false; ptEl.textContent = 'PT (tradução automática): ' + t; }
         if (cache[en]) mostra(cache[en]);
-        else if (i < 5) traduz(en, 'en', 'pt-BR').then(function (t) { var c = lerCache(); c[en] = t; gravaCache(c); mostra(t); }, function () {});
+        else if (i < 5 && navigator.onLine !== false) traduz(en, 'en', 'pt-BR').then(function (t) { var c = lerCache(); c[en] = t; gravaCache(c); mostra(t); }, function () {});
         card.querySelector('.sv').onclick = function () { var b = this; op.salvar(linhaSalvar(x, x.pt)); b.textContent = '✓ Salvo'; b.classList.add('ok'); setTimeout(function () { b.textContent = '+ Salvar no caderno'; b.classList.remove('ok'); }, 1800); };
+        var sp = card.querySelector('.sp');
+        if (sp) sp.onclick = function () { falarJa(x.r || x.k); };
       });
     }
     /* teclado japonês (IME): enquanto a palavra está sendo convertida, o texto ainda não "entrou" no campo.
@@ -138,21 +168,36 @@
     function buscar() {
       var t = q.value.trim(); if (!t) return;
       ultima = t;
-      var n = ++seq; msg('Buscando…');
+      var kCache = t.toLowerCase(), rc = lerResCache();
+      addHist(t); pintaHist();
+      /* se estiver offline (ou já estiver em cache), mostra imediatamente do cache */
+      if (rc[kCache] && rc[kCache].rs && rc[kCache].rs.length) {
+        pinta(rc[kCache].rs, rc[kCache].tx + (navigator.onLine === false ? ' · modo offline (cache)' : ''));
+        if (navigator.onLine === false) return;
+      } else {
+        msg('Buscando…');
+      }
+      var n = ++seq;
       var extra = null;
       var tarefas = [busca(t).catch(function (e) { return e; })];
       if (!TEM_JA.test(t)) tarefas.push(traduz(t, 'pt-BR', 'en').then(function (en) { if (en && en.toLowerCase() !== t.toLowerCase()) { extra = en; return busca(en).catch(function () { return []; }); } return []; }, function () { return []; }));
       Promise.all(tarefas).then(function (v) {
         if (n !== seq) return;
         var a = Array.isArray(v[0]) ? v[0] : null, b = v[1] || [];
-        if (!a && !b.length) { msg('Não consegui falar com o dicionário agora (internet ou bloqueio do navegador). ' + links(t)); return; }
+        if (!a && !b.length) {
+          if (rc[kCache] && rc[kCache].rs && rc[kCache].rs.length) return;
+          msg('Não consegui falar com o dicionário agora (internet ou bloqueio do navegador). ' + links(t)); return;
+        }
         var vistos = {}, rs = [];
         (b || []).concat(a || []).forEach(function (x) { var k = (x.k || '') + '|' + x.r; if (!vistos[k]) { vistos[k] = 1; rs.push(x); } });
         if (!rs.length) { msg('Nada encontrado para "' + esc(t) + '". ' + links(t)); return; }
-        pinta(rs.slice(0, 10), 'Significados em inglês pelo ' + (a && a.fonte || 'Jotoba') + (extra ? ' · também busquei por "' + esc(extra) + '"' : '') + '. O português é tradução automática: confira antes de estudar.');
+        var rsTop = rs.slice(0, 10);
+        var tx = 'Significados em inglês pelo ' + (a && a.fonte || 'Jotoba') + (extra ? ' · também busquei por "' + esc(extra) + '"' : '') + '. O português é tradução automática: confira antes de estudar.';
+        var c2 = lerResCache(); c2[kCache] = { rs: rsTop, tx: tx }; gravaResCache(c2);
+        pinta(rsTop, tx);
       });
     }
     return { foca: function () { setTimeout(function () { q.focus(); }, 50); } };
   }
-  window.UniDic = { montar: montar };
+  window.UniDic = { montar: montar, falar: falarJa };
 })();
