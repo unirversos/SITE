@@ -34,6 +34,8 @@ const questao = t => { const l = String(t || '').split('\n').map(x => x.trim()).
 const gabarito = t => { const m = String(t || '').match(/正解[：:]\s*([1-4１-４])/); const n = m ? '1234１２３４'.indexOf(m[1]) % 4 + 1 : 0;
   return { n, ex: String(t || '').replace(/^.*?正解[：:]\s*[1-4１-４]\s*/s, '').replace(/^【解説】\s*/, '').trim() }; };
 const itens = A.itens.map((r, n) => ({ n, s: r[0], d: r[1], tm: r[2], tipo: r[3], es: r[4], vo: r[5], q: r[6], min: r[7], tx: r[8] || '', qq: questao(r[9]), gb: gabarito(r[10]), xt: r[11] }));
+/* sem estratégia no material (ex.: Leitura N3): o botão de mostrar estratégias some */
+if (!itens.some(i => i.es)) $('oc').hidden = true;
 let oculta = (() => { try { return localStorage.getItem('uniAtivOcultaEstr') !== '0'; } catch (e) { return true; } })(), abertosEx = new Set();
 let R = {}, alvo = '', souProf = false, nuvem = true, filtro = { sem: 0, st: 'praticar', q: '' }, abertosPt = new Set();
 
@@ -167,11 +169,11 @@ function card(i){
     <div class="top"><span>${SEM(i.s)} · ${DIA(i.d)}${i.min ? ` · ⏱ ${i.min} min` : ''}</span><span>${novo(i.n) ? `<button type="button" class="novo" data-visto="${i.n}" title="Marcar como visto">nova correção · ✓ vi</button> ` : ''}<span class="pill p-${st}">${ST[st]}</span></span></div>
     <h3><span lang="ja">${esc(i.tm)}</span></h3>
     <p class="tipo">${esc(i.tipo)}</p>
-    ${oculta && !abertosEx.has(i.n) ? `<button type="button" class="verex" data-ex="${i.n}">👁 ver estratégia</button>` : `<div class="estr"><b>Estratégia</b>${esc(i.es)}${oculta ? ` <button type="button" class="verpt" data-ex="${i.n}">ocultar</button>` : ''}</div>`}
+    ${!i.es ? '' : oculta && !abertosEx.has(i.n) ? `<button type="button" class="verex" data-ex="${i.n}">👁 ver estratégia</button>` : `<div class="estr"><b>Estratégia</b>${esc(i.es)}${oculta ? ` <button type="button" class="verpt" data-ex="${i.n}">ocultar</button>` : ''}</div>`}
     ${i.tx ? `<div class="texto"><div class="tx-top"><b>Texto</b><button type="button" class="som" data-som="${i.n}" aria-label="Ouvir o texto" title="Ouvir o texto">🔊</button></div><div class="jp tx" lang="ja">${window.FraseJP ? FraseJP.html(i.xt, i.tx) : esc(i.tx)}</div></div>` : ''}
     ${i.qq.ops.length === 4 ? blocoQuestao(i, r) : ''}
-    <p class="voc"><b>Vocabulário</b> <span lang="ja">${esc(i.vo)}</span></p>
-    <p class="perg">✍️ ${esc(i.q)}</p>
+    ${i.vo ? `<p class="voc"><b>Vocabulário</b> <span lang="ja">${esc(i.vo)}</span></p>` : ''}
+    ${i.q ? `<p class="perg">✍️ ${esc(i.q)}</p>` : ''}
     <label class="l" for="f${i.n}">${souProf ? 'SÍNTESE DO ALUNO' : 'MINHA SÍNTESE'}</label>
     <textarea id="f${i.n}" data-f="${i.n}" rows="3" placeholder="${souProf ? 'O aluno ainda não escreveu' : 'Escreva aqui, em português ou em japonês'}" ${ro}>${esc(r.f)}</textarea>
     <div class="num2"><label>Acertos <input data-ac="${i.n}" value="${esc(r.ac)}" placeholder="ex.: 3/4" ${ro}></label><label>Tempo (min) <input data-tp="${i.n}" value="${esc(r.tp)}" inputmode="numeric" placeholder="${i.min || ''}" ${ro}></label></div>
