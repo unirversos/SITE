@@ -1,800 +1,1128 @@
 <!DOCTYPE html>
-<html lang="pt-BR" data-login="obrigatorio">
+<html lang="pt-BR">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-<title>Planeta Utopia · Unirversos Idiomas</title>
-<meta name="description" content="Planeta Utopia: uma sala onde os avatares andam, sentam à mesa, conversam em japonês e jogam juntos.">
+<title>Salão Unirversos · Beco Yokocho</title>
+<meta name="description" content="Beco interativo de Tóquio ao entardecer: ande com seu avatar, entre no Karaokê, Sushi, Konbini, Caligrafia e Café Social.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@500;700;800&family=Zen+Maru+Gothic:wght@400;500;700&display=swap">
-<style>html[data-login="obrigatorio"]:not(.uni-ok) body>*:not(#uni-gate){visibility:hidden}
-/* jogos na mesa */
-.jogo{border:1.5px solid var(--line);border-radius:18px;background:#fff;padding:14px;display:grid;gap:10px}
-.jogo[hidden]{display:none}
-.jogo .j-top{display:flex;justify-content:space-between;align-items:center;gap:8px;font-size:13px;color:var(--muted)}
-.jogo .j-q{font-family:var(--f-display);font-size:clamp(22px,4.6vw,30px);line-height:1.3;text-align:center;margin:4px 0}
-.jogo .j-q .vz{display:inline-block;min-width:1.6em;border-bottom:3px solid var(--pink)}
-.jogo .j-dica{text-align:center;margin:0}
-.jogo .j-ops{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}
-.jogo .j-ops button{font:inherit;font-weight:700;font-size:18px;min-height:52px;border-radius:14px;border:1.5px solid var(--line);background:#fff;color:var(--ink);cursor:pointer}
-.jogo .j-ops button:disabled{opacity:.55;cursor:default}
-.jogo .j-ops button.ok{background:var(--sage-soft);border-color:#bcd2bf}
-.jogo .j-ops button.no{background:#fdecee;border-color:#e9b9c0}
-.jogo .j-fb{border-left:5px solid var(--sage);background:var(--sage-soft);border-radius:12px;padding:10px 12px;font-size:14.5px}
-.jogo .j-fb.no{border-color:var(--pink);background:#fdecee}
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@600;700;800&family=Zen+Maru+Gothic:wght@400;500;700&display=swap">
+<link rel="stylesheet" href="./salao.css?v=6">
+<style>
+  /* ===== MAPA INTERATIVO DO BECO YOKOCHO ===== */
+  .beco-shell {
+    position: relative;
+    border-radius: 26px;
+    overflow: hidden;
+    border: 2px solid rgba(236, 192, 114, 0.38);
+    box-shadow: 0 22px 50px rgba(15, 10, 14, 0.5);
+    background: #2b252a;
+  }
+  .beco-scroll {
+    width: 100%;
+    overflow-x: auto;
+    overflow-y: hidden;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: thin;
+  }
 
-/* palavras cruzadas (solo, cada um no seu aparelho) */
-#cruzBox{gap:8px}
-#cruzBox .c-pill{display:flex;align-items:center;gap:10px;justify-content:center;background:#fdf0f3;border:1.5px solid #f0c9d3;border-radius:999px;padding:8px 16px;font-weight:700;min-height:48px;text-align:center}
-#cruzBox .c-pill .em{font-size:28px;line-height:1}
-#cruzBox .c-pill small{font-weight:500;color:var(--muted)}
-#cruzBox .c-bar{display:flex;justify-content:space-between;align-items:center;gap:8px;font-size:13px;color:var(--muted)}
-#cruzBox .c-tempo{font-variant-numeric:tabular-nums;font-weight:700;color:var(--ink)}
-#cruzBox .c-grade{display:grid;gap:3px;justify-content:center;margin:2px auto}
-#cruzBox .c-c{position:relative;width:var(--cs,40px);height:var(--cs,40px);border-radius:8px;border:1.5px solid #cdbba0;background:#fff;display:grid;place-items:center;font-size:calc(var(--cs,40px)*.52);font-weight:700;font-family:inherit;color:var(--ink);padding:0;cursor:pointer}
-#cruzBox .c-c.vazio{border:0;background:transparent;cursor:default;pointer-events:none}
-#cruzBox .c-c.na{background:#fff4d6}
-#cruzBox .c-c.sel{background:#ffe08a;border-color:#c99b2c;box-shadow:0 0 0 2px #c99b2c inset}
-#cruzBox .c-c.ok{background:var(--sage-soft);border-color:#bcd2bf}
-#cruzBox .c-c.err{background:#fdecee;border-color:#e9b9c0}
-#cruzBox .c-c i{position:absolute;top:1px;left:3px;font-size:10px;font-style:normal;font-weight:700;color:var(--muted);line-height:1}
-#cruzBox .c-rows,#cruzBox .c-keys{display:flex;flex-wrap:wrap;gap:5px;justify-content:center}
-#cruzBox .c-rows button,#cruzBox .c-keys button,#cruzBox .c-tools button{font:inherit;font-weight:700;border-radius:12px;border:1.5px solid var(--line);background:#fff;color:var(--ink);cursor:pointer;min-height:44px;min-width:44px;padding:0 8px}
-#cruzBox .c-rows button{font-size:14px;min-width:38px;min-height:38px;color:var(--muted)}
-#cruzBox .c-rows button[aria-pressed="true"]{background:#ffe08a;border-color:#c99b2c;color:var(--ink)}
-#cruzBox .c-keys button{font-size:22px;min-width:52px}
-#cruzBox .c-tools{display:flex;gap:6px;justify-content:center;flex-wrap:wrap}
-#cruzBox .c-fim{text-align:center;display:grid;gap:8px;padding:6px 0}
-/* sala */
-.topo-sala{display:flex;flex-wrap:wrap;justify-content:space-between;gap:8px;align-items:flex-start}
-.sala{position:relative;width:100%;aspect-ratio:4/3;border-radius:18px;overflow:hidden;border:1.5px solid var(--line);container-type:inline-size;touch-action:manipulation;cursor:pointer;outline-offset:3px;
-  background:url("data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 80%22 preserveAspectRatio=%22none%22%3E%3Crect width=%22100%22 height=%2280%22 fill=%22%23cfd3a2%22/%3E%3Cg stroke=%22%23b9be8a%22 stroke-width=%22.5%22 opacity=%22.7%22%3E%3Cline x1=%220%22 x2=%22100%22 y1=%224%22 y2=%224%22/%3E%3Cline x1=%220%22 x2=%22100%22 y1=%228%22 y2=%228%22/%3E%3Cline x1=%220%22 x2=%22100%22 y1=%2212%22 y2=%2212%22/%3E%3Cline x1=%220%22 x2=%22100%22 y1=%2216%22 y2=%2216%22/%3E%3Cline x1=%220%22 x2=%22100%22 y1=%2220%22 y2=%2220%22/%3E%3Cline x1=%220%22 x2=%22100%22 y1=%2224%22 y2=%2224%22/%3E%3Cline x1=%220%22 x2=%22100%22 y1=%2228%22 y2=%2228%22/%3E%3Cline x1=%220%22 x2=%22100%22 y1=%2232%22 y2=%2232%22/%3E%3Cline x1=%220%22 x2=%22100%22 y1=%2236%22 y2=%2236%22/%3E%3Cline x1=%220%22 x2=%22100%22 y1=%2240%22 y2=%2240%22/%3E%3Cline x1=%220%22 x2=%22100%22 y1=%2244%22 y2=%2244%22/%3E%3Cline x1=%220%22 x2=%22100%22 y1=%2248%22 y2=%2248%22/%3E%3Cline x1=%220%22 x2=%22100%22 y1=%2252%22 y2=%2252%22/%3E%3Cline x1=%220%22 x2=%22100%22 y1=%2256%22 y2=%2256%22/%3E%3Cline x1=%220%22 x2=%22100%22 y1=%2260%22 y2=%2260%22/%3E%3Cline x1=%220%22 x2=%22100%22 y1=%2264%22 y2=%2264%22/%3E%3Cline x1=%220%22 x2=%22100%22 y1=%2268%22 y2=%2268%22/%3E%3Cline x1=%220%22 x2=%22100%22 y1=%2272%22 y2=%2272%22/%3E%3Cline x1=%220%22 x2=%22100%22 y1=%2276%22 y2=%2276%22/%3E%3C/g%3E%3Cg stroke=%22%234f5e35%22 stroke-width=%221.6%22 fill=%22none%22 opacity=%22.75%22%3E%3Cline x1=%220%22 x2=%22100%22 y1=%220%22 y2=%220%22/%3E%3Cline x1=%220%22 x2=%22100%22 y1=%2240%22 y2=%2240%22/%3E%3Cline x1=%220%22 x2=%220%22 y1=%220%22 y2=%2240%22/%3E%3Cline x1=%2250%22 x2=%2250%22 y1=%220%22 y2=%2240%22/%3E%3Cline x1=%2225%22 x2=%2225%22 y1=%2240%22 y2=%2280%22/%3E%3Cline x1=%2275%22 x2=%2275%22 y1=%2240%22 y2=%2280%22/%3E%3C/g%3E%3C/svg%3E") 0 12%/50% 33.3% repeat,#cfd3a2}
-.sala::before{content:"";position:absolute;left:0;right:0;top:0;height:21%;background:repeating-linear-gradient(90deg,#a8744a 0 3px,transparent 3px 12.5%),repeating-linear-gradient(0deg,transparent 0 calc(33.3% - 2px),#a8744a calc(33.3% - 2px) 33.3%),linear-gradient(#f7f0e1,#efe4cd);border-bottom:6px solid #a8744a;pointer-events:none}
-.sala::after{content:"";position:absolute;inset:0;border:6px solid #b98a5e;border-radius:18px;pointer-events:none;box-shadow:inset 0 -40px 60px -30px rgba(70,35,40,.28)}
-.dec span{position:absolute;transform:translate(-50%,-50%);line-height:1;font-size:clamp(14px,4.6cqw,34px);pointer-events:none;filter:drop-shadow(0 3px 2px rgba(60,30,20,.22))}
-.dec .rug{width:36%;height:44%;left:50%;top:60%;border-radius:14%;background:radial-gradient(ellipse at center,#f2c1c8 0 55%,#e9a6b0 56% 66%,#f2c1c8 67% 100%);border:3px dashed rgba(255,255,255,.7);filter:none;opacity:.95}
-.dec .estante{position:absolute;top:11.5%;width:15%;height:15.5%;transform:translate(-50%,-50%);background:#8a5a38;border:3px solid #6e4528;border-radius:4px;padding:3px 3px 0;display:grid;grid-template-rows:repeat(3,1fr);gap:3px;box-shadow:0 3px 4px rgba(60,30,20,.25);pointer-events:none}
-.dec .estante b{display:flex;align-items:flex-end;gap:1px;padding:0 2px;background:#5b3a22;border-bottom:3px solid #b98a5e;overflow:hidden;min-height:0}
-.dec .estante u{flex:1 1 0;min-width:0;max-width:16%;border-radius:1px 1px 0 0;text-decoration:none;box-shadow:inset -1px 0 rgba(0,0,0,.18)}
-.dec .estante em{font-style:normal;font-size:clamp(7px,1.9cqw,14px);line-height:1;margin-left:3px;align-self:flex-end}
-.dec .shelf{white-space:nowrap;width:15%;height:12%;top:11%;border-radius:6px;background:#a8744a;border:3px solid #8a5a38;display:grid;place-items:center;font-size:clamp(12px,3.4cqw,24px);filter:none}
-.dec .lant{font-size:clamp(16px,5cqw,36px)}
-.dec .lant.sm{font-size:clamp(11px,3.4cqw,24px)}
-.dec .lant::before{content:"";position:absolute;left:50%;bottom:92%;width:2px;height:60cqw;max-height:120px;background:#8a5a38;transform:translateX(-50%)}
-.dec .lights{left:50%;top:6%;width:96%;text-align:center;font-size:clamp(9px,2.2cqw,15px);letter-spacing:.35em;white-space:nowrap;overflow:hidden}
-.dec .janela{position:absolute;left:50%;top:10.5%;width:21%;height:14%;transform:translate(-50%,-50%);border:4px solid #8a5a38;border-radius:8px;overflow:hidden;box-shadow:inset 0 0 0 2px rgba(255,255,255,.35),0 3px 4px rgba(60,30,20,.25);pointer-events:none}
-.dec .janela i{position:absolute;display:block;inset:0}
-.dec .janela::after{content:"";position:absolute;inset:0;background:linear-gradient(#8a5a38,#8a5a38) center/3px 100% no-repeat,linear-gradient(#8a5a38,#8a5a38) center/100% 3px no-repeat;z-index:4}
-.dec .janela .sky{background:linear-gradient(#8fd0f5,#d9f0fb)}
-.dec .janela .astro{inset:auto;font-size:clamp(12px,3.2cqw,24px);left:62%;top:6%;line-height:1;z-index:2}
-.dec .janela .astro::before{content:"☀️"}
-.dec .janela .nuvem{inset:auto;left:14%;top:30%;font-size:clamp(12px,3.6cqw,26px);line-height:1;z-index:2;opacity:.95}
-.dec .janela .nuvem::before{content:"☁️"}
-.dec .janela .chuva{display:none;z-index:3;background:repeating-linear-gradient(105deg,transparent 0 7px,rgba(255,255,255,.75) 7px 8px);animation:chove .5s linear infinite}
-@keyframes chove{from{background-position:0 0}to{background-position:-12px 16px}}
-.sala[data-clima=chuva] .janela .sky{background:linear-gradient(#7d8ea1,#a9b6c4)}
-.sala[data-clima=chuva] .janela .astro{display:none}
-.sala[data-clima=chuva] .janela .chuva{display:block}
-.sala[data-clima=chuva] .janela .nuvem::before{content:"🌧️"}
-.sala[data-clima=noite] .janela .sky{background:linear-gradient(#141a3a,#2b3568)}
-.sala[data-clima=noite] .janela .astro::before{content:"🌙"}
-.sala[data-clima=noite] .janela .nuvem{display:none}
-.sala[data-clima=noite]::after{box-shadow:inset 0 0 0 2000px rgba(30,25,70,.18),inset 0 -40px 60px -30px rgba(70,35,40,.28)}
-.sala[data-clima=chuva]::after{box-shadow:inset 0 0 0 2000px rgba(60,80,100,.08),inset 0 -40px 60px -30px rgba(70,35,40,.28)}
-@media (prefers-reduced-motion:reduce){.dec .janela .chuva{animation:none}}
-.dec .sofa{font-size:clamp(34px,11cqw,84px);filter:hue-rotate(155deg) saturate(.85) drop-shadow(0 3px 2px rgba(60,30,20,.22))}
-.dec .genkan{position:absolute;width:26%;height:11%;transform:translate(-50%,-50%);border-radius:10px 10px 0 0;background:repeating-linear-gradient(90deg,#8d8a83 0 6px,#807d76 6px 12px);border:3px solid #6b6962;border-bottom:0;display:flex;align-items:center;justify-content:center;gap:8px;pointer-events:none;box-shadow:inset 0 4px 6px rgba(0,0,0,.18)}
-.dec .genkan em{font-style:normal;font-size:clamp(10px,2.6cqw,18px)}
-.dec .genkan b{font-size:clamp(7px,1.7cqw,12px);color:#f2efe8;letter-spacing:.14em;text-transform:uppercase}
-.dec .tapete{position:absolute;width:30%;aspect-ratio:1;transform:translate(-50%,-50%);border-radius:50%;background:repeating-radial-gradient(circle at center,#dcc79a 0 5px,#cdb482 5px 9px);border:4px solid #b39868;box-shadow:0 3px 6px rgba(60,40,20,.18);pointer-events:none}
-.dec .akari{position:absolute;width:3.6%;height:6.8%;transform:translate(-50%,-50%);border-radius:40%/30%;background:repeating-linear-gradient(0deg,rgba(190,150,80,.35) 0 1.5px,transparent 1.5px 9px),radial-gradient(ellipse at center,#fff8e0,#f5dda0);border:2px solid #d9bd7e;box-shadow:0 0 12px 3px rgba(255,225,150,.55);pointer-events:none}
-.sala[data-clima=noite] .akari{box-shadow:0 0 26px 10px rgba(255,214,120,.7)}
-.dec .mesinha{position:absolute;width:6%;aspect-ratio:1;transform:translate(-50%,-50%);border-radius:50%;background:radial-gradient(circle at 35% 30%,#d9ab7a,#b8844f);border:3px solid #8f6238;box-shadow:0 4px 0 rgba(60,30,20,.18);pointer-events:none}
-.dec .big{font-size:clamp(14px,4cqw,30px)}
-.mesa-d{position:absolute;transform:translate(-50%,-50%);width:17%;aspect-ratio:1;border-radius:50%;background:radial-gradient(circle at 35% 30%,#d9ab7a,#b8844f);border:4px solid #8f6238;display:grid;place-items:center;font-size:clamp(11px,2.2cqw,15px);font-weight:700;color:#fff;text-align:center;box-shadow:0 6px 0 rgba(0,0,0,.08);pointer-events:none}
-.mesa-d.peq{width:14%;font-size:clamp(10px,2cqw,14px)}
-.sofa-d{position:absolute;transform:translate(-50%,-50%);width:40%;height:19%;pointer-events:none;filter:drop-shadow(0 4px 3px rgba(60,30,20,.22))}
-.sofa-d i{position:absolute;display:block}
-.sofa-d .enc{left:4%;right:4%;top:0;height:56%;background:#c0694a;border-radius:14px 14px 6px 6px}
-.sofa-d .ass{left:7%;right:7%;top:36%;height:52%;background:#dba98a;border-radius:10px;box-shadow:0 5px 0 rgba(90,50,30,.2)}
-.sofa-d .br{top:16%;bottom:2%;width:6.5%;background:#a95a3d;border-radius:10px}
-.sofa-d .br.e{left:0}.sofa-d .br.d{right:0}
-.sofa-d b{position:absolute;left:0;right:0;top:3%;text-align:center;color:#fff;font-size:clamp(9px,1.8cqw,13px);letter-spacing:.08em}
-.sofa-d.l .br.d{display:none}.sofa-d.l .enc{right:-1%}.sofa-d.l .ass{right:3%}
-.sofa-v{position:absolute;transform:translate(-50%,-50%);width:9.5%;height:42%;pointer-events:none;filter:drop-shadow(0 4px 3px rgba(60,30,20,.22))}
-.sofa-v i{position:absolute;display:block}
-.sofa-v .enc{right:0;top:0;bottom:0;width:34%;background:#c0694a;border-radius:6px 14px 14px 6px}
-.sofa-v .ass{left:2%;right:22%;top:0;bottom:6%;background:#dba98a;border-radius:10px;box-shadow:0 5px 0 rgba(90,50,30,.2)}
-.sofa-v .br{left:0;right:0;height:9%;background:#a95a3d;border-radius:10px}
-.sofa-v .br.t{display:none}.sofa-v .br.f{bottom:0}
-.cad.lin{width:6.4%;min-width:22px;border-radius:30%;border:2px dashed #fff;background:rgba(255,255,255,.28);box-shadow:none}
-.cad.lin:hover:not(.ocup){background:rgba(255,255,255,.6)}
-.cad{position:absolute;transform:translate(-50%,-50%);width:6%;aspect-ratio:1;min-width:26px;border-radius:26%;border:3px solid #fff;background:radial-gradient(circle at 35% 30%,#f6ead4,#dcc196);box-shadow:0 4px 0 rgba(90,60,30,.25);cursor:pointer;padding:0}
-.cad:hover:not(.ocup){transform:translate(-50%,-50%) scale(1.12);filter:brightness(1.06)}
-.cad.ocup{opacity:0;pointer-events:none}
-.av-p{position:absolute;transform:translate(-50%,-78%);display:grid;justify-items:center;gap:1px;transition:left .8s ease-in-out,top .8s ease-in-out;pointer-events:none}
-.av-p .face{width:clamp(40px,9cqw,70px);aspect-ratio:1;border-radius:50%;overflow:hidden;background:#fdf0f3;border:2.5px solid #fff;box-shadow:0 3px 8px rgba(0,0,0,.18);display:grid;place-items:center;font-size:24px}
-.av-p.eu .face{border-color:var(--pink)}
-.av-p b{font-size:clamp(10px,1.9cqw,13px);background:rgba(255,255,255,.85);border-radius:999px;padding:0 7px;line-height:1.5;max-width:12ch;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-.av-p.sent .face{box-shadow:0 0 0 3px rgba(212,106,132,.35),0 3px 8px rgba(0,0,0,.18)}
-@media (prefers-reduced-motion:reduce){.av-p{transition:none}}
+  .beco-stage {
+    position: relative;
+    width: 100%;
+    min-width: 780px;
+    aspect-ratio: 16 / 9;
+    overflow: hidden;
+    cursor: pointer;
+    user-select: none;
+    touch-action: pan-x;
+    container-type: inline-size;
+  }
 
-/* mesa no celular: chat em foco, pílulas e janela de jogos */
-.chat{min-height:34vh;max-height:52vh}
-.pilulas{display:flex;gap:6px;overflow-x:auto;padding:2px 0 6px;-webkit-overflow-scrolling:touch;scrollbar-width:thin}
-.pilulas button{flex:0 0 auto;font:inherit;font-size:15px;border:1.5px solid #cfe0f0;background:#f3f8fd;color:var(--ink);border-radius:999px;padding:0 14px;min-height:40px;cursor:pointer;white-space:nowrap}
-.pil-pt{margin:0;font-size:13px}
-.topo-mesa .row .btn{flex-shrink:0}
-#quemMesa{overflow-wrap:anywhere}
-.jogo.sheet{position:fixed;inset:0;z-index:200;border-radius:0;border:0;overflow:auto;padding:0 16px 24px;align-content:start;max-width:none;grid-template-columns:minmax(0,1fr)}
-.jogo.sheet>*{max-width:560px;width:100%;margin-inline:auto}
-.jogo.sheet .j-top{position:sticky;top:0;background:#fff;padding:12px 0;z-index:2;border-bottom:1.5px solid var(--line);font-size:15px;color:var(--ink)}
-.jogo .j-grade{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
-.jogo .j-grade button{font:inherit;font-weight:700;font-size:15px;min-height:76px;border-radius:16px;border:1.5px solid var(--line);background:#fff;color:var(--ink);cursor:pointer;display:grid;gap:2px;place-items:center;padding:8px;line-height:1.25}
-.jogo .j-grade button span{font-size:24px}
+  /* Avatares de outras alunas online no Beco */
+  .peer-walker {
+    position: absolute;
+    transform: translate(-50%, -86%);
+    z-index: 10;
+    background: none;
+    border: 0;
+    padding: 0;
+    cursor: pointer;
+    display: grid;
+    justify-items: center;
+    gap: 2px;
+    transition: left 0.85s ease, top 0.85s ease;
+  }
+  .peer-walker .walker-face {
+    border-color: var(--sage);
+    animation: walkBob 2.6s ease-in-out infinite;
+  }
+  .peer-walker:hover .walker-face { transform: scale(1.1); border-color: var(--lantern); }
+  .peer-badge {
+    font-size: 10px;
+    font-weight: 800;
+    background: #f4e2c7;
+    color: #7c4d1a;
+    border: 1px solid #c78f63;
+    border-radius: 999px;
+    padding: 0 6px;
+    line-height: 1.4;
+  }
 
-/* abas de conversa, chips de pessoas, convite */
-.quem-mesa{display:flex;gap:6px;align-items:center;overflow-x:auto;white-space:nowrap;font-size:14px;color:var(--muted);padding:2px 0}
-.quem-mesa button{font:inherit;font-size:14px;border:1.5px solid var(--line);background:#fff;color:var(--ink);border-radius:999px;padding:0 12px;min-height:36px;cursor:pointer;flex:0 0 auto}
-.quem-mesa .dica-chip{font-size:12px;flex:0 0 auto}
-.abas{display:flex;gap:6px;overflow-x:auto;align-items:center}
-.abas .ab{display:inline-flex;align-items:center;border:1.5px solid var(--line);background:#fff;border-radius:999px;flex:0 0 auto;overflow:hidden}
-.abas .ab button{font:inherit;font-size:14px;font-weight:700;border:0;background:none;color:var(--ink);min-height:38px;padding:0 12px;cursor:pointer}
-.abas .ab .x{padding:0 10px 0 0;font-weight:400;color:var(--muted)}
-.abas .ab.on{background:var(--ink);border-color:var(--ink)}
-.abas .ab.on button{color:#fff}
-.abas .ab .pt{display:inline-block;width:9px;height:9px;border-radius:50%;background:var(--pink);margin-left:6px}
-.convbar{border-left:6px solid var(--sage);background:var(--sage-soft);border-radius:14px;padding:10px 12px;display:grid;gap:8px;font-size:15px}
-.j-para{display:flex;gap:8px;align-items:center;font-size:14px;flex-wrap:wrap}
-.j-para select{font:inherit;min-height:40px;border:1.5px solid var(--line);border-radius:12px;padding:0 10px;background:#fff}
+  /* Barra de Ofensiva Coletiva (Alunas com Alunas) */
+  .ofensiva-bar {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px 14px;
+    padding: 10px 16px;
+    background: rgba(236, 192, 114, 0.12);
+    border-top: 1px solid rgba(236, 192, 114, 0.25);
+    font-size: 13px;
+  }
+  .alunas-chips { display: flex; flex-wrap: wrap; gap: 6px; align-items: center; }
+  .aluna-chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    padding: 3px 10px;
+    border-radius: 999px;
+    background: rgba(251, 243, 230, 0.1);
+    border: 1px solid rgba(251, 243, 230, 0.22);
+    color: var(--ink);
+    font-weight: 700;
+    font-size: 12.5px;
+  }
+  .aluna-chip.eu { border-color: var(--sakura); background: var(--sakura-soft); }
 
-/* ---- jogos: acabamento visual (caderno, washi, cartinhas) ---- */
-.jogo.sheet{background:var(--paper);background-image:radial-gradient(var(--line) 1.2px,transparent 1.3px);background-size:22px 22px}
-.jogo.sheet .j-top{background:var(--paper);border-bottom:1.5px dashed var(--line)}
-.jogo.sheet .j-top b,.jogo.sheet .j-top span{font-family:var(--f-display);font-weight:800;font-size:18px;color:var(--ink)}
-.j-cartao{position:relative;background:#fff;border:1.5px solid var(--line);border-radius:20px;padding:28px 16px 18px;box-shadow:0 8px 26px rgba(58,43,56,.08);display:grid;gap:14px;margin-top:22px}
-.j-cartao::before{content:"";position:absolute;top:-12px;left:50%;width:104px;height:26px;transform:translateX(-50%) rotate(-2deg);background:repeating-linear-gradient(45deg,rgba(248,221,225,.95) 0 9px,rgba(251,241,217,.95) 9px 18px);border-radius:3px;box-shadow:0 1px 3px rgba(0,0,0,.1)}
-.jogo .j-q{font-family:var(--f-body);font-weight:700;font-size:clamp(28px,8vw,40px);line-height:1.35;color:var(--ink);margin:2px 0}
-.jogo .j-q .vz{border-bottom:4px solid var(--pink);min-width:1.8em}
-.j-pontos{display:flex;gap:7px;justify-content:center;flex-wrap:wrap}
-.j-pontos i{width:10px;height:10px;border-radius:50%;background:var(--line)}
-.j-pontos i.f{background:var(--sage)}
-.j-pontos i.a{background:var(--pink);transform:scale(1.35)}
-.jogo .j-ops{gap:10px}
-.jogo .j-ops button{min-height:64px;font-size:20px;border:2px solid var(--line);border-radius:16px;background:#fff;box-shadow:0 3px 0 var(--line);transition:transform .12s,box-shadow .12s,background .15s,border-color .15s;position:relative}
-.jogo .j-ops button:not(:disabled):hover{border-color:#e3b6c0;background:#fff7f9}
-.jogo .j-ops button:not(:disabled):active{transform:translateY(2px) scale(.97);box-shadow:0 1px 0 var(--line)}
-.jogo .j-ops button:disabled{opacity:1;box-shadow:none;color:var(--muted)}
-.jogo .j-ops button.ok{background:var(--sage-soft);border-color:var(--sage);color:#2d4a35;box-shadow:0 3px 0 #bcd2bf;animation:pulso .35s ease}
-.jogo .j-ops button.no{background:#fdecee;border-color:var(--pink);color:#7d2b3a;box-shadow:none;animation:treme .35s ease}
-.jogo .j-ops button.ok::after{content:" ✓"}
-.jogo .j-ops button.no::after{content:" ✗"}
-@keyframes pulso{50%{transform:scale(1.05)}}
-@keyframes treme{25%{transform:translateX(-5px)}75%{transform:translateX(5px)}}
-.jogo .j-fb{border-left:6px solid var(--sage);border-radius:14px}
-.jogo .j-grade{gap:12px;margin-top:6px}
-.jogo .j-grade button{min-height:96px;border-radius:18px;border:2px solid transparent;font-family:var(--f-display);font-size:16px;line-height:1.2;box-shadow:0 4px 0 rgba(58,43,56,.08);gap:4px;transition:transform .12s}
-.jogo .j-grade button:active{transform:translateY(2px) scale(.97)}
-.jogo .j-grade button span{font-size:30px}
-.jogo .j-grade button small{font-family:var(--f-body);font-size:11px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;opacity:.7}
-.jogo .j-grade .g-voc{background:var(--sage-soft);border-color:#bcd2bf;color:#2d4a35}
-.jogo .j-grade .g-est{background:var(--gold-soft);border-color:#ecd9a4;color:#5f4713}
-.jogo .j-grade .g-te{background:#efeaf8;border-color:#cfc4e8;color:#43366b}
-@media (prefers-reduced-motion:reduce){.jogo .j-ops button{animation:none!important;transition:none}}
+  .beco-img {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+    transition: filter 0.45s ease;
+    pointer-events: none;
+  }
+  body[data-clima="noite"] .beco-img { filter: brightness(0.92) contrast(1.04) saturate(1.04); }
+  body[data-clima="tarde"] .beco-img { filter: brightness(1.03) sepia(0.08) saturate(1.1); }
+  body[data-clima="chuva"] .beco-img { filter: brightness(0.84) hue-rotate(-10deg) saturate(0.88); }
 
-.j-ilu{width:min(38vw,132px);aspect-ratio:1;margin:0 auto}
+  /* Brilho sutil de lanternas + chuva */
+  .beco-glow {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    background:
+      radial-gradient(circle at 10% 18%, rgba(236, 192, 114, 0.22), transparent 22%),
+      radial-gradient(circle at 86% 18%, rgba(236, 192, 114, 0.22), transparent 22%),
+      linear-gradient(180deg, rgba(35, 42, 68, 0.14) 0%, transparent 35%, rgba(28, 20, 22, 0.18) 100%);
+  }
+  .beco-rain {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    opacity: 0;
+    background: repeating-linear-gradient(106deg, transparent 0 18px, rgba(215, 232, 255, 0.26) 18px 19.5px);
+    animation: rainFall 0.6s linear infinite;
+    transition: opacity 0.35s ease;
+  }
+  body[data-clima="chuva"] .beco-rain { opacity: 1; }
+  @keyframes rainFall { from { background-position: 0 0; } to { background-position: -22px 46px; } }
+
+  /* Plaquinhas / Hotspots das Lojinhas no Beco */
+  .spot {
+    position: absolute;
+    transform: translate(-50%, -50%);
+    z-index: 6;
+    border: 2px solid #59433b;
+    background: rgba(251, 243, 230, 0.94);
+    color: #42322e;
+    border-radius: 14px;
+    padding: 4px 10px;
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    font-family: var(--f-display);
+    font-weight: 800;
+    font-size: clamp(11px, 1.5cqw, 15px);
+    line-height: 1.15;
+    box-shadow: 0 5px 14px rgba(34, 22, 18, 0.32), 0 0 0 0 rgba(236, 192, 114, 0.5);
+    white-space: nowrap;
+    transition: transform 0.18s ease, background 0.18s ease, box-shadow 0.18s ease;
+  }
+  .spot:hover, .spot.ativo {
+    transform: translate(-50%, -56%) scale(1.07);
+    background: #fffaf0;
+    border-color: var(--sakura);
+    box-shadow: 0 8px 22px rgba(34, 22, 18, 0.4), 0 0 0 5px rgba(217, 107, 92, 0.28);
+  }
+  .spot small {
+    font-family: var(--f-body);
+    font-size: 0.78em;
+    font-weight: 700;
+    color: #9e4b3e;
+  }
+  .spot .dot-pulse {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: var(--sakura);
+    animation: pulseDot 2.2s ease-in-out infinite;
+  }
+  @keyframes pulseDot {
+    0%, 100% { transform: scale(1); opacity: 1; }
+    50% { transform: scale(1.45); opacity: 0.65; }
+  }
+
+  /* Hotspots secretos / objetos do beco (tudo clicável mostra como chama!) */
+  .secret-spot {
+    position: absolute;
+    transform: translate(-50%, -50%);
+    z-index: 6;
+    width: clamp(30px, 4.4cqw, 44px);
+    height: clamp(30px, 4.4cqw, 44px);
+    border-radius: 50%;
+    border: 2px dashed rgba(251, 243, 230, 0.58);
+    background: rgba(251, 243, 230, 0.14);
+    color: #fff;
+    font-size: clamp(13px, 1.8cqw, 18px);
+    display: grid;
+    place-items: center;
+    opacity: 0.82;
+    transition: transform 0.18s ease, opacity 0.18s ease, background 0.18s ease;
+  }
+  .secret-spot:hover {
+    opacity: 1;
+    transform: translate(-50%, -54%) scale(1.14);
+    background: rgba(236, 192, 114, 0.42);
+    border-color: #fbf3e6;
+  }
+
+  /* Barraquinha de Yakitori (SVG no estilo da ilustração) */
+  .yakitori-stand {
+    position: absolute;
+    left: 38.5%;
+    top: 72%;
+    transform: translate(-50%, -50%);
+    z-index: 8;
+    width: clamp(68px, 10.5cqw, 118px);
+    background: none;
+    border: 0;
+    padding: 0;
+    cursor: pointer;
+    filter: drop-shadow(0 6px 10px rgba(24, 14, 12, 0.35));
+    transition: transform 0.18s ease;
+  }
+  .yakitori-stand:hover { transform: translate(-50%, -53%) scale(1.06); }
+  .smoke-puff { animation: smokeUp 2.6s ease-in-out infinite; transform-box: fill-box; transform-origin: center; }
+  .smoke-puff.s2 { animation-delay: -1.3s; }
+  @keyframes smokeUp {
+    0% { opacity: 0; transform: translateY(4px) scale(0.8); }
+    45% { opacity: 0.72; transform: translateY(-6px) scale(1.05); }
+    100% { opacity: 0; transform: translateY(-16px) scale(1.25); }
+  }
+
+  /* Cachorrinho Shiba Inu passeando pela calçada */
+  .shiba-dog {
+    position: absolute;
+    top: 90%;
+    left: 12%;
+    transform: translate(-50%, -75%);
+    z-index: 11;
+    width: clamp(46px, 6.2cqw, 68px);
+    background: none;
+    border: 0;
+    padding: 0;
+    cursor: pointer;
+    filter: drop-shadow(0 5px 8px rgba(24, 14, 12, 0.36));
+    transition: transform 0.2s ease;
+  }
+  .shiba-dog.flip svg { transform: scaleX(-1); }
+  .shiba-dog svg { display: block; width: 100%; height: auto; animation: dogTrotting 0.55s ease-in-out infinite; }
+  .shiba-dog.parado svg { animation: none; }
+  @keyframes dogTrotting { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-3px); } }
+  .shiba-dog.flip svg { animation: dogTrottingFlip 0.55s ease-in-out infinite; }
+  .shiba-dog.flip.parado svg { animation: none; transform: scaleX(-1); }
+  @keyframes dogTrottingFlip { 0%, 100% { transform: scaleX(-1) translateY(0); } 50% { transform: scaleX(-1) translateY(-3px); } }
+
+  /* Balãozinho de fala (agora interativo para salvar no Caderno!) */
+  .beco-bubble {
+    position: absolute;
+    transform: translate(-50%, -115%);
+    z-index: 22;
+    background: var(--washi);
+    color: var(--washi-ink);
+    border: 2px solid #59433b;
+    border-radius: 16px;
+    padding: 9px 13px;
+    max-width: 260px;
+    font-size: 13px;
+    box-shadow: 0 10px 24px rgba(20, 12, 10, 0.38);
+    pointer-events: auto;
+    animation: popIn 0.2s ease;
+  }
+  .bub-head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+    margin-bottom: 2px;
+  }
+  .bub-nome { font-family: var(--f-display); font-size: 16px; font-weight: 800; color: #9e4b3e; }
+  .bub-cad {
+    border: 1px solid #d4bfa9;
+    background: #fff;
+    color: #42322e;
+    border-radius: 999px;
+    padding: 1px 7px;
+    font-size: 11px;
+    font-weight: 700;
+  }
+  .bub-cad:hover { border-color: var(--sakura); background: #fff4ec; }
+
+  /* Avatar caminhando na calçada do Beco */
+  .walker {
+    position: absolute;
+    transform: translate(-50%, -86%);
+    z-index: 12;
+    pointer-events: none;
+    display: grid;
+    justify-items: center;
+    gap: 2px;
+    transition: left 0.85s cubic-bezier(0.32, 0.96, 0.48, 1), top 0.85s cubic-bezier(0.32, 0.96, 0.48, 1);
+  }
+  .walker-face {
+    width: clamp(44px, 6.2cqw, 68px);
+    aspect-ratio: 1;
+    border-radius: 50%;
+    overflow: hidden;
+    background: #fbf3e6;
+    border: 3px solid var(--sakura);
+    box-shadow: 0 8px 18px rgba(25, 16, 14, 0.42);
+    display: grid;
+    place-items: center;
+    font-size: clamp(22px, 3cqw, 34px);
+    animation: walkBob 2.2s ease-in-out infinite;
+  }
+  .walker.andando .walker-face { animation: walkStep 0.34s ease-in-out infinite; }
+  @keyframes walkBob { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-3px); } }
+  @keyframes walkStep { 0%, 100% { transform: translateY(0) rotate(-3deg); } 50% { transform: translateY(-7px) rotate(3deg); } }
+
+  .walker-name {
+    font-size: clamp(10px, 1.3cqw, 12.5px);
+    font-weight: 800;
+    background: rgba(251, 243, 230, 0.94);
+    color: #42322e;
+    border: 1.5px solid #59433b;
+    border-radius: 999px;
+    padding: 0 8px;
+    line-height: 1.45;
+    box-shadow: 0 3px 8px rgba(20, 12, 10, 0.25);
+  }
+
+  /* Balãozinho de fala (para Easter Eggs) */
+  .beco-bubble {
+    position: absolute;
+    transform: translate(-50%, -115%);
+    z-index: 20;
+    background: var(--washi);
+    color: var(--washi-ink);
+    border: 2px solid #59433b;
+    border-radius: 16px;
+    padding: 8px 13px;
+    max-width: 240px;
+    font-size: 13px;
+    box-shadow: 0 10px 24px rgba(20, 12, 10, 0.38);
+    pointer-events: none;
+    animation: popIn 0.2s ease;
+  }
+  .beco-bubble b { display: block; font-size: 15px; color: #9e4b3e; }
+  .beco-bubble rt, .spot rt, .loja-popover rt { color: #9e4b3e; }
+  @keyframes popIn { from { opacity: 0; transform: translate(-50%, -95%) scale(0.92); } to { opacity: 1; transform: translate(-50%, -115%) scale(1); } }
+
+  /* Popover Papel Washi da Lojinha selecionada (flutua no canto inferior do beco) */
+  .loja-popover {
+    position: absolute;
+    left: 16px;
+    right: 16px;
+    bottom: 16px;
+    max-width: 470px;
+    margin: 0 auto;
+    z-index: 25;
+    background: rgba(251, 243, 230, 0.97);
+    color: var(--washi-ink);
+    border: 2px solid #59433b;
+    border-left: 6px solid var(--sakura);
+    border-radius: 20px;
+    padding: 14px 16px;
+    box-shadow: 0 16px 36px rgba(15, 10, 12, 0.45);
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px 14px;
+    animation: slideUp 0.2s ease;
+  }
+  @keyframes slideUp { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+  .loja-popover h3 { color: var(--washi-ink); font-size: 19px; margin-bottom: 2px; }
+  .loja-popover p { margin: 0; font-size: 13.5px; color: #6b5852; max-width: 34ch; }
+  .loja-popover .jp-tag { font-size: 12px; font-weight: 700; color: #b24b3d; }
+
+  /* Barra de sinalização discreta colada embaixo do Beco (sem cara de card!) */
+  .beco-dock {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px 12px;
+    padding: 11px 16px;
+    background: #332c33;
+    border-top: 1px solid rgba(251, 243, 230, 0.14);
+  }
+  .dock-dica { font-size: 13px; color: var(--muted); }
+  .dock-atalhos { display: flex; flex-wrap: wrap; gap: 6px; }
+  .dock-pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    padding: 5px 12px;
+    border-radius: 999px;
+    border: 1px solid rgba(251, 243, 230, 0.22);
+    background: rgba(251, 243, 230, 0.08);
+    color: var(--ink);
+    font-size: 13px;
+    font-weight: 700;
+    text-decoration: none;
+    transition: 0.14s ease;
+  }
+  .dock-pill:hover {
+    background: rgba(236, 192, 114, 0.2);
+    border-color: var(--lantern);
+    transform: translateY(-1px);
+  }
+
+  /* Modal Papel Washi · Café Yokocho (Cantinho Social) */
+  dialog.cafe-modal {
+    border: 2px solid #59433b;
+    border-left: 6px solid var(--sakura);
+    border-radius: 24px;
+    background: var(--washi);
+    color: var(--washi-ink);
+    padding: 20px;
+    max-width: 560px;
+    width: calc(100% - 28px);
+    box-shadow: 0 24px 60px rgba(10, 6, 8, 0.55);
+  }
+  dialog.cafe-modal::backdrop { background: rgba(22, 18, 24, 0.62); backdrop-filter: blur(4px); }
+  .cafe-modal .sub { color: #6e5a54; }
+  .cafe-modal .btn { background: #fff; color: var(--washi-ink); border-color: #d6c2ae; }
+  .cafe-modal .btn.pri { background: var(--sakura); color: #fff; border-color: var(--sakura); }
+
+  .mural-lista { display: grid; gap: 8px; max-height: 210px; overflow: auto; margin: 10px 0; }
+  .recado {
+    background: #fff;
+    border: 1px solid #e3d3c3;
+    border-radius: 14px;
+    padding: 8px 12px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 10px;
+  }
+  .frases-bar { display: flex; gap: 6px; overflow-x: auto; padding-bottom: 4px; }
+  .frases-bar button {
+    flex: 0 0 auto;
+    border: 1px solid #d4bfa9;
+    background: #fff9f0;
+    color: var(--washi-ink);
+    border-radius: 999px;
+    padding: 4px 11px;
+    font-size: 13px;
+    font-weight: 700;
+    white-space: nowrap;
+  }
+  .mural-form { display: flex; gap: 8px; margin-top: 8px; }
+  .mural-form input {
+    flex: 1;
+    min-height: 40px;
+    border-radius: 12px;
+    border: 1.5px solid #d4bfa9;
+    background: #fff;
+    color: var(--washi-ink);
+    padding: 6px 12px;
+  }
+
+  @media (max-width: 680px) {
+    .spot small { display: none; }
+  }
 </style>
 <script type="module" src="/idiomas/dados/conta.js?v=6"></script>
-<script>setTimeout(function(){var h=document.documentElement;if(!h.classList.contains('uni-ok')&&!document.getElementById('uni-gate'))h.classList.add('uni-ok')},10000)</script>
-<style>
-:root{
-  --paper:#fdf6f4; --card:#ffffff; --ink:#3a2b38; --muted:#6b5a67; --line:#ecdadd;
-  --blush:#f8dde1; --pink:#c23f5e; --pink-d:#b23a57; --sage:#4f7a58; --sage-soft:#e8efe8; --taupe:#816c5b; --gold:#8f6b1d; --gold-soft:#fbf1d9;
-  --f-display:"Baloo 2","Zen Maru Gothic",system-ui,sans-serif;
-  --f-body:"Zen Maru Gothic","Hiragino Maru Gothic ProN","Noto Sans JP",system-ui,sans-serif;
-}
-*{box-sizing:border-box}
-body{margin:0;background:var(--paper);color:var(--ink);font-family:var(--f-body);font-size:16px;line-height:1.6;
-  background-image:radial-gradient(var(--line) 1.2px,transparent 1.3px);background-size:22px 22px;
-  padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));padding-block:18px 90px}
-a{color:inherit}
-a:focus-visible,button:focus-visible,input:focus-visible,textarea:focus-visible{outline:3px solid #b7a6dc;outline-offset:3px;border-radius:8px}
-.wrap{max-width:900px;margin:0 auto;display:grid;gap:22px}
-.sitebar{display:flex;flex-wrap:wrap;justify-content:space-between;align-items:center;gap:10px 18px}
-.logo{font-family:var(--f-display);font-weight:800;font-size:19px;letter-spacing:.14em;text-decoration:none}
-.logo span{color:var(--pink)}
-.navlinks{display:flex;flex-wrap:wrap;gap:6px 20px;font-size:14px}
-.navlinks a{text-decoration:none;color:var(--muted)}
-.navlinks a[aria-current]{color:var(--pink)}
-.eyebrow{font-size:12px;letter-spacing:.2em;text-transform:uppercase;color:var(--pink-d);font-weight:700;margin:0}
-h1{font-family:var(--f-display);font-weight:800;font-size:clamp(30px,5.2vw,46px);line-height:1.05;margin:6px 0 8px}
-h2{font-family:var(--f-display);font-size:22px;line-height:1.2;margin:0}
-.lede{margin:0;font-size:16.5px;max-width:62ch}
-.card{background:var(--card);border:1.5px solid var(--line);border-radius:20px;padding:18px;display:grid;gap:14px}
-.sub{margin:0;color:var(--muted);font-size:14.5px}
-.btn{font:inherit;font-weight:700;font-size:14px;min-height:44px;padding:0 16px;border-radius:999px;border:1.5px solid var(--line);background:#fff;color:var(--ink);cursor:pointer;display:inline-flex;align-items:center;justify-content:center;gap:6px;text-decoration:none}
-.btn.pri{background:var(--pink);border-color:var(--pink);color:#fff}
-.btn.sage{background:var(--sage-soft);border-color:#bcd2bf;color:#3e6347}
-.btn:disabled{opacity:.5;cursor:default}
-.row{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
-.aviso{border-left:6px solid var(--gold);background:var(--gold-soft);border-radius:16px;padding:14px 16px;display:grid;gap:8px}
-.aviso b{font-family:var(--f-display);font-size:18px}
-.nota{border-left:5px solid var(--sage);background:var(--sage-soft);border-radius:12px;padding:10px 12px;font-size:14px}
-/* saguão */
-.gente{display:grid;grid-template-columns:repeat(auto-fill,minmax(110px,1fr));gap:10px}
-.pess{border:1.5px solid var(--line);border-radius:16px;background:#fff;padding:8px;text-align:center;display:grid;gap:2px;justify-items:center}
-.pess .av{width:64px;height:64px;border-radius:50%;overflow:hidden;background:#fdf0f3;display:grid;place-items:center;font-size:30px}
-.pess b{font-size:13.5px;line-height:1.2;word-break:break-word}
-.pess small{font-size:11.5px;color:var(--muted)}
-.pess.eu{border-color:var(--pink)}
-.vazio{color:var(--muted);font-size:14px}
-/* sentado: a sala continua à vista e a mesa divide a tela */
-.wrap.sentado>header,.wrap.sentado>#aulaDupla,.wrap.sentado>#muralCom,.wrap.sentado>#portaSalao{display:none}
-#proxMapa{display:none!important}
-.quem{margin:0;font-weight:700;color:var(--ink)}.quem:empty{display:none}
-.lede{font-size:15px}
-.aula-dupla{padding:14px 16px;border-left:5px solid var(--sage);display:flex;flex-wrap:wrap;gap:10px 16px;align-items:center;justify-content:space-between}
-.aula-dupla p{margin:0}
-.porta{border-left:6px solid var(--pink);gap:12px}
-.porta .grande{justify-self:start;font-size:17px;padding:12px 26px;min-height:48px}
-.aula-dupla.mural{border-left-color:var(--pink)}
-.aula-dupla h2{font-size:17px;margin:0}
-.aula-dupla .sub{font-size:14px;margin:2px 0 0}
-.aula-dupla b{font-family:var(--f-display);font-size:18px}
-.wrap.sentado #dica,.wrap.sentado #secSala details{display:none}
-@media (min-width:900px){
-  .wrap.sentado{max-width:1240px;grid-template-columns:minmax(0,1.1fr) minmax(0,1fr);align-items:start}
-  .wrap.sentado>*{grid-column:1/-1}
-  .wrap.sentado>#secSala{grid-column:1;position:sticky;top:12px}
-  .wrap.sentado>#mesa{grid-column:2}
-}
-/* mesa */
-.mesa{display:grid;gap:12px}
-.missao{border:1.5px dashed #e3b6c0;border-radius:16px;background:#fff7f9;padding:12px 14px;display:grid;gap:6px}
-.missao b{color:#7d2b3a}
-.missao .chaves{display:flex;flex-wrap:wrap;gap:6px}
-.missao .chaves button{font:inherit;font-size:14px;border:1.5px solid var(--line);background:#fff;border-radius:999px;padding:4px 10px;cursor:pointer;min-height:36px}
-.quebra{border:1.5px solid #cfe0f0;border-radius:16px;background:#f3f8fd;padding:10px 14px}
-.quebra summary{cursor:pointer;font-weight:700;color:#2f5f8f;min-height:32px;display:flex;align-items:center}
-.quebra .q-sub{margin:6px 0 10px;color:var(--muted);font-size:14px}
-.quebra .q-l{display:grid;gap:8px}
-.q-b{max-width:88%;border-radius:16px;padding:8px 12px;background:#fff;border:1.5px solid #cfe0f0;display:grid;gap:4px}
-.q-b.b{justify-self:end;background:var(--blush);border-color:#efc3cd}
-.q-b .q-quem{font-size:11.5px;font-weight:700;color:var(--muted)}
-.q-b .q-f{display:flex;flex-wrap:wrap;gap:6px;align-items:center}
-.q-b .q-f button{font:inherit;font-size:16px;border:1.5px solid var(--line);background:#fff;border-radius:999px;padding:4px 12px;cursor:pointer;min-height:38px}
-.q-b .q-f button.ou{font-size:13px;padding:2px 10px;min-height:32px}
-.q-b .q-pt{font-size:13.5px;color:var(--muted)}
-.q-b .wro{font-size:13px;color:var(--pink)}
-.q-fim{margin:8px 0 0;font-size:14px;color:var(--muted)}
-.chat{border:1.5px solid var(--line);border-radius:18px;background:#fff;padding:12px;display:grid;gap:8px;max-height:52vh;overflow:auto;min-height:180px}
-.msg{max-width:85%;border-radius:16px;padding:8px 12px;line-height:1.5;font-size:16px}
-.msg .quem{display:block;font-size:11.5px;font-weight:700;color:var(--muted)}
-.msg.dele{background:#eef4fb;border:1.5px solid #cfe0f0;justify-self:start}
-.msg.meu{background:var(--blush);border:1.5px solid #efc3cd;justify-self:end}
-.msg.sis{justify-self:center;background:none;color:var(--muted);font-size:13px;text-align:center;max-width:100%}
-.msg .acoes{display:flex;gap:6px;margin-top:4px}
-.msg .acoes button{font:inherit;font-size:12px;border:1px solid var(--line);background:#fff;border-radius:999px;padding:2px 10px;cursor:pointer;min-height:30px}
-.wd{font:inherit;color:inherit;background:none;border:0;border-bottom:1.5px dotted #c9a3ad;padding:0 1px;margin:0;cursor:pointer}
-.wdinfo{margin-top:6px;border:1.5px solid var(--line);border-radius:12px;padding:6px 10px;background:#fff;font-size:13.5px}
-.wdinfo small{display:block;color:var(--muted)}
-.pecas{display:flex;flex-wrap:wrap;gap:6px}
-.pecas button{font:inherit;font-size:15px;font-weight:700;min-height:40px;padding:0 12px;border-radius:12px;border:1.5px solid var(--line);background:#fff;cursor:pointer;color:var(--ink)}
-.escrever{display:flex;gap:8px;align-items:flex-end}
-.escrever textarea{flex:1;font:inherit;font-size:16px;min-height:48px;max-height:120px;padding:10px 12px;border:1.5px solid var(--line);border-radius:14px;resize:vertical}
-.topo-mesa{display:flex;flex-wrap:wrap;justify-content:space-between;gap:8px;align-items:center}
-.lk{font:inherit;font-size:13px;border:0;background:none;color:var(--muted);text-decoration:underline;cursor:pointer;min-height:44px}
-dialog{border:1.5px solid var(--line);border-radius:18px;padding:18px;max-width:420px;width:calc(100% - 32px)}
-dialog textarea{width:100%;font:inherit;min-height:90px;border:1.5px solid var(--line);border-radius:12px;padding:8px}
-.regras{font-size:13.5px;color:var(--muted);margin:0;padding-left:18px}
-footer{border-top:1.5px dashed var(--line);padding-top:18px;display:flex;flex-wrap:wrap;justify-content:space-between;gap:12px;font-size:14px;color:var(--muted)}
-[hidden]{display:none!important}
-</style>
-<link rel="stylesheet" href="/estilo-celular.css?v=3">
-<script defer src="/menu-ativo.js?v=2"></script><script defer src="/voltar-global.js?v=5"></script>
-<link rel="icon" href="/favicon.svg" type="image/svg+xml"><link rel="icon" href="/favicon.ico" sizes="48x48"><link rel="apple-touch-icon" href="/apple-touch-icon.png"><link rel="manifest" href="/manifest.webmanifest"><meta name="theme-color" content="#3a2b38"><meta name="mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-title" content="Unirversos"><script src="/app.js" defer></script><style id="uni-logo">.logo,.brand,.sitebar .brand{font-family:"Baloo 2","Zen Maru Gothic",system-ui,sans-serif!important;font-weight:800!important;font-size:19px!important;letter-spacing:.14em!important;text-transform:none!important;text-decoration:none!important}.logo span,.brand span{color:#c23f5e!important;font:inherit!important;letter-spacing:inherit!important;margin:0!important}</style></head>
+</head>
 <body>
 <div class="wrap">
-  <nav class="sitebar" aria-label="Site">
-    <a class="logo" href="/">UNI<span>R</span>VERSOS</a>
-    <span class="navlinks"><a href="/idiomas/" aria-current="page">idiomas</a><a href="/travessia/">travessia</a><a href="/loja/">tesouros</a><span class="nav-sep" aria-hidden="true" style="opacity:.3">|</span><a href="/paralelos/">paralelos</a><a href="/sobre/">sobre</a></span>
+  <!-- Topbar limpa -->
+  <nav class="topbar" aria-label="Salão Unirversos">
+    <div class="brand-row">
+      <a class="logo" href="/idiomas/">UNI<span>R</span>VERSOS</a>
+      <span class="badge-teste">🏮 Yokocho</span>
+    </div>
+    <div class="top-tools">
+      <button type="button" class="btn sm lantern" id="btnStreak">🔥 Ofensiva</button>
+      <span class="xp-pill" title="XP acumulado no Salão">✦ <span data-xp-val>0</span> XP</span>
+      <button type="button" class="btn sm" data-clima-btn>🏮 Noite suave</button>
+      <button type="button" class="btn sm" data-mute-btn aria-pressed="true">🔊 Som: ON</button>
+    </div>
   </nav>
 
-  <p class="crumb" style="margin:0;font-size:14px;display:flex;flex-wrap:wrap;gap:8px 16px;align-items:center"><a href="/idiomas/japones/" style="color:var(--muted);text-decoration:none">← Trilha de japonês</a><a id="proxMapa" class="btn" href="/idiomas/japones/" hidden style="text-decoration:none">➡️ Próximo mapa</a></p>
-<script src="/idiomas/dados/trilha-mapas.js?v=2"></script>
-<script>(function(){ try{ var E=UniTrilha.estado(), a=document.getElementById('proxMapa');
-  for(var i=0;i<E.length;i++){ var m=E[i];
-    if(!m.aula){ a.href=m.aulaHref; a.textContent='➡️ Próximo mapa: '+m.emoji+' '+m.titulo; a.hidden=false; return; }
-    if(!m.prova){ a.href=m.testeHref; a.textContent='🏅 Próxima prova: '+m.emoji+' '+m.titulo; a.hidden=false; return; } }
-}catch(e){} })();</script>
+  <div data-acess-bar></div>
 
-  <div class="aviso" id="avisoPlaneta" hidden role="status">
-    <b>✨ O Planeta Utopia evoluiu!</b>
-    <span>Agora ele é uma sala de verdade: você anda com o seu avatar, senta numa mesa, conversa em japonês e joga com quem estiver ali. As provas e os carimbos do passaporte seguem na sua <a href="/idiomas/japones/">trilha de japonês</a>.</span>
-    <div><button class="btn pri" type="button" id="fechaAviso">Entendido, vamos lá!</button></div>
-  </div>
+  <!-- MAPINHA INTERATIVO DO BECO YOKOCHO (TELA PRINCIPAL) -->
+  <main class="beco-shell" aria-label="Mapa interativo do Beco Unirversos">
+    <div class="beco-scroll" id="becoScroll">
+    <div class="beco-stage" id="becoStage" tabindex="0" role="application" aria-label="Beco japonês interativo. Toque na calçada para andar ou numa porta para entrar.">
+      <img class="beco-img" src="./yokocho-beco.jpg" alt="Beco japonês ao entardecer com Karaokê, Sushi, Konbini, Caligrafia e Café">
+      <div class="beco-glow" aria-hidden="true"></div>
+      <div class="beco-rain" aria-hidden="true"></div>
 
-  <header>
-    <p class="eyebrow">✦ espírito · encontros ao vivo</p>
-    <h1>🪐 Planeta Utopia</h1>
-    <p class="lede">Ande pela sala com o seu avatar, sente numa mesa e comece a conversar. Os jogos abrem na hora, mesmo sem ninguém por perto: se alguém sentar, entra no jogo quando quiser.</p>
-  </header>
+      <!-- 5 Portas Interativas (100% japonês por padrão; tradução/furigana/romaji opcionais!) -->
+      <button type="button" class="spot" data-loja="karaoke" style="left:10.5%;top:41%">
+        <span class="dot-pulse" aria-hidden="true"></span>
+        🎤 <span lang="ja">カラオケ</span> <small class="trad">Karaokê</small>
+      </button>
 
-  <section class="card porta" id="portaSalao" aria-labelledby="h-porta">
-    <div><h2 id="h-porta">🏮 O Salão</h2><p class="sub">Uma sala onde os aventureiros se encontram: ande com o seu avatar, sente no sofá ou na mesa e converse em japonês. Quando você entra, as outras pessoas que estão lá passam a ver o seu avatar.</p></div>
-    <button class="btn pri grande" type="button" id="entrarSalao">Entrar no Salão →</button>
-  </section>
+      <button type="button" class="spot" data-loja="sushi" style="left:26.5%;top:42%">
+        🍣 <span lang="ja"><ruby>回転寿司<rt>かいてんずし</rt></ruby></span> <small class="trad">Sushi</small>
+      </button>
 
-  <section class="card" id="secSala" aria-labelledby="h-sala" hidden>
-    <div class="topo-sala"><div><h2 id="h-sala">🏮 O Salão</h2><p class="sub" id="dica">Toque no chão para andar e numa cadeira para sentar. No computador, use também as setas.</p></div>
-      <div class="row"><button class="btn" type="button" id="btnClima" aria-label="Mudar o clima da janela">☀️ 晴れ · Sol</button><button class="btn" type="button" id="btnRo" aria-pressed="false">Romaji: não</button><button class="btn" type="button" id="levantar" hidden>Levantar da mesa</button></div></div>
-    <p class="sub quem" id="quem" aria-live="polite"></p>
-    <div class="sala" id="sala" tabindex="0" role="application" aria-label="Sala do Salão. Toque no chão para andar, toque numa cadeira para sentar, ou use as setas do teclado."></div>
-    <p class="nota" id="semBanco" hidden>As outras pessoas ainda estão sendo ligadas. Você pode andar pela sala, mas só vai ver quem está online quando a conexão voltar.</p>
-    <details><summary style="cursor:pointer;font-weight:700">Regras do salão</summary>
-      <ul class="regras"><li>Fale com gentileza: aqui todo mundo está aprendendo.</li><li>Errar faz parte. Corrija com carinho, nunca com deboche.</li><li>Nada de dados pessoais (telefone, endereço, redes).</li><li>Algo errado? Use ⚑ Denunciar na mesa: a professora recebe.</li></ul>
-    </details>
-  </section>
+      <button type="button" class="spot" data-loja="konbini" style="left:51%;top:33%">
+        🏪 <span lang="ja">コンビニ</span> <small class="trad">Konbini</small>
+      </button>
 
-  <section class="card mesa" id="mesa" hidden aria-labelledby="h-mesa">
-    <div class="topo-mesa"><div><h2 id="h-mesa">🪑 Mesa</h2><div class="quem-mesa" id="quemMesa"></div></div>
-      <div class="row"><button class="btn" type="button" id="btnJogar">🎲 Jogos</button><button class="btn" type="button" id="levantar2">Levantar</button></div></div>
-    <div class="convbar" id="convBar" hidden></div>
-    <div class="abas" id="abas" aria-label="Conversas da mesa"></div>
-    <div class="chat" id="chat" aria-live="polite"></div>
-    <div class="pilulas" id="pilulas" aria-label="Frases prontas para tocar"></div>
-    <p class="sub pil-pt" id="pilPt" hidden></p>
-    <div class="escrever"><textarea id="txt" maxlength="300" placeholder="Escreva em japonês (kana, kanji ou romaji)…" aria-label="Mensagem"></textarea><button class="btn pri" type="button" id="enviar">Enviar</button></div>
-    <div class="row"><button class="btn" type="button" id="btnRo2" aria-pressed="false">Romaji: não</button><button class="lk" type="button" id="denunciar">⚑ Denunciar</button></div>
-  </section>
-  <div class="jogo sheet" id="jogoBox" hidden role="dialog" aria-modal="true" aria-label="Jogos da mesa"></div>
-  <div class="jogo sheet" id="cruzBox" hidden role="dialog" aria-modal="true" aria-label="Palavras cruzadas"></div>
+      <button type="button" class="spot" data-loja="lojinha" style="left:74%;top:35%">
+        👘 <span lang="ja"><ruby>雑貨屋<rt>ざっかや</rt></ruby></span> <small class="trad">Lojinha</small>
+      </button>
 
-  
-<footer>
-    <span>UNI<span style="color:#c23f5e">R</span>VERSOS — tudo conectado · Aline Kikuti</span>
-    <span><a href="/idiomas/japones/">trilha de japonês</a> · <a href="/idiomas/">idiomas</a></span>
+      <button type="button" class="spot" data-loja="cafe" style="left:88.5%;top:53%">
+        🍵 <span lang="ja"><ruby>喫茶<rt>きっさ</rt></ruby></span> <small class="trad">Café</small>
+      </button>
+
+      <!-- Objetos clicáveis do beco (tudo mostra o nome em japonês!) -->
+      <button type="button" class="secret-spot" data-secret="lanterna" style="left:6.5%;top:14%" aria-label="提灯">🏮</button>
+      <button type="button" class="secret-spot" data-secret="ceu" style="left:50%;top:10%" aria-label="空">🌇</button>
+      <button type="button" class="secret-spot" data-secret="noren" style="left:25.5%;top:50%" aria-label="暖簾">🟦</button>
+      <button type="button" class="secret-spot" data-secret="bambu" style="left:67.5%;top:64%" aria-label="竹">🎋</button>
+      <button type="button" class="secret-spot" data-secret="gato" style="left:88%;top:76%" aria-label="猫">🐾</button>
+      <button type="button" class="secret-spot" data-secret="maquina" style="left:96.8%;top:64%" aria-label="自動販売機">🥤</button>
+
+      <!-- Barraquinha de Yakitori (焼き鳥屋台) -->
+      <button type="button" class="yakitori-stand" data-secret="yakitori" aria-label="焼き鳥屋台">
+        <svg viewBox="0 0 120 104" xmlns="http://www.w3.org/2000/svg">
+          <!-- Fumacinha subindo -->
+          <circle class="smoke-puff" cx="48" cy="36" r="7" fill="#fbf3e6" opacity="0.65"/>
+          <circle class="smoke-puff s2" cx="68" cy="34" r="6" fill="#fbf3e6" opacity="0.55"/>
+          <!-- Toldo listrado terracota & creme -->
+          <path d="M10 26 L110 26 L116 40 L4 40 Z" fill="#d96b5c" stroke="#4a3b38" stroke-width="2.6" stroke-linejoin="round"/>
+          <path d="M28 26 L26 40 M48 26 L48 40 M72 26 L72 40 M92 26 L94 40" stroke="#fbf3e6" stroke-width="4" opacity="0.85"/>
+          <!-- Postes -->
+          <line x1="16" y1="40" x2="16" y2="62" stroke="#4a3b38" stroke-width="3"/>
+          <line x1="104" y1="40" x2="104" y2="62" stroke="#4a3b38" stroke-width="3"/>
+          <!-- Lanterninha vermelha na barraquinha -->
+          <ellipse cx="104" cy="48" rx="7" ry="9" fill="#d96b5c" stroke="#4a3b38" stroke-width="2"/>
+          <!-- Grelha + espetinhos de yakitori -->
+          <rect x="26" y="54" width="68" height="9" rx="3" fill="#4a3b38"/>
+          <g stroke="#d8a57a" stroke-width="2.2" stroke-linecap="round">
+            <line x1="36" y1="53" x2="48" y2="48"/><line x1="54" y1="53" x2="66" y2="48"/><line x1="72" y1="53" x2="84" y2="48"/>
+          </g>
+          <g fill="#a6523a" stroke="#4a3b38" stroke-width="1.4">
+            <circle cx="42" cy="50" r="3.2"/><circle cx="60" cy="50" r="3.2"/><circle cx="78" cy="50" r="3.2"/>
+          </g>
+          <!-- Balcão de madeira + noren curtinho -->
+          <rect x="12" y="62" width="96" height="32" rx="4" fill="#b6815c" stroke="#4a3b38" stroke-width="2.6"/>
+          <rect x="20" y="68" width="80" height="18" rx="3" fill="#fbf3e6" stroke="#4a3b38" stroke-width="1.8"/>
+          <text x="60" y="82" text-anchor="middle" fill="#9e4b3e" font-family="Zen Maru Gothic, sans-serif" font-weight="800" font-size="13">焼き鳥</text>
+          <!-- Rodinhas da carrocinha -->
+          <circle cx="28" cy="96" r="6" fill="#59433b" stroke="#4a3b38" stroke-width="2"/>
+          <circle cx="92" cy="96" r="6" fill="#59433b" stroke="#4a3b38" stroke-width="2"/>
+        </svg>
+      </button>
+
+      <!-- Cachorrinho Shiba Inu passeando na calçada -->
+      <button type="button" class="shiba-dog" id="shibaDog" data-secret="cachorro" aria-label="柴犬">
+        <svg viewBox="0 0 88 64" xmlns="http://www.w3.org/2000/svg">
+          <!-- Rabinho enrolado -->
+          <path d="M16 32 C6 24 8 12 18 14 C24 15 24 23 19 26" fill="#d99559" stroke="#4a3b38" stroke-width="2.6" stroke-linecap="round"/>
+          <!-- Corpinho -->
+          <ellipse cx="40" cy="36" rx="22" ry="13" fill="#d99559" stroke="#4a3b38" stroke-width="2.6"/>
+          <ellipse cx="42" cy="41" rx="14" ry="7" fill="#fbf3e6"/>
+          <!-- Patinhas -->
+          <rect x="24" y="44" width="6" height="14" rx="3" fill="#fbf3e6" stroke="#4a3b38" stroke-width="2.4"/>
+          <rect x="34" y="45" width="6" height="13" rx="3" fill="#d99559" stroke="#4a3b38" stroke-width="2.4"/>
+          <rect x="48" y="44" width="6" height="14" rx="3" fill="#fbf3e6" stroke="#4a3b38" stroke-width="2.4"/>
+          <rect x="56" y="45" width="6" height="13" rx="3" fill="#d99559" stroke="#4a3b38" stroke-width="2.4"/>
+          <!-- Coleirinha vermelha -->
+          <path d="M52 27 L60 35" stroke="#d96b5c" stroke-width="4.5" stroke-linecap="round"/>
+          <!-- Cabeça + orelhas pontudas -->
+          <path d="M54 18 L58 6 L66 16 Z" fill="#d99559" stroke="#4a3b38" stroke-width="2.4" stroke-linejoin="round"/>
+          <path d="M68 17 L75 7 L78 19 Z" fill="#d99559" stroke="#4a3b38" stroke-width="2.4" stroke-linejoin="round"/>
+          <circle cx="66" cy="25" r="13" fill="#d99559" stroke="#4a3b38" stroke-width="2.6"/>
+          <ellipse cx="69" cy="29" rx="9" ry="7" fill="#fbf3e6"/>
+          <!-- Olhinhos e focinho -->
+          <circle cx="64" cy="23" r="2" fill="#4a3b38"/>
+          <circle cx="73" cy="23" r="2" fill="#4a3b38"/>
+          <ellipse cx="70" cy="27" rx="2.5" ry="1.8" fill="#4a3b38"/>
+          <path d="M67 30 Q70 33 73 30" stroke="#4a3b38" stroke-width="1.8" fill="none" stroke-linecap="round"/>
+        </svg>
+      </button>
+
+      <!-- Avatar caminhando na calçada -->
+      <div class="walker" id="walker" style="left:50%;top:87%">
+        <div class="walker-face" id="walkerFace">🧳</div>
+        <span class="walker-name" id="walkerName">Você</span>
+      </div>
+
+      <!-- Balão flutuante para Easter Eggs -->
+      <div class="beco-bubble" id="becoBubble" hidden></div>
+
+      <!-- Popover Washi da lojinha escolhida -->
+      <div class="loja-popover" id="lojaPopover" hidden role="region" aria-live="polite">
+        <div>
+          <h3 id="popTit" lang="ja"></h3>
+          <span class="ro-block" id="popRo" style="font-size:12px;color:#9e4b3e"></span>
+          <p id="popJp" lang="ja" style="color:#42322e;font-weight:700"></p>
+          <p id="popDesc" class="trad-block"></p>
+        </div>
+        <div class="row">
+          <button type="button" class="btn sm" id="popFecha" style="background:#fff;color:#42322e;border-color:#d4bfa9">✕</button>
+          <a class="btn pri" id="popEntrar" href="#"><span lang="ja"><ruby>入<rt>はい</rt></ruby>る</span> →</a>
+        </div>
+      </div>
+    </div>
+    </div>
+
+    <!-- Ofensiva Coletiva & Presença das Alunas -->
+    <div class="ofensiva-bar" id="ofensivaBar">
+      <div class="alunas-chips" id="alunasOnline">
+        <span style="color:var(--lantern);font-weight:800">🔥 Ofensiva do Beco:</span>
+        <span class="aluna-chip eu" id="euChip">Você · 🔥 0d</span>
+      </div>
+      <span class="sub" id="statusPresenca" style="font-size:12.5px">Modo solo (ao logar, as alunas se veem andando aqui!)</span>
+    </div>
+
+    <!-- Placa de rua / Atalhos discretos na base do mapa -->
+    <div class="beco-dock">
+      <span class="dock-dica">👣 Arraste no celular para passear pelo beco · Toque nos objetos ou nas colegas!</span>
+      <div class="dock-atalhos">
+        <a class="dock-pill" href="./mala/">🧳 Mala Express</a>
+        <a class="dock-pill" href="./dupla/">👥 Jogos em Dupla</a>
+        <a class="dock-pill" href="./aula-dupla/">🎭 Ensaio (role play)</a>
+        <a class="dock-pill" href="/aluno/">📊 Meu Gráfico</a>
+      </div>
+    </div>
+  </main>
+
+  <footer>
+    <span>UNI<span style="color:var(--sakura)">R</span>VERSOS · Salão Yokocho</span>
+    <span><a href="/idiomas/">Idiomas</a> · <a href="./antigo/">Mesas e chat (versão anterior)</a></span>
   </footer>
 </div>
 
-<dialog id="dlgDen">
-  <form method="dialog" style="display:grid;gap:10px">
-    <b>⚑ Denunciar esta conversa</b>
-    <span class="sub">Conte o que aconteceu. A professora vai ler.</span>
-    <textarea id="denTxt" maxlength="500"></textarea>
-    <div class="row"><button class="btn pri" value="ok" type="submit">Enviar denúncia</button><button class="btn" value="cancel" type="submit">Cancelar</button></div>
+<!-- Modal Papel Washi · Café Yokocho (Cantinho Social Simples) -->
+<dialog class="cafe-modal" id="cafeModal">
+  <div class="row" style="justify-content:space-between;margin-bottom:6px">
+    <div>
+      <span style="font-size:11.5px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:#b24b3d">✦ 喫茶 · Cantinho Social</span>
+      <h2 style="color:#42322e">🍵 Café Yokocho</h2>
+    </div>
+    <button type="button" class="btn sm" id="fechaCafe">✕ Fechar</button>
+  </div>
+  <p class="sub" style="margin-bottom:10px">Deixe um recado rápido em japonês na mesinha do beco ou ouça quem passou por aqui.</p>
+
+  <div class="mural-lista" id="muralLista"></div>
+  <div class="frases-bar" id="frasesBar"></div>
+  <form class="mural-form" id="muralForm">
+    <input type="text" id="muralInput" maxlength="160" placeholder="Escreva em japonês (ex.: こんばんは！)…">
+    <button type="submit" class="btn pri">Enviar</button>
   </form>
 </dialog>
 
-<script src="/idiomas/dados/avatar.js?v=20261125a"></script>
+<script src="/idiomas/dados/avatar.js?v=20261016b"></script>
 <script src="/idiomas/dados/velocidade-voz.js?v=1"></script>
 <script src="/idiomas/dados/audio-mapa.js?v=jogos1"></script>
-<script src="/idiomas/dados/glossario.js?v=1"></script>
-<script src="/idiomas/planeta-utopia/salao/ilustracoes.js?v=1"></script>
-<script type="text/plain" id="salaModulo">
-import { getApps, initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
-import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
-import { getDatabase, ref, set, push, onValue, onDisconnect, remove, runTransaction, serverTimestamp, off, update, get, query, limitToLast } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-database.js";
-
-/* endereço do Realtime Database (região Estados Unidos, us-central1) */
-const DB_URL = 'https://unirversos-site-default-rtdb.firebaseio.com';
-const $ = id => document.getElementById(id);
-const esc = s => String(s).replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
-
-/* ---------- aviso de quem veio do Planeta ---------- */
-try{ const q=new URLSearchParams(location.search); if(q.get('de')==='planeta' && localStorage.getItem('salaoAvisoVisto')!=='1') $('avisoPlaneta').hidden=false; }catch(e){}
-$('fechaAviso').onclick=()=>{ $('avisoPlaneta').hidden=true; try{ localStorage.setItem('salaoAvisoVisto','1'); }catch(e){} };
-
-/* ---------- áudio ---------- */
-const chave = t => String(t).replace(/[\s、。，．,.!！?？…・「」『』（）()＿]/g,'');
-let tocando=null;
-function speakTTS(t){ try{ if(!window.speechSynthesis) return; speechSynthesis.cancel(); const u=new SpeechSynthesisUtterance(t); u.lang='ja-JP'; u.rate=.8*(window.UniVel?UniVel.get():1); const v=speechSynthesis.getVoices().find(x=>/^ja/i.test(x.lang)); if(v) u.voice=v; speechSynthesis.speak(u); }catch(e){} }
-function speak(t){ const id=window.AUDIO_MAP&&AUDIO_MAP[chave(t)]; if(!id){ speakTTS(t); return; }
-  try{ if(tocando) tocando.pause(); const a=new Audio('/idiomas/audio/'+id+'.mp3'); tocando=a; if(window.UniVel) UniVel.aplica(a,.85); a.onerror=()=>speakTTS(t); const p=a.play(); if(p&&p.catch) p.catch(()=>speakTTS(t)); }catch(e){ speakTTS(t); } }
-
-/* ---------- romaji (só pelo botão) ---------- */
-let ROM=false; try{ ROM=localStorage.getItem('utopiaRomaji')==='1'; }catch(e){}
-function aplicaRo(){ ['btnRo','btnRo2'].forEach(id=>{ const b=$(id); if(b){ b.textContent='Romaji: '+(ROM?'sim':'não'); b.setAttribute('aria-pressed',String(ROM)); } }); document.querySelectorAll('.wro').forEach(e=>e.hidden=!ROM); }
-$('btnRo').onclick=$('btnRo2').onclick=()=>{ ROM=!ROM; try{ localStorage.setItem('utopiaRomaji',ROM?'1':'0'); }catch(e){} aplicaRo(); };
-
-/* ---------- eu ---------- */
-const AV = window.UtopiaAvatar && UtopiaAvatar.load();
-const SEL = AV && AV.sel ? AV.sel : null;
-const P = (AV && AV.profile) || {};
-let me = { uid:null, nome:(P.kata||P.name||'').trim() };
-const avatarHTML = sel => (sel && window.UtopiaAvatar) ? UtopiaAvatar.svg(sel,{viewBox:'40 46 160 160',still:true,label:'Avatar'}) : '🧳';
-
-/* ---------- a sala ---------- */
-const MESAS=[{id:'m1',nome:'Mesa',x:28,y:62,n:4,r:12.5},{id:'m2',nome:'Sofá',x:65,y:31,n:4,linha:true,pos:[[54,32],[63,32],[72,32],[87.5,46]]}];
-const R_ASSENTO=13, PROP=1.333;             /* sala 4:3: 1% de largura = 1,333% de altura */
-const lugarPos=(mz,k)=>{ if(mz.pos) return {x:mz.pos[k][0], y:mz.pos[k][1]}; const ang=(k*2*Math.PI/mz.n)-Math.PI/2, r=mz.r||R_ASSENTO; return {x:mz.x+r*Math.cos(ang), y:mz.y+r*PROP*Math.sin(ang)}; };
-let ME={ x:44+Math.random()*12, y:84, mesa:null, lugar:null };
-let PRES={}, db=null, bancoOk=false;
-let falouFb=null, sessRef=null, msgsRef=null, jogoRef=null, jogoV=null, jogoAberto=false, falouJ=null, vistos=new Set(), mesaAtual=null, sessAtual=null, anterior={};
-const minhaChave=()=>me.uid||'eu';
-const clamp=(v,a,b)=>Math.max(a,Math.min(b,v));
-const nomeDe=p=>(p&&p.nome)||'Viajante';
-const sala=$('sala'); const elAv={}, elCad={};
-const DECOR='<div class="dec" aria-hidden="true"><div class="tapete" style="left:28%;top:62%"></div><div class="genkan" style="left:50%;top:94%"><em>🩴🩴</em><b>entrada</b></div><div class="akari" style="left:43%;top:35%"></div><div class="akari" style="left:93%;top:74%"></div><span class="lant sm" style="left:25.5%;top:6%">🏮</span><span class="lant" style="left:31%;top:9%">🏮</span><span class="lant" style="left:69%;top:9%">🏮</span><span class="lant sm" style="left:74.5%;top:6%">🏮</span><div class="estante" style="left:16%"><b><u style="background:#c2575f;height:62%"></u><u style="background:#8b5e83;height:73%"></u><u style="background:#5e8c6a;height:84%"></u><u style="background:#e07a8e;height:95%"></u><u style="background:#d98a6a;height:72%"></u><u style="background:#e8b04a;height:83%"></u><u style="background:#4f9aa0;height:94%"></u><em>🏺</em></b><b><u style="background:#6a7fb5;height:69%"></u><u style="background:#c2575f;height:80%"></u><u style="background:#8b5e83;height:91%"></u><u style="background:#5e8c6a;height:68%"></u><u style="background:#e07a8e;height:79%"></u><u style="background:#d98a6a;height:90%"></u><u style="background:#e8b04a;height:67%"></u></b><b><u style="background:#4f9aa0;height:76%"></u><u style="background:#6a7fb5;height:87%"></u><u style="background:#c2575f;height:64%"></u><u style="background:#8b5e83;height:75%"></u><u style="background:#5e8c6a;height:86%"></u><u style="background:#e07a8e;height:63%"></u><u style="background:#d98a6a;height:74%"></u><em>🕯️</em></b></div><div class="janela"><i class="sky"></i><i class="astro"></i><i class="nuvem"></i><i class="chuva"></i></div><div class="estante" style="left:84%"><b><u style="background:#e8b04a;height:83%"></u><u style="background:#4f9aa0;height:94%"></u><u style="background:#6a7fb5;height:71%"></u><u style="background:#c2575f;height:82%"></u><u style="background:#8b5e83;height:93%"></u><u style="background:#5e8c6a;height:70%"></u><u style="background:#e07a8e;height:81%"></u><em>🪴</em></b><b><u style="background:#d98a6a;height:90%"></u><u style="background:#e8b04a;height:67%"></u><u style="background:#4f9aa0;height:78%"></u><u style="background:#6a7fb5;height:89%"></u><u style="background:#c2575f;height:66%"></u><u style="background:#8b5e83;height:77%"></u><u style="background:#5e8c6a;height:88%"></u></b><b><u style="background:#e07a8e;height:63%"></u><u style="background:#d98a6a;height:74%"></u><u style="background:#e8b04a;height:85%"></u><u style="background:#4f9aa0;height:62%"></u><u style="background:#6a7fb5;height:73%"></u><u style="background:#c2575f;height:84%"></u><u style="background:#8b5e83;height:95%"></u><em>🍵</em></b></div></div>';
-sala.innerHTML=DECOR+MESAS.map(mz=>mz.linha?`<div class="sofa-d l" style="left:${mz.x}%;top:${mz.y}%"><i class="enc"></i><i class="ass"></i><i class="br e"></i><i class="br d"></i></div><div class="sofa-v" style="left:87.5%;top:45%"><i class="enc"></i><i class="ass"></i><i class="br t"></i><i class="br f"></i></div>`:`<div class="mesa-d peq" style="left:${mz.x}%;top:${mz.y}%"></div>`).join('')+
-  MESAS.map(mz=>Array.from({length:mz.n},(_,k)=>{ const q=lugarPos(mz,k); return `<button type="button" class="cad${mz.linha?' lin':''}" data-m="${mz.id}" data-k="${k}" style="left:${q.x}%;top:${q.y}%;z-index:1" aria-label="Sentar na ${mz.nome}, lugar ${k+1}"></button>`; }).join('')).join('');
-/* clima da janela: segue a hora do dia e o aluno pode mudar (fica guardado neste aparelho) */
-const CLIMAS=[['sol','☀️ 晴れ · Sol'],['chuva','🌧️ 雨 · Chuva'],['noite','🌙 夜 · Noite']];
-let CLIMA=(()=>{ try{ const v=localStorage.getItem('utopiaClima'); if(CLIMAS.some(c=>c[0]===v)) return v; }catch(e){} const h=new Date().getHours(); return (h>=6&&h<18)?'sol':'noite'; })();
-function aplicaClima(){ sala.dataset.clima=CLIMA; const c=CLIMAS.find(c=>c[0]===CLIMA); $('btnClima').textContent=c[1]; }
-$('btnClima').onclick=()=>{ CLIMA=CLIMAS[(CLIMAS.findIndex(c=>c[0]===CLIMA)+1)%CLIMAS.length][0]; try{ localStorage.setItem('utopiaClima',CLIMA); }catch(e){} aplicaClima(); };
-aplicaClima();
-sala.querySelectorAll('.cad').forEach(b=>elCad[b.dataset.m+b.dataset.k]=b);
-
-function todos(){ const o={...PRES}; o[minhaChave()]={nome:me.nome||'Você',sel:SEL,...ME}; return o; }
-function naMinhaMesa(T){ return Object.entries(T||todos()).filter(([u,p])=>ME.mesa&&p.mesa===ME.mesa).sort((a,b)=>(a[1].lugar||0)-(b[1].lugar||0)); }
-function renderSala(){
-  const T=todos(), vivos=new Set();
-  Object.entries(T).forEach(([uid,p])=>{ if(typeof p.x!=='number') return; vivos.add(uid);
-    let e=elAv[uid]; const eu=uid===minhaChave();
-    if(!e){ e=document.createElement('div'); e.className='av-p'+(eu?' eu':''); e.innerHTML='<div class="face"></div><b></b>'; sala.appendChild(e); elAv[uid]=e; e.querySelector('.face').innerHTML=avatarHTML(p.sel); }
-    e.style.left=p.x+'%'; e.style.top=p.y+'%'; e.style.zIndex=String(10+Math.round(p.y));
-    e.classList.toggle('sent',!!p.mesa); e.querySelector('b').textContent=nomeDe(p)+(eu?' (você)':'');
-  });
-  Object.keys(elAv).forEach(u=>{ if(!vivos.has(u)){ elAv[u].remove(); delete elAv[u]; } });
-  MESAS.forEach(mz=>{ for(let k=0;k<mz.n;k++){ const oc=Object.entries(T).some(([u,p])=>p.mesa===mz.id&&p.lugar===k&&u!==minhaChave()); elCad[mz.id+k].classList.toggle('ocup',oc); } });
-  const n=vivos.size; $('quem').textContent = bancoOk ? (n<=1?'Só você na sala agora.':n+' pessoas na sala (contando você).') : '';
-  atualizaMesaPainel(T);
-}
-
-/* ---------- presença no banco ---------- */
-let gravaT=null;
-function grava(){ if(!bancoOk||!db) return; clearTimeout(gravaT); gravaT=setTimeout(()=>{ set(ref(db,'salao/presenca/'+me.uid),{nome:me.nome.slice(0,30),sel:SEL||null,x:Math.round(ME.x*10)/10,y:Math.round(ME.y*10)/10,mesa:ME.mesa||null,lugar:ME.lugar==null?null:ME.lugar,t:serverTimestamp()}).catch(()=>{}); },120); }
-function iniciaBanco(user){
-  try{ db = getDatabase(getApps()[0], DB_URL); }catch(e){ semBanco(); return; }
-  me.uid=user.uid; if(!me.nome) me.nome=(user.displayName||'').split(' ')[0]||'Viajante';
-  const pres = ref(db,'salao/presenca/'+me.uid);
-  onDisconnect(pres).remove().then(()=>{ bancoOk=true; $('semBanco').hidden=true; grava(); renderSala(); }).catch(semBanco);
-  onValue(ref(db,'salao/presenca'), snap=>{ PRES=snap.val()||{}; delete PRES[me.uid]; renderSala(); }, semBanco);
-}
-function semBanco(){ bancoOk=false; $('semBanco').hidden=false; renderSala(); }
-
-/* ---------- andar e sentar ---------- */
-function vaiPara(x,y,mesa,lugar){ ME.x=clamp(x,5,95); ME.y=clamp(y,14,93); const mudou=(ME.mesa!==(mesa||null)); ME.mesa=mesa||null; ME.lugar=lugar==null?null:lugar; grava(); renderSala(); if(mudou) mudaMesa(); }
-function levanta(){ if(!ME.mesa) return; vaiPara(ME.x,clamp(ME.y+10,14,93),null,null); }
-sala.addEventListener('click',e=>{
-  const c=e.target.closest('.cad');
-  if(c){ const mz=MESAS.find(m=>m.id===c.dataset.m), k=+c.dataset.k, q=lugarPos(mz,k); vaiPara(q.x,q.y,mz.id,k); return; }
-  const r=sala.getBoundingClientRect(), px=(e.clientX-r.left)/r.width*100, py=(e.clientY-r.top)/r.height*100;
-  vaiPara(px,py,null,null);
-});
-sala.addEventListener('keydown',e=>{ const d={ArrowLeft:[-4,0],ArrowRight:[4,0],ArrowUp:[0,-5],ArrowDown:[0,5]}[e.key]; if(!d) return; e.preventDefault(); vaiPara(ME.x+d[0],ME.y+d[1],null,null); });
-$('levantar').onclick=levanta; $('levantar2').onclick=levanta;
-
-/* ---------- mesa: conversa e jogos (sessão em salao/mesas/sala-<id>/s/<sessão>) ---------- */
-const ramo=id=>'salao/mesas/sala-'+id;
-function soltaMesa(){ document.body.style.overflow=''; limpaAbas(); [sessRef,msgsRef,jogoRef].forEach(r=>{ if(r) try{ off(r); }catch(e){} }); sessRef=msgsRef=jogoRef=null; jogoV=null; jogoAberto=false; falouJ=null; vistos=new Set(); mesaAtual=null; sessAtual=null; }
-async function mudaMesa(){
-  soltaMesa(); $('chat').innerHTML=''; anterior={}; renderAbas();
-  if(!ME.mesa){ document.querySelector('.wrap').classList.remove('sentado'); $('mesa').hidden=true; $('secSala').hidden=false; $('levantar').hidden=true; $('jogoBox').hidden=true; return; }
-  mesaAtual=ME.mesa; const mz=MESAS.find(m=>m.id===ME.mesa);
-  $('mesa').hidden=false; $('levantar').hidden=false; $('h-mesa').textContent='🪑 '+mz.nome; renderPilulas(); document.querySelector('.wrap').classList.add('sentado'); $('secSala').hidden=false; window.scrollTo({top:0});
-  naMinhaMesa().forEach(([u,p])=>{ anterior[u]=nomeDe(p); }); atualizaMesaPainel(todos());
-  sis('Você sentou. Cumprimente quem estiver na mesa, ou espere alguém chegar.');
-  if(!bancoOk||!db){ sis('Sem conexão com as outras pessoas agora.'); return; }
-  try{
-    const outros=naMinhaMesa().filter(([u])=>u!==minhaChave()).length;
-    sessRef=ref(db,ramo(mz.id)+'/sessao');
-    if(!outros){ const k=push(ref(db,ramo(mz.id)+'/s')).key; await set(sessRef,k); }
-    onValue(sessRef,snap=>{ ligaSessao(mz.id,snap.val()); });
-  }catch(e){ sis('Não consegui abrir a conversa da mesa. Tente levantar e sentar de novo.'); }
-}
-function ligaSessao(id,k){
-  if(id!==mesaAtual||!k||k===sessAtual) return; sessAtual=k;
-  if(msgsRef) off(msgsRef); if(jogoRef) off(jogoRef);
-  const base=ramo(id)+'/s/'+k; vistos=new Set();
-  msgsRef=ref(db,base+'/msgs');
-  onValue(query(msgsRef,limitToLast(60)),snap=>{ const v=snap.val()||{}; Object.entries(v).sort((x,y)=>(x[1].t||0)-(y[1].t||0)).forEach(([kk,mm])=>{ if(vistos.has(kk)) return; vistos.add(kk); msg({quem:mm.uid===me.uid?'Você':mm.nome,txt:mm.txt,meu:mm.uid===me.uid}); if(mm.uid!==me.uid) speak(mm.txt); }); });
-  jogoRef=ref(db,base+'/jogo'); jogoV=null; onValue(jogoRef,s=>{ jogoV=s.val(); renderJogo(); });
-  naMinhaMesa().forEach(([u])=>{ if(u!==minhaChave()) ligaPrivado(u); });
-}
-
-/* abas: "mesa" (todos) e uma por pessoa (privado, só entre quem está na mesma mesa) */
-let CH={mesa:[]}, aba='mesa', ABAS=[], naoLidas=new Set(), privRefs={}, privVistos={}, NOMES={};
-const parId=u=>sessAtual+'_'+[me.uid,u].sort().join('_');
-function limpaAbas(){ Object.values(privRefs).forEach(r=>{ try{ off(r); }catch(e){} }); privRefs={}; privVistos={}; CH={mesa:[]}; aba='mesa'; ABAS=[]; naoLidas=new Set(); NOMES={}; }
-function renderAbas(){
-  $('abas').hidden=!ABAS.length;
-  $('abas').innerHTML=`<span class="ab${aba==='mesa'?' on':''}"><button type="button" data-t="mesa">Mesa${naoLidas.has('mesa')?'<i class="pt"></i>':''}</button></span>`+ABAS.map(u=>`<span class="ab${aba===u?' on':''}"><button type="button" data-t="${esc(u)}">${esc(NOMES[u]||'Privado')}${naoLidas.has(u)?'<i class="pt"></i>':''}</button><button type="button" class="x" data-x="${esc(u)}" aria-label="Fechar a conversa com ${esc(NOMES[u]||'')}">✕</button></span>`).join('');
-  $('txt').placeholder = aba==='mesa' ? 'Escreva em japonês (kana, kanji ou romaji)…' : 'Mensagem só para '+(NOMES[aba]||'a pessoa')+'…';
-}
-function mudaAba(t){ aba=t; naoLidas.delete(t); $('chat').innerHTML=''; (CH[t]||[]).forEach(pinta); renderAbas(); $('chat').scrollTop=$('chat').scrollHeight; }
-function abreAba(u,foco){ if(!ABAS.includes(u)) ABAS.push(u); CH[u]=CH[u]||[]; ligaPrivado(u); if(foco) mudaAba(u); else renderAbas(); }
-function fechaAba(u){ ABAS=ABAS.filter(x=>x!==u); if(aba===u) mudaAba('mesa'); else renderAbas(); }
-$('abas').onclick=e=>{ const x=e.target.closest('[data-x]'); if(x){ fechaAba(x.dataset.x); return; } const b=e.target.closest('[data-t]'); if(b) mudaAba(b.dataset.t); };
-function ligaPrivado(u){
-  if(privRefs[u]||!sessAtual||!db||u===me.uid) return;
-  const r=ref(db,'salao/privado/'+parId(u)+'/msgs'); privRefs[u]=r; privVistos[u]=new Set();
-  onValue(query(r,limitToLast(60)),snap=>{ const v=snap.val()||{}; Object.entries(v).sort((x,y)=>(x[1].t||0)-(y[1].t||0)).forEach(([kk,mm])=>{ if(privVistos[u].has(kk)) return; privVistos[u].add(kk);
-    const meu=mm.uid===me.uid; if(!ABAS.includes(u)){ ABAS.push(u); CH[u]=CH[u]||[]; }
-    msg({quem:meu?'Você':mm.nome,txt:mm.txt,meu},u); if(!meu&&aba===u) speak(mm.txt); }); });
-}
-function atualizaMesaPainel(T){
-  if(!ME.mesa||!mesaAtual) return;
-  const lista=naMinhaMesa(T), ids=new Set(lista.map(([u])=>u));
-  lista.forEach(([u,p])=>{ NOMES[u]=nomeDe(p); });
-  $('quemMesa').innerHTML='<span class="dica-chip">Na mesa:</span><span>você</span>'+lista.filter(([u])=>u!==minhaChave()).map(([u,p])=>`<button type="button" data-p="${esc(u)}" title="Conversar em particular com ${esc(nomeDe(p))}">💬 ${esc(nomeDe(p))}</button>`).join('');
-  lista.forEach(([u,p])=>{ if(!anterior[u]){ anterior[u]=nomeDe(p); if(u!==minhaChave()){ sis(nomeDe(p)+' sentou na mesa.'); ligaPrivado(u); } } });
-  Object.keys(anterior).forEach(u=>{ if(!ids.has(u)){ const n=anterior[u]; delete anterior[u]; if(u!==minhaChave()){ sis(n+' saiu da mesa.'); if(ABAS.includes(u)) sis(n+' saiu da mesa. Esta conversa fica aqui até você fechar.',u); } } });
-  renderAbas(); renderJogo();
-}
-$('quemMesa').onclick=e=>{ const b=e.target.closest('[data-p]'); if(b) abreAba(b.dataset.p,true); };
-function enviar(){
-  const t=$('txt').value.trim(); if(!t||!db) return;
-  const m={uid:me.uid,nome:me.nome.slice(0,30),txt:t.slice(0,300),t:serverTimestamp()};
-  if(aba==='mesa'){ if(!msgsRef) return; $('txt').value=''; push(msgsRef,m).catch(()=>sis('Não consegui enviar. Tente de novo.')); }
-  else { if(!sessAtual) return; $('txt').value=''; push(ref(db,'salao/privado/'+parId(aba)+'/msgs'),m).catch(()=>sis('Não consegui enviar. Tente de novo.',aba)); }
-}
-$('enviar').onclick=enviar;
-$('txt').addEventListener('keydown',e=>{ if(e.key==='Enter'&&!e.shiftKey){ e.preventDefault(); enviar(); } });
-function renderPilulas(){
-  const nome=(me&&me.nome?me.nome:'').slice(0,30)||'___';
-  const P=[['こんにちは！','konnichiwa','Olá!'],['おなまえは？','onamae wa?','Qual é o seu nome?'],['はじめまして。','hajimemashite','Muito prazer (primeiro encontro).'],['わたしは '+nome+' です。','watashi wa '+nome+' desu','Eu sou '+nome+'.'],['よろしく おねがいします。','yoroshiku onegaishimasu','Conto com você.'],['こちらこそ。','kochira koso','O prazer é meu.'],['ゲームを しませんか？','geemu o shimasen ka?','Vamos jogar?'],['ありがとう！','arigatou','Obrigada!'],['もういちど おねがいします。','mou ichido onegaishimasu','Pode repetir, por favor?']];
-  $('pilulas').innerHTML=P.map((x,i)=>`<button type="button" lang="ja" data-i="${i}">${esc(x[0])}</button>`).join('');
-  $('pilulas')._P=P; $('pilPt').hidden=true;
-}
-$('pilulas').onclick=e=>{ const b=e.target.closest('button'); if(!b) return; const x=$('pilulas')._P[+b.dataset.i]; if(!x) return;
-  const t=$('txt'); t.value=(t.value&&!/\s$/.test(t.value)?t.value+' ':t.value)+x[0]; speak(x[0]); t.focus();
-  $('pilPt').hidden=false; $('pilPt').innerHTML=esc(x[2])+(ROM?' · <span class="wro">'+esc(x[1])+'</span>':''); };
-
-/* ---------- jogos (2 ou mais pessoas na mesa; turnos em rodízio) ---------- */
-const DIAS=['にちようび','げつようび','かようび','すいようび','もくようび','きんようび','どようび'];
-const DPT=['domingo','segunda','terça','quarta','quinta','sexta','sábado'];
-const OPOS=[['おおきい','ちいさい','grande','pequeno'],['あたらしい','ふるい','novo','velho'],['あつい','さむい','quente (clima)','frio (clima)'],['いそがしい','ひま','ocupado','livre'],['たかい','やすい','caro','barato'],['しずか','にぎやか','silencioso','animado']];
-const PART=[
-  ['あした、えいが＿みます。','を',['を','に','で','と'],'Amanhã vou assistir a um filme.','を marca o objeto da ação: o que você vai ver? O filme.'],
-  ['わたしはレストラン＿たべます。','で',['に','で','を','は'],'Eu como no restaurante.','で marca o lugar onde a ação acontece.'],
-  ['にちようびにきょうと＿いきます。','へ',['へ','を','と','で'],'No domingo vou para Quioto.','へ (lê-se "e") marca o destino. に também serve aqui.',['へ','に']],
-  ['あさ、しちじ＿おきます。','に',['で','を','に','と'],'Acordo às sete da manhã.','に marca a hora exata.'],
-  ['ともだち＿にほんごを はなします。','と',['と','に','を','は'],'Falo japonês com minha amiga ou amigo.','と quer dizer "junto com".'],
-  ['これ＿いくらですか。','は',['を','は','に','で'],'Quanto custa isto?','は (lê-se "wa") apresenta o assunto da pergunta.'],
-  ['みず＿ください。','を',['に','で','を','と'],'Água, por favor.','を marca o que você está pedindo.'],
-  ['ホテル＿どこですか。','は',['は','を','で','と'],'Onde fica o hotel?','は apresenta o hotel como assunto.']
-];
-/* o que a voz fala quando a pergunta aparece: nos jogos de lacuna, NUNCA a resposta (a frase completa só depois de responder) */
-const temGrav=t=>!!(window.AUDIO_MAP&&AUDIO_MAP[chave(t)]);
-const SEM_RESPOSTA=['te','kud','moii','wa','part'];
-function falaPerg(q,id){ if(!SEM_RESPOSTA.includes(id)) return q.fala; const jp=String(q.jp||'');
-  if(jp.indexOf('→')>-1) return jp.split('→')[0].trim();
-  return jp.replace(/\s+/g,'').replace(/＿/g,'、、'); }
-const DUAS=['moii','part']; /* jogos com 2ª rodada sem som */
-const JOGOS={
-  dias:{ic:'📅',nome:'Dias da semana',qs:DIAS.map((d,i)=>{ const n=DIAS[(i+1)%7]; const o=[n,DIAS[(i+3)%7],DIAS[(i+5)%7]]; const k=(i*2)%3; [o[0],o[k]]=[o[k],o[0]]; return {jp:d+'の つぎは？',dica:'Depois de '+DPT[i]+' vem…',ops:o,ok:[n],expl:d+' → '+n+' ('+DPT[i]+' → '+DPT[(i+1)%7]+').',fala:d+'の つぎは'}; })},
-  part:{ic:'🧩',nome:'Partículas',qs:PART.map(p=>({jp:p[0],dica:p[3],ops:p[2],ok:p[5]||[p[1]],expl:p[0].replace('＿',p[5]?p[5][0]:p[1])+' — '+p[4],fala:p[0].replace('＿',p[1])}))},
-  opos:{ic:'↔️',nome:'Opostos',qs:OPOS.map((p,i)=>{ const a=i%2?1:0, q=p[a], r=p[1-a]; const o=[r,OPOS[(i+1)%6][a],OPOS[(i+2)%6][1-a]]; const k=(i+1)%3; [o[0],o[k]]=[o[k],o[0]]; return {jp:q+' の はんたいは？',dica:'O oposto de '+p[2+a]+'…',ops:o,ok:[r],expl:q+' ('+p[2+a]+') ↔ '+r+' ('+p[2+(1-a)]+').',fala:q+'の はんたい'}; })},
-  te:{"ic": "🔤", "nome": "Forma て", "qs": [{"jp": "いきます → ＿", "dica": "ir · Grupo 1 · Exceção Especial", "ops": ["いきて", "いって", "いいて", "いんで"], "ok": ["いって"], "expl": "いきます → いって. Exceção famosa! Embora termine em き, o verbo いく vira いって, nunca いいて.", "fala": "いきます、いって"}, {"jp": "たべます → ＿", "dica": "comer · Grupo 2 · Verbo em -eru", "ops": ["たべって", "たべいで", "たべて", "たべして"], "ok": ["たべて"], "expl": "たべます → たべて. Grupo 2 mantém a raiz e só troca ます por て (たべて).", "fala": "たべます、たべて"}, {"jp": "のみます → ＿", "dica": "beber · Grupo 1 · Terminação em む", "ops": ["のみて", "のって", "のいて", "のんで"], "ok": ["のんで"], "expl": "のみます → のんで. Sons de \"mi\" (む, ぶ, ぬ) viram んで: のみます → のんで.", "fala": "のみます、のんで"}, {"jp": "まちます → ＿", "dica": "esperar · Grupo 1 · Terminação em つ", "ops": ["まって", "まちて", "まいて", "まんで"], "ok": ["まって"], "expl": "まちます → まって. Terminados em ち (つ no dicionário) viram って: まちます → まって.", "fala": "まちます、まって"}, {"jp": "かえります → ＿", "dica": "voltar, retornar · Grupo 1 · Terminação em る", "ops": ["かえて", "かえって", "かえいで", "かえして"], "ok": ["かえって"], "expl": "かえります → かえって. Verbo do Grupo 1: かえります vira かえって, com っ pequeno.", "fala": "かえります、かえって"}, {"jp": "かいます → ＿", "dica": "comprar · Grupo 1 · Terminação em う", "ops": ["かいて", "かんで", "かって", "かして"], "ok": ["かって"], "expl": "かいます → かって. Terminados em い (う no dicionário) viram って: かいます → かって.", "fala": "かいます、かって"}, {"jp": "はなします → ＿", "dica": "falar, conversar · Grupo 1 · Terminação em す", "ops": ["はなって", "はないて", "はなんで", "はなして"], "ok": ["はなして"], "expl": "はなします → はなして. Verbos com som \"shi\" (す) viram sempre して: はなします → はなして.", "fala": "はなします、はなして"}, {"jp": "よみます → ＿", "dica": "ler · Grupo 1 · Terminação em む", "ops": ["よんで", "よいて", "よって", "よみて"], "ok": ["よんで"], "expl": "よみます → よんで. Som \"mi\" (む) troca por んで: よみます → よんで.", "fala": "よみます、よんで"}, {"jp": "かきます → ＿", "dica": "escrever · Grupo 1 · Terminação em く", "ops": ["かって", "かいて", "かいで", "かして"], "ok": ["かいて"], "expl": "かきます → かいて. Verbos com som \"ki\" (く) viram いて: かきます → かいて.", "fala": "かきます、かいて"}, {"jp": "みます → ＿", "dica": "ver, assistir · Grupo 2 · Verbo em -iru", "ops": ["みって", "みいで", "みて", "みんで"], "ok": ["みて"], "expl": "みます → みて. Grupo 2: troque ます por て: みます → みて.", "fala": "みます、みて"}, {"jp": "します → ＿", "dica": "fazer · Grupo 3 · Irregular (する)", "ops": ["しって", "しいて", "しんで", "して"], "ok": ["して"], "expl": "します → して. Verbo irregular: します vira して (ex: べんきょうして).", "fala": "します、して"}, {"jp": "きます → ＿", "dica": "vir · Grupo 3 · Irregular (くる)", "ops": ["きて", "きって", "きいて", "きんで"], "ok": ["きて"], "expl": "きます → きて. Verbo irregular: きます vira きて.", "fala": "きます、きて"}]},
-  verb:{"ic": "🏃", "nome": "Verbos do dia a dia", "qs": [{"jp": "おきる", "dica": "O que significa? (おきます)", "ops": ["acordar", "comer", "olhar", "escrever"], "ok": ["acordar"], "expl": "おきる = acordar, levantar-se. De manhã, abrindo os olhos na cama.", "fala": "おきる"}, {"jp": "たべる", "dica": "O que significa? (たべます)", "ops": ["beber", "comer", "ouvir", "dormir"], "ok": ["comer"], "expl": "たべる = comer. Saboreando uma refeição ou bentô no Japão.", "fala": "たべる"}, {"jp": "のむ", "dica": "O que significa? (のみます)", "ops": ["ir", "ler", "beber", "falar"], "ok": ["beber"], "expl": "のむ = beber. Tomando água fresca ou chá verde quentinho.", "fala": "のむ"}, {"jp": "いく", "dica": "O que significa? (いきます)", "ops": ["olhar", "escrever", "comprar", "ir"], "ok": ["ir"], "expl": "いく = ir. Indo em direção à estação ou ao santuário.", "fala": "いく"}, {"jp": "みる", "dica": "O que significa? (みます)", "ops": ["olhar", "ouvir", "dormir", "trabalhar"], "ok": ["olhar"], "expl": "みる = olhar, ver, assistir. Olhando a paisagem ou assistindo ao anime.", "fala": "みる"}, {"jp": "きく", "dica": "O que significa? (ききます)", "ops": ["ler", "ouvir", "falar", "acordar"], "ok": ["ouvir"], "expl": "きく = ouvir, escutar, perguntar. Escutando música japonesa no fone de ouvido.", "fala": "きく"}, {"jp": "よむ", "dica": "O que significa? (よみます)", "ops": ["escrever", "comprar", "ler", "comer"], "ok": ["ler"], "expl": "よむ = ler. Lendo uma placa de trânsito ou mangá.", "fala": "よむ"}, {"jp": "かく", "dica": "O que significa? (かきます)", "ops": ["dormir", "trabalhar", "beber", "escrever"], "ok": ["escrever"], "expl": "かく = escrever. Escrevendo kanji no caderno de viagens.", "fala": "かく"}, {"jp": "ねる", "dica": "O que significa? (ねます)", "ops": ["dormir", "falar", "acordar", "ir"], "ok": ["dormir"], "expl": "ねる = dormir, deitar-se. Deitando no futon macio à noite para descansar.", "fala": "ねる"}, {"jp": "はなす", "dica": "O que significa? (はなします)", "ops": ["comprar", "falar", "comer", "olhar"], "ok": ["falar"], "expl": "はなす = falar, conversar. Conversando amigavelmente com um atendente.", "fala": "はなす"}, {"jp": "かう", "dica": "O que significa? (かいます)", "ops": ["trabalhar", "beber", "comprar", "ouvir"], "ok": ["comprar"], "expl": "かう = comprar. Comprando um souvenir ou docinho no konbini.", "fala": "かう"}, {"jp": "はたらく", "dica": "O que significa? (はたらきます)", "ops": ["acordar", "ir", "ler", "trabalhar"], "ok": ["trabalhar"], "expl": "はたらく = trabalhar. Trabalhando no projeto com dedicação.", "fala": "はたらく"}]},
-  kud:{"ic": "🙏", "nome": "Pedidos com 〜てください", "qs": [{"jp": "まちます → ＿ください。", "dica": "Por favor, espere um momento.", "ops": ["まって", "まちて", "まいて", "まんで"], "ok": ["まって"], "expl": "まってください — Na recepção de hotel ou caixa da loja.", "fala": "まってください"}, {"jp": "たべます → ＿ください。", "dica": "Por favor, coma / sirva-se.", "ops": ["たべって", "たべて", "たべいで", "たべして"], "ok": ["たべて"], "expl": "たべてください — Oferecendo um prato na mesa de refeição.", "fala": "たべてください"}, {"jp": "かきます → ＿ください。", "dica": "Por favor, escreva aqui.", "ops": ["かって", "かきて", "かいて", "かんで"], "ok": ["かいて"], "expl": "かいてください — Preenchendo a ficha de imigração ou check-in.", "fala": "かいてください"}, {"jp": "みます → ＿ください。", "dica": "Por favor, olhe / veja isto.", "ops": ["みって", "みいで", "みんで", "みて"], "ok": ["みて"], "expl": "みてください — Mostrando uma foto ou mapa ao atendente.", "fala": "みてください"}, {"jp": "はいります → ＿ください。", "dica": "Por favor, entre / fique à vontade.", "ops": ["はいって", "はいりて", "はいいて", "はいんで"], "ok": ["はいって"], "expl": "はいってください — Sendo convidado para uma sala ou loja tradicional.", "fala": "はいってください"}, {"jp": "ききます → ＿ください。", "dica": "Por favor, escute / preste atenção.", "ops": ["きって", "きいて", "きいで", "きんで"], "ok": ["きいて"], "expl": "きいてください — A professora explicando o anúncio do trem.", "fala": "きいてください"}, {"jp": "のみます → ＿ください。", "dica": "Por favor, tome este chá / beba água.", "ops": ["のみて", "のって", "のんで", "のいて"], "ok": ["のんで"], "expl": "のんでください — Oferecendo um chá de boas-vindas no ryokan.", "fala": "のんでください"}, {"jp": "おしえます → ＿ください。", "dica": "Por favor, me ensine / explique o caminho.", "ops": ["おしえって", "おしえいで", "おしえんで", "おしえて"], "ok": ["おしえて"], "expl": "おしえてください — Pedindo ajuda para achar a rua em Tóquio.", "fala": "おしえてください"}]},
-  moii:{"ic": "🙋", "nome": "Pedindo permissão 〜てもいいですか", "qs": [{"jp": "しゃしんを＿もいいですか。", "dica": "Posso tirar fotos? (No museu ou templo histórico em Quioto)", "ops": ["とりて", "とって", "といて", "とんで"], "ok": ["とって"], "expl": "しゃしんをとってもいいですか。 Dica: Se responderem \"どうぞ\" (Douzo), fique à vontade! Se for \"ちょっと...\" (Chotto...), significa não.", "fala": "しゃしんをとってもいいですか"}, {"jp": "ここに＿もいいですか。", "dica": "Posso sentar aqui? (Num café cheio em Shibuya ou no vagão do Shinkansen)", "ops": ["すわりて", "すわいて", "すわって", "すわんで"], "ok": ["すわって"], "expl": "ここにすわってもいいですか。 Muito gentil perguntar antes de ocupar um assento vago próximo a alguém.", "fala": "ここにすわってもいいですか"}, {"jp": "＿もいいですか。", "dica": "Posso entrar? (Na porta de uma sala de reunião ou quarto privativo)", "ops": ["はいりて", "はいいて", "はいんで", "はいって"], "ok": ["はいって"], "expl": "はいってもいいですか。 Bata levemente na porta duas vezes antes de perguntar.", "fala": "はいってもいいですか"}, {"jp": "メニューを＿もいいですか。", "dica": "Posso ver o cardápio? (No restaurante antes de fazer o pedido ao garçom)", "ops": ["みて", "みって", "みいで", "みんで"], "ok": ["みて"], "expl": "メニューをみてもいいですか。 Útil quando o cardápio em inglês não estiver visível na mesa.", "fala": "メニューをみてもいいですか"}, {"jp": "これを＿もいいですか。", "dica": "Posso experimentar esta roupa? (Numa loja experimentando yukata ou roupas)", "ops": ["きって", "きて", "きいで", "きんで"], "ok": ["きて"], "expl": "これをきてもいいですか。 Sempre mostre a peça ao atendente antes de entrar no provador.", "fala": "これをきてもいいですか"}, {"jp": "これに＿もいいですか。", "dica": "Posso tocar / pegar nisto? (Na loja de artesanato tradicional em cerâmica)", "ops": ["さわりて", "さわいて", "さわって", "さわんで"], "ok": ["さわって"], "expl": "これにさわってもいいですか。 Demonstra respeito extremo com peças delicadas e artesanais.", "fala": "これにさわってもいいですか"}, {"jp": "にもつを＿もいいですか。", "dica": "Posso deixar as malas aqui? (Na recepção de um hotel antes do horário de check-in)", "ops": ["おって", "おいで", "おして", "おいて"], "ok": ["おいて"], "expl": "にもつをおいてもいいですか。 Quase todos os hotéis no Japão guardam suas malas de graça antes do check-in.", "fala": "にもつをおいてもいいですか"}, {"jp": "おみずを＿もいいですか。", "dica": "Posso receber água? (No balcão de um restaurante pedindo mais água)", "ops": ["もらって", "もらいて", "もらんで", "もらして"], "ok": ["もらって"], "expl": "おみずをもらってもいいですか。 No Japão a água fresca (おひや) é sempre cortesia da casa.", "fala": "おみずをもらってもいいですか"}]},
-  wa:{"ic": "🚫", "nome": "Proibição 〜てはいけません", "qs": [{"jp": "ここで タバコを ＿はいけません。", "dica": "Não pode fumar aqui / É proibido fumar aqui.", "ops": ["すりて", "すいて", "すって", "すんで"], "ok": ["すって"], "expl": "ここでタバコをすってはいけません。 No Japão é proibido fumar na rua enquanto caminha. Use as cabines de fumo (きつえんじょ).", "fala": "ここでタバコをすってはいけません"}, {"jp": "しゃしんを ＿はいけません。", "dica": "Não pode tirar fotos / Proibido fotografar.", "ops": ["とりて", "といて", "とんで", "とって"], "ok": ["とって"], "expl": "しゃしんをとってはいけません。 Comum em galerias de arte, altares sagrados e apresentações culturais em Quioto.", "fala": "しゃしんをとってはいけません"}, {"jp": "ここに ＿はいけません。", "dica": "Não pode entrar aqui / Acesso proibido.", "ops": ["はいって", "はいりて", "はいいて", "はいんで"], "ok": ["はいって"], "expl": "ここにはいってはいけません。 Placas com \"たちいりきんし\" indicam que o acesso é restrito.", "fala": "ここにはいってはいけません"}, {"jp": "ここに ごみを ＿はいけません。", "dica": "Não pode jogar lixo aqui.", "ops": ["すてって", "すてて", "すていで", "すてして"], "ok": ["すてて"], "expl": "ここにごみをすててはいけません。 No Japão não há muitas lixeiras públicas. O costume é levar seu lixo para o hotel.", "fala": "ここにごみをすててはいけません"}, {"jp": "でんしゃで おおごえで ＿はいけません。", "dica": "Não pode falar alto no trem.", "ops": ["はなって", "はないて", "はなして", "はなんで"], "ok": ["はなして"], "expl": "でんしゃでおおごえではなしてはいけません。 Os trens no Japão são espaços silenciosos. Evite ligações e fale bem baixinho.", "fala": "でんしゃでおおごえではなしてはいけません"}, {"jp": "ここで くつを ＿はいけません。", "dica": "Não pode usar sapatos aqui / Tire os calçados.", "ops": ["はって", "はいで", "はして", "はいて"], "ok": ["はいて"], "expl": "ここでくつをはいてはいけません。 Ao pisar em tatami ou entrar em templos e lares, retire os sapatos no genkan.", "fala": "ここでくつをはいてはいけません"}, {"jp": "ホームで ＿はいけません。", "dica": "Não pode correr na plataforma do trem.", "ops": ["はしって", "はしりて", "はしいて", "はしんで"], "ok": ["はしって"], "expl": "ホームではしってはいけません。 Aviso de segurança constante nas plataformas movimentadas do Shinkansen e metrô.", "fala": "ホームではしってはいけません"}, {"jp": "あるきながら ＿はいけません。", "dica": "Não pode comer enquanto caminha pela rua.", "ops": ["たべって", "たべて", "たべいで", "たべして"], "ok": ["たべて"], "expl": "あるきながらたべてはいけません。 A etiqueta japonesa pede para saborear o alimento parado perto de onde comprou.", "fala": "あるきながらたべてはいけません"}]}
-};
-
-const IC={
-  dias:['sun','moon','fire','drop','wood','gold','earth'],
-  opos:['big','old','hot','free','expensive','lively'],
-  verb:['wake','eat','drink','go','see','listen','read','write','sleep','talk','buy','work'],
-  te:['go','eat','drink','wait','return','buy','talk','read','write','see','doit','come'],
-  kud:['wait','eat','write','see','enter','listen','drink','teach'],
-  moii:['photo','sit','enter','menu','wear','touch','put','water'],
-  wa:['smoke','photo','noentry','trash','talk','shoes','run','eat'],
-  part:['movie','restaurant','torii','clock7','friends','price','water','hotel']
-};
-Object.entries(IC).forEach(([k,a])=>{ if(JOGOS[k]) JOGOS[k].qs.forEach((q,i)=>{ q.ic=a[i]; }); });
-const GRUPO={dias:'voc',opos:'voc',verb:'voc',part:'est',te:'te',kud:'te',moii:'te',wa:'te'}, GNOME={voc:'Vocabulário',est:'Estrutura',te:'Forma て'};
-let jParaVal='todos'; const dispensados=new Set();
-const aceitou=(j,u)=>!!(j&&j.aceitaram&&j.aceitaram[u]);
-const jogadores=()=>naMinhaMesa().filter(([u])=>!jogoV||aceitou(jogoV,u)).map(([u,p])=>({uid:u,nome:nomeDe(p)}));
-const vezEf=j=>{ const L=jogadores().map(x=>x.uid); return L.includes(j.vez)?j.vez:(L[0]||j.vez); };
-const nomeUid=u=>NOMES[u]||(u===me.uid?'você':'alguém');
-const ativo=j=>!!(j&&JOGOS[j.id]&&j.i<JOGOS[j.id].qs.length);
-function renderConvite(){
-  const j=jogoV, bar=$('convBar');
-  const conv = ativo(j) && j.por!==me.uid && !aceitou(j,me.uid) && !(j.recusou&&j.recusou[me.uid]) && (j.conv==='todos'||j.conv===me.uid) && !dispensados.has(j.k);
-  bar.hidden=!conv; if(!conv) return;
-  bar.innerHTML=`<span>🎲 <b>${esc(nomeUid(j.por))}</b> convidou ${j.conv==='todos'?'a mesa':'você'} para <b>${esc(JOGOS[j.id].nome)}</b></span><div class="row"><button class="btn pri" type="button" data-c="sim">Aceitar</button><button class="btn" type="button" data-c="nao">Agora não</button></div>`;
-}
-$('convBar').onclick=e=>{ const b=e.target.closest('[data-c]'); if(!b||!jogoRef||!jogoV) return; const j=jogoV;
-  if(b.dataset.c==='sim'){ update(jogoRef,{['aceitaram/'+me.uid]:true,estado:'jogando'}).catch(()=>{}); jogoAberto=true; renderJogo(); }
-  else{ dispensados.add(j.k); update(jogoRef,{['recusou/'+me.uid]:true}).catch(()=>{}); renderConvite(); } };
-function renderJogo(){ renderJogoCru(); embrulha(); }
-function embrulha(){ const box=$('jogoBox'); if(box.hidden||box.querySelector('.j-grade')||box.querySelector('.j-cartao')) return; const t=box.querySelector('.j-top'); if(!t) return; const c=document.createElement('div'); c.className='j-cartao'; while(t.nextSibling) c.appendChild(t.nextSibling); box.appendChild(c); }
-function renderJogoCru(){
-  const box=$('jogoBox'), j=jogoV, L=jogadores(), eu=aceitou(j,me.uid);
-  renderConvite();
-  $('btnJogar').textContent = ativo(j)&&eu ? (j.estado==='convite'?'🎲 Convite enviado':'🎲 Jogo em andamento') : '🎲 Jogos';
-  document.body.style.overflow = jogoAberto ? 'hidden' : '';
-  if(!jogoAberto){ box.hidden=true; return; }
-  box.hidden=false; const topo=t=>`<div class="j-top"><b>${t}</b><button class="btn" type="button" data-j="fecha">✕ Fechar</button></div>`;
-  if(!ativo(j)&&j&&JOGOS[j.id]&&eu){ /* jogo terminado: tela de resultado, abaixo */ }
-  else if(!ativo(j)||(!eu&&false)){
-    const outros=naMinhaMesa().filter(([u])=>u!==minhaChave());
-    const grade=`<div class="j-grade">${Object.entries(JOGOS).map(([k,g])=>`<button type="button" class="g-${GRUPO[k]}" data-j="ini" data-k="${k}"><span>${g.ic}</span>${g.nome}<small>${GNOME[GRUPO[k]]}</small></button>`).join('')+CRUZ_BTN}</div>`;
-    if(!outros.length){ box.innerHTML=topo('Escolha um jogo')+'<p class="sub">Você está sozinho(a) na mesa: pode jogar sozinho(a). Se alguém sentar, entra no jogo quando quiser.</p>'+grade; return; }
-    if(jParaVal!=='todos'&&!outros.some(([u])=>u===jParaVal)) jParaVal='todos';
-    box.innerHTML=topo('Escolham um jogo')+`<label class="j-para">Convidar: <select id="jPara"><option value="todos">Toda a mesa</option>${outros.map(([u,p])=>`<option value="${esc(u)}"${jParaVal===u?' selected':''}>${esc(nomeDe(p))}</option>`).join('')}</select></label><div class="j-grade">${Object.entries(JOGOS).map(([k,g])=>`<button type="button" class="g-${GRUPO[k]}" data-j="ini" data-k="${k}"><span>${g.ic}</span>${g.nome}<small>${GNOME[GRUPO[k]]}</small></button>`).join('')+CRUZ_BTN}</div>`; return; }
-  if(!eu){ box.innerHTML=topo('🎲 Jogo na mesa')+`<p class="sub">Já tem um jogo rodando na mesa (${esc(L.map(x=>x.nome).join(', '))}). Quando terminar, vocês podem abrir outro.</p>`+(j.conv==='todos'?'<div class="row"><button class="btn pri" type="button" data-j="entra">Entrar no jogo</button></div>':''); return; }
-  const g=JOGOS[j.id]; const N=g.qs.length;
-  if(j.estado==='convite'){
-    const rec=Object.keys(j.recusou||{}).map(nomeUid);
-    box.innerHTML=topo(g.ic+' '+g.nome)+`<p class="sub">Convite enviado${j.conv==='todos'?' para a mesa':' para '+esc(nomeUid(j.conv))}. Esperando alguém aceitar…${rec.length?' ('+esc(rec.join(', '))+' não pode agora.)':''}</p><div class="row"><button class="lk" type="button" data-j="sai">cancelar convite</button></div>`; return; }
-  if(j.i>=N){
-    box.innerHTML=topo(g.ic+' '+g.nome)+`<p class="j-q">${(j.ok||0)/N>=.7?'🎉 ':(j.ok||0)/N>=.4?'🌸 ':'💪 '}${j.ok||0} de ${N}</p><p class="sub j-dica">${jogadores().length>1?'Vocês acertaram juntos.':'Você acertou sozinho(a).'} おつかれさま！</p><div class="row" style="justify-content:center">${DUAS.includes(j.id)&&(j.rodada||1)===1?'<button class="btn pri" type="button" data-j="r2">2ª rodada (sem som)</button>':''}<button class="btn${DUAS.includes(j.id)&&(j.rodada||1)===1?'':' pri'}" type="button" data-j="fim">Outro jogo</button><button class="btn" type="button" data-j="fecha">Voltar à conversa</button></div>`; return; }
-  const q=g.qs[j.i], v=vezEf(j), minha=v===me.uid, fb=j.fb;
-  const jp=esc(q.jp).replace('＿','<span class="vz">&nbsp;</span>');
-  const ops=q.ops.map((o,x)=>{ let c=''; if(fb){ if(q.ok.includes(o)) c='ok'; else if(x===fb.esc) c='no'; } return `<button type="button" lang="ja" data-j="resp" data-x="${x}" class="${c}"${(fb||!minha)?' disabled':''}>${esc(o)}</button>`; }).join('');
-  let rodape;
-  if(fb){ rodape=`<div class="j-fb ${fb.certo?'':'no'}"><b>${fb.certo?'Acertou!':'Quase!'}</b> ${esc(q.expl)}</div><div class="row"><button class="btn pri" type="button" data-j="prox">${j.i+1>=N?'Ver resultado':'Próxima →'}</button></div>`; }
-  else rodape=`<p class="sub" style="text-align:center">${minha?'Sua vez':'Vez de '+esc(nomeUid(v))}</p>`;
-  const mudo=!fb&&SEM_RESPOSTA.includes(j.id)&&!temGrav(falaPerg(q,j.id));  /* sem gravação da pergunta, não usa a voz do aparelho: a voz gravada toca depois de responder */
-  box.innerHTML=topo(g.ic+' '+g.nome)+`<div class="j-pontos" role="img" aria-label="Pergunta ${j.i+1} de ${N}">${Array.from({length:N},(_,x)=>'<i class="'+(x<j.i?'f':x===j.i?'a':'')+'"></i>').join('')+CRUZ_BTN}</div>${q.ic&&window.ILU&&ILU[q.ic]?'<div class="j-ilu">'+ILU[q.ic]+'</div>':''}<p class="j-q" lang="ja">${jp}</p><p class="sub j-dica">${esc(q.dica)}</p>${!(DUAS.includes(j.id)&&j.rodada===2)?'<div class="row" style="justify-content:center">'+(mudo?'<button class="btn" type="button" disabled>🔊 A voz toca depois de responder</button>':'<button class="btn" type="button" data-j="ouvir">🔊 Ouvir mais uma vez</button>')+'</div>':''}${DUAS.includes(j.id)&&j.rodada===2?'<p class="sub" style="text-align:center">2ª rodada: sem som</p>':''}<div class="j-ops">${ops}</div>${rodape}<div class="row" style="justify-content:center"><button class="lk" type="button" data-j="sai">sair do jogo</button></div>`;
-  const kf=j.id+j.i; if(falouJ!==kf){ falouJ=kf; if(!(DUAS.includes(j.id)&&j.rodada===2)&&!mudo) speak(falaPerg(q,j.id)); }
-  if(fb && falouFb!==kf){ falouFb=kf; speak(q.fala); }  /* só depois de responder, a frase completa */
-}
-$('btnJogar').onclick=()=>{ jogoAberto=true; if(aba!=='mesa') jParaVal=aba; renderJogo(); $('jogoBox').scrollIntoView({behavior:'smooth',block:'nearest'}); };
-$('jogoBox').addEventListener('change',e=>{ if(e.target.id==='jPara') jParaVal=e.target.value; });
-$('jogoBox').onclick=e=>{ const b=e.target.closest('[data-j]'); if(!b) return; const a=b.dataset.j, j=jogoV;
-  if(a==='fecha'){ jogoAberto=false; renderJogo(); return; }
-  if(a==='cruz'){ abreCruz(); czEscolhe(); return; }
-  if(!jogoRef) return;
-  if(a==='ini'){ const sel=$('jPara'); const conv=sel?sel.value:'todos'; jParaVal=conv; const g=JOGOS[b.dataset.k];
-    const solo=naMinhaMesa().filter(([u])=>u!==minhaChave()).length===0;
-    set(jogoRef,{id:b.dataset.k,por:me.uid,conv:solo?'todos':conv,estado:solo?'jogando':'convite',aceitaram:{[me.uid]:true},i:0,ok:0,vez:me.uid,fb:null,k:Date.now()}).catch(()=>sis('Não consegui abrir o jogo. Tente de novo.'));
-    if(solo){ sis('Você começou '+g.nome+' sozinho(a).'); return; }
-    sis('Você convidou '+(conv==='todos'?'a mesa':nomeUid(conv))+' para '+g.nome+'.',conv==='todos'?'mesa':conv); return; }
-  if(a==='fim'){ set(jogoRef,null).catch(()=>{}); return; }
-  if(!j) return;
-  if(a==='entra'){ update(jogoRef,{['aceitaram/'+me.uid]:true}).catch(()=>{}); return; }
-  if(a==='sai'){ if(jogadores().length<=1||j.estado==='convite') set(jogoRef,null).catch(()=>{}); else update(jogoRef,{['aceitaram/'+me.uid]:null}).catch(()=>{}); jogoAberto=false; renderJogo(); return; }
-  const g=JOGOS[j.id]; if(!g) return;
-  if(a==='ouvir'){ const q=g.qs[j.i]; if(q&&(j.fb||temGrav(falaPerg(q,j.id))||!SEM_RESPOSTA.includes(j.id))) speak(j.fb?q.fala:falaPerg(q,j.id)); return; }
-  if(a==='r2'){ update(jogoRef,{i:0,ok:0,fb:null,vez:me.uid,rodada:2}).catch(()=>{}); return; }
-  if(a==='resp' && !j.fb && vezEf(j)===me.uid){ const q=g.qs[j.i], x=+b.dataset.x, certo=q.ok.includes(q.ops[x]); update(jogoRef,{fb:{por:me.uid,esc:x,certo},ok:(j.ok||0)+(certo?1:0)}).catch(()=>{}); return; }
-  if(a==='prox' && j.fb){ const L=jogadores().map(x=>x.uid); const i=L.indexOf(j.fb.por); const prox=L.length?L[(i+1)%L.length]:me.uid; update(jogoRef,{i:j.i+1,fb:null,vez:prox}).catch(()=>{}); }
-};
-
-
-/* ---------- palavras cruzadas (solo) ---------- */
-const CRUZ_BTN='<button type="button" class="g-voc" data-j="cruz"><span>✏️</span>Palavras cruzadas<small>Vocabulário · solo</small></button>';
-const CRUZ=[
- {nome:'Dias da semana',ic:'📅',w:[['すいようび',6,2,'h','quarta-feira','💧'],['げつようび',2,6,'v','segunda-feira','🌙'],['かようび',5,4,'v','terça-feira','🔥'],['にちようび',8,0,'h','domingo','☀️'],['どようび',4,5,'h','sábado','🌍'],['もくようび',0,8,'v','quinta-feira','🌳']]},
- {nome:'Opostos',ic:'↔️',w:[['いそがしい',6,0,'h','ocupado','🏃'],['ふるい',4,4,'v','velho','🏚️'],['あたらしい',2,0,'v','novo','✨'],['たかい',3,0,'h','caro','💰'],['ちいさい',0,2,'v','pequeno','🐭'],['さむい',2,2,'h','frio (clima)','🥶'],['あつい',0,4,'v','quente (clima)','🥵']]},
- {nome:'Do dia a dia',ic:'🍙',w:[['おにぎり',0,0,'h','bolinho de arroz','🍙'],['りんご',0,3,'v','maçã','🍎'],['ごはん',2,3,'h','arroz cozido / refeição','🍚'],['おかね',0,0,'v','dinheiro','💴'],['みかん',0,5,'v','tangerina','🍊'],['みず',0,5,'h','água','💧']]}
-];
-const KROWS=[['a','あいうえお'],['ka','かきくけこ'],['sa','さしすせそ'],['ta','たちつてと'],['na','なにぬねの'],['ha','はひふへほ'],['ma','まみむめも'],['ya','やゆよ'],['ra','らりるれろ'],['wa','わを'],['n','ん']];
-const DAK={か:'が',き:'ぎ',く:'ぐ',け:'げ',こ:'ご',さ:'ざ',し:'じ',す:'ず',せ:'ぜ',そ:'ぞ',た:'だ',ち:'ぢ',つ:'づ',て:'で',と:'ど',は:'ば',ひ:'び',ふ:'ぶ',へ:'べ',ほ:'ぼ'};
-const DAKV=Object.fromEntries(Object.entries(DAK).map(([a,b])=>[b,a]));
-const kata=c=>c.replace(/[ぁ-ゖ]/g,x=>String.fromCharCode(x.charCodeAt(0)+0x60));
-const ROMA={};
-(function(){ const r={a:'あ',i:'い',u:'う',e:'え',o:'お',ka:'か',ki:'き',ku:'く',ke:'け',ko:'こ',ga:'が',gi:'ぎ',gu:'ぐ',ge:'げ',go:'ご',sa:'さ',shi:'し',si:'し',su:'す',se:'せ',so:'そ',za:'ざ',ji:'じ',zi:'じ',zu:'ず',ze:'ぜ',zo:'ぞ',ta:'た',chi:'ち',ti:'ち',tsu:'つ',tu:'つ',te:'て',to:'と',da:'だ',de:'で',do:'ど',na:'な',ni:'に',nu:'ぬ',ne:'ね',no:'の',ha:'は',hi:'ひ',fu:'ふ',hu:'ふ',he:'へ',ho:'ほ',ba:'ば',bi:'び',bu:'ぶ',be:'べ',bo:'ぼ',ma:'ま',mi:'み',mu:'む',me:'め',mo:'も',ya:'や',yu:'ゆ',yo:'よ',ra:'ら',ri:'り',ru:'る',re:'れ',ro:'ろ',wa:'わ',wo:'を',nn:'ん'}; Object.assign(ROMA,r); })();
-const cz={on:false,pi:0,cel:{},pal:[],sel:null,dir:'h',linha:'a',kt:false,t0:0,tick:null,dicas:0,fim:false,buf:''};
-const czK=(r,c)=>r+','+c;
-function czMonta(pi){
-  const P=CRUZ[pi]; cz.pi=pi; cz.cel={}; cz.pal=P.w.map((w,i)=>({i,k:w[0],r:w[1],c:w[2],d:w[3],pt:w[4],em:w[5],ok:false,cels:[]}));
-  cz.pal.forEach(p=>{ [...p.k].forEach((ch,j)=>{ const r=p.d==='h'?p.r:p.r+j, c=p.d==='h'?p.c+j:p.c, key=czK(r,c);
-    const o=cz.cel[key]||(cz.cel[key]={r,c,ch,v:'',n:0,pal:[],ok:false}); o.pal.push(p.i); p.cels.push(key); }); });
-  const ord=cz.pal.slice().sort((a,b)=>a.r-b.r||a.c-b.c); let n=0, vistos={};
-  ord.forEach(p=>{ const key=p.cels[0]; if(!vistos[key]){ vistos[key]=++n; cz.cel[key].n=n; } p.num=cz.cel[key].n; });
-  cz.sel=null; cz.dir=cz.pal[0].d; cz.dicas=0; cz.fim=false; cz.buf=''; cz.t0=Date.now();
-  czSel(cz.pal.slice().sort((a,b)=>a.num-b.num)[0].cels[0]);
-  clearInterval(cz.tick); cz.tick=setInterval(czRelogio,500);
-}
-function czRelogio(){ const e=$('czT'); if(!e||cz.fim) return; const s=Math.floor((Date.now()-cz.t0)/1000); e.textContent=String(Math.floor(s/60)).padStart(2,'0')+':'+String(s%60).padStart(2,'0'); }
-function czPalAtiva(){ if(!cz.sel) return null; const o=cz.cel[cz.sel]; const ids=o.pal; const pick=ids.find(i=>cz.pal[i].d===cz.dir)??ids[0]; return cz.pal[pick]; }
-function czSel(key){ if(cz.sel===key){ const o=cz.cel[key]; if(o.pal.length>1){ cz.dir=cz.dir==='h'?'v':'h'; } } else { cz.sel=key; const o=cz.cel[key]; if(!o.pal.some(i=>cz.pal[i].d===cz.dir)) cz.dir=cz.pal[o.pal[0]].d; } czPinta(); }
-function czAvanca(){ const p=czPalAtiva(); if(!p) return; const i=p.cels.indexOf(cz.sel); for(let j=i+1;j<p.cels.length;j++){ if(!cz.cel[p.cels[j]].ok){ cz.sel=p.cels[j]; return; } } if(p.ok) czProx(); }
-function czVolta(){ const p=czPalAtiva(); if(!p) return; const i=p.cels.indexOf(cz.sel); for(let j=i-1;j>=0;j--){ if(!cz.cel[p.cels[j]].ok){ cz.sel=p.cels[j]; return; } } }
-function czProx(){ const ord=cz.pal.slice().sort((a,b)=>a.num-b.num||(a.d==='h'?-1:1)).filter(p=>!p.ok); if(!ord.length) return; const p=ord[0]; const k=p.cels.find(x=>!cz.cel[x].ok)||p.cels[0]; cz.sel=k; cz.dir=p.d; }
-function czPoe(ch){ if(cz.fim||!cz.sel) return; const o=cz.cel[cz.sel]; if(o.ok) { czAvanca(); czPinta(); return; } const pa=czPalAtiva(); o.v=ch; czConfere(o); if(pa&&pa.ok&&!cz.fim) czProx(); else czAvanca(); czPinta(); }
-function czConfere(o){ o.pal.forEach(i=>{ const p=cz.pal[i]; if(p.ok) return; const cs=p.cels.map(k=>cz.cel[k]); if(cs.some(c=>!c.v)) return;
-    if(cs.every(c=>c.v===c.ch)){ p.ok=true; cs.forEach(c=>c.ok=true); speak(p.k); }
-    else{ p.err=true; setTimeout(()=>{ p.err=false; czPinta(); },900); } });
-  if(cz.pal.every(p=>p.ok)){ cz.fim=true; cz.fimT=Date.now(); clearInterval(cz.tick); } }
-function czApaga(){ if(cz.fim||!cz.sel) return; const o=cz.cel[cz.sel]; if(o.ok){ czVolta(); czPinta(); return; } if(o.v){ o.v=''; } else { czVolta(); const o2=cz.cel[cz.sel]; if(!o2.ok) o2.v=''; } czPinta(); }
-function czDak(){ if(cz.fim||!cz.sel) return; const o=cz.cel[cz.sel]; if(o.ok||!o.v) return; const n=DAK[o.v]||DAKV[o.v]; if(n){ o.v=n; czConfere(o); } czPinta(); }
-function czDica(){ if(cz.fim||!cz.sel) return; const o=cz.cel[cz.sel]; if(o.ok){ czProx(); czPinta(); return; } o.v=o.ch; cz.dicas++; const pa=czPalAtiva(); czConfere(o); if(pa&&pa.ok&&!cz.fim) czProx(); else czAvanca(); czPinta(); }
-function czPinta(){
-  const box=$('cruzBox'); if(!box||box.hidden) return; const P=CRUZ[cz.pi];
-  const H=Math.max(...Object.values(cz.cel).map(o=>o.r))+1, W=Math.max(...Object.values(cz.cel).map(o=>o.c))+1;
-  const larg=Math.min(window.innerWidth-60,460), cs=Math.max(30,Math.min(46,Math.floor((larg-3*(W-1))/W)));
-  const pa=czPalAtiva(), minhas=new Set(pa?pa.cels:[]), sc=x=>cz.kt?kata(x):x;
-  let g=''; for(let r=0;r<H;r++) for(let c=0;c<W;c++){ const o=cz.cel[czK(r,c)];
-    if(!o){ g+='<span class="c-c vazio"></span>'; continue; }
-    const err=o.pal.some(i=>cz.pal[i].err&&!o.ok), cl='c-c'+(o.ok?' ok':'')+(err?' err':'')+(czK(r,c)===cz.sel?' sel':minhas.has(czK(r,c))?' na':'');
-    g+=`<button type="button" class="${cl}" data-k="${czK(r,c)}" lang="ja" aria-label="${o.n?'Número '+o.n:'Casa'}${o.v?', '+o.v:', vazia'}">${o.n?'<i>'+o.n+'</i>':''}${o.v?esc(sc(o.v)):''}</button>`; }
-  const row=KROWS.find(x=>x[0]===cz.linha)||KROWS[0];
-  const dirTxt=pa?(pa.d==='h'?'→':'↓'):'';
-  const feitas=cz.pal.filter(p=>p.ok).length;
-  box.innerHTML=`<div class="j-top"><b>✏️ ${esc(P.nome)}</b><button class="btn" type="button" data-cz="fecha">✕ Fechar</button></div>`+
-   (cz.fim?`<div class="c-fim"><p class="j-q">🎉 おつかれさま！</p><p class="sub">Você completou em <b>${czTempoTxt()}</b>${cz.dicas?' com '+cz.dicas+' dica'+(cz.dicas>1?'s':''):' sem nenhuma dica'}.</p><div class="row" style="justify-content:center"><button class="btn pri" type="button" data-cz="outro">Outro tabuleiro</button><button class="btn" type="button" data-cz="de-novo">Jogar este de novo</button></div></div>`:'')+
-   `<div class="c-bar"><span>${feitas} de ${cz.pal.length} palavras</span><span class="c-tempo" id="czT">${czTempoTxt()}</span></div>`+
-   (pa?`<div class="c-pill"><span class="em" aria-hidden="true">${pa.em}</span><span><b>${pa.num}${dirTxt}</b> ${esc(pa.pt)} <small>· ${pa.k.length} letras</small></span></div>`:'')+
-   `<div class="c-grade" style="grid-template-columns:repeat(${W},var(--cs));--cs:${cs}px">${g}</div>`+
-   `<div class="c-rows" role="group" aria-label="Linhas do kana">${KROWS.map(x=>`<button type="button" data-cz="lin" data-l="${x[0]}" aria-pressed="${x[0]===cz.linha}">${x[0]}</button>`).join('')}</div>`+
-   `<div class="c-keys" lang="ja">${[...row[1]].map(k=>`<button type="button" data-cz="k" data-ch="${k}">${esc(sc(k))}</button>`).join('')}</div>`+
-   `<div class="c-tools"><button type="button" data-cz="dak" aria-label="Dakuten">゛</button><button type="button" data-cz="del" aria-label="Apagar">⌫</button><button type="button" data-cz="dica" aria-label="Dica: revela esta letra">❓ dica</button><button type="button" data-cz="kt" aria-pressed="${cz.kt}" lang="ja">${cz.kt?'ひらがな':'カタカナ'}</button><button type="button" data-cz="ouvir" aria-label="Ouvir palavras já acertadas">🔊</button></div>`+
-   `<p class="sub" style="text-align:center;margin:0">Toque numa casa. Toque de novo para trocar → / ↓. A voz toca quando você acerta a palavra.</p>`;
-}
-function czTempoTxt(){ const s=Math.floor(((cz.fim?cz.fimT:Date.now())-cz.t0)/1000); return String(Math.floor(s/60)).padStart(2,'0')+':'+String(s%60).padStart(2,'0'); }
-function abreCruz(pi){ cz.on=true; jogoAberto=false; renderJogo(); const box=$('cruzBox'); box.hidden=false; document.body.style.overflow='hidden'; czMonta(pi==null?0:pi); czPinta(); box.scrollIntoView({block:'nearest'}); }
-function fechaCruz(){ cz.on=false; clearInterval(cz.tick); const box=$('cruzBox'); box.hidden=true; document.body.style.overflow=''; }
-function czEscolhe(){ const box=$('cruzBox'); box.innerHTML=`<div class="j-top"><b>✏️ Palavras cruzadas</b><button class="btn" type="button" data-cz="fecha">✕ Fechar</button></div><p class="sub">Escolha um tabuleiro. Cada pessoa joga o seu, no próprio aparelho.</p><div class="j-grade">${CRUZ.map((p,i)=>`<button type="button" class="g-voc" data-cz="abre" data-i="${i}"><span>${p.ic}</span>${esc(p.nome)}<small>${p.w.length} palavras</small></button>`).join('')}</div>`; }
-$('cruzBox').addEventListener('click',e=>{ const b=e.target.closest('[data-k],[data-cz]'); if(!b) return;
-  if(b.dataset.k){ czSel(b.dataset.k); return; }
-  const a=b.dataset.cz;
-  if(a==='fecha') fechaCruz();
-  else if(a==='abre') { czMonta(+b.dataset.i); czPinta(); }
-  else if(a==='outro'){ czEscolhe(); }
-  else if(a==='de-novo'){ czMonta(cz.pi); czPinta(); }
-  else if(a==='lin'){ cz.linha=b.dataset.l; czPinta(); }
-  else if(a==='k') czPoe(b.dataset.ch);
-  else if(a==='del') czApaga();
-  else if(a==='dak') czDak();
-  else if(a==='dica') czDica();
-  else if(a==='kt'){ cz.kt=!cz.kt; czPinta(); }
-  else if(a==='ouvir'){ const f=cz.pal.filter(p=>p.ok); if(f.length) speak(f[f.length-1].k); }
-});
-document.addEventListener('keydown',e=>{ if(!cz.on||$('cruzBox').hidden||cz.fim) return; if(e.ctrlKey||e.metaKey||e.altKey) return;
-  const t=e.target; if(t&&/^(INPUT|TEXTAREA|SELECT)$/.test(t.tagName)) return;
-  if(e.key==='Backspace'){ e.preventDefault(); cz.buf=''; czApaga(); return; }
-  if(e.key==='Escape'){ fechaCruz(); return; }
-  if(/^[a-z]$/i.test(e.key)){ e.preventDefault(); let b=cz.buf+e.key.toLowerCase();
-    if(cz.buf==='n' && !/[aiueoyn]/.test(e.key.toLowerCase())){ czPoe('ん'); b=e.key.toLowerCase(); }
-    if(ROMA[b]){ cz.buf=''; czPoe(ROMA[b]); } else if(b.length>=3) cz.buf=''; else cz.buf=b; } });
-
-/* ---------- mensagens com 🔍 palavra por palavra ---------- */
-function clicavel(txt){ if(!window.UniGloss) return esc(txt); return UniGloss.quebra(txt).map(t=>t.sep!=null?esc(t.sep):(t.pt?`<button type="button" class="wd" data-w="${encodeURIComponent(JSON.stringify(t))}">${esc(t.k)}</button>`:esc(t.k))).join(''); }
-function msg(o,tab){ tab=tab||'mesa'; (CH[tab]=CH[tab]||[]).push(o); if(tab===aba) pinta(o); else{ naoLidas.add(tab); renderAbas(); } }
-function pinta(o){
-  const c=$('chat');
-  if(o.sis){ const d=document.createElement('div'); d.className='msg sis'; d.textContent=o.txt; c.appendChild(d); }
-  else{ const d=document.createElement('div'); d.className='msg '+(o.meu?'meu':'dele');
-    d.innerHTML=`<span class="quem">${esc(o.quem)}</span><span lang="ja">${clicavel(o.txt)}</span><div class="acoes"><button type="button" data-ouvir>🔊</button></div>`;
-    d.querySelector('[data-ouvir]').onclick=()=>speak(o.txt); c.appendChild(d); }
-  c.scrollTop=c.scrollHeight;
-}
-function sis(t,tab){ msg({sis:true,txt:t},tab); }
-$('chat').addEventListener('click',e=>{ const b=e.target.closest('.wd'); if(!b) return; const t=JSON.parse(decodeURIComponent(b.dataset.w)), m=b.closest('.msg');
-  let box=m.querySelector('.wdinfo'); if(!box){ box=document.createElement('div'); box.className='wdinfo'; m.appendChild(box); }
-  box.innerHTML=`<b lang="ja">${esc(t.k)}</b> <span class="wro"${ROM?'':' hidden'}>${esc(t.ro)} · </span>${esc(t.pt)}${t.nota?`<small>${esc(t.nota)}</small>`:''}`; speak(t.k); });
-
-/* ---------- denúncia ---------- */
-$('denunciar').onclick=()=>{ $('denTxt').value=''; $('dlgDen').showModal(); };
-$('dlgDen').addEventListener('close',()=>{ if($('dlgDen').returnValue!=='ok') return; const txt=$('denTxt').value.trim().slice(0,500);
-  if(db&&bancoOk){ push(ref(db,'salao/denuncias'),{de:me.uid,mesa:ME.mesa?(aba==='mesa'?('sala-'+ME.mesa+'/'+(sessAtual||'')):('privado/'+parId(aba))):null,txt,t:serverTimestamp()}).then(()=>sis('Denúncia enviada. Obrigada por avisar.')).catch(()=>sis('Não consegui enviar a denúncia agora.')); }
-  else sis('Denúncia anotada. Se for urgente, levante da mesa.'); });
-
-/* ---------- começo ---------- */
-renderSala();
-function quandoLogar(){ const a=getApps()[0]; if(!a){ setTimeout(quandoLogar,300); return; } onAuthStateChanged(getAuth(a), u=>{ if(u && !me.uid) iniciaBanco(u); }); }
-quandoLogar();
-setTimeout(()=>{ if(!bancoOk) semBanco(); }, 6000);
-aplicaRo();
-</script>
+<script src="./sfx.js?v=6"></script>
 <script>
-/* o Salão só liga (presença, conversa, jogos) depois do clique em "Entrar no Salão" */
-(function(){
-  var ligado=false;
-  function entrar(){
-    if(ligado) return; ligado=true;
-    var porta=document.getElementById('portaSalao'), sec=document.getElementById('secSala');
-    if(porta) porta.hidden=true; if(sec) sec.hidden=false;
-    var m=document.createElement('script'); m.type='module'; m.textContent=document.getElementById('salaModulo').textContent;
-    document.body.appendChild(m);
-    try{ sec.scrollIntoView({behavior:'smooth',block:'start'}); }catch(e){}
+(function () {
+  'use strict';
+  const esc = s => String(s || '').replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
+
+  /* ---------- Ofensiva Diária ---------- */
+  const btnStreak = document.getElementById('btnStreak');
+  function syncStreak() {
+    const s = UniSalao.getStreak();
+    btnStreak.textContent = s.claimedToday ? `🔥 ${s.count}d` : '🔥 +25 XP';
+    btnStreak.classList.toggle('on', s.claimedToday);
   }
-  var b=document.getElementById('entrarSalao'); if(b) b.addEventListener('click',entrar);
-  /* cada aula em dupla nasce numa sala própria: só entra quem receber o link de convite */
-  var d=document.getElementById('irDupla');
-  if(d) d.addEventListener('click',function(){ var c=''; var A='abcdefghjkmnpqrstuvwxyz23456789'; for(var i=0;i<7;i++) c+=A[Math.floor(Math.random()*A.length)]; d.href='/idiomas/planeta-utopia/salao/aula-dupla/?sala=aula-'+c; });
-  if(location.hash==='#sala') entrar();
+  btnStreak.addEventListener('click', () => {
+    const r = UniSalao.claimDailyStreak();
+    if (!r.ok) UniSalao.toast('Ofensiva de hoje já resgatada! Volte amanhã 🔥');
+    syncStreak();
+  });
+  syncStreak();
+
+  /* ---------- Avatar do aluno (com acessórios da Lojinha!) ---------- */
+  const av = window.UtopiaAvatar && window.UtopiaAvatar.load && window.UtopiaAvatar.load();
+  const nome = (av && av.profile && (av.profile.kata || av.profile.name)) || 'Você';
+  document.getElementById('walkerName').textContent = nome;
+  document.getElementById('walkerFace').innerHTML = UniSalao.avatarHTML({ viewBox: '36 36 168 168' });
+
+  /* ---------- Lojas do Beco (100% japonês por padrão; tradução/furigana/romaji opcionais!) ---------- */
+  const LOJAS = {
+    karaoke: {
+      x: 10.5, y: 84,
+      titHtml: '🎤 カラオケ',
+      ro: 'karaoke · uta o utaimashou!',
+      jpHtml: '<ruby>歌<rt>うた</rt></ruby>を <ruby>歌<rt>うた</rt></ruby>いましょう！',
+      plain: 'カラオケ！うたを うたいましょう！',
+      desc: 'Sala de Karaokê · Cante com YouTube, letra sincronizada e microfone.',
+      href: './karaoke/'
+    },
+    sushi: {
+      x: 26.5, y: 84,
+      titHtml: '🍣 <ruby>回転寿司<rt>かいてんずし</rt></ruby>',
+      ro: 'kaiten-zushi · kotoba o torimashou!',
+      jpHtml: '<ruby>言葉<rt>ことば</rt></ruby>の お<ruby>皿<rt>さら</rt></ruby>を <ruby>取<rt>と</rt></ruby>りましょう！',
+      plain: 'かいてんずし！ことばの おさらを とりましょう！',
+      desc: 'Kaiten-Zushi · Pegue os pratos de Kanji na esteira e acompanhe seu tempo.',
+      href: './sushi/'
+    },
+    konbini: {
+      x: 51, y: 84,
+      titHtml: '🏪 コンビニ',
+      ro: 'konbini · irasshaimase!',
+      jpHtml: 'いらっしゃいませ！お<ruby>客様<rt>きゃくさま</rt></ruby>の <ruby>注文<rt>ちゅうもん</rt></ruby>を <ruby>聞<rt>き</rt></ruby>きましょう。',
+      plain: 'コンビニ！いらっしゃいませ！',
+      desc: 'Konbini Express · Ouça os pedidos dos clientes e pratique no microfone.',
+      href: './konbini/'
+    },
+    lojinha: {
+      x: 74, y: 84,
+      titHtml: '👘 <ruby>雑貨屋<rt>ざっかや</rt></ruby>',
+      ro: 'zakka-ya · fuku o erabimashou!',
+      jpHtml: '<ruby>服<rt>ふく</rt></ruby>や <ruby>小物<rt>こもの</rt></ruby>を <ruby>選<rt>えら</rt></ruby>びましょう！',
+      plain: 'ざっかや！ふくや こものを えらびましょう！',
+      desc: 'Lojinha do Beco · Troque seus pontos e ofensivas por itens para o avatar.',
+      href: './lojinha/'
+    },
+    cafe: {
+      x: 88.5, y: 86,
+      titHtml: '🍵 <ruby>喫茶<rt>きっさ</rt></ruby>',
+      ro: 'kissa · yukkuri yasumimashou!',
+      jpHtml: 'コーヒーを <ruby>飲<rt>の</rt></ruby>みながら ゆっくり <ruby>休<rt>やす</rt></ruby>みましょう。',
+      plain: 'きっさ！コーヒーを のみながら ゆっくり やすみましょう。',
+      desc: 'Café Yokocho · Sente à mesa, peça cafés/doces e converse com o Master.',
+      href: './cafe/'
+    }
+  };
+
+  /* ---------- Movimento do Avatar na Calçada ---------- */
+  const stage = document.getElementById('becoStage');
+  const walker = document.getElementById('walker');
+  const popover = document.getElementById('lojaPopover');
+  let pos = { x: 50, y: 87 };
+  let walkTimer = null;
+  let lojaAtiva = null;
+
+  function andarPara(x, y) {
+    pos.x = Math.max(6, Math.min(94, x));
+    pos.y = Math.max(80, Math.min(94, y));
+    walker.classList.add('andando');
+    walker.style.left = pos.x + '%';
+    walker.style.top = pos.y + '%';
+    clearTimeout(walkTimer);
+    walkTimer = setTimeout(() => walker.classList.remove('andando'), 860);
+    if (typeof window.__becoGravaPos === 'function') window.__becoGravaPos(pos.x, pos.y);
+  }
+
+  function abrePopover(id) {
+    const L = LOJAS[id];
+    if (!L) return;
+    /* Segundo clique na mesma placa entra direto! */
+    if (lojaAtiva === id && !popover.hidden) {
+      if (L.modal) { popover.hidden = true; document.getElementById('cafeModal').showModal(); }
+      else location.href = L.href;
+      return;
+    }
+    lojaAtiva = id;
+    document.querySelectorAll('.spot').forEach(s => s.classList.toggle('ativo', s.dataset.loja === id));
+    andarPara(L.x, L.y);
+    UniSalao.sfx.click();
+
+    document.getElementById('popTit').innerHTML = L.titHtml;
+    document.getElementById('popRo').textContent = L.ro;
+    document.getElementById('popJp').innerHTML = L.jpHtml;
+    document.getElementById('popDesc').textContent = L.desc;
+    UniSalao.speak(L.plain);
+    const btn = document.getElementById('popEntrar');
+    btn.href = L.href;
+    btn.innerHTML = '<span lang="ja"><ruby>入<rt>はい</rt></ruby>る</span> <span class="trad" style="font-size:12px">(Entrar)</span> →';
+    btn.onclick = null;
+    popover.hidden = false;
+  }
+
+  document.getElementById('popFecha').addEventListener('click', e => {
+    e.stopPropagation();
+    popover.hidden = true;
+    lojaAtiva = null;
+    document.querySelectorAll('.spot').forEach(s => s.classList.remove('ativo'));
+  });
+
+  /* ---------- Objetos & Interações Vivas do Beco (tudo mostra como chama em japonês!) ---------- */
+  const bubble = document.getElementById('becoBubble');
+  let bubTimer = null;
+  let lastBubItem = null;
+
+  function mostraBalao(x, y, nomeHtml, nomePlain, nomeRo, nomePt, fraseHtml, frasePlain, fraseRo, frasePt) {
+    lastBubItem = { nomePlain, nomeRo, nomePt };
+    bubble.style.left = Math.max(18, Math.min(82, x)) + '%';
+    bubble.style.top = Math.max(24, y - 5) + '%';
+    bubble.innerHTML = `
+      <div class="bub-head">
+        <span class="bub-nome" lang="ja">${nomeHtml}</span>
+        <button type="button" class="bub-cad" id="btnBubCad" title="Salvar palavra no Caderno">📒</button>
+      </div>
+      <div class="ro-block" style="color:#9e4b3e;font-size:11.5px">${esc(nomeRo)}</div>
+      <div class="trad-block" style="color:#6b5852;font-size:12px;margin-bottom:4px">${esc(nomePt)}</div>
+      ${fraseHtml ? `<div style="border-top:1px dashed #decbb6;padding-top:4px;margin-top:3px">
+        <span lang="ja" style="font-weight:700;color:#42322e">${fraseHtml}</span>
+        <span class="ro-block" style="color:#9e4b3e;font-size:11px">${esc(fraseRo || '')}</span>
+        <span class="trad-block" style="color:#6b5852;font-size:11.5px">${esc(frasePt || '')}</span>
+      </div>` : ''}
+    `;
+    bubble.hidden = false;
+    UniSalao.speak(frasePlain ? (nomePlain + '。' + frasePlain) : nomePlain);
+    clearTimeout(bubTimer);
+    bubTimer = setTimeout(() => { bubble.hidden = true; }, 5600);
+  }
+
+  bubble.addEventListener('click', e => {
+    e.stopPropagation();
+    if (e.target.id === 'btnBubCad' && lastBubItem) {
+      UniSalao.saveToCaderno(`${lastBubItem.nomePlain} (${lastBubItem.nomeRo}) — ${lastBubItem.nomePt}`, 'Beco Yokocho · Salão');
+    }
+  });
+
+  /* Cachorrinho Shiba passeando continuamente pelo beco */
+  const dogEl = document.getElementById('shibaDog');
+  let dogX = 14, dogDir = 1, dogPause = 0;
+  function tickDog() {
+    if (dogPause > 0) { dogPause -= 50; }
+    else {
+      dogX += dogDir * 0.22;
+      if (dogX >= 82) { dogDir = -1; dogEl.classList.add('flip'); }
+      else if (dogX <= 10) { dogDir = 1; dogEl.classList.remove('flip'); }
+      dogEl.style.left = dogX.toFixed(2) + '%';
+    }
+  }
+  setInterval(tickDog, 50);
+
+  const GATO_FALAS = [
+    ['にゃ〜！<ruby>今晩<rt>こんばん</rt></ruby>は！', 'にゃ〜！こんばんは！', 'nyaa! konbanwa!', 'Miau! Boa noite!'],
+    ['<ruby>魚<rt>さかな</rt></ruby>が <ruby>好<rt>す</rt></ruby>きです！', 'さかなが すきです！', 'sakana ga suki desu!', 'Eu amo peixe!'],
+    ['<ruby>今日<rt>きょう</rt></ruby>も <ruby>頑張<rt>がんば</rt></ruby>ってね！', 'きょうも がんばってね！', 'kyou mo ganbatte ne!', 'Dê o seu melhor hoje!']
+  ];
+  const DOG_FALAS = [
+    ['わんわん！お<ruby>散歩<rt>さんぽ</rt></ruby>です！', 'わんわん！おさんぽです！', 'wanwan! osanpo desu!', 'Au au! Estou passeando!'],
+    ['わん！<ruby>遊<rt>あそ</rt></ruby>びましょう！', 'わん！あそびましょう！', 'wan! asobimashou!', 'Au! Vamos brincar!'],
+    ['わんわん！いい<ruby>天気<rt>てんき</rt></ruby>ですね！', 'わんわん！いいてんきですね！', 'wanwan! ii tenki desu ne!', 'Au au! Que tempo gostoso!']
+  ];
+  const BEBIDAS = [
+    ['🍵 <ruby>冷<rt>つめ</rt></ruby>たい お<ruby>茶<rt>ちゃ</rt></ruby>！', 'つめたい おちゃ！', 'tsumetai ocha!', 'Caiu um chá verde gelado!'],
+    ['☕ <ruby>温<rt>あたた</rt></ruby>かい コーヒー！', 'あたたかい コーヒー！', 'atatakai koohii!', 'Caiu um café quentinho!'],
+    ['🫧 ラムネ どうぞ！', 'ラムネ どうぞ！', 'ramune douzo!', 'Caiu um refrigerante Ramune!'],
+    ['💧 <ruby>美味<rt>おい</rt></ruby>しい <ruby>水<rt>みず</rt></ruby>！', 'おいしい みず！', 'oishii mizu!', 'Caiu uma água geladinha!']
+  ];
+  const YAKITORI_FALAS = [
+    ['<ruby>焼<rt>や</rt></ruby>き<ruby>鳥<rt>とり</rt></ruby> いかがですか？', 'やきとり いかがですか？', 'yakitori ikaga desu ka?', 'Aceita um espetinho de yakitori?'],
+    ['<ruby>熱々<rt>あつあつ</rt></ruby>ですよ！<ruby>塩<rt>しお</rt></ruby>？タレ？', 'あつあつですよ！しお？タレ？', 'atsuatsu desu yo! shio? tare?', 'Está quentinho! Com sal ou molho tare?'],
+    ['いらっしゃい！いい<ruby>匂<rt>にお</rt></ruby>いでしょ？', 'いらっしゃい！いいにおいでしょ？', 'irasshai! ii nioi desho?', 'Bem-vindo! Cheirinho bom, né?']
+  ];
+  const BAMBUS = [
+    ['<ruby>塵<rt>ちり</rt></ruby>も <ruby>積<rt>つ</rt></ruby>もれば <ruby>山<rt>やま</rt></ruby>となる', 'ちりも つもれば やまとなる', 'chiri mo tsumoreba yama to naru', 'Grão em grão vira montanha (constância!).'],
+    ['<ruby>七転<rt>ななころ</rt></ruby>び <ruby>八起<rt>やお</rt></ruby>き', 'ななころび やおき', 'nanakorobi yaoki', 'Cair sete vezes, levantar oito.'],
+    ['<ruby>一期一会<rt>いちごいちえ</rt></ruby>', 'いちごいちえ', 'ichigo ichie', 'Cada encontro é único — aproveite!']
+  ];
+
+  stage.addEventListener('click', e => {
+    if (e.target.closest('#lojaPopover') || e.target.closest('#becoBubble')) return;
+
+    const sp = e.target.closest('[data-loja]');
+    if (sp) { abrePopover(sp.dataset.loja); return; }
+
+    const sec = e.target.closest('[data-secret]');
+    if (sec) {
+      popover.hidden = true;
+      const tipo = sec.dataset.secret;
+      if (tipo === 'gato') {
+        const f = GATO_FALAS[Math.floor(Math.random() * GATO_FALAS.length)];
+        andarPara(84, 86);
+        mostraBalao(86, 74, '🐱 <ruby>三毛猫<rt>みけねこ</rt></ruby>（<ruby>猫<rt>ねこ</rt></ruby>）', 'みけねこ', 'mikeneko (neko)', 'Gato tricolor (gato)', f[0], f[1], f[2], f[3]);
+        UniSalao.sfx.bell();
+      } else if (tipo === 'cachorro') {
+        dogPause = 3600;
+        dogEl.classList.add('parado');
+        setTimeout(() => dogEl.classList.remove('parado'), 3600);
+        const f = DOG_FALAS[Math.floor(Math.random() * DOG_FALAS.length)];
+        mostraBalao(dogX, 82, '🐕 <ruby>柴犬<rt>しばいぬ</rt></ruby>（<ruby>犬<rt>いぬ</rt></ruby>）', 'しばいぬ', 'shiba-inu (inu)', 'Cachorrinho Shiba (cachorro)', f[0], f[1], f[2], f[3]);
+        UniSalao.sfx.ok();
+        UniSalao.addXP(2);
+      } else if (tipo === 'yakitori') {
+        const f = YAKITORI_FALAS[Math.floor(Math.random() * YAKITORI_FALAS.length)];
+        andarPara(38.5, 85);
+        mostraBalao(38.5, 62, '🍢 <ruby>焼<rt>や</rt></ruby>き<ruby>鳥<rt>とり</rt></ruby><ruby>屋台<rt>やたい</rt></ruby>', 'やきとりやたい', 'yakitori yatai', 'Barraquinha de Yakitori (espetinho)', f[0], f[1], f[2], f[3]);
+        UniSalao.sfx.ok();
+        UniSalao.addXP(3);
+      } else if (tipo === 'maquina') {
+        const b = BEBIDAS[Math.floor(Math.random() * BEBIDAS.length)];
+        andarPara(92, 86);
+        mostraBalao(84, 58, '🥤 <ruby>自動販売機<rt>じどうはんばいき</rt></ruby>', 'じどうはんばいき', 'jidouhanbaiki', 'Máquina automática de bebidas', b[0], b[1], b[2], b[3]);
+        UniSalao.sfx.ok();
+        UniSalao.addXP(2);
+      } else if (tipo === 'bambu') {
+        const p = BAMBUS[Math.floor(Math.random() * BAMBUS.length)];
+        andarPara(67, 84);
+        mostraBalao(67, 58, '🎋 <ruby>竹<rt>たけ</rt></ruby>', 'たけ', 'take', 'Bambu', p[0], p[1], p[2], p[3]);
+        UniSalao.sfx.bell();
+      } else if (tipo === 'lanterna') {
+        mostraBalao(16, 26, '🏮 <ruby>提灯<rt>ちょうちん</rt></ruby>', 'ちょうちん', 'chouchin', 'Lanterna japonesa de papel', '<ruby>明<rt>あか</rt></ruby>るいですね！', 'あかるいですね！', 'akarui desu ne!', 'Está bem iluminado!');
+        UniSalao.sfx.bell();
+      } else if (tipo === 'noren') {
+        mostraBalao(26, 48, '🟦 <ruby>暖簾<rt>のれん</rt></ruby>', 'のれん', 'noren', 'Cortina tradicional na entrada da loja', 'お<ruby>店<rt>みせ</rt></ruby>が <ruby>開<rt>あ</rt></ruby>いています！', 'おみせが あいています！', 'omise ga aite imasu!', 'A loja está aberta!');
+        UniSalao.sfx.click();
+      } else if (tipo === 'ceu') {
+        const cl = document.body.dataset.clima || 'noite';
+        if (cl === 'chuva') mostraBalao(50, 26, '🌧️ <ruby>雨<rt>あめ</rt></ruby>', 'あめ', 'ame', 'Chuva', '<ruby>雨<rt>あめ</rt></ruby>が <ruby>降<rt>ふ</rt></ruby>っています。', 'あめが ふっています。', 'ame ga futte imasu.', 'Está chovendo.');
+        else if (cl === 'tarde') mostraBalao(50, 26, '🌇 <ruby>夕焼<rt>ゆうや</rt></ruby>け', 'ゆうやけ', 'yuuyake', 'Pôr do sol / Entardecer', 'きれいな <ruby>空<rt>そら</rt></ruby>ですね！', 'きれいな そらですね！', 'kirei na sora desu ne!', 'Que céu lindo!');
+        else mostraBalao(50, 26, '🌙 <ruby>夜空<rt>よぞら</rt></ruby>', 'よぞら', 'yozora', 'Céu noturno', '<ruby>静<rt>しず</rt></ruby>かな <ruby>夜<rt>よる</rt></ruby>ですね。', 'しずかな よるですね。', 'shizuka na yoru desu ne.', 'Que noite tranquila.');
+        UniSalao.sfx.bell();
+      }
+      return;
+    }
+
+    /* Clique na calçada: avatar passeia! */
+    const r = stage.getBoundingClientRect();
+    const px = ((e.clientX - r.left) / r.width) * 100;
+    const py = ((e.clientY - r.top) / r.height) * 100;
+    popover.hidden = true;
+    lojaAtiva = null;
+    document.querySelectorAll('.spot').forEach(s => s.classList.remove('ativo'));
+    andarPara(px, py);
+  });
+
+  /* Setas do teclado para caminhar */
+  stage.addEventListener('keydown', e => {
+    const d = { ArrowLeft: [-6, 0], ArrowRight: [6, 0], ArrowUp: [0, -4], ArrowDown: [0, 4] }[e.key];
+    if (!d) return;
+    e.preventDefault();
+    andarPara(pos.x + d[0], pos.y + d[1]);
+  });
+
+  /* ---------- Modal Café (opcional, se aberto por script) ---------- */
+  const modal = document.getElementById('cafeModal');
+  const btnAb = document.getElementById('btnAbrirCafe');
+  if (btnAb) btnAb.addEventListener('click', () => { UniSalao.sfx.click(); modal.showModal(); });
+  document.getElementById('fechaCafe').addEventListener('click', () => modal.close());
+
+  const MURAL_KEY = 'uniSalaoMuralTeste';
+  const SEED = [
+    { quem: 'Aline Sensei', jp: 'ようこそ！きょうは なにを あそびますか？', ro: 'youkoso! kyou wa nani o asobimasu ka?', pt: 'Bem-vindo(a)! O que você vai jogar hoje?' },
+    { quem: 'Hana', jp: 'カラオケが たのしいです！', ro: 'karaoke ga tanoshii desu!', pt: 'O karaokê está muito divertido!' }
+  ];
+  const FRASES = [
+    ['こんばんは！', 'konbanwa!', 'Boa noite!'],
+    ['おつかれさま！', 'otsukaresama!', 'Bom trabalho!'],
+    ['カラオケ いこう！', 'karaoke ikou!', 'Vamos no karaokê!'],
+    ['おすし すき！', 'osushi suki!', 'Amo sushi!']
+  ];
+
+  let mural = [];
+  try {
+    const s = JSON.parse(localStorage.getItem(MURAL_KEY) || 'null');
+    mural = Array.isArray(s) && s.length ? s : SEED.slice();
+  } catch (e) { mural = SEED.slice(); }
+
+  const listaEl = document.getElementById('muralLista');
+  function renderMural() {
+    listaEl.innerHTML = mural.map((m, i) => `
+      <div class="recado">
+        <div>
+          <div style="font-size:11.5px;color:#8a7268;font-weight:700">${esc(m.quem)}</div>
+          <div style="font-weight:700;font-size:15px" lang="ja">${esc(m.jp)}</div>
+          ${m.ro ? `<div class="ro-block" style="font-size:12px;color:#b24b3d">${esc(m.ro)}</div>` : ''}
+          ${m.pt ? `<div style="font-size:12.5px;color:#6e5a54">${esc(m.pt)}</div>` : ''}
+        </div>
+        <button type="button" class="btn sm" data-mouv="${i}">🔊</button>
+      </div>
+    `).join('');
+  }
+  renderMural();
+  listaEl.addEventListener('click', e => {
+    const b = e.target.closest('[data-mouv]');
+    if (b) UniSalao.speak(mural[+b.dataset.mouv].jp);
+  });
+
+  const frEl = document.getElementById('frasesBar');
+  frEl.innerHTML = FRASES.map((f, i) => `<button type="button" lang="ja" data-fi="${i}">${esc(f[0])}</button>`).join('');
+  frEl.addEventListener('click', e => {
+    const b = e.target.closest('[data-fi]');
+    if (!b) return;
+    const f = FRASES[+b.dataset.fi];
+    UniSalao.speak(f[0]);
+    document.getElementById('muralInput').value = f[0];
+  });
+
+  document.getElementById('muralForm').addEventListener('submit', e => {
+    e.preventDefault();
+    const inp = document.getElementById('muralInput');
+    const txt = inp.value.trim();
+    if (!txt) return;
+    const match = FRASES.find(f => f[0] === txt);
+    mural.unshift({ quem: nome, jp: txt, ro: match ? match[1] : '', pt: match ? match[2] : '' });
+    mural = mural.slice(0, 20);
+    try { localStorage.setItem(MURAL_KEY, JSON.stringify(mural)); } catch (err) {}
+    inp.value = '';
+    renderMural();
+    UniSalao.sfx.ok();
+    UniSalao.addXP(5);
+    UniSalao.toast('🍵 Recado deixado no Café! +5 XP');
+  });
+  /* Atualiza chip pessoal de ofensiva */
+  function syncEuChip() {
+    const s = UniSalao.getStreak();
+    const el = document.getElementById('euChip');
+    if (el) el.textContent = `${nome} · 🔥 ${s.count}d (${s.atividadesHoje} hoje)`;
+  }
+  syncEuChip();
+  btnStreak.addEventListener('click', syncEuChip);
 })();
 </script>
-<script defer src="/caderno-flutuante.js?v=24"></script>
+
+<!-- Presença ao Vivo + Ofensiva Coletiva entre Alunas (usa salao/presenca/ já existente no RTDB) -->
+<script type="module">
+import { getApps } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
+import { getDatabase, ref, set, onValue, onDisconnect, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-database.js";
+
+const DB_URL = 'https://unirversos-site-default-rtdb.firebaseio.com';
+const stage = document.getElementById('becoStage');
+const statusEl = document.getElementById('statusPresenca');
+const onlineEl = document.getElementById('alunasOnline');
+const peersEl = {};
+let db = null, meUid = null, meNome = '', lastX = 50, lastY = 87, gravaT = null, ultimoAcenoT = 0;
+
+function payload(extra) {
+  const av = window.UtopiaAvatar && window.UtopiaAvatar.load && window.UtopiaAvatar.load();
+  const st = window.UniSalao ? UniSalao.getStreak() : { count: 0, atividadesHoje: 0 };
+  const ex = window.UniSalao ? UniSalao.getAvatarExtras().equipped : {};
+  return Object.assign({
+    nome: (meNome || 'Viajante').slice(0, 30),
+    sel: (av && av.sel) || null,
+    extras: ex || null,
+    x: Math.round(lastX * 10) / 10,
+    y: Math.round(lastY * 10) / 10,
+    streak: st.count || 0,
+    ativHoje: st.atividadesHoje || 0,
+    t: serverTimestamp()
+  }, extra || {});
+}
+
+function grava(extra) {
+  if (!db || !meUid) return;
+  clearTimeout(gravaT);
+  gravaT = setTimeout(() => {
+    set(ref(db, 'salao/presenca/' + meUid), payload(extra)).catch(() => {});
+  }, 150);
+}
+window.__becoGravaPos = (x, y) => { lastX = x; lastY = y; grava(); };
+
+function renderPeers(PRES) {
+  const vivos = new Set();
+  let totalAtiv = window.UniSalao ? UniSalao.getStreak().atividadesHoje : 0;
+  let totalOnline = 1;
+  const chips = [];
+  const meuSt = window.UniSalao ? UniSalao.getStreak() : { count: 0, atividadesHoje: 0 };
+  chips.push(`<span style="color:var(--lantern);font-weight:800">🔥 Ofensiva do Beco:</span>`);
+  chips.push(`<span class="aluna-chip eu">${meNome || 'Você'} · 🔥 ${meuSt.count}d</span>`);
+
+  Object.entries(PRES || {}).forEach(([uid, p]) => {
+    if (uid === meUid || !p || typeof p.x !== 'number') return;
+    vivos.add(uid);
+    totalOnline++;
+    totalAtiv += (p.ativHoje || 0);
+    chips.push(`<span class="aluna-chip">${String(p.nome || 'Viajante').slice(0, 16)} · 🔥 ${p.streak || 0}d</span>`);
+
+    /* Recebe aceno dirigido a mim */
+    if (p.aceno && p.aceno.para === meUid && p.aceno.t && p.aceno.t > ultimoAcenoT) {
+      ultimoAcenoT = p.aceno.t;
+      if (window.UniSalao) {
+        UniSalao.sfx.bell();
+        UniSalao.speak('いっしょに がんばろう！');
+        UniSalao.toast(`🔥 ${p.nome || 'Colega'} acenou: 一緒に頑張ろう！(Vamos juntas!)`);
+      }
+    }
+
+    let el = peersEl[uid];
+    if (!el) {
+      el = document.createElement('button');
+      el.type = 'button';
+      el.className = 'peer-walker';
+      el.innerHTML = `<div class="walker-face"></div><span class="walker-name"></span><span class="peer-badge"></span>`;
+      el.addEventListener('click', ev => {
+        ev.stopPropagation();
+        grava({ aceno: { para: uid, t: Date.now() } });
+        if (window.UniSalao) {
+          UniSalao.sfx.ok();
+          UniSalao.speak('こんにちは！いっしょに がんばろう！');
+          UniSalao.addXP(5);
+          UniSalao.toast(`👋 Incentivo enviado para ${p.nome || 'colega'}! +5 XP`);
+        }
+      });
+      stage.appendChild(el);
+      peersEl[uid] = el;
+    }
+    el.style.left = Math.max(6, Math.min(94, p.x)) + '%';
+    el.style.top = Math.max(80, Math.min(94, p.y)) + '%';
+    el.querySelector('.walker-face').innerHTML = window.UniSalao ? UniSalao.avatarHTML({ sel: p.sel, equipped: p.extras || {}, viewBox: '36 36 168 168' }) : '🧳';
+    el.querySelector('.walker-name').textContent = p.nome || 'Viajante';
+    el.querySelector('.peer-badge').textContent = `🔥 ${p.streak || 0}d`;
+  });
+
+  Object.keys(peersEl).forEach(u => { if (!vivos.has(u)) { peersEl[u].remove(); delete peersEl[u]; } });
+  onlineEl.innerHTML = chips.join('');
+  statusEl.textContent = totalOnline > 1
+    ? `🟢 ${totalOnline} alunas no Beco · ${totalAtiv} atividade(s) hoje (toque num avatar para incentivar!)`
+    : `🟢 Conectada · ${totalAtiv} atividade(s) hoje no Beco`;
+}
+
+function ligaBanco(user) {
+  try {
+    db = getDatabase(getApps()[0], DB_URL);
+    meUid = user.uid;
+    const av = window.UtopiaAvatar && window.UtopiaAvatar.load && window.UtopiaAvatar.load();
+    meNome = (av && av.profile && (av.profile.kata || av.profile.name)) || (user.displayName || '').split(' ')[0] || 'Viajante';
+    const presRef = ref(db, 'salao/presenca/' + meUid);
+    onDisconnect(presRef).remove().then(() => { grava(); }).catch(() => {});
+    onValue(ref(db, 'salao/presenca'), snap => renderPeers(snap.val() || {}), () => {});
+  } catch (e) {}
+}
+
+function aguardaApp(tent) {
+  const apps = getApps();
+  if (!apps.length) { if (tent < 20) setTimeout(() => aguardaApp(tent + 1), 300); return; }
+  onAuthStateChanged(getAuth(apps[0]), u => { if (u && !meUid) ligaBanco(u); });
+}
+aguardaApp(0);
+</script>
 </body>
 </html>

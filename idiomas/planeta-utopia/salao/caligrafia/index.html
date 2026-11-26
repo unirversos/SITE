@@ -1,0 +1,452 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>Tinta Viva · Caligrafia · Salão Unirversos</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@600;700;800&family=Zen+Maru+Gothic:wght@400;500;700&display=swap">
+<link rel="stylesheet" href="../salao.css?v=6">
+<style>
+  .cali-grid {
+    display: grid;
+    grid-template-columns: 1fr 310px;
+    gap: 18px;
+    align-items: start;
+  }
+  @media (max-width: 820px) { .cali-grid { grid-template-columns: 1fr; } }
+
+  /* Mesa de Papel Washi */
+  .papel-wrap {
+    display: grid;
+    justify-items: center;
+    gap: 14px;
+  }
+  .papel-stage {
+    position: relative;
+    width: min(100%, 340px);
+    aspect-ratio: 1;
+    border-radius: 24px;
+    background: #fcf6ee;
+    border: 3px solid rgba(242, 192, 99, 0.55);
+    box-shadow: 0 16px 36px rgba(10, 6, 18, 0.45), inset 0 0 28px rgba(180, 145, 110, 0.16);
+    overflow: hidden;
+    touch-action: none;
+  }
+  /* Cruz guia tradicional de caligrafia */
+  .papel-stage::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background:
+      linear-gradient(90deg, transparent calc(50% - 0.5px), rgba(180, 145, 120, 0.25) 50%, transparent calc(50% + 0.5px)),
+      linear-gradient(0deg, transparent calc(50% - 0.5px), rgba(180, 145, 120, 0.25) 50%, transparent calc(50% + 0.5px));
+    pointer-events: none;
+  }
+  .guia-svg, .tinta-canvas {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+  }
+  .guia-svg { pointer-events: none; transition: opacity 0.2s ease; }
+  .guia-svg.off { opacity: 0; }
+  .tinta-canvas { cursor: crosshair; }
+
+  .score-box {
+    width: min(100%, 340px);
+    border-left: 5px solid var(--sky);
+    background: rgba(25, 20, 34, 0.55);
+    border-radius: 14px;
+    padding: 12px 14px;
+    display: grid;
+    gap: 4px;
+    text-align: center;
+  }
+  .score-estrelas { font-size: 24px; letter-spacing: 0.12em; }
+
+  /* Seletor de Kana */
+  .kana-painel {
+    display: grid;
+    gap: 12px;
+  }
+  .kana-tabs { display: flex; gap: 6px; }
+  .kana-tabs button.on { background: var(--sky-soft); border-color: var(--sky); color: #dff0ff; }
+
+  .kana-grade {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 6px;
+  }
+  .k-btn {
+    border: 1px solid var(--line);
+    background: rgba(25, 20, 34, 0.45);
+    color: var(--ink);
+    border-radius: 12px;
+    min-height: 44px;
+    font-size: 19px;
+    font-weight: 700;
+    display: grid;
+    place-items: center;
+    transition: 0.14s;
+  }
+  .k-btn:hover { border-color: var(--sky); background: var(--surface-2); }
+  .k-btn.on { background: var(--sky-soft); border-color: var(--sky); color: #fff; }
+  .k-btn.feito { border-color: var(--sage); background: var(--sage-soft); }
+
+  .char-head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+    background: rgba(25, 20, 34, 0.45);
+    border: 1px solid var(--line);
+    border-radius: 16px;
+    padding: 10px 14px;
+  }
+  .char-big { font-size: 36px; font-weight: 800; line-height: 1; }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <nav class="topbar">
+    <div class="brand-row">
+      <a class="btn sm" href="../">← Ruazinha do Salão</a>
+      <span class="badge-teste">Canvas · Tinta Viva</span>
+    </div>
+    <div class="top-tools">
+      <span class="xp-pill">✦ <span data-xp-val>0</span> XP</span>
+      <button type="button" class="btn sm" data-mute-btn aria-pressed="true">🔊 Som: ON</button>
+    </div>
+  </nav>
+
+  <div data-acess-bar></div>
+
+  <section class="card b-sky">
+    <div>
+      <p class="eyebrow">✦ 書道 · pincel interativo</p>
+      <h1>🖌️ Tinta Viva · Caligrafia</h1>
+      <p class="sub">Veja a ordem dos traços, desenhe no papel washi com o dedo ou mouse e ganhe estrelas pela precisão.</p>
+    </div>
+
+    <div class="cali-grid">
+      <!-- Área de desenho -->
+      <div class="papel-wrap">
+        <div class="char-head" style="width:min(100%,340px)">
+          <div class="row" style="gap:12px">
+            <span class="char-big" id="charBig" lang="ja">あ</span>
+            <div>
+              <strong id="charInfo">Hiragana · 3 traços</strong>
+              <div class="sub ro-block" style="font-size:13px">Leitura: <b id="charRo" style="color:var(--lantern)">a</b></div>
+            </div>
+          </div>
+          <button type="button" class="btn sm sky" id="btnSom">🔊 Ouvir</button>
+        </div>
+
+        <div class="papel-stage" id="papelStage">
+          <svg class="guia-svg" id="guiaSvg" viewBox="0 0 109 109" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"></svg>
+          <canvas class="tinta-canvas" id="tintaCanvas" width="340" height="340" aria-label="Folha de caligrafia para desenhar"></canvas>
+        </div>
+
+        <div class="row" style="justify-content:center">
+          <button type="button" class="btn sm" id="btnAnimar">▶ Ver ordem</button>
+          <button type="button" class="btn sm on" id="btnGuia" aria-pressed="true">👁️ Guia: ON</button>
+          <button type="button" class="btn sm" id="btnLimpar">🧹 Limpar</button>
+          <button type="button" class="btn pri" id="btnAvaliar">✓ Avaliar traço</button>
+        </div>
+
+        <div class="score-box" id="scoreBox" hidden>
+          <div class="score-estrelas" id="scoreEstrelas">⭐⭐⭐</div>
+          <strong id="scoreTit">Traço excelente!</strong>
+          <span class="sub" id="scoreSub"></span>
+        </div>
+      </div>
+
+      <!-- Painel lateral de caracteres -->
+      <div class="kana-painel">
+        <div class="kana-tabs">
+          <button type="button" class="btn sm on" id="tabHira">ひらがな Hiragana</button>
+          <button type="button" class="btn sm" id="tabKata">カタカナ Katakana</button>
+        </div>
+        <div class="kana-grade" id="kanaGrade"></div>
+        <div class="row" style="justify-content:space-between">
+          <button type="button" class="btn sm" id="btnAleat">🎲 Aleatório</button>
+          <button type="button" class="btn sm sage" id="btnProximo">Próximo →</button>
+        </div>
+      </div>
+    </div>
+  </section>
+</div>
+
+<script src="/idiomas/dados/kana-tracos.js?v=1"></script>
+<script src="/idiomas/dados/velocidade-voz.js?v=1"></script>
+<script src="../sfx.js?v=6"></script>
+<script>
+(function () {
+  'use strict';
+
+  const HIRA = [
+    ['あ','a'],['い','i'],['う','u'],['え','e'],['お','o'],
+    ['か','ka'],['き','ki'],['く','ku'],['け','ke'],['こ','ko'],
+    ['さ','sa'],['し','shi'],['す','su'],['せ','se'],['そ','so'],
+    ['た','ta'],['ち','chi'],['つ','tsu'],['て','te'],['と','to'],
+    ['な','na'],['に','ni'],['ぬ','nu'],['ね','ne'],['の','no'],
+    ['は','ha'],['ひ','hi'],['ふ','fu'],['へ','he'],['ほ','ho'],
+    ['ま','ma'],['み','mi'],['む','mu'],['め','me'],['も','mo']
+  ];
+  const KATA = [
+    ['ア','a'],['イ','i'],['ウ','u'],['エ','e'],['オ','o'],
+    ['カ','ka'],['キ','ki'],['ク','ku'],['ケ','ke'],['コ','ko'],
+    ['サ','sa'],['シ','shi'],['ス','su'],['セ','se'],['ソ','so'],
+    ['タ','ta'],['チ','chi'],['ツ','tsu'],['テ','te'],['ト','to'],
+    ['ナ','na'],['ニ','ni'],['ヌ','nu'],['ネ','ne'],['ノ','no'],
+    ['ハ','ha'],['ヒ','hi'],['フ','fu'],['ヘ','he'],['ホ','ho'],
+    ['マ','ma'],['ミ','mi'],['ム','mu'],['メ','me'],['モ','mo']
+  ];
+
+  let modo = 'hira';
+  let idx = 0;
+  let guiaOn = true;
+  let feitos = new Set();
+  try { feitos = new Set(JSON.parse(localStorage.getItem('uniCaliFeitos') || '[]')); } catch (e) {}
+
+  const listaAtual = () => modo === 'hira' ? HIRA : KATA;
+  const charAtual = () => listaAtual()[idx];
+
+  const svg = document.getElementById('guiaSvg');
+  const canvas = document.getElementById('tintaCanvas');
+  const ctx = canvas.getContext('2d', { willReadFrequently: true });
+  let desenhando = false;
+  let lastPt = null;
+  let hasInk = false;
+
+  function limpaCanvas() {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    hasInk = false;
+    document.getElementById('scoreBox').hidden = true;
+  }
+
+  function renderGuia(animar) {
+    const [ch, ro] = charAtual();
+    const dados = window.KanaStrokes && window.KanaStrokes[ch];
+    document.getElementById('charBig').textContent = ch;
+    document.getElementById('charRo').textContent = ro;
+    document.getElementById('charInfo').textContent = (modo === 'hira' ? 'Hiragana' : 'Katakana') + (dados ? ` · ${dados.p.length} traço${dados.p.length > 1 ? 's' : ''}` : '');
+
+    if (!dados) {
+      svg.innerHTML = `<text x="54.5" y="76" text-anchor="middle" font-size="72" fill="rgba(74,65,73,0.18)" font-family="Zen Maru Gothic, sans-serif">${ch}</text>`;
+      return;
+    }
+
+    const paths = dados.p.map((d, i) => `
+      <path d="${d}" fill="none" stroke="rgba(74,65,73,0.22)" stroke-width="6.5" stroke-linecap="round" stroke-linejoin="round"/>
+      <path class="anim-p" data-i="${i}" d="${d}" fill="none" stroke="#ef6b8c" stroke-width="5.5" stroke-linecap="round" stroke-linejoin="round" style="opacity:0"/>
+    `).join('');
+
+    const nums = (dados.n || []).map((pt, i) => `
+      <circle cx="${pt[0]}" cy="${pt[1]}" r="4.6" fill="#ef6b8c" opacity="0.85"/>
+      <text x="${pt[0]}" y="${pt[1] + 2.3}" text-anchor="middle" fill="#fff" font-size="6.2" font-weight="800">${i + 1}</text>
+    `).join('');
+
+    svg.innerHTML = paths + nums;
+
+    if (animar) {
+      const els = [...svg.querySelectorAll('.anim-p')];
+      els.forEach((el, i) => {
+        const len = el.getTotalLength ? el.getTotalLength() : 120;
+        el.style.strokeDasharray = len;
+        el.style.strokeDashoffset = len;
+        setTimeout(() => {
+          el.style.opacity = '0.9';
+          el.style.transition = 'stroke-dashoffset 0.65s ease';
+          el.style.strokeDashoffset = '0';
+        }, i * 680);
+      });
+    }
+  }
+
+  function renderGrade() {
+    const L = listaAtual();
+    const el = document.getElementById('kanaGrade');
+    el.innerHTML = L.map((item, i) => `
+      <button type="button" class="k-btn${i === idx ? ' on' : ''}${feitos.has(item[0]) ? ' feito' : ''}" data-i="${i}" lang="ja" title="${item[1]}">${item[0]}</button>
+    `).join('');
+  }
+
+  document.getElementById('kanaGrade').addEventListener('click', e => {
+    const b = e.target.closest('[data-i]');
+    if (!b) return;
+    idx = +b.dataset.i;
+    limpaCanvas();
+    renderGuia(false);
+    renderGrade();
+    UniSalao.speak(charAtual()[0]);
+  });
+
+  document.getElementById('tabHira').addEventListener('click', () => {
+    modo = 'hira'; idx = 0;
+    document.getElementById('tabHira').classList.add('on');
+    document.getElementById('tabKata').classList.remove('on');
+    limpaCanvas(); renderGuia(false); renderGrade();
+    UniSalao.sfx.click();
+  });
+  document.getElementById('tabKata').addEventListener('click', () => {
+    modo = 'kata'; idx = 0;
+    document.getElementById('tabKata').classList.add('on');
+    document.getElementById('tabHira').classList.remove('on');
+    limpaCanvas(); renderGuia(false); renderGrade();
+    UniSalao.sfx.click();
+  });
+
+  /* Desenho com efeito de pincel sumi-ê */
+  function getPos(ev) {
+    const r = canvas.getBoundingClientRect();
+    return {
+      x: (ev.clientX - r.left) * (canvas.width / r.width),
+      y: (ev.clientY - r.top) * (canvas.height / r.height),
+      t: performance.now()
+    };
+  }
+
+  canvas.addEventListener('pointerdown', ev => {
+    canvas.setPointerCapture(ev.pointerId);
+    desenhando = true;
+    hasInk = true;
+    lastPt = getPos(ev);
+    ctx.fillStyle = '#251c2e';
+    ctx.beginPath();
+    ctx.arc(lastPt.x, lastPt.y, 7, 0, Math.PI * 2);
+    ctx.fill();
+  });
+
+  canvas.addEventListener('pointermove', ev => {
+    if (!desenhando || !lastPt) return;
+    const pt = getPos(ev);
+    const dist = Math.hypot(pt.x - lastPt.x, pt.y - lastPt.y);
+    const dt = Math.max(1, pt.t - lastPt.t);
+    const speed = dist / dt;
+    const width = Math.max(8, Math.min(18, 16 - speed * 5));
+
+    ctx.strokeStyle = '#251c2e';
+    ctx.lineWidth = width;
+    ctx.lineCap = 'round';
+    ctx.lineJoin = 'round';
+    ctx.beginPath();
+    ctx.moveTo(lastPt.x, lastPt.y);
+    ctx.lineTo(pt.x, pt.y);
+    ctx.stroke();
+    lastPt = pt;
+  });
+
+  function solta() { desenhando = false; lastPt = null; }
+  canvas.addEventListener('pointerup', solta);
+  canvas.addEventListener('pointercancel', solta);
+
+  /* Avaliação real comparando a tinta com o molde KanjiVG */
+  function avaliar() {
+    if (!hasInk) {
+      UniSalao.toast('Desenhe o caractere no papel primeiro!');
+      return;
+    }
+    const [ch] = charAtual();
+    const dados = window.KanaStrokes && window.KanaStrokes[ch];
+    const size = 109;
+
+    /* Reduz desenho do usuário para 109x109 */
+    const uCan = document.createElement('canvas');
+    uCan.width = size; uCan.height = size;
+    const uCtx = uCan.getContext('2d');
+    uCtx.drawImage(canvas, 0, 0, size, size);
+    const uData = uCtx.getImageData(0, 0, size, size).data;
+
+    /* Desenha molde de referência em 109x109 */
+    const rCan = document.createElement('canvas');
+    rCan.width = size; rCan.height = size;
+    const rCtx = rCan.getContext('2d');
+    rCtx.strokeStyle = '#000';
+    rCtx.lineCap = 'round';
+    rCtx.lineJoin = 'round';
+    rCtx.lineWidth = 11;
+    if (dados && dados.p) {
+      dados.p.forEach(d => rCtx.stroke(new Path2D(d)));
+    } else {
+      rCtx.font = '76px "Zen Maru Gothic", sans-serif';
+      rCtx.textAlign = 'center';
+      rCtx.fillText(ch, 54.5, 78);
+    }
+    const rData = rCtx.getImageData(0, 0, size, size).data;
+
+    let refPx = 0, userPx = 0, hitRef = 0, hitUser = 0;
+    for (let i = 3; i < uData.length; i += 4) {
+      const u = uData[i] > 40;
+      const r = rData[i] > 40;
+      if (r) refPx++;
+      if (u) userPx++;
+      if (u && r) { hitRef++; hitUser++; }
+    }
+
+    const cobertura = refPx ? hitRef / refPx : 0;
+    const precisao = userPx ? hitUser / userPx : 0;
+    const nota = Math.round(((cobertura * 0.55) + (precisao * 0.45)) * 100);
+
+    const box = document.getElementById('scoreBox');
+    box.hidden = false;
+    let estrelas = 1, tit = 'Continue praticando!', xp = 5;
+    if (nota >= 52) { estrelas = 3; tit = 'Caligrafia linda! ✨'; xp = 15; }
+    else if (nota >= 34) { estrelas = 2; tit = 'Muito bom traço!'; xp = 10; }
+
+    const pct = Math.min(100, Math.round(nota * 1.35));
+    document.getElementById('scoreEstrelas').textContent = '⭐'.repeat(estrelas) + '☆'.repeat(3 - estrelas);
+    document.getElementById('scoreTit').textContent = `${tit} (+${xp} XP)`;
+    document.getElementById('scoreSub').textContent = `Fidelidade ao molde: ${pct}% · ${guiaOn ? 'Tente também com o Guia OFF!' : 'Feito de memória!'}`;
+
+    UniSalao.addXP(xp);
+    if (UniSalao.recordSession) {
+      UniSalao.recordSession({
+        jogo: 'caligrafia', nomeJogo: '🖌️ Tinta Viva',
+        duracaoSeg: 12, acertos: estrelas >= 2 ? 1 : 0, erros: estrelas >= 2 ? 0 : 1,
+        precisao: pct, tempoMedio: 12, pts: xp
+      });
+    }
+    if (estrelas >= 2) {
+      feitos.add(ch);
+      try { localStorage.setItem('uniCaliFeitos', JSON.stringify([...feitos])); } catch (e) {}
+      renderGrade();
+      estrelas === 3 ? UniSalao.sfx.fanfare() : UniSalao.sfx.ok();
+    } else {
+      UniSalao.sfx.err();
+    }
+    UniSalao.speak(ch);
+  }
+
+  document.getElementById('btnAvaliar').addEventListener('click', avaliar);
+  document.getElementById('btnLimpar').addEventListener('click', () => { limpaCanvas(); UniSalao.sfx.click(); });
+  document.getElementById('btnAnimar').addEventListener('click', () => { renderGuia(true); UniSalao.sfx.click(); });
+  document.getElementById('btnSom').addEventListener('click', () => UniSalao.speak(charAtual()[0]));
+  document.getElementById('btnGuia').addEventListener('click', () => {
+    guiaOn = !guiaOn;
+    svg.classList.toggle('off', !guiaOn);
+    const b = document.getElementById('btnGuia');
+    b.textContent = '👁️ Guia: ' + (guiaOn ? 'ON' : 'OFF');
+    b.classList.toggle('on', guiaOn);
+    b.setAttribute('aria-pressed', String(guiaOn));
+    UniSalao.sfx.click();
+  });
+  document.getElementById('btnProximo').addEventListener('click', () => {
+    idx = (idx + 1) % listaAtual().length;
+    limpaCanvas(); renderGuia(false); renderGrade();
+    UniSalao.speak(charAtual()[0]);
+  });
+  document.getElementById('btnAleat').addEventListener('click', () => {
+    idx = Math.floor(Math.random() * listaAtual().length);
+    limpaCanvas(); renderGuia(false); renderGrade();
+    UniSalao.speak(charAtual()[0]);
+  });
+
+  renderGuia(false);
+  renderGrade();
+})();
+</script>
+</body>
+</html>

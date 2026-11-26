@@ -1,0 +1,600 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>Festa no Salão · Jogos em Dupla · Salão Unirversos</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@600;700;800&family=Zen+Maru+Gothic:wght@400;500;700&display=swap">
+<link rel="stylesheet" href="../salao.css?v=6">
+<style>
+  .tabs-jogos {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 10px;
+  }
+  .tab-jogo {
+    text-align: left;
+    background: rgba(25, 20, 34, 0.48);
+    border: 1.5px solid var(--line-strong);
+    border-radius: 18px;
+    padding: 14px;
+    display: grid;
+    gap: 4px;
+    transition: 0.15s ease;
+  }
+  .tab-jogo:hover { border-color: var(--lav); background: var(--surface-2); transform: translateY(-2px); }
+  .tab-jogo.on { border-color: var(--lav); background: var(--lav-soft); }
+  .tab-jogo .ic { font-size: 26px; line-height: 1; }
+  .tab-jogo b { font-family: var(--f-display); font-size: 17px; }
+  .tab-jogo small { color: var(--muted); font-size: 13px; }
+
+  /* ===== JOGO 1: DUELO RELÂMPAGO (2 JOGADORES) ===== */
+  .duelo-arena {
+    display: grid;
+    gap: 14px;
+  }
+  .placar-duelo {
+    display: grid;
+    grid-template-columns: 1fr auto 1fr;
+    align-items: center;
+    gap: 10px;
+    background: rgba(25, 20, 34, 0.55);
+    border: 1px solid var(--line);
+    border-radius: 18px;
+    padding: 12px 16px;
+    text-align: center;
+  }
+  .p-lado b { font-family: var(--f-display); font-size: 28px; display: block; line-height: 1; }
+  .p-lado.p1 b { color: var(--sakura); }
+  .p-lado.p2 b { color: var(--sky); }
+
+  .centro-duelo {
+    background: linear-gradient(135deg, rgba(239, 107, 140, 0.14), rgba(111, 183, 246, 0.14));
+    border: 1.5px solid var(--line-strong);
+    border-radius: 22px;
+    padding: 18px;
+    text-align: center;
+    display: grid;
+    gap: 6px;
+    justify-items: center;
+  }
+  .centro-jp { font-family: var(--f-display); font-size: clamp(30px, 6vw, 44px); font-weight: 800; line-height: 1.15; }
+
+  .duelo-botoes {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 14px;
+  }
+  @media (max-width: 640px) { .duelo-botoes { grid-template-columns: 1fr; } }
+  .painel-jog {
+    border-radius: 20px;
+    padding: 14px;
+    display: grid;
+    gap: 8px;
+    border: 1.5px solid var(--line);
+  }
+  .painel-jog.j1 { background: rgba(239, 107, 140, 0.1); border-color: rgba(239, 107, 140, 0.4); }
+  .painel-jog.j2 { background: rgba(111, 183, 246, 0.1); border-color: rgba(111, 183, 246, 0.4); }
+  .ops-duelo { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+  .ops-duelo button {
+    min-height: 52px;
+    border-radius: 14px;
+    border: 1.5px solid var(--line-strong);
+    background: var(--surface);
+    color: var(--ink);
+    font-weight: 700;
+    font-size: 14.5px;
+    padding: 6px 8px;
+    transition: 0.12s;
+  }
+  .ops-duelo button:hover:not(:disabled) { border-color: var(--lantern); background: var(--surface-2); }
+  .ops-duelo button.ok { background: var(--sage-soft); border-color: var(--sage); color: #d8ffea; }
+  .ops-duelo button.no { background: var(--sakura-soft); border-color: var(--sakura); }
+
+  /* ===== JOGO 2: QUEM PEGOU O BOLO (DETETIVE) ===== */
+  .pistas-list { display: grid; gap: 8px; }
+  .pista-card {
+    background: rgba(242, 192, 99, 0.1);
+    border: 1px solid rgba(242, 192, 99, 0.35);
+    border-radius: 14px;
+    padding: 10px 14px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 10px;
+  }
+  .suspeitos-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+    gap: 10px;
+  }
+  .susp-card {
+    background: var(--surface);
+    border: 1.5px solid var(--line-strong);
+    border-radius: 18px;
+    padding: 12px 10px;
+    display: grid;
+    justify-items: center;
+    gap: 4px;
+    text-align: center;
+    transition: 0.18s;
+  }
+  .susp-card.eliminado { opacity: 0.32; filter: grayscale(0.9); transform: scale(0.97); }
+  .susp-card .av { font-size: 38px; line-height: 1.1; }
+  .susp-card b { font-size: 15px; }
+  .susp-tags { display: flex; flex-wrap: wrap; justify-content: center; gap: 4px; margin-top: 2px; }
+  .susp-tags span { font-size: 11px; padding: 2px 7px; border-radius: 999px; background: rgba(255,255,255,0.08); color: var(--muted); }
+
+  /* ===== JOGO 3: ADIVINHE QUEM É ===== */
+  .pergs-list { display: flex; flex-wrap: wrap; gap: 8px; }
+  .pergs-list button {
+    border: 1px solid rgba(197, 168, 255, 0.4);
+    background: var(--lav-soft);
+    color: var(--ink);
+    border-radius: 14px;
+    padding: 8px 12px;
+    font-size: 13.5px;
+    font-weight: 700;
+    text-align: left;
+  }
+  .pergs-list button:disabled { opacity: 0.4; }
+  .resp-log {
+    background: rgba(25, 20, 34, 0.5);
+    border: 1px solid var(--line);
+    border-radius: 14px;
+    padding: 10px 14px;
+    display: grid;
+    gap: 6px;
+    max-height: 160px;
+    overflow: auto;
+    font-size: 14px;
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <nav class="topbar">
+    <div class="brand-row">
+      <a class="btn sm" href="../">← Ruazinha do Salão</a>
+      <span class="badge-teste">Festa · Jogos em Dupla</span>
+    </div>
+    <div class="top-tools">
+      <span class="xp-pill">✦ <span data-xp-val>0</span> XP</span>
+      <button type="button" class="btn sm" data-mute-btn aria-pressed="true">🔊 Som: ON</button>
+    </div>
+  </nav>
+
+  <div data-acess-bar></div>
+
+  <!-- Seletor dos 3 Jogos de Festa -->
+  <section class="card b-lav">
+    <div>
+      <p class="eyebrow">✦ ふたりで · sem fila, abre na hora</p>
+      <h1>👥 Festa no Salão · Jogos de Mesa</h1>
+      <p class="sub">Jogue frente a frente no mesmo aparelho, em aula por chamada de vídeo ou sozinho(a) contra o relógio!</p>
+    </div>
+
+    <div class="tabs-jogos" id="tabsJogos">
+      <button type="button" class="tab-jogo on" data-tab="duelo">
+        <span class="ic">⚡</span>
+        <b>Duelo Relâmpago (2P)</b>
+        <small>Tela dividida: quem acerta a palavra em japonês primeiro marca ponto!</small>
+      </button>
+      <button type="button" class="tab-jogo" data-tab="detetive">
+        <span class="ic">🕵️</span>
+        <b>Quem pegou o bolo?</b>
+        <small>Leia e ouça pistas em japonês, elimine suspeitos e ache o ladrão.</small>
+      </button>
+      <button type="button" class="tab-jogo" data-tab="quem">
+        <span class="ic">🎯</span>
+        <b>Adivinhe Quem É</b>
+        <small>Faça perguntas em japonês para descobrir o personagem secreto.</small>
+      </button>
+    </div>
+  </section>
+
+  <!-- ============ JOGO 1: DUELO RELÂMPAGO ============ -->
+  <section class="card b-sakura" id="sec-duelo">
+    <div class="row" style="justify-content:space-between">
+      <div>
+        <p class="eyebrow">✦ 2 jogadores na mesma tela · primeiro a 7 pontos</p>
+        <h2>⚡ Duelo Relâmpago</h2>
+      </div>
+      <button type="button" class="btn sm" id="dueloReset">🔄 Nova partida</button>
+    </div>
+
+    <div class="duelo-arena">
+      <div class="placar-duelo">
+        <div class="p-lado p1">
+          <span class="sub">🌸 Jogador 1</span>
+          <b id="dPts1">0</b>
+        </div>
+        <span class="badge-teste" id="dStatus">Valendo!</span>
+        <div class="p-lado p2">
+          <span class="sub">🌊 Jogador 2</span>
+          <b id="dPts2">0</b>
+        </div>
+      </div>
+
+      <div class="centro-duelo">
+        <div class="centro-jp" id="dAlvoJp" lang="ja">—</div>
+        <div class="ro-block" id="dAlvoRo" style="color:var(--lantern);font-size:15px"></div>
+        <button type="button" class="btn sm sky" id="dOuvir">🔊 Ouvir palavra</button>
+      </div>
+
+      <div class="duelo-botoes">
+        <div class="painel-jog j1">
+          <strong style="color:#ffd6e0">🌸 Jogador 1</strong>
+          <div class="ops-duelo" id="dOps1"></div>
+        </div>
+        <div class="painel-jog j2">
+          <strong style="color:#d6ecff">🌊 Jogador 2</strong>
+          <div class="ops-duelo" id="dOps2"></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ JOGO 2: QUEM PEGOU O BOLO? ============ -->
+  <section class="card b-lantern" id="sec-detetive" hidden>
+    <div class="row" style="justify-content:space-between">
+      <div>
+        <p class="eyebrow">✦ ケーキどろぼう · mistério em japonês</p>
+        <h2>🕵️ Quem pegou o bolo?</h2>
+      </div>
+      <div class="row">
+        <button type="button" class="btn sm" id="detNovo">🎲 Novo caso</button>
+      </div>
+    </div>
+
+    <p class="sub">O bolo de morango do Salão sumiu! Leia e ouça as 3 pistas, toque nos inocentes para riscá-los e clique em <b>Acusar</b> no culpado.</p>
+
+    <div class="pistas-list" id="detPistas"></div>
+    <div class="suspeitos-grid" id="detGrid"></div>
+    <div id="detFb" class="card" style="padding:12px 14px" hidden></div>
+  </section>
+
+  <!-- ============ JOGO 3: ADIVINHE QUEM É ============ -->
+  <section class="card b-lav" id="sec-quem" hidden>
+    <div class="row" style="justify-content:space-between">
+      <div>
+        <p class="eyebrow">✦ だれでしょう？ · perguntas em japonês</p>
+        <h2>🎯 Adivinhe Quem É</h2>
+      </div>
+      <button type="button" class="btn sm" id="quemNovo">🎲 Novo personagem secreto</button>
+    </div>
+
+    <p class="sub">Um dos 6 amigos abaixo foi escolhido em segredo. Toque nas perguntas em japonês (e fale em voz alta!), risque quem não combina e clique em <b>Palpitar</b>.</p>
+
+    <div class="pergs-list" id="quemPergs"></div>
+    <div class="resp-log" id="quemLog"><span class="sub">Faça sua primeira pergunta acima…</span></div>
+    <div class="suspeitos-grid" id="quemGrid"></div>
+    <div id="quemFb" class="card" style="padding:12px 14px" hidden></div>
+  </section>
+</div>
+
+<script src="/idiomas/dados/velocidade-voz.js?v=1"></script>
+<script src="/idiomas/dados/audio-mapa.js?v=jogos1"></script>
+<script src="../sfx.js?v=6"></script>
+<script>
+(function () {
+  'use strict';
+
+  /* ---------- Troca de abas ---------- */
+  const secs = ['duelo', 'detetive', 'quem'];
+  document.getElementById('tabsJogos').addEventListener('click', e => {
+    const b = e.target.closest('[data-tab]');
+    if (!b) return;
+    const t = b.dataset.tab;
+    document.querySelectorAll('.tab-jogo').forEach(x => x.classList.toggle('on', x === b));
+    secs.forEach(id => { document.getElementById('sec-' + id).hidden = (id !== t); });
+    UniSalao.sfx.click();
+  });
+
+  /* ======================================================================
+     JOGO 1: DUELO RELÂMPAGO (2 JOGADORES)
+     ====================================================================== */
+  let PALAVRAS = [
+    ['おにぎり', 'おにぎり', 'onigiri', 'Bolinho de arroz'],
+    ['水', '<ruby>水<rt>みず</rt></ruby>', 'mizu', 'Água'],
+    ['お茶', 'お<ruby>茶<rt>ちゃ</rt></ruby>', 'ocha', 'Chá verde'],
+    ['電車', '<ruby>電車<rt>でんしゃ</rt></ruby>', 'densha', 'Trem'],
+    ['駅', '<ruby>駅<rt>えき</rt></ruby>', 'eki', 'Estação'],
+    ['出口', '<ruby>出口<rt>でぐち</rt></ruby>', 'deguchi', 'Saída'],
+    ['切符', '<ruby>切符<rt>きっぷ</rt></ruby>', 'kippu', 'Bilhete'],
+    ['友達', '<ruby>友達<rt>ともだち</rt></ruby>', 'tomodachi', 'Amigo(a)'],
+    ['美味しい', '<ruby>美味<rt>おい</rt></ruby>しい', 'oishii', 'Delicioso'],
+    ['大きい', '<ruby>大<rt>おお</rt></ruby>きい', 'ookii', 'Grande'],
+    ['小さい', '<ruby>小<rt>ちい</rt></ruby>さい', 'chiisai', 'Pequeno'],
+    ['新しい', '<ruby>新<rt>あたら</rt></ruby>しい', 'atarashii', 'Novo'],
+    ['寒い', '<ruby>寒<rt>さむ</rt></ruby>い', 'samui', 'Frio'],
+    ['暑い', '<ruby>暑<rt>あつ</rt></ruby>い', 'atsui', 'Quente'],
+    ['お土産', 'お<ruby>土産<rt>みやげ</rt></ruby>', 'omiyage', 'Lembrancinha'],
+    ['食べる', '<ruby>食<rt>た</rt></ruby>べる', 'taberu', 'Comer'],
+    ['飲む', '<ruby>飲<rt>の</rt></ruby>む', 'nomu', 'Beber'],
+    ['行く', '<ruby>行<rt>い</rt></ruby>く', 'iku', 'Ir']
+  ];
+  /* Enriquece automaticamente o Duelo 2P com o vocabulario.json real do curso */
+  fetch('/idiomas/dados/vocabulario.json')
+    .then(r => r.ok ? r.json() : null)
+    .then(d => {
+      if (d && Array.isArray(d.palavras) && d.palavras.length >= 16) {
+        PALAVRAS = d.palavras
+          .filter(p => p.kanji && p.pt && p.kanji.length <= 10)
+          .map(p => [p.kanji, UniSalao.rubyAuto(p.kanji, p.romaji), p.romaji || '', p.pt]);
+      }
+    })
+    .catch(() => {});
+
+  let dPts = [0, 0], dAlvo = null, dTrava = false, dFim = false, dInicio = performance.now(), dErros = 0;
+
+  function embaralha(a) {
+    const r = a.slice();
+    for (let i = r.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [r[i], r[j]] = [r[j], r[i]];
+    }
+    return r;
+  }
+
+  function dueloRodada() {
+    dTrava = false;
+    const pool = embaralha(PALAVRAS);
+    dAlvo = pool[0];
+    const ops = embaralha([pool[0], pool[1], pool[2], pool[3]]);
+    document.getElementById('dAlvoJp').innerHTML = dAlvo[1];
+    document.getElementById('dAlvoRo').textContent = dAlvo[2];
+    document.getElementById('dStatus').textContent = 'Valendo!';
+    ['dOps1', 'dOps2'].forEach((id, jIdx) => {
+      document.getElementById(id).innerHTML = ops.map(o =>
+        `<button type="button" data-jog="${jIdx}" data-pt="${o[3]}">${o[3]}</button>`
+      ).join('');
+    });
+    UniSalao.speak(dAlvo[0]);
+  }
+
+  function dueloClick(e) {
+    const b = e.target.closest('button[data-jog]');
+    if (!b || dTrava || dFim) return;
+    const j = +b.dataset.jog;
+    const certo = b.dataset.pt === dAlvo[3];
+    if (certo) {
+      dTrava = true;
+      b.classList.add('ok');
+      dPts[j]++;
+      document.getElementById('dPts1').textContent = String(dPts[0]);
+      document.getElementById('dPts2').textContent = String(dPts[1]);
+      UniSalao.sfx.ok();
+      if (dPts[j] >= 7) {
+        dFim = true;
+        document.getElementById('dStatus').textContent = (j === 0 ? '🌸 Jogador 1' : '🌊 Jogador 2') + ' venceu! 🎉';
+        UniSalao.sfx.fanfare();
+        UniSalao.addXP(20);
+        if (UniSalao.recordSession) {
+          UniSalao.recordSession({
+            jogo: 'dupla', nomeJogo: '👥 Duelo Relâmpago',
+            duracaoSeg: Math.max(1, Math.round((performance.now() - dInicio) / 1000)),
+            acertos: dPts[0] + dPts[1], erros: dErros, pts: 20
+          });
+        }
+        UniSalao.toast('🏆 Vitória no Duelo Relâmpago! +20 XP');
+      } else {
+        document.getElementById('dStatus').textContent = (j === 0 ? '🌸 +1 J1!' : '🌊 +1 J2!');
+        setTimeout(dueloRodada, 750);
+      }
+    } else {
+      dErros++;
+      b.classList.add('no');
+      b.disabled = true;
+      UniSalao.sfx.err();
+    }
+  }
+  document.getElementById('dOps1').addEventListener('click', dueloClick);
+  document.getElementById('dOps2').addEventListener('click', dueloClick);
+  document.getElementById('dOuvir').addEventListener('click', () => { if (dAlvo) UniSalao.speak(dAlvo[0]); });
+  document.getElementById('dueloReset').addEventListener('click', () => {
+    dPts = [0, 0]; dFim = false; dErros = 0; dInicio = performance.now();
+    document.getElementById('dPts1').textContent = '0';
+    document.getElementById('dPts2').textContent = '0';
+    dueloRodada();
+  });
+  dueloRodada();
+
+  /* ======================================================================
+     JOGO 2: QUEM PEGOU O BOLO? (DETETIVE)
+     ====================================================================== */
+  const SUSPEITOS = [
+    { id: 'hana', av: '👩‍🎨', nome: 'Hana', oculos: false, chapeu: true, bebida: 'ocha', lugar: 'cafe', tags: ['👒 Chapéu', '🍵 Chá', '☕ Café'] },
+    { id: 'ken', av: '🧑‍💻', nome: 'Kenji', oculos: true, chapeu: false, bebida: 'koohii', lugar: 'biblioteca', tags: ['👓 Óculos', '☕ Café', '📚 Biblioteca'] },
+    { id: 'mika', av: '👩‍🎤', nome: 'Mika', oculos: true, chapeu: true, bebida: 'ocha', lugar: 'karaoke', tags: ['👓 Óculos', '👒 Chapéu', '🍵 Chá'] },
+    { id: 'ren', av: '🧑‍🍳', nome: 'Ren', oculos: false, chapeu: true, bebida: 'koohii', lugar: 'cafe', tags: ['👒 Chapéu', '☕ Café', '🍰 Cozinha'] },
+    { id: 'yuki', av: '👩‍🎓', nome: 'Yuki', oculos: true, chapeu: false, bebida: 'ocha', lugar: 'biblioteca', tags: ['👓 Óculos', '🍵 Chá', '📚 Biblioteca'] },
+    { id: 'taro', av: '🕺', nome: 'Taro', oculos: false, chapeu: false, bebida: 'koohii', lugar: 'karaoke', tags: ['🚫 Sem óculos', '☕ Café', '🎤 Karaokê'] }
+  ];
+
+  let culpado = null, detElim = new Set(), detTrad = false, detFim = false;
+
+  function pistasDe(s) {
+    return [
+      s.oculos
+        ? { jp: 'めがねを かけて います。', ro: 'megane o kakete imasu.', pt: 'Está usando óculos.' }
+        : { jp: 'めがねを かけて いません。', ro: 'megane o kakete imasen.', pt: 'Não está usando óculos.' },
+      s.chapeu
+        ? { jp: 'ぼうしを かぶって います。', ro: 'boushi o kabutte imasu.', pt: 'Está usando chapéu.' }
+        : { jp: 'ぼうしを かぶって いません。', ro: 'boushi o kabutte imasen.', pt: 'Não está usando chapéu.' },
+      s.bebida === 'ocha'
+        ? { jp: 'おちゃが すきです。', ro: 'ocha ga suki desu.', pt: 'Gosta de chá verde.' }
+        : { jp: 'コーヒーが すきです。', ro: 'koohii ga suki desu.', pt: 'Gosta de café.' }
+    ];
+  }
+
+  function renderDet() {
+    const pistas = pistasDe(culpado);
+    document.getElementById('detPistas').innerHTML = pistas.map((p, i) => `
+      <div class="pista-card">
+        <div>
+          <strong lang="ja">Pista ${i + 1}: ${p.jp}</strong>
+          <div class="ro-block" style="color:var(--lantern);font-size:13px">${p.ro}</div>
+          <div class="sub trad-block" style="font-size:13px">${p.pt}</div>
+        </div>
+        <button type="button" class="btn sm sky" data-dp="${i}">🔊</button>
+      </div>
+    `).join('');
+
+    document.getElementById('detGrid').innerHTML = SUSPEITOS.map(s => `
+      <div class="susp-card${detElim.has(s.id) ? ' eliminado' : ''}">
+        <span class="av">${s.av}</span>
+        <b>${s.nome}</b>
+        <div class="susp-tags">${s.tags.map(t => `<span>${t}</span>`).join('')}</div>
+        <div class="row" style="margin-top:6px;justify-content:center">
+          <button type="button" class="btn sm" data-elim="${s.id}">${detElim.has(s.id) ? 'Voltar' : 'Riscar'}</button>
+          <button type="button" class="btn sm pri" data-acusar="${s.id}" ${detFim ? 'disabled' : ''}>Acusar</button>
+        </div>
+      </div>
+    `).join('');
+  }
+
+  function novoCaso() {
+    culpado = SUSPEITOS[Math.floor(Math.random() * SUSPEITOS.length)];
+    detElim = new Set();
+    detFim = false;
+    document.getElementById('detFb').hidden = true;
+    renderDet();
+  }
+
+  document.getElementById('detPistas').addEventListener('click', e => {
+    const b = e.target.closest('[data-dp]');
+    if (!b) return;
+    UniSalao.speak(pistasDe(culpado)[+b.dataset.dp].jp);
+  });
+
+  document.getElementById('detGrid').addEventListener('click', e => {
+    const el = e.target.closest('[data-elim]');
+    if (el) {
+      const id = el.dataset.elim;
+      detElim.has(id) ? detElim.delete(id) : detElim.add(id);
+      UniSalao.sfx.click();
+      renderDet();
+      return;
+    }
+    const ac = e.target.closest('[data-acusar]');
+    if (ac && !detFim) {
+      const fb = document.getElementById('detFb');
+      fb.hidden = false;
+      if (ac.dataset.acusar === culpado.id) {
+        detFim = true;
+        UniSalao.sfx.fanfare();
+        UniSalao.addXP(20);
+        fb.style.borderLeft = '5px solid var(--sage)';
+        fb.innerHTML = `<strong>🎉 Caso resolvido! Era ${culpado.av} ${culpado.nome}! (+20 XP)</strong><span class="sub">「ごめんなさい！ケーキが おいしそうでした…」 (Desculpa! O bolo parecia delicioso…)</span>`;
+        renderDet();
+      } else {
+        UniSalao.sfx.err();
+        fb.style.borderLeft = '5px solid var(--sakura)';
+        fb.innerHTML = `<strong>Hmm, não foi dessa vez!</strong><span class="sub">Confira as 3 pistas com atenção e risque quem não bate.</span>`;
+      }
+    }
+  });
+
+  document.getElementById('detNovo').addEventListener('click', () => { novoCaso(); UniSalao.sfx.click(); });
+  novoCaso();
+
+  /* ======================================================================
+     JOGO 3: ADIVINHE QUEM É (PERGUNTAS EM JAPONÊS)
+     ====================================================================== */
+  const PERGS = [
+    { id: 'oculos', jp: 'めがねを かけて いますか？', ro: 'megane o kakete imasu ka?', pt: 'Usa óculos?', test: s => s.oculos },
+    { id: 'chapeu', jp: 'ぼうしを かぶって いますか？', ro: 'boushi o kabutte imasu ka?', pt: 'Usa chapéu?', test: s => s.chapeu },
+    { id: 'ocha', jp: 'おちゃが すきですか？', ro: 'ocha ga suki desu ka?', pt: 'Gosta de chá verde?', test: s => s.bebida === 'ocha' },
+    { id: 'koohii', jp: 'コーヒーが すきですか？', ro: 'koohii ga suki desu ka?', pt: 'Gosta de café?', test: s => s.bebida === 'koohii' },
+    { id: 'bib', jp: 'としょかんに いますか？', ro: 'toshokan ni imasu ka?', pt: 'Está na biblioteca?', test: s => s.lugar === 'biblioteca' },
+    { id: 'kar', jp: 'カラオケに いますか？', ro: 'karaoke ni imasu ka?', pt: 'Está no karaokê?', test: s => s.lugar === 'karaoke' }
+  ];
+
+  let secreto = null, qFeitas = new Set(), qElim = new Set(), qFim = false;
+
+  function renderQuem() {
+    document.getElementById('quemPergs').innerHTML = PERGS.map(p => `
+      <button type="button" data-qp="${p.id}" ${qFeitas.has(p.id) || qFim ? 'disabled' : ''}>
+        <span lang="ja">${p.jp}</span>
+        <span class="ro-block" style="color:var(--lantern);font-size:11.5px">${p.ro}</span>
+        <small class="trad-block" style="color:var(--muted);font-weight:500">${p.pt}</small>
+      </button>
+    `).join('');
+
+    document.getElementById('quemGrid').innerHTML = SUSPEITOS.map(s => `
+      <div class="susp-card${qElim.has(s.id) ? ' eliminado' : ''}">
+        <span class="av">${s.av}</span>
+        <b>${s.nome}</b>
+        <div class="susp-tags">${s.tags.map(t => `<span>${t}</span>`).join('')}</div>
+        <div class="row" style="margin-top:6px;justify-content:center">
+          <button type="button" class="btn sm" data-qelim="${s.id}">${qElim.has(s.id) ? 'Voltar' : 'Riscar'}</button>
+          <button type="button" class="btn sm pri" data-qpalp="${s.id}" ${qFim ? 'disabled' : ''}>Palpitar</button>
+        </div>
+      </div>
+    `).join('');
+  }
+
+  function novoQuem() {
+    secreto = SUSPEITOS[Math.floor(Math.random() * SUSPEITOS.length)];
+    qFeitas = new Set();
+    qElim = new Set();
+    qFim = false;
+    document.getElementById('quemLog').innerHTML = '<span class="sub">Faça sua primeira pergunta acima…</span>';
+    document.getElementById('quemFb').hidden = true;
+    renderQuem();
+  }
+
+  document.getElementById('quemPergs').addEventListener('click', e => {
+    const b = e.target.closest('[data-qp]');
+    if (!b || qFim) return;
+    const p = PERGS.find(x => x.id === b.dataset.qp);
+    if (!p) return;
+    qFeitas.add(p.id);
+    UniSalao.speak(p.jp);
+    const sim = p.test(secreto);
+    const log = document.getElementById('quemLog');
+    if (qFeitas.size === 1) log.innerHTML = '';
+    const line = document.createElement('div');
+    line.innerHTML = `<b lang="ja">${p.jp}</b> → <strong style="color:${sim ? 'var(--sage)' : 'var(--sakura)'}">${sim ? 'はい！(Sim!)' : 'いいえ。(Não.)'}</strong>`;
+    log.prepend(line);
+    sim ? UniSalao.sfx.ok() : UniSalao.sfx.click();
+    renderQuem();
+  });
+
+  document.getElementById('quemGrid').addEventListener('click', e => {
+    const el = e.target.closest('[data-qelim]');
+    if (el) {
+      const id = el.dataset.qelim;
+      qElim.has(id) ? qElim.delete(id) : qElim.add(id);
+      UniSalao.sfx.click();
+      renderQuem();
+      return;
+    }
+    const pa = e.target.closest('[data-qpalp]');
+    if (pa && !qFim) {
+      const fb = document.getElementById('quemFb');
+      fb.hidden = false;
+      if (pa.dataset.qpalp === secreto.id) {
+        qFim = true;
+        UniSalao.sfx.fanfare();
+        UniSalao.addXP(20);
+        fb.style.borderLeft = '5px solid var(--sage)';
+        fb.innerHTML = `<strong>🎯 Acertou! Era ${secreto.av} ${secreto.nome}! (+20 XP)</strong><span class="sub">Você descobriu com ${qFeitas.size} pergunta(s).</span>`;
+        renderQuem();
+      } else {
+        UniSalao.sfx.err();
+        fb.style.borderLeft = '5px solid var(--sakura)';
+        fb.innerHTML = `<strong>Ainda não é essa pessoa!</strong><span class="sub">Faça mais uma pergunta em japonês para eliminar opções.</span>`;
+      }
+    }
+  });
+
+  document.getElementById('quemNovo').addEventListener('click', () => { novoQuem(); UniSalao.sfx.click(); });
+  novoQuem();
+})();
+</script>
+</body>
+</html>

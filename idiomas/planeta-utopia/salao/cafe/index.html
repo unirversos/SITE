@@ -1,0 +1,596 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>Café Yokocho · Kissaten · Salão Unirversos</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@600;700;800&family=Zen+Maru+Gothic:wght@400;500;700&display=swap">
+<link rel="stylesheet" href="../salao.css?v=6">
+<style>
+  /* Cena Interativa do Kissaten */
+  .cafe-stage-shell {
+    position: relative;
+    border-radius: 26px;
+    overflow: hidden;
+    border: 2px solid rgba(236, 192, 114, 0.42);
+    box-shadow: 0 20px 46px rgba(15, 10, 12, 0.48);
+    background: #2b2422;
+  }
+  .cafe-stage {
+    position: relative;
+    width: 100%;
+    aspect-ratio: 16 / 9;
+    min-height: 330px;
+    overflow: hidden;
+    container-type: inline-size;
+  }
+  .cafe-img {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+    pointer-events: none;
+  }
+
+  /* Hotspots no Café */
+  .c-spot {
+    position: absolute;
+    transform: translate(-50%, -50%);
+    z-index: 8;
+    border: 2px solid #59433b;
+    background: rgba(251, 243, 230, 0.94);
+    color: #42322e;
+    border-radius: 999px;
+    padding: 4px 11px;
+    font-family: var(--f-display);
+    font-weight: 800;
+    font-size: clamp(11px, 1.45cqw, 14px);
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    box-shadow: 0 6px 14px rgba(24, 14, 12, 0.32);
+    transition: transform 0.16s ease, border-color 0.16s ease;
+    white-space: nowrap;
+  }
+  .c-spot:hover {
+    transform: translate(-50%, -56%) scale(1.06);
+    border-color: var(--sakura);
+    background: #fffaf0;
+  }
+
+  /* Avatar sentado na cadeira */
+  .sentado-av {
+    position: absolute;
+    transform: translate(-50%, -84%);
+    z-index: 10;
+    width: clamp(54px, 7.6cqw, 86px);
+    aspect-ratio: 1;
+    border-radius: 50%;
+    overflow: hidden;
+    background: #fbf3e6;
+    border: 3px solid var(--sakura);
+    box-shadow: 0 10px 20px rgba(20, 12, 10, 0.42);
+    display: grid;
+    place-items: center;
+    font-size: 32px;
+    transition: left 0.55s ease, top 0.55s ease;
+    pointer-events: none;
+  }
+
+  /* Itens servidos em cima da mesa */
+  .mesa-itens {
+    position: absolute;
+    left: 71%;
+    top: 75%;
+    transform: translate(-50%, -50%);
+    z-index: 11;
+    display: flex;
+    gap: 6px;
+    align-items: center;
+    justify-content: center;
+    flex-wrap: wrap;
+    max-width: 24%;
+  }
+  .mesa-item-btn {
+    border: 2px solid #59433b;
+    background: rgba(251, 243, 230, 0.94);
+    border-radius: 50%;
+    width: clamp(32px, 4.4cqw, 46px);
+    height: clamp(32px, 4.4cqw, 46px);
+    font-size: clamp(16px, 2.4cqw, 24px);
+    display: grid;
+    place-items: center;
+    box-shadow: 0 5px 12px rgba(20, 12, 10, 0.34);
+    transition: transform 0.15s ease;
+  }
+  .mesa-item-btn:hover { transform: scale(1.16) rotate(-5deg); border-color: var(--sakura); }
+
+  /* Balão de fala do Barista / Interação */
+  .master-bubble {
+    position: absolute;
+    left: 24%;
+    top: 22%;
+    transform: translate(-35%, -50%);
+    z-index: 18;
+    background: var(--washi);
+    color: var(--washi-ink);
+    border: 2px solid #59433b;
+    border-radius: 18px;
+    padding: 9px 14px;
+    max-width: min(320px, 60cqw);
+    box-shadow: 0 12px 26px rgba(20, 12, 10, 0.38);
+    font-size: 13.5px;
+  }
+  .master-bubble b { font-size: 15px; color: #9e4b3e; display: block; }
+  .master-bubble rt { color: #9e4b3e; }
+
+  /* Painel de Interação abaixo da cena (Abas: Conversar · Cardápio · Mural) */
+  .cafe-tabs { display: flex; flex-wrap: wrap; gap: 8px; }
+  .cafe-tabs button.on { background: var(--sakura); border-color: var(--sakura); color: #fff; }
+
+  .menu-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(210px, 1fr));
+    gap: 12px;
+  }
+  .menu-card {
+    background: var(--washi);
+    color: var(--washi-ink);
+    border: 2px solid #d6c2ae;
+    border-left: 5px solid var(--sakura);
+    border-radius: 18px;
+    padding: 13px 14px;
+    display: grid;
+    gap: 6px;
+  }
+  .menu-card rt { color: #9e4b3e; }
+  .menu-top { display: flex; justify-content: space-between; align-items: center; gap: 8px; }
+  .menu-ic { font-size: 28px; line-height: 1; }
+  .menu-preco {
+    font-family: var(--f-display);
+    font-weight: 800;
+    font-size: 14px;
+    background: #f4e2c7;
+    color: #7c4d1a;
+    padding: 2px 10px;
+    border-radius: 999px;
+  }
+
+  .dialogo-ops { display: grid; gap: 8px; }
+  .dialogo-btn {
+    text-align: left;
+    background: rgba(34, 26, 28, 0.55);
+    border: 1.5px solid var(--line-strong);
+    border-radius: 16px;
+    padding: 11px 14px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 10px;
+    transition: 0.14s;
+  }
+  .dialogo-btn:hover { border-color: var(--lantern); background: var(--surface-2); }
+
+  .mural-lista { display: grid; gap: 8px; max-height: 220px; overflow: auto; }
+  .recado {
+    background: rgba(34, 26, 28, 0.5);
+    border: 1px solid var(--line);
+    border-radius: 14px;
+    padding: 9px 12px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 10px;
+  }
+  .mural-form { display: flex; gap: 8px; }
+  .mural-form input {
+    flex: 1;
+    min-height: 40px;
+    border-radius: 12px;
+    border: 1px solid var(--line-strong);
+    background: rgba(24, 18, 20, 0.55);
+    color: var(--ink);
+    padding: 6px 12px;
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <nav class="topbar">
+    <div class="brand-row">
+      <a class="btn sm" href="../">← Voltar ao Beco</a>
+      <span class="badge-teste">🍵 Café Yokocho · Kissaten</span>
+    </div>
+    <div class="top-tools">
+      <button type="button" class="btn sm lantern" id="btnStreak">🔥 Ofensiva diária</button>
+      <span class="xp-pill" title="Seus pontos para pedir no Café e comprar na Lojinha">✦ <span data-xp-val>0</span> XP</span>
+      <button type="button" class="btn sm" data-mute-btn aria-pressed="true">🔊 Som: ON</button>
+    </div>
+  </nav>
+
+  <div data-acess-bar></div>
+
+  <!-- CENA INTERATIVA DO CAFÉ -->
+  <section class="cafe-stage-shell" aria-label="Interior do Café Yokocho">
+    <div class="cafe-stage" id="cafeStage">
+      <img class="cafe-img" src="./cafe-yokocho.jpg" alt="Interior aconchegante do Café Yokocho com barista, vitrine de doces e mesa de madeira">
+
+      <!-- Balão do Barista (Master) -->
+      <div class="master-bubble" id="masterBubble">
+        <b lang="ja" id="mbJp">いらっしゃいませ！お<ruby>席<rt>せき</rt></ruby>へ どうぞ。</b>
+        <span class="ro-block" id="mbRo" style="color:#9e4b3e;font-size:12px">irasshaimase! oseki e douzo.</span>
+        <span class="trad-block" id="mbPt" style="color:#6b5852;font-size:12.5px">Bem-vindo(a)! Pode se sentar à mesa.</span>
+      </div>
+
+      <!-- Hotspots clicáveis -->
+      <button type="button" class="c-spot" id="spMaster" style="left:24%;top:50%">👨‍🍳 Falar com o Master</button>
+      <button type="button" class="c-spot" id="spMenu" style="left:42%;top:43%">🍰 Ver Cardápio</button>
+      <button type="button" class="c-spot" id="spCad1" style="left:59%;top:64%">🪑 Sentar aqui</button>
+      <button type="button" class="c-spot" id="spCad2" style="left:89%;top:68%">🪑 Sentar aqui</button>
+      <button type="button" class="c-spot" id="spDisco" style="left:9%;top:28%" title="Tocar vinil lo-fi">🎵 Vinil</button>
+
+      <!-- Avatar sentado (aparece quando senta) -->
+      <div class="sentado-av" id="sentadoAv" hidden style="left:59%;top:70%">🧳</div>
+
+      <!-- Pedidos servidos na mesa -->
+      <div class="mesa-itens" id="mesaItens" aria-label="Pedidos na sua mesa"></div>
+    </div>
+  </section>
+
+  <!-- Painel Interativo do Café -->
+  <section class="card b-sakura">
+    <div class="row" style="justify-content:space-between">
+      <div class="cafe-tabs" id="cafeTabs">
+        <button type="button" class="btn sm on" data-ctab="menu">📋 Cardápio &amp; Pedidos</button>
+        <button type="button" class="btn sm" data-ctab="conversa">💬 Conversar com o Atendente</button>
+        <button type="button" class="btn sm" data-ctab="mural">📝 Mural do Café</button>
+      </div>
+      <span class="sub" id="statusMesa" style="font-size:13px">Toque numa cadeira para sentar!</span>
+    </div>
+
+    <!-- ABA 1: CARDÁPIO & COMPRAR -->
+    <div id="tab-menu">
+      <p class="sub" style="margin-bottom:12px">Peça cafés e doces japoneses usando seus pontos do Salão — eles são servidos direto na sua mesa! Toque no item servido para saborear.</p>
+      <div class="menu-grid" id="menuGrid"></div>
+    </div>
+
+    <!-- ABA 2: CONVERSAR COM O MASTER / GARÇOM (EXERCÍCIO FIXO ENCADEADO) -->
+    <div id="tab-conversa" hidden>
+      <div class="row" style="justify-content:space-between;margin-bottom:8px">
+        <p class="sub">Exercício fixo de cafeteria: comece escolhendo a mesa e leve a conversa com o Master até a conta!</p>
+        <button type="button" class="btn sm" id="cafeConvReset">🔄 Recomeçar conversa</button>
+      </div>
+      <div id="cafeConvLog" style="background:rgba(24,18,20,0.45);border:1px solid var(--line);border-radius:16px;padding:12px;display:grid;gap:8px;max-height:220px;overflow:auto;margin-bottom:10px" aria-live="polite"></div>
+      <div class="dialogo-ops" id="dialogoOps"></div>
+    </div>
+
+    <!-- ABA 3: MURAL SOCIAL -->
+    <div id="tab-mural" hidden>
+      <div class="mural-lista" id="muralLista"></div>
+      <form class="mural-form" id="muralForm" style="margin-top:10px">
+        <input type="text" id="muralInput" maxlength="160" placeholder="Deixe um recado em japonês no Café…">
+        <button type="submit" class="btn pri">Enviar</button>
+      </form>
+    </div>
+  </section>
+</div>
+
+<script src="/idiomas/dados/avatar.js?v=20261016b"></script>
+<script src="/idiomas/dados/velocidade-voz.js?v=1"></script>
+<script src="/idiomas/dados/audio-mapa.js?v=jogos1"></script>
+<script src="../sfx.js?v=6"></script>
+<script>
+(function () {
+  'use strict';
+  const esc = s => String(s || '').replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
+
+  /* ---------- Ofensiva Diária ---------- */
+  const btnStreak = document.getElementById('btnStreak');
+  function syncStreakBtn() {
+    const s = UniSalao.getStreak();
+    btnStreak.textContent = s.claimedToday ? `🔥 Ofensiva: ${s.count} dia(s)` : '🔥 Resgatar +25 XP';
+    btnStreak.classList.toggle('on', s.claimedToday);
+  }
+  btnStreak.addEventListener('click', () => {
+    const r = UniSalao.claimDailyStreak();
+    if (!r.ok) UniSalao.toast('Você já resgatou sua ofensiva de hoje! Volte amanhã 🔥');
+    syncStreakBtn();
+  });
+  syncStreakBtn();
+
+  /* ---------- Avatar na cadeira ---------- */
+  const sentadoAv = document.getElementById('sentadoAv');
+  function atualizaAvatar() {
+    sentadoAv.innerHTML = UniSalao.avatarHTML({ viewBox: '36 38 168 168' });
+  }
+  atualizaAvatar();
+
+  function sentar(x, y, lado) {
+    sentadoAv.style.left = x + '%';
+    sentadoAv.style.top = y + '%';
+    sentadoAv.hidden = false;
+    document.getElementById('statusMesa').textContent = '✓ Você está sentado(a) à mesa (' + lado + ').';
+    UniSalao.sfx.click();
+    falaMaster(
+      'ゆっくり どうぞ！ご<ruby>注文<rt>ちゅうもん</rt></ruby>は お<ruby>決<rt>き</rt></ruby>まりですか？',
+      'ゆっくり どうぞ！ごちゅうもんは おきまりですか？',
+      'yukkuri douzo! gochuumon wa okimari desu ka?',
+      'Fique à vontade! Já decidiu o seu pedido?'
+    );
+  }
+  document.getElementById('spCad1').addEventListener('click', () => sentar(59, 68, 'esquerda'));
+  document.getElementById('spCad2').addEventListener('click', () => sentar(89, 73, 'direita'));
+
+  /* ---------- Balão do Master ---------- */
+  function falaMaster(html, plain, ro, pt) {
+    document.getElementById('mbJp').innerHTML = html;
+    document.getElementById('mbRo').textContent = ro;
+    document.getElementById('mbPt').textContent = pt;
+    UniSalao.speak(plain);
+  }
+
+  document.getElementById('spMaster').addEventListener('click', () => {
+    mudaAba('conversa');
+    falaMaster(
+      'いらっしゃいませ！きょうの おすすめは <ruby>抹茶<rt>まっちゃ</rt></ruby>ラテです。',
+      'いらっしゃいませ！きょうの おすすめは まっちゃラテです。',
+      'irasshaimase! kyou no osusume wa matcha rate desu.',
+      'Bem-vindo(a)! A recomendação de hoje é o Matcha Latte.'
+    );
+  });
+  document.getElementById('spMenu').addEventListener('click', () => {
+    mudaAba('menu');
+    UniSalao.sfx.click();
+  });
+  document.getElementById('spDisco').addEventListener('click', () => {
+    UniSalao.sfx.bell();
+    falaMaster(
+      'いい <ruby>音楽<rt>おんがく</rt></ruby>ですね！',
+      'いい おんがくですね！',
+      'ii ongaku desu ne!',
+      'Que música gostosa, né!'
+    );
+  });
+
+  /* ---------- Abas ---------- */
+  function mudaAba(id) {
+    document.querySelectorAll('#cafeTabs button').forEach(b => b.classList.toggle('on', b.dataset.ctab === id));
+    ['menu', 'conversa', 'mural'].forEach(t => { document.getElementById('tab-' + t).hidden = (t !== id); });
+  }
+  document.getElementById('cafeTabs').addEventListener('click', e => {
+    const b = e.target.closest('[data-ctab]');
+    if (!b) return;
+    mudaAba(b.dataset.ctab);
+    UniSalao.sfx.click();
+  });
+
+  /* ---------- Cardápio & Compras com XP ---------- */
+  const MENU = [
+    { id: 'matcha', ic: '🍵', html: '<ruby>抹茶<rt>まっちゃ</rt></ruby>ラテ', plain: 'まっちゃラテを ください', ro: 'matcha rate', pt: 'Matcha Latte cremoso', preco: 10 },
+    { id: 'coffee', ic: '☕', html: 'ブレンドコーヒー', plain: 'ブレンドコーヒーを ください', ro: 'burendo koohii', pt: 'Café coado no sifão', preco: 10 },
+    { id: 'soda', ic: '🍈', html: 'メロンソーダ', plain: 'メロンソーダを ください', ro: 'meron sooda', pt: 'Melon Soda retrô com sorvete', preco: 12 },
+    { id: 'pudim', ic: '🍮', html: '<ruby>自家製<rt>じかせい</rt></ruby>プリン', plain: 'じかせいプリンを ください', ro: 'jikasei purin', pt: 'Pudim artesanal de caramelo', preco: 15 },
+    { id: 'bolo', ic: '🍰', html: '<ruby>苺<rt>いちご</rt></ruby>ショートケーキ', plain: 'いちごショートケーキを ください', ro: 'ichigo shootokeeki', pt: 'Bolo de morango japonês', preco: 18 },
+    { id: 'panq', ic: '🥞', html: 'ホットケーキ', plain: 'ホットケーキを ください', ro: 'hottokeeki', pt: 'Panqueca fofinha com mel', preco: 15 }
+  ];
+
+  let naMesa = [];
+  try { naMesa = JSON.parse(localStorage.getItem('uniCafeMesa') || '[]'); } catch (e) {}
+
+  function renderMesa() {
+    const el = document.getElementById('mesaItens');
+    el.innerHTML = naMesa.map((id, i) => {
+      const m = MENU.find(x => x.id === id);
+      if (!m) return '';
+      return `<button type="button" class="mesa-item-btn" data-comer="${i}" title="Toque para saborear">${m.ic}</button>`;
+    }).join('');
+  }
+
+  document.getElementById('mesaItens').addEventListener('click', e => {
+    const b = e.target.closest('[data-comer]');
+    if (!b) return;
+    const i = +b.dataset.comer;
+    const item = MENU.find(x => x.id === naMesa[i]);
+    naMesa.splice(i, 1);
+    try { localStorage.setItem('uniCafeMesa', JSON.stringify(naMesa)); } catch (err) {}
+    renderMesa();
+    UniSalao.sfx.ok();
+    UniSalao.addXP(3);
+    UniSalao.speak('おいしい！ごちそうさまでした！');
+    UniSalao.toast(`${item ? item.ic : '☕'} おいしい！(Delicioso!) +3 XP`);
+  });
+
+  document.getElementById('menuGrid').innerHTML = MENU.map(m => `
+    <div class="menu-card">
+      <div class="menu-top">
+        <span class="menu-ic">${m.ic}</span>
+        <span class="menu-preco">✦ ${m.preco} XP</span>
+      </div>
+      <strong lang="ja" style="font-size:17px">${m.html}</strong>
+      <span class="ro-block" style="font-size:12.5px;color:#9e4b3e">${m.ro}</span>
+      <span class="trad-block" style="font-size:13px;color:#6b5852">${m.pt}</span>
+      <div class="row" style="margin-top:4px;justify-content:space-between">
+        <button type="button" class="btn sm" data-mouv="${m.id}" style="background:#fff;color:#42322e;border-color:#d6c2ae">🔊</button>
+        <button type="button" class="btn sm pri" data-pedir="${m.id}">Pedir →</button>
+      </div>
+    </div>
+  `).join('');
+
+  document.getElementById('menuGrid').addEventListener('click', e => {
+    const o = e.target.closest('[data-mouv]');
+    if (o) {
+      const m = MENU.find(x => x.id === o.dataset.mouv);
+      if (m) UniSalao.speak(m.plain);
+      return;
+    }
+    const p = e.target.closest('[data-pedir]');
+    if (!p) return;
+    const m = MENU.find(x => x.id === p.dataset.pedir);
+    if (!m) return;
+    if (!UniSalao.spendXP(m.preco)) {
+      UniSalao.sfx.err();
+      UniSalao.toast(`Faltam pontos! Jogue no Salão ou resgate a 🔥 Ofensiva (+25 XP).`);
+      return;
+    }
+    naMesa.push(m.id);
+    if (naMesa.length > 5) naMesa.shift();
+    try { localStorage.setItem('uniCafeMesa', JSON.stringify(naMesa)); } catch (err) {}
+    if (sentadoAv.hidden) sentar(59, 68, 'esquerda');
+    renderMesa();
+    UniSalao.sfx.ok();
+    falaMaster(
+      `かしこまりました！${m.html}、お<ruby>待<rt>ま</rt></ruby>たせしました！`,
+      `かしこまりました！おまたせしました！`,
+      'kashikomarimashita! omatase shimashita!',
+      'Com certeza! Aqui está o seu pedido na mesa!'
+    );
+    UniSalao.toast(`${m.ic} Servido na sua mesa! Toque no item para saborear.`);
+  });
+  renderMesa();
+
+  /* ---------- Exercício Fixo Encadeado: Conversa Completa no Café ---------- */
+  const CAFE_ITENS_CONV = [
+    { html: '<ruby>抹茶<rt>まっちゃ</rt></ruby>ラテ', plain: 'まっちゃラテ', ro: 'matcha rate', pt: 'Matcha Latte' },
+    { html: 'ブレンドコーヒー', plain: 'ブレンドコーヒー', ro: 'burendo koohii', pt: 'café coado' },
+    { html: '<ruby>自家製<rt>じかせい</rt></ruby>プリン', plain: 'じかせいプリン', ro: 'jikasei purin', pt: 'pudim artesanal' }
+  ];
+  let cEtapa = 0, cItem = CAFE_ITENS_CONV[0], cInicio = performance.now(), cTurnos = 0;
+
+  function addCafeMsg(quem, html, ro, pt) {
+    const log = document.getElementById('cafeConvLog');
+    const d = document.createElement('div');
+    d.style.cssText = quem === 'master'
+      ? 'justify-self:start;max-width:88%;background:var(--washi);color:var(--washi-ink);border:1.5px solid #d6c2ae;border-radius:14px;padding:8px 12px'
+      : 'justify-self:end;max-width:88%;background:var(--sakura-soft);color:var(--ink);border:1.5px solid rgba(217,107,92,0.5);border-radius:14px;padding:8px 12px';
+    d.innerHTML = `<strong lang="ja" style="font-size:15px">${html}</strong><div class="ro-block" style="font-size:11.5px;color:${quem === 'master' ? '#9e4b3e' : 'var(--lantern)'}">${ro}</div><div class="trad-block" style="font-size:12px;color:${quem === 'master' ? '#6b5852' : 'var(--muted)'}">${pt}</div>`;
+    log.appendChild(d);
+    log.scrollTop = log.scrollHeight;
+  }
+
+  function cafeOps(etapa, it) {
+    if (etapa === 0) return [
+      { html: '<ruby>一人<rt>ひとり</rt></ruby>です。<ruby>窓<rt>まど</rt></ruby>の <ruby>席<rt>せき</rt></ruby>は いいですか？', plain: 'ひとりです。まどの せきは いいですか？', ro: 'hitori desu. mado no seki wa ii desu ka?', pt: 'É para uma pessoa. Posso sentar perto da janela?', rHtml: 'はい、どうぞ！お<ruby>飲<rt>の</rt></ruby>み<ruby>物<rt>もの</rt></ruby>は <ruby>何<rt>なに</rt></ruby>に なさいますか？', rPlain: 'はい、どうぞ！おのみものは なにに なさいますか？', rRo: 'hai, douzo! onomimono wa nani ni nasaimasu ka?', rPt: 'Claro, fique à vontade! O que gostaria de beber?', prox: 1 },
+      { html: 'おすすめは <ruby>何<rt>なん</rt></ruby>ですか？', plain: 'おすすめは なんですか？', ro: 'osusume wa nan desu ka?', pt: 'Qual é a recomendação da casa?', rHtml: `きょうは ${it.html}が おすすめですよ！`, rPlain: `きょうは ${it.plain}が おすすめですよ！`, rRo: `kyou wa ${it.ro} ga osusume desu yo!`, rPt: `Hoje recomendamos ${it.pt}!`, prox: 1 }
+    ];
+    if (etapa === 1) return [
+      { html: `では、${it.html}を <ruby>一<rt>ひと</rt></ruby>つ ください。`, plain: `では、${it.plain}を ひとつ ください。`, ro: `dewa, ${it.ro} o hitotsu kudasai.`, pt: `Então, um(a) ${it.pt}, por favor.`, rHtml: 'ホットと アイス、どちらが よろしいですか？', rPlain: 'ホットと アイス、どちらが よろしいですか？', rRo: 'hotto to aisu, dochira ga yoroshii desu ka?', rPt: 'Prefere quente ou gelado?', prox: 2 },
+      { html: 'メニューを <ruby>見<rt>み</rt></ruby>ても いいですか？', plain: 'メニューを みても いいですか？', ro: 'menyuu o mitemo ii desu ka?', pt: 'Posso ver o cardápio?', rHtml: `はい、どうぞ！${it.html}も <ruby>人気<rt>にんき</rt></ruby>です。`, rPlain: `はい、どうぞ！${it.plain}も にんきです。`, rRo: `hai, douzo! ${it.ro} mo ninki desu.`, rPt: `Claro! ${it.pt} também é muito popular.`, prox: 2 }
+    ];
+    if (etapa === 2) return [
+      { html: 'ホットで お<ruby>願<rt>ねが</rt></ruby>いします。', plain: 'ホットで おねがいします。', ro: 'hotto de onegaishimasu.', pt: 'Quente, por favor.', rHtml: 'かしこまりました！お<ruby>待<rt>ま</rt></ruby>たせしました、どうぞ！', rPlain: 'かしこまりました！おまたせしました、どうぞ！', rRo: 'kashikomarimashita! omatase shimashita, douzo!', rPt: 'Com certeza! Aqui está, aproveite!', prox: 3 },
+      { html: 'アイスで お<ruby>願<rt>ねが</rt></ruby>いします。', plain: 'アイスで おねがいします。', ro: 'aisu de onegaishimasu.', pt: 'Gelado, por favor.', rHtml: 'はい、<ruby>冷<rt>つめ</rt></ruby>たいのを お<ruby>持<rt>も</rt></ruby>ちしますね！', rPlain: 'はい、つめたいのを おもちしますね！', rRo: 'hai, tsumetai no o omochi shimasu ne!', rPt: 'Sim, já trago bem geladinho!', prox: 3 }
+    ];
+    if (etapa === 3) return [
+      { html: 'とても <ruby>美味<rt>おい</rt></ruby>しかったです！お<ruby>会計<rt>かいけい</rt></ruby>を お<ruby>願<rt>ねが</rt></ruby>いします。', plain: 'とても おいしかったです！おかいけいを おねがいします。', ro: 'totemo oishikatta desu! okaikei o onegaishimasu.', pt: 'Estava delicioso! A conta, por favor.', rHtml: 'ありがとうございます！また お<ruby>越<rt>こ</rt></ruby>しくださいね！', rPlain: 'ありがとうございます！また おこしくださいね！', rRo: 'arigatou gozaimasu! mata okoshi kudasai ne!', rPt: 'Muito obrigado! Volte sempre!', prox: 4 }
+    ];
+    return [];
+  }
+
+  function renderCafeOps() {
+    const box = document.getElementById('dialogoOps');
+    if (cEtapa >= 4) {
+      const dur = Math.max(1, Math.round((performance.now() - cInicio) / 1000));
+      UniSalao.addXP(15);
+      UniSalao.sfx.fanfare();
+      if (UniSalao.recordSession) {
+        UniSalao.recordSession({ jogo: 'cafe', nomeJogo: '🍵 Café · Conversa', duracaoSeg: dur, acertos: cTurnos, erros: 0, precisao: 100, pts: 15 });
+      }
+      box.innerHTML = `<div class="row"><button type="button" class="btn pri" id="cafeConvDeNovo">🔄 Nova conversa (+15 XP!)</button><a class="btn sky" href="/aluno/">📊 Ver meu gráfico</a></div>`;
+      document.getElementById('cafeConvDeNovo').onclick = iniciaCafeConv;
+      return;
+    }
+    const ops = cafeOps(cEtapa, cItem);
+    box.innerHTML = ops.map((d, i) => `
+      <button type="button" class="dialogo-btn" data-di="${i}">
+        <div>
+          <strong lang="ja" style="font-size:16px">${d.html}</strong>
+          <div class="ro-block" style="font-size:12.5px;color:var(--lantern)">${d.ro}</div>
+          <div class="sub trad-block" style="font-size:13px">${d.pt}</div>
+        </div>
+        <span class="btn sm sky">Falar →</span>
+      </button>
+    `).join('');
+  }
+
+  function iniciaCafeConv() {
+    cEtapa = 0; cTurnos = 0; cInicio = performance.now();
+    cItem = CAFE_ITENS_CONV[Math.floor(Math.random() * CAFE_ITENS_CONV.length)];
+    document.getElementById('cafeConvLog').innerHTML = '';
+    addCafeMsg('master', 'いらっしゃいませ！<ruby>何名様<rt>なんめいさま</rt></ruby>ですか？', 'irasshaimase! nanmeisama desu ka?', 'Bem-vindo(a)! Para quantas pessoas?');
+    renderCafeOps();
+  }
+
+  document.getElementById('dialogoOps').addEventListener('click', e => {
+    const b = e.target.closest('[data-di]');
+    if (!b) return;
+    const ops = cafeOps(cEtapa, cItem);
+    const d = ops[+b.dataset.di];
+    if (!d) return;
+    cTurnos++;
+    addCafeMsg('eu', d.html, d.ro, d.pt);
+    UniSalao.sfx.click();
+    UniSalao.speak(d.plain);
+    document.getElementById('dialogoOps').innerHTML = '<span class="sub">Master respondendo…</span>';
+    setTimeout(() => {
+      addCafeMsg('master', d.rHtml, d.rRo, d.rPt);
+      falaMaster(d.rHtml, d.rPlain, d.rRo, d.rPt);
+      cEtapa = d.prox;
+      renderCafeOps();
+    }, 1050);
+  });
+  document.getElementById('cafeConvReset').addEventListener('click', iniciaCafeConv);
+  iniciaCafeConv();
+
+  /* ---------- Mural Social ---------- */
+  const MURAL_KEY = 'uniSalaoMuralTeste';
+  const av = window.UtopiaAvatar && window.UtopiaAvatar.load && window.UtopiaAvatar.load();
+  const nome = (av && av.profile && (av.profile.kata || av.profile.name)) || 'Viajante';
+  const SEED = [
+    { quem: 'Aline Sensei', jp: 'ようこそ！コーヒーを のみながら やすんでね。', pt: 'Bem-vindo(a)! Descanse tomando um café.' },
+    { quem: 'Hana', jp: 'プリンが おいしいです！', pt: 'O pudim está delicioso!' }
+  ];
+  let mural = [];
+  try {
+    const s = JSON.parse(localStorage.getItem(MURAL_KEY) || 'null');
+    mural = Array.isArray(s) && s.length ? s : SEED.slice();
+  } catch (e) { mural = SEED.slice(); }
+
+  function renderMural() {
+    document.getElementById('muralLista').innerHTML = mural.map((m, i) => `
+      <div class="recado">
+        <div>
+          <div style="font-size:11.5px;color:var(--soft);font-weight:700">${esc(m.quem)}</div>
+          <div style="font-weight:700" lang="ja">${esc(m.jp)}</div>
+          ${m.pt ? `<div class="sub trad-block" style="font-size:12.5px">${esc(m.pt)}</div>` : ''}
+        </div>
+        <button type="button" class="btn sm" data-mv="${i}">🔊</button>
+      </div>
+    `).join('');
+  }
+  renderMural();
+  document.getElementById('muralLista').addEventListener('click', e => {
+    const b = e.target.closest('[data-mv]');
+    if (b) UniSalao.speak(mural[+b.dataset.mv].jp);
+  });
+  document.getElementById('muralForm').addEventListener('submit', e => {
+    e.preventDefault();
+    const inp = document.getElementById('muralInput');
+    const txt = inp.value.trim();
+    if (!txt) return;
+    mural.unshift({ quem: nome, jp: txt, pt: '' });
+    mural = mural.slice(0, 20);
+    try { localStorage.setItem(MURAL_KEY, JSON.stringify(mural)); } catch (err) {}
+    inp.value = '';
+    renderMural();
+    UniSalao.sfx.ok();
+    UniSalao.addXP(5);
+    UniSalao.toast('📝 Recado deixado no Café! +5 XP');
+  });
+})();
+</script>
+</body>
+</html>
