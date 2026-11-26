@@ -1,0 +1,449 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="robots" content="noindex">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>Konbini Express · Salão Unirversos (Teste)</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@600;700;800&family=Zen+Maru+Gothic:wght@400;500;700&display=swap">
+<link rel="stylesheet" href="../salao.css?v=1">
+<style>
+  .konbini-faixa {
+    height: 10px;
+    border-radius: 999px;
+    background: linear-gradient(90deg, var(--lantern) 0 33%, var(--sage) 33% 66%, var(--sakura) 66% 100%);
+  }
+
+  .cliente-card {
+    background: rgba(24, 19, 34, 0.52);
+    border: 1px solid var(--line-strong);
+    border-radius: 20px;
+    padding: 16px 18px;
+    display: grid;
+    grid-template-columns: auto 1fr;
+    gap: 14px;
+    align-items: center;
+  }
+  .cliente-av {
+    width: 66px;
+    height: 66px;
+    border-radius: 50%;
+    background: var(--lantern-soft);
+    border: 2px solid var(--lantern);
+    display: grid;
+    place-items: center;
+    font-size: 36px;
+  }
+  .fala-balao {
+    display: grid;
+    gap: 6px;
+  }
+  .fala-jp { font-size: clamp(18px, 3.2vw, 22px); font-weight: 800; color: var(--ink); }
+  .fala-ro { font-size: 13.5px; color: var(--lantern); }
+  .fala-pt { font-size: 13.5px; color: var(--muted); }
+
+  .prateleira {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(128px, 1fr));
+    gap: 10px;
+  }
+  .item-btn {
+    border: 1.5px solid var(--line-strong);
+    background: var(--surface);
+    color: var(--ink);
+    border-radius: 18px;
+    padding: 12px 10px;
+    display: grid;
+    justify-items: center;
+    gap: 3px;
+    text-align: center;
+    transition: transform 0.14s ease, border-color 0.14s ease, background 0.14s ease;
+  }
+  .item-btn:hover { transform: translateY(-2px); border-color: var(--lantern); }
+  .item-btn.sel {
+    background: var(--lantern-soft);
+    border-color: var(--lantern);
+    box-shadow: 0 0 0 2px rgba(242, 192, 99, 0.25);
+  }
+  .item-btn .ic { font-size: 30px; line-height: 1.1; }
+  .item-btn b { font-size: 14.5px; }
+  .item-btn small { font-size: 11.5px; color: var(--muted); }
+
+  .bandeja {
+    background: rgba(242, 192, 99, 0.08);
+    border: 1.5px dashed rgba(242, 192, 99, 0.45);
+    border-radius: 18px;
+    padding: 12px 14px;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+  }
+  .bandeja-itens { display: flex; flex-wrap: wrap; gap: 6px; align-items: center; }
+  .b-chip {
+    background: var(--surface-2);
+    border: 1px solid var(--line-strong);
+    border-radius: 999px;
+    padding: 4px 11px;
+    font-size: 13.5px;
+    font-weight: 700;
+  }
+
+  .fb-box {
+    border-left: 5px solid var(--sage);
+    background: var(--sage-soft);
+    border-radius: 14px;
+    padding: 12px 14px;
+    display: grid;
+    gap: 8px;
+  }
+  .fb-box.err {
+    border-left-color: var(--sakura);
+    background: var(--sakura-soft);
+  }
+
+  .mic-box {
+    background: rgba(111, 183, 246, 0.12);
+    border: 1px solid rgba(111, 183, 246, 0.35);
+    border-radius: 16px;
+    padding: 12px 14px;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <nav class="topbar">
+    <div class="brand-row">
+      <a class="btn sm" href="../">← Ruazinha do Salão</a>
+      <span class="badge-teste">Escuta &amp; Fala · Konbini</span>
+    </div>
+    <div class="top-tools">
+      <span class="xp-pill">✦ <span data-xp-val>0</span> XP</span>
+      <button type="button" class="btn sm" data-romaji-btn aria-pressed="false">Romaji: OFF</button>
+      <button type="button" class="btn sm" data-mute-btn aria-pressed="true">🔊 Som: ON</button>
+    </div>
+  </nav>
+
+  <section class="card b-lantern" id="jogoSec">
+    <div class="konbini-faixa" aria-hidden="true"></div>
+    <div class="row" style="justify-content:space-between">
+      <div>
+        <p class="eyebrow">✦ コンビニ · turno da noite em tóquio</p>
+        <h1>🏪 Konbini Express</h1>
+      </div>
+      <span class="badge-teste" id="progBadge">Cliente 1 / 6</span>
+    </div>
+
+    <!-- Cliente atual -->
+    <div class="cliente-card">
+      <div class="cliente-av" id="cliAv">🧑‍💼</div>
+      <div class="fala-balao">
+        <div class="row" style="justify-content:space-between">
+          <strong id="cliNome">Cliente</strong>
+          <div class="row">
+            <button type="button" class="btn sm sky" id="btnOuvir">🔊 Ouvir pedido</button>
+            <button type="button" class="btn sm" id="btnLegenda">👁️ Mostrar texto</button>
+          </div>
+        </div>
+        <div id="legendaBox" hidden>
+          <div class="fala-jp" lang="ja" id="cliJp"></div>
+          <div class="fala-ro ro-block" id="cliRo"></div>
+          <div class="fala-pt" id="cliPt"></div>
+        </div>
+        <p class="sub" id="dicaEscuta" style="font-size:13px">Ouça o pedido e toque nos itens corretos abaixo para montar a bandeja.</p>
+      </div>
+    </div>
+
+    <!-- Prateleira do Konbini -->
+    <div>
+      <div class="sub" style="font-size:12.5px;margin-bottom:8px">Toque nos itens pedidos pelo cliente:</div>
+      <div class="prateleira" id="prateleira"></div>
+    </div>
+
+    <!-- Bandeja -->
+    <div class="bandeja">
+      <div class="bandeja-itens" id="bandejaItens">
+        <span class="sub" style="font-size:13px">Bandeja vazia…</span>
+      </div>
+      <div class="row">
+        <button type="button" class="btn sm" id="btnLimpar">Limpar</button>
+        <button type="button" class="btn pri" id="btnEntregar">✓ Entregar pedido</button>
+      </div>
+    </div>
+
+    <!-- Feedback + Bônus de Microfone -->
+    <div class="fb-box" id="fbBox" hidden></div>
+    <div class="mic-box" id="micBox" hidden>
+      <div>
+        <strong style="color:#d6ecff">🎙️ Bônus de fala (+10 XP):</strong>
+        <div class="sub" style="font-size:13.5px">Diga ao cliente: <b lang="ja" style="color:var(--ink)" id="micAlvo">ありがとうございます！</b> <span class="ro" style="color:var(--lantern)">(arigatou gozaimasu!)</span></div>
+      </div>
+      <div class="row">
+        <button type="button" class="btn sky" id="btnMic">🎙️ Falar agora</button>
+        <button type="button" class="btn pri" id="btnProx">Próximo cliente →</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- Fim do turno -->
+  <section class="card b-sage" id="fimSec" hidden>
+    <p class="eyebrow">✦ おつかれさまでした！</p>
+    <h2 id="fimTit">Turno concluído!</h2>
+    <p class="sub" id="fimSub"></p>
+    <div class="row">
+      <button type="button" class="btn pri" id="btnReiniciar">🔄 Novo turno</button>
+      <a class="btn" href="../">← Voltar à Ruazinha</a>
+    </div>
+  </section>
+</div>
+
+<script src="/idiomas/dados/velocidade-voz.js?v=1"></script>
+<script src="/idiomas/dados/audio-mapa.js?v=jogos1"></script>
+<script src="../sfx.js?v=1"></script>
+<script>
+(function () {
+  'use strict';
+
+  const ITENS = [
+    { id: 'onigiri', ic: '🍙', jp: 'おにぎり', ro: 'onigiri', pt: 'Onigiri' },
+    { id: 'bento', ic: '🍱', jp: 'べんとう', ro: 'bentou', pt: 'Bentô' },
+    { id: 'mizu', ic: '💧', jp: 'みず', ro: 'mizu', pt: 'Água' },
+    { id: 'ocha', ic: '🍵', jp: 'おちゃ', ro: 'ocha', pt: 'Chá verde' },
+    { id: 'koohii', ic: '☕', jp: 'コーヒー', ro: 'koohii', pt: 'Café' },
+    { id: 'esquentar', ic: '🔥', jp: 'あたためる', ro: 'atatameru', pt: 'Esquentar' },
+    { id: 'fukuro', ic: '🛍️', jp: 'ふくろ', ro: 'fukuro', pt: 'Sacola' },
+    { id: 'reshiito', ic: '🧾', jp: 'レシート', ro: 'reshiito', pt: 'Recibo' }
+  ];
+
+  const PEDIDOS = [
+    {
+      av: '🧑‍💼', nome: 'Kenji',
+      jp: 'おにぎりと おちゃを ください。',
+      ro: 'onigiri to ocha o kudasai.',
+      pt: 'Um onigiri e um chá verde, por favor.',
+      quer: ['onigiri', 'ocha'],
+      falaBonus: 'ありがとうございます'
+    },
+    {
+      av: '👩‍🎓', nome: 'Hana',
+      jp: 'べんとうを あたためて ください。',
+      ro: 'bentou o atatamete kudasai.',
+      pt: 'Por favor, esquente o bentô.',
+      quer: ['bento', 'esquentar'],
+      falaBonus: 'かしこまりました'
+    },
+    {
+      av: '🧳', nome: 'Lucas',
+      jp: 'みずと コーヒーを ください。ふくろは いりません。',
+      ro: 'mizu to koohii o kudasai. fukuro wa irimasen.',
+      pt: 'Água e café, por favor. Não preciso de sacola.',
+      quer: ['mizu', 'koohii'],
+      falaBonus: 'ありがとうございます'
+    },
+    {
+      av: '👩', nome: 'Yuki',
+      jp: 'おにぎりと ふくろを ください。',
+      ro: 'onigiri to fukuro o kudasai.',
+      pt: 'Um onigiri e uma sacola, por favor.',
+      quer: ['onigiri', 'fukuro'],
+      falaBonus: 'いらっしゃいませ'
+    },
+    {
+      av: '👨‍🎨', nome: 'Ren',
+      jp: 'べんとうと みず、それから レシートも ください。',
+      ro: 'bentou to mizu, sorekara reshiito mo kudasai.',
+      pt: 'Bentô, água e também o recibo, por favor.',
+      quer: ['bento', 'mizu', 'reshiito'],
+      falaBonus: 'ありがとうございます'
+    },
+    {
+      av: '👩‍💻', nome: 'Mika',
+      jp: 'コーヒーと おちゃと レシートを ください。',
+      ro: 'koohii to ocha to reshiito o kudasai.',
+      pt: 'Café, chá verde e o recibo, por favor.',
+      quer: ['koohii', 'ocha', 'reshiito'],
+      falaBonus: 'またおこしください'
+    }
+  ];
+
+  let idx = 0;
+  let sel = new Set();
+  let acertos = 0;
+  let bonusFala = 0;
+  let resolvido = false;
+
+  const pratEl = document.getElementById('prateleira');
+  const bandEl = document.getElementById('bandejaItens');
+  const fbEl = document.getElementById('fbBox');
+  const micBox = document.getElementById('micBox');
+
+  function renderPrateleira() {
+    pratEl.innerHTML = ITENS.map(it => `
+      <button type="button" class="item-btn${sel.has(it.id) ? ' sel' : ''}" data-id="${it.id}">
+        <span class="ic">${it.ic}</span>
+        <b lang="ja">${it.jp}</b>
+        <small class="ro-block" style="color:var(--lantern)">${it.ro}</small>
+        <small>${it.pt}</small>
+      </button>
+    `).join('');
+
+    if (!sel.size) {
+      bandEl.innerHTML = '<span class="sub" style="font-size:13px">Bandeja vazia…</span>';
+    } else {
+      bandEl.innerHTML = [...sel].map(id => {
+        const it = ITENS.find(x => x.id === id);
+        return `<span class="b-chip">${it.ic} ${it.pt}</span>`;
+      }).join('');
+    }
+  }
+
+  pratEl.addEventListener('click', e => {
+    if (resolvido) return;
+    const b = e.target.closest('[data-id]');
+    if (!b) return;
+    const id = b.dataset.id;
+    if (sel.has(id)) sel.delete(id);
+    else sel.add(id);
+    UniSalao.sfx.click();
+    renderPrateleira();
+  });
+
+  function carregarCliente() {
+    const p = PEDIDOS[idx];
+    sel = new Set();
+    resolvido = false;
+    document.getElementById('progBadge').textContent = `Cliente ${idx + 1} / ${PEDIDOS.length}`;
+    document.getElementById('cliAv').textContent = p.av;
+    document.getElementById('cliNome').textContent = p.nome;
+    document.getElementById('cliJp').textContent = p.jp;
+    document.getElementById('cliRo').textContent = p.ro;
+    document.getElementById('cliPt').textContent = p.pt;
+    document.getElementById('legendaBox').hidden = true;
+    document.getElementById('btnLegenda').textContent = '👁️ Mostrar texto';
+    fbEl.hidden = true;
+    micBox.hidden = true;
+    document.getElementById('btnEntregar').disabled = false;
+    renderPrateleira();
+    setTimeout(() => UniSalao.speak(p.jp), 220);
+  }
+
+  document.getElementById('btnOuvir').addEventListener('click', () => {
+    UniSalao.speak(PEDIDOS[idx].jp);
+  });
+
+  document.getElementById('btnLegenda').addEventListener('click', () => {
+    const box = document.getElementById('legendaBox');
+    box.hidden = !box.hidden;
+    document.getElementById('btnLegenda').textContent = box.hidden ? '👁️ Mostrar texto' : '🙈 Esconder texto';
+    UniSalao.sfx.click();
+  });
+
+  document.getElementById('btnLimpar').addEventListener('click', () => {
+    if (resolvido) return;
+    sel.clear();
+    renderPrateleira();
+    UniSalao.sfx.click();
+  });
+
+  document.getElementById('btnEntregar').addEventListener('click', () => {
+    if (resolvido) return;
+    const p = PEDIDOS[idx];
+    const querSet = new Set(p.quer);
+    const igual = sel.size === querSet.size && [...querSet].every(x => sel.has(x));
+
+    document.getElementById('legendaBox').hidden = false;
+    if (igual) {
+      resolvido = true;
+      acertos++;
+      UniSalao.addXP(15);
+      UniSalao.sfx.ok();
+      document.getElementById('btnEntregar').disabled = true;
+      fbEl.className = 'fb-box';
+      fbEl.innerHTML = `<strong>✓ Pedido perfeito! (+15 XP)</strong><span>${p.nome} agradeceu: <b lang="ja">ありがとう！</b></span>`;
+      fbEl.hidden = false;
+      document.getElementById('micAlvo').textContent = p.falaBonus + '！';
+      micBox.hidden = false;
+    } else {
+      UniSalao.sfx.err();
+      fbEl.className = 'fb-box err';
+      fbEl.innerHTML = `<strong>Quase!</strong><span>Ouça novamente ou veja a legenda — faltou ou sobrou algum item na bandeja.</span>`;
+      fbEl.hidden = false;
+    }
+  });
+
+  /* Microfone bônus (Web Speech API) */
+  const SR = window.SpeechRecognition || window.webkitSpeechRecognition || null;
+  document.getElementById('btnMic').addEventListener('click', () => {
+    const btn = document.getElementById('btnMic');
+    if (!SR) {
+      UniSalao.toast('Microfone não suportado neste navegador — mas valeu a prática! +5 XP');
+      UniSalao.addXP(5);
+      return;
+    }
+    try {
+      const rec = new SR();
+      rec.lang = 'ja-JP';
+      rec.interimResults = false;
+      btn.textContent = '🔴 Ouvindo…';
+      btn.disabled = true;
+      rec.onresult = ev => {
+        const dito = (ev.results[0] && ev.results[0][0] && ev.results[0][0].transcript) || '';
+        bonusFala++;
+        UniSalao.addXP(10);
+        UniSalao.sfx.fanfare();
+        UniSalao.toast(`🎙️ Você disse "${dito}" · +10 XP!`);
+        btn.textContent = '✓ Falado!';
+      };
+      rec.onerror = () => {
+        btn.textContent = '🎙️ Tentar de novo';
+        btn.disabled = false;
+        UniSalao.toast('Não consegui ouvir. Tente de novo ou avance.');
+      };
+      rec.onend = () => {
+        if (btn.textContent === '🔴 Ouvindo…') {
+          btn.textContent = '🎙️ Falar agora';
+          btn.disabled = false;
+        }
+      };
+      rec.start();
+    } catch (e) {
+      btn.disabled = false;
+      btn.textContent = '🎙️ Falar agora';
+    }
+  });
+
+  document.getElementById('btnProx').addEventListener('click', () => {
+    document.getElementById('btnMic').disabled = false;
+    document.getElementById('btnMic').textContent = '🎙️ Falar agora';
+    idx++;
+    if (idx >= PEDIDOS.length) {
+      document.getElementById('jogoSec').hidden = true;
+      document.getElementById('fimSec').hidden = false;
+      UniSalao.sfx.fanfare();
+      document.getElementById('fimTit').textContent = `Você atendeu ${acertos} clientes no turno!`;
+      document.getElementById('fimSub').textContent = `Prática de escuta concluída${bonusFala ? ` com ${bonusFala} bônus de fala no microfone` : ''}.`;
+    } else {
+      carregarCliente();
+    }
+  });
+
+  document.getElementById('btnReiniciar').addEventListener('click', () => {
+    idx = 0; acertos = 0; bonusFala = 0;
+    document.getElementById('fimSec').hidden = true;
+    document.getElementById('jogoSec').hidden = false;
+    carregarCliente();
+  });
+
+  carregarCliente();
+})();
+</script>
+</body>
+</html>

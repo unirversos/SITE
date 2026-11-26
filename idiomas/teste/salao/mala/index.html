@@ -1,0 +1,495 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="robots" content="noindex">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>Mala Express · Viagem pelo Japão · Salão Unirversos (Teste)</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@600;700;800&family=Zen+Maru+Gothic:wght@400;500;700&display=swap">
+<link rel="stylesheet" href="../salao.css?v=1">
+<style>
+  .destinos-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 12px;
+  }
+  .dest-btn {
+    text-align: left;
+    background: rgba(25, 20, 34, 0.48);
+    border: 1.5px solid var(--line-strong);
+    border-radius: 18px;
+    padding: 14px;
+    display: grid;
+    gap: 5px;
+    transition: transform 0.15s ease, border-color 0.15s ease, background 0.15s ease;
+  }
+  .dest-btn:hover { transform: translateY(-2px); border-color: var(--coral); background: var(--surface-2); }
+  .dest-btn.on { border-color: var(--coral); background: rgba(240, 142, 115, 0.16); box-shadow: 0 0 0 2px rgba(240, 142, 115, 0.2); }
+  .dest-btn .ic { font-size: 28px; line-height: 1; }
+  .dest-btn b { font-family: var(--f-display); font-size: 18px; }
+  .dest-btn small { color: var(--muted); font-size: 13px; }
+
+  .brief-bar {
+    background: rgba(242, 192, 99, 0.12);
+    border: 1px solid rgba(242, 192, 99, 0.35);
+    border-radius: 16px;
+    padding: 12px 16px;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    align-items: center;
+    gap: 10px;
+  }
+
+  /* Zonas de destino (Mala, Mochila, Casa) */
+  .zonas-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 12px;
+  }
+  @media (max-width: 720px) { .zonas-grid { grid-template-columns: 1fr; } }
+
+  .zona {
+    border-radius: 20px;
+    padding: 14px;
+    min-height: 140px;
+    display: grid;
+    align-content: start;
+    gap: 10px;
+    border: 2px dashed var(--line-strong);
+    background: rgba(25, 20, 34, 0.45);
+    transition: border-color 0.15s ease, background 0.15s ease, transform 0.15s ease;
+  }
+  .zona.z-mala { border-color: rgba(240, 142, 115, 0.55); background: rgba(240, 142, 115, 0.1); }
+  .zona.z-mochila { border-color: rgba(114, 207, 158, 0.55); background: rgba(114, 207, 158, 0.1); }
+  .zona.z-casa { border-color: rgba(197, 168, 255, 0.45); background: rgba(197, 168, 255, 0.08); }
+  .zona.alvo {
+    border-style: solid;
+    border-color: var(--lantern) !important;
+    background: rgba(242, 192, 99, 0.18) !important;
+    transform: scale(1.015);
+  }
+  .zona-head {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 6px;
+  }
+  .zona-head b { font-family: var(--f-display); font-size: 16px; }
+  .zona-head small { font-size: 12px; color: var(--muted); }
+
+  .chips-wrap {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    min-height: 46px;
+  }
+
+  /* Itens arrastáveis / clicáveis */
+  .item-chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+    padding: 7px 12px;
+    border-radius: 14px;
+    border: 1.5px solid var(--line-strong);
+    background: var(--surface);
+    color: var(--ink);
+    cursor: grab;
+    user-select: none;
+    touch-action: none;
+    transition: transform 0.12s ease, border-color 0.12s ease, background 0.12s ease;
+  }
+  .item-chip:hover { border-color: var(--lantern); background: var(--surface-2); }
+  .item-chip.sel {
+    border-color: var(--sakura);
+    background: var(--sakura-soft);
+    box-shadow: 0 0 0 3px rgba(239, 107, 140, 0.25);
+  }
+  .item-chip .ic { font-size: 22px; line-height: 1; }
+  .item-chip .tx { display: grid; line-height: 1.15; text-align: left; }
+  .item-chip .tx strong { font-size: 14px; }
+  .item-chip .tx small { font-size: 11px; color: var(--muted); }
+  .item-chip .tx .ro-block { font-size: 11px; color: var(--lantern); }
+
+  .item-chip.ghost {
+    position: fixed;
+    z-index: 400;
+    pointer-events: none;
+    transform: scale(1.08);
+    box-shadow: 0 12px 28px rgba(0, 0, 0, 0.45);
+    border-color: var(--lantern);
+  }
+
+  .quarto-box {
+    background: rgba(25, 20, 34, 0.42);
+    border: 1.5px solid var(--line);
+    border-radius: 20px;
+    padding: 14px;
+    display: grid;
+    gap: 10px;
+  }
+
+  .res-item {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    align-items: center;
+    gap: 8px;
+    padding: 10px 12px;
+    border-radius: 14px;
+    border: 1px solid var(--line);
+    background: rgba(25, 20, 34, 0.46);
+  }
+  .res-item.ok { border-left: 4px solid var(--sage); }
+  .res-item.err { border-left: 4px solid var(--sakura); }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <nav class="topbar">
+    <div class="brand-row">
+      <a class="btn sm" href="../">← Ruazinha do Salão</a>
+      <span class="badge-teste">Viagem · Mala Express</span>
+    </div>
+    <div class="top-tools">
+      <span class="xp-pill">✦ <span data-xp-val>0</span> XP</span>
+      <button type="button" class="btn sm" data-romaji-btn aria-pressed="false">Romaji: OFF</button>
+      <button type="button" class="btn sm" data-mute-btn aria-pressed="true">🔊 Som: ON</button>
+    </div>
+  </nav>
+
+  <!-- Seleção de destino -->
+  <section class="card" style="border-left:5px solid var(--coral)" id="secEscolha">
+    <div>
+      <p class="eyebrow">✦ パッキング · 3 destinos no japão</p>
+      <h1>🧳 Mala Express</h1>
+      <p class="sub">Escolha seu destino no Japão e decida o que vai na <b>Mala despachada</b>, na <b>Mochila de mão</b> ou <b>Fica em casa</b>. Cuidado com as regras de voo e o clima!</p>
+    </div>
+
+    <div class="destinos-grid" id="destGrid"></div>
+
+    <div class="row">
+      <button type="button" class="btn pri" id="btnComecar">✈️ Começar a arrumar</button>
+    </div>
+  </section>
+
+  <!-- Palco de Arrumar -->
+  <section class="card" style="border-left:5px solid var(--coral)" id="secJogo" hidden>
+    <div class="brief-bar">
+      <div>
+        <strong id="briefTit" style="font-size:17px">❄️ Sapporo · Inverno</strong>
+        <div class="sub" id="briefDesc" style="font-size:13.5px"></div>
+      </div>
+      <div class="row">
+        <span class="badge-teste" id="restBadge">Restam 8 itens</span>
+        <button type="button" class="btn sm" id="btnTrocarDest">Trocar destino</button>
+      </div>
+    </div>
+
+    <!-- Quarto (itens soltos) -->
+    <div class="quarto-box" data-zona="quarto">
+      <div class="zona-head">
+        <b>🛏️ Sobre a cama (arraste ou toque num item e depois na zona)</b>
+        <small>Toque no item para ouvir em japonês</small>
+      </div>
+      <div class="chips-wrap" id="z-quarto"></div>
+    </div>
+
+    <!-- 3 Zonas -->
+    <div class="zonas-grid">
+      <div class="zona z-mala" data-zona="mala">
+        <div class="zona-head">
+          <b>🧳 Mala despachada</b>
+          <small>Porão do avião</small>
+        </div>
+        <div class="chips-wrap" id="z-mala"></div>
+      </div>
+
+      <div class="zona z-mochila" data-zona="mochila">
+        <div class="zona-head">
+          <b>🎒 Mochila de mão</b>
+          <small>Vai com você</small>
+        </div>
+        <div class="chips-wrap" id="z-mochila"></div>
+      </div>
+
+      <div class="zona z-casa" data-zona="casa">
+        <div class="zona-head">
+          <b>🏠 Fica em casa</b>
+          <small>Não precisa levar</small>
+        </div>
+        <div class="chips-wrap" id="z-casa"></div>
+      </div>
+    </div>
+
+    <div class="row" style="justify-content:space-between">
+      <span class="sub" id="dicaAcao" style="font-size:13px">Dica: documentos e baterias sempre vão na mochila de mão!</span>
+      <button type="button" class="btn pri" id="btnEmbarcar" disabled>✈️ Fechar mala e embarcar</button>
+    </div>
+  </section>
+
+  <!-- Resultado do Embarque -->
+  <section class="card b-sage" id="secFim" hidden>
+    <div>
+      <p class="eyebrow">✦ とうちゃく！ · chegada ao destino</p>
+      <h2 id="fimTit">Chegada em Sapporo!</h2>
+      <p class="sub" id="fimSub"></p>
+    </div>
+
+    <div id="resLista" style="display:grid;gap:8px"></div>
+
+    <div class="row">
+      <button type="button" class="btn sage" id="btnSalvarVocab">📒 Salvar vocabulário no Caderno</button>
+      <button type="button" class="btn pri" id="btnOutroDest">🗺️ Escolher outro destino</button>
+      <a class="btn" href="../">← Ruazinha do Salão</a>
+    </div>
+  </section>
+</div>
+
+<script src="/idiomas/dados/velocidade-voz.js?v=1"></script>
+<script src="/idiomas/dados/audio-mapa.js?v=jogos1"></script>
+<script src="../sfx.js?v=1"></script>
+<script>
+(function () {
+  'use strict';
+
+  const DESTINOS = [
+    {
+      id: 'sapporo',
+      ic: '❄️',
+      nome: 'Sapporo · Inverno',
+      jp: 'さっぽろ（ふゆ）',
+      desc: 'Neve e -4°C em Hokkaido! Você vai de avião: atenção ao frio e às regras de bagagem de mão.',
+      itens: [
+        { id: 'pasu', ic: '🛂', jp: 'パスポート', ro: 'pasupooto', pt: 'Passaporte', certo: 'mochila', motivo: 'Documentos vão sempre na mochila de mão, nunca despachados.' },
+        { id: 'bat', ic: '🔋', jp: 'モバイルバッテリー', ro: 'mobairu batterii', pt: 'Bateria portátil', certo: 'mochila', motivo: 'Baterias de lítio são proibidas no porão: obrigatório levar na mochila de mão!' },
+        { id: 'coat', ic: '🧥', jp: 'コート', ro: 'kooto', pt: 'Casaco pesado', certo: 'mala', motivo: 'Essencial para a neve de Sapporo — ocupa espaço, vai na mala.' },
+        { id: 'tebu', ic: '🧤', jp: 'てぶくろ', ro: 'tebukuro', pt: 'Luvas', certo: 'mala', motivo: 'Sem luvas no inverno de Hokkaido, as mãos congelam!' },
+        { id: 'boots', ic: '🥾', jp: 'ブーツ', ro: 'buutsu', pt: 'Botas de neve', certo: 'mala', motivo: 'Botas impermeáveis evitam escorregar no gelo.' },
+        { id: 'kasa', ic: '⛱️', jp: 'ひがさ', ro: 'higasa', pt: 'Sombrinha de praia', certo: 'casa', motivo: 'Neve em Sapporo — sombrinha de praia fica em casa!' },
+        { id: 'sand', ic: '🩴', jp: 'サンダル', ro: 'sandaru', pt: 'Chinelo de dedo', certo: 'casa', motivo: 'A -4°C com neve na rua, chinelo fica em casa.' },
+        { id: 'fuku', ic: '🧣', jp: 'マフラー', ro: 'mafuraa', pt: 'Cachecol', certo: 'mala', motivo: 'Cachecol protege do vento gelado do norte.' }
+      ]
+    },
+    {
+      id: 'okinawa',
+      ic: '🌺',
+      nome: 'Okinawa · Verão',
+      jp: 'おきなわ（なつ）',
+      desc: 'Sol de 33°C e mar cristalino no sul do Japão! Leve o que protege do calor e deixe o peso para trás.',
+      itens: [
+        { id: 'pasu', ic: '🛂', jp: 'パスポート', ro: 'pasupooto', pt: 'Passaporte', certo: 'mochila', motivo: 'Sempre com você na mochila de mão.' },
+        { id: 'sun', ic: '🕶️', jp: 'サングラス', ro: 'sangurasu', pt: 'Óculos de sol', certo: 'mochila', motivo: 'Prático ter à mão já ao desembarcar no sol de Naha.' },
+        { id: 'mizu', ic: '🩱', jp: 'みずぎ', ro: 'mizugi', pt: 'Roupa de banho', certo: 'mala', motivo: 'Indispensável para as praias de Okinawa!' },
+        { id: 'tsh', ic: '👕', jp: 'Tシャツ', ro: 'tii-shatsu', pt: 'Camiseta leve', certo: 'mala', motivo: 'Roupas leves e frescas na mala para o verão.' },
+        { id: 'sand', ic: '🩴', jp: 'サンダル', ro: 'sandaru', pt: 'Sandália', certo: 'mala', motivo: 'Perfeita para caminhar na areia e no calor.' },
+        { id: 'coat', ic: '🧥', jp: 'コート', ro: 'kooto', pt: 'Casaco de inverno', certo: 'casa', motivo: '33°C em Okinawa — casaco pesado fica em casa!' },
+        { id: 'tebu', ic: '🧤', jp: 'てぶくろ', ro: 'tebukuro', pt: 'Luvas de lã', certo: 'casa', motivo: 'Sem neve em Okinawa — luvas de lã ficam em casa.' },
+        { id: 'kame', ic: '📷', jp: 'カメラ', ro: 'kamera', pt: 'Câmera', certo: 'mochila', motivo: 'Eletrônicos frágeis vão sempre na mochila de mão!' }
+      ]
+    },
+    {
+      id: 'kyoto',
+      ic: '⛩️',
+      nome: 'Quioto · Templos',
+      jp: 'きょうと（おてら）',
+      desc: 'Caminhadas por santuários, entrada descalça em templos e noite num ryokan tradicional.',
+      itens: [
+        { id: 'ic', ic: '💳', jp: 'ICカード', ro: 'ai-shii kaado', pt: 'Cartão Suica / IC', certo: 'mochila', motivo: 'Você vai usar o cartão o tempo todo nos ônibus e trens de Quioto!' },
+        { id: 'kutsu', ic: '🧦', jp: 'くつした', ro: 'kutsushita', pt: 'Meias extras', certo: 'mala', motivo: 'Em templos e ryokans você tira o sapato — meias limpas são essenciais!' },
+        { id: 'sneak', ic: '👟', jp: 'スニーカー', ro: 'suniikaa', pt: 'Tênis confortável', certo: 'mala', motivo: 'Quioto tem muitas ladeiras e milhares de passos por dia.' },
+        { id: 'kasa', ic: '☂️', jp: 'おりたたみがさ', ro: 'oritatamigasa', pt: 'Guarda-chuva dobrável', certo: 'mochila', motivo: 'Cabe na mochila para chuvas rápidas durante o passeio.' },
+        { id: 'towel', ic: '🧻', jp: 'ハンカチ', ro: 'hankachi', pt: 'Lencinho de mão', certo: 'mochila', motivo: 'Muitos banheiros públicos no Japão não têm papel toalha — lencinho na mochila salva!' },
+        { id: 'salt', ic: '👠', jp: 'ハイヒール', ro: 'haihiiru', pt: 'Salto alto', certo: 'casa', motivo: 'Escadarias de pedra em Fushimi Inari de salto alto não combinam — fica em casa.' },
+        { id: 'skate', ic: '🛹', jp: 'スケートボード', ro: 'sukeetoboodo', pt: 'Skate', certo: 'casa', motivo: 'Proibido nos templos e ruas estreitas de Gion — fica em casa.' },
+        { id: 'paj', ic: '👘', jp: 'パジャマ', ro: 'pajama', pt: 'Roupas de dormir', certo: 'mala', motivo: 'Mesmo com o yukata do ryokan, roupa confortável vai na mala.' }
+      ]
+    }
+  ];
+
+  let destId = 'sapporo';
+  let onde = {};
+  let selecionado = null;
+
+  const destAtual = () => DESTINOS.find(d => d.id === destId) || DESTINOS[0];
+
+  /* Render seleção de destinos */
+  const destGrid = document.getElementById('destGrid');
+  function renderDestinos() {
+    destGrid.innerHTML = DESTINOS.map(d => `
+      <button type="button" class="dest-btn${d.id === destId ? ' on' : ''}" data-d="${d.id}">
+        <span class="ic">${d.ic}</span>
+        <b>${d.nome}</b>
+        <small lang="ja" style="color:var(--lantern)">${d.jp}</small>
+        <small>${d.desc}</small>
+      </button>
+    `).join('');
+  }
+  destGrid.addEventListener('click', e => {
+    const b = e.target.closest('[data-d]');
+    if (!b) return;
+    destId = b.dataset.d;
+    renderDestinos();
+    UniSalao.sfx.click();
+  });
+  renderDestinos();
+
+  function iniciarJogo() {
+    const d = destAtual();
+    onde = {};
+    d.itens.forEach(it => { onde[it.id] = 'quarto'; });
+    selecionado = null;
+    document.getElementById('briefTit').textContent = `${d.ic} ${d.nome}`;
+    document.getElementById('briefDesc').textContent = d.desc;
+    document.getElementById('secEscolha').hidden = true;
+    document.getElementById('secFim').hidden = true;
+    document.getElementById('secJogo').hidden = false;
+    renderTabuleiro();
+    UniSalao.sfx.click();
+  }
+
+  function renderTabuleiro() {
+    const d = destAtual();
+    const zonas = ['quarto', 'mala', 'mochila', 'casa'];
+    zonas.forEach(z => {
+      const box = document.getElementById('z-' + z);
+      const lista = d.itens.filter(it => onde[it.id] === z);
+      if (!lista.length) {
+        box.innerHTML = `<span class="sub" style="font-size:12.5px;opacity:.65">${z === 'quarto' ? 'Tudo arrumado! Pronto para embarcar.' : 'Solte itens aqui…'}</span>`;
+        return;
+      }
+      box.innerHTML = lista.map(it => `
+        <button type="button" class="item-chip${selecionado === it.id ? ' sel' : ''}" data-item="${it.id}">
+          <span class="ic">${it.ic}</span>
+          <span class="tx">
+            <strong lang="ja">${it.jp}</strong>
+            <span class="ro-block">${it.ro}</span>
+            <small>${it.pt}</small>
+          </span>
+        </button>
+      `).join('');
+    });
+
+    const rest = d.itens.filter(it => onde[it.id] === 'quarto').length;
+    document.getElementById('restBadge').textContent = rest ? `Restam ${rest} item${rest > 1 ? 's' : ''}` : '✓ Tudo pronto!';
+    document.getElementById('btnEmbarcar').disabled = rest > 0;
+  }
+
+  function moverItem(id, zona) {
+    if (!id || !zona || onde[id] === zona) return;
+    onde[id] = zona;
+    selecionado = null;
+    UniSalao.sfx.click();
+    renderTabuleiro();
+  }
+
+  /* Drag & Drop (Pointer Events) + Clique-e-coloque (acessível) */
+  let drag = null;
+  document.getElementById('secJogo').addEventListener('pointerdown', e => {
+    const chip = e.target.closest('[data-item]');
+    if (!chip) return;
+    const id = chip.dataset.item;
+    const it = destAtual().itens.find(x => x.id === id);
+    if (it) UniSalao.speak(it.jp);
+
+    drag = { id, startX: e.clientX, startY: e.clientY, moved: false, ghost: null, orig: chip };
+  });
+
+  window.addEventListener('pointermove', e => {
+    if (!drag) return;
+    const dist = Math.hypot(e.clientX - drag.startX, e.clientY - drag.startY);
+    if (!drag.moved && dist > 8) {
+      drag.moved = true;
+      const g = drag.orig.cloneNode(true);
+      g.classList.add('ghost');
+      document.body.appendChild(g);
+      drag.ghost = g;
+    }
+    if (drag.moved && drag.ghost) {
+      drag.ghost.style.left = (e.clientX - 60) + 'px';
+      drag.ghost.style.top = (e.clientY - 24) + 'px';
+      document.querySelectorAll('[data-zona]').forEach(z => z.classList.remove('alvo'));
+      const el = document.elementFromPoint(e.clientX, e.clientY);
+      const z = el && el.closest('[data-zona]');
+      if (z) z.classList.add('alvo');
+    }
+  });
+
+  window.addEventListener('pointerup', e => {
+    if (!drag) return;
+    const d = drag;
+    drag = null;
+    document.querySelectorAll('[data-zona]').forEach(z => z.classList.remove('alvo'));
+    if (d.ghost) d.ghost.remove();
+
+    if (d.moved) {
+      const el = document.elementFromPoint(e.clientX, e.clientY);
+      const z = el && el.closest('[data-zona]');
+      if (z) moverItem(d.id, z.dataset.zona);
+    } else {
+      selecionado = (selecionado === d.id) ? null : d.id;
+      renderTabuleiro();
+    }
+  });
+
+  /* Clique na zona quando um item está selecionado */
+  document.getElementById('secJogo').addEventListener('click', e => {
+    if (e.target.closest('[data-item]')) return;
+    const z = e.target.closest('[data-zona]');
+    if (z && selecionado) moverItem(selecionado, z.dataset.zona);
+  });
+
+  /* Embarcar e conferir */
+  const ZNOME = { mala: '🧳 Mala', mochila: '🎒 Mochila', casa: '🏠 Casa' };
+  document.getElementById('btnEmbarcar').addEventListener('click', () => {
+    const d = destAtual();
+    let ok = 0;
+    const html = d.itens.map(it => {
+      const acertou = onde[it.id] === it.certo;
+      if (acertou) ok++;
+      return `
+        <div class="res-item ${acertou ? 'ok' : 'err'}">
+          <div>
+            <strong>${it.ic} <span lang="ja">${it.jp}</span></strong>
+            <span class="ro" style="color:var(--lantern);margin-left:5px">(${it.ro})</span>
+            <span class="sub"> — ${it.pt}</span>
+            <div class="sub" style="font-size:13px;margin-top:2px">${acertou ? '✓ ' : '✗ Melhor em ' + ZNOME[it.certo] + ': '}${it.motivo}</div>
+          </div>
+          <span class="badge-teste">${acertou ? 'Certo' : 'Você pôs: ' + ZNOME[onde[it.id]]}</span>
+        </div>
+      `;
+    }).join('');
+
+    const xp = ok * 5 + (ok === d.itens.length ? 15 : 0);
+    UniSalao.addXP(xp);
+    ok >= d.itens.length - 1 ? UniSalao.sfx.fanfare() : UniSalao.sfx.ok();
+
+    document.getElementById('fimTit').textContent = `${d.ic} ${d.nome} · ${ok} de ${d.itens.length} certos!`;
+    document.getElementById('fimSub').textContent = `Você ganhou +${xp} XP no Salão Unirversos!`;
+    document.getElementById('resLista').innerHTML = html;
+    document.getElementById('secJogo').hidden = true;
+    document.getElementById('secFim').hidden = false;
+  });
+
+  document.getElementById('btnSalvarVocab').addEventListener('click', () => {
+    const d = destAtual();
+    const resumo = d.itens.map(it => `${it.jp} (${it.ro}) = ${it.pt}`).join(' · ');
+    UniSalao.saveToCaderno(`[${d.nome}] ${resumo}`, 'Mala Express · Salão');
+  });
+
+  document.getElementById('btnComecar').addEventListener('click', iniciarJogo);
+  document.getElementById('btnTrocarDest').addEventListener('click', () => {
+    document.getElementById('secJogo').hidden = true;
+    document.getElementById('secEscolha').hidden = false;
+  });
+  document.getElementById('btnOutroDest').addEventListener('click', () => {
+    document.getElementById('secFim').hidden = true;
+    document.getElementById('secEscolha').hidden = false;
+  });
+})();
+</script>
+</body>
+</html>

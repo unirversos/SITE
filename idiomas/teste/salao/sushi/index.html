@@ -1,0 +1,497 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="robots" content="noindex">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>Kaiten-Zushi de Palavras · Salão Unirversos (Teste)</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@600;700;800&family=Zen+Maru+Gothic:wght@400;500;700&display=swap">
+<link rel="stylesheet" href="../salao.css?v=1">
+<style>
+  .hud {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+  }
+  .stats { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
+  .stat-pill {
+    background: rgba(25, 20, 34, 0.55);
+    border: 1px solid var(--line);
+    border-radius: 999px;
+    padding: 5px 13px;
+    font-weight: 700;
+    font-size: 13.5px;
+  }
+  .stat-pill b { font-family: var(--f-display); color: var(--lantern); font-size: 15px; }
+  .stat-pill.combo b { color: var(--sage); }
+
+  /* Balcão do Chef / Pedido atual */
+  .pedido-box {
+    background: linear-gradient(135deg, rgba(114, 207, 158, 0.14), rgba(53, 44, 67, 0.9));
+    border: 1px solid rgba(114, 207, 158, 0.35);
+    border-radius: 20px;
+    padding: 16px 20px;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+  }
+  .pedido-alvo {
+    font-family: var(--f-display);
+    font-size: clamp(24px, 4.5vw, 34px);
+    font-weight: 800;
+    color: var(--ink);
+    line-height: 1.15;
+  }
+  .pedido-dica { font-size: 13px; color: var(--muted); }
+
+  /* Esteira Kaiten-Zushi */
+  .esteira-wrap {
+    position: relative;
+    border-radius: 24px;
+    border: 1.5px solid var(--line-strong);
+    background: linear-gradient(180deg, #2b2437 0%, #241e2f 100%);
+    padding: 20px 0;
+    overflow: hidden;
+    min-height: 230px;
+    display: grid;
+    align-items: center;
+    box-shadow: inset 0 12px 26px rgba(0, 0, 0, 0.25);
+  }
+  .trilho-linha {
+    position: absolute;
+    left: 0;
+    right: 0;
+    height: 74px;
+    background: repeating-linear-gradient(90deg, rgba(255, 232, 210, 0.06) 0 26px, transparent 26px 52px);
+    border-top: 2px solid rgba(242, 192, 99, 0.22);
+    border-bottom: 2px solid rgba(242, 192, 99, 0.22);
+    pointer-events: none;
+  }
+  .trilho-linha.t1 { top: 28px; }
+  .trilho-linha.t2 { bottom: 28px; }
+
+  .pratos-layer {
+    position: relative;
+    width: 100%;
+    height: 196px;
+  }
+
+  .prato {
+    position: absolute;
+    transform: translate(-50%, -50%);
+    min-width: 126px;
+    max-width: 190px;
+    padding: 10px 16px;
+    border-radius: 999px;
+    border: 3px solid var(--lantern);
+    background: radial-gradient(circle at 35% 25%, #4a3f5e, #332a42 75%);
+    color: var(--ink);
+    box-shadow: 0 8px 18px rgba(0, 0, 0, 0.34), inset 0 0 0 3px rgba(255, 255, 255, 0.08);
+    display: grid;
+    justify-items: center;
+    gap: 1px;
+    text-align: center;
+    cursor: pointer;
+    user-select: none;
+    transition: transform 0.12s ease, border-color 0.15s ease;
+  }
+  .prato:hover { transform: translate(-50%, -54%) scale(1.06); }
+  .prato.p-sakura { border-color: var(--sakura); }
+  .prato.p-sage { border-color: var(--sage); }
+  .prato.p-sky { border-color: var(--sky); }
+  .prato.p-lav { border-color: var(--lav); }
+
+  .prato .em { font-size: 18px; line-height: 1; }
+  .prato .jp { font-size: 18px; font-weight: 800; white-space: nowrap; }
+  .prato .ro-block { font-size: 11.5px; color: var(--lantern); }
+
+  .prato.acertou {
+    border-color: var(--sage) !important;
+    background: rgba(114, 207, 158, 0.32) !important;
+    transform: translate(-50%, -65%) scale(1.16) !important;
+    opacity: 0;
+    transition: all 0.28s ease;
+  }
+  .prato.errou {
+    border-color: var(--sakura) !important;
+    background: rgba(239, 107, 140, 0.3) !important;
+    animation: shake 0.32s ease;
+  }
+  @keyframes shake {
+    25% { transform: translate(-54%, -50%); }
+    75% { transform: translate(-46%, -50%); }
+  }
+
+  .filtros { display: flex; flex-wrap: wrap; gap: 7px; }
+  .filtros button.on { background: var(--sage-soft); border-color: var(--sage); color: #d8ffea; }
+
+  .resumo-lista { display: grid; gap: 8px; }
+  .resumo-item {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    align-items: center;
+    gap: 8px;
+    background: rgba(25, 20, 34, 0.45);
+    border: 1px solid var(--line);
+    border-radius: 14px;
+    padding: 8px 12px;
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <nav class="topbar">
+    <div class="brand-row">
+      <a class="btn sm" href="../">← Ruazinha do Salão</a>
+      <span class="badge-teste">Fliperama · Kaiten-Zushi</span>
+    </div>
+    <div class="top-tools">
+      <span class="xp-pill">✦ <span data-xp-val>0</span> XP</span>
+      <button type="button" class="btn sm" data-romaji-btn aria-pressed="false">Romaji: OFF</button>
+      <button type="button" class="btn sm" data-mute-btn aria-pressed="true">🔊 Som: ON</button>
+    </div>
+  </nav>
+
+  <!-- Cabeçalho / Config -->
+  <section class="card b-sage" id="telaInicio">
+    <div>
+      <p class="eyebrow">✦ 回転寿司 · reflexo &amp; vocabulário</p>
+      <h1>🍣 Kaiten-Zushi de Palavras</h1>
+      <p class="sub">Pratos de sushi deslizam na esteira com palavras reais do curso. Pegue o prato que corresponde ao pedido antes que ele passe!</p>
+    </div>
+
+    <div>
+      <div class="sub" style="font-size:12.5px;margin-bottom:6px">Escolha o cardápio:</div>
+      <div class="filtros" id="catBtns">
+        <button type="button" class="btn sm on" data-cat="todos">🍱 Misturado</button>
+        <button type="button" class="btn sm" data-cat="restaurante">🍜 Comida &amp; Konbini</button>
+        <button type="button" class="btn sm" data-cat="movimentacao">🚆 Viagem &amp; Locais</button>
+        <button type="button" class="btn sm" data-cat="gentileza">🤝 Dia a dia</button>
+      </div>
+    </div>
+
+    <div class="row">
+      <button type="button" class="btn sm" id="btnModoEscuta" aria-pressed="false">🎧 Modo Escuta Pura: OFF</button>
+      <span class="sub" style="font-size:13px">Recorde: <b id="recVal" style="color:var(--lantern)">0</b> pts</span>
+    </div>
+
+    <div class="row">
+      <button type="button" class="btn pri" id="btnStart">▶ Começar rodada</button>
+    </div>
+  </section>
+
+  <!-- Palco do Jogo -->
+  <section class="card b-sage" id="telaJogo" hidden>
+    <div class="hud">
+      <div class="stats">
+        <span class="stat-pill">Pontos: <b id="hudPts">0</b></span>
+        <span class="stat-pill combo">Combo: <b id="hudCombo">x1</b></span>
+        <span class="stat-pill" id="hudVidas">❤️❤️❤️</span>
+      </div>
+      <button type="button" class="btn sm" id="btnParar">Encerrar</button>
+    </div>
+
+    <div class="pedido-box">
+      <div>
+        <div class="pedido-dica" id="pedidoDica">Chef pediu:</div>
+        <div class="pedido-alvo" id="pedidoAlvo">—</div>
+      </div>
+      <button type="button" class="btn sky" id="btnOuvirPedido">🔊 Ouvir em japonês</button>
+    </div>
+
+    <div class="esteira-wrap" aria-label="Esteira de pratos de sushi">
+      <div class="trilho-linha t1"></div>
+      <div class="trilho-linha t2"></div>
+      <div class="pratos-layer" id="pratosLayer"></div>
+    </div>
+  </section>
+
+  <!-- Fim de Jogo -->
+  <section class="card b-lantern" id="telaFim" hidden>
+    <div>
+      <p class="eyebrow">✦ おつかれさま！</p>
+      <h2 id="fimTitulo">Turno encerrado!</h2>
+      <p class="sub" id="fimSub"></p>
+    </div>
+
+    <div id="errosWrap" hidden>
+      <h3 style="margin-bottom:8px">Palavras para revisar</h3>
+      <div class="resumo-lista" id="errosLista"></div>
+    </div>
+
+    <div class="row">
+      <button type="button" class="btn pri" id="btnDeNovo">🔄 Jogar de novo</button>
+      <a class="btn" href="../">← Voltar à Ruazinha</a>
+    </div>
+  </section>
+</div>
+
+<script src="/idiomas/dados/velocidade-voz.js?v=1"></script>
+<script src="/idiomas/dados/audio-mapa.js?v=jogos1"></script>
+<script src="../sfx.js?v=1"></script>
+<script>
+(function () {
+  'use strict';
+
+  /* Fallback rico caso vocabulario.json não carregue (ex.: file://) */
+  const FALLBACK = [
+    { kanji: 'おにぎり', romaji: 'onigiri', pt: 'Bolinho de arroz', contexto: 'restaurante' },
+    { kanji: 'みず', romaji: 'mizu', pt: 'Água', contexto: 'restaurante' },
+    { kanji: 'おちゃ', romaji: 'ocha', pt: 'Chá verde', contexto: 'restaurante' },
+    { kanji: 'ラーメン', romaji: 'raamen', pt: 'Lámen', contexto: 'restaurante' },
+    { kanji: 'メニュー', romaji: 'menyuu', pt: 'Cardápio', contexto: 'restaurante' },
+    { kanji: 'おかいけい', romaji: 'okaikei', pt: 'A conta', contexto: 'restaurante' },
+    { kanji: 'べんとう', romaji: 'bentou', pt: 'Marmita japonesa', contexto: 'restaurante' },
+    { kanji: 'ふくろ', romaji: 'fukuro', pt: 'Sacola', contexto: 'restaurante' },
+    { kanji: 'パスポート', romaji: 'pasupooto', pt: 'Passaporte', contexto: 'movimentacao' },
+    { kanji: 'よやく', romaji: 'yoyaku', pt: 'Reserva', contexto: 'movimentacao' },
+    { kanji: 'きっぷ', romaji: 'kippu', pt: 'Bilhete de trem', contexto: 'movimentacao' },
+    { kanji: 'えき', romaji: 'eki', pt: 'Estação', contexto: 'movimentacao' },
+    { kanji: 'でぐち', romaji: 'deguchi', pt: 'Saída', contexto: 'movimentacao' },
+    { kanji: 'トイレ', romaji: 'toire', pt: 'Banheiro', contexto: 'movimentacao' },
+    { kanji: 'ホテル', romaji: 'hoteru', pt: 'Hotel', contexto: 'movimentacao' },
+    { kanji: 'くうこう', romaji: 'kuukou', pt: 'Aeroporto', contexto: 'movimentacao' },
+    { kanji: 'ありがとう', romaji: 'arigatou', pt: 'Obrigado(a)', contexto: 'gentileza' },
+    { kanji: 'すみません', romaji: 'sumimasen', pt: 'Com licença / Desculpe', contexto: 'gentileza' },
+    { kanji: 'ください', romaji: 'kudasai', pt: 'Por favor (me dê)', contexto: 'gentileza' },
+    { kanji: 'だいじょうぶ', romaji: 'daijoubu', pt: 'Tudo bem', contexto: 'gentileza' },
+    { kanji: 'おいしい', romaji: 'oishii', pt: 'Delicioso', contexto: 'gentileza' },
+    { kanji: 'いくら', romaji: 'ikura', pt: 'Quanto custa?', contexto: 'gentileza' },
+    { kanji: 'おみやげ', romaji: 'omiyage', pt: 'Lembrancinha', contexto: 'gentileza' },
+    { kanji: 'ともだち', romaji: 'tomodachi', pt: 'Amigo(a)', contexto: 'gentileza' }
+  ];
+
+  const SUSHI_ICONS = ['🍣', '🍙', '🍤', '🍡', '🍥', '🍵', '🥟'];
+  const PLATE_CLS = ['p-sakura', 'p-sage', 'p-sky', 'p-lav', ''];
+
+  let banco = FALLBACK.slice();
+  fetch('/idiomas/dados/vocabulario.json')
+    .then(r => r.ok ? r.json() : null)
+    .then(d => {
+      if (d && Array.isArray(d.palavras) && d.palavras.length >= 12) {
+        banco = d.palavras.filter(p => p.kanji && p.pt && p.kanji.length <= 10);
+      }
+    })
+    .catch(() => {});
+
+  let cat = 'todos';
+  let escutaPura = false;
+  let recorde = 0;
+  try { recorde = parseInt(localStorage.getItem('uniSushiRec') || '0', 10) || 0; } catch (e) {}
+  document.getElementById('recVal').textContent = String(recorde);
+
+  document.getElementById('catBtns').addEventListener('click', e => {
+    const b = e.target.closest('button');
+    if (!b) return;
+    cat = b.dataset.cat;
+    document.querySelectorAll('#catBtns button').forEach(x => x.classList.toggle('on', x === b));
+    UniSalao.sfx.click();
+  });
+
+  const btnEscuta = document.getElementById('btnModoEscuta');
+  btnEscuta.addEventListener('click', () => {
+    escutaPura = !escutaPura;
+    btnEscuta.textContent = '🎧 Modo Escuta Pura: ' + (escutaPura ? 'ON' : 'OFF');
+    btnEscuta.classList.toggle('on', escutaPura);
+    btnEscuta.setAttribute('aria-pressed', String(escutaPura));
+    UniSalao.sfx.click();
+  });
+
+  /* Estado da rodada */
+  let rodando = false;
+  let pts = 0, combo = 0, vidas = 3, acertos = 0;
+  let alvo = null;
+  let pratos = [];
+  let erros = [];
+  let rafId = null;
+  let lastT = 0;
+  let spawnAcc = 0;
+  let nextId = 1;
+
+  const layer = document.getElementById('pratosLayer');
+
+  function poolAtual() {
+    if (cat === 'todos') return banco;
+    const f = banco.filter(p => p.contexto === cat);
+    return f.length >= 6 ? f : banco;
+  }
+
+  function atualizaHud() {
+    document.getElementById('hudPts').textContent = String(pts);
+    document.getElementById('hudCombo').textContent = 'x' + Math.max(1, combo);
+    document.getElementById('hudVidas').textContent = '❤️'.repeat(Math.max(0, vidas)) + '🖤'.repeat(Math.max(0, 3 - vidas));
+  }
+
+  function escolheAlvo() {
+    const pool = poolAtual();
+    alvo = pool[Math.floor(Math.random() * pool.length)];
+    document.getElementById('pedidoDica').textContent = escutaPura ? '🎧 Ouça o chef e pegue o prato certo:' : 'Chef pediu:';
+    document.getElementById('pedidoAlvo').textContent = escutaPura ? '🔊 Escute o pedido!' : alvo.pt;
+    UniSalao.speak(alvo.kanji);
+  }
+
+  function criaPrato(palavra, forceLane) {
+    const lane = forceLane != null ? forceLane : (Math.random() < 0.5 ? 0 : 1);
+    const y = lane === 0 ? 48 : 148;
+    const dir = lane === 0 ? 1 : -1;
+    const x = dir === 1 ? -12 : 112;
+    const el = document.createElement('button');
+    el.type = 'button';
+    el.className = 'prato ' + PLATE_CLS[Math.floor(Math.random() * PLATE_CLS.length)];
+    el.innerHTML = `<span class="em">${SUSHI_ICONS[Math.floor(Math.random() * SUSHI_ICONS.length)]}</span><span class="jp" lang="ja">${palavra.kanji}</span><span class="ro-block">${palavra.romaji || ''}</span>`;
+    const obj = { id: nextId++, palavra, x, y, dir, el, morto: false };
+    el.style.left = x + '%';
+    el.style.top = y + 'px';
+    el.addEventListener('click', () => clicouPrato(obj));
+    layer.appendChild(el);
+    pratos.push(obj);
+  }
+
+  function clicouPrato(obj) {
+    if (!rodando || obj.morto) return;
+    if (alvo && obj.palavra.kanji === alvo.kanji) {
+      obj.morto = true;
+      obj.el.classList.add('acertou');
+      combo++;
+      acertos++;
+      const ganho = 10 * Math.min(5, combo);
+      pts += ganho;
+      UniSalao.sfx.combo(combo);
+      atualizaHud();
+      setTimeout(() => obj.el.remove(), 260);
+      escolheAlvo();
+      /* Garante que o novo alvo entre logo na esteira */
+      setTimeout(() => { if (rodando && alvo) criaPrato(alvo); }, 450);
+    } else {
+      obj.el.classList.add('errou');
+      setTimeout(() => obj.el.classList.remove('errou'), 340);
+      combo = 0;
+      vidas--;
+      if (alvo && !erros.some(e => e.kanji === alvo.kanji)) erros.push(alvo);
+      UniSalao.sfx.err();
+      atualizaHud();
+      if (vidas <= 0) encerrar();
+    }
+  }
+
+  function loop(ts) {
+    if (!rodando) return;
+    const dt = Math.min(0.05, (ts - lastT) / 1000);
+    lastT = ts;
+
+    /* Velocidade sobe suavemente conforme acertos */
+    const vel = 13 + Math.min(18, acertos * 0.9);
+    pratos.forEach(p => {
+      if (p.morto) return;
+      p.x += p.dir * vel * dt;
+      p.el.style.left = p.x + '%';
+      if ((p.dir === 1 && p.x > 114) || (p.dir === -1 && p.x < -14)) {
+        p.morto = true;
+        p.el.remove();
+      }
+    });
+    pratos = pratos.filter(p => !p.morto);
+
+    spawnAcc += dt;
+    const intervalo = Math.max(0.95, 1.85 - acertos * 0.04);
+    if (spawnAcc >= intervalo && pratos.length < 7) {
+      spawnAcc = 0;
+      const pool = poolAtual();
+      const temAlvo = pratos.some(p => alvo && p.palavra.kanji === alvo.kanji);
+      const pal = (!temAlvo && Math.random() < 0.65 && alvo)
+        ? alvo
+        : pool[Math.floor(Math.random() * pool.length)];
+      criaPrato(pal);
+    }
+
+    rafId = requestAnimationFrame(loop);
+  }
+
+  function iniciar() {
+    rodando = true;
+    pts = 0; combo = 0; vidas = 3; acertos = 0; erros = [];
+    pratos.forEach(p => p.el.remove());
+    pratos = [];
+    document.getElementById('telaInicio').hidden = true;
+    document.getElementById('telaFim').hidden = true;
+    document.getElementById('telaJogo').hidden = false;
+    atualizaHud();
+    escolheAlvo();
+    /* Solta 3 pratos iniciais (incluindo o alvo) */
+    const pool = poolAtual();
+    criaPrato(alvo, 0);
+    criaPrato(pool[Math.floor(Math.random() * pool.length)], 1);
+    lastT = performance.now();
+    spawnAcc = 0;
+    rafId = requestAnimationFrame(loop);
+  }
+
+  function encerrar() {
+    rodando = false;
+    cancelAnimationFrame(rafId);
+    pratos.forEach(p => p.el.remove());
+    pratos = [];
+    document.getElementById('telaJogo').hidden = true;
+    document.getElementById('telaFim').hidden = false;
+
+    const xpGanho = Math.max(5, Math.round(pts / 10));
+    UniSalao.addXP(xpGanho);
+    if (pts > recorde) {
+      recorde = pts;
+      try { localStorage.setItem('uniSushiRec', String(recorde)); } catch (e) {}
+      document.getElementById('recVal').textContent = String(recorde);
+      UniSalao.sfx.fanfare();
+    } else {
+      UniSalao.sfx.ok();
+    }
+
+    document.getElementById('fimTitulo').textContent = `${pts} pontos · ${acertos} prato(s) certos!`;
+    document.getElementById('fimSub').textContent = `Você ganhou +${xpGanho} XP no Salão Unirversos. Recorde atual: ${recorde} pts.`;
+
+    const wrap = document.getElementById('errosWrap');
+    const lista = document.getElementById('errosLista');
+    if (erros.length) {
+      wrap.hidden = false;
+      lista.innerHTML = erros.map((w, i) => `
+        <div class="resumo-item">
+          <div>
+            <strong lang="ja" style="font-size:17px">${w.kanji}</strong>
+            <span class="ro" style="color:var(--lantern);margin-left:6px">${w.romaji || ''}</span>
+            <span class="sub" style="margin-left:8px">— ${w.pt}</span>
+          </div>
+          <div class="row">
+            <button type="button" class="btn sm" data-rev-som="${i}">🔊</button>
+            <button type="button" class="btn sm sage" data-rev-cad="${i}">📒 Caderno</button>
+          </div>
+        </div>
+      `).join('');
+    } else {
+      wrap.hidden = true;
+    }
+  }
+
+  document.getElementById('errosLista').addEventListener('click', e => {
+    const s = e.target.closest('[data-rev-som]');
+    if (s) { UniSalao.speak(erros[+s.dataset.revSom].kanji); return; }
+    const c = e.target.closest('[data-rev-cad]');
+    if (c) {
+      const w = erros[+c.dataset.revCad];
+      UniSalao.saveToCaderno(`${w.kanji} (${w.romaji || ''}) — ${w.pt}`, 'Kaiten-Zushi · Salão');
+    }
+  });
+
+  document.getElementById('btnStart').addEventListener('click', iniciar);
+  document.getElementById('btnDeNovo').addEventListener('click', iniciar);
+  document.getElementById('btnParar').addEventListener('click', encerrar);
+  document.getElementById('btnOuvirPedido').addEventListener('click', () => { if (alvo) UniSalao.speak(alvo.kanji); });
+})();
+</script>
+</body>
+</html>

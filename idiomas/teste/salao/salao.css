@@ -1,0 +1,298 @@
+/* ==========================================================================
+   Salão Unirversos · Ruazinha de Tóquio ao Anoitecer (Crepúsculo Suave)
+   Meio-termo entre o claro minimalista e o noturno acolhedor · Zero pixel art
+   ========================================================================== */
+
+:root {
+  /* Superfícies Crepúsculo Suave (Twilight Yokocho) */
+  --bg: #2a2335;
+  --bg-top: #372d46;
+  --bg-deep: #211b2a;
+  --surface: #352c43;
+  --surface-2: #403551;
+  --surface-glass: rgba(53, 44, 67, 0.86);
+  --line: rgba(252, 236, 230, 0.13);
+  --line-strong: rgba(252, 236, 230, 0.24);
+
+  /* Textos quentes e legíveis */
+  --ink: #fbf5f2;
+  --muted: #cabcd4;
+  --soft: #a495b2;
+
+  /* Acentos luminosos suaves (lanternas e fachadas) */
+  --sakura: #ef6b8c;
+  --sakura-soft: rgba(239, 107, 140, 0.18);
+  --lantern: #f2c063;
+  --lantern-soft: rgba(242, 192, 99, 0.16);
+  --sage: #72cf9e;
+  --sage-soft: rgba(114, 207, 158, 0.16);
+  --sky: #6fb7f6;
+  --sky-soft: rgba(111, 183, 246, 0.16);
+  --lav: #c5a8ff;
+  --lav-soft: rgba(197, 168, 255, 0.16);
+  --coral: #f08e73;
+
+  --shadow: 0 12px 30px rgba(15, 10, 22, 0.28);
+  --shadow-sm: 0 6px 16px rgba(15, 10, 22, 0.2);
+
+  --f-display: "Baloo 2", "Zen Maru Gothic", system-ui, sans-serif;
+  --f-body: "Zen Maru Gothic", "Hiragino Maru Gothic ProN", "Noto Sans JP", system-ui, sans-serif;
+}
+
+/* Climas da Rua (controlados por data-clima no body) */
+body[data-clima="tarde"] {
+  --bg: #34293d;
+  --bg-top: #4b354b;
+  --surface: #40334b;
+  --surface-2: #4c3d59;
+  --surface-glass: rgba(64, 51, 75, 0.86);
+}
+body[data-clima="chuva"] {
+  --bg: #232838;
+  --bg-top: #2c3549;
+  --surface: #2d3447;
+  --surface-2: #374056;
+  --surface-glass: rgba(45, 52, 71, 0.88);
+}
+
+* { box-sizing: border-box; }
+[hidden] { display: none !important; }
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  background: var(--bg);
+  color: var(--ink);
+  font-family: var(--f-body);
+  font-size: 15.5px;
+  line-height: 1.55;
+  background-image:
+    radial-gradient(circle at 14% 0%, rgba(239, 107, 140, 0.18), transparent 42%),
+    radial-gradient(circle at 86% 6%, rgba(242, 192, 99, 0.15), transparent 38%),
+    radial-gradient(circle at 50% 100%, rgba(111, 183, 246, 0.11), transparent 50%),
+    linear-gradient(180deg, var(--bg-top) 0%, var(--bg) 38%, var(--bg-deep) 100%);
+  padding: 16px max(16px, env(safe-area-inset-right, 0px)) 72px max(16px, env(safe-area-inset-left, 0px));
+  transition: background-color 0.35s ease;
+}
+
+a { color: inherit; }
+button, input, textarea, select { font: inherit; color: inherit; }
+button { cursor: pointer; }
+a:focus-visible, button:focus-visible, input:focus-visible, textarea:focus-visible, select:focus-visible {
+  outline: 2.5px solid var(--lav);
+  outline-offset: 2px;
+  border-radius: 10px;
+}
+
+/* Romaji global */
+.ro { display: none; }
+body.ver-ro .ro { display: inline; }
+body.ver-ro .ro-block { display: block; }
+.ro-block { display: none; }
+
+/* Container */
+.wrap {
+  max-width: 1060px;
+  margin: 0 auto;
+  display: grid;
+  gap: 20px;
+}
+
+/* Topbar */
+.topbar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px 14px;
+}
+.brand-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+.logo {
+  font-family: var(--f-display);
+  font-weight: 800;
+  font-size: 19px;
+  letter-spacing: 0.14em;
+  text-decoration: none;
+  color: var(--ink);
+}
+.logo span { color: var(--sakura); }
+
+.badge-teste {
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  padding: 3px 10px;
+  border-radius: 999px;
+  background: var(--lantern-soft);
+  border: 1px solid rgba(242, 192, 99, 0.38);
+  color: var(--lantern);
+}
+
+.top-tools {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 7px;
+}
+
+.xp-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 13px;
+  border-radius: 999px;
+  background: var(--lantern-soft);
+  border: 1px solid rgba(242, 192, 99, 0.42);
+  color: #ffe3a3;
+  font-family: var(--f-display);
+  font-weight: 800;
+  font-size: 13.5px;
+}
+
+/* Botões */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  min-height: 38px;
+  padding: 7px 14px;
+  border-radius: 999px;
+  border: 1px solid var(--line-strong);
+  background: var(--surface);
+  color: var(--ink);
+  font-weight: 700;
+  font-size: 13.5px;
+  text-decoration: none;
+  transition: transform 0.15s ease, border-color 0.15s ease, background 0.15s ease;
+}
+.btn:hover:not(:disabled) {
+  border-color: var(--sakura);
+  background: var(--surface-2);
+  transform: translateY(-1px);
+}
+.btn:active:not(:disabled) { transform: translateY(0); }
+.btn:disabled { opacity: 0.45; cursor: not-allowed; }
+
+.btn.pri {
+  background: var(--sakura);
+  border-color: var(--sakura);
+  color: #fff;
+  box-shadow: 0 6px 18px rgba(239, 107, 140, 0.3);
+}
+.btn.pri:hover:not(:disabled) { background: #f57a99; }
+
+.btn.sage {
+  background: var(--sage-soft);
+  border-color: rgba(114, 207, 158, 0.45);
+  color: #cff6e0;
+}
+.btn.sky {
+  background: var(--sky-soft);
+  border-color: rgba(111, 183, 246, 0.45);
+  color: #d6ecff;
+}
+.btn.lantern {
+  background: var(--lantern-soft);
+  border-color: rgba(242, 192, 99, 0.45);
+  color: #ffe8b5;
+}
+.btn.on {
+  background: var(--sakura-soft);
+  border-color: var(--sakura);
+  color: #ffd6e0;
+}
+.btn.sm {
+  min-height: 32px;
+  padding: 4px 11px;
+  font-size: 12.5px;
+}
+
+/* Cards padrão Unirversos (com borda lateral colorida) */
+.card {
+  background: var(--surface-glass);
+  backdrop-filter: blur(8px);
+  border: 1px solid var(--line);
+  border-radius: 22px;
+  padding: 20px;
+  box-shadow: var(--shadow);
+  display: grid;
+  gap: 14px;
+}
+.card.b-sakura { border-left: 5px solid var(--sakura); }
+.card.b-lantern { border-left: 5px solid var(--lantern); }
+.card.b-sage { border-left: 5px solid var(--sage); }
+.card.b-sky { border-left: 5px solid var(--sky); }
+.card.b-lav { border-left: 5px solid var(--lav); }
+
+.eyebrow {
+  font-size: 11.5px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  font-weight: 700;
+  color: var(--lantern);
+  margin: 0;
+}
+h1, h2, h3 {
+  font-family: var(--f-display);
+  margin: 0;
+  line-height: 1.15;
+}
+h1 { font-size: clamp(26px, 4.4vw, 38px); font-weight: 800; }
+h2 { font-size: clamp(20px, 3vw, 24px); font-weight: 800; }
+h3 { font-size: 18px; font-weight: 700; }
+.sub { margin: 0; color: var(--muted); font-size: 14.5px; }
+
+.row { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; }
+
+/* Toast flutuante */
+.toast {
+  position: fixed;
+  left: 50%;
+  bottom: 22px;
+  transform: translateX(-50%) translateY(16px);
+  background: #231c2e;
+  color: var(--ink);
+  border: 1px solid var(--lantern);
+  border-radius: 999px;
+  padding: 9px 18px;
+  font-size: 14px;
+  font-weight: 700;
+  box-shadow: 0 10px 28px rgba(0, 0, 0, 0.4);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.22s ease, transform 0.22s ease;
+  z-index: 300;
+}
+.toast.show {
+  opacity: 1;
+  transform: translateX(-50%) translateY(0);
+}
+
+/* Rodapé */
+footer {
+  border-top: 1px dashed var(--line-strong);
+  padding-top: 16px;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: 8px 16px;
+  font-size: 13.5px;
+  color: var(--soft);
+}
+footer a { text-decoration: none; color: var(--muted); }
+footer a:hover { color: var(--sakura); }
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
