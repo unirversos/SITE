@@ -4,617 +4,425 @@
 <meta charset="UTF-8">
 <meta name="robots" content="noindex">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-<title>Salão Unirversos · Ruazinha de Tóquio (Teste)</title>
-<meta name="description" content="Novo Salão Unirversos: karaokê com YouTube e microfone, jogos interativos de japonês e um cantinho social acolhedor.">
+<title>Salão Unirversos · Beco Yokocho (Teste)</title>
+<meta name="description" content="Beco interativo de Tóquio ao entardecer: ande com seu avatar, entre no Karaokê, Sushi, Konbini, Caligrafia e Café Social.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@600;700;800&family=Zen+Maru+Gothic:wght@400;500;700&display=swap">
-<link rel="stylesheet" href="./salao.css?v=1">
+<link rel="stylesheet" href="./salao.css?v=2">
 <style>
-  /* Cena da Ruazinha de Tóquio (Yokocho) */
-  .yokocho-hero {
+  /* ===== MAPA INTERATIVO DO BECO YOKOCHO ===== */
+  .beco-shell {
     position: relative;
     border-radius: 26px;
     overflow: hidden;
-    border: 1px solid var(--line-strong);
-    box-shadow: var(--shadow);
-    background: linear-gradient(180deg, #3c2f52 0%, #2a2238 68%, #211a2c 100%);
-  }
-  body[data-clima="tarde"] .yokocho-hero {
-    background: linear-gradient(180deg, #6e455d 0%, #4b334f 52%, #2c2238 100%);
-  }
-  body[data-clima="chuva"] .yokocho-hero {
-    background: linear-gradient(180deg, #27344b 0%, #222a3d 62%, #1a2030 100%);
+    border: 2px solid rgba(236, 192, 114, 0.38);
+    box-shadow: 0 22px 50px rgba(15, 10, 14, 0.5);
+    background: #2b252a;
   }
 
-  .yokocho-svg {
-    display: block;
+  .beco-stage {
+    position: relative;
     width: 100%;
-    height: auto;
+    aspect-ratio: 16 / 9;
+    min-height: 360px;
+    overflow: hidden;
+    cursor: pointer;
+    user-select: none;
+    touch-action: manipulation;
+    container-type: inline-size;
   }
-  .shop-link { cursor: pointer; transition: transform 0.2s ease, filter 0.2s ease; transform-box: fill-box; transform-origin: center bottom; }
-  .shop-link:hover { filter: brightness(1.12); transform: translateY(-2px); }
-  .lantern-sway { transform-box: fill-box; transform-origin: top center; animation: sway 4.2s ease-in-out infinite; }
-  .lantern-sway.d2 { animation-delay: -1.4s; }
-  .lantern-sway.d3 { animation-delay: -2.7s; }
-  @keyframes sway { 0%, 100% { transform: rotate(-2.5deg); } 50% { transform: rotate(2.5deg); } }
 
-  /* Chuva sutil sobre a rua quando clima = chuva */
-  .rain-layer {
+  .beco-img {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+    transition: filter 0.45s ease;
+    pointer-events: none;
+  }
+  body[data-clima="noite"] .beco-img { filter: brightness(0.92) contrast(1.04) saturate(1.04); }
+  body[data-clima="tarde"] .beco-img { filter: brightness(1.03) sepia(0.08) saturate(1.1); }
+  body[data-clima="chuva"] .beco-img { filter: brightness(0.84) hue-rotate(-10deg) saturate(0.88); }
+
+  /* Brilho sutil de lanternas + chuva */
+  .beco-glow {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    background:
+      radial-gradient(circle at 10% 18%, rgba(236, 192, 114, 0.22), transparent 22%),
+      radial-gradient(circle at 86% 18%, rgba(236, 192, 114, 0.22), transparent 22%),
+      linear-gradient(180deg, rgba(35, 42, 68, 0.14) 0%, transparent 35%, rgba(28, 20, 22, 0.18) 100%);
+  }
+  .beco-rain {
     position: absolute;
     inset: 0;
     pointer-events: none;
     opacity: 0;
-    background: repeating-linear-gradient(106deg, transparent 0 18px, rgba(190, 220, 255, 0.22) 18px 19.5px);
-    animation: rainMove 0.65s linear infinite;
+    background: repeating-linear-gradient(106deg, transparent 0 18px, rgba(215, 232, 255, 0.26) 18px 19.5px);
+    animation: rainFall 0.6s linear infinite;
     transition: opacity 0.35s ease;
   }
-  body[data-clima="chuva"] .rain-layer { opacity: 1; }
-  @keyframes rainMove { from { background-position: 0 0; } to { background-position: -24px 48px; } }
+  body[data-clima="chuva"] .beco-rain { opacity: 1; }
+  @keyframes rainFall { from { background-position: 0 0; } to { background-position: -22px 46px; } }
 
-  .hero-caption {
-    padding: 18px 22px 20px;
-    display: flex;
-    flex-wrap: wrap;
+  /* Plaquinhas / Hotspots das Lojinhas no Beco */
+  .spot {
+    position: absolute;
+    transform: translate(-50%, -50%);
+    z-index: 6;
+    border: 2px solid #59433b;
+    background: rgba(251, 243, 230, 0.94);
+    color: #42322e;
+    border-radius: 14px;
+    padding: 4px 10px;
+    display: inline-flex;
     align-items: center;
-    justify-content: space-between;
-    gap: 12px 18px;
-    background: rgba(28, 22, 38, 0.72);
-    border-top: 1px solid var(--line);
+    gap: 5px;
+    font-family: var(--f-display);
+    font-weight: 800;
+    font-size: clamp(11px, 1.5cqw, 15px);
+    line-height: 1.15;
+    box-shadow: 0 5px 14px rgba(34, 22, 18, 0.32), 0 0 0 0 rgba(236, 192, 114, 0.5);
+    white-space: nowrap;
+    transition: transform 0.18s ease, background 0.18s ease, box-shadow 0.18s ease;
   }
-  .hero-caption p { margin: 4px 0 0; color: var(--muted); max-width: 58ch; font-size: 14.5px; }
+  .spot:hover, .spot.ativo {
+    transform: translate(-50%, -56%) scale(1.07);
+    background: #fffaf0;
+    border-color: var(--sakura);
+    box-shadow: 0 8px 22px rgba(34, 22, 18, 0.4), 0 0 0 5px rgba(217, 107, 92, 0.28);
+  }
+  .spot small {
+    font-family: var(--f-body);
+    font-size: 0.78em;
+    font-weight: 700;
+    color: #9e4b3e;
+  }
+  .spot .dot-pulse {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: var(--sakura);
+    animation: pulseDot 2.2s ease-in-out infinite;
+  }
+  @keyframes pulseDot {
+    0%, 100% { transform: scale(1); opacity: 1; }
+    50% { transform: scale(1.45); opacity: 0.65; }
+  }
 
-  /* Seções */
-  .sec-head {
-    display: flex;
-    flex-wrap: wrap;
-    align-items: baseline;
-    justify-content: space-between;
-    gap: 6px 14px;
-  }
-
-  /* Grid de Salas & Jogos */
-  .portas-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-    gap: 16px;
-  }
-
-  .porta-card {
-    position: relative;
-    background: var(--surface-glass);
-    backdrop-filter: blur(8px);
-    border: 1px solid var(--line);
-    border-left: 5px solid var(--sakura);
-    border-radius: 22px;
-    padding: 18px 18px 16px;
-    box-shadow: var(--shadow-sm);
-    display: grid;
-    grid-template-rows: auto 1fr auto;
-    gap: 10px;
-    text-decoration: none;
-    transition: transform 0.18s ease, border-color 0.18s ease, box-shadow 0.18s ease;
-  }
-  .porta-card:hover {
-    transform: translateY(-3px);
-    border-color: var(--line-strong);
-    box-shadow: 0 16px 34px rgba(10, 6, 18, 0.38);
-  }
-  .porta-card.destaque {
-    grid-column: span 2;
-    background: linear-gradient(135deg, rgba(239, 107, 140, 0.18), rgba(53, 44, 67, 0.92) 55%, rgba(197, 168, 255, 0.14));
-    border-left-color: var(--sakura);
-  }
-  @media (max-width: 700px) { .porta-card.destaque { grid-column: auto; } }
-
-  .porta-card.c-sage { border-left-color: var(--sage); }
-  .porta-card.c-lantern { border-left-color: var(--lantern); }
-  .porta-card.c-sky { border-left-color: var(--sky); }
-  .porta-card.c-lav { border-left-color: var(--lav); }
-  .porta-card.c-coral { border-left-color: var(--coral); }
-
-  .porta-top {
-    display: flex;
-    align-items: flex-start;
-    justify-content: space-between;
-    gap: 10px;
-  }
-  .porta-icon {
-    width: 48px;
-    height: 48px;
-    border-radius: 15px;
-    background: rgba(255, 255, 255, 0.08);
-    border: 1px solid var(--line);
+  /* Hotspots secretos (gatinho, máquina, bambu) */
+  .secret-spot {
+    position: absolute;
+    transform: translate(-50%, -50%);
+    z-index: 5;
+    width: clamp(34px, 5cqw, 52px);
+    height: clamp(34px, 5cqw, 52px);
+    border-radius: 50%;
+    border: 2px dashed rgba(251, 243, 230, 0.55);
+    background: rgba(251, 243, 230, 0.14);
+    color: #fff;
+    font-size: clamp(14px, 2cqw, 20px);
     display: grid;
     place-items: center;
-    font-size: 26px;
-    flex-shrink: 0;
+    opacity: 0.78;
+    transition: transform 0.18s ease, opacity 0.18s ease, background 0.18s ease;
   }
-  .porta-jp {
-    font-size: 12px;
-    font-weight: 700;
-    letter-spacing: 0.12em;
-    color: var(--lantern);
-    background: rgba(242, 192, 99, 0.12);
-    border: 1px solid rgba(242, 192, 99, 0.25);
-    padding: 3px 10px;
-    border-radius: 999px;
-  }
-  .porta-body h3 { font-size: 20px; margin-bottom: 4px; }
-  .porta-body p { margin: 0; color: var(--muted); font-size: 14px; }
-
-  .porta-tags {
-    display: flex;
-    flex-wrap: wrap;
-    align-items: center;
-    justify-content: space-between;
-    gap: 8px;
-    padding-top: 6px;
-    border-top: 1px dashed var(--line);
-  }
-  .tags-list { display: flex; flex-wrap: wrap; gap: 5px; }
-  .tag {
-    font-size: 11.5px;
-    font-weight: 700;
-    padding: 2px 9px;
-    border-radius: 999px;
-    background: rgba(255, 255, 255, 0.07);
-    color: var(--muted);
-  }
-  .entrar-cta {
-    font-size: 13px;
-    font-weight: 800;
-    color: var(--ink);
+  .secret-spot:hover {
+    opacity: 1;
+    transform: translate(-50%, -54%) scale(1.12);
+    background: rgba(236, 192, 114, 0.35);
+    border-color: #fbf3e6;
   }
 
-  /* Cantinho Social · Café Yokocho */
-  .cafe-grid {
+  /* Avatar caminhando na calçada do Beco */
+  .walker {
+    position: absolute;
+    transform: translate(-50%, -86%);
+    z-index: 12;
+    pointer-events: none;
     display: grid;
-    grid-template-columns: 1fr 1.45fr;
-    gap: 16px;
-    align-items: start;
+    justify-items: center;
+    gap: 2px;
+    transition: left 0.85s cubic-bezier(0.32, 0.96, 0.48, 1), top 0.85s cubic-bezier(0.32, 0.96, 0.48, 1);
   }
-  @media (max-width: 780px) { .cafe-grid { grid-template-columns: 1fr; } }
-
-  .status-box {
-    background: rgba(25, 20, 34, 0.42);
-    border: 1px solid var(--line);
-    border-radius: 16px;
-    padding: 14px;
-    display: grid;
-    gap: 12px;
-  }
-  .eu-row { display: flex; align-items: center; gap: 12px; }
-  .av-circ {
-    width: 52px;
-    height: 52px;
+  .walker-face {
+    width: clamp(44px, 6.2cqw, 68px);
+    aspect-ratio: 1;
     border-radius: 50%;
     overflow: hidden;
-    background: var(--sakura-soft);
-    border: 2px solid var(--sakura);
+    background: #fbf3e6;
+    border: 3px solid var(--sakura);
+    box-shadow: 0 8px 18px rgba(25, 16, 14, 0.42);
     display: grid;
     place-items: center;
-    font-size: 26px;
-    flex-shrink: 0;
+    font-size: clamp(22px, 3cqw, 34px);
+    animation: walkBob 2.2s ease-in-out infinite;
   }
-  .humor-pills { display: flex; flex-wrap: wrap; gap: 6px; }
-  .humor-pills button {
-    border: 1px solid var(--line);
-    background: var(--surface);
-    color: var(--muted);
+  .walker.andando .walker-face { animation: walkStep 0.34s ease-in-out infinite; }
+  @keyframes walkBob { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-3px); } }
+  @keyframes walkStep { 0%, 100% { transform: translateY(0) rotate(-3deg); } 50% { transform: translateY(-7px) rotate(3deg); } }
+
+  .walker-name {
+    font-size: clamp(10px, 1.3cqw, 12.5px);
+    font-weight: 800;
+    background: rgba(251, 243, 230, 0.94);
+    color: #42322e;
+    border: 1.5px solid #59433b;
     border-radius: 999px;
-    padding: 5px 11px;
-    font-size: 12.5px;
-    font-weight: 700;
-    transition: 0.15s;
-  }
-  .humor-pills button.on {
-    background: var(--lav-soft);
-    border-color: var(--lav);
-    color: var(--ink);
+    padding: 0 8px;
+    line-height: 1.45;
+    box-shadow: 0 3px 8px rgba(20, 12, 10, 0.25);
   }
 
-  .mural-box {
-    display: grid;
-    gap: 10px;
+  /* Balãozinho de fala (para Easter Eggs) */
+  .beco-bubble {
+    position: absolute;
+    transform: translate(-50%, -115%);
+    z-index: 20;
+    background: var(--washi);
+    color: var(--washi-ink);
+    border: 2px solid #59433b;
+    border-radius: 16px;
+    padding: 8px 13px;
+    max-width: 240px;
+    font-size: 13px;
+    box-shadow: 0 10px 24px rgba(20, 12, 10, 0.38);
+    pointer-events: none;
+    animation: popIn 0.2s ease;
   }
-  .mural-lista {
-    display: grid;
-    gap: 8px;
-    max-height: 230px;
-    overflow: auto;
-    padding-right: 4px;
+  .beco-bubble b { display: block; font-size: 14.5px; color: #9e4b3e; }
+  @keyframes popIn { from { opacity: 0; transform: translate(-50%, -95%) scale(0.92); } to { opacity: 1; transform: translate(-50%, -115%) scale(1); } }
+
+  /* Popover Papel Washi da Lojinha selecionada (flutua no canto inferior do beco) */
+  .loja-popover {
+    position: absolute;
+    left: 16px;
+    right: 16px;
+    bottom: 16px;
+    max-width: 470px;
+    margin: 0 auto;
+    z-index: 25;
+    background: rgba(251, 243, 230, 0.97);
+    color: var(--washi-ink);
+    border: 2px solid #59433b;
+    border-left: 6px solid var(--sakura);
+    border-radius: 20px;
+    padding: 14px 16px;
+    box-shadow: 0 16px 36px rgba(15, 10, 12, 0.45);
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px 14px;
+    animation: slideUp 0.2s ease;
   }
+  @keyframes slideUp { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+  .loja-popover h3 { color: var(--washi-ink); font-size: 19px; margin-bottom: 2px; }
+  .loja-popover p { margin: 0; font-size: 13.5px; color: #6b5852; max-width: 34ch; }
+  .loja-popover .jp-tag { font-size: 12px; font-weight: 700; color: #b24b3d; }
+
+  /* Barra de sinalização discreta colada embaixo do Beco (sem cara de card!) */
+  .beco-dock {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px 12px;
+    padding: 11px 16px;
+    background: #332c33;
+    border-top: 1px solid rgba(251, 243, 230, 0.14);
+  }
+  .dock-dica { font-size: 13px; color: var(--muted); }
+  .dock-atalhos { display: flex; flex-wrap: wrap; gap: 6px; }
+  .dock-pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    padding: 5px 12px;
+    border-radius: 999px;
+    border: 1px solid rgba(251, 243, 230, 0.22);
+    background: rgba(251, 243, 230, 0.08);
+    color: var(--ink);
+    font-size: 13px;
+    font-weight: 700;
+    text-decoration: none;
+    transition: 0.14s ease;
+  }
+  .dock-pill:hover {
+    background: rgba(236, 192, 114, 0.2);
+    border-color: var(--lantern);
+    transform: translateY(-1px);
+  }
+
+  /* Modal Papel Washi · Café Yokocho (Cantinho Social) */
+  dialog.cafe-modal {
+    border: 2px solid #59433b;
+    border-left: 6px solid var(--sakura);
+    border-radius: 24px;
+    background: var(--washi);
+    color: var(--washi-ink);
+    padding: 20px;
+    max-width: 560px;
+    width: calc(100% - 28px);
+    box-shadow: 0 24px 60px rgba(10, 6, 8, 0.55);
+  }
+  dialog.cafe-modal::backdrop { background: rgba(22, 18, 24, 0.62); backdrop-filter: blur(4px); }
+  .cafe-modal .sub { color: #6e5a54; }
+  .cafe-modal .btn { background: #fff; color: var(--washi-ink); border-color: #d6c2ae; }
+  .cafe-modal .btn.pri { background: var(--sakura); color: #fff; border-color: var(--sakura); }
+
+  .mural-lista { display: grid; gap: 8px; max-height: 210px; overflow: auto; margin: 10px 0; }
   .recado {
-    background: rgba(25, 20, 34, 0.46);
-    border: 1px solid var(--line);
+    background: #fff;
+    border: 1px solid #e3d3c3;
     border-radius: 14px;
-    padding: 9px 12px;
+    padding: 8px 12px;
     display: flex;
     justify-content: space-between;
-    align-items: flex-start;
+    align-items: center;
     gap: 10px;
   }
-  .recado-txt { display: grid; gap: 2px; }
-  .recado-meta { font-size: 11.5px; color: var(--soft); font-weight: 700; }
-  .recado-jp { font-size: 15.5px; font-weight: 700; color: var(--ink); }
-  .recado-ro { font-size: 12.5px; color: var(--lantern); }
-  .recado-pt { font-size: 13px; color: var(--muted); }
-
-  .frases-rapidas {
-    display: flex;
-    gap: 6px;
-    overflow-x: auto;
-    padding-bottom: 4px;
-  }
-  .frases-rapidas button {
+  .frases-bar { display: flex; gap: 6px; overflow-x: auto; padding-bottom: 4px; }
+  .frases-bar button {
     flex: 0 0 auto;
-    border: 1px solid rgba(111, 183, 246, 0.35);
-    background: var(--sky-soft);
-    color: #dff0ff;
+    border: 1px solid #d4bfa9;
+    background: #fff9f0;
+    color: var(--washi-ink);
     border-radius: 999px;
-    padding: 5px 12px;
+    padding: 4px 11px;
     font-size: 13px;
     font-weight: 700;
     white-space: nowrap;
   }
-  .mural-form { display: flex; gap: 8px; }
+  .mural-form { display: flex; gap: 8px; margin-top: 8px; }
   .mural-form input {
     flex: 1;
-    min-height: 42px;
-    border-radius: 14px;
-    border: 1px solid var(--line-strong);
-    background: rgba(20, 15, 28, 0.55);
-    padding: 8px 13px;
-    font-size: 14.5px;
-    color: var(--ink);
+    min-height: 40px;
+    border-radius: 12px;
+    border: 1.5px solid #d4bfa9;
+    background: #fff;
+    color: var(--washi-ink);
+    padding: 6px 12px;
   }
-  .mural-form input::placeholder { color: var(--soft); }
+
+  @media (max-width: 680px) {
+    .beco-stage { aspect-ratio: 4 / 3; }
+    .spot small { display: none; }
+  }
 </style>
 </head>
 <body>
 <div class="wrap">
-  <!-- Barra de topo -->
+  <!-- Topbar limpa -->
   <nav class="topbar" aria-label="Salão Unirversos">
     <div class="brand-row">
       <a class="logo" href="/idiomas/teste/">UNI<span>R</span>VERSOS</a>
-      <span class="badge-teste">Teste · Novo Salão</span>
+      <span class="badge-teste">🏮 Yokocho · Teste</span>
     </div>
     <div class="top-tools">
-      <span class="xp-pill" title="Pontos acumulados nos jogos do Salão">✦ <span data-xp-val>0</span> XP</span>
-      <button type="button" class="btn sm" data-clima-btn aria-label="Mudar clima da ruazinha">🏮 Noite suave</button>
+      <span class="xp-pill" title="XP acumulado no Salão">✦ <span data-xp-val>0</span> XP</span>
+      <button type="button" class="btn sm" data-clima-btn>🏮 Noite suave</button>
       <button type="button" class="btn sm" data-romaji-btn aria-pressed="false">Romaji: OFF</button>
       <button type="button" class="btn sm" data-mute-btn aria-pressed="true">🔊 Som: ON</button>
     </div>
   </nav>
 
-  <!-- Banner Ilustrado · Ruazinha de Tóquio ao Anoitecer -->
-  <section class="yokocho-hero" aria-label="Ruazinha do Salão Unirversos">
-    <div class="rain-layer" aria-hidden="true"></div>
-    <svg class="yokocho-svg" viewBox="0 0 1000 290" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Ruazinha japonesa ao anoitecer com fachadas de Karaokê, Sushi, Konbini, Caligrafia e Café">
-      <defs>
-        <radialGradient id="glowLantern" cx="50%" cy="50%" r="50%">
-          <stop offset="0%" stop-color="#ffd98a" stop-opacity="0.55"/>
-          <stop offset="100%" stop-color="#ffd98a" stop-opacity="0"/>
-        </radialGradient>
-        <radialGradient id="glowSakura" cx="50%" cy="50%" r="50%">
-          <stop offset="0%" stop-color="#ef6b8c" stop-opacity="0.45"/>
-          <stop offset="100%" stop-color="#ef6b8c" stop-opacity="0"/>
-        </radialGradient>
-        <linearGradient id="streetGrad" x1="0" y1="0" x2="0" y2="1">
-          <stop offset="0%" stop-color="#2c2539"/>
-          <stop offset="100%" stop-color="#1e1828"/>
-        </linearGradient>
-      </defs>
+  <!-- MAPINHA INTERATIVO DO BECO YOKOCHO (TELA PRINCIPAL) -->
+  <main class="beco-shell" aria-label="Mapa interativo do Beco Unirversos">
+    <div class="beco-stage" id="becoStage" tabindex="0" role="application" aria-label="Beco japonês interativo. Toque na calçada para andar ou numa porta para entrar.">
+      <img class="beco-img" src="./yokocho-beco.jpg" alt="Beco japonês ao entardecer com Karaokê, Sushi, Konbini, Caligrafia e Café">
+      <div class="beco-glow" aria-hidden="true"></div>
+      <div class="beco-rain" aria-hidden="true"></div>
 
-      <!-- Lua / Estrelinhas suaves -->
-      <circle cx="885" cy="48" r="22" fill="#fce8c5" opacity="0.88"/>
-      <circle cx="894" cy="43" r="19" fill="#372d46" opacity="0.72"/>
-      <g fill="#fde8d7" opacity="0.55">
-        <circle cx="110" cy="34" r="1.8"/><circle cx="240" cy="24" r="1.4"/><circle cx="430" cy="38" r="1.6"/>
-        <circle cx="620" cy="26" r="1.8"/><circle cx="760" cy="42" r="1.3"/>
-      </g>
+      <!-- 5 Portas Interativas alinhadas às fachadas da ilustração -->
+      <button type="button" class="spot" data-loja="karaoke" style="left:10.5%;top:41%">
+        <span class="dot-pulse" aria-hidden="true"></span>
+        🎤 Karaokê <small lang="ja">カラオケ</small>
+      </button>
 
-      <!-- Silhueta de telhados ao fundo -->
-      <path d="M0 155 L75 130 L170 130 L190 150 L360 142 L390 118 L560 118 L590 144 L760 136 L810 118 L940 118 L1000 142 L1000 245 L0 245 Z" fill="#251e31" opacity="0.7"/>
+      <button type="button" class="spot" data-loja="sushi" style="left:26.5%;top:42%">
+        🍣 Sushi <small lang="ja">回転寿司</small>
+      </button>
 
-      <!-- Calçada / Rua com reflexos suaves -->
-      <rect x="0" y="238" width="1000" height="52" fill="url(#streetGrad)"/>
-      <line x1="0" y1="238" x2="1000" y2="238" stroke="#625178" stroke-width="2" opacity="0.55"/>
-      <ellipse cx="145" cy="262" rx="70" ry="8" fill="#ef6b8c" opacity="0.16"/>
-      <ellipse cx="345" cy="262" rx="60" ry="8" fill="#72cf9e" opacity="0.14"/>
-      <ellipse cx="535" cy="262" rx="60" ry="8" fill="#f2c063" opacity="0.15"/>
-      <ellipse cx="725" cy="262" rx="58" ry="8" fill="#6fb7f6" opacity="0.14"/>
-      <ellipse cx="890" cy="262" rx="52" ry="8" fill="#c5a8ff" opacity="0.15"/>
+      <button type="button" class="spot" data-loja="konbini" style="left:51%;top:33%">
+        🏪 Konbini <small lang="ja">コンビニ</small>
+      </button>
 
-      <!-- FACHADA 1: KARAOKÊ (カラオケ) -->
-      <a href="./karaoke/" class="shop-link">
-        <g>
-          <rect x="55" y="102" width="180" height="136" rx="12" fill="#3a2c4a" stroke="#ef6b8c" stroke-opacity="0.45" stroke-width="1.5"/>
-          <path d="M46 108 L145 78 L244 108 Z" fill="#4f3659"/>
-          <!-- Toldo -->
-          <rect x="65" y="138" width="160" height="18" rx="6" fill="#ef6b8c" opacity="0.88"/>
-          <!-- Janela luminosa -->
-          <rect x="82" y="166" width="126" height="56" rx="8" fill="#241a30" stroke="#ef6b8c" stroke-opacity="0.4"/>
-          <circle cx="145" cy="194" r="36" fill="url(#glowSakura)"/>
-          <text x="145" y="191" text-anchor="middle" fill="#fff" font-size="22">🎤</text>
-          <text x="145" y="212" text-anchor="middle" fill="#ffd6e0" font-family="Baloo 2, sans-serif" font-weight="800" font-size="13">KARAOKÊ</text>
-          <!-- Placa vertical luminosa -->
-          <rect x="218" y="88" width="24" height="72" rx="6" fill="#ef6b8c"/>
-          <text x="230" y="106" text-anchor="middle" fill="#fff" font-size="11" font-weight="700">カ</text>
-          <text x="230" y="120" text-anchor="middle" fill="#fff" font-size="11" font-weight="700">ラ</text>
-          <text x="230" y="134" text-anchor="middle" fill="#fff" font-size="11" font-weight="700">オ</text>
-          <text x="230" y="148" text-anchor="middle" fill="#fff" font-size="11" font-weight="700">ケ</text>
-        </g>
-      </a>
+      <button type="button" class="spot" data-loja="caligrafia" style="left:74%;top:35%">
+        🖌️ Tinta Viva <small lang="ja">書道</small>
+      </button>
 
-      <!-- FACHADA 2: KAITEN-ZUSHI (寿司) -->
-      <a href="./sushi/" class="shop-link">
-        <g>
-          <rect x="262" y="114" width="164" height="124" rx="12" fill="#323548" stroke="#72cf9e" stroke-opacity="0.45" stroke-width="1.5"/>
-          <rect x="256" y="106" width="176" height="14" rx="6" fill="#46585c"/>
-          <!-- Noren (cortininha japonesa) -->
-          <g fill="#5ea884" opacity="0.9">
-            <rect x="278" y="132" width="38" height="24" rx="4"/>
-            <rect x="325" y="132" width="38" height="24" rx="4"/>
-            <rect x="372" y="132" width="38" height="24" rx="4"/>
-          </g>
-          <rect x="284" y="166" width="120" height="56" rx="8" fill="#212533" stroke="#72cf9e" stroke-opacity="0.38"/>
-          <text x="344" y="191" text-anchor="middle" fill="#fff" font-size="22">🍣</text>
-          <text x="344" y="212" text-anchor="middle" fill="#cff6e0" font-family="Baloo 2, sans-serif" font-weight="800" font-size="13">SUSHI</text>
-        </g>
-      </a>
+      <button type="button" class="spot" data-loja="cafe" style="left:88.5%;top:53%">
+        🍵 Café <small lang="ja">喫茶</small>
+      </button>
 
-      <!-- FACHADA 3: KONBINI EXPRESS (コンビニ) -->
-      <a href="./konbini/" class="shop-link">
-        <g>
-          <rect x="452" y="110" width="168" height="128" rx="12" fill="#3a3347" stroke="#f2c063" stroke-opacity="0.5" stroke-width="1.5"/>
-          <!-- Faixa clássica de konbini -->
-          <rect x="452" y="122" width="168" height="8" fill="#f2c063"/>
-          <rect x="452" y="130" width="168" height="5" fill="#72cf9e"/>
-          <rect x="452" y="135" width="168" height="5" fill="#ef6b8c"/>
-          <rect x="472" y="156" width="128" height="66" rx="8" fill="#292234" stroke="#f2c063" stroke-opacity="0.4"/>
-          <text x="536" y="186" text-anchor="middle" fill="#fff" font-size="22">🏪</text>
-          <text x="536" y="209" text-anchor="middle" fill="#ffe8b5" font-family="Baloo 2, sans-serif" font-weight="800" font-size="13">KONBINI</text>
-        </g>
-      </a>
+      <!-- Segredinhos vivos do beco (Easter Eggs clicáveis com áudio!) -->
+      <button type="button" class="secret-spot" data-secret="gato" style="left:88%;top:76%" aria-label="Falar com o gatinho do beco" title="Toque no gatinho!">🐾</button>
+      <button type="button" class="secret-spot" data-secret="maquina" style="left:96.8%;top:64%" aria-label="Usar a máquina de bebidas" title="Máquina de bebidas">🥤</button>
+      <button type="button" class="secret-spot" data-secret="bambu" style="left:67.5%;top:64%" aria-label="Tocar no bambu da sorte" title="Bambu da sorte">🎋</button>
 
-      <!-- FACHADA 4: TINTA VIVA / CALIGRAFIA (書道) -->
-      <a href="./caligrafia/" class="shop-link">
-        <g>
-          <rect x="646" y="116" width="156" height="122" rx="12" fill="#31334a" stroke="#6fb7f6" stroke-opacity="0.45" stroke-width="1.5"/>
-          <path d="M638 122 L724 94 L810 122 Z" fill="#3d4461"/>
-          <rect x="666" y="152" width="116" height="70" rx="8" fill="#212438" stroke="#6fb7f6" stroke-opacity="0.4"/>
-          <text x="724" y="185" text-anchor="middle" fill="#fff" font-size="22">🖌️</text>
-          <text x="724" y="208" text-anchor="middle" fill="#d6ecff" font-family="Baloo 2, sans-serif" font-weight="800" font-size="13">TINTA VIVA</text>
-        </g>
-      </a>
-
-      <!-- FACHADA 5: CAFÉ YOKOCHO (Cantinho Social) -->
-      <a href="#cantinho-social" class="shop-link">
-        <g>
-          <rect x="826" y="122" width="126" height="116" rx="12" fill="#3b304b" stroke="#c5a8ff" stroke-opacity="0.45" stroke-width="1.5"/>
-          <rect x="840" y="154" width="98" height="68" rx="8" fill="#261e33" stroke="#c5a8ff" stroke-opacity="0.38"/>
-          <text x="889" y="186" text-anchor="middle" fill="#fff" font-size="22">🍵</text>
-          <text x="889" y="208" text-anchor="middle" fill="#e5d8ff" font-family="Baloo 2, sans-serif" font-weight="800" font-size="12.5">CAFÉ SOCIAL</text>
-        </g>
-      </a>
-
-      <!-- Fio de lanterninhas Chōchin atravessando a rua -->
-      <path d="M0 58 Q250 96 500 72 T1000 62" fill="none" stroke="#6a5a7e" stroke-width="1.8" opacity="0.75"/>
-      <g class="lantern-sway">
-        <circle cx="150" cy="84" r="24" fill="url(#glowLantern)"/>
-        <rect x="140" y="70" width="20" height="26" rx="9" fill="#f2c063" stroke="#d18b47" stroke-width="1.5"/>
-      </g>
-      <g class="lantern-sway d2">
-        <circle cx="385" cy="83" r="24" fill="url(#glowLantern)"/>
-        <rect x="375" y="69" width="20" height="26" rx="9" fill="#ef6b8c" stroke="#b84260" stroke-width="1.5"/>
-      </g>
-      <g class="lantern-sway d3">
-        <circle cx="620" cy="79" r="24" fill="url(#glowLantern)"/>
-        <rect x="610" y="65" width="20" height="26" rx="9" fill="#f2c063" stroke="#d18b47" stroke-width="1.5"/>
-      </g>
-      <g class="lantern-sway">
-        <circle cx="835" cy="76" r="22" fill="url(#glowLantern)"/>
-        <rect x="826" y="63" width="18" height="24" rx="8" fill="#ef6b8c" stroke="#b84260" stroke-width="1.5"/>
-      </g>
-    </svg>
-
-    <div class="hero-caption">
-      <div>
-        <p class="eyebrow">✦ Planeta Utopia · Yokocho Unirversos</p>
-        <h1>Salão Unirversos</h1>
-        <p>Uma ruazinha de Tóquio ao entardecer para cantar, treinar o ouvido, jogar no fliperama e trocar um recado em japonês — tudo abre na hora, mesmo jogando sozinho(a).</p>
+      <!-- Avatar caminhando na calçada -->
+      <div class="walker" id="walker" style="left:50%;top:87%">
+        <div class="walker-face" id="walkerFace">🧳</div>
+        <span class="walker-name" id="walkerName">Você</span>
       </div>
-      <div class="row">
-        <a class="btn pri" href="./karaoke/">🎤 Entrar no Karaokê</a>
-        <a class="btn" href="#cantinho-social">🍵 Café Social</a>
-      </div>
-    </div>
-  </section>
 
-  <!-- Portas do Salão (Jogos & Experiências) -->
-  <section aria-labelledby="h-portas">
-    <div class="sec-head">
-      <div>
-        <p class="eyebrow">✦ escolha uma porta</p>
-        <h2 id="h-portas">Karaokê &amp; Fliperama de Japonês</h2>
-      </div>
-      <p class="sub">Toque em qualquer ambiente para entrar direto.</p>
-    </div>
+      <!-- Balão flutuante para Easter Eggs -->
+      <div class="beco-bubble" id="becoBubble" hidden></div>
 
-    <div class="portas-grid" style="margin-top:12px">
-      <!-- 1. Karaokê (Destaque) -->
-      <a class="porta-card destaque" href="./karaoke/">
-        <div class="porta-top">
-          <div class="porta-icon">🎤</div>
-          <span class="porta-jp">カラオケ · DESTAQUE</span>
-        </div>
-        <div class="porta-body">
-          <h3>Sala de Karaokê</h3>
-          <p>Cole qualquer música japonesa do YouTube (ou escolha do catálogo), acompanhe a letra sincronizada com Furigana, Romaji e tradução, teste a pronúncia no microfone e salve versos no Caderno.</p>
-        </div>
-        <div class="porta-tags">
-          <div class="tags-list">
-            <span class="tag">YouTube + LRC</span>
-            <span class="tag">🎙️ Microfone</span>
-            <span class="tag">📒 Caderno</span>
-          </div>
-          <span class="entrar-cta">Abrir palco →</span>
-        </div>
-      </a>
-
-      <!-- 2. Kaiten-Zushi -->
-      <a class="porta-card c-sage" href="./sushi/">
-        <div class="porta-top">
-          <div class="porta-icon">🍣</div>
-          <span class="porta-jp">回転寿司</span>
-        </div>
-        <div class="porta-body">
-          <h3>Kaiten-Zushi de Palavras</h3>
-          <p>Fliperama de reflexo! Pratos passam na esteira com palavras reais do curso. Ouça o pedido, pegue o prato certo antes que passe e empilhe combos.</p>
-        </div>
-        <div class="porta-tags">
-          <div class="tags-list">
-            <span class="tag">Reflexo</span>
-            <span class="tag">🔊 Áudio</span>
-            <span class="tag">Combos</span>
-          </div>
-          <span class="entrar-cta">Jogar →</span>
-        </div>
-      </a>
-
-      <!-- 3. Konbini Express -->
-      <a class="porta-card c-lantern" href="./konbini/">
-        <div class="porta-top">
-          <div class="porta-icon">🏪</div>
-          <span class="porta-jp">コンビニ</span>
-        </div>
-        <div class="porta-body">
-          <h3>Konbini Express</h3>
-          <p>Atenda o balcão de uma loja de conveniência em Tóquio! Entenda os pedidos falados pelos clientes, monte a bandeja e pratique respostas no microfone.</p>
-        </div>
-        <div class="porta-tags">
-          <div class="tags-list">
-            <span class="tag">Escuta real</span>
-            <span class="tag">🎙️ Fala</span>
-          </div>
-          <span class="entrar-cta">Abrir turno →</span>
-        </div>
-      </a>
-
-      <!-- 4. Tinta Viva · Caligrafia -->
-      <a class="porta-card c-sky" href="./caligrafia/">
-        <div class="porta-top">
-          <div class="porta-icon">🖌️</div>
-          <span class="porta-jp">書道</span>
-        </div>
-        <div class="porta-body">
-          <h3>Tinta Viva · Caligrafia</h3>
-          <p>Desenhe Hiragana e Katakana traço por traço em uma tela de nanquim interativa, com guia animado da ordem correta e avaliação de precisão.</p>
-        </div>
-        <div class="porta-tags">
-          <div class="tags-list">
-            <span class="tag">Canvas de traços</span>
-            <span class="tag">Ordem KanjiVG</span>
-          </div>
-          <span class="entrar-cta">Desenhar →</span>
-        </div>
-      </a>
-
-      <!-- 5. Mala Express (novo!) -->
-      <a class="porta-card c-coral" href="./mala/">
-        <div class="porta-top">
-          <div class="porta-icon">🧳</div>
-          <span class="porta-jp">パッキング</span>
-        </div>
-        <div class="porta-body">
-          <h3>Mala Express · 3 Destinos</h3>
-          <p>Arrume a mala e a mochila de mão para Sapporo (inverno), Okinawa (verão) ou Quioto (templos) — com áudio, regras reais de voo e envio ao Caderno.</p>
-        </div>
-        <div class="porta-tags">
-          <div class="tags-list">
-            <span class="tag">Arrastar &amp; Soltar</span>
-            <span class="tag">3 Destinos</span>
-            <span class="tag">📒 Caderno</span>
-          </div>
-          <span class="entrar-cta">Embarcar →</span>
-        </div>
-      </a>
-
-      <!-- 6. Festa no Salão · Jogos em Dupla (novo!) -->
-      <a class="porta-card c-lav" href="./dupla/">
-        <div class="porta-top">
-          <div class="porta-icon">👥</div>
-          <span class="porta-jp">ふたりで</span>
-        </div>
-        <div class="porta-body">
-          <h3>Festa no Salão · Jogos de Mesa</h3>
-          <p>Duelo Relâmpago (2 jogadores na mesma tela!), Quem pegou o bolo? (detetive em japonês) e Adivinhe Quem É — abre na hora, sem fila.</p>
-        </div>
-        <div class="porta-tags">
-          <div class="tags-list">
-            <span class="tag">⚡ Duelo 2P</span>
-            <span class="tag">🕵️ Detetive</span>
-            <span class="tag">🎯 Perguntas</span>
-          </div>
-          <span class="entrar-cta">Jogar juntos →</span>
-        </div>
-      </a>
-    </div>
-  </section>
-
-  <!-- Cantinho Social Simples · Café Yokocho -->
-  <section class="card b-lav" id="cantinho-social" aria-labelledby="h-cafe">
-    <div class="sec-head">
-      <div>
-        <p class="eyebrow">✦ cantinho social · sem pressa</p>
-        <h2 id="h-cafe">🍵 Café Yokocho · Mural &amp; Status</h2>
-      </div>
-      <span class="sub">Deixe um "olá" em japonês — mesmo se entrar fora de hora, a rua tem movimento.</span>
-    </div>
-
-    <div class="cafe-grid">
-      <!-- Seu status rápido -->
-      <div class="status-box">
-        <div class="eu-row">
-          <div class="av-circ" id="meuAv">🧳</div>
-          <div>
-            <strong id="meuNome" style="font-size:16px">Viajante</strong>
-            <div class="sub" id="meuStatusTxt" style="font-size:13px">🍵 Tomando um chá no Café</div>
-          </div>
-        </div>
+      <!-- Popover Washi da lojinha escolhida -->
+      <div class="loja-popover" id="lojaPopover" hidden role="region" aria-live="polite">
         <div>
-          <div class="sub" style="font-size:12px;margin-bottom:6px">O que você está fazendo hoje?</div>
-          <div class="humor-pills" id="humorPills">
-            <button type="button" data-h="🎤 Cantando no Karaokê">🎤 Karaokê</button>
-            <button type="button" data-h="🍣 No Fliperama de Sushi">🍣 Sushi</button>
-            <button type="button" data-h="🖌️ Treinando Caligrafia">🖌️ Caligrafia</button>
-            <button type="button" data-h="🍵 Tomando um chá no Café" class="on">🍵 Chá</button>
-          </div>
+          <span class="jp-tag" id="popJp" lang="ja"></span>
+          <h3 id="popTit"></h3>
+          <p id="popDesc"></p>
         </div>
-        <p class="sub" style="font-size:12.5px">Modo teste local: os recados ficam salvos neste aparelho. Na versão oficial, conectamos ao mural compartilhado do Salão.</p>
-      </div>
-
-      <!-- Mural de recados em japonês -->
-      <div class="mural-box">
-        <div class="mural-lista" id="muralLista" aria-live="polite"></div>
-
-        <div class="frases-rapidas" id="frasesRapidas" aria-label="Frases prontas em japonês"></div>
-
-        <form class="mural-form" id="muralForm">
-          <input type="text" id="muralInput" maxlength="160" placeholder="Deixe um recado em japonês (ex.: こんばんは！)…" aria-label="Recado em japonês">
-          <button type="submit" class="btn pri">Enviar</button>
-        </form>
+        <div class="row">
+          <button type="button" class="btn sm" id="popFecha" style="background:#fff;color:#42322e;border-color:#d4bfa9">✕</button>
+          <a class="btn pri" id="popEntrar" href="#">Entrar →</a>
+        </div>
       </div>
     </div>
-  </section>
+
+    <!-- Placa de rua / Atalhos discretos na base do mapa -->
+    <div class="beco-dock">
+      <span class="dock-dica">👣 Toque na calçada para passear (ou use ← →) · Toque numa porta para entrar</span>
+      <div class="dock-atalhos">
+        <a class="dock-pill" href="./mala/">🧳 Mala Express</a>
+        <a class="dock-pill" href="./dupla/">👥 Jogos em Dupla</a>
+        <button type="button" class="dock-pill" id="btnAbrirCafe">🍵 Mural do Café</button>
+      </div>
+    </div>
+  </main>
 
   <footer>
-    <span>UNI<span style="color:var(--sakura)">R</span>VERSOS · Salão em Área de Teste</span>
+    <span>UNI<span style="color:var(--sakura)">R</span>VERSOS · Salão Yokocho (Área de Teste)</span>
     <span><a href="/idiomas/teste/">Área de teste</a> · <a href="/idiomas/planeta-utopia/salao/">Salão oficial atual</a></span>
   </footer>
 </div>
+
+<!-- Modal Papel Washi · Café Yokocho (Cantinho Social Simples) -->
+<dialog class="cafe-modal" id="cafeModal">
+  <div class="row" style="justify-content:space-between;margin-bottom:6px">
+    <div>
+      <span style="font-size:11.5px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:#b24b3d">✦ 喫茶 · Cantinho Social</span>
+      <h2 style="color:#42322e">🍵 Café Yokocho</h2>
+    </div>
+    <button type="button" class="btn sm" id="fechaCafe">✕ Fechar</button>
+  </div>
+  <p class="sub" style="margin-bottom:10px">Deixe um recado rápido em japonês na mesinha do beco ou ouça quem passou por aqui.</p>
+
+  <div class="mural-lista" id="muralLista"></div>
+  <div class="frases-bar" id="frasesBar"></div>
+  <form class="mural-form" id="muralForm">
+    <input type="text" id="muralInput" maxlength="160" placeholder="Escreva em japonês (ex.: こんばんは！)…">
+    <button type="submit" class="btn pri">Enviar</button>
+  </form>
+</dialog>
 
 <script src="/idiomas/dados/avatar.js?v=20261016b"></script>
 <script src="/idiomas/dados/velocidade-voz.js?v=1"></script>
@@ -625,93 +433,237 @@
   'use strict';
   const esc = s => String(s || '').replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
 
-  /* ---------- Avatar e Nome do aluno ---------- */
+  /* ---------- Avatar do aluno ---------- */
   const av = window.UtopiaAvatar && window.UtopiaAvatar.load && window.UtopiaAvatar.load();
-  const nome = (av && av.profile && (av.profile.kata || av.profile.name)) || 'Viajante';
-  document.getElementById('meuNome').textContent = nome;
+  const nome = (av && av.profile && (av.profile.kata || av.profile.name)) || 'Você';
+  document.getElementById('walkerName').textContent = nome;
   if (av && av.sel && window.UtopiaAvatar) {
-    document.getElementById('meuAv').innerHTML = window.UtopiaAvatar.svg(av.sel, { viewBox: '40 46 160 160', still: true, label: 'Avatar' });
+    document.getElementById('walkerFace').innerHTML = window.UtopiaAvatar.svg(av.sel, { viewBox: '40 46 160 160', still: true, label: 'Avatar' });
   }
 
-  /* ---------- Status / Humor ---------- */
-  const HUMOR_KEY = 'uniSalaoHumor';
-  let humor = '🍵 Tomando um chá no Café';
-  try { humor = localStorage.getItem(HUMOR_KEY) || humor; } catch (e) {}
-  const statusEl = document.getElementById('meuStatusTxt');
-  const pillsEl = document.getElementById('humorPills');
+  /* ---------- Lojas do Beco ---------- */
+  const LOJAS = {
+    karaoke: {
+      x: 10.5, y: 84,
+      jp: 'カラオケ · Palco & Microfone',
+      tit: '🎤 Sala de Karaokê',
+      desc: 'Cole qualquer música do YouTube, cante com letra sincronizada, furigana e teste sua voz no microfone.',
+      href: './karaoke/'
+    },
+    sushi: {
+      x: 26.5, y: 84,
+      jp: '回転寿司 · Fliperama de Reflexo',
+      tit: '🍣 Kaiten-Zushi de Palavras',
+      desc: 'Pegue os pratos certos na esteira antes que passem, empilhe combos e treine escuta pura.',
+      href: './sushi/'
+    },
+    konbini: {
+      x: 51, y: 84,
+      jp: 'コンビニ · Escuta & Fala',
+      tit: '🏪 Konbini Express',
+      desc: 'Atenda clientes no turno da noite, monte a bandeja certa e ganhe bônus falando no microfone.',
+      href: './konbini/'
+    },
+    caligrafia: {
+      x: 74, y: 84,
+      jp: '書道 · Pincel Interativo',
+      tit: '🖌️ Tinta Viva · Caligrafia',
+      desc: 'Desenhe Hiragana e Katakana no papel washi com guia animado da ordem dos traços.',
+      href: './caligrafia/'
+    },
+    cafe: {
+      x: 88.5, y: 86,
+      jp: '喫茶 · Cantinho Social',
+      tit: '🍵 Café Yokocho',
+      desc: 'Sente na mesinha da rua, deixe um recado em japonês e veja quem passou pelo beco.',
+      modal: true
+    }
+  };
 
-  function renderHumor() {
-    statusEl.textContent = humor;
-    pillsEl.querySelectorAll('button').forEach(b => b.classList.toggle('on', b.dataset.h === humor));
+  /* ---------- Movimento do Avatar na Calçada ---------- */
+  const stage = document.getElementById('becoStage');
+  const walker = document.getElementById('walker');
+  const popover = document.getElementById('lojaPopover');
+  let pos = { x: 50, y: 87 };
+  let walkTimer = null;
+  let lojaAtiva = null;
+
+  function andarPara(x, y) {
+    pos.x = Math.max(6, Math.min(94, x));
+    pos.y = Math.max(80, Math.min(94, y));
+    walker.classList.add('andando');
+    walker.style.left = pos.x + '%';
+    walker.style.top = pos.y + '%';
+    clearTimeout(walkTimer);
+    walkTimer = setTimeout(() => walker.classList.remove('andando'), 860);
   }
-  pillsEl.addEventListener('click', e => {
-    const b = e.target.closest('button');
-    if (!b) return;
-    humor = b.dataset.h;
-    try { localStorage.setItem(HUMOR_KEY, humor); } catch (err) {}
-    renderHumor();
-    window.UniSalao && UniSalao.sfx.click();
+
+  function abrePopover(id) {
+    const L = LOJAS[id];
+    if (!L) return;
+    /* Segundo clique na mesma placa entra direto! */
+    if (lojaAtiva === id && !popover.hidden) {
+      if (L.modal) { popover.hidden = true; document.getElementById('cafeModal').showModal(); }
+      else location.href = L.href;
+      return;
+    }
+    lojaAtiva = id;
+    document.querySelectorAll('.spot').forEach(s => s.classList.toggle('ativo', s.dataset.loja === id));
+    andarPara(L.x, L.y);
+    UniSalao.sfx.click();
+
+    document.getElementById('popJp').textContent = L.jp;
+    document.getElementById('popTit').textContent = L.tit;
+    document.getElementById('popDesc').textContent = L.desc;
+    const btn = document.getElementById('popEntrar');
+    if (L.modal) {
+      btn.href = '#cafe';
+      btn.textContent = 'Sentar no Café →';
+      btn.onclick = ev => { ev.preventDefault(); popover.hidden = true; document.getElementById('cafeModal').showModal(); };
+    } else {
+      btn.href = L.href;
+      btn.textContent = 'Entrar →';
+      btn.onclick = null;
+    }
+    popover.hidden = false;
+  }
+
+  document.getElementById('popFecha').addEventListener('click', e => {
+    e.stopPropagation();
+    popover.hidden = true;
+    lojaAtiva = null;
+    document.querySelectorAll('.spot').forEach(s => s.classList.remove('ativo'));
   });
-  renderHumor();
 
-  /* ---------- Mural do Café ---------- */
+  /* ---------- Easter Eggs vivos do Beco ---------- */
+  const bubble = document.getElementById('becoBubble');
+  let bubTimer = null;
+  function mostraBalao(x, y, jp, ro, pt) {
+    bubble.style.left = Math.max(16, Math.min(84, x)) + '%';
+    bubble.style.top = Math.max(22, y - 4) + '%';
+    bubble.innerHTML = `<b lang="ja">${esc(jp)}</b><span class="ro-block" style="color:#9e4b3e;font-size:11.5px">${esc(ro)}</span><span>${esc(pt)}</span>`;
+    bubble.hidden = false;
+    UniSalao.speak(jp);
+    clearTimeout(bubTimer);
+    bubTimer = setTimeout(() => { bubble.hidden = true; }, 4200);
+  }
+
+  const GATO_FALAS = [
+    ['にゃ〜！こんばんは！', 'nyaa! konbanwa!', 'Miau! Boa noite!'],
+    ['さかなが すきです！', 'sakana ga suki desu!', 'Eu amo peixe!'],
+    ['きょうも がんばってね！', 'kyou mo ganbatte ne!', 'Dê o seu melhor hoje!']
+  ];
+  const BEBIDAS = [
+    ['つめたい おちゃ！', 'tsumetai ocha!', '🍵 Caiu um chá verde gelado!'],
+    ['あたたかい コーヒー！', 'atatakai koohii!', '☕ Caiu um café quentinho!'],
+    ['ラムネ どうぞ！', 'ramune douzo!', '🫧 Caiu um refrigerante Ramune!'],
+    ['おいしい みず！', 'oishii mizu!', '💧 Caiu uma água geladinha!']
+  ];
+  const BAMBUS = [
+    ['ちりも つもれば やまとなる', 'chiri mo tsumoreba yama to naru', 'Grão em grão vira montanha (constância!).'],
+    ['ななころび やおき', 'nanakorobi yaoki', 'Cair sete vezes, levantar oito.'],
+    ['いちげ いちえ', 'ichigo ichie', 'Cada encontro é único — aproveite!']
+  ];
+
+  stage.addEventListener('click', e => {
+    if (e.target.closest('#lojaPopover')) return;
+
+    const sp = e.target.closest('[data-loja]');
+    if (sp) { abrePopover(sp.dataset.loja); return; }
+
+    const sec = e.target.closest('[data-secret]');
+    if (sec) {
+      popover.hidden = true;
+      const tipo = sec.dataset.secret;
+      if (tipo === 'gato') {
+        const f = GATO_FALAS[Math.floor(Math.random() * GATO_FALAS.length)];
+        andarPara(84, 86);
+        mostraBalao(86, 74, f[0], f[1], f[2]);
+        UniSalao.sfx.bell();
+      } else if (tipo === 'maquina') {
+        const b = BEBIDAS[Math.floor(Math.random() * BEBIDAS.length)];
+        andarPara(92, 86);
+        mostraBalao(86, 60, b[0], b[1], b[2]);
+        UniSalao.sfx.ok();
+        UniSalao.addXP(2);
+      } else if (tipo === 'bambu') {
+        const p = BAMBUS[Math.floor(Math.random() * BAMBUS.length)];
+        andarPara(67, 84);
+        mostraBalao(67, 60, p[0], p[1], '🎋 ' + p[2]);
+        UniSalao.sfx.bell();
+      }
+      return;
+    }
+
+    /* Clique na calçada: avatar passeia! */
+    const r = stage.getBoundingClientRect();
+    const px = ((e.clientX - r.left) / r.width) * 100;
+    const py = ((e.clientY - r.top) / r.height) * 100;
+    popover.hidden = true;
+    lojaAtiva = null;
+    document.querySelectorAll('.spot').forEach(s => s.classList.remove('ativo'));
+    andarPara(px, py);
+  });
+
+  /* Setas do teclado para caminhar */
+  stage.addEventListener('keydown', e => {
+    const d = { ArrowLeft: [-6, 0], ArrowRight: [6, 0], ArrowUp: [0, -4], ArrowDown: [0, 4] }[e.key];
+    if (!d) return;
+    e.preventDefault();
+    andarPara(pos.x + d[0], pos.y + d[1]);
+  });
+
+  /* ---------- Modal Café Yokocho (Mural Social) ---------- */
+  const modal = document.getElementById('cafeModal');
+  document.getElementById('btnAbrirCafe').addEventListener('click', () => { UniSalao.sfx.click(); modal.showModal(); });
+  document.getElementById('fechaCafe').addEventListener('click', () => modal.close());
+
   const MURAL_KEY = 'uniSalaoMuralTeste';
   const SEED = [
-    { quem: 'Aline Sensei', jp: 'ようこそ！きょうは なにを あそびますか？', ro: 'youkoso! kyou wa nani o asobimasu ka?', pt: 'Bem-vindo(a)! O que você vai jogar hoje?', hora: 'agora' },
-    { quem: 'Hana', jp: 'カラオケが たのしいです！', ro: 'karaoke ga tanoshii desu!', pt: 'O karaokê é muito divertido!', hora: 'hoje' }
+    { quem: 'Aline Sensei', jp: 'ようこそ！きょうは なにを あそびますか？', ro: 'youkoso! kyou wa nani o asobimasu ka?', pt: 'Bem-vindo(a)! O que você vai jogar hoje?' },
+    { quem: 'Hana', jp: 'カラオケが たのしいです！', ro: 'karaoke ga tanoshii desu!', pt: 'O karaokê está muito divertido!' }
   ];
   const FRASES = [
     ['こんばんは！', 'konbanwa!', 'Boa noite!'],
-    ['こんにちは！', 'konnichiwa!', 'Olá!'],
-    ['おつかれさまです！', 'otsukaresama desu!', 'Bom trabalho!'],
-    ['カラオケを うたいましょう！', 'karaoke o utaimashou!', 'Vamos cantar karaokê!'],
-    ['おすしが すきです！', 'osushi ga suki desu!', 'Eu gosto de sushi!'],
-    ['がんばります！', 'ganbarimasu!', 'Vou dar o meu melhor!']
+    ['おつかれさま！', 'otsukaresama!', 'Bom trabalho!'],
+    ['カラオケ いこう！', 'karaoke ikou!', 'Vamos no karaokê!'],
+    ['おすし すき！', 'osushi suki!', 'Amo sushi!']
   ];
 
   let mural = [];
   try {
-    const saved = JSON.parse(localStorage.getItem(MURAL_KEY) || 'null');
-    mural = Array.isArray(saved) && saved.length ? saved : SEED.slice();
+    const s = JSON.parse(localStorage.getItem(MURAL_KEY) || 'null');
+    mural = Array.isArray(s) && s.length ? s : SEED.slice();
   } catch (e) { mural = SEED.slice(); }
 
   const listaEl = document.getElementById('muralLista');
   function renderMural() {
     listaEl.innerHTML = mural.map((m, i) => `
       <div class="recado">
-        <div class="recado-txt">
-          <span class="recado-meta">${esc(m.quem)} · ${esc(m.hora || 'agora')}</span>
-          <span class="recado-jp" lang="ja">${esc(m.jp)}</span>
-          ${m.ro ? `<span class="recado-ro ro-block">${esc(m.ro)}</span>` : ''}
-          ${m.pt ? `<span class="recado-pt">${esc(m.pt)}</span>` : ''}
+        <div>
+          <div style="font-size:11.5px;color:#8a7268;font-weight:700">${esc(m.quem)}</div>
+          <div style="font-weight:700;font-size:15px" lang="ja">${esc(m.jp)}</div>
+          ${m.ro ? `<div class="ro-block" style="font-size:12px;color:#b24b3d">${esc(m.ro)}</div>` : ''}
+          ${m.pt ? `<div style="font-size:12.5px;color:#6e5a54">${esc(m.pt)}</div>` : ''}
         </div>
-        <button type="button" class="btn sm" data-ouvir="${i}" aria-label="Ouvir recado">🔊</button>
+        <button type="button" class="btn sm" data-mouv="${i}">🔊</button>
       </div>
     `).join('');
   }
   renderMural();
-
   listaEl.addEventListener('click', e => {
-    const b = e.target.closest('[data-ouvir]');
-    if (!b) return;
-    const item = mural[+b.dataset.ouvir];
-    if (item) UniSalao.speak(item.jp);
+    const b = e.target.closest('[data-mouv]');
+    if (b) UniSalao.speak(mural[+b.dataset.mouv].jp);
   });
 
-  /* Frases rápidas */
-  const frEl = document.getElementById('frasesRapidas');
-  frEl.innerHTML = FRASES.map((f, i) => `<button type="button" lang="ja" data-fi="${i}" title="${esc(f[2])}">${esc(f[0])}</button>`).join('');
+  const frEl = document.getElementById('frasesBar');
+  frEl.innerHTML = FRASES.map((f, i) => `<button type="button" lang="ja" data-fi="${i}">${esc(f[0])}</button>`).join('');
   frEl.addEventListener('click', e => {
     const b = e.target.closest('[data-fi]');
     if (!b) return;
     const f = FRASES[+b.dataset.fi];
-    if (!f) return;
     UniSalao.speak(f[0]);
-    const inp = document.getElementById('muralInput');
-    inp.value = f[0];
-    inp.dataset.ro = f[1];
-    inp.dataset.pt = f[2];
-    inp.focus();
+    document.getElementById('muralInput').value = f[0];
   });
 
   document.getElementById('muralForm').addEventListener('submit', e => {
@@ -720,13 +672,7 @@
     const txt = inp.value.trim();
     if (!txt) return;
     const match = FRASES.find(f => f[0] === txt);
-    mural.unshift({
-      quem: nome,
-      jp: txt,
-      ro: match ? match[1] : '',
-      pt: match ? match[2] : '',
-      hora: 'agora'
-    });
+    mural.unshift({ quem: nome, jp: txt, ro: match ? match[1] : '', pt: match ? match[2] : '' });
     mural = mural.slice(0, 20);
     try { localStorage.setItem(MURAL_KEY, JSON.stringify(mural)); } catch (err) {}
     inp.value = '';
