@@ -8,7 +8,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@600;700;800&family=Zen+Maru+Gothic:wght@400;500;700&display=swap">
-<link rel="stylesheet" href="../salao.css?v=2">
+<link rel="stylesheet" href="../salao.css?v=6">
 <style>
   .cali-grid {
     display: grid;
@@ -118,10 +118,11 @@
     </div>
     <div class="top-tools">
       <span class="xp-pill">✦ <span data-xp-val>0</span> XP</span>
-      <button type="button" class="btn sm" data-romaji-btn aria-pressed="false">Romaji: OFF</button>
       <button type="button" class="btn sm" data-mute-btn aria-pressed="true">🔊 Som: ON</button>
     </div>
   </nav>
+
+  <div data-acess-bar></div>
 
   <section class="card b-sky">
     <div>
@@ -138,7 +139,7 @@
             <span class="char-big" id="charBig" lang="ja">あ</span>
             <div>
               <strong id="charInfo">Hiragana · 3 traços</strong>
-              <div class="sub" style="font-size:13px">Leitura: <b id="charRo" style="color:var(--lantern)">a</b></div>
+              <div class="sub ro-block" style="font-size:13px">Leitura: <b id="charRo" style="color:var(--lantern)">a</b></div>
             </div>
           </div>
           <button type="button" class="btn sm sky" id="btnSom">🔊 Ouvir</button>
@@ -181,7 +182,7 @@
 
 <script src="/idiomas/dados/kana-tracos.js?v=1"></script>
 <script src="/idiomas/dados/velocidade-voz.js?v=1"></script>
-<script src="../sfx.js?v=1"></script>
+<script src="../sfx.js?v=6"></script>
 <script>
 (function () {
   'use strict';
@@ -396,11 +397,19 @@
     if (nota >= 52) { estrelas = 3; tit = 'Caligrafia linda! ✨'; xp = 15; }
     else if (nota >= 34) { estrelas = 2; tit = 'Muito bom traço!'; xp = 10; }
 
+    const pct = Math.min(100, Math.round(nota * 1.35));
     document.getElementById('scoreEstrelas').textContent = '⭐'.repeat(estrelas) + '☆'.repeat(3 - estrelas);
     document.getElementById('scoreTit').textContent = `${tit} (+${xp} XP)`;
-    document.getElementById('scoreSub').textContent = `Fidelidade ao molde: ${Math.min(100, Math.round(nota * 1.35))}% · ${guiaOn ? 'Tente também com o Guia OFF!' : 'Feito de memória!'}`;
+    document.getElementById('scoreSub').textContent = `Fidelidade ao molde: ${pct}% · ${guiaOn ? 'Tente também com o Guia OFF!' : 'Feito de memória!'}`;
 
     UniSalao.addXP(xp);
+    if (UniSalao.recordSession) {
+      UniSalao.recordSession({
+        jogo: 'caligrafia', nomeJogo: '🖌️ Tinta Viva',
+        duracaoSeg: 12, acertos: estrelas >= 2 ? 1 : 0, erros: estrelas >= 2 ? 0 : 1,
+        precisao: pct, tempoMedio: 12, pts: xp
+      });
+    }
     if (estrelas >= 2) {
       feitos.add(ch);
       try { localStorage.setItem('uniCaliFeitos', JSON.stringify([...feitos])); } catch (e) {}

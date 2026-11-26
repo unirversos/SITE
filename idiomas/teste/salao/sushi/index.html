@@ -8,7 +8,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@600;700;800&family=Zen+Maru+Gothic:wght@400;500;700&display=swap">
-<link rel="stylesheet" href="../salao.css?v=2">
+<link rel="stylesheet" href="../salao.css?v=6">
 <style>
   .hud {
     display: flex;
@@ -19,7 +19,7 @@
   }
   .stats { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
   .stat-pill {
-    background: rgba(25, 20, 34, 0.55);
+    background: rgba(34, 26, 28, 0.55);
     border: 1px solid var(--line);
     border-radius: 999px;
     padding: 5px 13px;
@@ -29,10 +29,63 @@
   .stat-pill b { font-family: var(--f-display); color: var(--lantern); font-size: 15px; }
   .stat-pill.combo b { color: var(--sage); }
 
+  /* Barra de Acessibilidade & Controles (sempre opcional durante o jogo) */
+  .acess-bar {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px 12px;
+    background: rgba(34, 26, 28, 0.48);
+    border: 1px solid var(--line);
+    border-radius: 16px;
+    padding: 8px 12px;
+  }
+  .acess-grupo { display: flex; flex-wrap: wrap; align-items: center; gap: 6px; }
+  .vel-ctrl {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    background: var(--surface);
+    border: 1px solid var(--line-strong);
+    border-radius: 999px;
+    padding: 2px 5px;
+  }
+  .vel-ctrl button {
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    border: 0;
+    background: rgba(251, 243, 230, 0.1);
+    color: var(--ink);
+    font-weight: 800;
+    font-size: 15px;
+    display: grid;
+    place-items: center;
+  }
+  .vel-ctrl button:hover { background: var(--lantern-soft); color: var(--lantern); }
+  .vel-ctrl span {
+    min-width: 58px;
+    text-align: center;
+    font-size: 12.5px;
+    font-weight: 800;
+    color: var(--lantern);
+  }
+
+  /* Furigana opcional via classe no body */
+  body:not(.ver-furi) .prato rt { display: none; }
+  .prato ruby { ruby-position: over; }
+  .prato rt {
+    font-size: 11px;
+    font-weight: 700;
+    color: #fce2ad;
+    letter-spacing: 0.02em;
+  }
+
   /* Balcão do Chef / Pedido atual */
   .pedido-box {
-    background: linear-gradient(135deg, rgba(114, 207, 158, 0.14), rgba(53, 44, 67, 0.9));
-    border: 1px solid rgba(114, 207, 158, 0.35);
+    background: linear-gradient(135deg, rgba(133, 176, 141, 0.16), rgba(57, 53, 63, 0.92));
+    border: 1px solid rgba(133, 176, 141, 0.4);
     border-radius: 20px;
     padding: 16px 20px;
     display: flex;
@@ -50,27 +103,27 @@
   }
   .pedido-dica { font-size: 13px; color: var(--muted); }
 
-  /* Esteira Kaiten-Zushi */
+  /* Esteira Kaiten-Zushi (madeira quente Yokocho) */
   .esteira-wrap {
     position: relative;
     border-radius: 24px;
-    border: 1.5px solid var(--line-strong);
-    background: linear-gradient(180deg, #2b2437 0%, #241e2f 100%);
+    border: 2px solid rgba(199, 143, 99, 0.45);
+    background: linear-gradient(180deg, #3a2f2b 0%, #2d2422 100%);
     padding: 20px 0;
     overflow: hidden;
-    min-height: 230px;
+    min-height: 244px;
     display: grid;
     align-items: center;
-    box-shadow: inset 0 12px 26px rgba(0, 0, 0, 0.25);
+    box-shadow: inset 0 12px 26px rgba(0, 0, 0, 0.28);
   }
   .trilho-linha {
     position: absolute;
     left: 0;
     right: 0;
-    height: 74px;
-    background: repeating-linear-gradient(90deg, rgba(255, 232, 210, 0.06) 0 26px, transparent 26px 52px);
-    border-top: 2px solid rgba(242, 192, 99, 0.22);
-    border-bottom: 2px solid rgba(242, 192, 99, 0.22);
+    height: 78px;
+    background: repeating-linear-gradient(90deg, rgba(251, 243, 230, 0.06) 0 26px, transparent 26px 52px);
+    border-top: 2px solid rgba(236, 192, 114, 0.26);
+    border-bottom: 2px solid rgba(236, 192, 114, 0.26);
     pointer-events: none;
   }
   .trilho-linha.t1 { top: 28px; }
@@ -79,20 +132,20 @@
   .pratos-layer {
     position: relative;
     width: 100%;
-    height: 196px;
+    height: 204px;
   }
 
   .prato {
     position: absolute;
     transform: translate(-50%, -50%);
-    min-width: 126px;
-    max-width: 190px;
+    min-width: 132px;
+    max-width: 210px;
     padding: 10px 16px;
     border-radius: 999px;
     border: 3px solid var(--lantern);
-    background: radial-gradient(circle at 35% 25%, #4a3f5e, #332a42 75%);
+    background: radial-gradient(circle at 35% 25%, #51464b, #383034 75%);
     color: var(--ink);
-    box-shadow: 0 8px 18px rgba(0, 0, 0, 0.34), inset 0 0 0 3px rgba(255, 255, 255, 0.08);
+    box-shadow: 0 8px 18px rgba(15, 10, 10, 0.4), inset 0 0 0 3px rgba(251, 243, 230, 0.08);
     display: grid;
     justify-items: center;
     gap: 1px;
@@ -108,19 +161,19 @@
   .prato.p-lav { border-color: var(--lav); }
 
   .prato .em { font-size: 18px; line-height: 1; }
-  .prato .jp { font-size: 18px; font-weight: 800; white-space: nowrap; }
+  .prato .jp { font-size: 19px; font-weight: 800; white-space: nowrap; }
   .prato .ro-block { font-size: 11.5px; color: var(--lantern); }
 
   .prato.acertou {
     border-color: var(--sage) !important;
-    background: rgba(114, 207, 158, 0.32) !important;
+    background: rgba(133, 176, 141, 0.35) !important;
     transform: translate(-50%, -65%) scale(1.16) !important;
     opacity: 0;
     transition: all 0.28s ease;
   }
   .prato.errou {
     border-color: var(--sakura) !important;
-    background: rgba(239, 107, 140, 0.3) !important;
+    background: rgba(217, 107, 92, 0.32) !important;
     animation: shake 0.32s ease;
   }
   @keyframes shake {
@@ -129,7 +182,7 @@
   }
 
   .filtros { display: flex; flex-wrap: wrap; gap: 7px; }
-  .filtros button.on { background: var(--sage-soft); border-color: var(--sage); color: #d8ffea; }
+  .filtros button.on { background: var(--sage-soft); border-color: var(--sage); color: #dcf5e0; }
 
   .resumo-lista { display: grid; gap: 8px; }
   .resumo-item {
@@ -138,7 +191,7 @@
     justify-content: space-between;
     align-items: center;
     gap: 8px;
-    background: rgba(25, 20, 34, 0.45);
+    background: rgba(34, 26, 28, 0.48);
     border: 1px solid var(--line);
     border-radius: 14px;
     padding: 8px 12px;
@@ -149,22 +202,38 @@
 <div class="wrap">
   <nav class="topbar">
     <div class="brand-row">
-      <a class="btn sm" href="../">← Ruazinha do Salão</a>
+      <a class="btn sm" href="../">← Voltar ao Beco</a>
       <span class="badge-teste">Fliperama · Kaiten-Zushi</span>
     </div>
     <div class="top-tools">
       <span class="xp-pill">✦ <span data-xp-val>0</span> XP</span>
-      <button type="button" class="btn sm" data-romaji-btn aria-pressed="false">Romaji: OFF</button>
       <button type="button" class="btn sm" data-mute-btn aria-pressed="true">🔊 Som: ON</button>
     </div>
   </nav>
 
+  <!-- Barra de Acessibilidade Permanente (funciona antes e durante a partida) -->
+  <div class="acess-bar" role="region" aria-label="Acessibilidade e velocidade">
+    <div class="acess-grupo">
+      <span class="sub" style="font-size:12.5px;font-weight:700">🐢 Velocidade:</span>
+      <div class="vel-ctrl">
+        <button type="button" id="btnVelMenos" aria-label="Diminuir velocidade da esteira">−</button>
+        <span id="velLabel">1.0x</span>
+        <button type="button" id="btnVelMais" aria-label="Aumentar velocidade da esteira">+</button>
+      </div>
+    </div>
+    <div class="acess-grupo">
+      <button type="button" class="btn sm on" id="btnTrad" aria-pressed="true">👁️ Tradução: ON</button>
+      <button type="button" class="btn sm" id="btnFuri" aria-pressed="false">あ Furigana: OFF</button>
+      <button type="button" class="btn sm" data-romaji-btn aria-pressed="false">Romaji: OFF</button>
+    </div>
+  </div>
+
   <!-- Cabeçalho / Config -->
   <section class="card b-sage" id="telaInicio">
     <div>
-      <p class="eyebrow">✦ 回転寿司 · reflexo &amp; vocabulário</p>
+      <p class="eyebrow">✦ 回転寿司 · kanji real com acessibilidade opcional</p>
       <h1>🍣 Kaiten-Zushi de Palavras</h1>
-      <p class="sub">Pratos de sushi deslizam na esteira com palavras reais do curso. Pegue o prato que corresponde ao pedido antes que ele passe!</p>
+      <p class="sub">Os pratos vêm em <b>Kanji</b> (nível real do Japão). Precisa de apoio? Ligue <b>Furigana</b>, <b>Romaji</b>, <b>Tradução</b> ou diminua a velocidade na barra acima a qualquer momento.</p>
     </div>
 
     <div>
@@ -177,14 +246,41 @@
       </div>
     </div>
 
-    <div class="row">
-      <button type="button" class="btn sm" id="btnModoEscuta" aria-pressed="false">🎧 Modo Escuta Pura: OFF</button>
-      <span class="sub" style="font-size:13px">Recorde: <b id="recVal" style="color:var(--lantern)">0</b> pts</span>
+    <div class="row" style="justify-content:space-between">
+      <span class="sub" style="font-size:13.5px">Recorde: <b id="recVal" style="color:var(--lantern)">0</b> pts</span>
+      <div class="row">
+        <button type="button" class="btn lantern" id="btnAbrirCont">🔢 Treinar Contadores (1〜10)</button>
+        <button type="button" class="btn pri" id="btnStart">▶ Começar esteira</button>
+      </div>
     </div>
+  </section>
 
-    <div class="row">
-      <button type="button" class="btn pri" id="btnStart">▶ Começar rodada</button>
+  <!-- Exercício Fixo: Contadores Japoneses de Pedido (一つ〜十) em Numeral -->
+  <section class="card b-lantern" id="telaContadores" hidden>
+    <div class="row" style="justify-content:space-between">
+      <div>
+        <p class="eyebrow">✦ 注文 · exercício fixo de contadores</p>
+        <h2>🔢 Quantos pratos o cliente pediu?</h2>
+      </div>
+      <div class="row">
+        <span class="badge-teste" id="ctProg">1 / 6</span>
+        <button type="button" class="btn sm" id="ctVoltar">← Voltar à esteira</button>
+      </div>
     </div>
+    <div class="pedido-box">
+      <div>
+        <div class="pedido-dica">Ouça o pedido com contador japonês (<span lang="ja">一つ・二つ…</span>) e toque no número:</div>
+        <div class="pedido-alvo" id="ctJp" lang="ja" style="font-size:clamp(20px,3.6vw,26px)" hidden></div>
+        <div class="ro-block" id="ctRo" style="color:var(--lantern);font-size:13.5px"></div>
+        <div class="sub trad-block" id="ctPt" style="font-size:13.5px"></div>
+      </div>
+      <div class="row">
+        <button type="button" class="btn sky" id="ctOuvir">🔊 Ouvir pedido</button>
+        <button type="button" class="btn sm" id="ctVer">👁️ Ver texto</button>
+      </div>
+    </div>
+    <div id="ctNums" style="display:grid;grid-template-columns:repeat(5,1fr);gap:8px"></div>
+    <div id="ctFb" class="resumo-item" hidden></div>
   </section>
 
   <!-- Palco do Jogo -->
@@ -193,6 +289,8 @@
       <div class="stats">
         <span class="stat-pill">Pontos: <b id="hudPts">0</b></span>
         <span class="stat-pill combo">Combo: <b id="hudCombo">x1</b></span>
+        <span class="stat-pill">⏱️ <b id="hudTempo">00:00</b></span>
+        <span class="stat-pill">🎯 <b id="hudDesemp">100%</b></span>
         <span class="stat-pill" id="hudVidas">❤️❤️❤️</span>
       </div>
       <button type="button" class="btn sm" id="btnParar">Encerrar</button>
@@ -228,44 +326,86 @@
 
     <div class="row">
       <button type="button" class="btn pri" id="btnDeNovo">🔄 Jogar de novo</button>
-      <a class="btn" href="../">← Voltar à Ruazinha</a>
+      <a class="btn sky" href="/aluno/teste/#desempenho">📊 Ver meu gráfico</a>
+      <a class="btn" href="../">← Voltar ao Beco</a>
     </div>
   </section>
 </div>
 
 <script src="/idiomas/dados/velocidade-voz.js?v=1"></script>
 <script src="/idiomas/dados/audio-mapa.js?v=jogos1"></script>
-<script src="../sfx.js?v=1"></script>
+<script src="../sfx.js?v=6"></script>
 <script>
 (function () {
   'use strict';
 
-  /* Fallback rico caso vocabulario.json não carregue (ex.: file://) */
+  /* ---------- Conversor Romaji -> Hiragana (para Furigana automático em Kanjis) ---------- */
+  const R2H = {
+    kya:'きゃ',kyu:'きゅ',kyo:'きょ',sha:'しゃ',shu:'しゅ',sho:'しょ',cha:'ちゃ',chu:'ちゅ',cho:'ちょ',
+    nya:'にゃ',nyu:'にゅ',nyo:'にょ',hya:'ひゃ',hyu:'ひゅ',hyo:'ひょ',mya:'みゃ',myu:'みゅ',myo:'みょ',
+    rya:'りゃ',ryu:'りゅ',ryo:'りょ',gya:'ぎゃ',gyu:'ぎゅ',gyo:'ぎょ',ja:'じゃ',ju:'じゅ',jo:'じょ',
+    bya:'びゃ',byu:'びゅ',byo:'びょ',pya:'ぴゃ',pyu:'ぴゅ',pyo:'ぴょ',
+    shi:'し',chi:'ち',tsu:'つ',fu:'ふ',ji:'じ',
+    ka:'か',ki:'き',ku:'く',ke:'け',ko:'こ',sa:'さ',su:'す',se:'せ',so:'そ',
+    ta:'た',te:'て',to:'と',na:'な',ni:'に',nu:'ぬ',ne:'ね',no:'の',
+    ha:'は',hi:'ひ',he:'へ',ho:'ほ',ma:'ま',mi:'み',mu:'む',me:'め',mo:'も',
+    ya:'や',yu:'ゆ',yo:'よ',ra:'ら',ri:'り',ru:'る',re:'れ',ro:'ろ',wa:'わ',wo:'を',
+    ga:'が',gi:'ぎ',gu:'ぐ',ge:'げ',go:'ご',za:'ざ',zu:'ず',ze:'ぜ',zo:'ぞ',
+    da:'だ',de:'で',do:'ど',ba:'ば',bi:'び',bu:'ぶ',be:'べ',bo:'ぼ',
+    pa:'ぱ',pi:'ぴ',pu:'ぷ',pe:'ぺ',po:'ぽ',
+    a:'あ',i:'い',u:'う',e:'え',o:'お'
+  };
+
+  function romajiToHiragana(raw) {
+    if (!raw) return '';
+    let s = String(raw).toLowerCase()
+      .replace(/ā/g, 'aa').replace(/ī/g, 'ii').replace(/ū/g, 'uu')
+      .replace(/ē/g, 'ee').replace(/ō/g, 'ou')
+      .replace(/[^a-z\s'-]/g, '');
+    let out = '';
+    let i = 0;
+    while (i < s.length) {
+      const ch = s[i];
+      if (ch === ' ' || ch === '-' || ch === "'") { out += ch === ' ' ? ' ' : ''; i++; continue; }
+      /* Consoante dupla -> っ */
+      if (i + 1 < s.length && ch === s[i + 1] && /[bcdfghjklmpqrstvwxyz]/.test(ch) && ch !== 'n') {
+        out += 'っ'; i++; continue;
+      }
+      if (s.slice(i, i + 3) === 'tch') { out += 'っ'; i++; continue; }
+      const t3 = s.slice(i, i + 3);
+      if (R2H[t3]) { out += R2H[t3]; i += 3; continue; }
+      const t2 = s.slice(i, i + 2);
+      if (R2H[t2]) { out += R2H[t2]; i += 2; continue; }
+      if (ch === 'n') {
+        const nx = s[i + 1] || '';
+        if (!nx || !/[aiueoy]/.test(nx)) { out += 'ん'; i++; continue; }
+      }
+      if (R2H[ch]) { out += R2H[ch]; i++; continue; }
+      i++;
+    }
+    return out.trim();
+  }
+
+  const hasKanji = s => /[\u4e00-\u9faf]/.test(String(s || ''));
+
+  /* Fallback em Kanji real */
   const FALLBACK = [
-    { kanji: 'おにぎり', romaji: 'onigiri', pt: 'Bolinho de arroz', contexto: 'restaurante' },
-    { kanji: 'みず', romaji: 'mizu', pt: 'Água', contexto: 'restaurante' },
-    { kanji: 'おちゃ', romaji: 'ocha', pt: 'Chá verde', contexto: 'restaurante' },
-    { kanji: 'ラーメン', romaji: 'raamen', pt: 'Lámen', contexto: 'restaurante' },
-    { kanji: 'メニュー', romaji: 'menyuu', pt: 'Cardápio', contexto: 'restaurante' },
-    { kanji: 'おかいけい', romaji: 'okaikei', pt: 'A conta', contexto: 'restaurante' },
-    { kanji: 'べんとう', romaji: 'bentou', pt: 'Marmita japonesa', contexto: 'restaurante' },
-    { kanji: 'ふくろ', romaji: 'fukuro', pt: 'Sacola', contexto: 'restaurante' },
-    { kanji: 'パスポート', romaji: 'pasupooto', pt: 'Passaporte', contexto: 'movimentacao' },
-    { kanji: 'よやく', romaji: 'yoyaku', pt: 'Reserva', contexto: 'movimentacao' },
-    { kanji: 'きっぷ', romaji: 'kippu', pt: 'Bilhete de trem', contexto: 'movimentacao' },
-    { kanji: 'えき', romaji: 'eki', pt: 'Estação', contexto: 'movimentacao' },
-    { kanji: 'でぐち', romaji: 'deguchi', pt: 'Saída', contexto: 'movimentacao' },
-    { kanji: 'トイレ', romaji: 'toire', pt: 'Banheiro', contexto: 'movimentacao' },
-    { kanji: 'ホテル', romaji: 'hoteru', pt: 'Hotel', contexto: 'movimentacao' },
-    { kanji: 'くうこう', romaji: 'kuukou', pt: 'Aeroporto', contexto: 'movimentacao' },
-    { kanji: 'ありがとう', romaji: 'arigatou', pt: 'Obrigado(a)', contexto: 'gentileza' },
-    { kanji: 'すみません', romaji: 'sumimasen', pt: 'Com licença / Desculpe', contexto: 'gentileza' },
-    { kanji: 'ください', romaji: 'kudasai', pt: 'Por favor (me dê)', contexto: 'gentileza' },
-    { kanji: 'だいじょうぶ', romaji: 'daijoubu', pt: 'Tudo bem', contexto: 'gentileza' },
-    { kanji: 'おいしい', romaji: 'oishii', pt: 'Delicioso', contexto: 'gentileza' },
-    { kanji: 'いくら', romaji: 'ikura', pt: 'Quanto custa?', contexto: 'gentileza' },
-    { kanji: 'おみやげ', romaji: 'omiyage', pt: 'Lembrancinha', contexto: 'gentileza' },
-    { kanji: 'ともだち', romaji: 'tomodachi', pt: 'Amigo(a)', contexto: 'gentileza' }
+    { kanji: '水', romaji: 'mizu', pt: 'Água', contexto: 'restaurante' },
+    { kanji: 'お茶', romaji: 'ocha', pt: 'Chá verde', contexto: 'restaurante' },
+    { kanji: '弁当', romaji: 'bentō', pt: 'Marmita japonesa', contexto: 'restaurante' },
+    { kanji: '袋', romaji: 'fukuro', pt: 'Sacola', contexto: 'restaurante' },
+    { kanji: 'お会計', romaji: 'okaikei', pt: 'A conta', contexto: 'restaurante' },
+    { kanji: '予約', romaji: 'yoyaku', pt: 'Reserva', contexto: 'movimentacao' },
+    { kanji: '切符', romaji: 'kippu', pt: 'Bilhete de trem', contexto: 'movimentacao' },
+    { kanji: '駅', romaji: 'eki', pt: 'Estação', contexto: 'movimentacao' },
+    { kanji: '出口', romaji: 'deguchi', pt: 'Saída', contexto: 'movimentacao' },
+    { kanji: '空港', romaji: 'kūkō', pt: 'Aeroporto', contexto: 'movimentacao' },
+    { kanji: '旅館', romaji: 'ryokan', pt: 'Hospedaria tradicional', contexto: 'movimentacao' },
+    { kanji: '注意', romaji: 'chūi', pt: 'Atenção / Cuidado', contexto: 'movimentacao' },
+    { kanji: '大丈夫', romaji: 'daijōbu', pt: 'Tudo bem', contexto: 'gentileza' },
+    { kanji: '友達', romaji: 'tomodachi', pt: 'Amigo(a)', contexto: 'gentileza' },
+    { kanji: 'お土産', romaji: 'omiyage', pt: 'Lembrancinha', contexto: 'gentileza' },
+    { kanji: '写真', romaji: 'shashin', pt: 'Foto', contexto: 'gentileza' }
   ];
 
   const SUSHI_ICONS = ['🍣', '🍙', '🍤', '🍡', '🍥', '🍵', '🥟'];
@@ -281,8 +421,62 @@
     })
     .catch(() => {});
 
+  /* ---------- Controles de Acessibilidade (Velocidade, Tradução, Furigana) ---------- */
+  const VELS = [0.4, 0.6, 0.8, 1.0, 1.25, 1.5, 1.8];
+  let velIdx = 3; /* 1.0x padrão */
+  let tradOn = true;
+  let furiOn = false; /* Nível difícil por padrão: Kanji puro */
+
+  try {
+    const sv = parseFloat(localStorage.getItem('uniSushiVel'));
+    const fi = VELS.indexOf(sv);
+    if (fi >= 0) velIdx = fi;
+    if (localStorage.getItem('uniSushiFuri') === '1') furiOn = true;
+    if (localStorage.getItem('uniSushiTrad') === '0') tradOn = false;
+  } catch (e) {}
+
+  function aplicaAcess() {
+    document.getElementById('velLabel').textContent = VELS[velIdx].toFixed(1) + 'x';
+    document.body.classList.toggle('ver-furi', furiOn);
+    const bf = document.getElementById('btnFuri');
+    bf.textContent = 'あ Furigana: ' + (furiOn ? 'ON' : 'OFF');
+    bf.classList.toggle('on', furiOn);
+    bf.setAttribute('aria-pressed', String(furiOn));
+
+    const bt = document.getElementById('btnTrad');
+    bt.textContent = '👁️ Tradução: ' + (tradOn ? 'ON' : 'OFF');
+    bt.classList.toggle('on', tradOn);
+    bt.setAttribute('aria-pressed', String(tradOn));
+
+    if (rodando && alvo) atualizaPedidoTexto();
+  }
+
+  document.getElementById('btnVelMenos').addEventListener('click', () => {
+    velIdx = Math.max(0, velIdx - 1);
+    try { localStorage.setItem('uniSushiVel', String(VELS[velIdx])); } catch (e) {}
+    aplicaAcess();
+    UniSalao.sfx.click();
+  });
+  document.getElementById('btnVelMais').addEventListener('click', () => {
+    velIdx = Math.min(VELS.length - 1, velIdx + 1);
+    try { localStorage.setItem('uniSushiVel', String(VELS[velIdx])); } catch (e) {}
+    aplicaAcess();
+    UniSalao.sfx.click();
+  });
+  document.getElementById('btnFuri').addEventListener('click', () => {
+    furiOn = !furiOn;
+    try { localStorage.setItem('uniSushiFuri', furiOn ? '1' : '0'); } catch (e) {}
+    aplicaAcess();
+    UniSalao.sfx.click();
+  });
+  document.getElementById('btnTrad').addEventListener('click', () => {
+    tradOn = !tradOn;
+    try { localStorage.setItem('uniSushiTrad', tradOn ? '1' : '0'); } catch (e) {}
+    aplicaAcess();
+    UniSalao.sfx.click();
+  });
+
   let cat = 'todos';
-  let escutaPura = false;
   let recorde = 0;
   try { recorde = parseInt(localStorage.getItem('uniSushiRec') || '0', 10) || 0; } catch (e) {}
   document.getElementById('recVal').textContent = String(recorde);
@@ -295,18 +489,10 @@
     UniSalao.sfx.click();
   });
 
-  const btnEscuta = document.getElementById('btnModoEscuta');
-  btnEscuta.addEventListener('click', () => {
-    escutaPura = !escutaPura;
-    btnEscuta.textContent = '🎧 Modo Escuta Pura: ' + (escutaPura ? 'ON' : 'OFF');
-    btnEscuta.classList.toggle('on', escutaPura);
-    btnEscuta.setAttribute('aria-pressed', String(escutaPura));
-    UniSalao.sfx.click();
-  });
-
-  /* Estado da rodada */
+  /* ---------- Estado da Rodada ---------- */
   let rodando = false;
-  let pts = 0, combo = 0, vidas = 3, acertos = 0;
+  let pts = 0, combo = 0, vidas = 3, acertos = 0, tentativas = 0;
+  let tInicio = 0, tAlvo = 0, temposAcerto = [], relogioInt = null;
   let alvo = null;
   let pratos = [];
   let erros = [];
@@ -317,6 +503,11 @@
 
   const layer = document.getElementById('pratosLayer');
 
+  function fmtTempo(seg) {
+    const s = Math.max(0, Math.floor(seg));
+    return String(Math.floor(s / 60)).padStart(2, '0') + ':' + String(s % 60).padStart(2, '0');
+  }
+
   function poolAtual() {
     if (cat === 'todos') return banco;
     const f = banco.filter(p => p.contexto === cat);
@@ -326,26 +517,40 @@
   function atualizaHud() {
     document.getElementById('hudPts').textContent = String(pts);
     document.getElementById('hudCombo').textContent = 'x' + Math.max(1, combo);
+    const pct = tentativas > 0 ? Math.round((acertos / tentativas) * 100) : 100;
+    document.getElementById('hudDesemp').textContent = pct + '%';
     document.getElementById('hudVidas').textContent = '❤️'.repeat(Math.max(0, vidas)) + '🖤'.repeat(Math.max(0, 3 - vidas));
+  }
+
+  function atualizaPedidoTexto() {
+    document.getElementById('pedidoDica').textContent = tradOn ? 'Chef pediu:' : '🎧 Escuta pura (ligue Tradução se precisar):';
+    document.getElementById('pedidoAlvo').textContent = tradOn ? alvo.pt : '🔊 Ouça e pegue o Kanji certo!';
   }
 
   function escolheAlvo() {
     const pool = poolAtual();
     alvo = pool[Math.floor(Math.random() * pool.length)];
-    document.getElementById('pedidoDica').textContent = escutaPura ? '🎧 Ouça o chef e pegue o prato certo:' : 'Chef pediu:';
-    document.getElementById('pedidoAlvo').textContent = escutaPura ? '🔊 Escute o pedido!' : alvo.pt;
+    tAlvo = performance.now();
+    atualizaPedidoTexto();
     UniSalao.speak(alvo.kanji);
+  }
+
+  function formataKanjiComFuri(pal) {
+    if (!hasKanji(pal.kanji)) return pal.kanji;
+    const furi = pal.kana || romajiToHiragana(pal.romaji);
+    if (!furi) return pal.kanji;
+    return `<ruby>${pal.kanji}<rt>${furi}</rt></ruby>`;
   }
 
   function criaPrato(palavra, forceLane) {
     const lane = forceLane != null ? forceLane : (Math.random() < 0.5 ? 0 : 1);
-    const y = lane === 0 ? 48 : 148;
+    const y = lane === 0 ? 50 : 154;
     const dir = lane === 0 ? 1 : -1;
-    const x = dir === 1 ? -12 : 112;
+    const x = dir === 1 ? -14 : 114;
     const el = document.createElement('button');
     el.type = 'button';
     el.className = 'prato ' + PLATE_CLS[Math.floor(Math.random() * PLATE_CLS.length)];
-    el.innerHTML = `<span class="em">${SUSHI_ICONS[Math.floor(Math.random() * SUSHI_ICONS.length)]}</span><span class="jp" lang="ja">${palavra.kanji}</span><span class="ro-block">${palavra.romaji || ''}</span>`;
+    el.innerHTML = `<span class="em">${SUSHI_ICONS[Math.floor(Math.random() * SUSHI_ICONS.length)]}</span><span class="jp" lang="ja">${formataKanjiComFuri(palavra)}</span><span class="ro-block">${palavra.romaji || ''}</span>`;
     const obj = { id: nextId++, palavra, x, y, dir, el, morto: false };
     el.style.left = x + '%';
     el.style.top = y + 'px';
@@ -356,18 +561,18 @@
 
   function clicouPrato(obj) {
     if (!rodando || obj.morto) return;
+    tentativas++;
     if (alvo && obj.palavra.kanji === alvo.kanji) {
       obj.morto = true;
       obj.el.classList.add('acertou');
       combo++;
       acertos++;
-      const ganho = 10 * Math.min(5, combo);
-      pts += ganho;
+      temposAcerto.push(Math.max(0.2, (performance.now() - tAlvo) / 1000));
+      pts += 10 * Math.min(5, combo);
       UniSalao.sfx.combo(combo);
       atualizaHud();
       setTimeout(() => obj.el.remove(), 260);
       escolheAlvo();
-      /* Garante que o novo alvo entre logo na esteira */
       setTimeout(() => { if (rodando && alvo) criaPrato(alvo); }, 450);
     } else {
       obj.el.classList.add('errou');
@@ -386,13 +591,13 @@
     const dt = Math.min(0.05, (ts - lastT) / 1000);
     lastT = ts;
 
-    /* Velocidade sobe suavemente conforme acertos */
-    const vel = 13 + Math.min(18, acertos * 0.9);
+    const mult = VELS[velIdx];
+    const vel = (12 + Math.min(14, acertos * 0.7)) * mult;
     pratos.forEach(p => {
       if (p.morto) return;
       p.x += p.dir * vel * dt;
       p.el.style.left = p.x + '%';
-      if ((p.dir === 1 && p.x > 114) || (p.dir === -1 && p.x < -14)) {
+      if ((p.dir === 1 && p.x > 116) || (p.dir === -1 && p.x < -16)) {
         p.morto = true;
         p.el.remove();
       }
@@ -400,12 +605,12 @@
     pratos = pratos.filter(p => !p.morto);
 
     spawnAcc += dt;
-    const intervalo = Math.max(0.95, 1.85 - acertos * 0.04);
+    const intervalo = Math.max(0.85, (1.85 - acertos * 0.03) / Math.max(0.55, mult));
     if (spawnAcc >= intervalo && pratos.length < 7) {
       spawnAcc = 0;
       const pool = poolAtual();
       const temAlvo = pratos.some(p => alvo && p.palavra.kanji === alvo.kanji);
-      const pal = (!temAlvo && Math.random() < 0.65 && alvo)
+      const pal = (!temAlvo && Math.random() < 0.68 && alvo)
         ? alvo
         : pool[Math.floor(Math.random() * pool.length)];
       criaPrato(pal);
@@ -416,7 +621,16 @@
 
   function iniciar() {
     rodando = true;
-    pts = 0; combo = 0; vidas = 3; acertos = 0; erros = [];
+    pts = 0; combo = 0; vidas = 3; acertos = 0; tentativas = 0; erros = [];
+    temposAcerto = [];
+    tInicio = performance.now();
+    clearInterval(relogioInt);
+    document.getElementById('hudTempo').textContent = '00:00';
+    relogioInt = setInterval(() => {
+      if (!rodando) return;
+      document.getElementById('hudTempo').textContent = fmtTempo((performance.now() - tInicio) / 1000);
+    }, 500);
+
     pratos.forEach(p => p.el.remove());
     pratos = [];
     document.getElementById('telaInicio').hidden = true;
@@ -424,7 +638,6 @@
     document.getElementById('telaJogo').hidden = false;
     atualizaHud();
     escolheAlvo();
-    /* Solta 3 pratos iniciais (incluindo o alvo) */
     const pool = poolAtual();
     criaPrato(alvo, 0);
     criaPrato(pool[Math.floor(Math.random() * pool.length)], 1);
@@ -435,11 +648,33 @@
 
   function encerrar() {
     rodando = false;
+    clearInterval(relogioInt);
     cancelAnimationFrame(rafId);
     pratos.forEach(p => p.el.remove());
     pratos = [];
     document.getElementById('telaJogo').hidden = true;
     document.getElementById('telaFim').hidden = false;
+
+    const duracaoSeg = Math.max(1, Math.round((performance.now() - tInicio) / 1000));
+    const numErros = Math.max(0, tentativas - acertos);
+    const precisao = tentativas > 0 ? Math.round((acertos / tentativas) * 100) : 0;
+    const tempoMedio = temposAcerto.length
+      ? Math.round((temposAcerto.reduce((a, b) => a + b, 0) / temposAcerto.length) * 10) / 10
+      : duracaoSeg;
+
+    if (tentativas > 0 && UniSalao.recordSession) {
+      UniSalao.recordSession({
+        jogo: 'sushi',
+        nomeJogo: '🍣 Kaiten-Zushi',
+        duracaoSeg,
+        acertos,
+        erros: numErros,
+        precisao,
+        tempoMedio,
+        pts,
+        velocidade: VELS[velIdx]
+      });
+    }
 
     const xpGanho = Math.max(5, Math.round(pts / 10));
     UniSalao.addXP(xpGanho);
@@ -452,8 +687,8 @@
       UniSalao.sfx.ok();
     }
 
-    document.getElementById('fimTitulo').textContent = `${pts} pontos · ${acertos} prato(s) certos!`;
-    document.getElementById('fimSub').textContent = `Você ganhou +${xpGanho} XP no Salão Unirversos. Recorde atual: ${recorde} pts.`;
+    document.getElementById('fimTitulo').textContent = `${pts} pontos · 🎯 ${precisao}% de desempenho`;
+    document.getElementById('fimSub').textContent = `⏱️ Tempo: ${fmtTempo(duracaoSeg)} · Média: ${tempoMedio}s/prato · Velocidade: ${VELS[velIdx].toFixed(1)}x · +${xpGanho} XP (salvo no seu gráfico da Área do Aluno).`;
 
     const wrap = document.getElementById('errosWrap');
     const lista = document.getElementById('errosLista');
@@ -462,7 +697,7 @@
       lista.innerHTML = erros.map((w, i) => `
         <div class="resumo-item">
           <div>
-            <strong lang="ja" style="font-size:17px">${w.kanji}</strong>
+            <strong lang="ja" style="font-size:17px">${formataKanjiComFuri(w)}</strong>
             <span class="ro" style="color:var(--lantern);margin-left:6px">${w.romaji || ''}</span>
             <span class="sub" style="margin-left:8px">— ${w.pt}</span>
           </div>
@@ -491,6 +726,92 @@
   document.getElementById('btnDeNovo').addEventListener('click', iniciar);
   document.getElementById('btnParar').addEventListener('click', encerrar);
   document.getElementById('btnOuvirPedido').addEventListener('click', () => { if (alvo) UniSalao.speak(alvo.kanji); });
+
+  aplicaAcess();
+
+  /* ======================================================================
+     EXERCÍCIO FIXO: CONTADORES JAPONESES EM NUMERAL (一つ〜十)
+     ====================================================================== */
+  const CONTADORES = [
+    [1, '一つ', 'ひとつ', 'hitotsu'], [2, '二つ', 'ふたつ', 'futatsu'], [3, '三つ', 'みっつ', 'mittsu'],
+    [4, '四つ', 'よっつ', 'yottsu'], [5, '五つ', 'いつつ', 'itsutsu'], [6, '六つ', 'むっつ', 'muttsu'],
+    [7, '七つ', 'ななつ', 'nanatsu'], [8, '八つ', 'やっつ', 'yattsu'], [9, '九つ', 'ここのつ', 'kokonotsu'],
+    [10, '十', 'とお', 'too']
+  ];
+  const PRATOS_CT = [
+    ['サーモン', 'サーモン', 'saamon', 'salmão'],
+    ['まぐろ', 'まぐろ', 'maguro', 'atum'],
+    ['<ruby>玉子<rt>たまご</rt></ruby>', 'たまご', 'tamago', 'omelete'],
+    ['えび', 'えび', 'ebi', 'camarão'],
+    ['お<ruby>茶<rt>ちゃ</rt></ruby>', 'おちゃ', 'ocha', 'chá verde']
+  ];
+  let ctRodada = [], ctIdx = 0, ctOk = 0, ctErr = 0, ctT0 = 0, ctTrava = false;
+
+  function renderCont() {
+    const item = ctRodada[ctIdx];
+    ctTrava = false;
+    document.getElementById('ctProg').textContent = `${ctIdx + 1} / ${ctRodada.length}`;
+    document.getElementById('ctJp').innerHTML = `${item.prato[0]}を <ruby>${item.c[1]}<rt>${item.c[2]}</rt></ruby> ください。`;
+    document.getElementById('ctJp').hidden = true;
+    document.getElementById('ctRo').textContent = `${item.prato[2]} o ${item.c[3]} kudasai.`;
+    document.getElementById('ctPt').textContent = `${item.c[0]} unidade(s) de ${item.prato[3]}, por favor.`;
+    document.getElementById('ctFb').hidden = true;
+    document.getElementById('ctNums').innerHTML = CONTADORES.map(c => `<button type="button" class="btn" data-cn="${c[0]}" style="min-height:48px;font-size:19px">${c[0]}</button>`).join('');
+    setTimeout(() => UniSalao.speak(`${item.prato[1]}を ${item.c[2]} ください。`), 180);
+  }
+
+  document.getElementById('btnAbrirCont').addEventListener('click', () => {
+    ctRodada = CONTADORES.slice().sort(() => Math.random() - 0.5).slice(0, 6).map(c => ({
+      c, prato: PRATOS_CT[Math.floor(Math.random() * PRATOS_CT.length)]
+    }));
+    ctIdx = 0; ctOk = 0; ctErr = 0; ctT0 = performance.now();
+    document.getElementById('telaInicio').hidden = true;
+    document.getElementById('telaContadores').hidden = false;
+    renderCont();
+    UniSalao.sfx.click();
+  });
+  document.getElementById('ctVoltar').addEventListener('click', () => {
+    document.getElementById('telaContadores').hidden = true;
+    document.getElementById('telaInicio').hidden = false;
+    UniSalao.sfx.click();
+  });
+  document.getElementById('ctOuvir').addEventListener('click', () => {
+    const it = ctRodada[ctIdx];
+    if (it) UniSalao.speak(`${it.prato[1]}を ${it.c[2]} ください。`);
+  });
+  document.getElementById('ctVer').addEventListener('click', () => {
+    const el = document.getElementById('ctJp');
+    el.hidden = !el.hidden;
+    UniSalao.sfx.click();
+  });
+  document.getElementById('ctNums').addEventListener('click', e => {
+    const b = e.target.closest('[data-cn]');
+    if (!b || ctTrava) return;
+    const item = ctRodada[ctIdx];
+    const fb = document.getElementById('ctFb');
+    document.getElementById('ctJp').hidden = false;
+    fb.hidden = false;
+    if (+b.dataset.cn === item.c[0]) {
+      ctTrava = true; ctOk++;
+      UniSalao.sfx.ok(); UniSalao.addXP(10);
+      fb.innerHTML = `<div><strong>✓ ${item.c[0]} · <ruby>${item.c[1]}<rt>${item.c[2]}</rt></ruby> (+10 XP)</strong></div><button type="button" class="btn pri sm" id="ctProx">${ctIdx + 1 >= ctRodada.length ? 'Concluir →' : 'Próximo →'}</button>`;
+      document.getElementById('ctProx').onclick = () => {
+        ctIdx++;
+        if (ctIdx >= ctRodada.length) {
+          const dur = Math.max(1, Math.round((performance.now() - ctT0) / 1000));
+          UniSalao.recordSession({ jogo: 'sushi', nomeJogo: '🔢 Sushi · Contadores', duracaoSeg: dur, acertos: ctOk, erros: ctErr, pts: ctOk * 10 });
+          UniSalao.sfx.fanfare();
+          UniSalao.toast(`🎉 Contadores concluídos! Salvo no seu gráfico.`);
+          document.getElementById('telaContadores').hidden = true;
+          document.getElementById('telaInicio').hidden = false;
+        } else renderCont();
+      };
+    } else {
+      ctErr++;
+      UniSalao.sfx.err();
+      fb.innerHTML = `<strong>Quase! Ouça novamente o contador japonês.</strong>`;
+    }
+  });
 })();
 </script>
 </body>

@@ -8,7 +8,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@600;700;800&family=Zen+Maru+Gothic:wght@400;500;700&display=swap">
-<link rel="stylesheet" href="../salao.css?v=2">
+<link rel="stylesheet" href="../salao.css?v=6">
 <style>
   .tabs-jogos {
     display: grid;
@@ -163,10 +163,11 @@
     </div>
     <div class="top-tools">
       <span class="xp-pill">✦ <span data-xp-val>0</span> XP</span>
-      <button type="button" class="btn sm" data-romaji-btn aria-pressed="false">Romaji: OFF</button>
       <button type="button" class="btn sm" data-mute-btn aria-pressed="true">🔊 Som: ON</button>
     </div>
   </nav>
+
+  <div data-acess-bar></div>
 
   <!-- Seletor dos 3 Jogos de Festa -->
   <section class="card b-lav">
@@ -245,7 +246,6 @@
         <h2>🕵️ Quem pegou o bolo?</h2>
       </div>
       <div class="row">
-        <button type="button" class="btn sm" id="detTradBtn">👁️ Tradução: OFF</button>
         <button type="button" class="btn sm" id="detNovo">🎲 Novo caso</button>
       </div>
     </div>
@@ -278,7 +278,7 @@
 
 <script src="/idiomas/dados/velocidade-voz.js?v=1"></script>
 <script src="/idiomas/dados/audio-mapa.js?v=jogos1"></script>
-<script src="../sfx.js?v=1"></script>
+<script src="../sfx.js?v=6"></script>
 <script>
 (function () {
   'use strict';
@@ -297,28 +297,39 @@
   /* ======================================================================
      JOGO 1: DUELO RELÂMPAGO (2 JOGADORES)
      ====================================================================== */
-  const PALAVRAS = [
-    ['おにぎり', 'onigiri', 'Bolinho de arroz'],
-    ['みず', 'mizu', 'Água'],
-    ['おちゃ', 'ocha', 'Chá verde'],
-    ['でんしゃ', 'densha', 'Trem'],
-    ['えき', 'eki', 'Estação'],
-    ['でぐち', 'deguchi', 'Saída'],
-    ['きっぷ', 'kippu', 'Bilhete'],
-    ['ともだち', 'tomodachi', 'Amigo(a)'],
-    ['おいしい', 'oishii', 'Delicioso'],
-    ['おおきい', 'ookii', 'Grande'],
-    ['ちいさい', 'chiisai', 'Pequeno'],
-    ['あたらしい', 'atarashii', 'Novo'],
-    ['さむい', 'samui', 'Frio'],
-    ['あつい', 'atsui', 'Quente'],
-    ['おみやげ', 'omiyage', 'Lembrancinha'],
-    ['たべる', 'taberu', 'Comer'],
-    ['のむ', 'nomu', 'Beber'],
-    ['いく', 'iku', 'Ir']
+  let PALAVRAS = [
+    ['おにぎり', 'おにぎり', 'onigiri', 'Bolinho de arroz'],
+    ['水', '<ruby>水<rt>みず</rt></ruby>', 'mizu', 'Água'],
+    ['お茶', 'お<ruby>茶<rt>ちゃ</rt></ruby>', 'ocha', 'Chá verde'],
+    ['電車', '<ruby>電車<rt>でんしゃ</rt></ruby>', 'densha', 'Trem'],
+    ['駅', '<ruby>駅<rt>えき</rt></ruby>', 'eki', 'Estação'],
+    ['出口', '<ruby>出口<rt>でぐち</rt></ruby>', 'deguchi', 'Saída'],
+    ['切符', '<ruby>切符<rt>きっぷ</rt></ruby>', 'kippu', 'Bilhete'],
+    ['友達', '<ruby>友達<rt>ともだち</rt></ruby>', 'tomodachi', 'Amigo(a)'],
+    ['美味しい', '<ruby>美味<rt>おい</rt></ruby>しい', 'oishii', 'Delicioso'],
+    ['大きい', '<ruby>大<rt>おお</rt></ruby>きい', 'ookii', 'Grande'],
+    ['小さい', '<ruby>小<rt>ちい</rt></ruby>さい', 'chiisai', 'Pequeno'],
+    ['新しい', '<ruby>新<rt>あたら</rt></ruby>しい', 'atarashii', 'Novo'],
+    ['寒い', '<ruby>寒<rt>さむ</rt></ruby>い', 'samui', 'Frio'],
+    ['暑い', '<ruby>暑<rt>あつ</rt></ruby>い', 'atsui', 'Quente'],
+    ['お土産', 'お<ruby>土産<rt>みやげ</rt></ruby>', 'omiyage', 'Lembrancinha'],
+    ['食べる', '<ruby>食<rt>た</rt></ruby>べる', 'taberu', 'Comer'],
+    ['飲む', '<ruby>飲<rt>の</rt></ruby>む', 'nomu', 'Beber'],
+    ['行く', '<ruby>行<rt>い</rt></ruby>く', 'iku', 'Ir']
   ];
+  /* Enriquece automaticamente o Duelo 2P com o vocabulario.json real do curso */
+  fetch('/idiomas/dados/vocabulario.json')
+    .then(r => r.ok ? r.json() : null)
+    .then(d => {
+      if (d && Array.isArray(d.palavras) && d.palavras.length >= 16) {
+        PALAVRAS = d.palavras
+          .filter(p => p.kanji && p.pt && p.kanji.length <= 10)
+          .map(p => [p.kanji, UniSalao.rubyAuto(p.kanji, p.romaji), p.romaji || '', p.pt]);
+      }
+    })
+    .catch(() => {});
 
-  let dPts = [0, 0], dAlvo = null, dTrava = false, dFim = false;
+  let dPts = [0, 0], dAlvo = null, dTrava = false, dFim = false, dInicio = performance.now(), dErros = 0;
 
   function embaralha(a) {
     const r = a.slice();
@@ -334,12 +345,12 @@
     const pool = embaralha(PALAVRAS);
     dAlvo = pool[0];
     const ops = embaralha([pool[0], pool[1], pool[2], pool[3]]);
-    document.getElementById('dAlvoJp').textContent = dAlvo[0];
-    document.getElementById('dAlvoRo').textContent = dAlvo[1];
+    document.getElementById('dAlvoJp').innerHTML = dAlvo[1];
+    document.getElementById('dAlvoRo').textContent = dAlvo[2];
     document.getElementById('dStatus').textContent = 'Valendo!';
     ['dOps1', 'dOps2'].forEach((id, jIdx) => {
       document.getElementById(id).innerHTML = ops.map(o =>
-        `<button type="button" data-jog="${jIdx}" data-pt="${o[2]}">${o[2]}</button>`
+        `<button type="button" data-jog="${jIdx}" data-pt="${o[3]}">${o[3]}</button>`
       ).join('');
     });
     UniSalao.speak(dAlvo[0]);
@@ -349,7 +360,7 @@
     const b = e.target.closest('button[data-jog]');
     if (!b || dTrava || dFim) return;
     const j = +b.dataset.jog;
-    const certo = b.dataset.pt === dAlvo[2];
+    const certo = b.dataset.pt === dAlvo[3];
     if (certo) {
       dTrava = true;
       b.classList.add('ok');
@@ -362,12 +373,20 @@
         document.getElementById('dStatus').textContent = (j === 0 ? '🌸 Jogador 1' : '🌊 Jogador 2') + ' venceu! 🎉';
         UniSalao.sfx.fanfare();
         UniSalao.addXP(20);
+        if (UniSalao.recordSession) {
+          UniSalao.recordSession({
+            jogo: 'dupla', nomeJogo: '👥 Duelo Relâmpago',
+            duracaoSeg: Math.max(1, Math.round((performance.now() - dInicio) / 1000)),
+            acertos: dPts[0] + dPts[1], erros: dErros, pts: 20
+          });
+        }
         UniSalao.toast('🏆 Vitória no Duelo Relâmpago! +20 XP');
       } else {
         document.getElementById('dStatus').textContent = (j === 0 ? '🌸 +1 J1!' : '🌊 +1 J2!');
         setTimeout(dueloRodada, 750);
       }
     } else {
+      dErros++;
       b.classList.add('no');
       b.disabled = true;
       UniSalao.sfx.err();
@@ -377,7 +396,7 @@
   document.getElementById('dOps2').addEventListener('click', dueloClick);
   document.getElementById('dOuvir').addEventListener('click', () => { if (dAlvo) UniSalao.speak(dAlvo[0]); });
   document.getElementById('dueloReset').addEventListener('click', () => {
-    dPts = [0, 0]; dFim = false;
+    dPts = [0, 0]; dFim = false; dErros = 0; dInicio = performance.now();
     document.getElementById('dPts1').textContent = '0';
     document.getElementById('dPts2').textContent = '0';
     dueloRodada();
@@ -419,7 +438,7 @@
         <div>
           <strong lang="ja">Pista ${i + 1}: ${p.jp}</strong>
           <div class="ro-block" style="color:var(--lantern);font-size:13px">${p.ro}</div>
-          ${detTrad ? `<div class="sub" style="font-size:13px">${p.pt}</div>` : ''}
+          <div class="sub trad-block" style="font-size:13px">${p.pt}</div>
         </div>
         <button type="button" class="btn sm sky" data-dp="${i}">🔊</button>
       </div>
@@ -480,12 +499,6 @@
     }
   });
 
-  document.getElementById('detTradBtn').addEventListener('click', () => {
-    detTrad = !detTrad;
-    document.getElementById('detTradBtn').textContent = '👁️ Tradução: ' + (detTrad ? 'ON' : 'OFF');
-    renderDet();
-    UniSalao.sfx.click();
-  });
   document.getElementById('detNovo').addEventListener('click', () => { novoCaso(); UniSalao.sfx.click(); });
   novoCaso();
 
@@ -508,7 +521,7 @@
       <button type="button" data-qp="${p.id}" ${qFeitas.has(p.id) || qFim ? 'disabled' : ''}>
         <span lang="ja">${p.jp}</span>
         <span class="ro-block" style="color:var(--lantern);font-size:11.5px">${p.ro}</span>
-        <small style="display:block;color:var(--muted);font-weight:500">${p.pt}</small>
+        <small class="trad-block" style="color:var(--muted);font-weight:500">${p.pt}</small>
       </button>
     `).join('');
 

@@ -9,7 +9,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@600;700;800&family=Zen+Maru+Gothic:wght@400;500;700&display=swap">
-<link rel="stylesheet" href="./salao.css?v=2">
+<link rel="stylesheet" href="./salao.css?v=6">
 <style>
   /* ===== MAPA INTERATIVO DO BECO YOKOCHO ===== */
   .beco-shell {
@@ -20,18 +20,82 @@
     box-shadow: 0 22px 50px rgba(15, 10, 14, 0.5);
     background: #2b252a;
   }
+  .beco-scroll {
+    width: 100%;
+    overflow-x: auto;
+    overflow-y: hidden;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: thin;
+  }
 
   .beco-stage {
     position: relative;
     width: 100%;
+    min-width: 780px;
     aspect-ratio: 16 / 9;
-    min-height: 360px;
     overflow: hidden;
     cursor: pointer;
     user-select: none;
-    touch-action: manipulation;
+    touch-action: pan-x;
     container-type: inline-size;
   }
+
+  /* Avatares de outras alunas online no Beco */
+  .peer-walker {
+    position: absolute;
+    transform: translate(-50%, -86%);
+    z-index: 10;
+    background: none;
+    border: 0;
+    padding: 0;
+    cursor: pointer;
+    display: grid;
+    justify-items: center;
+    gap: 2px;
+    transition: left 0.85s ease, top 0.85s ease;
+  }
+  .peer-walker .walker-face {
+    border-color: var(--sage);
+    animation: walkBob 2.6s ease-in-out infinite;
+  }
+  .peer-walker:hover .walker-face { transform: scale(1.1); border-color: var(--lantern); }
+  .peer-badge {
+    font-size: 10px;
+    font-weight: 800;
+    background: #f4e2c7;
+    color: #7c4d1a;
+    border: 1px solid #c78f63;
+    border-radius: 999px;
+    padding: 0 6px;
+    line-height: 1.4;
+  }
+
+  /* Barra de Ofensiva Coletiva (Alunas com Alunas) */
+  .ofensiva-bar {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px 14px;
+    padding: 10px 16px;
+    background: rgba(236, 192, 114, 0.12);
+    border-top: 1px solid rgba(236, 192, 114, 0.25);
+    font-size: 13px;
+  }
+  .alunas-chips { display: flex; flex-wrap: wrap; gap: 6px; align-items: center; }
+  .aluna-chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    padding: 3px 10px;
+    border-radius: 999px;
+    background: rgba(251, 243, 230, 0.1);
+    border: 1px solid rgba(251, 243, 230, 0.22);
+    color: var(--ink);
+    font-weight: 700;
+    font-size: 12.5px;
+  }
+  .aluna-chip.eu { border-color: var(--sakura); background: var(--sakura-soft); }
 
   .beco-img {
     position: absolute;
@@ -114,29 +178,111 @@
     50% { transform: scale(1.45); opacity: 0.65; }
   }
 
-  /* Hotspots secretos (gatinho, máquina, bambu) */
+  /* Hotspots secretos / objetos do beco (tudo clicável mostra como chama!) */
   .secret-spot {
     position: absolute;
     transform: translate(-50%, -50%);
-    z-index: 5;
-    width: clamp(34px, 5cqw, 52px);
-    height: clamp(34px, 5cqw, 52px);
+    z-index: 6;
+    width: clamp(30px, 4.4cqw, 44px);
+    height: clamp(30px, 4.4cqw, 44px);
     border-radius: 50%;
-    border: 2px dashed rgba(251, 243, 230, 0.55);
+    border: 2px dashed rgba(251, 243, 230, 0.58);
     background: rgba(251, 243, 230, 0.14);
     color: #fff;
-    font-size: clamp(14px, 2cqw, 20px);
+    font-size: clamp(13px, 1.8cqw, 18px);
     display: grid;
     place-items: center;
-    opacity: 0.78;
+    opacity: 0.82;
     transition: transform 0.18s ease, opacity 0.18s ease, background 0.18s ease;
   }
   .secret-spot:hover {
     opacity: 1;
-    transform: translate(-50%, -54%) scale(1.12);
-    background: rgba(236, 192, 114, 0.35);
+    transform: translate(-50%, -54%) scale(1.14);
+    background: rgba(236, 192, 114, 0.42);
     border-color: #fbf3e6;
   }
+
+  /* Barraquinha de Yakitori (SVG no estilo da ilustração) */
+  .yakitori-stand {
+    position: absolute;
+    left: 38.5%;
+    top: 72%;
+    transform: translate(-50%, -50%);
+    z-index: 8;
+    width: clamp(68px, 10.5cqw, 118px);
+    background: none;
+    border: 0;
+    padding: 0;
+    cursor: pointer;
+    filter: drop-shadow(0 6px 10px rgba(24, 14, 12, 0.35));
+    transition: transform 0.18s ease;
+  }
+  .yakitori-stand:hover { transform: translate(-50%, -53%) scale(1.06); }
+  .smoke-puff { animation: smokeUp 2.6s ease-in-out infinite; transform-box: fill-box; transform-origin: center; }
+  .smoke-puff.s2 { animation-delay: -1.3s; }
+  @keyframes smokeUp {
+    0% { opacity: 0; transform: translateY(4px) scale(0.8); }
+    45% { opacity: 0.72; transform: translateY(-6px) scale(1.05); }
+    100% { opacity: 0; transform: translateY(-16px) scale(1.25); }
+  }
+
+  /* Cachorrinho Shiba Inu passeando pela calçada */
+  .shiba-dog {
+    position: absolute;
+    top: 90%;
+    left: 12%;
+    transform: translate(-50%, -75%);
+    z-index: 11;
+    width: clamp(46px, 6.2cqw, 68px);
+    background: none;
+    border: 0;
+    padding: 0;
+    cursor: pointer;
+    filter: drop-shadow(0 5px 8px rgba(24, 14, 12, 0.36));
+    transition: transform 0.2s ease;
+  }
+  .shiba-dog.flip svg { transform: scaleX(-1); }
+  .shiba-dog svg { display: block; width: 100%; height: auto; animation: dogTrotting 0.55s ease-in-out infinite; }
+  .shiba-dog.parado svg { animation: none; }
+  @keyframes dogTrotting { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-3px); } }
+  .shiba-dog.flip svg { animation: dogTrottingFlip 0.55s ease-in-out infinite; }
+  .shiba-dog.flip.parado svg { animation: none; transform: scaleX(-1); }
+  @keyframes dogTrottingFlip { 0%, 100% { transform: scaleX(-1) translateY(0); } 50% { transform: scaleX(-1) translateY(-3px); } }
+
+  /* Balãozinho de fala (agora interativo para salvar no Caderno!) */
+  .beco-bubble {
+    position: absolute;
+    transform: translate(-50%, -115%);
+    z-index: 22;
+    background: var(--washi);
+    color: var(--washi-ink);
+    border: 2px solid #59433b;
+    border-radius: 16px;
+    padding: 9px 13px;
+    max-width: 260px;
+    font-size: 13px;
+    box-shadow: 0 10px 24px rgba(20, 12, 10, 0.38);
+    pointer-events: auto;
+    animation: popIn 0.2s ease;
+  }
+  .bub-head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+    margin-bottom: 2px;
+  }
+  .bub-nome { font-family: var(--f-display); font-size: 16px; font-weight: 800; color: #9e4b3e; }
+  .bub-cad {
+    border: 1px solid #d4bfa9;
+    background: #fff;
+    color: #42322e;
+    border-radius: 999px;
+    padding: 1px 7px;
+    font-size: 11px;
+    font-weight: 700;
+  }
+  .bub-cad:hover { border-color: var(--sakura); background: #fff4ec; }
 
   /* Avatar caminhando na calçada do Beco */
   .walker {
@@ -194,7 +340,8 @@
     pointer-events: none;
     animation: popIn 0.2s ease;
   }
-  .beco-bubble b { display: block; font-size: 14.5px; color: #9e4b3e; }
+  .beco-bubble b { display: block; font-size: 15px; color: #9e4b3e; }
+  .beco-bubble rt, .spot rt, .loja-popover rt { color: #9e4b3e; }
   @keyframes popIn { from { opacity: 0; transform: translate(-50%, -95%) scale(0.92); } to { opacity: 1; transform: translate(-50%, -115%) scale(1); } }
 
   /* Popover Papel Washi da Lojinha selecionada (flutua no canto inferior do beco) */
@@ -310,10 +457,10 @@
   }
 
   @media (max-width: 680px) {
-    .beco-stage { aspect-ratio: 4 / 3; }
     .spot small { display: none; }
   }
 </style>
+<script type="module" src="/idiomas/dados/conta.js?v=6"></script>
 </head>
 <body>
 <div class="wrap">
@@ -324,46 +471,112 @@
       <span class="badge-teste">🏮 Yokocho · Teste</span>
     </div>
     <div class="top-tools">
+      <button type="button" class="btn sm lantern" id="btnStreak">🔥 Ofensiva</button>
       <span class="xp-pill" title="XP acumulado no Salão">✦ <span data-xp-val>0</span> XP</span>
       <button type="button" class="btn sm" data-clima-btn>🏮 Noite suave</button>
-      <button type="button" class="btn sm" data-romaji-btn aria-pressed="false">Romaji: OFF</button>
       <button type="button" class="btn sm" data-mute-btn aria-pressed="true">🔊 Som: ON</button>
     </div>
   </nav>
 
+  <div data-acess-bar></div>
+
   <!-- MAPINHA INTERATIVO DO BECO YOKOCHO (TELA PRINCIPAL) -->
   <main class="beco-shell" aria-label="Mapa interativo do Beco Unirversos">
+    <div class="beco-scroll" id="becoScroll">
     <div class="beco-stage" id="becoStage" tabindex="0" role="application" aria-label="Beco japonês interativo. Toque na calçada para andar ou numa porta para entrar.">
       <img class="beco-img" src="./yokocho-beco.jpg" alt="Beco japonês ao entardecer com Karaokê, Sushi, Konbini, Caligrafia e Café">
       <div class="beco-glow" aria-hidden="true"></div>
       <div class="beco-rain" aria-hidden="true"></div>
 
-      <!-- 5 Portas Interativas alinhadas às fachadas da ilustração -->
+      <!-- 5 Portas Interativas (100% japonês por padrão; tradução/furigana/romaji opcionais!) -->
       <button type="button" class="spot" data-loja="karaoke" style="left:10.5%;top:41%">
         <span class="dot-pulse" aria-hidden="true"></span>
-        🎤 Karaokê <small lang="ja">カラオケ</small>
+        🎤 <span lang="ja">カラオケ</span> <small class="trad">Karaokê</small>
       </button>
 
       <button type="button" class="spot" data-loja="sushi" style="left:26.5%;top:42%">
-        🍣 Sushi <small lang="ja">回転寿司</small>
+        🍣 <span lang="ja"><ruby>回転寿司<rt>かいてんずし</rt></ruby></span> <small class="trad">Sushi</small>
       </button>
 
       <button type="button" class="spot" data-loja="konbini" style="left:51%;top:33%">
-        🏪 Konbini <small lang="ja">コンビニ</small>
+        🏪 <span lang="ja">コンビニ</span> <small class="trad">Konbini</small>
       </button>
 
-      <button type="button" class="spot" data-loja="caligrafia" style="left:74%;top:35%">
-        🖌️ Tinta Viva <small lang="ja">書道</small>
+      <button type="button" class="spot" data-loja="lojinha" style="left:74%;top:35%">
+        👘 <span lang="ja"><ruby>雑貨屋<rt>ざっかや</rt></ruby></span> <small class="trad">Lojinha</small>
       </button>
 
       <button type="button" class="spot" data-loja="cafe" style="left:88.5%;top:53%">
-        🍵 Café <small lang="ja">喫茶</small>
+        🍵 <span lang="ja"><ruby>喫茶<rt>きっさ</rt></ruby></span> <small class="trad">Café</small>
       </button>
 
-      <!-- Segredinhos vivos do beco (Easter Eggs clicáveis com áudio!) -->
-      <button type="button" class="secret-spot" data-secret="gato" style="left:88%;top:76%" aria-label="Falar com o gatinho do beco" title="Toque no gatinho!">🐾</button>
-      <button type="button" class="secret-spot" data-secret="maquina" style="left:96.8%;top:64%" aria-label="Usar a máquina de bebidas" title="Máquina de bebidas">🥤</button>
-      <button type="button" class="secret-spot" data-secret="bambu" style="left:67.5%;top:64%" aria-label="Tocar no bambu da sorte" title="Bambu da sorte">🎋</button>
+      <!-- Objetos clicáveis do beco (tudo mostra o nome em japonês!) -->
+      <button type="button" class="secret-spot" data-secret="lanterna" style="left:6.5%;top:14%" aria-label="提灯">🏮</button>
+      <button type="button" class="secret-spot" data-secret="ceu" style="left:50%;top:10%" aria-label="空">🌇</button>
+      <button type="button" class="secret-spot" data-secret="noren" style="left:25.5%;top:50%" aria-label="暖簾">🟦</button>
+      <button type="button" class="secret-spot" data-secret="bambu" style="left:67.5%;top:64%" aria-label="竹">🎋</button>
+      <button type="button" class="secret-spot" data-secret="gato" style="left:88%;top:76%" aria-label="猫">🐾</button>
+      <button type="button" class="secret-spot" data-secret="maquina" style="left:96.8%;top:64%" aria-label="自動販売機">🥤</button>
+
+      <!-- Barraquinha de Yakitori (焼き鳥屋台) -->
+      <button type="button" class="yakitori-stand" data-secret="yakitori" aria-label="焼き鳥屋台">
+        <svg viewBox="0 0 120 104" xmlns="http://www.w3.org/2000/svg">
+          <!-- Fumacinha subindo -->
+          <circle class="smoke-puff" cx="48" cy="36" r="7" fill="#fbf3e6" opacity="0.65"/>
+          <circle class="smoke-puff s2" cx="68" cy="34" r="6" fill="#fbf3e6" opacity="0.55"/>
+          <!-- Toldo listrado terracota & creme -->
+          <path d="M10 26 L110 26 L116 40 L4 40 Z" fill="#d96b5c" stroke="#4a3b38" stroke-width="2.6" stroke-linejoin="round"/>
+          <path d="M28 26 L26 40 M48 26 L48 40 M72 26 L72 40 M92 26 L94 40" stroke="#fbf3e6" stroke-width="4" opacity="0.85"/>
+          <!-- Postes -->
+          <line x1="16" y1="40" x2="16" y2="62" stroke="#4a3b38" stroke-width="3"/>
+          <line x1="104" y1="40" x2="104" y2="62" stroke="#4a3b38" stroke-width="3"/>
+          <!-- Lanterninha vermelha na barraquinha -->
+          <ellipse cx="104" cy="48" rx="7" ry="9" fill="#d96b5c" stroke="#4a3b38" stroke-width="2"/>
+          <!-- Grelha + espetinhos de yakitori -->
+          <rect x="26" y="54" width="68" height="9" rx="3" fill="#4a3b38"/>
+          <g stroke="#d8a57a" stroke-width="2.2" stroke-linecap="round">
+            <line x1="36" y1="53" x2="48" y2="48"/><line x1="54" y1="53" x2="66" y2="48"/><line x1="72" y1="53" x2="84" y2="48"/>
+          </g>
+          <g fill="#a6523a" stroke="#4a3b38" stroke-width="1.4">
+            <circle cx="42" cy="50" r="3.2"/><circle cx="60" cy="50" r="3.2"/><circle cx="78" cy="50" r="3.2"/>
+          </g>
+          <!-- Balcão de madeira + noren curtinho -->
+          <rect x="12" y="62" width="96" height="32" rx="4" fill="#b6815c" stroke="#4a3b38" stroke-width="2.6"/>
+          <rect x="20" y="68" width="80" height="18" rx="3" fill="#fbf3e6" stroke="#4a3b38" stroke-width="1.8"/>
+          <text x="60" y="82" text-anchor="middle" fill="#9e4b3e" font-family="Zen Maru Gothic, sans-serif" font-weight="800" font-size="13">焼き鳥</text>
+          <!-- Rodinhas da carrocinha -->
+          <circle cx="28" cy="96" r="6" fill="#59433b" stroke="#4a3b38" stroke-width="2"/>
+          <circle cx="92" cy="96" r="6" fill="#59433b" stroke="#4a3b38" stroke-width="2"/>
+        </svg>
+      </button>
+
+      <!-- Cachorrinho Shiba Inu passeando na calçada -->
+      <button type="button" class="shiba-dog" id="shibaDog" data-secret="cachorro" aria-label="柴犬">
+        <svg viewBox="0 0 88 64" xmlns="http://www.w3.org/2000/svg">
+          <!-- Rabinho enrolado -->
+          <path d="M16 32 C6 24 8 12 18 14 C24 15 24 23 19 26" fill="#d99559" stroke="#4a3b38" stroke-width="2.6" stroke-linecap="round"/>
+          <!-- Corpinho -->
+          <ellipse cx="40" cy="36" rx="22" ry="13" fill="#d99559" stroke="#4a3b38" stroke-width="2.6"/>
+          <ellipse cx="42" cy="41" rx="14" ry="7" fill="#fbf3e6"/>
+          <!-- Patinhas -->
+          <rect x="24" y="44" width="6" height="14" rx="3" fill="#fbf3e6" stroke="#4a3b38" stroke-width="2.4"/>
+          <rect x="34" y="45" width="6" height="13" rx="3" fill="#d99559" stroke="#4a3b38" stroke-width="2.4"/>
+          <rect x="48" y="44" width="6" height="14" rx="3" fill="#fbf3e6" stroke="#4a3b38" stroke-width="2.4"/>
+          <rect x="56" y="45" width="6" height="13" rx="3" fill="#d99559" stroke="#4a3b38" stroke-width="2.4"/>
+          <!-- Coleirinha vermelha -->
+          <path d="M52 27 L60 35" stroke="#d96b5c" stroke-width="4.5" stroke-linecap="round"/>
+          <!-- Cabeça + orelhas pontudas -->
+          <path d="M54 18 L58 6 L66 16 Z" fill="#d99559" stroke="#4a3b38" stroke-width="2.4" stroke-linejoin="round"/>
+          <path d="M68 17 L75 7 L78 19 Z" fill="#d99559" stroke="#4a3b38" stroke-width="2.4" stroke-linejoin="round"/>
+          <circle cx="66" cy="25" r="13" fill="#d99559" stroke="#4a3b38" stroke-width="2.6"/>
+          <ellipse cx="69" cy="29" rx="9" ry="7" fill="#fbf3e6"/>
+          <!-- Olhinhos e focinho -->
+          <circle cx="64" cy="23" r="2" fill="#4a3b38"/>
+          <circle cx="73" cy="23" r="2" fill="#4a3b38"/>
+          <ellipse cx="70" cy="27" rx="2.5" ry="1.8" fill="#4a3b38"/>
+          <path d="M67 30 Q70 33 73 30" stroke="#4a3b38" stroke-width="1.8" fill="none" stroke-linecap="round"/>
+        </svg>
+      </button>
 
       <!-- Avatar caminhando na calçada -->
       <div class="walker" id="walker" style="left:50%;top:87%">
@@ -377,24 +590,35 @@
       <!-- Popover Washi da lojinha escolhida -->
       <div class="loja-popover" id="lojaPopover" hidden role="region" aria-live="polite">
         <div>
-          <span class="jp-tag" id="popJp" lang="ja"></span>
-          <h3 id="popTit"></h3>
-          <p id="popDesc"></p>
+          <h3 id="popTit" lang="ja"></h3>
+          <span class="ro-block" id="popRo" style="font-size:12px;color:#9e4b3e"></span>
+          <p id="popJp" lang="ja" style="color:#42322e;font-weight:700"></p>
+          <p id="popDesc" class="trad-block"></p>
         </div>
         <div class="row">
           <button type="button" class="btn sm" id="popFecha" style="background:#fff;color:#42322e;border-color:#d4bfa9">✕</button>
-          <a class="btn pri" id="popEntrar" href="#">Entrar →</a>
+          <a class="btn pri" id="popEntrar" href="#"><span lang="ja"><ruby>入<rt>はい</rt></ruby>る</span> →</a>
         </div>
       </div>
+    </div>
+    </div>
+
+    <!-- Ofensiva Coletiva & Presença das Alunas -->
+    <div class="ofensiva-bar" id="ofensivaBar">
+      <div class="alunas-chips" id="alunasOnline">
+        <span style="color:var(--lantern);font-weight:800">🔥 Ofensiva do Beco:</span>
+        <span class="aluna-chip eu" id="euChip">Você · 🔥 0d</span>
+      </div>
+      <span class="sub" id="statusPresenca" style="font-size:12.5px">Modo solo (ao logar, as alunas se veem andando aqui!)</span>
     </div>
 
     <!-- Placa de rua / Atalhos discretos na base do mapa -->
     <div class="beco-dock">
-      <span class="dock-dica">👣 Toque na calçada para passear (ou use ← →) · Toque numa porta para entrar</span>
+      <span class="dock-dica">👣 Arraste no celular para passear pelo beco · Toque nos objetos ou nas colegas!</span>
       <div class="dock-atalhos">
         <a class="dock-pill" href="./mala/">🧳 Mala Express</a>
         <a class="dock-pill" href="./dupla/">👥 Jogos em Dupla</a>
-        <button type="button" class="dock-pill" id="btnAbrirCafe">🍵 Mural do Café</button>
+        <a class="dock-pill" href="/aluno/teste/#desempenho">📊 Meu Gráfico</a>
       </div>
     </div>
   </main>
@@ -427,56 +651,78 @@
 <script src="/idiomas/dados/avatar.js?v=20261016b"></script>
 <script src="/idiomas/dados/velocidade-voz.js?v=1"></script>
 <script src="/idiomas/dados/audio-mapa.js?v=jogos1"></script>
-<script src="./sfx.js?v=1"></script>
+<script src="./sfx.js?v=6"></script>
 <script>
 (function () {
   'use strict';
   const esc = s => String(s || '').replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
 
-  /* ---------- Avatar do aluno ---------- */
+  /* ---------- Ofensiva Diária ---------- */
+  const btnStreak = document.getElementById('btnStreak');
+  function syncStreak() {
+    const s = UniSalao.getStreak();
+    btnStreak.textContent = s.claimedToday ? `🔥 ${s.count}d` : '🔥 +25 XP';
+    btnStreak.classList.toggle('on', s.claimedToday);
+  }
+  btnStreak.addEventListener('click', () => {
+    const r = UniSalao.claimDailyStreak();
+    if (!r.ok) UniSalao.toast('Ofensiva de hoje já resgatada! Volte amanhã 🔥');
+    syncStreak();
+  });
+  syncStreak();
+
+  /* ---------- Avatar do aluno (com acessórios da Lojinha!) ---------- */
   const av = window.UtopiaAvatar && window.UtopiaAvatar.load && window.UtopiaAvatar.load();
   const nome = (av && av.profile && (av.profile.kata || av.profile.name)) || 'Você';
   document.getElementById('walkerName').textContent = nome;
-  if (av && av.sel && window.UtopiaAvatar) {
-    document.getElementById('walkerFace').innerHTML = window.UtopiaAvatar.svg(av.sel, { viewBox: '40 46 160 160', still: true, label: 'Avatar' });
-  }
+  document.getElementById('walkerFace').innerHTML = UniSalao.avatarHTML({ viewBox: '36 36 168 168' });
 
-  /* ---------- Lojas do Beco ---------- */
+  /* ---------- Lojas do Beco (100% japonês por padrão; tradução/furigana/romaji opcionais!) ---------- */
   const LOJAS = {
     karaoke: {
       x: 10.5, y: 84,
-      jp: 'カラオケ · Palco & Microfone',
-      tit: '🎤 Sala de Karaokê',
-      desc: 'Cole qualquer música do YouTube, cante com letra sincronizada, furigana e teste sua voz no microfone.',
+      titHtml: '🎤 カラオケ',
+      ro: 'karaoke · uta o utaimashou!',
+      jpHtml: '<ruby>歌<rt>うた</rt></ruby>を <ruby>歌<rt>うた</rt></ruby>いましょう！',
+      plain: 'カラオケ！うたを うたいましょう！',
+      desc: 'Sala de Karaokê · Cante com YouTube, letra sincronizada e microfone.',
       href: './karaoke/'
     },
     sushi: {
       x: 26.5, y: 84,
-      jp: '回転寿司 · Fliperama de Reflexo',
-      tit: '🍣 Kaiten-Zushi de Palavras',
-      desc: 'Pegue os pratos certos na esteira antes que passem, empilhe combos e treine escuta pura.',
+      titHtml: '🍣 <ruby>回転寿司<rt>かいてんずし</rt></ruby>',
+      ro: 'kaiten-zushi · kotoba o torimashou!',
+      jpHtml: '<ruby>言葉<rt>ことば</rt></ruby>の お<ruby>皿<rt>さら</rt></ruby>を <ruby>取<rt>と</rt></ruby>りましょう！',
+      plain: 'かいてんずし！ことばの おさらを とりましょう！',
+      desc: 'Kaiten-Zushi · Pegue os pratos de Kanji na esteira e acompanhe seu tempo.',
       href: './sushi/'
     },
     konbini: {
       x: 51, y: 84,
-      jp: 'コンビニ · Escuta & Fala',
-      tit: '🏪 Konbini Express',
-      desc: 'Atenda clientes no turno da noite, monte a bandeja certa e ganhe bônus falando no microfone.',
+      titHtml: '🏪 コンビニ',
+      ro: 'konbini · irasshaimase!',
+      jpHtml: 'いらっしゃいませ！お<ruby>客様<rt>きゃくさま</rt></ruby>の <ruby>注文<rt>ちゅうもん</rt></ruby>を <ruby>聞<rt>き</rt></ruby>きましょう。',
+      plain: 'コンビニ！いらっしゃいませ！',
+      desc: 'Konbini Express · Ouça os pedidos dos clientes e pratique no microfone.',
       href: './konbini/'
     },
-    caligrafia: {
+    lojinha: {
       x: 74, y: 84,
-      jp: '書道 · Pincel Interativo',
-      tit: '🖌️ Tinta Viva · Caligrafia',
-      desc: 'Desenhe Hiragana e Katakana no papel washi com guia animado da ordem dos traços.',
-      href: './caligrafia/'
+      titHtml: '👘 <ruby>雑貨屋<rt>ざっかや</rt></ruby>',
+      ro: 'zakka-ya · fuku o erabimashou!',
+      jpHtml: '<ruby>服<rt>ふく</rt></ruby>や <ruby>小物<rt>こもの</rt></ruby>を <ruby>選<rt>えら</rt></ruby>びましょう！',
+      plain: 'ざっかや！ふくや こものを えらびましょう！',
+      desc: 'Lojinha do Beco · Troque seus pontos e ofensivas por itens para o avatar.',
+      href: './lojinha/'
     },
     cafe: {
       x: 88.5, y: 86,
-      jp: '喫茶 · Cantinho Social',
-      tit: '🍵 Café Yokocho',
-      desc: 'Sente na mesinha da rua, deixe um recado em japonês e veja quem passou pelo beco.',
-      modal: true
+      titHtml: '🍵 <ruby>喫茶<rt>きっさ</rt></ruby>',
+      ro: 'kissa · yukkuri yasumimashou!',
+      jpHtml: 'コーヒーを <ruby>飲<rt>の</rt></ruby>みながら ゆっくり <ruby>休<rt>やす</rt></ruby>みましょう。',
+      plain: 'きっさ！コーヒーを のみながら ゆっくり やすみましょう。',
+      desc: 'Café Yokocho · Sente à mesa, peça cafés/doces e converse com o Master.',
+      href: './cafe/'
     }
   };
 
@@ -496,6 +742,7 @@
     walker.style.top = pos.y + '%';
     clearTimeout(walkTimer);
     walkTimer = setTimeout(() => walker.classList.remove('andando'), 860);
+    if (typeof window.__becoGravaPos === 'function') window.__becoGravaPos(pos.x, pos.y);
   }
 
   function abrePopover(id) {
@@ -512,19 +759,15 @@
     andarPara(L.x, L.y);
     UniSalao.sfx.click();
 
-    document.getElementById('popJp').textContent = L.jp;
-    document.getElementById('popTit').textContent = L.tit;
+    document.getElementById('popTit').innerHTML = L.titHtml;
+    document.getElementById('popRo').textContent = L.ro;
+    document.getElementById('popJp').innerHTML = L.jpHtml;
     document.getElementById('popDesc').textContent = L.desc;
+    UniSalao.speak(L.plain);
     const btn = document.getElementById('popEntrar');
-    if (L.modal) {
-      btn.href = '#cafe';
-      btn.textContent = 'Sentar no Café →';
-      btn.onclick = ev => { ev.preventDefault(); popover.hidden = true; document.getElementById('cafeModal').showModal(); };
-    } else {
-      btn.href = L.href;
-      btn.textContent = 'Entrar →';
-      btn.onclick = null;
-    }
+    btn.href = L.href;
+    btn.innerHTML = '<span lang="ja"><ruby>入<rt>はい</rt></ruby>る</span> <span class="trad" style="font-size:12px">(Entrar)</span> →';
+    btn.onclick = null;
     popover.hidden = false;
   }
 
@@ -535,38 +778,84 @@
     document.querySelectorAll('.spot').forEach(s => s.classList.remove('ativo'));
   });
 
-  /* ---------- Easter Eggs vivos do Beco ---------- */
+  /* ---------- Objetos & Interações Vivas do Beco (tudo mostra como chama em japonês!) ---------- */
   const bubble = document.getElementById('becoBubble');
   let bubTimer = null;
-  function mostraBalao(x, y, jp, ro, pt) {
-    bubble.style.left = Math.max(16, Math.min(84, x)) + '%';
-    bubble.style.top = Math.max(22, y - 4) + '%';
-    bubble.innerHTML = `<b lang="ja">${esc(jp)}</b><span class="ro-block" style="color:#9e4b3e;font-size:11.5px">${esc(ro)}</span><span>${esc(pt)}</span>`;
+  let lastBubItem = null;
+
+  function mostraBalao(x, y, nomeHtml, nomePlain, nomeRo, nomePt, fraseHtml, frasePlain, fraseRo, frasePt) {
+    lastBubItem = { nomePlain, nomeRo, nomePt };
+    bubble.style.left = Math.max(18, Math.min(82, x)) + '%';
+    bubble.style.top = Math.max(24, y - 5) + '%';
+    bubble.innerHTML = `
+      <div class="bub-head">
+        <span class="bub-nome" lang="ja">${nomeHtml}</span>
+        <button type="button" class="bub-cad" id="btnBubCad" title="Salvar palavra no Caderno">📒</button>
+      </div>
+      <div class="ro-block" style="color:#9e4b3e;font-size:11.5px">${esc(nomeRo)}</div>
+      <div class="trad-block" style="color:#6b5852;font-size:12px;margin-bottom:4px">${esc(nomePt)}</div>
+      ${fraseHtml ? `<div style="border-top:1px dashed #decbb6;padding-top:4px;margin-top:3px">
+        <span lang="ja" style="font-weight:700;color:#42322e">${fraseHtml}</span>
+        <span class="ro-block" style="color:#9e4b3e;font-size:11px">${esc(fraseRo || '')}</span>
+        <span class="trad-block" style="color:#6b5852;font-size:11.5px">${esc(frasePt || '')}</span>
+      </div>` : ''}
+    `;
     bubble.hidden = false;
-    UniSalao.speak(jp);
+    UniSalao.speak(frasePlain ? (nomePlain + '。' + frasePlain) : nomePlain);
     clearTimeout(bubTimer);
-    bubTimer = setTimeout(() => { bubble.hidden = true; }, 4200);
+    bubTimer = setTimeout(() => { bubble.hidden = true; }, 5600);
   }
 
+  bubble.addEventListener('click', e => {
+    e.stopPropagation();
+    if (e.target.id === 'btnBubCad' && lastBubItem) {
+      UniSalao.saveToCaderno(`${lastBubItem.nomePlain} (${lastBubItem.nomeRo}) — ${lastBubItem.nomePt}`, 'Beco Yokocho · Salão');
+    }
+  });
+
+  /* Cachorrinho Shiba passeando continuamente pelo beco */
+  const dogEl = document.getElementById('shibaDog');
+  let dogX = 14, dogDir = 1, dogPause = 0;
+  function tickDog() {
+    if (dogPause > 0) { dogPause -= 50; }
+    else {
+      dogX += dogDir * 0.22;
+      if (dogX >= 82) { dogDir = -1; dogEl.classList.add('flip'); }
+      else if (dogX <= 10) { dogDir = 1; dogEl.classList.remove('flip'); }
+      dogEl.style.left = dogX.toFixed(2) + '%';
+    }
+  }
+  setInterval(tickDog, 50);
+
   const GATO_FALAS = [
-    ['にゃ〜！こんばんは！', 'nyaa! konbanwa!', 'Miau! Boa noite!'],
-    ['さかなが すきです！', 'sakana ga suki desu!', 'Eu amo peixe!'],
-    ['きょうも がんばってね！', 'kyou mo ganbatte ne!', 'Dê o seu melhor hoje!']
+    ['にゃ〜！<ruby>今晩<rt>こんばん</rt></ruby>は！', 'にゃ〜！こんばんは！', 'nyaa! konbanwa!', 'Miau! Boa noite!'],
+    ['<ruby>魚<rt>さかな</rt></ruby>が <ruby>好<rt>す</rt></ruby>きです！', 'さかなが すきです！', 'sakana ga suki desu!', 'Eu amo peixe!'],
+    ['<ruby>今日<rt>きょう</rt></ruby>も <ruby>頑張<rt>がんば</rt></ruby>ってね！', 'きょうも がんばってね！', 'kyou mo ganbatte ne!', 'Dê o seu melhor hoje!']
+  ];
+  const DOG_FALAS = [
+    ['わんわん！お<ruby>散歩<rt>さんぽ</rt></ruby>です！', 'わんわん！おさんぽです！', 'wanwan! osanpo desu!', 'Au au! Estou passeando!'],
+    ['わん！<ruby>遊<rt>あそ</rt></ruby>びましょう！', 'わん！あそびましょう！', 'wan! asobimashou!', 'Au! Vamos brincar!'],
+    ['わんわん！いい<ruby>天気<rt>てんき</rt></ruby>ですね！', 'わんわん！いいてんきですね！', 'wanwan! ii tenki desu ne!', 'Au au! Que tempo gostoso!']
   ];
   const BEBIDAS = [
-    ['つめたい おちゃ！', 'tsumetai ocha!', '🍵 Caiu um chá verde gelado!'],
-    ['あたたかい コーヒー！', 'atatakai koohii!', '☕ Caiu um café quentinho!'],
-    ['ラムネ どうぞ！', 'ramune douzo!', '🫧 Caiu um refrigerante Ramune!'],
-    ['おいしい みず！', 'oishii mizu!', '💧 Caiu uma água geladinha!']
+    ['🍵 <ruby>冷<rt>つめ</rt></ruby>たい お<ruby>茶<rt>ちゃ</rt></ruby>！', 'つめたい おちゃ！', 'tsumetai ocha!', 'Caiu um chá verde gelado!'],
+    ['☕ <ruby>温<rt>あたた</rt></ruby>かい コーヒー！', 'あたたかい コーヒー！', 'atatakai koohii!', 'Caiu um café quentinho!'],
+    ['🫧 ラムネ どうぞ！', 'ラムネ どうぞ！', 'ramune douzo!', 'Caiu um refrigerante Ramune!'],
+    ['💧 <ruby>美味<rt>おい</rt></ruby>しい <ruby>水<rt>みず</rt></ruby>！', 'おいしい みず！', 'oishii mizu!', 'Caiu uma água geladinha!']
+  ];
+  const YAKITORI_FALAS = [
+    ['<ruby>焼<rt>や</rt></ruby>き<ruby>鳥<rt>とり</rt></ruby> いかがですか？', 'やきとり いかがですか？', 'yakitori ikaga desu ka?', 'Aceita um espetinho de yakitori?'],
+    ['<ruby>熱々<rt>あつあつ</rt></ruby>ですよ！<ruby>塩<rt>しお</rt></ruby>？タレ？', 'あつあつですよ！しお？タレ？', 'atsuatsu desu yo! shio? tare?', 'Está quentinho! Com sal ou molho tare?'],
+    ['いらっしゃい！いい<ruby>匂<rt>にお</rt></ruby>いでしょ？', 'いらっしゃい！いいにおいでしょ？', 'irasshai! ii nioi desho?', 'Bem-vindo! Cheirinho bom, né?']
   ];
   const BAMBUS = [
-    ['ちりも つもれば やまとなる', 'chiri mo tsumoreba yama to naru', 'Grão em grão vira montanha (constância!).'],
-    ['ななころび やおき', 'nanakorobi yaoki', 'Cair sete vezes, levantar oito.'],
-    ['いちげ いちえ', 'ichigo ichie', 'Cada encontro é único — aproveite!']
+    ['<ruby>塵<rt>ちり</rt></ruby>も <ruby>積<rt>つ</rt></ruby>もれば <ruby>山<rt>やま</rt></ruby>となる', 'ちりも つもれば やまとなる', 'chiri mo tsumoreba yama to naru', 'Grão em grão vira montanha (constância!).'],
+    ['<ruby>七転<rt>ななころ</rt></ruby>び <ruby>八起<rt>やお</rt></ruby>き', 'ななころび やおき', 'nanakorobi yaoki', 'Cair sete vezes, levantar oito.'],
+    ['<ruby>一期一会<rt>いちごいちえ</rt></ruby>', 'いちごいちえ', 'ichigo ichie', 'Cada encontro é único — aproveite!']
   ];
 
   stage.addEventListener('click', e => {
-    if (e.target.closest('#lojaPopover')) return;
+    if (e.target.closest('#lojaPopover') || e.target.closest('#becoBubble')) return;
 
     const sp = e.target.closest('[data-loja]');
     if (sp) { abrePopover(sp.dataset.loja); return; }
@@ -578,18 +867,44 @@
       if (tipo === 'gato') {
         const f = GATO_FALAS[Math.floor(Math.random() * GATO_FALAS.length)];
         andarPara(84, 86);
-        mostraBalao(86, 74, f[0], f[1], f[2]);
+        mostraBalao(86, 74, '🐱 <ruby>三毛猫<rt>みけねこ</rt></ruby>（<ruby>猫<rt>ねこ</rt></ruby>）', 'みけねこ', 'mikeneko (neko)', 'Gato tricolor (gato)', f[0], f[1], f[2], f[3]);
         UniSalao.sfx.bell();
+      } else if (tipo === 'cachorro') {
+        dogPause = 3600;
+        dogEl.classList.add('parado');
+        setTimeout(() => dogEl.classList.remove('parado'), 3600);
+        const f = DOG_FALAS[Math.floor(Math.random() * DOG_FALAS.length)];
+        mostraBalao(dogX, 82, '🐕 <ruby>柴犬<rt>しばいぬ</rt></ruby>（<ruby>犬<rt>いぬ</rt></ruby>）', 'しばいぬ', 'shiba-inu (inu)', 'Cachorrinho Shiba (cachorro)', f[0], f[1], f[2], f[3]);
+        UniSalao.sfx.ok();
+        UniSalao.addXP(2);
+      } else if (tipo === 'yakitori') {
+        const f = YAKITORI_FALAS[Math.floor(Math.random() * YAKITORI_FALAS.length)];
+        andarPara(38.5, 85);
+        mostraBalao(38.5, 62, '🍢 <ruby>焼<rt>や</rt></ruby>き<ruby>鳥<rt>とり</rt></ruby><ruby>屋台<rt>やたい</rt></ruby>', 'やきとりやたい', 'yakitori yatai', 'Barraquinha de Yakitori (espetinho)', f[0], f[1], f[2], f[3]);
+        UniSalao.sfx.ok();
+        UniSalao.addXP(3);
       } else if (tipo === 'maquina') {
         const b = BEBIDAS[Math.floor(Math.random() * BEBIDAS.length)];
         andarPara(92, 86);
-        mostraBalao(86, 60, b[0], b[1], b[2]);
+        mostraBalao(84, 58, '🥤 <ruby>自動販売機<rt>じどうはんばいき</rt></ruby>', 'じどうはんばいき', 'jidouhanbaiki', 'Máquina automática de bebidas', b[0], b[1], b[2], b[3]);
         UniSalao.sfx.ok();
         UniSalao.addXP(2);
       } else if (tipo === 'bambu') {
         const p = BAMBUS[Math.floor(Math.random() * BAMBUS.length)];
         andarPara(67, 84);
-        mostraBalao(67, 60, p[0], p[1], '🎋 ' + p[2]);
+        mostraBalao(67, 58, '🎋 <ruby>竹<rt>たけ</rt></ruby>', 'たけ', 'take', 'Bambu', p[0], p[1], p[2], p[3]);
+        UniSalao.sfx.bell();
+      } else if (tipo === 'lanterna') {
+        mostraBalao(16, 26, '🏮 <ruby>提灯<rt>ちょうちん</rt></ruby>', 'ちょうちん', 'chouchin', 'Lanterna japonesa de papel', '<ruby>明<rt>あか</rt></ruby>るいですね！', 'あかるいですね！', 'akarui desu ne!', 'Está bem iluminado!');
+        UniSalao.sfx.bell();
+      } else if (tipo === 'noren') {
+        mostraBalao(26, 48, '🟦 <ruby>暖簾<rt>のれん</rt></ruby>', 'のれん', 'noren', 'Cortina tradicional na entrada da loja', 'お<ruby>店<rt>みせ</rt></ruby>が <ruby>開<rt>あ</rt></ruby>いています！', 'おみせが あいています！', 'omise ga aite imasu!', 'A loja está aberta!');
+        UniSalao.sfx.click();
+      } else if (tipo === 'ceu') {
+        const cl = document.body.dataset.clima || 'noite';
+        if (cl === 'chuva') mostraBalao(50, 26, '🌧️ <ruby>雨<rt>あめ</rt></ruby>', 'あめ', 'ame', 'Chuva', '<ruby>雨<rt>あめ</rt></ruby>が <ruby>降<rt>ふ</rt></ruby>っています。', 'あめが ふっています。', 'ame ga futte imasu.', 'Está chovendo.');
+        else if (cl === 'tarde') mostraBalao(50, 26, '🌇 <ruby>夕焼<rt>ゆうや</rt></ruby>け', 'ゆうやけ', 'yuuyake', 'Pôr do sol / Entardecer', 'きれいな <ruby>空<rt>そら</rt></ruby>ですね！', 'きれいな そらですね！', 'kirei na sora desu ne!', 'Que céu lindo!');
+        else mostraBalao(50, 26, '🌙 <ruby>夜空<rt>よぞら</rt></ruby>', 'よぞら', 'yozora', 'Céu noturno', '<ruby>静<rt>しず</rt></ruby>かな <ruby>夜<rt>よる</rt></ruby>ですね。', 'しずかな よるですね。', 'shizuka na yoru desu ne.', 'Que noite tranquila.');
         UniSalao.sfx.bell();
       }
       return;
@@ -613,9 +928,10 @@
     andarPara(pos.x + d[0], pos.y + d[1]);
   });
 
-  /* ---------- Modal Café Yokocho (Mural Social) ---------- */
+  /* ---------- Modal Café (opcional, se aberto por script) ---------- */
   const modal = document.getElementById('cafeModal');
-  document.getElementById('btnAbrirCafe').addEventListener('click', () => { UniSalao.sfx.click(); modal.showModal(); });
+  const btnAb = document.getElementById('btnAbrirCafe');
+  if (btnAb) btnAb.addEventListener('click', () => { UniSalao.sfx.click(); modal.showModal(); });
   document.getElementById('fechaCafe').addEventListener('click', () => modal.close());
 
   const MURAL_KEY = 'uniSalaoMuralTeste';
@@ -681,7 +997,132 @@
     UniSalao.addXP(5);
     UniSalao.toast('🍵 Recado deixado no Café! +5 XP');
   });
+  /* Atualiza chip pessoal de ofensiva */
+  function syncEuChip() {
+    const s = UniSalao.getStreak();
+    const el = document.getElementById('euChip');
+    if (el) el.textContent = `${nome} · 🔥 ${s.count}d (${s.atividadesHoje} hoje)`;
+  }
+  syncEuChip();
+  btnStreak.addEventListener('click', syncEuChip);
 })();
+</script>
+
+<!-- Presença ao Vivo + Ofensiva Coletiva entre Alunas (usa salao/presenca/ já existente no RTDB) -->
+<script type="module">
+import { getApps } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
+import { getDatabase, ref, set, onValue, onDisconnect, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-database.js";
+
+const DB_URL = 'https://unirversos-site-default-rtdb.firebaseio.com';
+const stage = document.getElementById('becoStage');
+const statusEl = document.getElementById('statusPresenca');
+const onlineEl = document.getElementById('alunasOnline');
+const peersEl = {};
+let db = null, meUid = null, meNome = '', lastX = 50, lastY = 87, gravaT = null, ultimoAcenoT = 0;
+
+function payload(extra) {
+  const av = window.UtopiaAvatar && window.UtopiaAvatar.load && window.UtopiaAvatar.load();
+  const st = window.UniSalao ? UniSalao.getStreak() : { count: 0, atividadesHoje: 0 };
+  const ex = window.UniSalao ? UniSalao.getAvatarExtras().equipped : {};
+  return Object.assign({
+    nome: (meNome || 'Viajante').slice(0, 30),
+    sel: (av && av.sel) || null,
+    extras: ex || null,
+    x: Math.round(lastX * 10) / 10,
+    y: Math.round(lastY * 10) / 10,
+    streak: st.count || 0,
+    ativHoje: st.atividadesHoje || 0,
+    t: serverTimestamp()
+  }, extra || {});
+}
+
+function grava(extra) {
+  if (!db || !meUid) return;
+  clearTimeout(gravaT);
+  gravaT = setTimeout(() => {
+    set(ref(db, 'salao/presenca/' + meUid), payload(extra)).catch(() => {});
+  }, 150);
+}
+window.__becoGravaPos = (x, y) => { lastX = x; lastY = y; grava(); };
+
+function renderPeers(PRES) {
+  const vivos = new Set();
+  let totalAtiv = window.UniSalao ? UniSalao.getStreak().atividadesHoje : 0;
+  let totalOnline = 1;
+  const chips = [];
+  const meuSt = window.UniSalao ? UniSalao.getStreak() : { count: 0, atividadesHoje: 0 };
+  chips.push(`<span style="color:var(--lantern);font-weight:800">🔥 Ofensiva do Beco:</span>`);
+  chips.push(`<span class="aluna-chip eu">${meNome || 'Você'} · 🔥 ${meuSt.count}d</span>`);
+
+  Object.entries(PRES || {}).forEach(([uid, p]) => {
+    if (uid === meUid || !p || typeof p.x !== 'number') return;
+    vivos.add(uid);
+    totalOnline++;
+    totalAtiv += (p.ativHoje || 0);
+    chips.push(`<span class="aluna-chip">${String(p.nome || 'Viajante').slice(0, 16)} · 🔥 ${p.streak || 0}d</span>`);
+
+    /* Recebe aceno dirigido a mim */
+    if (p.aceno && p.aceno.para === meUid && p.aceno.t && p.aceno.t > ultimoAcenoT) {
+      ultimoAcenoT = p.aceno.t;
+      if (window.UniSalao) {
+        UniSalao.sfx.bell();
+        UniSalao.speak('いっしょに がんばろう！');
+        UniSalao.toast(`🔥 ${p.nome || 'Colega'} acenou: 一緒に頑張ろう！(Vamos juntas!)`);
+      }
+    }
+
+    let el = peersEl[uid];
+    if (!el) {
+      el = document.createElement('button');
+      el.type = 'button';
+      el.className = 'peer-walker';
+      el.innerHTML = `<div class="walker-face"></div><span class="walker-name"></span><span class="peer-badge"></span>`;
+      el.addEventListener('click', ev => {
+        ev.stopPropagation();
+        grava({ aceno: { para: uid, t: Date.now() } });
+        if (window.UniSalao) {
+          UniSalao.sfx.ok();
+          UniSalao.speak('こんにちは！いっしょに がんばろう！');
+          UniSalao.addXP(5);
+          UniSalao.toast(`👋 Incentivo enviado para ${p.nome || 'colega'}! +5 XP`);
+        }
+      });
+      stage.appendChild(el);
+      peersEl[uid] = el;
+    }
+    el.style.left = Math.max(6, Math.min(94, p.x)) + '%';
+    el.style.top = Math.max(80, Math.min(94, p.y)) + '%';
+    el.querySelector('.walker-face').innerHTML = window.UniSalao ? UniSalao.avatarHTML({ sel: p.sel, equipped: p.extras || {}, viewBox: '36 36 168 168' }) : '🧳';
+    el.querySelector('.walker-name').textContent = p.nome || 'Viajante';
+    el.querySelector('.peer-badge').textContent = `🔥 ${p.streak || 0}d`;
+  });
+
+  Object.keys(peersEl).forEach(u => { if (!vivos.has(u)) { peersEl[u].remove(); delete peersEl[u]; } });
+  onlineEl.innerHTML = chips.join('');
+  statusEl.textContent = totalOnline > 1
+    ? `🟢 ${totalOnline} alunas no Beco · ${totalAtiv} atividade(s) hoje (toque num avatar para incentivar!)`
+    : `🟢 Conectada · ${totalAtiv} atividade(s) hoje no Beco`;
+}
+
+function ligaBanco(user) {
+  try {
+    db = getDatabase(getApps()[0], DB_URL);
+    meUid = user.uid;
+    const av = window.UtopiaAvatar && window.UtopiaAvatar.load && window.UtopiaAvatar.load();
+    meNome = (av && av.profile && (av.profile.kata || av.profile.name)) || (user.displayName || '').split(' ')[0] || 'Viajante';
+    const presRef = ref(db, 'salao/presenca/' + meUid);
+    onDisconnect(presRef).remove().then(() => { grava(); }).catch(() => {});
+    onValue(ref(db, 'salao/presenca'), snap => renderPeers(snap.val() || {}), () => {});
+  } catch (e) {}
+}
+
+function aguardaApp(tent) {
+  const apps = getApps();
+  if (!apps.length) { if (tent < 20) setTimeout(() => aguardaApp(tent + 1), 300); return; }
+  onAuthStateChanged(getAuth(apps[0]), u => { if (u && !meUid) ligaBanco(u); });
+}
+aguardaApp(0);
 </script>
 </body>
 </html>

@@ -87,6 +87,59 @@ body.ver-ro .ro { display: inline; }
 body.ver-ro .ro-block { display: block; }
 .ro-block { display: none; }
 
+/* Furigana & Tradução opcionais globais (padrão OFF = nível difícil em Kanji) */
+body:not(.ver-furi) rt { display: none; }
+ruby { ruby-position: over; }
+rt { font-size: 0.56em; font-weight: 700; color: #fce2ad; letter-spacing: 0.02em; }
+
+.trad { display: none; }
+body.ver-trad .trad { display: inline; }
+.trad-block { display: none; }
+body.ver-trad .trad-block { display: block; }
+
+/* Barra de Acessibilidade Global (Velocidade, Tradução, Furigana, Romaji) */
+.acess-bar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px 12px;
+  background: rgba(34, 26, 28, 0.52);
+  border: 1px solid var(--line);
+  border-radius: 16px;
+  padding: 8px 12px;
+}
+.acess-grupo { display: flex; flex-wrap: wrap; align-items: center; gap: 6px; }
+.vel-ctrl {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  background: var(--surface);
+  border: 1px solid var(--line-strong);
+  border-radius: 999px;
+  padding: 2px 5px;
+}
+.vel-ctrl button {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  border: 0;
+  background: rgba(251, 243, 230, 0.1);
+  color: var(--ink);
+  font-weight: 800;
+  font-size: 15px;
+  display: grid;
+  place-items: center;
+}
+.vel-ctrl button:hover { background: var(--lantern-soft); color: var(--lantern); }
+.vel-ctrl span {
+  min-width: 48px;
+  text-align: center;
+  font-size: 12.5px;
+  font-weight: 800;
+  color: var(--lantern);
+}
+
 .wrap {
   max-width: 1120px;
   margin: 0 auto;

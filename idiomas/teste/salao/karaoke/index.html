@@ -259,6 +259,7 @@ h1{font-family:var(--f-display); font-size:clamp(22px,3vw,30px); font-weight:800
       <button type="button" class="btn on" id="btnRo">Romaji: ON</button>
       <button type="button" class="btn on" id="btnFuri">Furigana: ON</button>
       <button type="button" class="btn on" id="btnPt">Tradução: ON</button>
+      <button type="button" class="btn terra" id="btnRecKara">💬 Exercício: Recepção</button>
       <button type="button" class="btn agua" id="btnAiCfg">✨ IA (Gemini)</button>
     </div>
   </header>
@@ -431,6 +432,19 @@ h1{font-family:var(--f-display); font-size:clamp(22px,3vw,30px); font-weight:800
 
 <script src="https://cdn.jsdelivr.net/npm/kuroshiro@1.2.0/dist/kuroshiro.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/kuroshiro-analyzer-kuromoji@1.1.0/dist/kuroshiro-analyzer-kuromoji.min.js"></script>
+<!-- Modal Exercício Fixo: Recepção do Karaokê no Japão -->
+<div class="modal-bg" id="recModal" hidden>
+  <div class="modal" role="dialog" aria-modal="true" aria-label="Recepção do Karaokê">
+    <div style="display:flex;justify-content:space-between;align-items:center;gap:8px">
+      <h2 style="font-size:20px">💬 <ruby>受付<rt>うけつけ</rt></ruby> · Recepção do Karaokê</h2>
+      <button type="button" class="btn sm" id="recClose">✕ Fechar</button>
+    </div>
+    <p class="sub" style="font-size:13px;color:var(--muted)">Exercício fixo: reserve uma sala de karaokê em Tóquio em japonês (usa os botões de Romaji, Furigana e Tradução do topo).</p>
+    <div id="recLog" style="background:var(--bg);border:1px solid var(--line);border-radius:14px;padding:12px;display:grid;gap:8px;max-height:220px;overflow:auto"></div>
+    <div id="recOps" style="display:grid;gap:8px"></div>
+  </div>
+</div>
+
 <script src="https://www.youtube.com/iframe_api"></script>
 <script>
 (function(){
@@ -1221,6 +1235,66 @@ try{
     loadFromYouTube(v);
   }
 }catch(e){}
+})();
+/* ---------- Exercício Fixo: Recepção do Karaokê ---------- */
+(function(){
+  const modal = $('recModal'), log = $('recLog'), ops = $('recOps');
+  if(!modal) return;
+  let etapa = 0, t0 = 0, pessoas = 2, horas = 1;
+  function speakJa(t){
+    try{ if(!window.speechSynthesis) return; speechSynthesis.cancel(); const u=new SpeechSynthesisUtterance(t); u.lang='ja-JP'; u.rate=0.9; speechSynthesis.speak(u); }catch(e){}
+  }
+  function addM(quem, html, ro, pt){
+    const d = document.createElement('div');
+    d.style.cssText = quem==='loja'
+      ? 'justify-self:start;max-width:88%;background:var(--card);border:1px solid var(--line);border-radius:14px;padding:8px 12px'
+      : 'justify-self:end;max-width:88%;background:rgba(217,107,92,.22);border:1px solid var(--pink);border-radius:14px;padding:8px 12px';
+    d.innerHTML = `<strong lang="ja" style="font-size:15px">${html}</strong><div class="ro" style="font-size:12px;color:var(--ar)">${ro}</div><div class="pt-line" style="font-size:12.5px;color:var(--muted)">${pt}</div>`;
+    log.appendChild(d); log.scrollTop = log.scrollHeight;
+  }
+  function renderStep(){
+    if(etapa===0){
+      addM('loja','いらっしゃいませ！<ruby>何名様<rt>なんめいさま</rt></ruby>ですか？','irasshaimase! nanmeisama desu ka?','Bem-vindo(a)! Para quantas pessoas?');
+      speakJa('いらっしゃいませ！なんめいさまですか？');
+      ops.innerHTML = `<button type="button" class="cand-item" data-rk="0"><div><strong lang="ja">${pessoas}<ruby>人<rt>にん</rt></ruby>です。${horas}<ruby>時間<rt>じかん</rt></ruby> お<ruby>願<rt>ねが</rt></ruby>いします。</strong><div class="ro" style="font-size:12px;color:var(--ar)">${pessoas}-nin desu. ${horas}-jikan onegaishimasu.</div><div class="pt-line" style="font-size:12.5px;color:var(--muted)">Somos ${pessoas}. ${horas} hora(s), por favor.</div></div></button>`;
+    } else if(etapa===1){
+      addM('loja','ドリンクバーは つけますか？','dorinkubaa wa tsukemasu ka?','Vai querer bebida à vontade (drink bar)?');
+      speakJa('ドリンクバーは つけますか？');
+      ops.innerHTML = `
+        <button type="button" class="cand-item" data-rk="1a"><div><strong lang="ja">はい、お<ruby>願<rt>ねが</rt></ruby>いします！</strong><div class="ro" style="font-size:12px;color:var(--ar)">hai, onegaishimasu!</div><div class="pt-line" style="font-size:12.5px;color:var(--muted)">Sim, por favor!</div></div></button>
+        <button type="button" class="cand-item" data-rk="1b"><div><strong lang="ja">いいえ、<ruby>大丈夫<rt>だいじょうぶ</rt></ruby>です。</strong><div class="ro" style="font-size:12px;color:var(--ar)">iie, daijoubu desu.</div><div class="pt-line" style="font-size:12.5px;color:var(--muted)">Não, está tudo bem.</div></div></button>`;
+    } else {
+      addM('loja','<ruby>三番<rt>さんばん</rt></ruby>の お<ruby>部屋<rt>へや</rt></ruby>へ どうぞ！<ruby>楽<rt>たの</rt></ruby>しんでくださいね！','sanban no oheya e douzo! tanoshinde kudasai ne!','Pode ir para a sala 3! Divirta-se muito!');
+      speakJa('さんばんの おへやへ どうぞ！たのしんでくださいね！');
+      addXp(15);
+      try{
+        const arr = JSON.parse(localStorage.getItem('uniSalaoHistorico')||'[]');
+        arr.push({ jogo:'karaoke', nomeJogo:'🎤 Karaokê · Recepção', data:new Date().toISOString(), duracaoSeg:Math.max(1,Math.round((performance.now()-t0)/1000)), acertos:2, erros:0, precisao:100, tempoMedio:5, pts:15 });
+        localStorage.setItem('uniSalaoHistorico', JSON.stringify(arr.slice(-120)));
+      }catch(e){}
+      ops.innerHTML = `<div style="display:flex;gap:8px;flex-wrap:wrap"><button type="button" class="btn pri" id="rkAgain">🔄 Repetir (+15 XP!)</button><button type="button" class="btn" id="rkGo">🎤 Ir cantar</button></div>`;
+      $('rkAgain').onclick = startRec;
+      $('rkGo').onclick = () => { modal.hidden = true; };
+    }
+  }
+  function startRec(){
+    etapa = 0; t0 = performance.now();
+    pessoas = [1,2,3][Math.floor(Math.random()*3)];
+    horas = [1,2][Math.floor(Math.random()*2)];
+    log.innerHTML = ''; modal.hidden = false;
+    renderStep();
+  }
+  ops.addEventListener('click', e => {
+    const b = e.target.closest('[data-rk]'); if(!b) return;
+    const k = b.dataset.rk;
+    if(k==='0'){ addM('eu',`${pessoas}<ruby>人<rt>にん</rt></ruby>です。${horas}<ruby>時間<rt>じかん</rt></ruby> お<ruby>願<rt>ねが</rt></ruby>いします。`,`${pessoas}-nin desu. ${horas}-jikan onegaishimasu.`,`Somos ${pessoas}. ${horas} hora(s), por favor.`); speakJa(`${pessoas}にんです。${horas}じかん おねがいします。`); }
+    else if(k==='1a'){ addM('eu','はい、お<ruby>願<rt>ねが</rt></ruby>いします！','hai, onegaishimasu!','Sim, por favor!'); speakJa('はい、おねがいします！'); }
+    else if(k==='1b'){ addM('eu','いいえ、<ruby>大丈夫<rt>だいじょうぶ</rt></ruby>です。','iie, daijoubu desu.','Não, está tudo bem.'); speakJa('いいえ、だいじょうぶです。'); }
+    etapa++; ops.innerHTML = '<span style="color:var(--muted);font-size:13px">Atendente respondendo…</span>';
+    setTimeout(renderStep, 950);
+  });
+  $('btnRecKara').onclick = startRec;
+  $('recClose').onclick = () => { modal.hidden = true; };
 })();
 </script>
 </body>

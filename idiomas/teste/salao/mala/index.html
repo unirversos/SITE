@@ -8,7 +8,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@600;700;800&family=Zen+Maru+Gothic:wght@400;500;700&display=swap">
-<link rel="stylesheet" href="../salao.css?v=2">
+<link rel="stylesheet" href="../salao.css?v=6">
 <style>
   .destinos-grid {
     display: grid;
@@ -156,10 +156,11 @@
     </div>
     <div class="top-tools">
       <span class="xp-pill">✦ <span data-xp-val>0</span> XP</span>
-      <button type="button" class="btn sm" data-romaji-btn aria-pressed="false">Romaji: OFF</button>
       <button type="button" class="btn sm" data-mute-btn aria-pressed="true">🔊 Som: ON</button>
     </div>
   </nav>
+
+  <div data-acess-bar></div>
 
   <!-- Seleção de destino -->
   <section class="card" style="border-left:5px solid var(--coral)" id="secEscolha">
@@ -173,7 +174,22 @@
 
     <div class="row">
       <button type="button" class="btn pri" id="btnComecar">✈️ Começar a arrumar</button>
+      <button type="button" class="btn lantern" id="btnCheckin">🛫 Exercício: Balcão de Check-in</button>
     </div>
+  </section>
+
+  <!-- Exercício Fixo: Balcão de Check-in / Imigração (Perguntas Fixas de Viagem) -->
+  <section class="card b-sky" id="secCheckin" hidden>
+    <div class="row" style="justify-content:space-between">
+      <div>
+        <p class="eyebrow">✦ 空港チェックイン · exercício fixo de viagem</p>
+        <h2>🛫 Balcão de Check-in</h2>
+      </div>
+      <button type="button" class="btn sm" id="ckVoltar">← Voltar</button>
+    </div>
+    <p class="sub" id="ckResumo">Responda às perguntas do atendente sobre a sua viagem.</p>
+    <div id="ckLog" style="background:rgba(24,18,20,0.45);border:1px solid var(--line);border-radius:16px;padding:12px;display:grid;gap:8px;max-height:220px;overflow:auto"></div>
+    <div id="ckOps" style="display:grid;gap:8px"></div>
   </section>
 
   <!-- Palco de Arrumar -->
@@ -243,15 +259,16 @@
 
     <div class="row">
       <button type="button" class="btn sage" id="btnSalvarVocab">📒 Salvar vocabulário no Caderno</button>
+      <a class="btn sky" href="/aluno/teste/#desempenho">📊 Ver meu gráfico</a>
       <button type="button" class="btn pri" id="btnOutroDest">🗺️ Escolher outro destino</button>
-      <a class="btn" href="../">← Ruazinha do Salão</a>
+      <a class="btn" href="../">← Voltar ao Beco</a>
     </div>
   </section>
 </div>
 
 <script src="/idiomas/dados/velocidade-voz.js?v=1"></script>
 <script src="/idiomas/dados/audio-mapa.js?v=jogos1"></script>
-<script src="../sfx.js?v=1"></script>
+<script src="../sfx.js?v=6"></script>
 <script>
 (function () {
   'use strict';
@@ -313,6 +330,7 @@
   let destId = 'sapporo';
   let onde = {};
   let selecionado = null;
+  let tInicio = performance.now();
 
   const destAtual = () => DESTINOS.find(d => d.id === destId) || DESTINOS[0];
 
@@ -342,6 +360,7 @@
     onde = {};
     d.itens.forEach(it => { onde[it.id] = 'quarto'; });
     selecionado = null;
+    tInicio = performance.now();
     document.getElementById('briefTit').textContent = `${d.ic} ${d.nome}`;
     document.getElementById('briefDesc').textContent = d.desc;
     document.getElementById('secEscolha').hidden = true;
@@ -365,9 +384,9 @@
         <button type="button" class="item-chip${selecionado === it.id ? ' sel' : ''}" data-item="${it.id}">
           <span class="ic">${it.ic}</span>
           <span class="tx">
-            <strong lang="ja">${it.jp}</strong>
+            <strong lang="ja">${it.html || it.jp}</strong>
             <span class="ro-block">${it.ro}</span>
-            <small>${it.pt}</small>
+            <small class="trad-block">${it.pt}</small>
           </span>
         </button>
       `).join('');
@@ -464,11 +483,18 @@
     }).join('');
 
     const xp = ok * 5 + (ok === d.itens.length ? 15 : 0);
+    const dur = Math.max(1, Math.round((performance.now() - tInicio) / 1000));
     UniSalao.addXP(xp);
+    if (UniSalao.recordSession) {
+      UniSalao.recordSession({
+        jogo: 'mala', nomeJogo: '🧳 Mala Express',
+        duracaoSeg: dur, acertos: ok, erros: d.itens.length - ok, pts: xp
+      });
+    }
     ok >= d.itens.length - 1 ? UniSalao.sfx.fanfare() : UniSalao.sfx.ok();
 
     document.getElementById('fimTit').textContent = `${d.ic} ${d.nome} · ${ok} de ${d.itens.length} certos!`;
-    document.getElementById('fimSub').textContent = `Você ganhou +${xp} XP no Salão Unirversos!`;
+    document.getElementById('fimSub').textContent = `⏱️ Tempo: ${dur}s · 🎯 ${Math.round((ok / d.itens.length) * 100)}% · +${xp} XP (salvo no seu gráfico da Área do Aluno).`;
     document.getElementById('resLista').innerHTML = html;
     document.getElementById('secJogo').hidden = true;
     document.getElementById('secFim').hidden = false;
@@ -487,6 +513,83 @@
   });
   document.getElementById('btnOutroDest').addEventListener('click', () => {
     document.getElementById('secFim').hidden = true;
+    document.getElementById('secEscolha').hidden = false;
+  });
+
+  /* ======================================================================
+     EXERCÍCIO FIXO: BALCÃO DE CHECK-IN / IMIGRAÇÃO
+     ====================================================================== */
+  const CK_DESTS = {
+    sapporo: { html: '<ruby>札幌<rt>さっぽろ</rt></ruby>', plain: 'さっぽろ', ro: 'Sapporo', pt: 'Sapporo' },
+    okinawa: { html: '<ruby>沖縄<rt>おきなわ</rt></ruby>', plain: 'おきなわ', ro: 'Okinawa', pt: 'Okinawa' },
+    kyoto: { html: '<ruby>京都<rt>きょうと</rt></ruby>', plain: 'きょうと', ro: 'Kyouto', pt: 'Quioto' }
+  };
+  let ckEtapa = 0, ckNoites = 3, ckMalas = 2, ckT0 = 0;
+
+  function addCkMsg(quem, html, ro, pt) {
+    const log = document.getElementById('ckLog');
+    const d = document.createElement('div');
+    d.style.cssText = quem === 'ag'
+      ? 'justify-self:start;max-width:88%;background:var(--washi);color:var(--washi-ink);border:1.5px solid #d6c2ae;border-radius:14px;padding:8px 12px'
+      : 'justify-self:end;max-width:88%;background:var(--sakura-soft);color:var(--ink);border:1.5px solid rgba(217,107,92,0.5);border-radius:14px;padding:8px 12px';
+    d.innerHTML = `<strong lang="ja" style="font-size:15px">${html}</strong><div class="ro-block" style="font-size:11.5px;color:${quem === 'ag' ? '#9e4b3e' : 'var(--lantern)'}">${ro}</div><div class="trad-block" style="font-size:12px;color:${quem === 'ag' ? '#6b5852' : 'var(--muted)'}">${pt}</div>`;
+    log.appendChild(d);
+    log.scrollTop = log.scrollHeight;
+  }
+
+  function renderCheckinEtapa() {
+    const d = CK_DESTS[destId] || CK_DESTS.sapporo;
+    const opsBox = document.getElementById('ckOps');
+    if (ckEtapa === 0) {
+      addCkMsg('ag', 'パスポートを お<ruby>願<rt>ねが</rt></ruby>いします。どこへ <ruby>行<rt>い</rt></ruby>きますか？', 'pasupooto o onegaishimasu. doko e ikimasu ka?', 'Passaporte, por favor. Para onde você vai?');
+      UniSalao.speak('パスポートを おねがいします。どこへ いきますか？');
+      opsBox.innerHTML = `<button type="button" class="btn" style="justify-content:flex-start;text-align:left;padding:10px 14px" data-ck="0"><div><strong lang="ja">${d.html}へ <ruby>行<rt>い</rt></ruby>きます。</strong><div class="ro-block" style="color:var(--lantern);font-size:12px">${d.ro} e ikimasu.</div><div class="trad-block" style="font-size:12.5px;color:var(--muted)">Vou para ${d.pt}.</div></div></button>`;
+    } else if (ckEtapa === 1) {
+      addCkMsg('ag', '<ruby>何泊<rt>なんぱく</rt></ruby> しますか？', 'nanpaku shimasu ka?', 'Quantas noites vai ficar?');
+      UniSalao.speak('なんぱく しますか？');
+      opsBox.innerHTML = `<button type="button" class="btn" style="justify-content:flex-start;text-align:left;padding:10px 14px" data-ck="1"><div><strong lang="ja">${ckNoites}<ruby>泊<rt>はく</rt></ruby>です。<ruby>観光<rt>かんこう</rt></ruby>です。</strong><div class="ro-block" style="color:var(--lantern);font-size:12px">${ckNoites}-haku desu. kankou desu.</div><div class="trad-block" style="font-size:12.5px;color:var(--muted)">${ckNoites} noites. É turismo.</div></div></button>`;
+    } else if (ckEtapa === 2) {
+      addCkMsg('ag', '<ruby>荷物<rt>にもつ</rt></ruby>は いくつ ありますか？', 'nimotsu wa ikutsu arimasu ka?', 'Quantas bagagens você tem?');
+      UniSalao.speak('にもつは いくつ ありますか？');
+      opsBox.innerHTML = `<button type="button" class="btn" style="justify-content:flex-start;text-align:left;padding:10px 14px" data-ck="2"><div><strong lang="ja">${ckMalas}<ruby>個<rt>こ</rt></ruby>です。よろしく お<ruby>願<rt>ねが</rt></ruby>いします。</strong><div class="ro-block" style="color:var(--lantern);font-size:12px">${ckMalas}-ko desu. yoroshiku onegaishimasu.</div><div class="trad-block" style="font-size:12.5px;color:var(--muted)">São ${ckMalas}. Obrigado(a).</div></div></button>`;
+    } else {
+      addCkMsg('ag', 'チェックインが <ruby>終<rt>お</rt></ruby>わりました！よい ご<ruby>旅行<rt>りょこう</rt></ruby>を！', 'chekkuin ga owarimashita! yoi goryokou o!', 'Check-in concluído! Boa viagem!');
+      UniSalao.speak('チェックインが おわりました！よい ごりょこうを！');
+      UniSalao.addXP(15); UniSalao.sfx.fanfare();
+      const dur = Math.max(1, Math.round((performance.now() - ckT0) / 1000));
+      UniSalao.recordSession({ jogo: 'mala', nomeJogo: '🛫 Check-in · Viagem', duracaoSeg: dur, acertos: 3, erros: 0, precisao: 100, pts: 15 });
+      opsBox.innerHTML = `<div class="row"><button type="button" class="btn pri" id="ckAgain">🔄 Repetir Check-in (+15 XP!)</button><a class="btn sky" href="/aluno/teste/#desempenho">📊 Ver meu gráfico</a></div>`;
+      document.getElementById('ckAgain').onclick = iniciaCheckin;
+    }
+  }
+
+  function iniciaCheckin() {
+    ckEtapa = 0; ckNoites = [2, 3, 4, 5][Math.floor(Math.random() * 4)]; ckMalas = [1, 2][Math.floor(Math.random() * 2)];
+    ckT0 = performance.now();
+    document.getElementById('secEscolha').hidden = true;
+    document.getElementById('secCheckin').hidden = false;
+    document.getElementById('ckLog').innerHTML = '';
+    const d = CK_DESTS[destId] || CK_DESTS.sapporo;
+    document.getElementById('ckResumo').textContent = `Sua passagem: ${d.pt} · ${ckNoites} noites · ${ckMalas} bagagem(ns).`;
+    renderCheckinEtapa();
+  }
+
+  document.getElementById('ckOps').addEventListener('click', e => {
+    const b = e.target.closest('[data-ck]');
+    if (!b) return;
+    const d = CK_DESTS[destId] || CK_DESTS.sapporo;
+    const et = +b.dataset.ck;
+    UniSalao.sfx.click();
+    if (et === 0) { addCkMsg('eu', `${d.html}へ <ruby>行<rt>い</rt></ruby>きます。`, `${d.ro} e ikimasu.`, `Vou para ${d.pt}.`); UniSalao.speak(`${d.plain}へ いきます。`); }
+    else if (et === 1) { addCkMsg('eu', `${ckNoites}<ruby>泊<rt>はく</rt></ruby>です。<ruby>観光<rt>かんこう</rt></ruby>です。`, `${ckNoites}-haku desu. kankou desu.`, `${ckNoites} noites. É turismo.`); UniSalao.speak(`${ckNoites}はくです。かんこうです。`); }
+    else if (et === 2) { addCkMsg('eu', `${ckMalas}<ruby>個<rt>こ</rt></ruby>です。よろしく お<ruby>願<rt>ねが</rt></ruby>いします。`, `${ckMalas}-ko desu. yoroshiku onegaishimasu.`, `São ${ckMalas}. Obrigado(a).`); UniSalao.speak(`${ckMalas}こです。よろしく おねがいします。`); }
+    ckEtapa++;
+    document.getElementById('ckOps').innerHTML = '<span class="sub">Atendente respondendo…</span>';
+    setTimeout(renderCheckinEtapa, 1000);
+  });
+  document.getElementById('btnCheckin').addEventListener('click', iniciaCheckin);
+  document.getElementById('ckVoltar').addEventListener('click', () => {
+    document.getElementById('secCheckin').hidden = true;
     document.getElementById('secEscolha').hidden = false;
   });
 })();

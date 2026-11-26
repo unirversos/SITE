@@ -1,0 +1,560 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="robots" content="noindex">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>Lojinha do Beco · Roupas &amp; Itens do Avatar · Salão Unirversos (Teste)</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@600;700;800&family=Zen+Maru+Gothic:wght@400;500;700&display=swap">
+<link rel="stylesheet" href="../salao.css?v=6">
+<style>
+  .loja-hero {
+    display: grid;
+    grid-template-columns: 1.35fr 1fr;
+    gap: 16px;
+    align-items: stretch;
+  }
+  @media (max-width: 820px) { .loja-hero { grid-template-columns: 1fr; } }
+
+  .cena-box {
+    position: relative;
+    border-radius: 24px;
+    overflow: hidden;
+    border: 2px solid rgba(236, 192, 114, 0.42);
+    box-shadow: var(--shadow);
+    min-height: 240px;
+  }
+  .cena-box img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+  }
+  .cena-tag {
+    position: absolute;
+    left: 14px;
+    bottom: 14px;
+    background: rgba(251, 243, 230, 0.95);
+    color: #42322e;
+    border: 2px solid #59433b;
+    border-radius: 14px;
+    padding: 6px 12px;
+    font-size: 13px;
+    font-weight: 700;
+    box-shadow: 0 6px 16px rgba(20, 12, 10, 0.34);
+  }
+
+  /* Espelho do Provador */
+  .provador {
+    background: var(--washi);
+    color: var(--washi-ink);
+    border: 2px solid #59433b;
+    border-left: 6px solid var(--sakura);
+    border-radius: 24px;
+    padding: 18px;
+    display: grid;
+    justify-items: center;
+    align-content: center;
+    gap: 10px;
+    text-align: center;
+    box-shadow: var(--shadow);
+  }
+  .espelho-frame {
+    width: 168px;
+    height: 168px;
+    border-radius: 50%;
+    overflow: hidden;
+    border: 4px solid #c78f63;
+    background: #f6e7d4;
+    box-shadow: 0 10px 24px rgba(45, 30, 22, 0.25);
+    display: grid;
+    place-items: center;
+    font-size: 62px;
+  }
+  .espelho-frame svg { width: 100%; height: 100%; display: block; }
+  .provador .sub { color: #6e5a54; }
+
+  /* Catálogo */
+  .cat-tabs { display: flex; flex-wrap: wrap; gap: 8px; }
+  .cat-tabs button.on { background: var(--sakura); border-color: var(--sakura); color: #fff; }
+
+  .itens-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(215px, 1fr));
+    gap: 12px;
+  }
+  .prod-card {
+    background: var(--washi);
+    color: var(--washi-ink);
+    border: 2px solid #d6c2ae;
+    border-radius: 18px;
+    padding: 13px 14px;
+    display: grid;
+    gap: 6px;
+    transition: transform 0.14s ease, border-color 0.14s ease;
+  }
+  .prod-card:hover { transform: translateY(-2px); border-color: var(--sakura); }
+  .prod-card.equipado { border-color: var(--sage); border-left: 5px solid var(--sage); background: #f4faf4; }
+  .prod-card rt { color: #9e4b3e; }
+
+  .prod-top { display: flex; justify-content: space-between; align-items: center; gap: 8px; }
+  .prod-ic { font-size: 28px; line-height: 1; }
+  .prod-preco {
+    font-family: var(--f-display);
+    font-weight: 800;
+    font-size: 13.5px;
+    background: #f4e2c7;
+    color: #7c4d1a;
+    padding: 2px 10px;
+    border-radius: 999px;
+  }
+  .prod-preco.tem { background: #dceee0; color: #35593c; }
+  .prod-card .btn { background: #fff; color: #42322e; border-color: #d6c2ae; }
+  .prod-card .btn.pri { background: var(--sakura); color: #fff; border-color: var(--sakura); }
+  .prod-card .btn.sage { background: #e3f1e5; color: #2f5236; border-color: #a9c9ae; }
+
+  /* Exercício Fixo: Conversa na Loja (Perguntas Fixas -> Diálogo Dinâmico) */
+  .conv-log {
+    background: rgba(24, 18, 20, 0.45);
+    border: 1px solid var(--line);
+    border-radius: 18px;
+    padding: 14px;
+    display: grid;
+    gap: 10px;
+    max-height: 280px;
+    overflow: auto;
+  }
+  .c-msg {
+    max-width: 86%;
+    border-radius: 16px;
+    padding: 9px 13px;
+    display: grid;
+    gap: 2px;
+  }
+  .c-msg.loja {
+    justify-self: start;
+    background: var(--washi);
+    color: var(--washi-ink);
+    border: 1.5px solid #d6c2ae;
+  }
+  .c-msg.loja rt { color: #9e4b3e; }
+  .c-msg.eu {
+    justify-self: end;
+    background: var(--sakura-soft);
+    border: 1.5px solid rgba(217, 107, 92, 0.5);
+    color: var(--ink);
+  }
+  .c-ops { display: grid; gap: 8px; }
+  .c-op-btn {
+    text-align: left;
+    background: rgba(34, 26, 28, 0.58);
+    border: 1.5px solid var(--line-strong);
+    border-radius: 16px;
+    padding: 11px 14px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 10px;
+    transition: 0.14s;
+  }
+  .c-op-btn:hover { border-color: var(--lantern); background: var(--surface-2); }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <nav class="topbar">
+    <div class="brand-row">
+      <a class="btn sm" href="../">← Voltar ao Beco</a>
+      <span class="badge-teste">👘 Lojinha do Beco · Avatar</span>
+    </div>
+    <div class="top-tools">
+      <button type="button" class="btn sm lantern" id="btnStreak">🔥 Ofensiva diária</button>
+      <span class="xp-pill" title="Seus pontos acumulados nos jogos e ofensivas">✦ <span data-xp-val>0</span> XP</span>
+      <button type="button" class="btn sm" data-mute-btn aria-pressed="true">🔊 Som: ON</button>
+    </div>
+  </nav>
+
+  <div data-acess-bar></div>
+
+  <!-- Interior da Lojinha + Provador ao vivo -->
+  <section class="loja-hero">
+    <div class="cena-box">
+      <img src="./lojinha-avatar.jpg" alt="Interior aconchegante da Lojinha do Beco com roupas japonesas, boinas, máscara kitsune e espelho">
+      <div class="cena-tag">🏮 <span lang="ja">いらっしゃいませ！</span> Troque seus pontos dos jogos e das ofensivas por itens para o seu avatar!</div>
+    </div>
+
+    <div class="provador" aria-label="Provador do seu avatar">
+      <span style="font-size:11.5px;font-weight:800;letter-spacing:.14em;text-transform:uppercase;color:#b24b3d">✦ 試着 · Espelho do Provador</span>
+      <div class="espelho-frame" id="espelhoAv">🧳</div>
+      <strong id="provNome" style="font-size:17px">Seu Avatar</strong>
+      <span class="sub" id="provStatus" style="font-size:13px">Experimente qualquer item abaixo antes de comprar!</span>
+      <div class="row" style="justify-content:center">
+        <button type="button" class="btn sm" id="btnLimparProva" hidden style="background:#fff;color:#42322e;border-color:#d6c2ae">Voltar ao meu visual</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- Prateleiras da Lojinha -->
+  <section class="card b-lantern">
+    <div class="row" style="justify-content:space-between">
+      <div>
+        <p class="eyebrow">✦ 雑貨屋 · boutique do salão</p>
+        <h1>👘 Roupas &amp; Acessórios</h1>
+      </div>
+      <div class="cat-tabs" id="catTabs">
+        <button type="button" class="btn sm on" data-cat="todos">✨ Tudo</button>
+        <button type="button" class="btn sm" data-cat="acessorio">🦊 Acessórios</button>
+        <button type="button" class="btn sm" data-cat="roupa">👘 Roupas &amp; Fundos</button>
+        <button type="button" class="btn sm lantern" data-cat="conversa">💬 Conversar na Loja</button>
+      </div>
+    </div>
+
+    <div class="itens-grid" id="itensGrid"></div>
+
+    <!-- Exercício Fixo: Perguntas Fixas -> Conversa na Loja -->
+    <div id="convSec" hidden style="display:grid;gap:14px">
+      <div class="row" style="justify-content:space-between">
+        <div>
+          <strong style="font-size:17px" id="convItemTit">🦊 Item na vitrine</strong>
+          <div class="sub" style="font-size:13px">Comece com uma pergunta fixa (ex.: <span lang="ja">これは何ですか？</span>) e leve a conversa até o final!</div>
+        </div>
+        <button type="button" class="btn sm" id="convNova">🎲 Trocar item da vitrine</button>
+      </div>
+      <div class="conv-log" id="convLog" aria-live="polite"></div>
+      <div class="c-ops" id="convOps"></div>
+    </div>
+  </section>
+</div>
+
+<script src="/idiomas/dados/avatar.js?v=20261016b"></script>
+<script src="/idiomas/dados/velocidade-voz.js?v=1"></script>
+<script src="/idiomas/dados/audio-mapa.js?v=jogos1"></script>
+<script src="../sfx.js?v=6"></script>
+<script>
+(function () {
+  'use strict';
+
+  /* ---------- Ofensiva Diária ---------- */
+  const btnStreak = document.getElementById('btnStreak');
+  function syncStreak() {
+    const s = UniSalao.getStreak();
+    btnStreak.textContent = s.claimedToday ? `🔥 Ofensiva: ${s.count} dia(s)` : '🔥 Resgatar +25 XP';
+    btnStreak.classList.toggle('on', s.claimedToday);
+  }
+  btnStreak.addEventListener('click', () => {
+    const r = UniSalao.claimDailyStreak();
+    if (!r.ok) UniSalao.toast('Você já resgatou sua ofensiva de hoje! Volte amanhã 🔥');
+    syncStreak();
+    renderItens();
+  });
+  syncStreak();
+
+  /* ---------- Catálogo da Lojinha ---------- */
+  const CATALOGO = [
+    /* Acessórios exclusivos sobrepostos em SVG */
+    { id: 'kitsune', tipo: 'acessorio', slot: 'hat', ic: '🦊', html: '<ruby>狐<rt>きつね</rt></ruby>の<ruby>面<rt>めん</rt></ruby>', plain: 'きつねのめん', ro: 'kitsune no men', pt: 'Máscara Kitsune', preco: 40 },
+    { id: 'boina', tipo: 'acessorio', slot: 'hat', ic: '👒', html: '<ruby>赤<rt>あか</rt></ruby>いベレー<ruby>帽<rt>ぼう</rt></ruby>', plain: 'あかいベレーぼう', ro: 'akai bereebou', pt: 'Boina Terracota', preco: 30 },
+    { id: 'boina_indigo', tipo: 'acessorio', slot: 'hat', ic: '🧢', html: '<ruby>紺<rt>こん</rt></ruby>のベレー<ruby>帽<rt>ぼう</rt></ruby>', plain: 'こんのベレーぼう', ro: 'kon no bereebou', pt: 'Boina Índigo', preco: 30 },
+    { id: 'laco', tipo: 'acessorio', slot: 'hat', ic: '🎀', html: '<ruby>桜<rt>さくら</rt></ruby>リボン', plain: 'さくらリボン', ro: 'sakura ribon', pt: 'Laço Sakura', preco: 25 },
+    { id: 'oculos_red', tipo: 'acessorio', slot: 'face', ic: '👓', html: '<ruby>丸<rt>まる</rt></ruby>メガネ', plain: 'まるメガネ', ro: 'maru megane', pt: 'Óculos Redondos', preco: 25 },
+    { id: 'cachecol', tipo: 'acessorio', slot: 'neck', ic: '🧣', html: '<ruby>冬<rt>ふゆ</rt></ruby>マフラー', plain: 'ふゆマフラー', ro: 'fuyu mafuraa', pt: 'Cachecol Quentinho', preco: 35 },
+    { id: 'fone', tipo: 'acessorio', slot: 'ears', ic: '🎧', html: 'ヘッドホン', plain: 'ヘッドホン', ro: 'heddohon', pt: 'Fone Lo-Fi Dourado', preco: 45 },
+    { id: 'gatinho', tipo: 'acessorio', slot: 'buddy', ic: '🐱', html: '<ruby>三毛猫<rt>みけねこ</rt></ruby>', plain: 'みけねこ', ro: 'mikeneko', pt: 'Gatinho Calico Companheiro', preco: 60 },
+    { id: 'lanterna', tipo: 'acessorio', slot: 'buddy', ic: '🏮', html: '<ruby>提灯<rt>ちょうちん</rt></ruby>', plain: 'ちょうちん', ro: 'chouchin', pt: 'Lanterninha do Beco', preco: 50 },
+
+    /* Roupas & Fundos reais do utopiaAvatar1 */
+    { id: 'cl_kimono', tipo: 'roupa', avKey: 'clothes', avVal: 'kimono', ic: '👘', html: '<ruby>着物<rt>きもの</rt></ruby>', plain: 'きもの', ro: 'kimono', pt: 'Kimono Tradicional', preco: 50 },
+    { id: 'cl_wanpiisu', tipo: 'roupa', avKey: 'clothes', avVal: 'wanpiisu', ic: '👗', html: 'ワンピース', plain: 'ワンピース', ro: 'wanpiisu', pt: 'Vestido Retrô', preco: 35 },
+    { id: 'cl_seetaa', tipo: 'roupa', avKey: 'clothes', avVal: 'seetaa', ic: '🧶', html: 'セーター', plain: 'セーター', ro: 'seetaa', pt: 'Suéter Aconchegante', preco: 30 },
+    { id: 'bg_sakura', tipo: 'roupa', avKey: 'bg', avVal: 'sakura', ic: '🌸', html: '<ruby>桜<rt>さくら</rt></ruby>の<ruby>背景<rt>はいけい</rt></ruby>', plain: 'さくらのはいけい', ro: 'sakura no haikei', pt: 'Fundo Cerejeiras', preco: 40 },
+    { id: 'bg_yoru', tipo: 'roupa', avKey: 'bg', avVal: 'yoru', ic: '🌙', html: '<ruby>夜空<rt>よぞら</rt></ruby>の<ruby>背景<rt>はいけい</rt></ruby>', plain: 'よぞらのはいけい', ro: 'yozora no haikei', pt: 'Fundo Noite Estrelada', preco: 40 }
+  ];
+
+  let filtro = 'todos';
+  let provando = null;
+
+  function loadAvatarData() {
+    try {
+      const raw = JSON.parse(localStorage.getItem('utopiaAvatar1') || 'null');
+      if (raw && raw.sel) return raw;
+    } catch (e) {}
+    return {
+      sel: { hair: 'mijikai', hairColor: 'kuro', face: 'egao', clothes: 'parka', clothColor: 'midori', acc: [], traits: [], bg: 'sora', skin: 3, age: 20 },
+      profile: { name: 'Viajante' },
+      learned: []
+    };
+  }
+  function saveAvatarData(d) {
+    try { localStorage.setItem('utopiaAvatar1', JSON.stringify(d)); } catch (e) {}
+  }
+
+  function renderEspelho() {
+    const av = loadAvatarData();
+    const extras = UniSalao.getAvatarExtras();
+    const sel = Object.assign({}, av.sel);
+    const eq = Object.assign({}, extras.equipped);
+
+    if (provando) {
+      if (provando.tipo === 'acessorio') eq[provando.slot] = provando.id;
+      else if (provando.avKey) sel[provando.avKey] = provando.avVal;
+      document.getElementById('provStatus').textContent = `Provando: ${provando.ic} ${provando.pt}`;
+      document.getElementById('btnLimparProva').hidden = false;
+    } else {
+      document.getElementById('provStatus').textContent = 'Seu visual equipado no Beco e no Café!';
+      document.getElementById('btnLimparProva').hidden = true;
+    }
+
+    document.getElementById('provNome').textContent = (av.profile && (av.profile.kata || av.profile.name)) || 'Seu Avatar';
+    document.getElementById('espelhoAv').innerHTML = UniSalao.avatarHTML({ sel, equipped: eq, viewBox: '24 24 192 192' });
+  }
+
+  function isEquipado(it, av, extras) {
+    if (it.tipo === 'acessorio') return extras.equipped[it.slot] === it.id;
+    return av.sel && av.sel[it.avKey] === it.avVal;
+  }
+
+  function renderItens() {
+    const av = loadAvatarData();
+    const extras = UniSalao.getAvatarExtras();
+    const lista = filtro === 'todos' ? CATALOGO : CATALOGO.filter(x => x.tipo === filtro);
+
+    document.getElementById('itensGrid').innerHTML = lista.map(it => {
+      const tem = extras.owned.includes(it.id);
+      const eq = isEquipado(it, av, extras);
+      return `
+        <div class="prod-card${eq ? ' equipado' : ''}">
+          <div class="prod-top">
+            <span class="prod-ic">${it.ic}</span>
+            <span class="prod-preco${tem ? ' tem' : ''}">${tem ? (eq ? '✓ Equipado' : '✓ Na bolsa') : '✦ ' + it.preco + ' XP'}</span>
+          </div>
+          <strong lang="ja" style="font-size:17px">${it.html}</strong>
+          <span class="ro-block" style="font-size:12px;color:#9e4b3e">${it.ro}</span>
+          <span class="trad-block" style="font-size:13px;color:#6e5a54">${it.pt}</span>
+          <div class="row" style="margin-top:4px;justify-content:space-between">
+            <div class="row" style="gap:5px">
+              <button type="button" class="btn sm" data-ouv="${it.id}">🔊</button>
+              <button type="button" class="btn sm" data-prov="${it.id}">👁️ Provar</button>
+            </div>
+            ${tem
+              ? `<button type="button" class="btn sm ${eq ? '' : 'sage'}" data-eq="${it.id}">${eq ? 'Tirar' : 'Usar'}</button>`
+              : `<button type="button" class="btn sm pri" data-comp="${it.id}">Comprar</button>`
+            }
+          </div>
+        </div>
+      `;
+    }).join('');
+  }
+
+  document.getElementById('itensGrid').addEventListener('click', e => {
+    const o = e.target.closest('[data-ouv]');
+    if (o) {
+      const it = CATALOGO.find(x => x.id === o.dataset.ouv);
+      if (it) UniSalao.speak(it.plain);
+      return;
+    }
+    const p = e.target.closest('[data-prov]');
+    if (p) {
+      provando = CATALOGO.find(x => x.id === p.dataset.prov);
+      UniSalao.sfx.click();
+      if (provando) UniSalao.speak(provando.plain);
+      renderEspelho();
+      return;
+    }
+    const c = e.target.closest('[data-comp]');
+    if (c) {
+      const it = CATALOGO.find(x => x.id === c.dataset.comp);
+      if (!it) return;
+      if (!UniSalao.spendXP(it.preco)) {
+        UniSalao.sfx.err();
+        UniSalao.toast(`Você precisa de ${it.preco} XP! Jogue no Salão ou resgate sua 🔥 Ofensiva.`);
+        return;
+      }
+      const extras = UniSalao.getAvatarExtras();
+      if (!extras.owned.includes(it.id)) extras.owned.push(it.id);
+      if (it.tipo === 'acessorio') {
+        extras.equipped[it.slot] = it.id;
+      } else {
+        const av = loadAvatarData();
+        av.sel[it.avKey] = it.avVal;
+        saveAvatarData(av);
+      }
+      UniSalao.saveAvatarExtras(extras);
+      provando = null;
+      UniSalao.sfx.fanfare();
+      UniSalao.speak('ありがとうございます！');
+      UniSalao.toast(`🎉 ${it.ic} ${it.pt} comprado e equipado no seu avatar!`);
+      renderEspelho();
+      renderItens();
+      return;
+    }
+    const eqBtn = e.target.closest('[data-eq]');
+    if (eqBtn) {
+      const it = CATALOGO.find(x => x.id === eqBtn.dataset.eq);
+      if (!it) return;
+      const extras = UniSalao.getAvatarExtras();
+      const av = loadAvatarData();
+      if (it.tipo === 'acessorio') {
+        extras.equipped[it.slot] = (extras.equipped[it.slot] === it.id) ? null : it.id;
+        UniSalao.saveAvatarExtras(extras);
+      } else {
+        av.sel[it.avKey] = (av.sel[it.avKey] === it.avVal) ? (it.avKey === 'bg' ? 'sora' : 'parka') : it.avVal;
+        saveAvatarData(av);
+      }
+      provando = null;
+      UniSalao.sfx.click();
+      renderEspelho();
+      renderItens();
+    }
+  });
+
+  document.getElementById('btnLimparProva').addEventListener('click', () => {
+    provando = null;
+    UniSalao.sfx.click();
+    renderEspelho();
+  });
+
+  document.getElementById('catTabs').addEventListener('click', e => {
+    const b = e.target.closest('[data-cat]');
+    if (!b) return;
+    filtro = b.dataset.cat;
+    document.querySelectorAll('#catTabs button').forEach(x => x.classList.toggle('on', x === b));
+    const ehConv = filtro === 'conversa';
+    document.getElementById('itensGrid').hidden = ehConv;
+    document.getElementById('convSec').hidden = !ehConv;
+    if (ehConv && !convIniciada) iniciaConversa();
+    else if (!ehConv) renderItens();
+    UniSalao.sfx.click();
+  });
+
+  /* ======================================================================
+     EXERCÍCIO FIXO: PERGUNTAS FIXAS -> CONVERSA DINÂMICA NA LOJA
+     Aluno começa ("これは何ですか？" etc.) e desencadeia o diálogo real
+     ====================================================================== */
+  const VITRINE = [
+    { ic: '🦊', html: '<ruby>狐<rt>きつね</rt></ruby>の<ruby>面<rt>めん</rt></ruby>', plain: 'きつねのめん', ro: 'kitsune no men', pt: 'máscara kitsune', precoHtml: '<ruby>三千五百円<rt>さんぜんごひゃくえん</rt></ruby>', precoPlain: 'さんぜんごひゃくえん', precoRo: 'sanzen gohyaku en', precoPt: '3.500 ienes', coresHtml: '<ruby>白<rt>しろ</rt></ruby>と <ruby>赤<rt>あか</rt></ruby>', coresPlain: 'しろと あか', coresRo: 'shiro to aka', coresPt: 'branco e vermelho' },
+    { ic: '👒', html: 'ベレー<ruby>帽<rt>ぼう</rt></ruby>', plain: 'ベレーぼう', ro: 'bereebou', pt: 'boina', precoHtml: '<ruby>二千八百円<rt>にせんはっぴゃくえん</rt></ruby>', precoPlain: 'にせんはっぴゃくえん', precoRo: 'nisen happyaku en', precoPt: '2.800 ienes', coresHtml: '<ruby>赤<rt>あか</rt></ruby>と <ruby>紺<rt>こん</rt></ruby>', coresPlain: 'あかと こん', coresRo: 'aka to kon', coresPt: 'vermelho e azul-marinho' },
+    { ic: '👘', html: '<ruby>着物<rt>きもの</rt></ruby>', plain: 'きもの', ro: 'kimono', pt: 'kimono', precoHtml: '<ruby>八千五百円<rt>はっせんごひゃくえん</rt></ruby>', precoPlain: 'はっせんごひゃくえん', precoRo: 'hassen gohyaku en', precoPt: '8.500 ienes', coresHtml: '<ruby>桜色<rt>さくらいろ</rt></ruby>と <ruby>紺<rt>こん</rt></ruby>', coresPlain: 'さくらいろと こん', coresRo: 'sakurairo to kon', coresPt: 'rosa-sakura e índigo' },
+    { ic: '🧣', html: '<ruby>冬<rt>ふゆ</rt></ruby>マフラー', plain: 'ふゆマフラー', ro: 'fuyu mafuraa', pt: 'cachecol de inverno', precoHtml: '<ruby>二千四百円<rt>にせんよんひゃくえん</rt></ruby>', precoPlain: 'にせんよんひゃくえん', precoRo: 'nisen yonhyaku en', precoPt: '2.400 ienes', coresHtml: '<ruby>赤<rt>あか</rt></ruby>と <ruby>茶色<rt>ちゃいろ</rt></ruby>', coresPlain: 'あかと ちゃいろ', coresRo: 'aka to chairo', coresPt: 'vermelho e marrom' }
+  ];
+
+  let convIniciada = false, convItem = null, convEtapa = 0, convInicio = 0, convTurnos = 0;
+
+  function addMsg(quem, html, ro, pt) {
+    const log = document.getElementById('convLog');
+    const div = document.createElement('div');
+    div.className = 'c-msg ' + quem;
+    div.innerHTML = `<strong lang="ja" style="font-size:15.5px">${html}</strong><span class="ro-block" style="font-size:12px;color:${quem === 'loja' ? '#9e4b3e' : 'var(--lantern)'}">${ro}</span><span class="trad-block" style="font-size:12.5px;color:${quem === 'loja' ? '#6e5a54' : 'var(--muted)'}">${pt}</span>`;
+    log.appendChild(div);
+    log.scrollTop = log.scrollHeight;
+  }
+
+  function opcoesDaEtapa(etapa, it) {
+    if (etapa === 0) return [
+      {
+        html: 'これは <ruby>何<rt>なん</rt></ruby>ですか？', plain: 'これは なんですか？', ro: 'kore wa nan desu ka?', pt: 'O que é isto?',
+        respHtml: `それは ${it.html}です。<ruby>人気<rt>にんき</rt></ruby>ですよ！`, respPlain: `それは ${it.plain}です。にんきですよ！`, respRo: `sore wa ${it.ro} desu. ninki desu yo!`, respPt: `Isto é ${it.pt}. Faz muito sucesso!`, prox: 1
+      },
+      {
+        html: 'すみません、これを <ruby>見<rt>み</rt></ruby>ても いいですか？', plain: 'すみません、これを みても いいですか？', ro: 'sumimasen, kore o mitemo ii desu ka?', pt: 'Com licença, posso dar uma olhada nisto?',
+        respHtml: `はい、どうぞ！${it.html}、とても きれいでしょ？`, respPlain: `はい、どうぞ！${it.plain}、とても きれいでしょ？`, respRo: `hai, douzo! ${it.ro}, totemo kirei desho?`, respPt: `Claro, fique à vontade! ${it.pt} é lindo(a), né?`, prox: 1
+      }
+    ];
+    if (etapa === 1) return [
+      {
+        html: 'いくらですか？', plain: 'いくらですか？', ro: 'ikura desu ka?', pt: 'Quanto custa?',
+        respHtml: `${it.precoHtml}です。`, respPlain: `${it.precoPlain}です。`, respRo: `${it.precoRo} desu.`, respPt: `Custa ${it.precoPt}.`, prox: 2
+      },
+      {
+        html: '<ruby>別<rt>べつ</rt></ruby>の <ruby>色<rt>いろ</rt></ruby>は ありますか？', plain: 'べつの いろは ありますか？', ro: 'betsu no iro wa arimasu ka?', pt: 'Tem outra cor?',
+        respHtml: `はい、${it.coresHtml}が ありますよ！`, respPlain: `はい、${it.coresPlain}が ありますよ！`, respRo: `hai, ${it.coresRo} ga arimasu yo!`, respPt: `Sim, temos ${it.coresPt}!`, prox: 2
+      },
+      {
+        html: '<ruby>試着<rt>しちゃく</rt></ruby>しても いいですか？', plain: 'しちゃくしても いいですか？', ro: 'shichaku shitemo ii desu ka?', pt: 'Posso experimentar?',
+        respHtml: 'はい、どうぞ！<ruby>鏡<rt>かがみ</rt></ruby>は こちらです。', respPlain: 'はい、どうぞ！かがみは こちらです。', respRo: 'hai, douzo! kagami wa kochira desu.', respPt: 'Sim, fique à vontade! O espelho é por aqui.', prox: 2
+      }
+    ];
+    if (etapa === 2) return [
+      {
+        html: 'これを ください！', plain: 'これを ください！', ro: 'kore o kudasai!', pt: 'Vou levar este, por favor!',
+        respHtml: 'ありがとうございます！<ruby>袋<rt>ふくろ</rt></ruby>に お<ruby>入<rt>い</rt></ruby>れしますね。', respPlain: 'ありがとうございます！ふくろに おいれしますね。', respRo: 'arigatou gozaimasu! fukuro ni oire shimasu ne.', respPt: 'Muito obrigada! Vou colocar na sacola.', prox: 3
+      },
+      {
+        html: 'カードで <ruby>払<rt>はら</rt></ruby>えますか？', plain: 'カードで はらえますか？', ro: 'kaado de haraemasu ka?', pt: 'Posso pagar com cartão?',
+        respHtml: 'はい、カードも だいじょうぶです！ありがとうございます！', respPlain: 'はい、カードも だいじょうぶです！ありがとうございます！', respRo: 'hai, kaado mo daijoubu desu! arigatou gozaimasu!', respPt: 'Sim, aceitamos cartão! Muito obrigada!', prox: 3
+      },
+      {
+        html: 'ありがとうございます、また <ruby>来<rt>き</rt></ruby>ます！', plain: 'ありがとうございます、また きます！', ro: 'arigatou gozaimasu, mata kimasu!', pt: 'Obrigado(a), volto outra hora!',
+        respHtml: 'はい、また お<ruby>越<rt>こ</rt></ruby>しくださいね！', respPlain: 'はい、また おこしくださいね！', respRo: 'hai, mata okoshi kudasai ne!', respPt: 'Claro, volte sempre!', prox: 3
+      }
+    ];
+    return [];
+  }
+
+  function renderOps() {
+    const box = document.getElementById('convOps');
+    if (convEtapa >= 3) {
+      const dur = Math.max(1, Math.round((performance.now() - convInicio) / 1000));
+      UniSalao.addXP(15);
+      UniSalao.sfx.fanfare();
+      if (UniSalao.recordSession) {
+        UniSalao.recordSession({
+          jogo: 'lojinha', nomeJogo: '👘 Lojinha · Conversa',
+          duracaoSeg: dur, acertos: convTurnos, erros: 0, precisao: 100, pts: 15
+        });
+      }
+      box.innerHTML = `<div class="row"><button type="button" class="btn pri" id="convDeNovo">🔄 Nova conversa (+15 XP ganhos!)</button><a class="btn sky" href="/aluno/teste/#desempenho">📊 Ver meu gráfico</a></div>`;
+      document.getElementById('convDeNovo').onclick = iniciaConversa;
+      return;
+    }
+    const ops = opcoesDaEtapa(convEtapa, convItem);
+    box.innerHTML = ops.map((o, i) => `
+      <button type="button" class="c-op-btn" data-ci="${i}">
+        <div>
+          <strong lang="ja" style="font-size:16px">${o.html}</strong>
+          <div class="ro-block" style="font-size:12px;color:var(--lantern)">${o.ro}</div>
+          <div class="sub trad-block" style="font-size:13px">${o.pt}</div>
+        </div>
+        <span class="btn sm sky">Falar →</span>
+      </button>
+    `).join('');
+  }
+
+  function iniciaConversa() {
+    convIniciada = true;
+    convItem = VITRINE[Math.floor(Math.random() * VITRINE.length)];
+    convEtapa = 0; convTurnos = 0; convInicio = performance.now();
+    document.getElementById('convItemTit').innerHTML = `${convItem.ic} <span lang="ja">${convItem.html}</span>`;
+    document.getElementById('convLog').innerHTML = '';
+    addMsg('loja', 'いらっしゃいませ！ゆっくり ご<ruby>覧<rt>らん</rt></ruby>ください。', 'irasshaimase! yukkuri goran kudasai.', 'Bem-vindo(a)! Fique à vontade para olhar.');
+    UniSalao.speak('いらっしゃいませ！ゆっくり ごらんください。');
+    renderOps();
+  }
+
+  document.getElementById('convOps').addEventListener('click', e => {
+    const b = e.target.closest('[data-ci]');
+    if (!b) return;
+    const ops = opcoesDaEtapa(convEtapa, convItem);
+    const o = ops[+b.dataset.ci];
+    if (!o) return;
+    convTurnos++;
+    addMsg('eu', o.html, o.ro, o.pt);
+    UniSalao.sfx.click();
+    UniSalao.speak(o.plain);
+    document.getElementById('convOps').innerHTML = '<span class="sub">Vendedora respondendo…</span>';
+    setTimeout(() => {
+      addMsg('loja', o.respHtml, o.respRo, o.respPt);
+      UniSalao.speak(o.respPlain);
+      convEtapa = o.prox;
+      renderOps();
+    }, 1050);
+  });
+  document.getElementById('convNova').addEventListener('click', iniciaConversa);
+
+  renderEspelho();
+  renderItens();
+})();
+</script>
+</body>
+</html>
