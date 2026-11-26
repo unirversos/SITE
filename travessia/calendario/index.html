@@ -438,7 +438,8 @@ footer a{color:var(--pink); text-decoration:none; margin-right:12px}
   .navlinks::-webkit-scrollbar{display:none}
   .quick-desk{display:none}
   .tabs{width:100%; border-radius:16px}
-  .tab{flex-direction:column; gap:2px; font-size:12px; padding:6px 4px; min-height:48px; border-radius:12px}
+  .tab{flex-direction:column; gap:2px; font-size:12px; padding:6px 4px; min-height:48px; border-radius:12px; min-width:0; white-space:normal; text-align:center; line-height:1.15; overflow-wrap:anywhere}
+  .tab > span:first-child{display:block; max-width:100%}
   .rot-bar{grid-template-columns:1fr auto; gap:8px}
   .rot-bar .nav{grid-column:1 / -1; justify-content:space-between; order:3}
   .rot-bar .nav h2{min-width:0; font-size:19px}
