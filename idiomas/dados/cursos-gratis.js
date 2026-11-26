@@ -16,6 +16,16 @@ window.UniCursos = [
     "casa": true
    },
    {
+    "id": "caderno-app",
+    "n": "Caderno Unirversos",
+    "d": "App grátis, exclusivo para tablet (Android e iPad)",
+    "tag": "app · da casa",
+    "url": "/idiomas/caderno/",
+    "c": "lav",
+    "svg": "<rect x=\"7\" y=\"3\" width=\"10\" height=\"18\" rx=\"2.5\"/><path d=\"M11 18h2\"/>",
+    "casa": true
+   },
+   {
     "id": "marugoto-a1",
     "n": "MARUGOTO+ A1",
     "d": "Conversas e cultura em vídeo",

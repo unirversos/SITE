@@ -82,6 +82,21 @@ h1{font-family:var(--f-display);font-weight:800;font-size:clamp(26px,5vw,34px);l
 #dicbox .dicin{overflow:hidden;min-height:0;background:#fff;border:0 solid #ecdadd;border-radius:18px;padding:0 14px;transition:padding .28s ease}
 #dicbox.on .dicin{border-width:1.5px;padding:14px}
 @media (prefers-reduced-motion:reduce){#dicbox,#dicbox .dicin{transition:none}}
+.top-bt{font:inherit;font-size:14px;font-weight:700;border:1.5px solid var(--line);background:var(--card);color:inherit;border-radius:99px;padding:8px 16px;min-height:40px;cursor:pointer;display:inline-flex;align-items:center;gap:6px}
+.top-bt:hover{border-color:var(--pink)}
+.top-bt:focus-visible{outline:3px solid var(--lavender);outline-offset:2px}
+@media (max-width:480px){.top-bt{padding:8px 12px;font-size:13px}}
+#appbox{display:grid;grid-template-rows:0fr;margin:0;transition:grid-template-rows .28s ease,margin .28s ease;visibility:hidden}
+#appbox.on{grid-template-rows:1fr;margin:0 0 14px;visibility:visible}
+#appbox .dicin{overflow:hidden;min-height:0;background:#fff;border:0 solid #ecdadd;border-radius:18px;padding:0 14px;transition:padding .28s ease}
+#appbox.on .dicin{border-width:1.5px;padding:14px}
+.cfg-acts{display:flex;flex-wrap:wrap;gap:8px;margin-top:8px}
+.app-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:10px;margin-top:10px}
+.app-card{border:1.5px solid var(--line);border-radius:14px;padding:12px;background:var(--paper)}
+.app-card h3{margin:0 0 4px;font-family:var(--f-display);font-size:16px}
+.app-card p{margin:0 0 8px;font-size:13.5px;color:var(--muted)}
+.app-card a.top-bt{text-decoration:none}
+@media (prefers-reduced-motion:reduce){#appbox,#appbox .dicin{transition:none}}
 </style>
 <link rel="stylesheet" href="/estilo-celular.css?v=3">
 <script defer src="/menu-ativo.js?v=2"></script><script defer src="/voltar-global.js?v=5"></script>
@@ -93,10 +108,12 @@ h1{font-family:var(--f-display);font-weight:800;font-size:clamp(26px,5vw,34px);l
   <nav class="trail" aria-label="Trilha"><a href="/idiomas/japones/">← Minha trilha</a></nav>
   <header>
     <button type="button" id="dicbt" style="float:right;margin:2px 0 8px 12px;font:inherit;font-size:14px;font-weight:700;border:1.5px solid var(--line,#e7e1da);background:var(--card,#fff);color:inherit;border-radius:99px;padding:8px 18px;min-height:40px;cursor:pointer" aria-expanded="false" aria-controls="dicbox">📖 Dicionário</button><button type="button" id="recolher" style="float:right;margin:2px 0 8px 12px;font:inherit;font-size:14px;font-weight:700;border:1.5px solid var(--line,#e7e1da);background:var(--card,#fff);color:inherit;border-radius:99px;padding:8px 18px;min-height:40px;cursor:pointer">Recolher ↘</button>
+    <button type="button" id="appbt" class="top-bt" style="float:right;margin:2px 0 8px 12px" aria-expanded="false" aria-controls="appbox">📲 Baixar App</button>
     <h1>Caderno de Unir Versos</h1>
     <p class="sub">Anotações livres, em páginas: escreva com o teclado e desenhe com a caneta por cima. Com a conta, tudo vai junto para qualquer aparelho.</p>
   </header>
   <section id="dicbox" aria-label="Dicionário"><div class="dicin"><div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px"><b style="font-family:var(--f-display);font-size:18px">Dicionário</b><button type="button" id="dicx" aria-label="Fechar o dicionário" style="font:inherit;border:1.5px solid #ecdadd;background:#fff;border-radius:99px;width:36px;height:36px;cursor:pointer">×</button></div><div id="dicmt"></div></div></section>
+  <section id="appbox" aria-label="Instalar aplicativo"><div class="dicin"><div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:4px"><b style="font-family:var(--f-display);font-size:18px">Instalar o Caderno Unirversos (grátis)</b><button type="button" id="appx" aria-label="Fechar painel de instalação" style="font:inherit;border:1.5px solid #ecdadd;background:#fff;border-radius:99px;width:36px;height:36px;cursor:pointer">×</button></div><p class="sub" style="margin:0">Aplicativo exclusivo para tablet, em tela cheia, 100% offline e gratuito.</p><div class="app-grid"><div class="app-card"><h3>🤖 Tablet Android</h3><p>Baixe o aplicativo nativo (.apk) ou instale direto pelo navegador.</p><div class="cfg-acts"><a href="./Caderno-Unirversos.apk" download class="top-bt">↓ Baixar APK (tablet Android)</a><button type="button" id="pwa-inst" class="top-bt" hidden>⚡ Instalar direto</button></div></div><div class="app-card"><h3>🍎 iPad</h3><p>No <b>Safari</b>, toque no botão <b>Compartilhar (⬆️)</b> na barra inferior e escolha <b>“Adicionar à Tela de Início”</b>.</p></div></div></div></section>
   <div id="cad"></div>
 </div>
 <script src="/caderno-dados.js?v=8"></script>
@@ -133,6 +150,25 @@ document.getElementById('recolher').onclick=function(){
 <script>
 /* links antigos de "Caderno de palavras" (QR e #frases) agora vivem em Minhas palavras */
 (function(){var q=location.search,h=location.hash;if(/[?&]w=/.test(q)||h==='#frases')location.replace('/idiomas/palavras/'+q+h)})();
+</script>
+<script>
+/* Painel Baixar App (APK Android + PWA 1 toque + guia iOS) */
+(function(){
+  var box=document.getElementById('appbox'),bt=document.getElementById('appbt'),pwaBt=document.getElementById('pwa-inst'),evInst=null;
+  if(!box||!bt)return;
+  function abre(v){box.classList.toggle('on',v);bt.setAttribute('aria-expanded',String(v));}
+  bt.onclick=function(){abre(!box.classList.contains('on'));};
+  document.getElementById('appx').onclick=function(){abre(false);bt.focus();};
+  window.addEventListener('beforeinstallprompt',function(e){
+    e.preventDefault(); evInst=e;
+    if(pwaBt) pwaBt.hidden=false;
+  });
+  if(pwaBt) pwaBt.onclick=function(){
+    if(!evInst)return;
+    evInst.prompt();
+    evInst.userChoice.finally(function(){evInst=null;pwaBt.hidden=true;});
+  };
+})();
 </script>
 </body>
 </html>
