@@ -666,8 +666,20 @@ window.onYouTubeIframeAPIReady = function(){
   }
 };
 
+// A API do YouTube pode avisar que está pronta ANTES desta página definir onYouTubeIframeAPIReady
+// (depende do cache e da rede): aí o vídeo nunca montava e ficava preto. Estas duas linhas cobrem isso.
+(function vigiaYT(){
+  const w = setInterval(() => {
+    if(window.YT && typeof YT.Player === 'function'){
+      clearInterval(w);
+      if(!ytReady){ ytReady = true; if(pendingVideoId){ const v = pendingVideoId; pendingVideoId = null; mountYouTube(v); } }
+    }
+  }, 250);
+})();
+
 function mountYouTube(videoId){
   $('playerEmpty').hidden = true;
+  if(!ytReady && window.YT && typeof YT.Player === 'function') ytReady = true;
   if(!ytReady || typeof YT === 'undefined' || !YT.Player){
     pendingVideoId = videoId;
     return;
