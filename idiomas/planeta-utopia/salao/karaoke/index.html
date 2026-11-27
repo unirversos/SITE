@@ -240,6 +240,34 @@ h1{font-family:var(--f-display); font-size:clamp(22px,3vw,30px); font-weight:800
 .cand-item:hover{border-color:var(--pink)}
 .badge{font-size:11px; font-weight:700; padding:2px 8px; border-radius:999px; background:rgba(111,208,155,.18); color:var(--terra)}
 .badge.plain{background:rgba(247,201,107,.16); color:var(--ar)}
+
+/* ---- Melhorias de leitura (aula) ---- */
+.grp{display:inline-flex; flex-wrap:wrap; gap:5px; padding:4px; border-radius:20px; background:rgba(0,0,0,.22); border:1px solid var(--line)}
+.grp .btn{min-height:32px}
+.lyrics-card{height:clamp(540px, 78vh, 860px)}
+.lyrics-stream{padding:22px 16px 140px; gap:8px}
+.l-row{opacity:.66; transform:none; padding:12px 18px}
+.l-row:hover{opacity:.9}
+.l-row.active{opacity:1; padding:16px 18px}
+.l-time{display:none}
+.l-row:hover .l-time, .l-row.active .l-time{display:block; opacity:.7}
+.l-row.active .l-jp{font-size:clamp(26px,3vw,38px); line-height:1.8}
+.l-row.active .l-ro{font-size:clamp(17px,1.9vw,22px)}
+.l-row.active .l-pt{font-size:clamp(20px,2.3vw,27px)}
+.l-ro{color:#9cc3e6; font-weight:400; letter-spacing:.01em}
+.l-pt{color:#ffe3b0; font-weight:500}
+.lyrics-head h3{max-width:none}
+/* Modo aula: letra grande, vídeo pequeno, sem a biblioteca */
+body.modo-aula .stage-grid{grid-template-columns:minmax(250px,.36fr) 1fr}
+body.modo-aula .shelf-card, body.modo-aula .yt-bar, body.modo-aula .mic-strip{display:none}
+body.modo-aula .lyrics-card{height:calc(100vh - 130px); min-height:520px}
+body.modo-aula .l-row.active .l-jp{font-size:clamp(34px,4.2vw,58px)}
+body.modo-aula .l-row.active .l-ro{font-size:clamp(20px,2.4vw,30px)}
+body.modo-aula .l-row.active .l-pt{font-size:clamp(24px,3vw,38px)}
+body.modo-aula .l-jp{font-size:clamp(24px,2.8vw,40px)}
+body.modo-aula .l-ro{font-size:clamp(16px,1.8vw,24px)}
+body.modo-aula .l-pt{font-size:clamp(18px,2.2vw,30px)}
+@media (max-width:920px){ body.modo-aula .stage-grid{grid-template-columns:1fr} }
 </style>
 </head>
 <body class="ver-ro ver-furi ver-pt">
@@ -255,10 +283,13 @@ h1{font-family:var(--f-display); font-size:clamp(22px,3vw,30px); font-weight:800
     </div>
     <div class="tools">
       <span class="xp" id="xpBadge">✨ 0 XP</span>
-      <button type="button" class="btn on" id="btnRo">Romaji: ON</button>
-      <button type="button" class="btn on" id="btnFuri">Furigana: ON</button>
-      <button type="button" class="btn on" id="btnPt">Tradução: ON</button>
-      <button type="button" class="btn" id="btnLang" title="Idioma da tradução">Idioma: PT</button>
+      <span class="grp" role="group" aria-label="O que mostrar na letra">
+        <button type="button" class="btn on" id="btnRo">Romaji: ON</button>
+        <button type="button" class="btn on" id="btnFuri">Furigana: ON</button>
+        <button type="button" class="btn on" id="btnPt">Tradução: ON</button>
+        <button type="button" class="btn" id="btnLang" title="Idioma da tradução">Idioma: PT</button>
+      </span>
+      <button type="button" class="btn" id="btnAula" title="Letra grande para compartilhar a tela">🎓 Modo aula</button>
       <button type="button" class="btn terra" id="btnRecKara">💬 Exercício: Recepção</button>
       <button type="button" class="btn agua" id="btnAiCfg">✨ IA (Gemini)</button>
     </div>
@@ -1240,6 +1271,12 @@ $('btnPt').onclick = function(){
   this.textContent = 'Tradução: ' + (on ? 'ON' : 'OFF');
 };
 
+$('btnAula').onclick = function(){
+  const on = document.body.classList.toggle('modo-aula');
+  this.classList.toggle('on', on);
+  this.textContent = on ? '↩ Sair do modo aula' : '🎓 Modo aula';
+  const a = document.querySelector('.l-row.active'); if(a) a.scrollIntoView({block:'center'});
+};
 $('btnLang').textContent = 'Idioma: ' + LANG.toUpperCase();
 $('btnLang').onclick = function(){
   LANG = LANG === 'en' ? 'pt' : 'en';
