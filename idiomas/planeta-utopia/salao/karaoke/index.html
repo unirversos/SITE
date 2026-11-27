@@ -258,6 +258,7 @@ h1{font-family:var(--f-display); font-size:clamp(22px,3vw,30px); font-weight:800
       <button type="button" class="btn on" id="btnRo">Romaji: ON</button>
       <button type="button" class="btn on" id="btnFuri">Furigana: ON</button>
       <button type="button" class="btn on" id="btnPt">Tradução: ON</button>
+      <button type="button" class="btn" id="btnLang" title="Idioma da tradução">Idioma: PT</button>
       <button type="button" class="btn terra" id="btnRecKara">💬 Exercício: Recepção</button>
       <button type="button" class="btn agua" id="btnAiCfg">✨ IA (Gemini)</button>
     </div>
@@ -460,6 +461,9 @@ let ytReady = false;
 let pendingVideoId = null;
 let rafId = null;
 
+let LANG = 'pt';
+try{ LANG = localStorage.getItem('uniKaraokeLang') === 'en' ? 'en' : 'pt'; }catch(e){}
+const trad = l => LANG === 'en' ? (l.en || '') : (l.pt || '');
 const S = {
   current: null, // { id, videoId, title, thumb, offset, lines:[{t, jp, ruby, ro, pt}], sung:[] }
   activeIdx: -1,
@@ -845,7 +849,7 @@ async function enhanceLyrics(){
     try{
       setStatus('✨ Gemini está gerando Furigana (<ruby>), Romaji e Tradução em Português...');
       const payloadLines = S.current.lines.map((l, i) => `${i}|${l.jp}`).join('\n');
-      const prompt = `Você é professor de japonês do Unirversos. Para cada linha numerada (formato "indice|texto_japones"), retorne APENAS um JSON array válido com objetos: {"i": numero, "ruby": "HTML usando <ruby>漢字<rt>かんじ</rt></ruby> apenas nos kanjis", "ro": "romaji natural com espaços", "pt": "tradução natural em português brasileiro"}. Não inclua markdown nem texto fora do JSON.\n\nLinhas:\n${payloadLines}`;
+      const prompt = `Você é professor de japonês do Unirversos. Para cada linha numerada (formato "indice|texto_japones"), retorne APENAS um JSON array válido com objetos: {"i": numero, "ruby": "HTML usando <ruby>漢字<rt>かんじ</rt></ruby> apenas nos kanjis", "ro": "romaji natural com espaços", "pt": "tradução natural em português brasileiro", "en": "natural English translation"}. Não inclua markdown nem texto fora do JSON.\n\nLinhas:\n${payloadLines}`;
 
       const res = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${encodeURIComponent(S.aiKey)}`, {
         method: 'POST',
@@ -865,6 +869,7 @@ async function enhanceLyrics(){
           if(item.ruby) target.ruby = item.ruby;
           if(item.ro) target.ro = item.ro;
           if(item.pt) target.pt = item.pt;
+          if(item.en) target.en = item.en;
         }
       }
       saveLib();
@@ -901,18 +906,19 @@ async function enhanceLyrics(){
   })().catch(() => {});
 
   // 2) Tradução gratuita (MyMemory) para versos ainda sem tradução
-  const needsPt = lines.some(l => !l.pt);
+  const campo = LANG === 'en' ? 'en' : 'pt';
+  const needsPt = lines.some(l => !l[campo]);
   if(needsPt){
-    setStatus('🌐 Traduzindo versos para o português...');
+    setStatus(LANG === 'en' ? '🌐 Translating lyrics to English...' : '🌐 Traduzindo versos para o português...');
     const maxBatch = Math.min(lines.length, 45);
     const traduz = async i => {
-      if(lines[i].pt) return;
+      if(lines[i][campo]) return;
       try{
-        const r = await fetch(`https://api.mymemory.translated.net/get?q=${encodeURIComponent(lines[i].jp)}&langpair=ja|pt-BR`);
+        const r = await fetch(`https://api.mymemory.translated.net/get?q=${encodeURIComponent(lines[i].jp)}&langpair=ja|${LANG === 'en' ? 'en' : 'pt-BR'}`);
         if(r.ok){
           const j = await r.json();
           if(j.responseData?.translatedText){
-            lines[i].pt = j.responseData.translatedText;
+            lines[i][campo] = j.responseData.translatedText;
           }
         }
       }catch(e){}
@@ -957,7 +963,7 @@ function renderLyricsStream(){
       <div class="l-time">${fmtTime(l.t)}</div>
       <div class="l-jp" lang="ja">${l.ruby || l.jp}</div>
       ${l.ro ? `<div class="l-ro ro">${l.ro}</div>` : ''}
-      ${l.pt ? `<div class="l-pt pt-line">${l.pt}</div>` : ''}
+      ${trad(l) ? `<div class="l-pt pt-line">${trad(l)}</div>` : ''}
       <div class="l-prog"><i></i></div>
     </div>
   `).join('');
@@ -1232,6 +1238,16 @@ $('btnPt').onclick = function(){
   const on = document.body.classList.toggle('ver-pt');
   this.classList.toggle('on', on);
   this.textContent = 'Tradução: ' + (on ? 'ON' : 'OFF');
+};
+
+$('btnLang').textContent = 'Idioma: ' + LANG.toUpperCase();
+$('btnLang').onclick = function(){
+  LANG = LANG === 'en' ? 'pt' : 'en';
+  try{ localStorage.setItem('uniKaraokeLang', LANG); }catch(e){}
+  this.textContent = 'Idioma: ' + LANG.toUpperCase();
+  renderLyricsStream();
+  // se faltar a tradução nesse idioma, gera agora
+  if(S.current && S.current.lines.length && S.current.lines.some(l => !(LANG === 'en' ? l.en : l.pt))) enhanceLyrics();
 };
 
 // Modal IA
