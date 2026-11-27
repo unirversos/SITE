@@ -826,8 +826,8 @@ function getKuroshiro(){
     const k = new K();
     // Se o dicionario demorar demais (ou travar), segue sem furigana em vez de ficar preso em "Gerando..."
     await Promise.race([
-      k.init(new A({ dictPath: 'https://cdn.jsdelivr.net/npm/kuromoji@0.1.2/dict' })),
-      new Promise((_, rej) => setTimeout(() => rej(new Error('timeout')), 25000))
+      k.init(new A({ dictPath: '/idiomas/dados/kuromoji-dict/' })),
+      new Promise((_, rej) => setTimeout(() => rej(new Error('timeout')), 15000))
     ]);
     return k;
   })().catch(() => null);
@@ -881,8 +881,8 @@ async function enhanceLyrics(){
 
   // 1) Furigana real (<ruby>) + Romaji limpo via Kuroshiro/Kuromoji (sem precisar de chave!)
   const needsReading = lines.some(l => (hasKanji(l.jp) && !l.ruby) || !l.ro || hasKanji(l.ro));
-  if(needsReading){
-    setStatus('🇯🇵 Carregando dicionário japonês para gerar Furigana e Romaji...');
+  // Roda em segundo plano: a tradução não espera o dicionário
+  const furiPromise = !needsReading ? Promise.resolve() : (async () => {
     const kuro = await getKuroshiro();
     if(kuro){
       for(const l of lines){
@@ -898,15 +898,15 @@ async function enhanceLyrics(){
       saveLib();
       renderLyricsStream();
     }
-  }
+  })().catch(() => {});
 
   // 2) Tradução gratuita (MyMemory) para versos ainda sem tradução
   const needsPt = lines.some(l => !l.pt);
   if(needsPt){
     setStatus('🌐 Traduzindo versos para o português...');
     const maxBatch = Math.min(lines.length, 45);
-    for(let i = 0; i < maxBatch; i++){
-      if(lines[i].pt) continue;
+    const traduz = async i => {
+      if(lines[i].pt) return;
       try{
         const r = await fetch(`https://api.mymemory.translated.net/get?q=${encodeURIComponent(lines[i].jp)}&langpair=ja|pt-BR`);
         if(r.ok){
@@ -916,11 +916,17 @@ async function enhanceLyrics(){
           }
         }
       }catch(e){}
-      if(i % 4 === 3) renderLyricsStream();
+    };
+    // 5 versos por vez (bem mais rápido que um por um)
+    for(let i = 0; i < maxBatch; i += 5){
+      await Promise.all([0,1,2,3,4].filter(d => i + d < maxBatch).map(d => traduz(i + d)));
+      renderLyricsStream();
     }
     saveLib();
     renderLyricsStream();
   }
+
+  await furiPromise;
 
   setStatus('✨ Furigana, Romaji e Tradução prontos! Clique em qualquer verso para cantar junto.', 'ok');
   btn.disabled = false;
@@ -1256,6 +1262,7 @@ try{
 })();
 /* ---------- Exercício Fixo: Recepção do Karaokê ---------- */
 (function(){
+  const $ = id => document.getElementById(id);
   const modal = $('recModal'), log = $('recLog'), ops = $('recOps');
   if(!modal) return;
   let etapa = 0, t0 = 0, pessoas = 2, horas = 1;
