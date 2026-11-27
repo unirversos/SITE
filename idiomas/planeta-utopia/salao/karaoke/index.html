@@ -685,8 +685,10 @@ function enableDeck(on){
 
 // ---------- Loop de Sincronização em Tempo Real ----------
 function startSyncLoop(){
-  if(rafId) cancelAnimationFrame(rafId);
-  function loop(){
+  if(rafId) clearInterval(rafId);
+  // setInterval (e nao requestAnimationFrame): continua rodando com a aba em segundo plano, e um erro num tick nao mata o acompanhamento
+  function loop(){ try{ tick(); }catch(e){ console.warn('karaoke sync:', e); } }
+  function tick(){
     if(ytPlayer && typeof ytPlayer.getCurrentTime === 'function' && S.current && S.current.lines.length){
       const rawT = ytPlayer.getCurrentTime();
       const t = rawT + (S.current.offset || 0);
@@ -724,9 +726,8 @@ function startSyncLoop(){
         }
       }
     }
-    rafId = requestAnimationFrame(loop);
   }
-  rafId = requestAnimationFrame(loop);
+  rafId = setInterval(loop, 100);
 }
 
 // ---------- Busca Automática: YouTube Metadata + LRCLIB ----------
