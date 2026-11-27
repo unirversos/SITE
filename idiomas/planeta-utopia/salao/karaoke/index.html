@@ -257,6 +257,11 @@ h1{font-family:var(--f-display); font-size:clamp(22px,3vw,30px); font-weight:800
 .l-ro{color:#9cc3e6; font-weight:400; letter-spacing:.01em}
 .l-pt{color:#ffe3b0; font-weight:500}
 .lyrics-head h3{max-width:none}
+/* Modo estudo */
+.study-strip{display:flex; flex-wrap:wrap; align-items:center; gap:8px; padding:10px 12px; border-radius:14px; background:rgba(125,163,201,.14); border:1px dashed rgba(125,163,201,.55)}
+.study-strip.esperando{border-style:solid; border-color:var(--ar); background:rgba(236,192,114,.16)}
+.study-msg{flex:1; min-width:170px; font-size:13px; color:#e6eefb}
+.l-row.active.espera{box-shadow:0 0 0 2px var(--ar), 0 8px 24px rgba(236,192,114,.2)}
 /* Modo aula: letra grande, vídeo pequeno, sem a biblioteca */
 body.modo-aula .stage-grid{grid-template-columns:minmax(250px,.36fr) 1fr}
 body.modo-aula .shelf-card, body.modo-aula .yt-bar, body.modo-aula .mic-strip{display:none}
@@ -331,6 +336,7 @@ body.modo-aula .l-pt{font-size:clamp(18px,2.2vw,30px)}
             <button type="button" class="btn sm" id="btnBack3" disabled>⏪ -3s</button>
             <button type="button" class="btn sm" id="btnFwd3" disabled>⏩ +3s</button>
             <button type="button" class="btn sm" id="btnLoop" disabled>🔁 Loop verso</button>
+            <button type="button" class="btn sm" id="btnStudy" title="Pausa no fim de cada verso para o aluno repetir">📖 Modo estudo</button>
             <button type="button" class="btn sm" id="btnSpeak" disabled>🔊 Ouvir lento</button>
           </div>
           <div class="deck-group">
@@ -347,6 +353,12 @@ body.modo-aula .l-pt{font-size:clamp(18px,2.2vw,30px)}
               <button type="button" id="offPlus">+</button>
             </div>
           </div>
+        </div>
+
+        <div class="study-strip" id="studyStrip" hidden>
+          <button type="button" class="btn" id="btnStudyRepeat">🔁 Repetir verso</button>
+          <button type="button" class="btn pri" id="btnStudyNext">▶ Próximo verso</button>
+          <span class="study-msg" id="studyMsg">Modo estudo: o vídeo pausa no fim de cada verso.</span>
         </div>
 
         <div class="mic-strip">
@@ -500,6 +512,8 @@ const S = {
   activeIdx: -1,
   loopLine: false,
   syncMode: false,
+  study: false,
+  studyWaiting: false,
   syncCursor: 0,
   candidates: [],
   library: [],
@@ -709,7 +723,15 @@ function startSyncLoop(){
           for(let i = 0; i < lines.length; i++){
             if(lines[i].t !== null && t >= lines[i].t) idx = i;
           }
-          if(idx !== S.activeIdx){
+          if(S.study && S.studyWaiting){
+            // parado no fim do verso: não muda o destaque até o aluno escolher
+          } else if(S.study && S.activeIdx >= 0 && idx === S.activeIdx + 1 &&
+                    typeof ytPlayer.getPlayerState === 'function' && ytPlayer.getPlayerState() === 1){
+            // acabou o verso: pausa para o aluno repetir
+            ytPlayer.pauseVideo();
+            S.studyWaiting = true;
+            studyShow(true);
+          } else if(idx !== S.activeIdx){
             S.activeIdx = idx;
             updateActiveHighlight();
           }
@@ -1067,6 +1089,43 @@ $('btnPlayPause').onclick = () => {
 $('btnBack3').onclick = () => { if(ytPlayer) ytPlayer.seekTo(Math.max(0, ytPlayer.getCurrentTime() - 3), true); };
 $('btnFwd3').onclick = () => { if(ytPlayer) ytPlayer.seekTo(ytPlayer.getCurrentTime() + 3, true); };
 $('speedSel').onchange = function(){ if(ytPlayer) ytPlayer.setPlaybackRate(parseFloat(this.value) || 1); };
+function studyShow(esperando){
+  const st = $('studyStrip');
+  st.hidden = !S.study;
+  st.classList.toggle('esperando', !!esperando);
+  $('studyMsg').textContent = esperando
+    ? `⏸ Fim do verso ${S.activeIdx + 1}. Repita em voz alta e depois siga.`
+    : 'Modo estudo: o vídeo pausa no fim de cada verso.';
+  const row = document.querySelector(`.l-row[data-i="${S.activeIdx}"]`);
+  document.querySelectorAll('.l-row.espera').forEach(e => e.classList.remove('espera'));
+  if(esperando && row) row.classList.add('espera');
+}
+$('btnStudy').onclick = function(){
+  S.study = !S.study;
+  S.studyWaiting = false;
+  this.classList.toggle('on', S.study);
+  this.textContent = S.study ? '📖 Estudo: ON' : '📖 Modo estudo';
+  studyShow(false);
+};
+$('btnStudyRepeat').onclick = () => {
+  if(!ytPlayer || !S.current || S.activeIdx < 0) return;
+  const cur = S.current.lines[S.activeIdx];
+  S.studyWaiting = false;
+  studyShow(false);
+  if(cur && cur.t !== null) ytPlayer.seekTo(Math.max(0, cur.t - (S.current.offset || 0)), true);
+  ytPlayer.playVideo();
+};
+$('btnStudyNext').onclick = () => {
+  if(!ytPlayer || !S.current) return;
+  const lines = S.current.lines;
+  const t = ytPlayer.getCurrentTime() + (S.current.offset || 0);
+  let idx = -1;
+  for(let i = 0; i < lines.length; i++){ if(lines[i].t !== null && t >= lines[i].t) idx = i; }
+  S.studyWaiting = false;
+  studyShow(false);
+  if(idx >= 0){ S.activeIdx = idx; updateActiveHighlight(); }
+  ytPlayer.playVideo();
+};
 $('btnLoop').onclick = function(){
   S.loopLine = !S.loopLine;
   this.classList.toggle('on', S.loopLine);
