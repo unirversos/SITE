@@ -745,7 +745,8 @@ async function loadFromYouTube(url){
 
   // Checar se já está salvo na biblioteca
   const existing = S.library.find(x => x.videoId === videoId);
-  if(existing){
+  // Musica salva sem letra (0 versos) nao conta: tenta buscar a letra de novo
+  if(existing && existing.lines && existing.lines.length){
     S.current = existing;
     // Limpa romaji quebrado antigo (com kanji misturado)
     let needsUpgrade = false;
@@ -765,9 +766,17 @@ async function loadFromYouTube(url){
   const query = cleanSearchTitle(meta.title);
   setStatus(`🔍 Vídeo detectado: <b>${meta.title}</b> — buscando letra sincronizada...`);
 
-  let cands = await searchLrclib(query);
-  if(!cands.length && meta.author){
-    cands = await searchLrclib(`${meta.author} ${query}`);
+  // Tenta varias buscas: nome da musica entre 「」/『』, depois titulo limpo, depois artista + titulo
+  const inner = (String(meta.title).match(/[「『]([^」』]+)[」』]/) || [])[1];
+  const author = String(meta.author || '').replace(/\s*-\s*Topic$/i, '').trim();
+  const tries = [];
+  if(inner){ tries.push(inner); if(author) tries.push(`${author} ${inner}`); }
+  tries.push(query);
+  if(author) tries.push(`${author} ${query}`);
+  let cands = [];
+  for(const q of tries){
+    cands = await searchLrclib(q);
+    if(cands.length) break;
   }
   S.candidates = cands;
 
