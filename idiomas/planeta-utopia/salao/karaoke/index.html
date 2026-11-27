@@ -551,8 +551,14 @@ function kanaToRomaji(str){
 // ---------- Parser de YouTube URL & LRC ----------
 function extractVideoId(url){
   const s = String(url || '').trim();
+  // Aceita o parametro v= em qualquer posicao (ex.: ?feature=shared&v=ID, ?list=...&v=ID)
+  try{
+    const u = new URL(/^https?:\/\//i.test(s) ? s : 'https://' + s);
+    const v = u.searchParams.get('v');
+    if(v && /^[a-zA-Z0-9_-]{11}$/.test(v)) return v;
+  }catch(e){}
   const patterns = [
-    /(?:youtube\.com\/watch\?v=|youtu\.be\/|youtube\.com\/embed\/|youtube\.com\/shorts\/|music\.youtube\.com\/watch\?v=)([a-zA-Z0-9_-]{11})/,
+    /(?:youtube\.com\/watch\?v=|youtu\.be\/|youtube\.com\/embed\/|youtube\.com\/shorts\/|youtube\.com\/live\/|music\.youtube\.com\/watch\?v=)([a-zA-Z0-9_-]{11})/,
     /^([a-zA-Z0-9_-]{11})$/
   ];
   for(const p of patterns){
@@ -809,7 +815,11 @@ function getKuroshiro(){
     const A = window.KuromojiAnalyzer?.default || window.KuromojiAnalyzer;
     if(!K || !A) return null;
     const k = new K();
-    await k.init(new A({ dictPath: 'https://cdn.jsdelivr.net/npm/kuromoji@0.1.2/dict' }));
+    // Se o dicionario demorar demais (ou travar), segue sem furigana em vez de ficar preso em "Gerando..."
+    await Promise.race([
+      k.init(new A({ dictPath: 'https://cdn.jsdelivr.net/npm/kuromoji@0.1.2/dict' })),
+      new Promise((_, rej) => setTimeout(() => rej(new Error('timeout')), 25000))
+    ]);
     return k;
   })().catch(() => null);
   return kuroPromise;
